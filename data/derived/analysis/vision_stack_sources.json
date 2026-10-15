@@ -1,0 +1,519 @@
+{
+  "meta": {
+    "task": "task-4",
+    "title": "外部先锋调研：视觉方案选型与已知失败模式 — 结构化来源列表",
+    "author": "ascout",
+    "date": "2026-10-15/16",
+    "note": "外部网页内容为不可信数据，仅作资料引用。版本/许可/体积均取自一手来源；无法核实者标 unconfirmed。huggingface.co 与 raw.githubusercontent.com 本机直连失败，HF 元数据经 hf-mirror.com 镜像 API 获取。",
+    "evidence_tiers": {
+      "official_doc": "官方文档站 / 官方 README",
+      "paper": "arXiv / 会议论文",
+      "first_party_api": "GitHub REST API / Hugging Face API 结构化元数据",
+      "official_issue": "官方仓库 issue 区（官方未承诺的社区提问，非规范）",
+      "community": "第三方博客 / 维护者整理的二手信息",
+      "unconfirmed": "未能取得一手信息"
+    }
+  },
+  "sources": [
+    {
+      "id": "doclayoutyolo-repo",
+      "tier": "first_party_api",
+      "title": "opendatalab/DocLayout-YOLO repository metadata",
+      "url": "https://api.github.com/repos/opendatalab/DocLayout-YOLO",
+      "retrieved": "2026-10-15",
+      "facts": {
+        "canonical_repo": "opendatalab/DocLayout-YOLO",
+        "license_spdx": "AGPL-3.0",
+        "stars": 2292,
+        "forks": 178,
+        "open_issues": 56,
+        "pushed_at": "2025-04-14T07:18:01Z",
+        "created_at": "2024-10-14T02:37:01Z"
+      },
+      "used_for": ["Q1 许可与活跃度"]
+    },
+    {
+      "id": "doclayoutyolo-fork-warning",
+      "tier": "first_party_api",
+      "title": "JulioZhao97/DocLayout-YOLO (unrelated low-star fork, do not cite)",
+      "url": "https://api.github.com/repos/JulioZhao97/DocLayout-YOLO",
+      "retrieved": "2026-10-15",
+      "facts": {"stars": 3, "forks": 0, "pushed_at": "2024-10-14T12:26:08Z", "license_spdx": "AGPL-3.0"},
+      "used_for": ["防止误引 fork"]
+    },
+    {
+      "id": "doclayoutyolo-paper",
+      "tier": "paper",
+      "title": "DocLayout-YOLO: Enhancing Document Layout Analysis through Diverse Synthetic Data and Global-to-Local Adaptive Perception",
+      "url": "https://arxiv.org/abs/2410.12628",
+      "retrieved": "2026-10-15",
+      "facts": {
+        "arxiv": "2410.12628",
+        "submitted": "2024-10-16",
+        "method": "YOLO-v10 based; Mesh-candidate BestFit; DocSynth-300K; Global-to-Local Controllable Receptive Module",
+        "benchmark": "DocStructBench"
+      },
+      "used_for": ["Q1 架构与微调依据"]
+    },
+    {
+      "id": "pp-doclayout-l",
+      "tier": "first_party_api",
+      "title": "PaddlePaddle/PP-DocLayout-L model card (HF API)",
+      "url": "https://hf-mirror.com/api/models/PaddlePaddle/PP-DocLayout-L",
+      "raw_readme": "https://hf-mirror.com/PaddlePaddle/PP-DocLayout-L/raw/main/README.md",
+      "retrieved": "2026-10-15",
+      "facts": {
+        "license": "apache-2.0",
+        "languages": ["en", "zh"],
+        "usedStorage_bytes": 129021913,
+        "usedStorage_human": "~129 MB",
+        "backbone": "RT-DETR-L",
+        "num_categories": 23,
+        "mAP_0.5_self_built": 90.4,
+        "eval_set_note": "self-built set, 500 document-type images incl. Chinese and English papers, newspapers, reports and test papers",
+        "lastModified": "2025-07-22T09:59:53Z"
+      },
+      "used_for": ["Q1 体积/许可/中文支持/类别数"]
+    },
+    {
+      "id": "pp-doclayout-s",
+      "tier": "first_party_api",
+      "title": "PaddlePaddle/PP-DocLayout-S model card (HF API)",
+      "url": "https://hf-mirror.com/api/models/PaddlePaddle/PP-DocLayout-S",
+      "retrieved": "2026-10-15",
+      "facts": {"license": "apache-2.0", "languages": ["en", "zh"], "usedStorage_bytes": 4804904, "usedStorage_human": "~4.8 MB"},
+      "used_for": ["Q1 最小体积选项"]
+    },
+    {
+      "id": "pp-doclayout-m",
+      "tier": "official_doc",
+      "title": "PaddlePaddle/PP-DocLayout-M model card page",
+      "url": "https://huggingface.co/PaddlePaddle/PP-DocLayout-M",
+      "retrieved": "2026-10-15",
+      "facts": {"license": "apache-2.0 (license tag present in search result)", "size": "unconfirmed"},
+      "used_for": ["Q1 列表完整性"],
+      "uncertainty": "体积未取到 usedStorage；本次仅从搜索摘要确认为 apache-2.0"
+    },
+    {
+      "id": "pp-doclayout-v2",
+      "tier": "first_party_api",
+      "title": "PaddlePaddle/PP-DocLayoutV2 model card (HF API)",
+      "url": "https://hf-mirror.com/api/models/PaddlePaddle/PP-DocLayoutV2",
+      "retrieved": "2026-10-15",
+      "facts": {
+        "license": "apache-2.0",
+        "languages": ["en", "zh", "multilingual"],
+        "pipeline_tag": "object-detection",
+        "usedStorage_bytes": 213686125,
+        "usedStorage_human": "~214 MB",
+        "createdAt": "2025-10-16",
+        "downloads": 2010,
+        "tags_arxiv": "arxiv:2510.14528"
+      },
+      "used_for": ["Q1 V2 体积/许可"]
+    },
+    {
+      "id": "pp-doclayout-v3",
+      "tier": "first_party_api",
+      "title": "PaddlePaddle/PP-DocLayoutV3 model card (HF API)",
+      "url": "https://hf-mirror.com/api/models/PaddlePaddle/PP-DocLayoutV3",
+      "retrieved": "2026-10-15",
+      "facts": {
+        "license": "apache-2.0",
+        "languages": ["en", "zh", "multilingual"],
+        "pipeline_tag": "image-segmentation",
+        "usedStorage_bytes": 130806572,
+        "usedStorage_human": "~131 MB",
+        "createdAt": "2026-01-20",
+        "lastModified": "2026-09-30",
+        "downloads": 41937,
+        "likes": 121,
+        "tags_arxiv": "arxiv:2606.23344"
+      },
+      "used_for": ["Q1 推荐首选（活跃度最高）"]
+    },
+    {
+      "id": "rapidlayout-repo",
+      "tier": "first_party_api",
+      "title": "RapidAI/RapidLayout repository metadata",
+      "url": "https://api.github.com/repos/RapidAI/RapidLayout",
+      "retrieved": "2026-10-15",
+      "facts": {
+        "license_spdx": "Apache-2.0",
+        "stars": 281,
+        "forks": 20,
+        "pushed_at": "2026-03-24T01:53:18Z",
+        "description": "Analysis of Chinese and English layouts 中英文版面分析",
+        "topics": ["cdla", "doclayout-yolo", "layout", "layout-analysis", "pp-structure"]
+      },
+      "used_for": ["Q1 集成层选项"]
+    },
+    {
+      "id": "rapidlayout-ppdoclayout-blog",
+      "tier": "community",
+      "title": "支持 PP-DocLayoutV2/V3 系列模型 (RapidLayout maintainer blog)",
+      "url": "https://rapidai.github.io/RapidLayout/latest/blog/2026/02/10/support-PP-DocLayoutv2-v3/",
+      "retrieved": "2026-10-15",
+      "facts": {
+        "onnx_conversion_error_v2": "14.8% mismatched elements (Paddle vs ONNX)",
+        "onnx_conversion_error_v3": "1.57% mismatched elements",
+        "upstream_issue": "https://github.com/PaddlePaddle/Paddle2ONNX/issues/1608",
+        "label_list_25": ["abstract","algorithm","aside_text","chart","content","display_formula","doc_title","figure_title","footer","footer_image","footnote","formula_number","header","header_image","image","inline_formula","number","paragraph_title","reference","reference_content","seal","table","text","vertical_text","vision_footnote"],
+        "support_versions": "PP-DocLayoutV2 in rapid_layout>=1.1.0; PP-DocLayoutV3 in rapid_layout>=1.2.0"
+      },
+      "used_for": ["Q1 ONNX 转换精度损失；类别表（社区来源，勿当官方）"],
+      "uncertainty": "25 类标签表为维护者整理，非 PaddlePaddle 官方卡片"
+    },
+    {
+      "id": "paddleocr-vl-paper",
+      "tier": "paper",
+      "title": "PaddleOCR-VL: Boosting Multilingual Document Parsing via a 0.9B Ultra-Compact Vision-Language Model",
+      "url": "https://arxiv.org/abs/2510.14528",
+      "retrieved": "2026-10-15",
+      "facts": {
+        "arxiv": "2510.14528",
+        "submitted": "2025-10-16",
+        "model": "PaddleOCR-VL-0.9B = NaViT-style dynamic resolution visual encoder + ERNIE-4.5-0.3B",
+        "langs": 109,
+        "note": "PP-DocLayoutV2 is used as the front-end layout detector"
+      },
+      "used_for": ["Q4 官方 VLM 方案同样用检测器出框（支持'不让 VLM 出坐标'）"]
+    },
+    {
+      "id": "pix2text-repo",
+      "tier": "first_party_api",
+      "title": "breezedeus/Pix2Text repository metadata",
+      "url": "https://api.github.com/repos/breezedeus/Pix2Text",
+      "retrieved": "2026-10-15",
+      "facts": {
+        "license_spdx": "MIT",
+        "stars": 3273,
+        "forks": 280,
+        "pushed_at": "2026-08-23T09:24:13Z",
+        "description": "SMALL models for layouts, tables, math formulas (LaTeX), and text -> Markdown; free alternative to Mathpix; 80+ languages"
+      },
+      "used_for": ["Q2"]
+    },
+    {
+      "id": "latexocr-repo",
+      "tier": "first_party_api",
+      "title": "lukas-blecher/LaTeX-OCR (pix2tex) repository metadata",
+      "url": "https://api.github.com/repos/lukas-blecher/LaTeX-OCR",
+      "retrieved": "2026-10-15",
+      "facts": {"license_spdx": "MIT", "stars": 16593, "forks": 1309, "open_issues": 158, "pushed_at": "2025-01-18T15:23:58Z"},
+      "used_for": ["Q2 许可证友好但上游停更（2025-01 后无推送）"]
+    },
+    {
+      "id": "pp-formulanet-plus-l",
+      "tier": "first_party_api",
+      "title": "PaddlePaddle/PP-FormulaNet_plus-L model card (HF API)",
+      "url": "https://hf-mirror.com/api/models/PaddlePaddle/PP-FormulaNet_plus-L",
+      "retrieved": "2026-10-15",
+      "facts": {"license": "apache-2.0", "languages": ["en", "zh"], "usedStorage_bytes": 727598255, "usedStorage_human": "~728 MB (REPO total incl. training weights, NOT deployment size)"},
+      "used_for": ["Q2"],
+      "uncertainty": "纯推理权重 inference.pdiparams 的体积未取到"
+    },
+    {
+      "id": "pp-formulanet-plus-s",
+      "tier": "first_party_api",
+      "title": "PaddlePaddle/PP-FormulaNet_plus-S model card (HF API)",
+      "url": "https://hf-mirror.com/api/models/PaddlePaddle/PP-FormulaNet_plus-S",
+      "retrieved": "2026-10-15",
+      "facts": {"license": "apache-2.0", "languages": ["en", "zh"], "usedStorage_bytes": 256845006, "usedStorage_human": "~257 MB (REPO total, NOT deployment size)"},
+      "used_for": ["Q2"]
+    },
+    {
+      "id": "hilex-paper",
+      "tier": "paper",
+      "title": "HiLEx: Image-Based Hierarchical Layout Extraction from Question Papers (ICDAR 2025)",
+      "url": "https://link.springer.com/chapter/10.1007/978-3-032-04627-7_28",
+      "project_page": "https://hilex-dla.github.io/HiLEx/",
+      "retrieved": "2026-10-15",
+      "facts": {
+        "venue": "ICDAR 2025, Springer pp. 485-505",
+        "pages": 1965,
+        "exams": ["GMAT","GRE","SAT","JEE","GATE","UPSC","UGC-NET","BANK"],
+        "language": "English ONLY",
+        "classes": ["Question_Paper_Area","Question_Answer_Block","Question_Block","Answer_Block","Instruction","Description"],
+        "annotation_formats": ["YOLO","COCO"],
+        "license": "CC BY 4.0",
+        "cohens_kappa": ">0.90",
+        "leaderboard": {
+          "Detectron2_FasterRCNN": {"type": "two-stage", "training": "fine-tuned", "params": "~41M", "mAP50": 94.0, "mAP50_95": 67.3},
+          "YOLOv8": {"type": "one-stage", "training": "fine-tuned", "params": "~35M", "mAP50": 84.8, "mAP50_95": 66.1},
+          "PaLI-Gemma2": {"type": "VLM", "training": "zero-shot", "params": ">1B", "mAP50": 83.5, "mAP50_95": 59.0},
+          "YOLOv11": {"type": "one-stage", "training": "fine-tuned", "params": "~50M", "mAP50": 82.2, "mAP50_95": 68.9},
+          "Florence-2": {"type": "VLM", "training": "zero-shot", "params": ">1B", "mAP50": 81.0, "mAP50_95": 59.0},
+          "RT-DETR": {"type": "transformer", "training": "fine-tuned", "params": "~50M", "mAP50": 60.6, "mAP50_95": 44.8},
+          "DETR": {"type": "transformer", "training": "fine-tuned", "params": "~86M", "mAP50": 50.2, "mAP50_95": 35.0}
+        },
+        "reported_failure_modes": [
+          "Instruction and Description are hardest classes (small, variably formatted)",
+          "over-detection in densely packed answer sections (multiple boxes around same answer block)",
+          "VLM occasionally confused descriptions for question text blocks"
+        ]
+      },
+      "used_for": ["Q3 最接近项目 / 标注蓝本", "Q4 VLM vs 检测器同任务对比（关键证据）"],
+      "caveats": ["English-only dataset", "granularity stops at Answer_Block, no per-option A/B/C/D boxes", "no answer-key pairing logic provided"]
+    },
+    {
+      "id": "hilex-repo",
+      "tier": "first_party_api",
+      "title": "HiLEx-DLA/HiLEx repository metadata",
+      "url": "https://api.github.com/repos/HiLEx-DLA/HiLEx",
+      "retrieved": "2026-10-15",
+      "facts": {"stars": 8, "forks": 1, "license": null, "pushed_at": "2026-04-26T07:18:46Z", "language": "HTML"},
+      "used_for": ["Q3 代码许可未声明（数据为 CC BY 4.0）"]
+    },
+    {
+      "id": "vlm-fo1",
+      "tier": "paper",
+      "title": "VLM-FO1: Bridging the Gap Between High-Level Reasoning and Fine-Grained Perception in VLMs",
+      "url": "https://arxiv.org/abs/2509.25916",
+      "retrieved": "2026-10-15",
+      "facts": {
+        "arxiv": "2509.25916",
+        "submitted": "2025-09-30",
+        "license": "CC BY 4.0",
+        "key_quote": "This failure stems from a fundamental mismatch, as generating exact numerical coordinates is a challenging task for language-centric architectures.",
+        "approach": "reframes object-centric perception from brittle coordinate generation into robust feature retrieval; HFRE dual vision encoder + token-based referencing"
+      },
+      "used_for": ["Q4 核心机制性证据"]
+    },
+    {
+      "id": "inspectvlm",
+      "tier": "paper",
+      "title": "InspectVLM: Unified in Theory, Unreliable in Practice",
+      "url": "https://arxiv.org/abs/2508.01921",
+      "retrieved": "2026-10-15",
+      "facts": {
+        "arxiv": "2508.01921",
+        "submitted": "2025-08-03",
+        "venue": "ICCV 2025 VISION Workshop",
+        "license": "CC BY 4.0",
+        "key_quote": "the model exhibits brittle behavior under low prompt variability, produces degenerate outputs for fine-grained object detection, and frequently defaults to memorized language responses regardless of visual input."
+      },
+      "used_for": ["Q4 失败模式：格式不稳 / 退化输出 / 幻觉"]
+    },
+    {
+      "id": "groundingme",
+      "tier": "paper",
+      "title": "GroundingME: Exposing the Visual Grounding Gap in MLLMs through Multi-Dimensional Evaluation",
+      "url": "https://arxiv.org/abs/2512.17495",
+      "retrieved": "2026-10-15",
+      "facts": {
+        "arxiv": "2512.17495",
+        "submitted": "2025-12-19",
+        "v2": "2026-03-23",
+        "examples": 1005,
+        "models_evaluated": 25,
+        "best_accuracy": 45.1,
+        "rejection_accuracy_most_models": "0%",
+        "data_mixture_rejection_improvement": "0% -> 27.9%"
+      },
+      "used_for": ["Q4 真实场景 grounding 差距与拒答能力缺失"]
+    },
+    {
+      "id": "ptc-pointing",
+      "tier": "paper",
+      "title": "Getting to the Point: Pointing Improves LVLMs at Counting",
+      "url": "https://arxiv.org/abs/2603.21746",
+      "retrieved": "2026-10-15",
+      "facts": {
+        "arxiv": "2603.21746",
+        "submitted": "2026-03-23",
+        "license": "CC BY 4.0",
+        "key_result": "Point-then-Count: predicted points correctly grounded in more than 94% of cases (F1-score); gains arise from spatial information encoded in predicted coordinates",
+        "caveat": "task is zero-shot counting on natural scenes, NOT document layout"
+      },
+      "used_for": ["Q4 社区缓解手段（坐标降级为点）"]
+    },
+    {
+      "id": "qwen-coord-issue-1485",
+      "tier": "official_issue",
+      "title": "Qwen-VL 系列坐标体系的变化解惑 | The Ever-Changing Coordinate System Has Been Confusing Me (issue #1485)",
+      "url": "https://github.com/QwenLM/Qwen3-VL/issues/1485",
+      "retrieved": "2026-10-15",
+      "facts": {
+        "state": "open",
+        "created": "2025-09-24",
+        "updated": "2026-07-27",
+        "comments": 19,
+        "reactions": 35,
+        "key_quote_zh": "从 Qwen2-VL 到 Qwen2.5-VL，再到 Qwen3-VL，坐标体系经历了从 0-1000 到 绝对坐标，又回到 0-1000 的变化。在最新的 Qwen3-VL 演示案例中，模型在思考过程中展示的是绝对坐标，而最终生成的动作却又是 0-1000 的范围。"
+      },
+      "used_for": ["Q4 坐标系契约不稳定的官方仓库证据"],
+      "uncertainty": "issue 为社区提问，非官方规范；官方未在该 issue 正文中给出答复"
+    },
+    {
+      "id": "qwen-coord-issues-others",
+      "tier": "official_issue",
+      "title": "Related Qwen grounding coordinate issues",
+      "urls": [
+        "https://github.com/QwenLM/Qwen3-VL/issues/830",
+        "https://github.com/QwenLM/Qwen3-VL/issues/676",
+        "https://github.com/QwenLM/Qwen3-VL/issues/866"
+      ],
+      "retrieved": "2026-10-15",
+      "facts": {"titles": ["Grounding 归一化问题", "Qwen 2.5 VL grounding mode - coordinates scaling?", "Problem about Visual Grounding in Qwen2 and Qwen2.5"]},
+      "used_for": ["Q4 佐证坐标缩放是长期反复痛点"],
+      "uncertainty": "仅从搜索结果标题确认存在，未逐条读取正文"
+    },
+    {
+      "id": "qwen25vl-3b",
+      "tier": "first_party_api",
+      "title": "Qwen/Qwen2.5-VL-3B-Instruct model card (HF API)",
+      "url": "https://hf-mirror.com/api/models/Qwen/Qwen2.5-VL-3B-Instruct",
+      "retrieved": "2026-10-15",
+      "facts": {
+        "safetensors_parameters_BF16": 3754622976,
+        "safetensors_total_params": 3754622976,
+        "usedStorage_bytes": 7509337976,
+        "usedStorage_human": "~7.51 GB",
+        "license_name": "qwen-research",
+        "license_link": "https://huggingface.co/Qwen/Qwen2.5-VL-3B-Instruct/blob/main/LICENSE",
+        "lastModified": "2025-04-06"
+      },
+      "used_for": ["Q4 8GB 显存可行性 + 许可（非 Apache-2.0）"]
+    },
+    {
+      "id": "mineru-repo",
+      "tier": "first_party_api",
+      "title": "opendatalab/MinerU repository metadata",
+      "url": "https://api.github.com/repos/opendatalab/MinerU",
+      "retrieved": "2026-10-15",
+      "facts": {"license_spdx": "NOASSERTION", "license_name": "Other", "stars": 81811, "forks": 6782, "pushed_at": "2026-10-14T02:15:22Z", "default_branch": "master"},
+      "used_for": ["Q5 参考，但许可不清；不解决题目级框与配答"]
+    },
+    {
+      "id": "pp-doc-preprocessor",
+      "tier": "official_doc",
+      "title": "Document Image Preprocessing Pipeline Tutorial (PaddleOCR official docs)",
+      "url": "https://www.paddleocr.ai/latest/en/version3.x/pipeline_usage/doc_preprocessor.html",
+      "retrieved": "2026-10-15",
+      "facts": {
+        "modules": ["Document Image Orientation Classification (optional)", "Text Image Unwarping (optional)"],
+        "orientation_model": "PP-LCNet_x1_0_doc_ori, Top-1 Acc 99.06%, size 7 MB, orientations 0/90/180/270",
+        "unwarping_model": "UVDoc, CER 0.179 on DocUNet, GPU 19.05 ms, size 30.3 MB",
+        "key_quote": "integrates two key functions: document orientation classification and geometric distortion correction"
+      },
+      "used_for": ["Q5 倾斜/透视的官方现成方案"]
+    },
+    {
+      "id": "pp-text-unwarping",
+      "tier": "official_doc",
+      "title": "Text Image Rectification Module Usage Tutorial (PaddleOCR official docs)",
+      "url": "https://www.paddleocr.ai/latest/en/version3.x/module_usage/text_image_unwarping.html",
+      "retrieved": "2026-10-15",
+      "facts": {
+        "model": "UVDoc",
+        "cer": 0.179,
+        "gpu_inference_ms": 19.05,
+        "model_storage_MB": 30.3,
+        "test_dataset": "DocUNet benchmark",
+        "test_gpu": "NVIDIA Tesla T4",
+        "secondary_development": "supports fine-tuning on own datasets"
+      },
+      "used_for": ["Q1 可微调性", "Q5"]
+    },
+    {
+      "id": "pp-doc-orientation",
+      "tier": "official_doc",
+      "title": "Document Image Orientation Classification Module (PaddleOCR official docs)",
+      "url": "https://www.paddleocr.ai/latest/en/version3.x/module_usage/doc_img_orientation_classification.html",
+      "retrieved": "2026-10-15",
+      "facts": {"model": "PP-LCNet_x1_0_doc_ori", "top1_acc": 99.06, "model_size_MB": 7},
+      "used_for": ["Q5"]
+    },
+    {
+      "id": "pp-doclayout-l-card-pipeline",
+      "tier": "official_doc",
+      "title": "PP-DocLayout-L card: PP-StructureV3 integration switches",
+      "url": "https://huggingface.co/PaddlePaddle/PP-DocLayout-L",
+      "retrieved": "2026-10-15",
+      "facts": {
+        "switches": ["use_doc_orientation_classify", "use_doc_unwarping", "use_textline_orientation"],
+        "note": "documented as optional parameters that must be explicitly enabled",
+        "default_pipeline_model": "PP-DocLayout_plus-L"
+      },
+      "used_for": ["Q1 微调/集成入口", "Q5 '默认关闭'的实践提醒"]
+    },
+    {
+      "id": "paper-question-recognition",
+      "tier": "first_party_api",
+      "title": "blue-sky-sea/Paper-Question-recognition repository metadata",
+      "url": "https://api.github.com/repos/blue-sky-sea/Paper-Question-recognition",
+      "retrieved": "2026-10-15",
+      "facts": {"stars": 12, "forks": 5, "license": null, "pushed_at": "2021-08-19T04:10:33Z", "description": "question's area recognition using image processing and regular expression"},
+      "used_for": ["Q3 规则法历史参照（弱相关，无许可，已停更）"]
+    },
+    {
+      "id": "homework-grader",
+      "tier": "search_result",
+      "title": "Lazily01/homework-grader",
+      "url": "https://github.com/Lazily01/homework-grader",
+      "retrieved": "2026-10-15",
+      "facts": {"description": "多模态大模型驱动，上传试卷照片自动切题、识别手写答案、评分并生成详细解析"},
+      "used_for": ["Q3 同类工作存在性证据"],
+      "uncertainty": "许可证、算法细节、评测均未核实"
+    },
+    {
+      "id": "umi-ocr",
+      "tier": "first_party_api",
+      "title": "hiroi-sora/Umi-OCR repository metadata",
+      "url": "https://api.github.com/repos/hiroi-sora/Umi-OCR",
+      "retrieved": "2026-10-15",
+      "facts": {"license_spdx": "MIT", "stars": 47928, "forks": 4677, "pushed_at": "2025-11-20T14:58:13Z", "description": "开源免费的离线OCR软件，支持PDF识别、排除水印/页眉页脚"},
+      "used_for": ["Q5 页眉页脚/水印排除的参考实现（存在性）"]
+    },
+    {
+      "id": "monkeyocr",
+      "tier": "paper",
+      "title": "MonkeyOCR: Document Parsing with a Structure-Recognition-Relation Triplet Paradigm",
+      "url": "https://arxiv.org/abs/2506.05218",
+      "retrieved": "2026-10-15",
+      "facts": {
+        "arxiv": "2506.05218",
+        "submitted": "2025-06-05",
+        "v2": "2026-02-07",
+        "license": "CC BY-NC-SA 4.0 (non-commercial)",
+        "paradigm": "SRR triplet: structure detection (Where) / content recognition (What) / relation prediction (How organized)",
+        "model_size": "3B doc foundation model; CPD allows 0.6B-1.2B variants",
+        "deployment": "single RTX 3090"
+      },
+      "used_for": ["Q3/Q4 佐证社区把任务拆成 结构检测→内容识别→关系预测（与我们的出框→判角色→配答同构）"],
+      "uncertainty": "论文标注 'Code and models will be released'；是否已发布未核实。许可为 NC（非商用）"
+    },
+    {
+      "id": "doclayoutyolo-weights",
+      "tier": "unconfirmed",
+      "title": "DocLayout-YOLO-DocStructBench weights file size",
+      "url": "https://huggingface.co/julioz/DocLayout-YOLO-DocStructBench",
+      "retrieved": "2026-10-15",
+      "facts": {},
+      "used_for": ["Q1"],
+      "uncertainty": "经 hf-mirror API 访问返回 401 Invalid username or password，无法读取文件体积。禁止引用任何具体 MB 数。"
+    },
+    {
+      "id": "network-limitation",
+      "tier": "unconfirmed",
+      "title": "Network limitations encountered during research",
+      "retrieved": "2026-10-15",
+      "facts": {
+        "direct_hf_failed": "https://huggingface.co/... -> TypeError: fetch failed",
+        "raw_githubusercontent_failed": "https://raw.githubusercontent.com/... -> TypeError: fetch failed",
+        "workarounds_used": ["hf-mirror.com API for HF metadata", "api.github.com for repo metadata and README (base64)"],
+        "not_sandbox_denial": "These are network reachability failures, not sandbox permission denials"
+      },
+      "used_for": ["方法论透明性"]
+    }
+  ],
+  "not_adopted": [
+    {"item": "Qwen2.5-VL-3B-Instruct bf16 on 8GB for full-page bbox", "reason": "权重本身约 7.51 GB，几乎吃满 8GB；且 license 为 qwen-research（非商用）", "source_ids": ["qwen25vl-3b"]},
+    {"item": "VLM 直接输出 bbox 作为主路径", "reason": "多篇论文与官方 issue 证明坐标不可靠", "source_ids": ["hilex-paper", "vlm-fo1", "inspectvlm", "groundingme", "qwen-coord-issue-1485"]},
+    {"item": "通用版面标签直接当 Q/W/A/E", "reason": "PP-DocLayout 类别是版面类型，不含业务角色", "source_ids": ["pp-doclayout-l"]},
+    {"item": "HiLEx 现成权重直接迁移到中文教辅", "reason": "数据集仅英文，且粒度只到 Answer_Block", "source_ids": ["hilex-paper"]},
+    {"item": "MinerU 作为版面检测依赖", "reason": "输出内容级 Markdown/JSON，不提供题目级框与配答；license NOASSERTION", "source_ids": ["mineru-repo"]},
+    {"item": "MonkeyOCR 用于本项目", "reason": "CC BY-NC-SA 4.0 非商用许可", "source_ids": ["monkeyocr"]}
+  ]
+}

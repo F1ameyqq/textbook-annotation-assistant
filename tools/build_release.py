@@ -94,9 +94,15 @@ def main() -> int:
     target = os.path.abspath(args.target)
 
     if os.path.exists(target):
-        # 安全校验：只允许删除看起来像我们的构建目录
+        # 安全校验：只允许删除看起来像我们的构建目录，且绝不删除含 .git 的目录
         if not os.path.basename(target).startswith("_release"):
             raise SystemExit(f"拒绝清空非 _release* 目录: {target}")
+        if os.path.isdir(os.path.join(target, ".git")):
+            raise SystemExit(
+                f"拒绝清空 {target}：该目录已是 git 仓库（含 .git）。\n"
+                "发布目录一旦 git init 过，就不能再用本脚本重建。\n"
+                "请改为：本脚本输出到临时目录（如 _release_build），再手动同步差异到仓库目录。"
+            )
         shutil.rmtree(target)
     os.makedirs(target, exist_ok=True)
 

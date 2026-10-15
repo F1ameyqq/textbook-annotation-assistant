@@ -1,0 +1,918 @@
+﻿== meta ==
+{
+ "task": "task-3 路线C：OCR+公式+固定规则配答基线",
+ "script": "tools/route_c_ocr.py",
+ "started_at": "2026-10-15T23:33:19+0800",
+ "finished_at": "2026-10-15T23:35:28+0800",
+ "annotation_snapshot": "data/raw/annotations/annotations_unified_snapshot.json",
+ "n_annotations": 36,
+ "box_ocr_pages": [
+  8,
+  9,
+  10
+ ],
+ "mappings_tested": {
+  "identity": "标注 page_index N 直接用 46006966_page_N.jpg（任务给的前提）",
+  "shift1": "标注 page_index N 用 46006966_page_{N-1}.jpg（资源索引 0 基 → 标注 1 基）"
+ },
+ "ocr_total_seconds": 112.99,
+ "ocr_backend_used": "rapidocr-onnxruntime 1.4.4 (CPUExecutionProvider)",
+ "gpu_used_for_ocr": false,
+ "text_is_raw_ocr_output": true,
+ "text_was_manually_corrected": false,
+ "missing_inputs": {
+  "46006966_paper_questions.jsonl": "本工作区不存在该内容导出；本报告未使用它，也未伪造其内容"
+ }
+}
+== chosen backend ==
+{
+ "backend": "rapidocr-onnxruntime 1.4.4 (PP-OCRv4 det + rec)",
+ "provider": "CPUExecutionProvider",
+ "actual_session_providers": {
+  "text_det": null,
+  "text_rec": [
+   "CPUExecutionProvider"
+  ],
+  "text_cls": null
+ },
+ "reason": "GPU 路径全部不可用（详见 gpu_attempts）；这是本机唯一可离线运行的 OCR 后端",
+ "intra_op_num_threads": 4,
+ "init_seconds": 0.63,
+ "model_downloaded_this_run": false
+}
+== gpu attempts ==
+[
+ {
+  "path": "rapidocr_onnxruntime(use_cuda=True) -> onnxruntime CUDAExecutionProvider",
+  "gpu_used": false,
+  "session_providers": {
+   "text_det": null,
+   "text_rec": [
+    "CPUExecutionProvider"
+   ],
+   "text_cls": null
+  },
+  "init_did_not_raise": true,
+  "verdict": "构造未抛异常，但实测 session providers 仍是 CPU —— use_cuda 被静默忽略（infer_engine.py::_check_cuda 在 CUDAExecutionProvider 不在 available_providers 时返回 False，然后 _get_ep_list 只放 CPUExecutionProvider）",
+  "elapsed_s": 1.07
+ },
+ {
+  "path": "paddleocr 3.7.0 + paddlepaddle 3.3.1 GPU",
+  "gpu_used": false,
+  "ran": false,
+  "not_run_reason": "paddle.device.is_compiled_with_cuda() == False、cuda_device_count == 0，本机 paddlepaddle 是 CPU 轮子，GPU 路径在编译期就不存在；且 PaddleOCR 3.x 首次运行需联网拉模型，而 PyPI/模型站不可达"
+ },
+ {
+  "path": "torch 2.11.0+cu128 直连 GPU",
+  "gpu_used": true,
+  "ran": true,
+  "scope": "仅验证 GPU 栈本身可用（矩阵乘），**未用于 OCR**",
+  "not_run_reason": "本机没有任何可离线加载的 torch OCR/版面模型，GPU 算力无法落到 OCR 上"
+ }
+]
+== torch subprocess probes ==
+{
+ "torch_only": {
+  "script": "data/derived/analysis/route_c_probe_tmp/torch_probe_clean.py",
+  "returncode": 0,
+  "stdout": "TORCH_IMPORT_OK 2.11.0+cu128 cuda_available= True\nDEVICE NVIDIA GeForce RTX 5060 Laptop GPU capability= (12, 0)\nCUDA_MATMUL_OK 910.05",
+  "stderr_tail": ""
+ },
+ "paddle_then_torch": {
+  "script": "data/derived/analysis/route_c_probe_tmp/torch_probe_paddle_first.py",
+  "returncode": 0,
+  "stdout": "TORCH_IMPORT_FAIL OSError [WinError 127] 找不到指定的程序。 Error loading \"C:\\Users\\LIHAOYANG\\AppData\\Local\\Programs\\Python\\Python311\\Lib\\site-packages\\torch\\lib\\shm.dll\" or one of its dependencies.",
+  "stderr_tail": "INFO: Could not find files for the given pattern(s).\nC:\\Users\\LIHAOYANG\\AppData\\Local\\Programs\\Python\\Python311\\Lib\\site-packages\\paddle\\utils\\cpp_extension\\extension_utils.py:712: UserWarning: No ccache found. Please be aware that recompiling all source files may be required. You can download and install ccache from: https://github.com/ccache/ccache/blob/master/doc/INSTALL.md\n  warnings.warn(warning_message)"
+ }
+}
+== network ==
+{
+ "hosts": {
+  "pypi.org": {
+   "reachable": true,
+   "seconds": 0.2
+  },
+  "files.pythonhosted.org": {
+   "reachable": true,
+   "seconds": 0.34
+  }
+ },
+ "pip_download_probes": [
+  "pip download --no-deps onnxruntime-gpu==1.25.1 ：180s 未返回，被强制终止",
+  "pip download --no-deps --timeout 8 --retries 1 six ：90s 未返回，被强制终止"
+ ],
+ "conclusion": "PyPI 不可达/极慢：无法离线安装 onnxruntime-gpu、pix2text 或 rapidocr_paddle，因此本机 OCR 只能落在 CPUExecutionProvider 上。"
+}
+== confidence ==
+{
+ "boxes_total_both_mappings": 42,
+ "boxes_with_text": 35,
+ "boxes_no_text": 7,
+ "boxes_error": 0,
+ "box_mean_score_avg": 0.9298,
+ "box_mean_score_min": 0.6354,
+ "box_mean_score_max": 0.9999,
+ "box_mean_score_lt_0.9": 9,
+ "box_mean_score_lt_0.6": 0,
+ "line_total": 99,
+ "line_score_avg": 0.9299,
+ "line_score_median": 0.9543,
+ "line_score_lt_0.6": 1,
+ "line_score_lt_0.9": 29,
+ "line_score_min": 0.5762,
+ "fullpage_lines_total": 126,
+ "fullpage_mean_score_avg": 0.9481,
+ "by_mapping_identity": {
+  "boxes": 21,
+  "boxes_with_text": 14,
+  "boxes_no_text": 7,
+  "box_mean_score_avg": 0.9048,
+  "line_total": 39,
+  "line_score_avg": 0.9009,
+  "line_score_lt_0.6": 1
+ },
+ "by_mapping_shift1": {
+  "boxes": 21,
+  "boxes_with_text": 21,
+  "boxes_no_text": 0,
+  "box_mean_score_avg": 0.9464,
+  "line_total": 60,
+  "line_score_avg": 0.9488,
+  "line_score_lt_0.6": 0
+ }
+}
+== mapping diagnosis ==
+{
+ "identity": {
+  "description": "标注 page_index N 直接用 46006966_page_N.jpg（任务给的前提）",
+  "boxes": 21,
+  "boxes_with_text": 14,
+  "boxes_no_text": 7,
+  "choice_boxes": 5,
+  "choice_boxes_with_AB_options": 0,
+  "choice_boxes_no_text": 2,
+  "question_boxes": 16,
+  "question_boxes_leading_number_matches_order": 0,
+  "question_boxes_with_leading_number": 4
+ },
+ "shift1": {
+  "description": "标注 page_index N 用 46006966_page_{N-1}.jpg（资源索引 0 基 → 标注 1 基）",
+  "boxes": 21,
+  "boxes_with_text": 21,
+  "boxes_no_text": 0,
+  "choice_boxes": 5,
+  "choice_boxes_with_AB_options": 5,
+  "choice_boxes_no_text": 0,
+  "question_boxes": 16,
+  "question_boxes_leading_number_matches_order": 7,
+  "question_boxes_with_leading_number": 8
+ }
+}
+== geometry ==
+{
+ "8": {
+  "identity": {
+   "image": "46006966_page_8.jpg",
+   "image_size": [
+    1176,
+    1681
+   ],
+   "n_rects": 12,
+   "max_bbox_x2": 1181.1,
+   "max_bbox_y2": 1552.6,
+   "max_x_ratio_of_image": 1.0043,
+   "max_y_ratio_of_image": 0.9236,
+   "fits_image_bounds": true,
+   "orientation": "portrait_page"
+  },
+  "shift1": {
+   "image": "46006966_page_7.jpg",
+   "image_size": [
+    1178,
+    1673
+   ],
+   "n_rects": 12,
+   "max_bbox_x2": 1181.1,
+   "max_bbox_y2": 1552.6,
+   "max_x_ratio_of_image": 1.0026,
+   "max_y_ratio_of_image": 0.9281,
+   "fits_image_bounds": true,
+   "orientation": "portrait_page"
+  }
+ },
+ "9": {
+  "identity": {
+   "image": "46006966_page_9.jpg",
+   "image_size": [
+    1179,
+    1671
+   ],
+   "n_rects": 7,
+   "max_bbox_x2": 1148.8,
+   "max_bbox_y2": 1347.3,
+   "max_x_ratio_of_image": 0.9744,
+   "max_y_ratio_of_image": 0.8063,
+   "fits_image_bounds": true,
+   "orientation": "portrait_page"
+  },
+  "shift1": {
+   "image": "46006966_page_8.jpg",
+   "image_size": [
+    1176,
+    1681
+   ],
+   "n_rects": 7,
+   "max_bbox_x2": 1148.8,
+   "max_bbox_y2": 1347.3,
+   "max_x_ratio_of_image": 0.9769,
+   "max_y_ratio_of_image": 0.8015,
+   "fits_image_bounds": true,
+   "orientation": "portrait_page"
+  }
+ },
+ "10": {
+  "identity": {
+   "image": "46006966_page_10.jpg",
+   "image_size": [
+    1175,
+    1674
+   ],
+   "n_rects": 2,
+   "max_bbox_x2": 1152.5,
+   "max_bbox_y2": 393.4,
+   "max_x_ratio_of_image": 0.9808,
+   "max_y_ratio_of_image": 0.235,
+   "fits_image_bounds": true,
+   "orientation": "portrait_page"
+  },
+  "shift1": {
+   "image": "46006966_page_9.jpg",
+   "image_size": [
+    1179,
+    1671
+   ],
+   "n_rects": 2,
+   "max_bbox_x2": 1152.5,
+   "max_bbox_y2": 393.4,
+   "max_x_ratio_of_image": 0.9775,
+   "max_y_ratio_of_image": 0.2354,
+   "fits_image_bounds": true,
+   "orientation": "portrait_page"
+  }
+ },
+ "234": {
+  "identity": {
+   "image": "46006966_page_234.jpg",
+   "image_size": [
+    3465,
+    1615
+   ],
+   "n_rects": 15,
+   "max_bbox_x2": 594.1,
+   "max_bbox_y2": 1164.6,
+   "max_x_ratio_of_image": 0.1715,
+   "max_y_ratio_of_image": 0.7211,
+   "fits_image_bounds": true,
+   "orientation": "landscape_spread"
+  },
+  "shift1": {
+   "image": "46006966_page_233.jpg",
+   "image_size": [
+    3467,
+    1615
+   ],
+   "n_rects": 15,
+   "max_bbox_x2": 594.1,
+   "max_bbox_y2": 1164.6,
+   "max_x_ratio_of_image": 0.1714,
+   "max_y_ratio_of_image": 0.7211,
+   "fits_image_bounds": true,
+   "orientation": "landscape_spread"
+  }
+ }
+}
+== cross check ==
+-- identity {"boxes_compared": 21, "mean_similarity": 0.8226, "boxes_similarity_ge_0.9": 8, "boxes_similarity_lt_0.5": 0, "boxes_box_text_but_zero_fullpage_inside": 0, "boxes_no_box_text_but_fullpage_inside": 0}
+-- shift1 {"boxes_compared": 21, "mean_similarity": 0.9413, "boxes_similarity_ge_0.9": 18, "boxes_similarity_lt_0.5": 0, "boxes_box_text_but_zero_fullpage_inside": 0, "boxes_no_box_text_but_fullpage_inside": 0}
+== boxes ==
+### mapping = identity
+  p8 choice   ord 1 <- 46006966_page_8.jpg      status=ok                lines=2 mean=0.927778 ink=0.0292 up=1 clip=True ABopt=False lead=None leadMatch=False
+         '教材受式题' 0.855793
+         '常数项' 0.999762
+  p8 choice   ord 2 <- 46006966_page_8.jpg      status=no_text_detected  lines=0 mean=None ink=0.001 up=2 clip=True ABopt=False lead=None leadMatch=False
+  p8 choice   ord 7 <- 46006966_page_8.jpg      status=no_text_detected  lines=0 mean=None ink=0.0 up=2 clip=True ABopt=False lead=None leadMatch=False
+  p8 question ord 1 <- 46006966_page_8.jpg      status=ok                lines=3 mean=0.970105 ink=0.0664 up=1 clip=True ABopt=False lead=None leadMatch=False
+         '整体思想若m是方程x²一2x一1=0的根，则m²+一的值为' 0.91598
+         '教材变式题' 0.997829
+         '把下面的方程化成一元二次方程的一般形式，并写出其二次项系数、一次项系数和' 0.996505
+  p8 question ord 2 <- 46006966_page_8.jpg      status=ok                lines=2 mean=0.85664 ink=0.019 up=2 clip=True ABopt=False lead=None leadMatch=False
+         '(2）（x+2)²-2x（x-2)=4x+4.' 0.876929
+         '（1）（x+4)（x-3)=12;' 0.836352
+  p8 question ord 3 <- 46006966_page_8.jpg      status=no_text_detected  lines=0 mean=None ink=0.0 up=1 clip=True ABopt=False lead=None leadMatch=False
+  p8 question ord 4 <- 46006966_page_8.jpg      status=no_text_detected  lines=0 mean=None ink=0.0 up=1 clip=True ABopt=False lead=None leadMatch=False
+  p8 question ord 5 <- 46006966_page_8.jpg      status=ok                lines=4 mean=0.934711 ink=0.0349 up=1 clip=True ABopt=False lead=2 leadMatch=False
+         '2已知关于x的方程（m一1）x' 0.968048
+         'm²+1' 0.88421
+         '十（m一2）x一1=0，回答下面的问题：' 0.919579
+         '（1）若方程是一元二次方程，求m的值.' 0.967008
+  p8 question ord 5 <- 46006966_page_8.jpg      status=no_text_detected  lines=0 mean=None ink=0.0 up=2 clip=True ABopt=False lead=None leadMatch=False
+  p8 question ord 6 <- 46006966_page_8.jpg      status=ok                lines=2 mean=0.965915 ink=0.0312 up=2 clip=True ABopt=False lead=None leadMatch=False
+         '科素养，拓展思维' 0.934203
+         '比较M与N的' 0.997628
+  p8 question ord 6 <- 46006966_page_8.jpg      status=ok                lines=2 mean=0.840686 ink=0.0184 up=1 clip=True ABopt=False lead=1 leadMatch=False
+         '1）岩方程是一元二伙刀性，水流的值：' 0.700427
+         '（2）若方程是一元一次方程，则m的值是否存在？若存在，请求出m的值，并求出方程的解.' 0.980945
+  p8 question ord 7 <- 46006966_page_8.jpg      status=no_text_detected  lines=0 mean=None ink=0.0 up=1 clip=True ABopt=False lead=None leadMatch=False
+  p9 choice   ord 8 <- 46006966_page_9.jpg      status=ok                lines=2 mean=0.635444 ink=0.0416 up=2 clip=True ABopt=False lead=None leadMatch=False
+         '弟下保时' 0.57624
+         '直接升平万法' 0.694648
+  p9 question ord 8 <- 46006966_page_9.jpg      status=ok                lines=3 mean=0.957383 ink=0.0653 up=1 clip=True ABopt=False lead=1 leadMatch=False
+         '1.2' 0.997959
+         '一元二次方程的解法' 0.998582
+         '等4用0' 0.875608
+  p9 question ord 9 <- 46006966_page_9.jpg      status=ok                lines=2 mean=0.995119 ink=0.0408 up=1 clip=True ABopt=False lead=None leadMatch=False
+         '基础知识过关' 0.993418
+         '巩固新授知识，夯实基础' 0.99682
+  p9 question ord10 <- 46006966_page_9.jpg      status=ok                lines=5 mean=0.865962 ink=0.069 up=1 clip=True ABopt=True lead=None leadMatch=False
+         '如果关于x的方程（x一9）²=m十3可以用直接开平方法求解，那么m的取值范围是' 0.964143
+         'A.m>0' 0.88539
+         'B.m≥0' 0.763553
+         'C.m>-3' 0.895117
+         'D.m>-3' 0.821609
+  p9 question ord11 <- 46006966_page_9.jpg      status=ok                lines=8 mean=0.891404 ink=0.0445 up=1 clip=True ABopt=True lead=2 leadMatch=False
+         '2如果x=4是关于x的一元二次方程x²一3r=a²的一个根，那么常数a的值为' 0.95517
+         'A.2' 0.960042
+         'B.—2' 0.800507
+         'C.±2' 0.95485
+         'D.±4' 0.816369
+         '3（1）[2025贵州]方程x²-1=0的根为' 0.948184
+         '(2)' 0.742648
+         '[2025常熟市段考]一元二次方程（x一1）²=2的解为' 0.953464
+  p9 question ord12 <- 46006966_page_9.jpg      status=ok                lines=2 mean=0.882611 ink=0.0053 up=1 clip=True ABopt=False lead=None leadMatch=False
+         '（3）3（x+4）²=15；' 0.867618
+         '（4）（2x+3）²=（3x+2）²' 0.897605
+  p9 question ord13 <- 46006966_page_9.jpg      status=no_text_detected  lines=0 mean=None ink=0.0071 up=1 clip=True ABopt=False lead=None leadMatch=False
+  p10 choice   ord14 <- 46006966_page_10.jpg     status=ok                lines=1 mean=0.999944 ink=0.0049 up=2 clip=True ABopt=False lead=None leadMatch=False
+         '为' 0.999944
+  p10 question ord14 <- 46006966_page_10.jpg     status=ok                lines=1 mean=0.943273 ink=0.0546 up=1 clip=True ABopt=False lead=None leadMatch=False
+         '如果关于x的一元二次方程ax²=b（ab>0）的两个根分别是x=m十1，x2=2m一4，那么一的值' 0.943273
+### mapping = shift1
+  p8 choice   ord 1 <- 46006966_page_7.jpg      status=ok                lines=4 mean=0.883175 ink=0.0161 up=1 clip=True ABopt=True lead=None leadMatch=False
+         'A.-4,2' 0.840758
+         'B.-4x，2' 0.887206
+         'C.4x，-2' 0.911561
+         'D.3x²，2' 0.893175
+  p8 choice   ord 2 <- 46006966_page_7.jpg      status=ok                lines=4 mean=0.964773 ink=0.0152 up=2 clip=True ABopt=True lead=None leadMatch=False
+         'A.0' 0.940946
+         'B.2' 0.995726
+         'C.4' 0.995595
+         'D. 6' 0.926827
+  p8 choice   ord 7 <- 46006966_page_7.jpg      status=ok                lines=4 mean=0.938903 ink=0.0137 up=2 clip=True ABopt=True lead=None leadMatch=False
+         'A.0' 0.908279
+         'B.±3' 0.981883
+         'C. 3' 0.985997
+         'D. —3' 0.879452
+  p8 question ord 1 <- 46006966_page_7.jpg      status=ok                lines=1 mean=0.941556 ink=0.0355 up=1 clip=True ABopt=False lead=None leadMatch=False
+         '将一元二次方程一3x²-2=一4x化成一般形式ax²+bx十c=0（a>0）后，一次项和常数项分别是' 0.941556
+  p8 question ord 2 <- 46006966_page_7.jpg      status=ok                lines=1 mean=0.958003 ink=0.0543 up=2 clip=True ABopt=False lead=2 leadMatch=True
+         '2[2025苏州期中]若关于x的一元二次方程x²一kx十8=0有一根为2，则k的值是' 0.958003
+  p8 question ord 3 <- 46006966_page_7.jpg      status=ok                lines=3 mean=0.909263 ink=0.0464 up=1 clip=True ABopt=False lead=3 leadMatch=True
+         '3)=0；5' 0.796935
+         'mx²一3x十5=2x²（m≠0）.其中，一定属于一元二次方程的是' 0.958618
+         '（填序号）.' 0.972237
+  p8 question ord 4 <- 46006966_page_7.jpg      status=ok                lines=1 mean=0.950763 ink=0.0634 up=1 clip=True ABopt=False lead=None leadMatch=False
+         '[2025苏州工业园区期中]已知关于x的方程x²十mx一3=0的一个根是1，则m的值为' 0.950763
+  p8 question ord 5 <- 46006966_page_7.jpg      status=ok                lines=3 mean=0.97461 ink=0.0779 up=1 clip=True ABopt=False lead=5 leadMatch=True
+         '5[2025新疆]如图，小明在数学综合实践活动中，利用一面墙（墙足够长）和24m' 0.969595
+         '长的围栏围成一个面积为40m²的' 0.966006
+         '的矩形场地.设矩形的宽为xm，则可列方程为' 0.988228
+  p8 question ord 5 <- 46006966_page_7.jpg      status=ok                lines=1 mean=0.954257 ink=0.0648 up=2 clip=True ABopt=False lead=None leadMatch=False
+         'xm' 0.954257
+  p8 question ord 6 <- 46006966_page_7.jpg      status=ok                lines=3 mean=0.996565 ink=0.0304 up=2 clip=True ABopt=False lead=5 leadMatch=False
+         '5' 0.998963
+         'm' 0.997694
+         '3m' 0.993039
+  p8 question ord 6 <- 46006966_page_7.jpg      status=ok                lines=8 mean=0.989867 ink=0.0867 up=1 clip=True ABopt=False lead=6 leadMatch=True
+         '6' 0.995304
+         '教材变式题' 0.997457
+         '根据题意列方程：' 0.999398
+         '（1）已知两个连续奇数的平方和为74，求这两个奇数' 0.998336
+         '（2）某网店售卖的大熊猫玩偶原本标价为50元/个，因市场波动，经过两次降价后标价变为40元' 0.993739
+         '个.求大熊猫玩偶两次降价的平均降价率，' 0.964681
+         '（3）如图，一架5m长的梯子斜靠在墙上，梯子的底端与墙的距离是3m.如果梯子底端向右滑动' 0.992602
+         '的距离与梯子顶端向下滑动的距离相等，求该梯子底端滑动的距离.' 0.977418
+  p8 question ord 7 <- 46006966_page_7.jpg      status=ok                lines=1 mean=0.955663 ink=0.0373 up=1 clip=True ABopt=False lead=None leadMatch=False
+         '已知关于x的一元二次方程（m一3）x²十m²x=9x十5化为一般形式后不含一次项，则m的值为' 0.955663
+  p9 choice   ord 8 <- 46006966_page_8.jpg      status=ok                lines=4 mean=0.886879 ink=0.0159 up=2 clip=True ABopt=True lead=None leadMatch=False
+         'C. 7' 0.899679
+         'D.-7或7' 0.924417
+         'A.—7' 0.84455
+         'B.0' 0.878869
+  p9 question ord 8 <- 46006966_page_8.jpg      status=ok                lines=1 mean=0.899725 ink=0.0307 up=1 clip=True ABopt=False lead=None leadMatch=False
+         '（易错题）若关于x的一元二次方程（a一7）x²十x十la|一7=0的一个根是x=0，则实数a的值为' 0.899725
+  p9 question ord 9 <- 46006966_page_8.jpg      status=ok                lines=2 mean=0.962327 ink=0.0378 up=1 clip=True ABopt=False lead=None leadMatch=False
+         '[2025常熟市一模]已知x=a是关于x的一元二次方程x²一3x十1=0的一个根，则代数式2a' 0.953477
+         '6a十3的值为' 0.971177
+  p9 question ord10 <- 46006966_page_8.jpg      status=ok                lines=2 mean=0.966241 ink=0.034 up=1 clip=True ABopt=False lead=None leadMatch=False
+         '整体思想若m是方程x²-2x一1=0的根，则m²+' 0.932515
+         '的值为' 0.999968
+  p9 question ord11 <- 46006966_page_8.jpg      status=ok                lines=6 mean=0.961588 ink=0.0328 up=1 clip=True ABopt=False lead=11 leadMatch=True
+         '11' 0.998847
+         '教材变式题' 0.998364
+         '把下面的方程化成一元二次方程的一般形式，并写出其二次项系数、一次项系数和' 0.996885
+         '常数项' 0.999758
+         '（1）（x+4）（x-3）=12；' 0.885809
+         '（2）（x+2）²-2x（x-2）=4.x+4.' 0.889865
+  p9 question ord12 <- 46006966_page_8.jpg      status=ok                lines=4 mean=0.964635 ink=0.0379 up=1 clip=True ABopt=False lead=12 leadMatch=True
+         '12已知关于x的方程（m一1）x' 0.966919
+         'm²+1+（m-2）x一1=0，回答下面的问题：' 0.91005
+         '（1）若方程是一元二次方程，求m的值' 0.994368
+         '（2）若方程是一元一次方程，则m的值是否存在？若存在，请求出m的值，并求出方程的解.' 0.987204
+  p9 question ord13 <- 46006966_page_8.jpg      status=ok                lines=2 mean=0.905735 ink=0.0181 up=1 clip=True ABopt=False lead=13 leadMatch=True
+         '13若x。是方程ax²+2x十c=0（a≠0）的一个根，设M=1-ac，N=（ax。十1）²，试比较M与N的' 0.935612
+         '大小.' 0.875858
+  p10 choice   ord14 <- 46006966_page_9.jpg      status=ok                lines=4 mean=0.936143 ink=0.0248 up=2 clip=True ABopt=True lead=None leadMatch=False
+         'A. m>0' 0.915924
+         'B. m≥0' 0.960928
+         'C. m>-3' 0.936123
+         'D. m≥-3' 0.931597
+  p10 question ord14 <- 46006966_page_9.jpg      status=ok                lines=1 mean=0.973611 ink=0.0581 up=1 clip=True ABopt=False lead=None leadMatch=False
+         '如果关于x的方程（x一9）²=m十3可以用直接开平方法求解，那么m的取值范围是' 0.973611
+== fullpage lines ==
+--- 46006966_page_7.jpg 41 lines mean 0.964639 5.54s
+   0.986 第1章
+   0.997 一元二次方程
+   0.999 1.1
+   0.999 一元二次方程的概念
+   0.998 基础知识过关
+   0.998 巩固新授知识，夯实基础
+   0.938 1将一元二次方程一3x²-2=一4x化成一般形式ax²+bx十c=0（a>0）后，一次项和常数项分别是
+   0.826 A.-4,2
+   0.851 B.-4x，2
+   0.899 C.4x，-2
+   0.902 D.3x²，2
+   0.944 2[2025苏州期中]若关于x的一元二次方程x²一kx十8=0有一根为2，则k的值是
+   0.984 A.0
+   0.984 B.2
+   0.986 C.4
+   0.996 D.6
+   0.936 3有下列方程：①2x²一
+   0.999 3
+   0.883 =0；②（x-2）²=2x（x-2）;③cx²+bx+a=0;④（x-1）（2x+
+   0.923 3)=0；5mx²一3x十5=2x²（m≠0）.其中，一定属于一元二次方程的是
+   0.951 (填序号).
+   0.952 4[2025苏州工业园区期中]已知关于x的方程x²十mx一3=0的一个根是1，则m的值为
+   0.974 5[2025新疆]如图，小明在数学综合实践活动中，利用一面墙（墙足够长）和24m
+   0.987 长的围栏围成一个面积为40m²的矩形场地.设矩形的宽为xm，则可列方程为
+   0.919 xm
+   0.983 （第5题）
+   0.999 6教材变式题根据题意列方程：
+   0.983 （1）已知两个连续奇数的平方和为74，求这两个奇数.
+   0.993 （2）某网店售卖的大熊猫玩偶原本标价为50元/个，因市场波动，经过两次降价后标价变为40元
+   0.984 个.求大熊猫玩偶两次降价的平均降价率.
+   0.992 （3）如图，一架5m长的梯子斜靠在墙上，梯子的底端与墙的距离是3m.如果梯子底端向右滑动
+   0.993 的距离与梯子顶端向下滑动的距离相等，求该梯子底端滑动的距离.
+   0.997 5m
+   0.994 3m
+   0.976 （第6题）
+   0.995 综合能力进阶
+   0.999 培养关键能力，综合进阶
+   0.958 7已知关于x的一元二次方程（m一3）x²十m²x=9x十5化为一般形式后不含一次项，则m的值为
+   0.975 B.±3
+   0.991 C.3
+   0.927 D.-3
+--- 46006966_page_8.jpg 24 lines mean 0.946891 3.55s
+   0.992 第1章一元二次方程
+   0.896 8（易错题）若关于x的一元二次方程（a-7）x²+x十la|-7=0的一个根是x=0，则实数α的值为
+   0.956 B.0
+   0.992 C.7
+   0.972 D.-7或7
+   0.858 A.-7
+   0.955 9[2025常熟市一模]已知x=a是关于x的一元二次方程x²—3x十1=0的一个根，则代数式2a²一
+   0.965 6a十3的值为
+   1.000 10
+   0.951 整体思想若m是方程x²-2x-1=0的根，则m²
+   1.000 的值为
+   0.882 m
+   0.937 11
+   0.997 教材变式题把下面的方程化成一元二次方程的一般形式，并写出其二次项系数、一次项系数和
+   0.927 常数项.
+   0.842 （1）（x+4)（x-3）=12；
+   0.876 （2）（x+2）²-2x（x-2)=4x+4.
+   0.903 12已知关于x的方程（m-1）x㎡²+1+（m-2）x-1=0，回答下面的问题：
+   0.964 （1）若方程是一元二次方程，求m的值.
+   0.982 （2）若方程是一元一次方程，则m的值是否存在？若存在，请求出m的值，并求出方程的解.
+   0.993 核心素养提升
+   0.999 提升学科素养，拓展思维
+   0.927 13若x。是方程ax²+2x十c=0（a≠0）的一个根，设M=1-ac，N=（ax。+1）²，试比较M与N的
+   0.960 大小.
+--- 46006966_page_9.jpg 38 lines mean 0.9481 3.59s
+   0.994 课时作业本数学（苏科版）九年级上
+   0.998 1.2
+   0.999 一元二次方程的解法
+   0.522 批
+   0.998 第1课时直接开平方法
+   0.999 基础知识过关
+   0.999 巩固新授知识，夯实基础
+   0.961 1如果关于x的方程（x一9）²=m十3可以用直接开平方法求解，那么㎡的取值范围是
+   0.978 A.m>0
+   0.972 B.m≥0
+   0.969 C.m>-3
+   0.927 D.m≥-3
+   0.950 2如果x=4是关于x的一元二次方程x²一3r=a²的一个根，那么常数α的值为
+   0.985 A.2
+   0.936 B.-2
+   0.987 C.±2
+   0.938 D.±4
+   0.945 3（1）[2025贵州]方程x²-1=0的根为
+   0.941 （2）[2025常熟市段考]一元二次方程（x一1）²=2的解为
+   1.000 4用直接开平方法解下列方程：
+   0.767 （1）
+   0.904 (2）9x²-0.16=0；
+   0.847 (3）3（x+4)²=15；
+   0.884 （4）（2x+3）²=（3x+2）².
+   0.985 5
+   0.971 新考向条件开放题已知关于x的一元二次方程（x一2）²=16一m，请你选取一个适当的m的值，使
+   0.993 方程能用直接开平方法求解，并解这个方程.
+   0.996 综合能力进阶
+   1.000 培养关键能力，综合进阶
+   0.928 6[2025张家港市期中]已知关于x的一元二次方程（a-1)x²+x十a²-1=0的一个根是x=0，则
+   0.909 a的值为
+   0.995 A.1
+   0.919 B.-1
+   0.980 C.1或-1
+   0.985 1
+   0.973 D.
+   0.999 2
+   0.998 6
+--- 46006966_page_10.jpg 23 lines mean 0.932848 6.45s
+   0.995 第1章一元二次方程
+   0.925 7方程x²-√49=0的根是
+   0.851 A.x1=-7,x2=7
+   0.915 B.x=x2=7
+   0.938 C.x=x2=√7
+   0.899 D.x=√7，x2=-√7
+   0.952 8已知关于x的一元二次方程（2x+5）²+3n一4=0有实数根，则n的取值范围是
+   0.940 9如果关于x的一元二次方程ax²=b（ab>0）的两个根分别是x=m十1，x2=2m一4，那么的值
+   0.974 a
+   1.000 为
+   1.000 10用直接开平方法解下列方程：
+   0.801 （2）
+   0.879 （x-5）²-16=0;
+   0.999 2
+   0.871 （3）（y+0.3)（y-0.3)-0.16=0；
+   0.819 （4）4（2m-3)²=9（m-1）².
+   0.883 11整体思想若（a²+b²-1)²=17，求a²+6²的值.
+   0.991 核心素养提升
+   0.998 提升学科素养，拓展思维
+   0.999 12
+   0.923 新考向新定义题定义[x]为不超过实数x的最大整数，如[1.8]=1，[-1.4]=-2，[-3]=一3.
+   0.913 函数y=[x]在-2≤x<2范围内的图象如图所示，试求当-2≤x<2时，[x]=
+   0.990 （第12题）
+== formula stats ==
+{
+ "fullpage_page_7": {
+  "n_lines": 41,
+  "n_chars": 698,
+  "pattern_counts": {
+   "Unicode 上标数字": 13,
+   "Unicode 数学符号": 2,
+   "拉丁字母": 65,
+   "阿拉伯数字": 86,
+   "等号": 10
+  },
+  "has_real_latex_markup": false,
+  "math_like_lines": 16,
+  "math_like_line_ratio": 0.3902
+ },
+ "fullpage_page_8": {
+  "n_lines": 24,
+  "n_chars": 447,
+  "pattern_counts": {
+   "Unicode 上标数字": 9,
+   "Unicode 数学符号": 1,
+   "拉丁字母": 51,
+   "阿拉伯数字": 56,
+   "等号": 11
+  },
+  "has_real_latex_markup": false,
+  "math_like_lines": 8,
+  "math_like_line_ratio": 0.3333
+ },
+ "fullpage_page_9": {
+  "n_lines": 38,
+  "n_chars": 483,
+  "pattern_counts": {
+   "Unicode 上标数字": 12,
+   "Unicode 数学符号": 4,
+   "拉丁字母": 41,
+   "阿拉伯数字": 70,
+   "等号": 11
+  },
+  "has_real_latex_markup": false,
+  "math_like_lines": 11,
+  "math_like_line_ratio": 0.2895
+ },
+ "fullpage_page_10": {
+  "n_lines": 23,
+  "n_chars": 401,
+  "pattern_counts": {
+   "Unicode 上标数字": 11,
+   "Unicode 数学符号": 6,
+   "拉丁字母": 43,
+   "阿拉伯数字": 73,
+   "等号": 22
+  },
+  "has_real_latex_markup": false,
+  "math_like_lines": 13,
+  "math_like_line_ratio": 0.5652
+ },
+ "box_ocr_identity": {
+  "n_lines": 39,
+  "n_chars": 581,
+  "pattern_counts": {
+   "Unicode 上标数字": 13,
+   "Unicode 数学符号": 3,
+   "拉丁字母": 58,
+   "阿拉伯数字": 70,
+   "等号": 14
+  },
+  "has_real_latex_markup": false,
+  "math_like_lines": 14,
+  "math_like_line_ratio": 0.359
+ },
+ "box_ocr_shift1": {
+  "n_lines": 60,
+  "n_chars": 1058,
+  "pattern_counts": {
+   "Unicode 上标数字": 19,
+   "Unicode 数学符号": 5,
+   "拉丁字母": 119,
+   "阿拉伯数字": 126,
+   "等号": 19
+  },
+  "has_real_latex_markup": false,
+  "math_like_lines": 23,
+  "math_like_line_ratio": 0.3833
+ }
+}
+== formula failure samples ==
+[
+ {
+  "file": "46006966_page_9.jpg",
+  "text": "批",
+  "score": 0.521679,
+  "flags": {
+   "has_superscript_glyph": false,
+   "has_math_symbol": false,
+   "has_caret_or_latex": false,
+   "low_score_lt_085": true
+  }
+ },
+ {
+  "file": "46006966_page_9.jpg",
+  "text": "（1）",
+  "score": 0.766987,
+  "flags": {
+   "has_superscript_glyph": false,
+   "has_math_symbol": false,
+   "has_caret_or_latex": false,
+   "low_score_lt_085": true
+  }
+ },
+ {
+  "file": "46006966_page_10.jpg",
+  "text": "（2）",
+  "score": 0.800931,
+  "flags": {
+   "has_superscript_glyph": false,
+   "has_math_symbol": false,
+   "has_caret_or_latex": false,
+   "low_score_lt_085": true
+  }
+ },
+ {
+  "file": "46006966_page_10.jpg",
+  "text": "（4）4（2m-3)²=9（m-1）².",
+  "score": 0.819281,
+  "flags": {
+   "has_superscript_glyph": true,
+   "has_math_symbol": false,
+   "has_caret_or_latex": false,
+   "low_score_lt_085": true
+  }
+ },
+ {
+  "file": "46006966_page_7.jpg",
+  "text": "A.-4,2",
+  "score": 0.826143,
+  "flags": {
+   "has_superscript_glyph": false,
+   "has_math_symbol": false,
+   "has_caret_or_latex": false,
+   "low_score_lt_085": true
+  }
+ },
+ {
+  "file": "46006966_page_8.jpg",
+  "text": "（1）（x+4)（x-3）=12；",
+  "score": 0.841618,
+  "flags": {
+   "has_superscript_glyph": false,
+   "has_math_symbol": false,
+   "has_caret_or_latex": false,
+   "low_score_lt_085": true
+  }
+ },
+ {
+  "file": "46006966_page_9.jpg",
+  "text": "(3）3（x+4)²=15；",
+  "score": 0.84729,
+  "flags": {
+   "has_superscript_glyph": true,
+   "has_math_symbol": false,
+   "has_caret_or_latex": false,
+   "low_score_lt_085": true
+  }
+ },
+ {
+  "file": "46006966_page_8.jpg",
+  "text": "（2）（x+2）²-2x（x-2)=4x+4.",
+  "score": 0.875901,
+  "flags": {
+   "has_superscript_glyph": true,
+   "has_math_symbol": false,
+   "has_caret_or_latex": false,
+   "low_score_lt_085": false
+  }
+ },
+ {
+  "file": "46006966_page_10.jpg",
+  "text": "（x-5）²-16=0;",
+  "score": 0.879285,
+  "flags": {
+   "has_superscript_glyph": true,
+   "has_math_symbol": false,
+   "has_caret_or_latex": false,
+   "low_score_lt_085": false
+  }
+ },
+ {
+  "file": "46006966_page_7.jpg",
+  "text": "=0；②（x-2）²=2x（x-2）;③cx²+bx+a=0;④（x-1）（2x+",
+  "score": 0.882798,
+  "flags": {
+   "has_superscript_glyph": true,
+   "has_math_symbol": false,
+   "has_caret_or_latex": false,
+   "low_score_lt_085": false
+  }
+ },
+ {
+  "file": "46006966_page_10.jpg",
+  "text": "11整体思想若（a²+b²-1)²=17，求a²+6²的值.",
+  "score": 0.883066,
+  "flags": {
+   "has_superscript_glyph": true,
+   "has_math_symbol": false,
+   "has_caret_or_latex": false,
+   "low_score_lt_085": false
+  }
+ },
+ {
+  "file": "46006966_page_9.jpg",
+  "text": "（4）（2x+3）²=（3x+2）².",
+  "score": 0.88356,
+  "flags": {
+   "has_superscript_glyph": true,
+   "has_math_symbol": false,
+   "has_caret_or_latex": false,
+   "low_score_lt_085": false
+  }
+ },
+ {
+  "file": "46006966_page_8.jpg",
+  "text": "8（易错题）若关于x的一元二次方程（a-7）x²+x十la|-7=0的一个根是x=0，则实数α的值为",
+  "score": 0.896036,
+  "flags": {
+   "has_superscript_glyph": true,
+   "has_math_symbol": false,
+   "has_caret_or_latex": false,
+   "low_score_lt_085": false
+  }
+ },
+ {
+  "file": "46006966_page_10.jpg",
+  "text": "D.x=√7，x2=-√7",
+  "score": 0.898714,
+  "flags": {
+   "has_superscript_glyph": false,
+   "has_math_symbol": true,
+   "has_caret_or_latex": false,
+   "low_score_lt_085": false
+  }
+ },
+ {
+  "file": "46006966_page_7.jpg",
+  "text": "D.3x²，2",
+  "score": 0.901832,
+  "flags": {
+   "has_superscript_glyph": true,
+   "has_math_symbol": false,
+   "has_caret_or_latex": false,
+   "low_score_lt_085": false
+  }
+ }
+]
+== pairing ==
+{
+ "n_questions": 14,
+ "has_question": 14,
+ "has_choice": 5,
+ "has_answer": 14,
+ "has_analysis": 1,
+ "question_and_answer": 14,
+ "question_answer_analysis": 1,
+ "question_completeness": "14/14",
+ "choice_completeness": "5/14",
+ "answer_completeness": "14/14",
+ "analysis_completeness": "1/14",
+ "orders_with_question_split_across_rects": [
+  5,
+  6
+ ],
+ "orders_missing_analysis": [
+  1,
+  2,
+  3,
+  4,
+  5,
+  6,
+  7,
+  8,
+  9,
+  11,
+  12,
+  13,
+  14
+ ],
+ "orders_missing_choice": [
+  3,
+  4,
+  5,
+  6,
+  9,
+  10,
+  11,
+  12,
+  13
+ ],
+ "unparsable_order_rect_ids": []
+}
+  ord 1 q=1 c=1 a=1 ana=0 qpages=[8] apages=[234]
+  ord 2 q=1 c=1 a=1 ana=0 qpages=[8] apages=[234]
+  ord 3 q=1 c=0 a=1 ana=0 qpages=[8] apages=[234]
+  ord 4 q=1 c=0 a=1 ana=0 qpages=[8] apages=[234]
+  ord 5 q=2 c=0 a=1 ana=0 qpages=[8] apages=[234]
+  ord 6 q=2 c=0 a=1 ana=0 qpages=[8] apages=[234]
+  ord 7 q=1 c=1 a=1 ana=0 qpages=[8] apages=[234]
+  ord 8 q=1 c=1 a=1 ana=0 qpages=[9] apages=[234]
+  ord 9 q=1 c=0 a=1 ana=0 qpages=[9] apages=[234]
+  ord10 q=1 c=0 a=1 ana=1 qpages=[9] apages=[234]
+  ord11 q=1 c=0 a=1 ana=0 qpages=[9] apages=[234]
+  ord12 q=1 c=0 a=1 ana=0 qpages=[9] apages=[234]
+  ord13 q=1 c=0 a=1 ana=0 qpages=[9] apages=[234]
+  ord14 q=1 c=1 a=1 ana=0 qpages=[10] apages=[234]
+== probe page234 ==
+alignment_trusted: {'identity': False, 'shift1': True}
+identity（page_234.jpg）下这 15 个框落在无关正文上，OCR 只得到 'L'/'3.'/'240,'/'理'/'为（1' 之类碎片，已判定不可用。shift1（page_233.jpg）下则可语义校验通过：answer ord1='B'、ord2='D'、ord3='④'、ord7='D'、ord8='A'、ord14='D'，与印刷第1/2/3/7/8/14题算出的正确答案逐个吻合；analysis ord10='10.6【解析】m是方程x²-2x-1=0的根...m²+1/m²=6'，正是 page_8.jpg 第10题的解析；answer ord13 的裁切图与 OCR 文本经人工看图逐字一致（见 route_c_crops/probe234/shift1/）。因此页234的坐标本身是对的，错的是文件映射，与页8/9/10同因（off-by-one）。
+  [identity] p234 analysis ord10 <- 46006966_page_234.jpg    lines=8 mean=0.898278 ink=0.0698 text='为（14一4x）m的矩形地块.根据题意，得（20-4x）（14-4x）=24×\n化简，得2.x²-17x十8=0，解得x=0.5，r2=8（不符合题意，舍去\n答：小路的宽度为0.5m\n9.（1）由题图①，可知花圃的面积为（100一2a）（60一2a）=（4a\n320a+6000)m²\n（2）由题意，得100×60一（4a²一320a十6000）\n×100×60，解得a=5，a2=75（不合题意，舍去），此时通道的\n有两个'
+  [identity] p234 answer   ord 1 <- 46006966_page_234.jpg    lines=1 mean=0.712692 ink=0.0453 text='L'
+  [identity] p234 answer   ord 2 <- 46006966_page_234.jpg    lines=1 mean=0.847049 ink=0.0338 text='3.'
+  [identity] p234 answer   ord 3 <- 46006966_page_234.jpg    lines=1 mean=0.95171 ink=0.0513 text='240,'
+  [identity] p234 answer   ord 4 <- 46006966_page_234.jpg    lines=1 mean=0.999314 ink=0.094 text='理'
+  [identity] p234 answer   ord 5 <- 46006966_page_234.jpg    lines=3 mean=0.933916 ink=0.041 text='17x\n80\n0.'
+  [identity] p234 answer   ord 6 <- 46006966_page_234.jpg    lines=7 mean=0.950655 ink=0.051 text='80=一31<0.该方程没有实数根.矩形花园ABCD的面积不\n能达到240m²\n5.C\n6.C\n【解析】设BC的长为xm，则AB的长为\n9\n（10+1-x）m'
+  [identity] p234 answer   ord 7 <- 46006966_page_234.jpg    lines=0 mean=None ink=0.0 text=''
+  [identity] p234 answer   ord 8 <- 46006966_page_234.jpg    lines=0 mean=None ink=0.0359 text=''
+  [identity] p234 answer   ord 9 <- 46006966_page_234.jpg    lines=2 mean=0.999468 ink=0.096 text='8\n设'
+  [identity] p234 answer   ord10 <- 46006966_page_234.jpg    lines=1 mean=0.935643 ink=0.1116 text='为（1'
+  [identity] p234 answer   ord11 <- 46006966_page_234.jpg    lines=8 mean=0.842391 ink=0.0604 text='5204\n1\n×100×60，解得a=5，a=75（不合题意，舍去）.此时通道的\n4\n为5m\n（3）\n关于的方程\nax+25a一150=0有两个相'
+  [identity] p234 answer   ord12 <- 46006966_page_234.jpg    lines=6 mean=0.932616 ink=0.0519 text='的实数根，△=a²-2\n25a+150=0，解得a=10，a2=15.5≤a\n55625\n12.a=10.设y=kS，将（1000，55625）代人，得k=\n1000\n55.625.y=55.625S.当a=10时，S=（100-2×10）（60-2'
+  [identity] p234 answer   ord13 <- 46006966_page_234.jpg    lines=5 mean=0.796668 ink=0.1116 text='10）=80×40=3200，y=3200×55.625=178000，通道的面积为10\n60-3200=2800（m²）.修建通道的价格为2800×50=140000（元\n修建通道和花圃的总价为178000十140000=318000（元）\n质\n动达'
+  [identity] p234 answer   ord14 <- 46006966_page_234.jpg    lines=2 mean=0.998414 ink=0.0953 text='4\n解'
+  [shift1] p234 analysis ord10 <- 46006966_page_233.jpg    lines=15 mean=0.833145 ink=0.0582 text='10.6\n【解析】m是方程x²-2x-1=0的根，m²-2m-1=\n=0.即m一\n1=2.两边分别平方，得\n0，且m≠0，.m一2一\n777\n22\n(m-）\n=4，即m²-2+-\n=4.m²+\n=6.\n771\n11.（1）x²+x一24=0它的二次项系数为1，一次项系数为1，常数\n项为一24（2）一x²+4x=0它的二次项系数为一1，一次项系数为\n4，常数项为0'
+  [shift1] p234 answer   ord 1 <- 46006966_page_233.jpg    lines=1 mean=0.995639 ink=0.0234 text='B'
+  [shift1] p234 answer   ord 2 <- 46006966_page_233.jpg    lines=1 mean=0.988745 ink=0.0226 text='D'
+  [shift1] p234 answer   ord 3 <- 46006966_page_233.jpg    lines=1 mean=0.867481 ink=0.0369 text='④'
+  [shift1] p234 answer   ord 4 <- 46006966_page_233.jpg    lines=0 mean=None ink=0.0174 text=''
+  [shift1] p234 answer   ord 5 <- 46006966_page_233.jpg    lines=3 mean=0.879425 ink=0.0317 text='x（24\n2x\n40'
+  [shift1] p234 answer   ord 6 <- 46006966_page_233.jpg    lines=5 mean=0.917374 ink=0.0896 text='6.（1）设这两个奇数分别为x，x+2.根据题意，得x²+（x+2）²=74\n（2）设大熊猫玩偶两次降价的平均降价率为r.根据题意，得50（1一\nx）²=40\n（3）设该梯子底端滑动的距离为xm.√5一3=\n4（m），根据题意，得（4-x）²+（3+x）²=5²'
+  [shift1] p234 answer   ord 7 <- 46006966_page_233.jpg    lines=1 mean=0.983408 ink=0.0447 text='D'
+  [shift1] p234 answer   ord 8 <- 46006966_page_233.jpg    lines=1 mean=0.998503 ink=0.0218 text='A'
+  [shift1] p234 answer   ord 9 <- 46006966_page_233.jpg    lines=1 mean=0.506397 ink=0.0118 text='po'
+  [shift1] p234 answer   ord10 <- 46006966_page_233.jpg    lines=1 mean=0.998982 ink=0.0212 text='6'
+  [shift1] p234 answer   ord11 <- 46006966_page_233.jpg    lines=6 mean=0.933787 ink=0.0662 text='11.（1）x²+x-24=0\n它的二次项系数为1，一次项系数为1.常数\n项为一24\n（2）-x²+4x=0\n它的二次项系数为一1，一次项系数为\n4，常数项为0'
+  [shift1] p234 answer   ord12 <- 46006966_page_233.jpg    lines=4 mean=0.931742 ink=0.0699 text='12.（1）根据题意，得m²+1=2，且m-1≠0，解得m=-1\n（2）存\n在有两种情况：①当满足m²+1=1，且（m一1）+（m一2）≠0，即\n且m-2≠0，即m=1时，方程变为一x一1=0，解得x=-1'
+  [shift1] p234 answer   ord13 <- 46006966_page_233.jpg    lines=4 mean=0.902767 ink=0.0502 text='13.\nr。是方程ax²+2x+c=0（a≠0）的一个根，.ax²+2x。+\nc=0，即ax²=-2x-c，N=（axo+1）²=a²x²+2axo+1=\na（-2x-c）+2axo+1=1-ac.M=1-ac，..M=N'
+  [shift1] p234 answer   ord14 <- 46006966_page_233.jpg    lines=1 mean=0.990739 ink=0.0249 text='D'
