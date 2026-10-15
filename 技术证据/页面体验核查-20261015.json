@@ -1,0 +1,64 @@
+{
+  "date": "2026-10-15",
+  "bookId": "46006966",
+  "scope": "浏览体验；不修改目录或标注内容",
+  "tested": [
+    "目录折叠和重新展开、目录栏收起和展开",
+    "题目区页码输入回车跳转",
+    "答案区234→233→234翻页",
+    "已完成题号4的定位",
+    "编辑/预览页签浏览",
+    "答案区滚轮缩放及上限",
+    "按住空格+左键拖动平移"
+  ],
+  "incident": {
+    "action": "中键在已有答案框上拖动",
+    "observed": "进入第12题编辑视图，题目页跳到9",
+    "recovery": "点击退出编辑；回到新题15；题目页回到8；已完成题号回4",
+    "contentInput": false,
+    "saveOrSubmitInvoked": false
+  },
+  "findings": [
+    "重置缩放是整图适配，答案文字很小；源码限制用户倍率最大5",
+    "中键落在已有框上会触发编辑；按住空格拖动已验证只做平移",
+    "快捷键提示的A/W与工具栏及缓存代码相反，实际A=答案、W=选项",
+    "已完成题号定位会展开目录，但非编辑态右侧预览仍是当前新题15"
+  ],
+  "finalView": {
+    "questionPage": 8,
+    "answerPage": 234,
+    "completedQuestionSelection": 4,
+    "currentNewQuestion": 15,
+    "answerUserZoom": 5,
+    "answerFirstRectPosition": {
+      "left": 150,
+      "top": 15
+    },
+    "editorEmpty": true,
+    "allHistoryFramesLocked": true
+  },
+  "preservation": {
+    "inputsUnchanged": true,
+    "directoryNamesAndExpansionUnchanged": true,
+    "directoryNodes": 95,
+    "questionCanvasHashUnchanged": true,
+    "questionRectsUnchanged": true,
+    "answerRectCount": 15,
+    "answerScreenTransform": {
+      "scale": 1.331446115711791,
+      "translateX": -12.052969635513506,
+      "translateY": 89.55139606782717,
+      "maxRoundingErrorPixels": 0.0010255196889943363
+    },
+    "editorUnchanged": true,
+    "answerLabelsTypesAndLockStateUnchanged": true,
+    "visualSelectionChange": {
+      "questionLabel": "12",
+      "view": "answer",
+      "change": "selected CSS class only; history-rect and locked preserved"
+    },
+    "answerRectGeometryPreservedUpToViewTransform": true
+  },
+  "networkLog": "### Result\n1. [GET] https://www.usense.com/qieti/version.json?t=1792069425789 => [200] OK\n2. [GET] https://www.usense.com/qieti/version.json?t=1792069605786 => [200] OK\n3. [GET] https://www.usense.com/qieti/api/annotate_pic/pre_annotation/46006966?pageNum=9&annotationType=mr_pre => [200] OK\n5. [GET] https://www.usense.com/qieti/api/annotate_pic/get_manual_annotations_unified_by_order_in_level/46006966/12 => [200] OK\n6. [GET] https://www.usense.com/qieti/api/annotate_pic/get_question_info/46006966/12 => [200] OK\n8. [GET] https://www.usense.com/qieti/api/verify_annotation/get-ocr-annotation?file_id=46006966&question_order=12&zone=question => [200] OK\n9. [GET] https://www.usense.com/qieti/api/verify_annotation/get-ocr-annotation?file_id=46006966&question_order=12&zone=answer => [200] OK\n10. [GET] https://www.usense.com/qieti/version.json?t=1792069785783 => [200] OK\n11. [GET] https://www.usense.com/qieti/api/annotate_pic/pre_annotation/46006966?pageNum=8&annotationType=mr_pre => [200] OK\n12. [GET] https://www.usense.com/qieti/api/annotate_pic/pre_annotation/46006966?pageNum=233&annotationType=mr_pre => [200] OK\n14. [GET] https://www.usense.com/qieti/api/annotate_pic/pre_annotation/46006966?pageNum=234&annotationType=mr_pre => [200] OK\n15. [GET] https://www.usense.com/qieti/version.json?t=1792069965774 => [200] OK\n\nNote: 3 static requests not shown, run with \"static\" option to see them.",
+  "networkFinding": "本次采集的非静态请求均为GET，未观察到保存、删除或提交请求。"
+}
