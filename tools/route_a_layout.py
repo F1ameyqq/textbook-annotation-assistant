@@ -99,6 +99,9 @@ CFG = {
     "furniture_max_h_frac": 0.06, # 且高度 < 6% 图高 → 判为页眉/页脚/页码
     # —— 连通域精修 ——
     "cc_min_area": 4,             # 小于该面积的连通域视为噪点
+    # —— 选项行几何补框（OCR det 漏检整行最左侧选项时）——
+    "gapfill_min_w": 40,          # 左空隙最小宽度（px）
+    "gapfill_min_ink": 30,        # 左段最少墨迹像素
     # —— OCR ——
     "ocr_engine": "rapidocr_onnxruntime",
     "ocr_score_floor": 0.30,
@@ -276,9 +279,9 @@ def best_internal_split_column(mask: np.ndarray, x1: int, x2: int, cfg: dict) ->
     return None
 
 
-def split_subpages(mask: np.ndarray, cfg: dict) -> list[dict]:
+def split_subpages(mask: np.ndarray, cfg: dict) -> tuple[list[dict], dict]:
     """
-    返回子页列表 [{'x1','x2','ink_px','source'}]。
+    返回 (子页列表 [{'subpage_index','x1','x2','width','ink_px'}], 切分说明 dict)。
     一级：严格贯穿空沟切分（可靠信号）。
     二级：仅当图是横向宽图 (W/H > split_requires_wide_image) 且某段宽 > factor*中位宽 时，
           在该段内按"最佳空列"再切一刀（应对页缝仅 2px、一级判据看不到的情况）。
@@ -570,6 +573,35 @@ def split_line_by_blank(mask: np.ndarray, box, cfg: dict) -> list[list[float]]:
     return [a, b]
 
 
+def geom_gap_option(mask, ln, cfg) -> dict | None:
+    """
+    几何补框：选项行最左侧有墨迹，但 OCR det 没给出 atom（整行的第一个 atom 起点明显右移）。
+    此时用连通域把这段"未识别文字区域"单独框出来，避免整行缺一个选项。
+    触发条件（保守，避免误检）：行内已有 ≥1 个选项 atom、左空隙 ≥40px、
+    左段墨迹像素 ≥30 且该段高度 ≥ 行高的 40%。
+    """
+    atoms = ln["atoms"]
+    if not atoms:
+        return None
+    line_x1, line_y1, _line_x2, line_y2 = ln["bbox"]
+    first = min(a["bbox"][0] for a in atoms)
+    if first - line_x1 < cfg["gapfill_min_w"]:
+        return None
+    region = [line_x1, line_y1, first, line_y2]
+    bb = cc_refine_bbox(mask, region, cfg["cc_min_area"], 1)
+    h = mask.shape[0]
+    x1 = max(0, int(bb[0])); y1 = max(0, int(bb[1]))
+    x2 = min(mask.shape[1], int(bb[2])); y2 = min(h, int(bb[3]))
+    if x2 - x1 < cfg["gapfill_min_w"]:
+        return None
+    ink = int(mask[y1:y2, x1:x2].sum())
+    if ink < cfg["gapfill_min_ink"] or (y2 - y1) < 0.4 * (line_y2 - line_y1):
+        return None
+    return {"bbox": bb, "texts": [], "score": 0.0, "method": "geom_gap_fill",
+            "evidence": (f"几何补框：行左侧 x[{line_x1:.0f},{first:.0f}] 有 {ink} 个墨迹像素"
+                         f"但 OCR 未给出 atom（det 漏检），单独出框")}
+
+
 def option_candidates_from_line(mask, ln, cfg) -> list[dict]:
     """一"行"内逐 OCR atom 拆成独立选项框；无 atom 时退化为整行。"""
     atoms = ln["atoms"]
@@ -586,6 +618,9 @@ def option_candidates_from_line(mask, ln, cfg) -> list[dict]:
         else:
             groups.append({"atoms": [a], "no_marker": True})
     out = []
+    gap = geom_gap_option(mask, ln, cfg)
+    if gap is not None:
+        out.append(gap)
     for g in groups:
         boxes = [a["bbox"] for a in g["atoms"]]
         bb = union_bbox(boxes)
@@ -1280,7 +1315,6 @@ def main() -> int:
         }
 
     payload = {"pages": pages, "evaluation": evaluation}
-    payload_json = json.dumps(payload, ensure_ascii=False, sort_keys=True)
     # 哈希视图排除耗时字段（机器相关的非确定性），其余内容应与第三方重跑逐字节一致
     hash_view = {
         "pages": [{k: v for k, v in p.items() if k != "timing_sec"} for p in pages],
