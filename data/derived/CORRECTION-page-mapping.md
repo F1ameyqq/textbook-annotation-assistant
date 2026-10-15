@@ -105,6 +105,36 @@ python tools/verify_page_mapping.py      # 需要先把 annotate_images 裁图�
 4. **一切坐标产物都要带"参考图像标识"**（file_id + page_index + 页图文件名 + 画布尺寸）。
    缺了它，off-by-one 这类错误可以潜伏到很晚才被发现。
 
+## 5.5 独立佐证：用户自己的归档给出同一结论
+
+用户随后提交的原始项目归档（`技术证据/`，commit `3fb3bca`）**独立地**给出了同一映射，
+而且是平台侧的直接证据：
+
+- `技术证据/只读样本-46006966/source-images-complete.json` 明确记录
+  **`viewerPage 8 → sourceImageIndex 7`**、**`viewerPage 9 → sourceImageIndex 8`**、
+  **`viewerPage 10 → sourceImageIndex 9`**、**`viewerPage 234 → sourceImageIndex 233`**。
+  即 `page_index = N → page_{N-1}`，与我的结论完全一致。
+- 该归档的 4 张页图与我下载的文件 **SHA-256 逐字节相同**：
+
+  | 用户归档 | 我的下载 | sha256 前 16 位 |
+  |---|---|---|
+  | viewer-page-0008.jpg | 46006966_page_7.jpg | `5d6202e74285043e` |
+  | viewer-page-0009.jpg | 46006966_page_8.jpg | `eaa01c1d9c66bd32` |
+  | viewer-page-0010.jpg | 46006966_page_9.jpg | `fe54c4e7b9d0deb6` |
+  | viewer-page-0234.jpg | 46006966_page_233.jpg | `7559b233e5c6d564` |
+
+- `reference-review-notes.json` 的越界记录写的是
+  `"originalImageWidth": 1178, "excessPixels": 3.0944752623527` ——
+  **与我在正确映射下算出的 3.09px 完全吻合**（我最初报的 5.09px 是配错页图所致）。
+- 同文件的跨框重叠 `intersectionOverAnswerArea: 0.9108314766235834` 与我的 `0.9108` 一致。
+- `coordinate-audit-20261015.json` 给出 DOM 侧仿射拟合：
+  `question_zone pageIndex=8` scale ≈ 0.4881、`answer_zone pageIndex=234` scale ≈ 0.1396，
+  残差 ~1e-4。注意这是**历史框 props → CSS 样式**的拟合（记录坐标→画布像素），
+  不是"原图→记录坐标"的变换，不影响"记录坐标就是源图像素坐标、1:1"的结论。
+
+**四条独立来源（我的互相关、acoord 的裁剪图比对、aocr 的 OCR 语义、用户归档元数据）
+结论一致，off-by-one 可视为定论。**
+
 ## 6. 对下游的影响
 
 | 影响面 | 变化 |
