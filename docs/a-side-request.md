@@ -95,3 +95,16 @@ B的本地pipeline现已连接基础识别/细化/组题配答/质量检查，�
 B增加保留完整裁片空间范围的公式预处理观察、候选和独立check（均b-formula-canvas-*-trial/0.1），详见`docs/b-formula-canvas-46007447.md`。实际尺寸模型输出、每步tensor/坐标/停止原因和全部新旧文字均保留；WIDTH_STABLE与MAX_ITERATIONS不是转写核准。新路径补出部分四次幂，也有旧路径匹配而新路径不匹配的退化，因此不能用新模型结果整体替代旧观察或据agreement自动提交。
 
 请固定消费者保留版本及来源类别、原始候选/未知语法和空selected字段，区分执行/投影一致与业务核准；当前没有改动图谱或持久pipeline。独立验收材料需按题/页/书分组，提供人工盲标和明确接收回执；同题11个重复分式的MODEL_VISUAL开发覆盖不是留出准确率。公共适配与A接收仍待A自行记录。
+
+## 跨页持久链与Check04交接
+
+当前B已将Q9来源扩展、当前证明重建、本地0.4应用和Check04串入持久pipeline，见[b-pipeline-continuation-46007447.md](b-pipeline-continuation-46007447.md)。请A在共同SHA上核对以下最小材料，未提供可标UNKNOWN，B不代签验收：
+
+| 请A提供或验证 | 最小要求 |
+|---|---|
+| 当前合同/校验器及固定消费者 | 识别三个continuation-stage封套、b-check-trial/0.4和实际`final_outputs`；partial/FAILED时不得沿用旧图谱检查，READY仍非业务PASS |
+| typed render_regions消费 | Q9的33来源片段对应15呈现区，23图内OCR仅诊断；保留来源、图片完整区域、组合标题边界及外部版本回执，不能每片段重复绘框 |
+| 原图、页目录及公共身份 | 原5页及resource173明确原图SHA；续页只有前缀OCR、viewer映射未知。提供全书页清单/目录、19条已定位材料的对应题页及稳定ID，不能猜页号或跨章节同号配答 |
+| 独立内容验收及恢复样例 | 新Check04保留5条正文开发分歧和其他115项问题；需人工独立样本、留出划分与接收记录。复核审核变化、局部损坏、崩溃后旧attempt不消费及最终E/G/check当前引用 |
+
+本轮没有网站请求或标注写入；B的本地阶段恢复不替代A的平台保存/读回恢复。公式候选整合、全书覆盖和支持范围验收仍在长期目标内，双方进度按collaboration.md继续以PR/SHA和各自状态同步。

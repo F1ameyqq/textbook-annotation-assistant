@@ -24,6 +24,7 @@ from . import batch, offline
 from .baseline import code_digest, digest, file_digest, load_source, valid_bbox
 from .batch_quality import audit_batch
 from . import recovery_stage
+from . import continuation_stage, continued_quality
 
 # Explicit bindings are also useful for synthetic fault tests; there is no
 # alternate runtime or hidden production backend in this module.
@@ -34,6 +35,7 @@ quality_check = offline.quality_check
 
 SCHEMA = "b-pipeline-report-trial/0.1"
 STAGE_SCHEMA = "b-pipeline-stage-trial/0.1"
+CONTINUATION_STAGES = ("continuation_prepare", "continuation_proof", "continuation_apply", "continuation_quality")
 SQL = """
 CREATE TABLE IF NOT EXISTS stage_attempts (
  attempt_id TEXT PRIMARY KEY, run_id TEXT NOT NULL, stage_id TEXT NOT NULL,
@@ -104,16 +106,27 @@ def _pipeline_lock(workdir):
         stream.close()
 
 
-def _implementation(stage, mode, kind, use_ocr, worker):
+def _implementation(stage, mode, kind, use_ocr, worker, *, continuation_enabled=False):
     functions = {"recognition": run_batch, "evidence": _validate_evidence, "refine": refine,
                  "recover": recovery_stage.recover_evidence, "recovery_review": recovery_stage.build_recovery_review,
                  "assemble": assemble, "quality": quality_check}
+    functions.update(continuation_prepare=continuation_stage.prepare_continuation_scope,
+        continuation_proof=continuation_stage.build_continuation_stage_proof,
+        continuation_apply=continuation_stage.apply_continuation_stage,
+        continuation_quality=continued_quality.build_continued_quality)
     helpers, names = {}, []
     if stage == "recognition":
         names = ["batch", "baseline"]
     elif stage == "evidence":
         names = ["baseline"]
         helpers = {name: _function_sha(getattr(offline, name)) for name in ("check_artifact", "validate_context")}
+    elif stage in CONTINUATION_STAGES:
+        names = ["continuation_stage", "continuation", "continuation_apply", "continuation_quality", "boundary", "image_regions", "baseline", "offline", "answer_assembly", "policy"]
+        if stage == "continuation_prepare":
+            helpers = {name: _function_sha(getattr(offline, name)) for name in ("artifact", "ref", "check_artifact", "assemble", "entity_id", "scope_key")}
+        elif stage == "continuation_quality":
+            names += ["continued_quality", "continuation_stage_quality", "question_quality", "answer_quality", "recovery_quality", "recovery_apply", "policy"]
+            helpers = {name: _function_sha(getattr(offline, name)) for name in ("scalar_issues", "scope_key")}
     elif stage in ("recover", "recovery_review"):
         names = ["recovery_stage", "recovery_apply", "baseline"]
         helpers = {name: _function_sha(getattr(offline, name)) for name in ("artifact", "ref", "check_artifact")}
@@ -124,7 +137,7 @@ def _implementation(stage, mode, kind, use_ocr, worker):
                     "assemble": ["entity_id", "scope_key"], "quality": ["scalar_issues", "scope_key"]}
         helpers = {name: _function_sha(getattr(offline, name)) for name in common+specific[stage]}
         names = {"refine": ["baseline"], "assemble": ["answer_assembly", "policy"],
-                 "quality": ["answer_quality", "recovery_quality", "recovery_apply", "policy"]}[stage]
+                 "quality": ["question_quality", "answer_quality", "recovery_quality", "recovery_apply", "policy"]}[stage]
     modules = {name: code_digest(Path(__file__).with_name(name+".py")) for name in names}
     modules["baseline"] = code_digest(Path(batch.baseline.__file__))
     if stage == "refine": modules["legacy"] = code_digest(batch.baseline.LEGACY_PATH)
@@ -135,6 +148,8 @@ def _implementation(stage, mode, kind, use_ocr, worker):
                         "recover": ["EVIDENCE_SCHEMA", "CONTEXT_SCHEMA"], "recovery_review": ["EVIDENCE_SCHEMA"],
                         "assemble": ["EVIDENCE_SCHEMA", "GRAPH_SCHEMA", "QSTART", "ASTART", "OPTION", "CAPTION", "DECORATION"],
                         "quality": ["EVIDENCE_SCHEMA", "GRAPH_SCHEMA", "CHECK_SCHEMA"]}
+    globals_by_stage.update({name: [] for name in CONTINUATION_STAGES})
+    globals_by_stage["continuation_prepare"] = ["EVIDENCE_SCHEMA", "GRAPH_SCHEMA", "QSTART", "ASTART", "OPTION", "CAPTION", "DECORATION"]
     global_values = {}
     for name in globals_by_stage[stage]:
         value = getattr(offline, name)
@@ -143,10 +158,19 @@ def _implementation(stage, mode, kind, use_ocr, worker):
                      "offline_globals": global_values,
                      "refinement_mode": ("SYNTHETIC_TEST_OVERRIDE" if synthetic_refine else "CPU_OCR") if stage == "refine" else None}
     if stage in ("recover", "recovery_review"): configuration["recovery_policy"] = recovery_stage.POLICY
+    if stage in CONTINUATION_STAGES: configuration["continuation_policy"] = continuation_stage.POLICY
+    if stage == "assemble" and continuation_enabled:
+        configuration["artifact_time_policy"] = "EXECUTION_TIME_IN_STAGE_JOURNAL/0.1"
+    dependencies = _dependencies()
+    if stage in CONTINUATION_STAGES:
+        import cv2
+        native = Path(getattr(cv2, "_native", cv2).__file__)
+        dependencies["opencv"] = {"version": cv2.__version__, "package_entry_sha256": file_digest(Path(cv2.__file__)),
+                                  "native_module": {"name": native.name, "sha256": file_digest(native)}}
     return {"code": {"pipeline": code_digest(Path(__file__)), "entrypoint": _function_sha(functions[stage]),
                      "helpers": helpers, "modules": modules},
             "configuration": configuration,
-            "dependencies": _dependencies(), "recognizer": recognizer}
+            "dependencies": dependencies, "recognizer": recognizer}
 
 
 def _validate_review(source, review):
@@ -206,6 +230,31 @@ def _validate_evidence(value, source, context):
 
 
 def _validate_result(stage, value, source, context, review, dependencies, recognition_dir, current_evidence=None):
+    if stage in CONTINUATION_STAGES:
+        schemas = {"continuation_prepare": "b-continuation-scope-trial/0.1",
+            "continuation_proof": "b-continuation-proof-stage-trial/0.1",
+            "continuation_apply": "b-continuation-apply-stage-trial/0.1",
+            "continuation_quality": "b-check-trial/0.4"}
+        offline.check_artifact(value, {schemas[stage]})
+        kinds = {"continuation_prepare": "ContinuationScopeTrial", "continuation_proof": "ContinuationProofStageTrial",
+            "continuation_apply": "ContinuationApplyStageTrial", "continuation_quality": "CheckReportTrial"}
+        if (value.get("kind") != kinds[stage] or value.get("book_id") != source["book_id"]
+                or value.get("scope_id") != dependencies["continuation"]["extended_scope_id"]
+                or value["payload"].get("business_acceptance") is not False or value["payload"].get("transcription_verified") is not False
+                or value["payload"].get("decision") != "HOLD" or value["payload"].get("platform_actions") != []):
+            raise ValueError("continued stage must preserve its explicit expanded scope and HOLD")
+        payload = value["payload"]
+        if payload.get("package_receipt") != continuation_stage.content_receipt(dependencies["continuation"]):
+            raise ValueError("continued stage is not bound to the actual package content")
+        if stage == "continuation_prepare":
+            if (payload.get("base_evidence_ref") != dependencies["evidence"]["result_ref"]
+                    or payload.get("base_graph_ref") != dependencies["graph"]["result_ref"]):
+                raise ValueError("continuation scope changed its actual base inputs")
+        elif payload.get("scope_ref") != dependencies["scope"]["result_ref"]:
+            raise ValueError("continued result refers to a different scope stage")
+        if stage == "continuation_apply" and payload.get("proof_stage_ref") != dependencies["proof"]["result_ref"]:
+            raise ValueError("continuation application uses a different proof stage")
+        return
     if stage == "recognition":
         if value.get("payload", {}).get("source_manifest") != source:
             raise ValueError("recognition batch scope changed")
@@ -298,7 +347,8 @@ def _read_stage(db, workdir, descriptor, source, mode, stage, key, dependencies,
 
 
 def run_pipeline(source_path, context_path, review_path, workdir, *, use_ocr=False, max_items=None,
-                 stop_after=None, evidence_path=None, worker=None, recovery_path=None):
+                 stop_after=None, evidence_path=None, worker=None, recovery_path=None,
+                 continuation_path=None, adjacent_source_path=None):
     """Resume source-bound local stages; READY still means HOLD for business use."""
     if type(use_ocr) is not bool or (max_items is not None and (type(max_items) is not int or max_items < 1)):
         raise ValueError("invalid pipeline OCR flag or batch budget")
@@ -307,6 +357,9 @@ def run_pipeline(source_path, context_path, review_path, workdir, *, use_ocr=Fal
     if recovery_path is not None:
         stages.insert(stages.index("assemble"), "recover")
         stages.insert(stages.index("quality"), "recovery_review")
+    if (continuation_path is None) != (adjacent_source_path is None):
+        raise ValueError("continuation package and adjacent original source are required together")
+    if continuation_path is not None: stages.extend(CONTINUATION_STAGES)
     if mode == "CACHED_INPUT" and stop_after == "recognition": stop_after = "evidence"
     if stop_after is not None and stop_after not in stages:
         raise ValueError("stop_after must name a stage present in this pipeline mode")
@@ -336,6 +389,10 @@ def run_pipeline(source_path, context_path, review_path, workdir, *, use_ocr=Fal
                 "review": _receipt(review_path, review),
                 "evidence": _receipt(evidence_path, cached_evidence, artifact=True) if cached_evidence else None}
     if package is not None: receipts["recovery"] = package["receipt"]
+    if continuation_path is not None:
+        continuation_path, adjacent_source_path = Path(continuation_path), Path(adjacent_source_path)
+        continuation_package = continuation_stage.load_continuation_package(continuation_path, source_path, adjacent_source_path)
+        receipts["continuation"] = continuation_package["receipt"]
     source_ref = receipts["source"]["reference"]
     kind = "CACHED_INPUT" if cached_evidence else "SYNTHETIC_TEST" if worker else "LIVE_CPU_OCR" if use_ocr else "LIVE_GEOMETRY"
     run_id = "pipeline-run-"+uuid4().hex
@@ -344,12 +401,12 @@ def run_pipeline(source_path, context_path, review_path, workdir, *, use_ocr=Fal
     with _pipeline_lock(workdir):
         return _run(source_path, context_path, review_path, evidence_path, workdir, source, context, review,
                     receipts, source_ref, cached_evidence, mode, kind, stages, run_id, use_ocr, max_items, stop_after, worker, recognition_dir,
-                    recovery_path=recovery_path)
+                    recovery_path=recovery_path, continuation_path=continuation_path, adjacent_source_path=adjacent_source_path)
 
 
 def _run(source_path, context_path, review_path, evidence_path, workdir, source, context, review,
          receipts, source_ref, cached_evidence, mode, kind, stages, run_id, use_ocr, max_items, stop_after, worker, recognition_dir,
-         recovery_path=None):
+         recovery_path=None, continuation_path=None, adjacent_source_path=None):
     db = sqlite3.connect(workdir / "pipeline.sqlite3")
     db.row_factory = sqlite3.Row
     db.execute("PRAGMA journal_mode=WAL")
@@ -391,9 +448,22 @@ def _run(source_path, context_path, review_path, evidence_path, workdir, source,
                     review_dependency = {**observations["recovery_review"],
                                          "reference": {"artifact_id": active["artifact_id"], "content_hash": digest(active)}}
                 dep.update(evidence=observations["evidence"], graph=observations["assemble"], review=review_dependency)
+            elif stage == "continuation_prepare":
+                dep.update(evidence=observations["evidence"], graph=observations["assemble"], continuation=receipts["continuation"])
+            elif stage == "continuation_proof":
+                dep.update(scope=observations["continuation_prepare"], continuation=receipts["continuation"])
+            elif stage == "continuation_apply":
+                dep.update(scope=observations["continuation_prepare"], proof=observations["continuation_proof"], continuation=receipts["continuation"])
+            elif stage == "continuation_quality":
+                review_dependency = receipts["review"]
+                if recovery_path is not None:
+                    active = results["active_review"]
+                    review_dependency = {**observations["recovery_review"], "reference": {"artifact_id": active["artifact_id"], "content_hash": digest(active)}}
+                dep.update(scope=observations["continuation_prepare"], proof=observations["continuation_proof"],
+                    application=observations["continuation_apply"], review=review_dependency, continuation=receipts["continuation"])
             entry["dependencies"] = dep
             try:
-                implementation = _implementation(stage, mode, kind, use_ocr, worker)
+                implementation = _implementation(stage, mode, kind, use_ocr, worker, continuation_enabled=continuation_path is not None)
             except Exception as exc:
                 with db:
                     event = _event(db, run_id, "STAGE_SETUP_FAILED", stage_id=stage,
@@ -438,8 +508,23 @@ def _run(source_path, context_path, review_path, evidence_path, workdir, source,
                     elif stage == "evidence": result = copy.deepcopy(cached_evidence)
                     elif stage == "refine": result = refine(source_path, results["baseline"], context)
                     elif stage == "recover": result = recovery_stage.recover_evidence(results["evidence"], recovery_path, source_path, context)
-                    elif stage == "assemble": result = assemble(results["evidence"])
+                    elif stage == "assemble":
+                        result = assemble(results["evidence"])
+                        if continuation_path is not None:
+                            # This result has not been published. Historical
+                            # input objects and archives remain untouched.
+                            result.pop("created_at", None)
                     elif stage == "recovery_review": result = recovery_stage.build_recovery_review(review, results["evidence"])
+                    elif stage == "continuation_prepare":
+                        result = continuation_stage.prepare_continuation_scope(results["evidence"], results["assemble"], continuation_path, source_path, adjacent_source_path)
+                    elif stage == "continuation_proof":
+                        result = continuation_stage.build_continuation_stage_proof(results["continuation_prepare"], continuation_path, source_path, adjacent_source_path)
+                    elif stage == "continuation_apply":
+                        result = continuation_stage.apply_continuation_stage(results["continuation_prepare"], results["continuation_proof"], continuation_path, source_path, adjacent_source_path)
+                    elif stage == "continuation_quality":
+                        result = continued_quality.build_continued_quality(results["continuation_prepare"], results["continuation_proof"],
+                            results["continuation_apply"], results["active_review"], package_path=continuation_path,
+                            source_path=source_path, adjacent_source_path=adjacent_source_path)
                     else: result = quality_check(results["evidence"], results["assemble"], results["active_review"])
                     _validate_result(stage, result, source, context, results["active_review"], dep, recognition_dir, results.get("evidence"))
                     if stage == "recognition" and not audit_batch(source_path, recognition_dir, result)["payload"]["accepted"]:
@@ -480,6 +565,8 @@ def _run(source_path, context_path, review_path, evidence_path, workdir, source,
                 raise ValueError("pipeline input files changed during execution")
             if recovery_path is not None and recovery_stage.load_recovery_package(recovery_path, source_path, context)["receipt"] != receipts["recovery"]:
                 raise ValueError("recovery package files changed during pipeline execution")
+            if continuation_path is not None and continuation_stage.load_continuation_package(continuation_path, source_path, adjacent_source_path)["receipt"] != receipts["continuation"]:
+                raise ValueError("continuation input files changed during pipeline execution")
         except Exception as exc:
             run_error = {"code": "INPUT_CHANGED_DURING_RUN", "error": str(exc), "error_type": type(exc).__name__}
             with db: _event(db, run_id, "RUN_INPUT_CHANGED", **run_error)
@@ -496,6 +583,14 @@ def _run(source_path, context_path, review_path, evidence_path, workdir, source,
                    "limitations": ["READY means that local stages produced bound artifacts, never business acceptance.",
                                    "The declared asset scope is not a whole-book or 214-page acceptance claim.",
                                    "Geometry-only live runs wait before refinement because refinement performs new CPU OCR."]}
+        if continuation_path is not None:
+            payload["continuation_scope"] = {"package_receipt": receipts["continuation"],
+                "base_source_ref": source_ref, "adjacent_coverage": "PREFIX_CROP_ONLY_WITH_BOUNDARY_AND_FIGURES",
+                "full_adjacent_page_ocr": False, "viewer_page_mapping_verified": False}
+            payload["final_outputs"] = None
+            if state == "READY":
+                payload["final_outputs"] = {"evidence_ref": _ref(results["continuation_prepare"]["payload"]["evidence"]),
+                    "graph_ref": _ref(results["continuation_apply"]["payload"]["graph"]), "quality_ref": _ref(results["continuation_quality"])}
         producer = {"module": __name__, "version": "0.1.0", "code_sha256": code_digest(Path(__file__))}
         report = {"schema_version": SCHEMA, "kind": "PipelineReportTrial",
                   "artifact_id": "pipeline-report-"+digest([source_ref, producer, payload])[:24], "revision": 1,

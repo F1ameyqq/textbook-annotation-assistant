@@ -384,9 +384,9 @@ class PipelineQualityRegression(unittest.TestCase):
     def test_stage_setup_failure_has_a_terminal_report_without_a_fabricated_attempt(self):
         from annotation.recognition import pipeline
         original = pipeline._implementation
-        def unavailable(stage,*args):
+        def unavailable(stage,*args,**kwargs):
             if stage == "assemble": raise RuntimeError("synthetic unavailable dependency receipt")
-            return original(stage,*args)
+            return original(stage,*args,**kwargs)
         with mock.patch.object(pipeline,"_implementation",side_effect=unavailable): report = self.pipeline()
         checked = self.check(report)
         self.assertTrue(checked["accepted"],checked)
