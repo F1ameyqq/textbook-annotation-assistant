@@ -348,5 +348,101 @@ class ContinuationStageTests(unittest.TestCase):
         refresh_package(self.data)
         with self.assertRaisesRegex(ValueError, "content review line, pixel region"): self.prepare()
 
+    def revised_content_review(self):
+        """A generated model-review correction, without reading a real glyph."""
+        review = self.data["documents"]["content_review"]
+        line = self.data["documents"]["continuation_fixture"]["payload"]["ocr_lines"][0]
+        region = [8, 8, 92, 24]
+        with Image.open(self.data["adjacent_source_path"]) as opened:
+            original = opened.convert("RGB")
+        sha = lambda box: hashlib.sha256(original.crop(box).tobytes()).hexdigest()
+        case = {"case_id": "synthetic-revised-observation", "asset_id": "target-page",
+            "source_sha256": self.data["package"]["adjacent_source"]["sha256"], "line_id": line["line_id"],
+            "raw_text": line["text"], "raw_text_sha256": hashlib.sha256(line["text"].encode()).hexdigest(),
+            "line_bbox": line["bbox"], "review_region_bbox": region, "review_region_rgb_sha256": sha(region),
+            "observed_text": "SYNTHETIC_TEST old observation", "differences": [{"kind": "SYNTHETIC_TEST",
+                "raw_fragment": line["text"][:1], "raw_text_span": [0, 1], "observed_source_fragment": "old"}],
+            "reference_quality": "MODEL_VISUAL_DEVELOPMENT_REVIEW", "human_verified": False, "business_acceptance": False}
+        review["payload"]["line_checks"] = [case]
+        refresh_package(self.data)
+        old = copy.deepcopy(review)
+        old_path = self.root/self.data["package"]["documents"]["content_review"]["path"]
+        old_bytes = old_path.read_bytes()
+        review["revision"] = 2
+        review["artifact_id"] = "synthetic-content-review-v2"
+        review["input_refs"] = old["input_refs"]+[reference(old)]
+        case["observed_text"] = "SYNTHETIC_TEST corrected observation"
+        case["differences"][0]["observed_source_fragment"] = "corrected"
+        witness = {"source_region_bbox": [10, 10, 50, 23], "raised_component_bbox": [21, 11, 24, 15],
+                   "body_digit_bbox": [15, 15, 20, 21], "threshold": 210,
+                   "interpretation": "SYNTHETIC_TEST geometry receipt, no actual character interpretation", "human_verified": False}
+        for prefix in ("source_region", "raised_component", "body_digit"):
+            witness[prefix+"_rgb_sha256"] = sha(witness[prefix+"_bbox"])
+        review["payload"]["lineage"] = {"supersedes_ref": reference(old), "previous_review_archive": old,
+            "reason": "SYNTHETIC_TEST correction of model observation", "changes": [{"case_id": case["case_id"],
+                "changed_fields": ["observed_text", "differences"], "reason": "SYNTHETIC_TEST source rereview",
+                "source_geometry_witness": witness}]}
+        self.data["package"]["documents"]["content_review"]["path"] = "content-review-v2.json"
+        refresh_package(self.data)
+        return review, old, old_path, old_bytes
+
+    def test_revision_two_preserves_complete_old_archive_and_original_file(self):
+        review, old, old_path, old_bytes = self.revised_content_review()
+        loaded = load_continuation_package(*self.args())
+        self.assertEqual(loaded["documents"]["content_review"], review)
+        self.assertEqual(review["payload"]["lineage"]["previous_review_archive"], old)
+        self.assertEqual(old_path.read_bytes(), old_bytes)
+        self.assertEqual(review["input_refs"], old["input_refs"]+[reference(old)])
+        self.assertFalse(review["payload"]["human_verified"])
+        self.assertFalse(review["payload"]["transcription_verified"])
+
+    def test_revision_two_rejects_bad_archive_reference_revision_and_named_fields(self):
+        review, _, _, _ = self.revised_content_review()
+        frozen = copy.deepcopy(review)
+        for fault in ("hash", "ref", "inputs", "revision", "fields", "empty_reason", "duplicate_change"):
+            with self.subTest(fault=fault):
+                review.clear(); review.update(copy.deepcopy(frozen))
+                lineage = review["payload"]["lineage"]
+                if fault == "hash": lineage["previous_review_archive"]["payload"]["limitations"].append("changed")
+                elif fault == "ref": lineage["supersedes_ref"]["artifact_id"] = "wrong"
+                elif fault == "inputs": review["input_refs"].pop()
+                elif fault == "revision": review["revision"] = 3
+                elif fault == "fields": lineage["changes"][0]["changed_fields"].append("raw_text")
+                elif fault == "empty_reason": lineage["reason"] = ""
+                else: lineage["changes"].append(copy.deepcopy(lineage["changes"][0]))
+                refresh_package(self.data)
+                with self.assertRaises(ValueError): load_continuation_package(*self.args())
+
+    def test_revision_two_rejects_unlisted_source_raw_and_verification_edits(self):
+        review, _, _, _ = self.revised_content_review()
+        frozen = copy.deepcopy(review)
+        for fault in ("raw", "bbox", "pixel", "verification", "other_payload"):
+            with self.subTest(fault=fault):
+                review.clear(); review.update(copy.deepcopy(frozen))
+                case = review["payload"]["line_checks"][0]
+                if fault == "raw": case["raw_text"] += "changed"
+                elif fault == "bbox": case["line_bbox"][0] += 1
+                elif fault == "pixel": case["review_region_rgb_sha256"] = "0"*64
+                elif fault == "verification": review["payload"]["human_verified"] = True
+                else: review["payload"]["review_method"] += "changed"
+                refresh_package(self.data)
+                with self.assertRaisesRegex(ValueError, "unlisted raw, source, pixel or verification"):
+                    load_continuation_package(*self.args())
+
+    def test_revision_two_rejects_wrong_pixels_or_side_in_geometry_witness(self):
+        review, _, _, _ = self.revised_content_review()
+        frozen = copy.deepcopy(review)
+        for fault in ("pixels", "side", "verified"):
+            with self.subTest(fault=fault):
+                review.clear(); review.update(copy.deepcopy(frozen))
+                witness = review["payload"]["lineage"]["changes"][0]["source_geometry_witness"]
+                if fault == "pixels": witness["raised_component_rgb_sha256"] = "0"*64
+                elif fault == "side":
+                    witness["body_digit_bbox"], witness["raised_component_bbox"] = witness["raised_component_bbox"], witness["body_digit_bbox"]
+                    witness["body_digit_rgb_sha256"], witness["raised_component_rgb_sha256"] = witness["raised_component_rgb_sha256"], witness["body_digit_rgb_sha256"]
+                else: witness["human_verified"] = True
+                refresh_package(self.data)
+                with self.assertRaises(ValueError): load_continuation_package(*self.args())
+
 
 if __name__ == "__main__": unittest.main()

@@ -40,7 +40,7 @@ def fraction_count(value):
     return int(value.get('type') == 'fraction') + sum(fraction_count(v) for v in value.values())
 
 
-def parse_formula_latex(raw):
+def _parse_formula_latex(raw, *, inline=False):
     tokens = []
     result = {'raw_latex': raw, 'supported': False, 'ast': None, 'normalized_ast': None,
               'tokens': tokens, 'errors': [], 'unparsed_tail': None}
@@ -51,13 +51,18 @@ def parse_formula_latex(raw):
         result['errors'] = [{'code': 'FORMULA_SYNTAX_LIMIT', 'position': 0}]
         result['unparsed_tail'] = raw
         return result
+    operators = OPERATORS | ({'\\because', '\\therefore', '\\approx', '\\neq', ':'} if inline else set())
+    styles = {'\\mathrm', '\\mathbf', '\\mathit', '\\text'} if inline else set()
+    symbols = {'\\pi', '\\alpha', '\\beta', '\\gamma', '\\theta', '\\ell'} if inline else set()
+    supported_commands = FRACTIONS | operators | styles | symbols | ({'\\sqrt'} if inline else set())
+    lexer = re.compile(_LEX.pattern + r'|:') if inline else _LEX
     try:
         position = 0
         while position < len(raw):
             if raw[position].isspace():
                 position += 1
                 continue
-            match = _LEX.match(raw, position)
+            match = lexer.match(raw, position)
             if not match:
                 raise SyntaxFailure(position, 'unknown character or command')
             text = match[0]
@@ -114,6 +119,22 @@ def parse_formula_latex(raw):
                 denominator = argument(depth+1, braces=True)
                 return node('fraction', [token['start'], denominator['raw_source_span'][1]],
                             numerator=numerator['body'], denominator=denominator['body'])
+            if inline and text == '\\sqrt':
+                cursor += 1
+                index = None
+                if current() is not None and current()['text'] == '[':
+                    index = group(depth+1)
+                radicand = argument(depth+1)
+                return node('radical', [token['start'], radicand['raw_source_span'][1]],
+                            index=index, radicand=radicand)
+            if text in styles:
+                cursor += 1
+                body = argument(depth+1, braces=True)
+                return node('styled', [token['start'], body['raw_source_span'][1]],
+                            style=text, body=body)
+            if text in symbols:
+                cursor += 1
+                return node('symbol', [token['start'], token['end']], value=text)
             if token['kind'] in {'number', 'symbol'}:
                 cursor += 1
                 return node(token['kind'], [token['start'], token['end']], value=text)
@@ -125,7 +146,7 @@ def parse_formula_latex(raw):
             while current() is not None and current()['text'] != stop:
                 token = current()
                 text = token['text']
-                if text in OPERATORS:
+                if text in operators:
                     cursor += 1
                     values.append(node('operator', [token['start'], token['end']], value=text))
                     continue
@@ -157,9 +178,23 @@ def parse_formula_latex(raw):
         # A later lexing failure must not move an earlier unknown command out
         # of the unresolved tail. Keep every scanned token and start the tail
         # at the first unsupported source position.
-        unknown = [t for t in tokens if t['kind'] == 'command' and t['text'] not in FRACTIONS | OPERATORS]
+        unknown = [t for t in tokens if t['kind'] == 'command' and t['text'] not in supported_commands]
         position = min([exc.position]+[t['start'] for t in unknown])
         detail = str(exc) if position == exc.position else 'unsupported command before later syntax failure'
         result['errors'].append({'code': 'UNSUPPORTED_FORMULA_SYNTAX', 'position': position, 'detail': detail})
         result['unparsed_tail'] = raw[position:]
     return result
+
+
+def parse_formula_latex(raw):
+    """Historical fraction grammar; new inline constructs remain unsupported."""
+    return _parse_formula_latex(raw)
+
+
+def parse_inline_formula_latex(raw):
+    """Explicit inline profile: retain radical/index/style scope without evaluation.
+
+    This adds no transcription certainty and does not simplify or solve math.
+    The historical parser's accepted language remains unchanged.
+    """
+    return {**_parse_formula_latex(raw, inline=True), 'syntax_profile': 'INLINE_ARITHMETIC_RADICAL/0.1'}

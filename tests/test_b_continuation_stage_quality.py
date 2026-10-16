@@ -214,10 +214,10 @@ class ContinuationStageIntegrityTests(unittest.TestCase):
 class RealContinuationDevelopmentReferences(unittest.TestCase):
     def test_five_source_bound_real_differences_keep_exact_raw_and_review_pixels(self):
         fixture = ROOT/"tests/fixtures/book46007447"
-        package = json.loads((fixture/"continuation-package.json").read_text(encoding="utf8"))
-        descriptor = package["documents"]["content_review"]
-        content = json.loads((fixture/descriptor["path"]).read_text(encoding="utf8"))
-        evidence = json.loads((fixture/package["documents"]["continuation_fixture"]["path"]).read_text(encoding="utf8"))
+        # Preserve this exact historical development reference, including its
+        # subsequently corrected radical mistake. The current package uses v2.
+        content = json.loads((fixture/"continuation-content-review.json").read_text(encoding="utf8"))
+        evidence = json.loads((fixture/"continuation-evidence.json").read_text(encoding="utf8"))
         cp = content["payload"];raw = {l["line_id"]:l for l in evidence["payload"]["ocr_lines"]}
         self.assertEqual([c["line_id"]for c in cp["line_checks"]],["resource-173/ocr/0","resource-173/ocr/4","resource-173/ocr/5","resource-173/ocr/6","resource-173/ocr/7"])
         self.assertEqual(sum(len(c["differences"])for c in cp["line_checks"]),6)

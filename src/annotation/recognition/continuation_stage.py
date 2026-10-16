@@ -116,6 +116,86 @@ def source_answer_snapshot(evidence, graph, *, asset_id, section_path, printed_n
             "assembly_status": answer["assembly_status"], "boundary": copy.deepcopy(answer["boundary"])}
 
 
+def _validate_content_lineage(content, base_inputs, original):
+    """Permit explicit development-observation corrections, never raw edits.
+
+    The complete previous review is embedded so the package's document receipt
+    covers it. No historical filename is resolved and no observation is treated
+    as a human transcription or used to choose continuation source lines.
+    """
+    revision, payload = content["revision"], content["payload"]
+    if revision == 1:
+        if content.get("input_refs") != base_inputs or "lineage" in payload:
+            raise ValueError("original content review references or lineage changed")
+        return
+    if revision != 2:
+        raise ValueError("unsupported content review correction revision")
+    lineage = payload.get("lineage")
+    if (not isinstance(lineage, dict)
+            or set(lineage) != {"supersedes_ref", "previous_review_archive", "reason", "changes"}
+            or not isinstance(lineage.get("reason"), str) or not lineage["reason"].strip()):
+        raise ValueError("content review correction requires explicit lineage and reason")
+    old = lineage["previous_review_archive"]
+    if not isinstance(old, dict) or not isinstance(old.get("payload"), dict):
+        raise ValueError("content review correction requires a complete previous archive")
+    _checked(old, {"b-continuation-content-review-trial/0.1"}, "ContinuationContentReviewTrial")
+    if (old.get("revision") != 1 or any(old.get(k) != content.get(k) for k in ("book_id", "scope_id"))
+            or old.get("input_refs") != base_inputs or "lineage" in old["payload"]
+            or reference(old) != lineage["supersedes_ref"]
+            or content.get("input_refs") != base_inputs+[reference(old)]):
+        raise ValueError("content review correction archive or exact prior references changed")
+    expected = copy.deepcopy(old["payload"])
+    changes = lineage["changes"]
+    if not isinstance(changes, list) or not changes:
+        raise ValueError("content review correction needs named changes")
+    case_lists = [expected.get("line_checks"), payload.get("line_checks")]
+    if any(not isinstance(cases, list) or any(not isinstance(case, dict) or not isinstance(case.get("case_id"), str)
+            or not case["case_id"] for case in cases) for cases in case_lists):
+        raise ValueError("content review correction has invalid case identities")
+    old_cases, new_cases = [{case["case_id"]: case for case in cases} for cases in case_lists]
+    if any(len(cases) != len(index) for cases, index in zip(case_lists, (old_cases, new_cases))):
+        raise ValueError("content review correction has duplicate cases")
+    seen = set()
+    for change in changes:
+        if not isinstance(change, dict):
+            raise ValueError("invalid content review change")
+        case_id = change.get("case_id")
+        if (set(change) != {"case_id", "changed_fields", "reason", "source_geometry_witness"}
+                or not isinstance(case_id, str) or case_id in seen or case_id not in old_cases or case_id not in new_cases
+                or change.get("changed_fields") != ["observed_text", "differences"]
+                or not isinstance(change.get("reason"), str) or not change["reason"].strip()
+                or all(old_cases[case_id].get(field) == new_cases[case_id].get(field) for field in change["changed_fields"])):
+            raise ValueError("content review correction may change only named observations and differences")
+        for field in change["changed_fields"]:
+            old_cases[case_id][field] = copy.deepcopy(new_cases[case_id].get(field))
+        witness = change["source_geometry_witness"]
+        witness_keys = {"source_region_bbox", "source_region_rgb_sha256", "raised_component_bbox", "raised_component_rgb_sha256",
+                        "body_digit_bbox", "body_digit_rgb_sha256", "threshold", "interpretation", "human_verified"}
+        if (not isinstance(witness, dict) or set(witness) != witness_keys or witness.get("human_verified") is not False
+                or type(witness.get("threshold")) is not int or not 0 < witness["threshold"] < 256
+                or not isinstance(witness.get("interpretation"), str) or not witness["interpretation"].strip()):
+            raise ValueError("content review correction witness cannot verify a symbol")
+        region, reviewed = witness["source_region_bbox"], new_cases[case_id].get("review_region_bbox")
+        if (not isinstance(region, list) or not valid_bbox(region, *original.size)
+                or not isinstance(reviewed, list) or not valid_bbox(reviewed, *original.size)
+                or not (reviewed[0] <= region[0] < region[2] <= reviewed[2]
+                        and reviewed[1] <= region[1] < region[3] <= reviewed[3])):
+            raise ValueError("content review correction witness is outside its reviewed source row")
+        for prefix in ("source_region", "raised_component", "body_digit"):
+            box = witness[prefix+"_bbox"]
+            if (not isinstance(box, list) or not valid_bbox(box, *original.size) or any(type(v) is not int for v in box)
+                    or not (region[0] <= box[0] < box[2] <= region[2] and region[1] <= box[1] < box[3] <= region[3])
+                    or _rgb(original.crop(box)) != witness[prefix+"_rgb_sha256"]):
+                raise ValueError("content review correction witness differs from original pixels")
+        raised, body = witness["raised_component_bbox"], witness["body_digit_bbox"]
+        if not (raised[0] >= body[0] and raised[1] < body[1] and raised[3] < body[3]):
+            raise ValueError("content review correction raised-right geometry is inconsistent")
+        seen.add(case_id)
+    expected["lineage"] = copy.deepcopy(lineage)
+    if payload != expected:
+        raise ValueError("content review correction changed unlisted raw, source, pixel or verification fields")
+
+
 def load_continuation_package(package_path, source_path, adjacent_source_path):
     """Validate all declared originals, captures, normalized documents and OCR.
 
@@ -235,11 +315,12 @@ def load_continuation_package(package_path, source_path, adjacent_source_path):
     # Development text is only a downstream quality reference. It never
     # participates in choosing a source answer, proof lines or replacement OCR.
     cr = content_review["payload"]
+    base_review_inputs = [reference(fixture), {"asset_id": adjacent["asset_id"], "sha256": adjacent["sha256"]},
+                          {"crop_sha256": crop["sha256"]}]
+    _validate_content_lineage(content_review, base_review_inputs, originals[adjacent["asset_id"]][1])
     asset_ref = {key: adjacent[key] for key in ("asset_id", "sha256", "width", "height")}
     capture_ref = {key: crop[key] for key in ("path", "sha256", "source_bbox", "width", "height")}
     if (content_review.get("kind") != "ContinuationContentReviewTrial" or content_review.get("scope_id") != manifest["extended_scope_id"]
-            or content_review.get("input_refs") != [reference(fixture), {"asset_id": adjacent["asset_id"], "sha256": adjacent["sha256"]},
-                                                    {"crop_sha256": crop["sha256"]}]
             or cr.get("asset") != asset_ref or cr.get("capture") != capture_ref
             or cr.get("reference_quality") != "MODEL_VISUAL_DEVELOPMENT_REVIEW"
             or any(cr.get(key) is not False for key in ("human_verified", "transcription_verified", "business_acceptance"))

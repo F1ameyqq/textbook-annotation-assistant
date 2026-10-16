@@ -47,6 +47,61 @@ def semantic_receipt(receipt):
     return result
 
 
+def _content_lineage(content,base_inputs,original):
+    """A source review correction cannot silently rewrite its earlier record."""
+    if content["revision"] == 1:
+        if content.get("input_refs") != base_inputs or "lineage"in content["payload"]:
+            raise ValueError("original content review input references or lineage changed")
+        return
+    if content["revision"] != 2: raise ValueError("unsupported content review lineage revision")
+    payload = content["payload"];lineage = payload.get("lineage",{})
+    if set(lineage) != {"supersedes_ref","previous_review_archive","reason","changes"}or not isinstance(lineage["reason"],str)or not lineage["reason"]:
+        raise ValueError("content review correction needs explicit lineage and reason")
+    old = lineage["previous_review_archive"]
+    if (not _checked(old,"b-continuation-content-review-trial/0.1")or old.get("kind") != "ContinuationContentReviewTrial"
+            or old.get("revision") != 1 or any(old.get(k) != content.get(k)for k in ("book_id","scope_id"))
+            or old.get("input_refs") != base_inputs or "lineage"in old["payload"]or ref(old) != lineage["supersedes_ref"]
+            or content.get("input_refs") != base_inputs+[ref(old)]):
+        raise ValueError("content review lineage original archive or input reference changed")
+    expected = copy.deepcopy(old["payload"]);changes = lineage["changes"]
+    if not isinstance(changes,list)or not changes: raise ValueError("content review lineage has no named correction")
+    old_cases = {case["case_id"]:case for case in expected["line_checks"]}
+    new_cases = {case["case_id"]:case for case in payload["line_checks"]}
+    seen = set()
+    for change in changes:
+        case_id = change.get("case_id")
+        if (set(change) != {"case_id","changed_fields","reason","source_geometry_witness"}or case_id in seen
+                or case_id not in old_cases or case_id not in new_cases or change.get("changed_fields") != ["observed_text","differences"]
+                or not isinstance(change.get("reason"),str)or not change["reason"]):
+            raise ValueError("content review correction must name only observed text and differences")
+        if all(old_cases[case_id].get(k) == new_cases[case_id].get(k)for k in change["changed_fields"]):
+            raise ValueError("content review correction does not change its named observation")
+        for field in change["changed_fields"]: old_cases[case_id][field] = copy.deepcopy(new_cases[case_id][field])
+        witness = change["source_geometry_witness"]
+        witness_keys = {"source_region_bbox","source_region_rgb_sha256","raised_component_bbox","raised_component_rgb_sha256",
+            "body_digit_bbox","body_digit_rgb_sha256","threshold","interpretation","human_verified"}
+        if (not isinstance(witness,dict)or set(witness) != witness_keys or witness.get("human_verified")is not False
+                or type(witness.get("threshold"))is not int or not 0 < witness["threshold"] < 256
+                or not isinstance(witness.get("interpretation"),str)or not witness["interpretation"]):
+            raise ValueError("content review geometry witness falsely verifies a symbol")
+        region = witness["source_region_bbox"]
+        reviewed_region = new_cases[case_id]["review_region_bbox"]
+        if not(reviewed_region[0] <= region[0] < region[2] <= reviewed_region[2]and reviewed_region[1] <= region[1] < region[3] <= reviewed_region[3]):
+            raise ValueError("content review lineage witness is outside its reviewed row")
+        for prefix in ("source_region","raised_component","body_digit"):
+            box = witness[prefix+"_bbox"]
+            if (not valid_bbox(box,*original.size)or any(type(v)is not int for v in box)
+                    or not(region[0] <= box[0] < box[2] <= region[2]and region[1] <= box[1] < box[3] <= region[3])
+                    or _rgb(original.crop(box)) != witness[prefix+"_rgb_sha256"]):
+                raise ValueError("content review lineage witness differs from source pixels")
+        raised,body = witness["raised_component_bbox"],witness["body_digit_bbox"]
+        if not(raised[0] >= body[0]and raised[1] < body[1]and raised[3] < body[3]):
+            raise ValueError("content review raised-right witness geometry is inconsistent")
+        seen.add(case_id)
+    expected["lineage"] = copy.deepcopy(lineage)
+    if payload != expected: raise ValueError("content review correction changed unlisted raw, source or verification fields")
+
+
 def inspect_continuation_package(package_path,source_path,adjacent_source_path):
     """Read current originals and all captures, independently of the loader."""
     if adjacent_source_path is None: raise ValueError("adjacent original is required")
@@ -135,6 +190,7 @@ def inspect_continuation_package(package_path,source_path,adjacent_source_path):
             or snapshot.get("boundary",{}).get("kind") != "ANSWER_PAGE_EDGE"):
         raise ValueError("source snapshot is not the reviewed open tail")
     cp = content["payload"]
+    _content_lineage(content,[ref(fixture),{"asset_id":adjacent["asset_id"],"sha256":adjacent["sha256"]},{"crop_sha256":crop["sha256"]}],originals[adjacent["asset_id"]][1])
     if (content.get("scope_id") != manifest["extended_scope_id"]
             or cp.get("asset") != {k:adjacent[k]for k in ("asset_id","sha256","width","height")}
             or cp.get("capture") != {k:crop[k]for k in ("path","sha256","source_bbox","width","height")}
