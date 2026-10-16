@@ -20,6 +20,7 @@ import cv2
 
 from .baseline import code_digest,digest,file_digest,load_source,valid_bbox
 from .batch_quality import audit_batch
+from .recovery_stage_quality import audit_recovery_stage,audit_recovery_review,_load_package,POLICY
 
 SCHEMA = "b-pipeline-check-trial/0.1"
 
@@ -306,7 +307,7 @@ def _recognizer_current(receipt,*,use_ocr,synthetic):
     return receipt == {**expected,"fingerprint":digest(expected)}
 
 
-def _audit_pipeline(source_path,context_path,review_path,report,workdir,*,evidence_path=None):
+def _audit_pipeline(source_path,context_path,review_path,report,workdir,*,evidence_path=None,recovery_path=None):
     issues,summary = [],{}
 
     def emit(code,stage=None,detail=None):
@@ -338,6 +339,8 @@ def _audit_pipeline(source_path,context_path,review_path,report,workdir,*,eviden
     if evidence_path is not None:
         imported = json.loads(Path(evidence_path).read_text(encoding="utf-8"))
         receipts["evidence"] = {"file_sha256":file_digest(Path(evidence_path)),"reference":_ref(imported)}
+    if recovery_path is not None:
+        _,_,receipts["recovery"],_,_ = _load_package(source_path,recovery_path,lambda code,detail=None:emit(code,"recover",detail))
     mode = "CACHED_INPUT"if imported is not None else"LIVE_BATCH"
     if (context.get("schema_version") != "b-context-trial/0.1"or review.get("schema_version") != "b-review-trial/0.1"
             or any(document.get(k) != source[k]for document in (context,review)for k in ("book_id","scope_id"))
@@ -374,6 +377,9 @@ def _audit_pipeline(source_path,context_path,review_path,report,workdir,*,eviden
             or p.get("transcription_verified")is not False or p.get("platform_actions") != []):
         emit("PIPELINE_FALSE_VERIFICATION")
     stage_order = ["evidence","assemble","quality"]if mode == "CACHED_INPUT"else["recognition","refine","assemble","quality"]
+    if recovery_path is not None:
+        stage_order.insert(stage_order.index("assemble"),"recover")
+        stage_order.insert(stage_order.index("quality"),"recovery_review")
     stages = p.get("stages",[])
     if [s.get("stage_id")for s in stages] != stage_order:
         emit("PIPELINE_STAGE_SCOPE_MISMATCH")
@@ -448,7 +454,8 @@ def _audit_pipeline(source_path,context_path,review_path,report,workdir,*,eviden
         emit("PIPELINE_EVENT_ATTEMPT_UNKNOWN")
     offline_path = Path(__file__).with_name("offline.py")
     pipeline_path,batch_path = Path(__file__).with_name("pipeline.py"),Path(__file__).with_name("batch.py")
-    source_functions = {"offline":_function_hashes(offline_path),"pipeline":_function_hashes(pipeline_path),"batch":_function_hashes(batch_path)}
+    source_functions = {"offline":_function_hashes(offline_path),"pipeline":_function_hashes(pipeline_path),"batch":_function_hashes(batch_path),
+        "recovery_stage":_function_hashes(Path(__file__).with_name("recovery_stage.py"))}
     offline_globals = _offline_global_values(offline_path)
     expected_dependencies = {distribution:{"version":importlib.metadata.version(distribution),
         "package_entry_sha256":file_digest(Path(importlib.util.find_spec(module).origin))}for distribution,module in (("numpy","numpy"),("Pillow","PIL"))}
@@ -478,8 +485,12 @@ def _audit_pipeline(source_path,context_path,review_path,report,workdir,*,eviden
         elif stage == "refine":
             dependencies.update(context=receipts["context"],recognition=bindings["recognition"],baseline={
                 "artifact":results["recognition"]["payload"]["bundle"],"result_ref":_ref(results["baseline"])})
+        elif stage == "recover": dependencies.update(evidence=bindings["evidence"],recovery=receipts["recovery"])
         elif stage == "assemble": dependencies["evidence"] = bindings["evidence"]
-        elif stage == "quality": dependencies.update(evidence=bindings["evidence"],graph=bindings["assemble"],review=receipts["review"])
+        elif stage == "recovery_review": dependencies.update(evidence=bindings["evidence"],review=receipts["review"])
+        elif stage == "quality":
+            review_dependency = {**bindings["recovery_review"],"reference":_document_ref(results["active_review"])}if recovery_path is not None else receipts["review"]
+            dependencies.update(evidence=bindings["evidence"],graph=bindings["assemble"],review=review_dependency)
         if entry.get("reason") == "STAGE_SETUP_FAILED":
             current = entry.get("current_run_receipt")or{}
             associated = [e for e in run_events if e["event_id"] == current.get("event_id")]
@@ -499,14 +510,16 @@ def _audit_pipeline(source_path,context_path,review_path,report,workdir,*,eviden
             continue
         implementation = entry.get("implementation")or{}
         code = implementation.get("code",{})
-        function_owner,function_name = ("batch","run_batch")if stage == "recognition"else("pipeline","_validate_evidence")if stage == "evidence"else("offline","quality_check"if stage == "quality"else stage)
+        function_owner,function_name = ("batch","run_batch")if stage == "recognition"else("pipeline","_validate_evidence")if stage == "evidence"else("recovery_stage","recover_evidence"if stage == "recover"else"build_recovery_review")if stage in {"recover","recovery_review"}else("offline","quality_check"if stage == "quality"else stage)
         helper_names = []if stage == "recognition"else["check_artifact","validate_context"]if stage == "evidence"else["artifact","ref","check_artifact"]+{
-            "refine":["validate_context","detect_columns","locate"],"assemble":["entity_id","scope_key"],"quality":["scalar_issues","scope_key"]}[stage]
+            "refine":["validate_context","detect_columns","locate"],"assemble":["entity_id","scope_key"],"quality":["scalar_issues","scope_key"],"recover":["validate_context"],"recovery_review":[]}[stage]
         expected_helpers = {n:source_functions["offline"][n]for n in helper_names}
         module_names = {"recognition":["batch","baseline"],"evidence":["baseline"],
+            "recover":["recovery_stage","recovery_apply","baseline"],"recovery_review":["recovery_stage","recovery_apply","baseline"],
             "refine":["baseline","legacy"],"assemble":["baseline","answer_assembly","policy"],
             "quality":["baseline","answer_quality","recovery_quality","recovery_apply","policy"]}[stage]
         global_names = {"recognition":[],"evidence":["CONTEXT_SCHEMA","EVIDENCE_SCHEMA"],"refine":["CONTEXT_SCHEMA","EVIDENCE_SCHEMA","ASTART"],
+            "recover":["EVIDENCE_SCHEMA","CONTEXT_SCHEMA"],"recovery_review":["EVIDENCE_SCHEMA"],
             "assemble":["EVIDENCE_SCHEMA","GRAPH_SCHEMA","QSTART","ASTART","OPTION","CAPTION","DECORATION"],
             "quality":["EVIDENCE_SCHEMA","GRAPH_SCHEMA","CHECK_SCHEMA"]}[stage]
         module_paths = {n:(Path(__file__).resolve().parents[3]/"tools/route_a_layout.py"if n == "legacy"else Path(__file__).with_name(n+".py"))for n in module_names}
@@ -514,12 +527,14 @@ def _audit_pipeline(source_path,context_path,review_path,report,workdir,*,eviden
         synthetic_override = stage == "refine"and kind == "SYNTHETIC_TEST"and refinement_mode == "SYNTHETIC_TEST_OVERRIDE"
         expected_entrypoint = source_functions[function_owner][function_name]
         entrypoint_valid = bool(re.fullmatch(r"[0-9a-f]{64}",str(code.get("entrypoint",""))))if synthetic_override else code.get("entrypoint") == expected_entrypoint
+        expected_configuration = {"stage_id":stage,"mode":mode,"execution_kind":kind,"use_ocr":use_ocr,
+            "offline_globals":{name:offline_globals[name]for name in global_names},
+            "refinement_mode":"SYNTHETIC_TEST_OVERRIDE"if synthetic_override else"CPU_OCR"if stage == "refine"else None}
+        if stage in {"recover","recovery_review"}: expected_configuration["recovery_policy"] = POLICY
         if (code.get("pipeline") != code_digest(pipeline_path)or not entrypoint_valid
                 or code.get("helpers") != expected_helpers or code.get("modules") != {n:code_digest(path)for n,path in module_paths.items()}
                 or implementation.get("dependencies") != expected_dependencies
-                or implementation.get("configuration") != {"stage_id":stage,"mode":mode,"execution_kind":kind,"use_ocr":use_ocr,
-                    "offline_globals":{name:offline_globals[name]for name in global_names},
-                    "refinement_mode":"SYNTHETIC_TEST_OVERRIDE"if synthetic_override else"CPU_OCR"if stage == "refine"else None}):
+                or implementation.get("configuration") != expected_configuration):
             emit("PIPELINE_IMPLEMENTATION_VERSION_MISMATCH",stage)
         if stage in {"recognition","refine"}:
             try:
@@ -600,17 +615,27 @@ def _audit_pipeline(source_path,context_path,review_path,report,workdir,*,eviden
                 if stage == "evidence"and result != imported: emit("PIPELINE_CACHED_INPUT_CHANGED",stage)
                 if stage == "refine"and result.get("input_refs") != [dependencies["baseline"]["result_ref"],receipts["context"]["reference"]]:
                     emit("PIPELINE_REFINED_INPUT_REFERENCE_MISMATCH",stage)
+            elif stage == "recover":
+                _source_evidence(result,source,context,lambda code,**kwargs:emit(code,stage,kwargs.get("detail")))
+                recovery_check = audit_recovery_stage(source_path,recovery_path,results["evidence"],result)
+                if not recovery_check["payload"]["accepted"]:
+                    emit("PIPELINE_RECOVERY_MIGRATION_REJECTED",stage,recovery_check["payload"]["issues"])
+            elif stage == "recovery_review":
+                review_check = audit_recovery_review(review,results["evidence"],result)
+                if not review_check["payload"]["accepted"]:
+                    emit("PIPELINE_RECOVERY_REVIEW_REJECTED",stage,review_check["payload"]["issues"])
             elif stage == "assemble":
                 e = results["evidence"]
                 units = _source_evidence(e,source,context,lambda code,**kwargs:emit(code,stage,kwargs.get("detail")))
                 _graph_sources(e,result,units,lambda code,**kwargs:emit(code,stage,kwargs.get("detail")))
             else:
-                _quality_bindings(results["evidence"],results["assemble"],result,review,
+                _quality_bindings(results["evidence"],results["assemble"],result,results.get("active_review",review),
                     lambda code,**kwargs:emit(code,stage,kwargs.get("detail")))
             if state == "DONE":
                 results[stage] = result
                 bindings[stage] = {"output":entry["output"],"result_ref":_ref(result)}
-                if stage == "refine": results["evidence"],bindings["evidence"] = result,bindings[stage]
+                if stage in {"refine","recover"}: results["evidence"],bindings["evidence"] = result,bindings[stage]
+                if stage == "recovery_review": results["active_review"] = result["payload"]["review"]
             else: blocked = True
         except (OSError,ValueError,TypeError,KeyError)as exc:
             emit("PIPELINE_STAGE_OUTPUT_INVALID",stage,str(exc))
@@ -627,10 +652,10 @@ def _audit_pipeline(source_path,context_path,review_path,report,workdir,*,eviden
     return finish()
 
 
-def audit_pipeline(source_path,context_path,review_path,report,workdir,*,evidence_path=None):
+def audit_pipeline(source_path,context_path,review_path,report,workdir,*,evidence_path=None,recovery_path=None):
     """Fail closed on bad inputs; do not certify business or execution signatures."""
     try:
-        return _audit_pipeline(source_path,context_path,review_path,report,workdir,evidence_path=evidence_path)
+        return _audit_pipeline(source_path,context_path,review_path,report,workdir,evidence_path=evidence_path,recovery_path=recovery_path)
     except (OSError,ValueError,TypeError,KeyError,AttributeError,IndexError,sqlite3.Error)as exc:
         payload = {"accepted":False,"decision":"HOLD","issues":[{"code":"PIPELINE_PERSISTED_DATA_INVALID","severity":"ERROR",
             "detail":type(exc).__name__+": "+str(exc)}],"summary":{},"business_acceptance":False,

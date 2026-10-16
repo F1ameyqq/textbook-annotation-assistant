@@ -2,6 +2,8 @@
 
 Without --ocr, live runs stop after geometric recognition. --evidence imports
 an existing source-bound refined EvidenceBundle without running an OCR model.
+--recovery applies an explicit local recovery package as independently cached
+evidence and review stages; it never enables OCR by itself.
 READY means the offline stages ran, while all business results remain HOLD.
 """
 from __future__ import annotations
@@ -64,7 +66,8 @@ def _save_check(workdir, report, check):
 
 
 def execute(source_path, context_path, review_path, workdir, *, use_ocr=False,
-            max_items=None, stop_after=None, evidence_path=None, runner=None, auditor=None):
+            max_items=None, stop_after=None, evidence_path=None, recovery_path=None,
+            runner=None, auditor=None):
     try:
         if runner is None:
             from annotation.recognition.pipeline import run_pipeline
@@ -77,13 +80,16 @@ def execute(source_path, context_path, review_path, workdir, *, use_ocr=False,
     source_path, context_path, review_path, workdir = map(Path,
         (source_path, context_path, review_path, workdir))
     evidence_path = Path(evidence_path) if evidence_path is not None else None
+    recovery_path = Path(recovery_path) if recovery_path is not None else None
     try:
         report = runner(source_path, context_path, review_path, workdir, use_ocr=use_ocr,
-            max_items=max_items, stop_after=stop_after, evidence_path=evidence_path)
+            max_items=max_items, stop_after=stop_after, evidence_path=evidence_path,
+            recovery_path=recovery_path)
     except Exception as exc:
         raise PipelineCLIError("RUN_FAILED", exc) from exc
     try:
-        check = auditor(source_path, context_path, review_path, report, workdir, evidence_path=evidence_path)
+        check = auditor(source_path, context_path, review_path, report, workdir,
+            evidence_path=evidence_path, recovery_path=recovery_path)
         payload, checked = report["payload"], check["payload"]
         if (check["schema_version"] != "b-pipeline-check-trial/0.1"
                 or type(checked["accepted"]) is not bool
@@ -115,16 +121,20 @@ def main(argv=None):
     parser.add_argument("--workdir", type=local_path, required=True, help="persistent offline pipeline directory")
     parser.add_argument("--ocr", action="store_true", help="explicitly enable live baseline and answer-row CPU OCR")
     parser.add_argument("--max-items", type=positive_int, help="bound this live recognition invocation without shrinking scope")
-    parser.add_argument("--stop-after", choices=("recognition", "refine", "assemble", "quality"))
+    parser.add_argument("--stop-after", choices=("recognition", "refine", "recover", "assemble", "recovery_review", "quality"))
     parser.add_argument("--evidence", type=local_path, help="import an existing refined 0.2/0.3 EvidenceBundle; no new OCR")
+    parser.add_argument("--recovery", type=local_path, help="explicit local source-bound recovery package; no new OCR")
     args = parser.parse_args(argv)
     if args.evidence is not None and (args.ocr or args.max_items is not None):
         parser.error("--evidence cannot be combined with --ocr or --max-items")
     if args.evidence is not None and args.stop_after == "refine":
         parser.error("cached evidence is already refined; --stop-after refine is unsupported")
+    if args.recovery is None and args.stop_after in {"recover", "recovery_review"}:
+        parser.error("--stop-after recover/recovery_review requires --recovery")
     try:
         result = execute(args.source, args.context, args.review, args.workdir, use_ocr=args.ocr,
-            max_items=args.max_items, stop_after=args.stop_after, evidence_path=args.evidence)
+            max_items=args.max_items, stop_after=args.stop_after, evidence_path=args.evidence,
+            recovery_path=args.recovery)
     except PipelineCLIError as exc:
         result = dict(schema_version="b-pipeline-cli-result-trial/0.1", pipeline_state="FAILED",
             mode="CACHED_INPUT" if args.evidence is not None else "LIVE_BATCH", decision="HOLD",

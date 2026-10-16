@@ -23,6 +23,7 @@ from uuid import uuid4
 from . import batch, offline
 from .baseline import code_digest, digest, file_digest, load_source, valid_bbox
 from .batch_quality import audit_batch
+from . import recovery_stage
 
 # Explicit bindings are also useful for synthetic fault tests; there is no
 # alternate runtime or hidden production backend in this module.
@@ -105,6 +106,7 @@ def _pipeline_lock(workdir):
 
 def _implementation(stage, mode, kind, use_ocr, worker):
     functions = {"recognition": run_batch, "evidence": _validate_evidence, "refine": refine,
+                 "recover": recovery_stage.recover_evidence, "recovery_review": recovery_stage.build_recovery_review,
                  "assemble": assemble, "quality": quality_check}
     helpers, names = {}, []
     if stage == "recognition":
@@ -112,6 +114,10 @@ def _implementation(stage, mode, kind, use_ocr, worker):
     elif stage == "evidence":
         names = ["baseline"]
         helpers = {name: _function_sha(getattr(offline, name)) for name in ("check_artifact", "validate_context")}
+    elif stage in ("recover", "recovery_review"):
+        names = ["recovery_stage", "recovery_apply", "baseline"]
+        helpers = {name: _function_sha(getattr(offline, name)) for name in ("artifact", "ref", "check_artifact")}
+        if stage == "recover": helpers["validate_context"] = _function_sha(offline.validate_context)
     else:
         common = ["artifact", "ref", "check_artifact"]
         specific = {"refine": ["validate_context", "detect_columns", "locate"],
@@ -126,17 +132,20 @@ def _implementation(stage, mode, kind, use_ocr, worker):
     recognizer = (batch._recognizer(use_ocr, worker) if stage == "recognition"
                   else batch._recognizer(True, worker if synthetic_refine else None) if stage == "refine" else None)
     globals_by_stage = {"recognition": [], "evidence": ["CONTEXT_SCHEMA", "EVIDENCE_SCHEMA"], "refine": ["CONTEXT_SCHEMA", "EVIDENCE_SCHEMA", "ASTART"],
+                        "recover": ["EVIDENCE_SCHEMA", "CONTEXT_SCHEMA"], "recovery_review": ["EVIDENCE_SCHEMA"],
                         "assemble": ["EVIDENCE_SCHEMA", "GRAPH_SCHEMA", "QSTART", "ASTART", "OPTION", "CAPTION", "DECORATION"],
                         "quality": ["EVIDENCE_SCHEMA", "GRAPH_SCHEMA", "CHECK_SCHEMA"]}
     global_values = {}
     for name in globals_by_stage[stage]:
         value = getattr(offline, name)
         global_values[name] = {"pattern": value.pattern, "flags": value.flags} if hasattr(value, "pattern") else value
+    configuration = {"stage_id": stage, "mode": mode, "execution_kind": kind, "use_ocr": use_ocr,
+                     "offline_globals": global_values,
+                     "refinement_mode": ("SYNTHETIC_TEST_OVERRIDE" if synthetic_refine else "CPU_OCR") if stage == "refine" else None}
+    if stage in ("recover", "recovery_review"): configuration["recovery_policy"] = recovery_stage.POLICY
     return {"code": {"pipeline": code_digest(Path(__file__)), "entrypoint": _function_sha(functions[stage]),
                      "helpers": helpers, "modules": modules},
-            "configuration": {"stage_id": stage, "mode": mode, "execution_kind": kind, "use_ocr": use_ocr,
-                              "offline_globals": global_values,
-                              "refinement_mode": ("SYNTHETIC_TEST_OVERRIDE" if synthetic_refine else "CPU_OCR") if stage == "refine" else None},
+            "configuration": configuration,
             "dependencies": _dependencies(), "recognizer": recognizer}
 
 
@@ -196,17 +205,40 @@ def _validate_evidence(value, source, context):
         raise ValueError("imported evidence cannot claim business acceptance or platform actions")
 
 
-def _validate_result(stage, value, source, context, review, dependencies, recognition_dir):
+def _validate_result(stage, value, source, context, review, dependencies, recognition_dir, current_evidence=None):
     if stage == "recognition":
         if value.get("payload", {}).get("source_manifest") != source:
             raise ValueError("recognition batch scope changed")
         # audit_batch takes a path. The caller performs this check with the
         # actual validated manifest, never a newly fabricated source alias.
         return
-    if stage in ("evidence", "refine"):
+    if stage in ("evidence", "refine", "recover"):
         _validate_evidence(value, source, context)
         if stage == "refine" and value["input_refs"] != [dependencies["baseline"]["result_ref"], dependencies["context"]["reference"]]:
             raise ValueError("refined evidence does not reference its actual baseline/context inputs")
+        if stage == "recover":
+            migration = value["payload"].get("recovery_migration", {})
+            document_refs = dependencies["recovery"]["documents"]
+            if (value["schema_version"] != "b-evidence-trial/0.3" or migration.get("policy") != recovery_stage.POLICY
+                    or value.get("producer", {}).get("identity_policy") != recovery_stage.IDENTITY_POLICY or "created_at" in value
+                    or migration.get("current_base_ref") != dependencies["evidence"]["result_ref"]
+                    or migration.get("package_receipt") != recovery_stage.content_receipt(dependencies["recovery"])
+                    or migration.get("payloads_equal") is not True or migration.get("new_ocr_calls") != 0
+                    or value.get("input_refs") != [dependencies["evidence"]["result_ref"], document_refs["base_evidence"]["artifact_ref"],
+                        document_refs["recovery"]["artifact_ref"], document_refs["source_review"]["artifact_ref"],
+                        dependencies["recovery"]["package"]["reference"]]):
+                raise ValueError("recovery stage did not preserve exact current-base/package migration binding")
+    elif stage == "recovery_review":
+        offline.check_artifact(value, {recovery_stage.REVIEW_SCHEMA})
+        document = value["payload"].get("review", {})
+        if (value.get("kind") != "RecoveryReviewTrial" or value.get("input_refs") != [dependencies["review"]["reference"], dependencies["evidence"]["result_ref"]]
+                or value.get("producer", {}).get("identity_policy") != recovery_stage.IDENTITY_POLICY or "created_at" in value
+                or value["payload"].get("input_review_ref") != dependencies["review"]["reference"]
+                or value["payload"].get("recovered_evidence_ref") != dependencies["evidence"]["result_ref"]
+                or document.get("recovery_migration_ref") != dependencies["evidence"]["result_ref"]
+                or current_evidence is None or value["payload"].get("package_receipt") != current_evidence["payload"]["recovery_migration"]["package_receipt"]
+                or value["payload"].get("new_ocr_calls") != 0 or value["payload"].get("decision") != "HOLD"):
+            raise ValueError("recovery review is not bound to current review and recovered evidence")
     elif stage == "assemble":
         offline.check_artifact(value, {"b-graph-trial/0.2", "b-graph-trial/0.3"})
         if value.get("kind") != "QuestionGraphTrial" or value.get("input_refs") != [dependencies["evidence"]["result_ref"]]:
@@ -266,12 +298,15 @@ def _read_stage(db, workdir, descriptor, source, mode, stage, key, dependencies,
 
 
 def run_pipeline(source_path, context_path, review_path, workdir, *, use_ocr=False, max_items=None,
-                 stop_after=None, evidence_path=None, worker=None):
+                 stop_after=None, evidence_path=None, worker=None, recovery_path=None):
     """Resume source-bound local stages; READY still means HOLD for business use."""
     if type(use_ocr) is not bool or (max_items is not None and (type(max_items) is not int or max_items < 1)):
         raise ValueError("invalid pipeline OCR flag or batch budget")
     mode = "CACHED_INPUT" if evidence_path is not None else "LIVE_BATCH"
     stages = ["evidence", "assemble", "quality"] if evidence_path is not None else ["recognition", "refine", "assemble", "quality"]
+    if recovery_path is not None:
+        stages.insert(stages.index("assemble"), "recover")
+        stages.insert(stages.index("quality"), "recovery_review")
     if mode == "CACHED_INPUT" and stop_after == "recognition": stop_after = "evidence"
     if stop_after is not None and stop_after not in stages:
         raise ValueError("stop_after must name a stage present in this pipeline mode")
@@ -289,9 +324,18 @@ def run_pipeline(source_path, context_path, review_path, workdir, *, use_ocr=Fal
         evidence_path = Path(evidence_path)
         cached_evidence = json.loads(evidence_path.read_text(encoding="utf-8"))
         _validate_evidence(cached_evidence, source, context)
+        if recovery_path is not None and cached_evidence["schema_version"] != "b-evidence-trial/0.2":
+            raise ValueError("recovery cannot be applied again to already recovered E0.3 evidence")
+    package = None
+    if recovery_path is not None:
+        recovery_path = Path(recovery_path)
+        if "recovery_migration_ref" in review:
+            raise ValueError("recovery requires the original review, not an already migrated review")
+        package = recovery_stage.load_recovery_package(recovery_path, source_path, context)
     receipts = {"source": _receipt(source_path, source), "context": _receipt(context_path, context),
                 "review": _receipt(review_path, review),
                 "evidence": _receipt(evidence_path, cached_evidence, artifact=True) if cached_evidence else None}
+    if package is not None: receipts["recovery"] = package["receipt"]
     source_ref = receipts["source"]["reference"]
     kind = "CACHED_INPUT" if cached_evidence else "SYNTHETIC_TEST" if worker else "LIVE_CPU_OCR" if use_ocr else "LIVE_GEOMETRY"
     run_id = "pipeline-run-"+uuid4().hex
@@ -299,17 +343,19 @@ def run_pipeline(source_path, context_path, review_path, workdir, *, use_ocr=Fal
     recognition_dir = workdir / "recognition"
     with _pipeline_lock(workdir):
         return _run(source_path, context_path, review_path, evidence_path, workdir, source, context, review,
-                    receipts, source_ref, cached_evidence, mode, kind, stages, run_id, use_ocr, max_items, stop_after, worker, recognition_dir)
+                    receipts, source_ref, cached_evidence, mode, kind, stages, run_id, use_ocr, max_items, stop_after, worker, recognition_dir,
+                    recovery_path=recovery_path)
 
 
 def _run(source_path, context_path, review_path, evidence_path, workdir, source, context, review,
-         receipts, source_ref, cached_evidence, mode, kind, stages, run_id, use_ocr, max_items, stop_after, worker, recognition_dir):
+         receipts, source_ref, cached_evidence, mode, kind, stages, run_id, use_ocr, max_items, stop_after, worker, recognition_dir,
+         recovery_path=None):
     db = sqlite3.connect(workdir / "pipeline.sqlite3")
     db.row_factory = sqlite3.Row
     db.execute("PRAGMA journal_mode=WAL")
     db.execute("PRAGMA synchronous=FULL")
     db.executescript(SQL)
-    results, observations, entries, invalidated = {}, {}, [], 0
+    results, observations, entries, invalidated = {"active_review": review}, {}, [], 0
     try:
         with db:
             for prior in db.execute("SELECT * FROM stage_attempts WHERE state='RUNNING'").fetchall():
@@ -335,8 +381,16 @@ def _run(source_path, context_path, review_path, evidence_path, workdir, source,
             elif stage == "refine":
                 dep.update(context=receipts["context"], recognition=observations["recognition"], baseline={
                     "artifact": results["recognition"]["payload"]["bundle"], "result_ref": _ref(results["baseline"])})
+            elif stage == "recover": dep.update(evidence=observations["evidence"], recovery=receipts["recovery"])
             elif stage == "assemble": dep["evidence"] = observations["evidence"]
-            elif stage == "quality": dep.update(evidence=observations["evidence"], graph=observations["assemble"], review=receipts["review"])
+            elif stage == "recovery_review": dep.update(evidence=observations["evidence"], review=receipts["review"])
+            elif stage == "quality":
+                review_dependency = receipts["review"]
+                if recovery_path is not None:
+                    active = results["active_review"]
+                    review_dependency = {**observations["recovery_review"],
+                                         "reference": {"artifact_id": active["artifact_id"], "content_hash": digest(active)}}
+                dep.update(evidence=observations["evidence"], graph=observations["assemble"], review=review_dependency)
             entry["dependencies"] = dep
             try:
                 implementation = _implementation(stage, mode, kind, use_ocr, worker)
@@ -358,7 +412,7 @@ def _run(source_path, context_path, review_path, evidence_path, workdir, source,
                     if (cached["stage_id"] != stage or cached["attempt_id"] != value["payload"]["attempt_id"]
                             or json.loads(cached["result_ref_json"]) != _ref(result)):
                         raise ValueError("stage cache row differs from the immutable origin")
-                    _validate_result(stage, result, source, context, review, dep, recognition_dir)
+                    _validate_result(stage, result, source, context, results["active_review"], dep, recognition_dir, results.get("evidence"))
                     if stage == "recognition" and not audit_batch(source_path, recognition_dir, result)["payload"]["accepted"]:
                         raise ValueError("child recognition journal or source artifacts are invalid")
                 except (ValueError, OSError, KeyError, TypeError) as exc:
@@ -383,9 +437,11 @@ def _run(source_path, context_path, review_path, evidence_path, workdir, source,
                         result = run_batch(source_path, recognition_dir, use_ocr=use_ocr, max_items=max_items, worker=worker)
                     elif stage == "evidence": result = copy.deepcopy(cached_evidence)
                     elif stage == "refine": result = refine(source_path, results["baseline"], context)
+                    elif stage == "recover": result = recovery_stage.recover_evidence(results["evidence"], recovery_path, source_path, context)
                     elif stage == "assemble": result = assemble(results["evidence"])
-                    else: result = quality_check(results["evidence"], results["assemble"], review)
-                    _validate_result(stage, result, source, context, review, dep, recognition_dir)
+                    elif stage == "recovery_review": result = recovery_stage.build_recovery_review(review, results["evidence"])
+                    else: result = quality_check(results["evidence"], results["assemble"], results["active_review"])
+                    _validate_result(stage, result, source, context, results["active_review"], dep, recognition_dir, results.get("evidence"))
                     if stage == "recognition" and not audit_batch(source_path, recognition_dir, result)["payload"]["accepted"]:
                         raise ValueError("child recognition run failed independent integrity audit")
                     state = "DONE"
@@ -410,8 +466,9 @@ def _run(source_path, context_path, review_path, evidence_path, workdir, source,
                 results[stage] = result
                 observations[stage] = {"output": entry["output"], "result_ref": entry["result_ref"]}
                 if stage == "recognition": results["baseline"] = batch._read_object(recognition_dir, result["payload"]["bundle"])
-                if stage == "refine":
+                if stage in ("refine", "recover"):
                     results["evidence"], observations["evidence"] = result, observations[stage]
+                if stage == "recovery_review": results["active_review"] = result["payload"]["review"]
             else: blocked = True
             if stage == stop_after: stopped = True
         run_error = None
@@ -421,6 +478,8 @@ def _run(source_path, context_path, review_path, evidence_path, workdir, source,
                     or _receipt(context_path, context) != receipts["context"] or _receipt(review_path, review) != receipts["review"]
                     or (evidence_path and _receipt(evidence_path, cached_evidence, artifact=True) != receipts["evidence"])):
                 raise ValueError("pipeline input files changed during execution")
+            if recovery_path is not None and recovery_stage.load_recovery_package(recovery_path, source_path, context)["receipt"] != receipts["recovery"]:
+                raise ValueError("recovery package files changed during pipeline execution")
         except Exception as exc:
             run_error = {"code": "INPUT_CHANGED_DURING_RUN", "error": str(exc), "error_type": type(exc).__name__}
             with db: _event(db, run_id, "RUN_INPUT_CHANGED", **run_error)

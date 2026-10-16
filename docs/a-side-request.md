@@ -75,3 +75,17 @@ B现在有带原始LaTeX/AST/token跨度、完整源区域及模型摘要的公�
 B的本地pipeline现已连接基础识别/细化/组题配答/质量检查，以及已有回补EvidenceBundle的导入路径，见docs/b-pipeline-46007447.md。阶段wrapper保存原业务产物，不改变其artifact身份；消费者从payload.result读取，并保留外层依赖/attempt/source回执。stage DONE或pipeline READY不能映射业务PASS、平台写入或最终提交。
 
 基础CPU链仍有38行未归属；导入已有回补E0.3可保留19行未归属与既有候选，尚未自动串入全部补救及0.4续接。请公共合同明确版本迁移、已有证据导入/新CPU运行/测试后端的不同来源及失效语义。B不接管A平台runtime；固定消费者、可导入类型/校验器、整书来源和独立验收材料仍优先，接收方验证由A自行记录。
+
+## 自动局部回补与审核迁移交接
+
+本轮新增显式恢复包、recover和recovery_review阶段，见[b-pipeline-recovery-46007447.md](b-pipeline-recovery-46007447.md)。恢复只允许当前E0.2与包内历史base完整payload精确等价，原E/R/source_review的身份、内容和时间不改；新的E0.3与派生审核另记迁移来源。本轮实际运行和最终版本以B状态与评估材料为准，公共合同仍是草案，A接收验证PENDING_A。
+
+| 请A对齐的材料 | 最小消费与失败要求 |
+|---|---|
+| 共同提交、可导入类型/校验器与固定消费者 | 显式适配b-recovery-package-trial/0.1、E0.3迁移字段、b-recovery-review-trial/0.1和阶段wrapper；读取payload.result，派生审核再读取payload.review；未知版本明确拒绝 |
+| 原始引用与等价迁移策略 | 保留current_base_ref及historical base/R/source_review引用和归档；完整原始OCR、细分OCR、context或payload元数据单字段变化须拒绝旧包，不能按同页SHA重新绑定；已恢复E不能重复回补 |
+| 文本内容身份与实际字节回执 | 识别NORMALIZED_TEXT_CONTENT/0.1和REFERENCE_BOUND_EXECUTION_TIME_IN_JOURNAL/0.1；包JSON规范化textSHA用于稳定内容，实际raw file SHA仍绑定运行与失效；原图/裁片二进制SHA及像素摘要不能放宽，历史时间不能重写 |
+| 恢复/重检与异常固定样例 | review-only变化仅重派生审核及quality；包/输入损坏、缺页、执行中修改、生成时间及LF/CRLF变更应有正负回执；旧审核结果不能被新run静默覆盖，也不能省略源码/依赖版本 |
+| 来源类别与放行语义 | 既有CPU缓存、显式测试后端和MODEL_VISUAL参考分开；拒绝伪人工标签/产物身份；stage DONE、pipeline READY及完整性accepted均不能映射内容核准、业务PASS或平台提交 |
+
+恢复包中的文档和裁片相对包manifest目录，原图相对source manifest目录；请消费者保留这两个来源根，并校验可移植相对路径及源像素。新增阶段不接管A平台执行和保存恢复，也未自动串入公式选择或Q9的0.4应用。整书目录/页映射、材料公共身份、独立核准样本及实际平台读回仍需共同准备；A自行记录接收和联调结果。
