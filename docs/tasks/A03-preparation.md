@@ -2,6 +2,8 @@
 
 日期：2026-10-16。状态：**DRAFT_WAITING_A02**。这是离线准备草案，不是开工授权、已实现接口或验收结论；A02 接受提交、恢复合同与正式执行/验收任务单固定后，由主调度派发。
 
+补充准备：[恢复合同扩展候选](A03-contract-extension-preparation.md)细化 intent、部分执行事实、解决链及跨 scope 账本；[S01 来源完整性门禁候选](S01-eligibility-preparation.md)说明真实来源与合成样例的自动资格边界。两份均未实施、未接受、未获 B 确认；不改变正在独立验收的 A02 合同版本。
+
 依据：[项目约定](../../AGENTS.md)、[A 侧调度](../coordination.md)、[开发计划](../development-plan.md)、[架构](../architecture.md)、[合同设计](../contracts-v1.md)、[C01 公共 API](../contracts-implementation-v1.md)、[A02 执行任务](A02-planner-mock.md)和[独立验收](A02-independent-review.md)。准备时根提交为 `d6738cf239b203496c9e84cb87178eb82f2d4f89`；仅检查根目录已集成 C01 与正式任务单，没有读取 A02 未冻结实现。
 
 ## 1. 目标、范围与依赖

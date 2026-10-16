@@ -2,7 +2,7 @@
   "schema_version": 1,
   "project": "D:\\1800",
   "coordinator_thread_id": "01a13f26-7567-75e1-99ee-c9d2194e78bb",
-  "updated_at": "2026-10-16T22:33:29.361823+08:00",
+  "updated_at": "2026-10-16T22:46:26.514185+08:00",
   "automation": {
     "id": "1800-a",
     "kind": "heartbeat",
@@ -192,21 +192,25 @@
         "thread_id": "01a144ca-ed53-7303-ace2-21a4ca42e13c",
         "host_id": "local",
         "turn_status": "inProgress",
-        "cursor": "a5b9aa07-1d6e-4e48-9581-b1789646eed2:8",
+        "cursor": "a5b9aa07-1d6e-4e48-9581-b1789646eed2:9",
         "report": "C:/Users/ASUS/.codex/worktrees/a01-source-geometry/1800/docs/tasks/A01-execution-report.md",
         "turn_id": "01a14517-81d0-7ed1-9a73-70da5e3b4391",
-        "last_progress": "我先读取 R1 任务单和正式反例，核对原工作树基线，再仅修复 R01–R04。旧证据保持原字节，新验证结果单独归档，交付状态停在 REVIEW。",
+        "last_progress": "基线已确认仍是干净的 a8d5e96。反例指出了具体问题：展开矩阵造成合法边界误差，逆变换前未严格检查补边域，大整数在转浮点时丢失精度，来源加载器也漏查了包内记录的相互矛盾。我会先留存修复前结果，再逐项修复；S01、D01 仍由主调度处理。",
         "phase": "R1_EXECUTING",
-        "last_checked_at": "2026-10-16T22:30:49.815787+08:00",
+        "last_checked_at": "2026-10-16T22:38:36.493134+08:00",
         "observed_worktree": {
-          "observed_at": "2026-10-16T22:33:29.361823+08:00",
+          "observed_at": "2026-10-16T22:38:36.493134+08:00",
           "head": "a8d5e96d128e10d341de935d4856682e50df79d9",
           "working_tree_dirty": true,
           "status": [
-            "?? docs/evidence/A01/execution/R1/"
+            " M src/annotation/geometry/__init__.py",
+            "?? docs/evidence/A01/execution/R1/",
+            "?? examples/a01/R1/"
           ],
-          "frozen_delivery_verified": false,
-          "note": "R1 repair active; previous accepted-for-review commit remains historical, no new delivery."
+          "status_count": 3,
+          "execution_report_present": false,
+          "observed_report_sha256": null,
+          "frozen_delivery_verified": false
         },
         "implementation_commit": "c8b8c6e158547954c59017211507755f67eda0e8",
         "implementation_scope_precheck": {
@@ -231,7 +235,7 @@
         "turn_id": "01a144ee-dee2-79c3-8477-531ac0403ee0",
         "last_progress": "正式独立验收结论：REWORK，被验提交 a8d5e96d128e10d341de935d4856682e50df79d9。 作者测试复现为 A01 22通过、1跳过，C01 70通过；独立反例发现几何边界误拒绝、补边漏拒绝、整数改值及来源一致性校验缺口。S01门禁和Pillow依赖仍属集成限制。 正式报告 · 证据摘要 未修改实现，未集成，未释放A04。",
         "phase": "FORMAL_REWORK_CONFIRMED",
-        "last_checked_at": "2026-10-16T22:22:10.707665+08:00",
+        "last_checked_at": "2026-10-16T22:38:36.493134+08:00",
         "formal_decision": "REWORK",
         "preparation_report_sha256": "5fed126b35e8b18976885d6a47c3cd7fa7416d46706d0a753c0dbae49c4e1701",
         "preparation_archive": {
@@ -300,7 +304,8 @@
           "dispatch_result": "send_message_to_thread returned original execution thread ID",
           "execution_turn_id": "01a14517-81d0-7ed1-9a73-70da5e3b4391",
           "dispatched_document_sha256": "315084ff6f3c28b447d68ce0fafe2b56a76601cd54061b7a9ae5b04d4e6b25ad",
-          "formatting_note": "Removed one trailing blank line only after dispatch; no semantic change."
+          "formatting_note": "Removed one trailing blank line only after dispatch; no semantic change.",
+          "record_commit": "67310ae7781eff2fd76f56c6920c8d5351167160"
         }
       ],
       "integration_gaps": {
@@ -315,10 +320,11 @@
         "report_hash_verified": true,
         "push_status": "NOT_PUSHED",
         "B_shared": false,
-        "status": "LOCAL_ARCHIVE_VERIFIED_PENDING_LOG_SUPPLEMENT",
+        "status": "ARCHIVED_LOCALLY",
         "index_manifest_entries_verified": 406,
         "git_index_bytes_verified": true,
-        "commit": "67310ae7781eff2fd76f56c6920c8d5351167160"
+        "commit": "67310ae7781eff2fd76f56c6920c8d5351167160",
+        "supplement_commit": "402170b7361e4a47c12e5726cc73f684340a4f6d"
       }
     },
     "A02": {
@@ -347,12 +353,13 @@
         "turn_id": "01a144cc-279e-79c0-abcb-25bef07c0bea",
         "last_progress": "A02 已交付并冻结为 REVIEW，工作树干净，未推送或集成。 代码提交：3fe492ce10bf93711ce57d305bc716f8b29345b7 交付 HEAD：5c9285720c8628c5198bedeadfc9f6bc7826a914 执行报告与复现命令 44 项 A02、70 项 C01 检查及 10 组模拟演示通过。UNKNOWN 保持同书阻断；内容仍 PENDING，提交 NOT_SUBMITTED。平台及模型调用均为 0。 跨进程恢复留给 A03；独立验收及依赖释放由主调度负责。",
         "phase": "DELIVERED",
-        "last_checked_at": "2026-10-16T22:30:49.815787+08:00",
+        "last_checked_at": "2026-10-16T22:38:36.493134+08:00",
         "observed_worktree": {
-          "observed_at": "2026-10-16T22:30:49.815787+08:00",
+          "observed_at": "2026-10-16T22:38:36.493134+08:00",
           "head": "5c9285720c8628c5198bedeadfc9f6bc7826a914",
           "working_tree_dirty": false,
           "status": [],
+          "status_count": 0,
           "execution_report_present": true,
           "observed_report_sha256": "d8c0cfc961a0ac7a1d78a4ca8cfa235bb26a20ee1c3af5c0bbedc6ab492eddda",
           "frozen_delivery_verified": true
@@ -383,7 +390,7 @@
         "turn_id": "01a1451f-6d91-7ae3-9402-6743ee06ec11",
         "last_progress": "我会按交接单核对冻结提交和隔离副本，再复现作者命令并运行独立反例。正式证据将写入 review/formal/，原准备材料保持不变。",
         "phase": "FORMAL_REVIEW_RUNNING",
-        "last_checked_at": "2026-10-16T22:33:29.361823+08:00",
+        "last_checked_at": "2026-10-16T22:38:36.493134+08:00",
         "formal_decision": "NOT_STARTED",
         "preparation_report_sha256": "c27997a3b9ff72a197363c82d23bf29ac52aea53fbdf6a49c400d501c1833ee5",
         "preparation_archive": {
@@ -410,7 +417,8 @@
         "turn_id": "01a1451f-6d91-7ae3-9402-6743ee06ec11",
         "acknowledged_at": "2026-10-16T22:33:29.361823+08:00",
         "dispatched_document_sha256": "e266d4b11ac210cfa04ddd0b15afed7b2e90c6172113a0e676f4bd92d2bd0f3a",
-        "formatting_note": "Removed one trailing blank line only after dispatch; no semantic change."
+        "formatting_note": "Removed one trailing blank line only after dispatch; no semantic change.",
+        "record_commit": "67310ae7781eff2fd76f56c6920c8d5351167160"
       }
     },
     "A04": {
@@ -444,12 +452,13 @@
         "turn_id": "01a144cc-e1a4-7523-bf4b-11cce1462585",
         "last_progress": "A04 阶段交付已冻结，回 REVIEW。 代码提交：d28a58f1859d00c70fc86aeecbb11ec2e7f06f89 交付 HEAD：3e4dba5676c2dc4a71d7826827a76df11017a68b 131 项 A04、70 项合同、8 项登录测试通过。 真实只读取得 14/15/173 页；本次读回 22题68框，前后状态一致。浏览器/profile 已释放，worktree 干净。 执行报告 A01 接受提交仍未发布，正式坐标联调未执行；未标记 ACCEPTED，未推送或集成，模型调用及花费均为 0。",
         "phase": "PARTIAL_DELIVERED_WAITING_ACCEPTED_GEOMETRY",
-        "last_checked_at": "2026-10-16T22:30:49.815787+08:00",
+        "last_checked_at": "2026-10-16T22:38:36.493134+08:00",
         "observed_worktree": {
-          "observed_at": "2026-10-16T22:30:49.815787+08:00",
+          "observed_at": "2026-10-16T22:38:36.493134+08:00",
           "head": "3e4dba5676c2dc4a71d7826827a76df11017a68b",
           "working_tree_dirty": false,
           "status": [],
+          "status_count": 0,
           "execution_report_present": true,
           "observed_report_sha256": "9501e987dec4327ed18f1f244aa29ffba93adb9dab407a1106be93cf68b493ff",
           "frozen_delivery_verified": true
@@ -493,7 +502,7 @@
         "turn_id": "01a144cc-ed10-72e3-8b34-1eb3c12b5841",
         "last_progress": "A04 已记为 WAITING_EXECUTION / BLOCKED（前置条件未齐）。 验收报告 场景与证据清单 已准备 28 个场景，全部 NOT_RUN；准备材料的链接及摘要核验通过。未启动浏览器、读取凭据或取得会话。 等待主调度确认固定交付、A01 geometry 接受提交及会话释放后唤醒。本轮结束，不持续轮询。",
         "phase": "WAITING_EXECUTION",
-        "last_checked_at": "2026-10-16T22:22:10.707665+08:00",
+        "last_checked_at": "2026-10-16T22:38:36.493134+08:00",
         "formal_decision": "NOT_STARTED",
         "preparation_report_sha256": "7fac7f25edb027b1f5b493b32b254ff1f447e5ad515b3808298d01226144cc4b",
         "preparation_archive": {
@@ -625,62 +634,87 @@
       "thread_id": "01a144cc-e93d-7841-a259-d6aac22c94f4"
     }
   ],
-  "last_action": "Lightweight progress check: A01 execution completed and frozen delivery remains unchanged; its independent review is running. A02/A04 continue implementation and evidence finalization. No duplicate dispatch, functional retest or dependency release.",
+  "last_action": "A01 R1 and A02 review still active; prepared bounded A03 recovery-contract and S01 source-eligibility drafts. No new stage, tests, platform action or dependency release.",
   "limitations": [
     "Current route uses mock B artifacts until independently agreed interface/artifact versions exist.",
     "Local integration is not remote publication.",
     "Platform test is single-book serial, no book submission, no unbudgeted paid models."
   ],
   "last_check": {
-    "observed_at": "2026-10-16T22:32:57.079621+08:00",
-    "automation_tick": "2026-10-16T14:03:40.025Z",
-    "coordinator_head": "54eb8efc19a956879ea049d82a848b705716d7a2",
+    "observed_at": "2026-10-16T22:38:36.493134+08:00",
+    "automation_tick": "2026-10-16T14:36:45.552Z",
+    "coordinator_head": "402170b7361e4a47c12e5726cc73f684340a4f6d",
     "execution_worktrees": {
       "A01": {
-        "observed_at": "2026-10-16T22:33:29.361823+08:00",
+        "observed_at": "2026-10-16T22:38:36.493134+08:00",
         "head": "a8d5e96d128e10d341de935d4856682e50df79d9",
         "working_tree_dirty": true,
         "status": [
-          "?? docs/evidence/A01/execution/R1/"
+          " M src/annotation/geometry/__init__.py",
+          "?? docs/evidence/A01/execution/R1/",
+          "?? examples/a01/R1/"
         ],
-        "frozen_delivery_verified": false,
-        "note": "R1 repair active; previous accepted-for-review commit remains historical, no new delivery."
+        "status_count": 3,
+        "execution_report_present": false,
+        "observed_report_sha256": null,
+        "frozen_delivery_verified": false
       },
       "A02": {
-        "observed_at": "2026-10-16T22:30:49.815787+08:00",
+        "observed_at": "2026-10-16T22:38:36.493134+08:00",
         "head": "5c9285720c8628c5198bedeadfc9f6bc7826a914",
         "working_tree_dirty": false,
         "status": [],
+        "status_count": 0,
         "execution_report_present": true,
         "observed_report_sha256": "d8c0cfc961a0ac7a1d78a4ca8cfa235bb26a20ee1c3af5c0bbedc6ab492eddda",
         "frozen_delivery_verified": true
       },
       "A04": {
-        "observed_at": "2026-10-16T22:30:49.815787+08:00",
+        "observed_at": "2026-10-16T22:38:36.493134+08:00",
         "head": "3e4dba5676c2dc4a71d7826827a76df11017a68b",
         "working_tree_dirty": false,
         "status": [],
+        "status_count": 0,
         "execution_report_present": true,
         "observed_report_sha256": "9501e987dec4327ed18f1f244aa29ffba93adb9dab407a1106be93cf68b493ff",
         "frozen_delivery_verified": true
       }
     },
-    "result": "A01 R1 repair dispatched and running after confirmed REWORK; A02 frozen delivery handed to original independent reviewer; A04 partial readonly delivery frozen, geometry blocked by A01 R1.",
+    "result": "No new frozen R1 delivery or formal A02 decision. Existing dependencies unchanged.",
     "new_dispatches": 0,
-    "existing_review_continuations": 1,
-    "tests_rerun": true,
-    "tests_scope": "A01 reviewer minimal-confirmation script rerun: seven geometry and two source failures on verified exact source; no full-suite rerun.",
+    "existing_review_continuations": 0,
+    "tests_rerun": false,
+    "tests_scope": "None: lightweight Git/report/status check only.",
     "coordinator_platform_actions": false,
     "user_action_required": false,
-    "platform_session_note": "A04 final live-run-09 release record verified against frozen Git bytes; no current process inspection or new session allocation.",
-    "review_setup_note": "Formal A01 review complete; 362/362 formal and 8/8 preparation manifest entries verified.",
-    "repair_followups": 1,
-    "document_verification": {
-      "local_links": 53,
-      "missing": 0,
-      "evidence_index_records": 406,
-      "hash_failures": 0,
-      "note": "Two *.log evidence files omitted by Git ignore were explicitly staged without changing bytes; first archive commit preserved and supplement follows."
+    "offline_preparation": {
+      "documents": [
+        {
+          "path": "docs/tasks/A03-preparation.md",
+          "sha256": "8569ae63cbac643598f1a92f186d74dbb1fc73488688b4629b62f236b3d813eb",
+          "lines": 112,
+          "local_links": 12,
+          "missing_links": []
+        },
+        {
+          "path": "docs/tasks/A03-contract-extension-preparation.md",
+          "sha256": "3c99880a85943302514dce6fcbae637423dcc54a48c4e7f6e518b7fa37e3bca5",
+          "lines": 100,
+          "local_links": 9,
+          "missing_links": []
+        },
+        {
+          "path": "docs/tasks/S01-eligibility-preparation.md",
+          "sha256": "9c7aa48c70627a064294f9953490e3597fcc0ed9736e751d75ee004291d9a9af",
+          "lines": 46,
+          "local_links": 4,
+          "missing_links": []
+        }
+      ],
+      "result": "DRAFT_ONLY",
+      "new_stage_dispatch": false,
+      "public_contract_changes": false,
+      "functional_tests": false
     }
   },
   "prepared_next_batch": {
@@ -751,10 +785,10 @@
     "kind": "Internal offline scope preparation only, not stage execution or acceptance.",
     "next_dependency": "A02 accepted exact commit and public API; coordinator-approved versioned reconciliation contract extension before resumption can pass C01.",
     "dispatch_result": "NO_STAGE_DISPATCH",
-    "draft_sha256": "f4a7be6aff12145735325c7b47aac73f5bb8089ab2b1307d21ca70ec7c5079df",
+    "draft_sha256": "8569ae63cbac643598f1a92f186d74dbb1fc73488688b4629b62f236b3d813eb",
     "prepared_at": "2026-10-16T21:29:34.322691+08:00",
     "coordinator_document_check": {
-      "local_links": 10,
+      "local_links": 12,
       "missing_links": [],
       "implementation_tests_run": false
     },
@@ -765,6 +799,46 @@
       "Cross-scope book ledger completeness without invalid C01 exchange references"
     ],
     "record_commit": "1ca8275e6e973365e8e958027533b3ca642e037b",
-    "remote_push": false
+    "remote_push": false,
+    "contract_design_preparation": {
+      "status": "DRAFT_REVIEWED_WAITING_A02",
+      "document": "docs/tasks/A03-contract-extension-preparation.md",
+      "agent": "/root/a03_preparation_review",
+      "S01_readonly_advisor": "/root/a01_handoff_audit",
+      "scope": "Offline A-internal versioned contract design only; no implementation, acceptance, new stage or B confirmation.",
+      "started_at": "2026-10-16T22:38:36.493134+08:00",
+      "next_dependency": "A02 exact delivery accepted/integrated and coordinator-reviewed proposal before any contract change.",
+      "documents": [
+        {
+          "path": "docs/tasks/A03-preparation.md",
+          "sha256": "8569ae63cbac643598f1a92f186d74dbb1fc73488688b4629b62f236b3d813eb",
+          "lines": 112,
+          "local_links": 12,
+          "missing_links": []
+        },
+        {
+          "path": "docs/tasks/A03-contract-extension-preparation.md",
+          "sha256": "3c99880a85943302514dce6fcbae637423dcc54a48c4e7f6e518b7fa37e3bca5",
+          "lines": 100,
+          "local_links": 9,
+          "missing_links": []
+        },
+        {
+          "path": "docs/tasks/S01-eligibility-preparation.md",
+          "sha256": "9c7aa48c70627a064294f9953490e3597fcc0ed9736e751d75ee004291d9a9af",
+          "lines": 46,
+          "local_links": 4,
+          "missing_links": []
+        }
+      ],
+      "completed_at": "2026-10-16T22:46:26.514185+08:00",
+      "coordinator_review": "Reviewed wording and existing public API; design remains candidate, not approved implementation contract.",
+      "agent_status": "INTERRUPTED_AFTER_DRAFT; coordinator completed S01 link and cross-version reference limitation",
+      "S01_advice_status": "COMPLETED_READ_ONLY",
+      "dispatch_result": "NO_STAGE_DISPATCH",
+      "implementation_changed": false,
+      "tests_run": false,
+      "B_confirmation": "NOT_CONFIRMED"
+    }
   }
 }
