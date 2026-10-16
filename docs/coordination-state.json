@@ -1,0 +1,106 @@
+{
+  "schema_version": 1,
+  "project": "D:\\1800",
+  "coordinator_thread_id": "01a13f26-7567-75e1-99ee-c9d2194e78bb",
+  "updated_at": "2026-10-16T19:34:52+08:00",
+  "automation": {
+    "id": "1800-a",
+    "kind": "heartbeat",
+    "status": "ACTIVE",
+    "interval_minutes": 15
+  },
+  "managed_side": "A",
+  "authority": {
+    "create_stage_execution_and_review_threads": true,
+    "follow_up_managed_A_threads": true,
+    "manage_B": false,
+    "write_test_book_id": "46007447",
+    "book_review_or_delivery_allowed": false,
+    "paid_model_budget_authorized": false
+  },
+  "tasks": {
+    "A05": {
+      "status": "ACCEPTED",
+      "acceptance_scope": "One saved Q/A frame pair for question 22; refreshed and independently reopened; CONTENT_PENDING",
+      "execution": {
+        "thread_id": "01a14454-610f-75f0-8baa-225518a51136",
+        "host_id": "local",
+        "turn_status": "completed",
+        "cursor": "c3685138-7aa7-4d33-919d-4913aaa8aef4:48",
+        "commit": "a56ce0e23ee613cd81c09f7f21392ffc2ff17d60",
+        "report": "docs/tasks/A05-execution-report.md",
+        "session_released": true
+      },
+      "review": {
+        "thread_id": "01a14454-a318-72d1-ad1d-62243d475888",
+        "host_id": "local",
+        "turn_status": "completed",
+        "cursor": "940b9722-5b93-45aa-b2e7-7ef2bdf21a43:2",
+        "decision": "ACCEPTED",
+        "report": "docs/tasks/A05-review-report.md",
+        "session_released": true
+      },
+      "coordinator_report": "docs/tasks/A05-coordinator-acceptance.md",
+      "integration_commit": null,
+      "do_not_replay_question_order": 22,
+      "content_check_status": "PENDING",
+      "submission_status": "NOT_SUBMITTED"
+    },
+    "C01": {
+      "status": "READY",
+      "execution_task": "docs/tasks/C01-contracts-implementation.md",
+      "review_task": "docs/tasks/C01-independent-review.md",
+      "base_commit": null,
+      "workflow_commit": null,
+      "worktree": null,
+      "execution": null,
+      "review": null,
+      "B_contract_confirmation": "NOT_CONFIRMED"
+    }
+  },
+  "route": [
+    {
+      "task": "C01",
+      "depends_on": []
+    },
+    {
+      "task": "A01",
+      "depends_on": [
+        "C01"
+      ]
+    },
+    {
+      "task": "A02",
+      "depends_on": [
+        "C01"
+      ]
+    },
+    {
+      "task": "A04",
+      "depends_on": [
+        "C01"
+      ]
+    },
+    {
+      "task": "A03",
+      "depends_on": [
+        "A02"
+      ]
+    },
+    {
+      "task": "I01-A",
+      "depends_on": [
+        "A01",
+        "A02",
+        "A03"
+      ]
+    }
+  ],
+  "dispatch_intents": [],
+  "last_action": "A05 independent acceptance reproduced; scheduled follow-up activated; preparing C01 workflow baseline.",
+  "limitations": [
+    "Current route uses mock B artifacts until independently agreed interface/artifact versions exist.",
+    "Local integration is not remote publication.",
+    "Platform test is single-book serial, no book submission, no unbudgeted paid models."
+  ]
+}
