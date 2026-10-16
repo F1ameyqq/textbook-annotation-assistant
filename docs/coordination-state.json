@@ -2,7 +2,7 @@
   "schema_version": 1,
   "project": "D:\\1800",
   "coordinator_thread_id": "01a13f26-7567-75e1-99ee-c9d2194e78bb",
-  "updated_at": "2026-10-16T17:01:00.934526+00:00",
+  "updated_at": "2026-10-16T17:05:32.648656+00:00",
   "automation": {
     "id": "1800-a",
     "kind": "heartbeat",
@@ -172,7 +172,7 @@
       "integration_commit": "223b0b3d9ae0bd50ef2ac045219a41ad41611856"
     },
     "A01": {
-      "status": "REWORK",
+      "status": "REVIEW",
       "depends_on": [
         "C01"
       ],
@@ -180,7 +180,7 @@
       "review_task": "docs/tasks/A01-independent-review.md",
       "acceptance_scope": "Static sources for two separate books and declared geometry; no platform/model actions.",
       "dispatch_status": "EXECUTION_AND_REVIEW_ACKNOWLEDGED",
-      "next_dependency": "Bounded R2 source consistency repair and original independent review; A04 waits accepted/integrated exact A01.",
+      "next_dependency": "Original independent R2 review, then coordinator acceptance and integration; A04 remains gated.",
       "base_commit": "39341c98d73c354d639f3beeb55429f55d0e9be5",
       "workflow_commit": "39341c98d73c354d639f3beeb55429f55d0e9be5",
       "worktree_name": "a01-source-geometry",
@@ -191,22 +191,22 @@
       "execution": {
         "thread_id": "01a144ca-ed53-7303-ace2-21a4ca42e13c",
         "host_id": "local",
-        "turn_status": "inProgress",
-        "cursor": "a5b9aa07-1d6e-4e48-9581-b1789646eed2:15",
+        "turn_status": "completed",
+        "cursor": "a5b9aa07-1d6e-4e48-9581-b1789646eed2:16",
         "report": "C:/Users/ASUS/.codex/worktrees/a01-source-geometry/1800/docs/tasks/A01-rework-R2-report.md",
         "turn_id": "01a14568-62db-7913-b11c-412f5d246638",
-        "last_progress": "R2 remains active: four formal and five portable negative cases retained, ten added tests passing; full regression and byte preservation pending.",
-        "phase": "R2_EXECUTING",
-        "last_checked_at": "2026-10-17T00:38:13.957419+08:00",
+        "last_progress": "R2 frozen delivery received; preflight audit running before independent review.",
+        "phase": "R2_DELIVERED",
+        "last_checked_at": "2026-10-16T17:05:32.648656+00:00",
         "observed_worktree": {
-          "observed_at": "2026-10-17T00:00:43.001944+08:00",
-          "head": "03c1af41a134945c406a52a48e3d4f6f0da33eb2",
+          "observed_at": "2026-10-16T17:05:32.648656+00:00",
+          "head": "c3aff9598b6705ab4122062615a13ae3774698b2",
           "working_tree_dirty": false,
           "status": [],
           "status_count": 0,
-          "execution_report_present": false,
-          "observed_report_sha256": null,
-          "frozen_delivery_verified": false
+          "execution_report_present": true,
+          "observed_report_sha256": "3aeaaf40e55163541921ec5915995cc9d01b878bb6843f76fb9f048d5dba8d50",
+          "frozen_delivery_verified": true
         },
         "implementation_scope_precheck": {
           "commit": "c8b8c6e158547954c59017211507755f67eda0e8",
@@ -214,54 +214,53 @@
           "out_of_scope_paths": [],
           "does_not_constitute_acceptance": true
         },
-        "working_tree_clean": null,
-        "session_released": null,
-        "session_release_basis": "R2 offline task dispatched; new completion declaration pending.",
-        "completed_turn_confirms_freeze": false,
+        "working_tree_clean": true,
+        "session_released": true,
+        "session_release_basis": "Completed delivery and report declare offline-only, zero owned browser sessions.",
+        "completed_turn_confirms_freeze": true,
         "base_commit": "03c1af41a134945c406a52a48e3d4f6f0da33eb2",
-        "previous_delivery_commit": "03c1af41a134945c406a52a48e3d4f6f0da33eb2"
+        "previous_delivery_commit": "03c1af41a134945c406a52a48e3d4f6f0da33eb2",
+        "commit": "c3aff9598b6705ab4122062615a13ae3774698b2",
+        "implementation_commit": "63ac5a184798326d629a43d1dfed25fa73a1a27e",
+        "report_sha256": "3aeaaf40e55163541921ec5915995cc9d01b878bb6843f76fb9f048d5dba8d50",
+        "delivery_preflight": {
+          "changed_paths": 88,
+          "out_of_scope_paths": [],
+          "final_manifest_entries": 87,
+          "manifest_sha256": "ed4aee2d5aaf4b71f5eee6c60c90c0b58c1672a4803507bb03d1056c00000576",
+          "old_files_preserved": 886,
+          "original_inputs": 31,
+          "main_frozen_inputs": 7,
+          "new_bundle_files": 29,
+          "geometry_unchanged": true,
+          "functional_tests_run": false
+        }
       },
       "review": {
         "thread_id": "01a144cb-69e8-7981-a8d5-8832eae61829",
         "host_id": "local",
-        "turn_status": "completed",
-        "cursor": "45744dd7-003f-41b4-a2c5-99d28971d2cc:8",
-        "report": "docs/tasks/A01-review-R1-report.md",
-        "turn_id": "01a1454d-a058-7ba1-9088-5a25e2ac0702",
-        "last_progress": "R1 结论仍为 REWORK。原16个修复反例已通过，几何630项独立检查通过；来源加载仍接受范围、历史URL及观察摘要的内部矛盾。 复验报告 · 证据清单 旧证据保持原字节。未集成，未释放A04。",
-        "phase": "R1_REWORK_CONFIRMED",
-        "last_checked_at": "2026-10-17T00:00:43.001944+08:00",
-        "formal_decision": "REWORK",
-        "preparation_report_sha256": "5fed126b35e8b18976885d6a47c3cd7fa7416d46706d0a753c0dbae49c4e1701",
-        "preparation_archive": {
-          "status": "ARCHIVED_LOCALLY",
-          "manifest": "docs/evidence/A01/review/sha256-manifest.json",
-          "manifest_entries_verified": 8,
-          "scope": "Preparation only, all implementation scenarios NOT_RUN; no acceptance or dependency release.",
-          "commit": "60ad7be2766c6a645a747006203297d658ea7fa7",
-          "index_manifest_entries_verified": 8,
-          "remote_push": false
-        },
-        "preparation_report": "docs/tasks/A01-review-report.md",
-        "target_commit": "03c1af41a134945c406a52a48e3d4f6f0da33eb2",
-        "decision": "REWORK",
-        "report_sha256": "394001a09bb61565816c2a06dc3e8f478e4cb3e295d221cc4563aad1a3bb36cf",
-        "evidence_manifest": "docs/evidence/A01/review-R1/sha256-manifest.json",
-        "evidence_manifest_sha256": "fa3d48054dc0d7c87154da1d65db7129d29b1da6a137c2d68cb325b486b49ed8"
+        "cursor": "45744dd7-003f-41b4-a2c5-99d28971d2cc:9",
+        "turn_status": "inProgress",
+        "phase": "R2_REVIEW_RUNNING",
+        "report": "docs/tasks/A01-review-R2-report.md",
+        "target_commit": "c3aff9598b6705ab4122062615a13ae3774698b2",
+        "formal_decision": "PENDING",
+        "turn_id": "01a145ac-32e8-7c81-a302-8dd17ec1d096",
+        "last_checked_at": "2026-10-16T17:05:32.648656+00:00",
+        "last_progress": "R2 acknowledged; frozen source export and independent source review starting."
       },
       "dispatch_record_commit": "d6738cf239b203496c9e84cb87178eb82f2d4f89",
       "review_handoff": {
+        "round": "R2",
         "state": "ACKNOWLEDGED",
-        "round": "R1",
-        "target_commit": "03c1af41a134945c406a52a48e3d4f6f0da33eb2",
-        "document": "docs/tasks/A01-review-R1-handoff.md",
-        "document_sha256": "3e5edf02152c30c51bb0d5fc5e54338ae36fcf94e3c298c7695805bf4706beb5",
-        "prepared_at": "2026-10-16T23:21:17.227028+08:00",
-        "sent_at": "2026-10-16T23:21:19.124664+08:00",
+        "target_commit": "c3aff9598b6705ab4122062615a13ae3774698b2",
+        "document": "docs/tasks/A01-review-R2-handoff.md",
+        "document_sha256": "3346c510b46cc7f4a8e81bbcf926233825579d7db5b671cefbe4d14fccbcfd37",
+        "prepared_at": "2026-10-16T17:04:35.351482+00:00",
+        "sent_at": "2026-10-16T17:04:52.771180+00:00",
         "dispatch_result": "send_message_to_thread returned original reviewer thread ID",
-        "acknowledged_at": "2026-10-16T23:26:54.649519+08:00",
-        "turn_id": "01a1454d-a058-7ba1-9088-5a25e2ac0702",
-        "record_commit": "4d69d050d61c3136d53e97a5d487d6061e75dcae"
+        "turn_id": "01a145ac-32e8-7c81-a302-8dd17ec1d096",
+        "acknowledged_at": "2026-10-16T17:05:32.648656+00:00"
       },
       "rework_round": 2,
       "coordinator_reproduction": {
@@ -300,7 +299,7 @@
         },
         {
           "round": "R2",
-          "state": "ACKNOWLEDGED",
+          "state": "DELIVERED",
           "task": "docs/tasks/A01-rework-R2.md",
           "task_sha256": "3f895641fd71cf00952cf8c25d95b851a958d97877901420ffe7dd59b79f5e85",
           "thread_id": "01a144ca-ed53-7303-ace2-21a4ca42e13c",
@@ -315,7 +314,9 @@
           "dispatch_result": "send_message_to_thread returned original execution thread ID",
           "acknowledged_at": "2026-10-16T23:52:24.535370+08:00",
           "turn_id": "01a14568-62db-7913-b11c-412f5d246638",
-          "record_commit": "ec2129089b5257db8ea678049887ebe4abf85bce"
+          "record_commit": "ec2129089b5257db8ea678049887ebe4abf85bce",
+          "delivery_commit": "c3aff9598b6705ab4122062615a13ae3774698b2",
+          "implementation_commit": "63ac5a184798326d629a43d1dfed25fa73a1a27e"
         }
       ],
       "integration_gaps": {
@@ -364,6 +365,34 @@
           "report_sha256": "157dddf56287a1a3b3d1fd2714d63e8a068fb34b052fe949eb06b75c9901a8a3",
           "evidence_manifest": "docs/evidence/A01/review/formal/sha256-manifest.json",
           "evidence_manifest_sha256": "cd0e89443bf24c39722375e4ee6fac91e4f92e3429004dc7092c30868d99bb4f"
+        },
+        {
+          "thread_id": "01a144cb-69e8-7981-a8d5-8832eae61829",
+          "host_id": "local",
+          "turn_status": "completed",
+          "cursor": "45744dd7-003f-41b4-a2c5-99d28971d2cc:8",
+          "report": "docs/tasks/A01-review-R1-report.md",
+          "turn_id": "01a1454d-a058-7ba1-9088-5a25e2ac0702",
+          "last_progress": "R1 结论仍为 REWORK。原16个修复反例已通过，几何630项独立检查通过；来源加载仍接受范围、历史URL及观察摘要的内部矛盾。 复验报告 · 证据清单 旧证据保持原字节。未集成，未释放A04。",
+          "phase": "R1_REWORK_CONFIRMED",
+          "last_checked_at": "2026-10-17T00:00:43.001944+08:00",
+          "formal_decision": "REWORK",
+          "preparation_report_sha256": "5fed126b35e8b18976885d6a47c3cd7fa7416d46706d0a753c0dbae49c4e1701",
+          "preparation_archive": {
+            "status": "ARCHIVED_LOCALLY",
+            "manifest": "docs/evidence/A01/review/sha256-manifest.json",
+            "manifest_entries_verified": 8,
+            "scope": "Preparation only, all implementation scenarios NOT_RUN; no acceptance or dependency release.",
+            "commit": "60ad7be2766c6a645a747006203297d658ea7fa7",
+            "index_manifest_entries_verified": 8,
+            "remote_push": false
+          },
+          "preparation_report": "docs/tasks/A01-review-report.md",
+          "target_commit": "03c1af41a134945c406a52a48e3d4f6f0da33eb2",
+          "decision": "REWORK",
+          "report_sha256": "394001a09bb61565816c2a06dc3e8f478e4cb3e295d221cc4563aad1a3bb36cf",
+          "evidence_manifest": "docs/evidence/A01/review-R1/sha256-manifest.json",
+          "evidence_manifest_sha256": "fa3d48054dc0d7c87154da1d65db7129d29b1da6a137c2d68cb325b486b49ed8"
         }
       ],
       "review_handoff_history": [
@@ -385,6 +414,19 @@
           "turn_id": "01a144ee-dee2-79c3-8477-531ac0403ee0",
           "acknowledged_at": "2026-10-16T21:39:54.612736+08:00",
           "record_commit": "54eb8efc19a956879ea049d82a848b705716d7a2"
+        },
+        {
+          "state": "ACKNOWLEDGED",
+          "round": "R1",
+          "target_commit": "03c1af41a134945c406a52a48e3d4f6f0da33eb2",
+          "document": "docs/tasks/A01-review-R1-handoff.md",
+          "document_sha256": "3e5edf02152c30c51bb0d5fc5e54338ae36fcf94e3c298c7695805bf4706beb5",
+          "prepared_at": "2026-10-16T23:21:17.227028+08:00",
+          "sent_at": "2026-10-16T23:21:19.124664+08:00",
+          "dispatch_result": "send_message_to_thread returned original reviewer thread ID",
+          "acknowledged_at": "2026-10-16T23:26:54.649519+08:00",
+          "turn_id": "01a1454d-a058-7ba1-9088-5a25e2ac0702",
+          "record_commit": "4d69d050d61c3136d53e97a5d487d6061e75dcae"
         }
       ],
       "coordinator_reproduction_history": [
@@ -856,7 +898,7 @@
       "resume_condition": "Coordinator supplies accepted and integrated exact A01 geometry commit; execution completes coordinate integration and releases session before full review."
     },
     "A03": {
-      "status": "DISPATCH_PREPARED",
+      "status": "IN_PROGRESS",
       "phase": "P1_DESIGN_ONLY",
       "depends_on": [
         "A02"
@@ -865,9 +907,41 @@
       "execution_task": "docs/tasks/A03-runtime-recovery.md",
       "review_task": "docs/tasks/A03-independent-review.md",
       "acceptance_scope": "P1 design of versioned recovery contracts and four A02 public adapters only; P2 requires independent design acceptance and coordinator approval.",
-      "next_dependency": "Create isolated A03 worktree and separate execution/review chats; no runtime implementation authorized yet.",
-      "dispatch_status": "INTENT_RECORDED",
-      "B_confirmation": "NOT_CONFIRMED"
+      "next_dependency": "Frozen P1 design delivery, coordinator handoff to original review chat, independent design review and coordinator approval before P2.",
+      "dispatch_status": "EXECUTION_AND_REVIEW_ACKNOWLEDGED",
+      "B_confirmation": "NOT_CONFIRMED",
+      "workflow_commit": "a354f95f1d0b40a8f0847b57fa3978cac999e7a2",
+      "worktree_name": "a03-runtime-recovery",
+      "branch": "codex/a03-runtime-recovery",
+      "worktree_status": "READY",
+      "worktree": "C:/Users/ASUS/.codex/worktrees/a03-runtime-recovery/1800",
+      "worktree_operation_id": "d889dde1-d7c4-45b3-88d3-40c823bf3750",
+      "execution": {
+        "thread_id": "01a145aa-2fea-7942-97f9-ad260acf4e30",
+        "host_id": "local",
+        "phase": "P1_DISPATCHED",
+        "turn_status": "inProgress",
+        "cursor": "62b38dd9-743b-4363-8cfa-e354555521a8:1",
+        "report": "C:/Users/ASUS/.codex/worktrees/a03-runtime-recovery/1800/docs/tasks/A03-P1-execution-report.md",
+        "turn_id": "01a145aa-3432-7fb2-92ee-1a21dae403ff",
+        "last_progress": "我会先在指定独立工作树核对基线和 A03 任务约束，再完成 P1 恢复合同、候选接口与样例的设计交付；完成后冻结为 P1 REVIEW，停在设计阶段。",
+        "last_checked_at": "2026-10-16T17:03:21.944819+00:00",
+        "task_sha256": "51bedca4608931a1d2c75c71c8ca15a3835029357a6853c15724e50719b337cf"
+      },
+      "review": {
+        "thread_id": "01a145aa-8d59-7c70-8d81-731712103a9a",
+        "host_id": "local",
+        "phase": "PREPARATION_DISPATCHED",
+        "turn_status": "inProgress",
+        "cursor": "a912ddc6-bfef-418b-8c2b-e05defaffff1:1",
+        "preparation_report": "docs/tasks/A03-review-preparation.md",
+        "report": "docs/tasks/A03-P1-review-report.md",
+        "formal_decision": "WAITING_FOR_FROZEN_P1",
+        "turn_id": "01a145aa-9125-7243-a365-c6bf004fcede",
+        "last_progress": "我会按 A03 独立验收准备范围读取正式标准，只整理 P1 方法与证据清单，并将状态标为 WAITING_FOR_FROZEN_P1。本轮不查看执行工作树的浮动输出，不进行平台、网络或模型操作。",
+        "last_checked_at": "2026-10-16T17:03:21.944819+00:00",
+        "task_sha256": "292b8820573cc8b577e8f852c1b6fbee577ca2c4a920720db53bc76b9ee2c3be"
+      }
     }
   },
   "route": [
@@ -987,24 +1061,31 @@
       "key": "A03:execution:ec1b4defbfa3ec0f181d291106fb53313983e493",
       "task": "A03",
       "stage": "execution",
-      "state": "INTENT",
-      "created_at": "2026-10-16T17:01:00.934526+00:00",
-      "base_commit": "ec1b4defbfa3ec0f181d291106fb53313983e493"
+      "state": "CREATED",
+      "created_at": "2026-10-16T17:02:47.434270+00:00",
+      "base_commit": "ec1b4defbfa3ec0f181d291106fb53313983e493",
+      "workflow_commit": "a354f95f1d0b40a8f0847b57fa3978cac999e7a2",
+      "thread_id": "01a145aa-2fea-7942-97f9-ad260acf4e30",
+      "result": "create_thread returned threadId"
     },
     {
       "key": "A03:review:ec1b4defbfa3ec0f181d291106fb53313983e493",
       "task": "A03",
       "stage": "review",
-      "state": "INTENT",
-      "created_at": "2026-10-16T17:01:00.934526+00:00",
-      "base_commit": "ec1b4defbfa3ec0f181d291106fb53313983e493"
+      "state": "CREATED",
+      "created_at": "2026-10-16T17:03:06.156869+00:00",
+      "base_commit": "ec1b4defbfa3ec0f181d291106fb53313983e493",
+      "workflow_commit": "a354f95f1d0b40a8f0847b57fa3978cac999e7a2",
+      "thread_id": "01a145aa-8d59-7c70-8d81-731712103a9a",
+      "result": "create_thread returned threadId"
     }
   ],
   "last_action": {
-    "at": "2026-10-16T16:57:32.620946+00:00",
-    "task_id": "A02",
-    "action": "INTEGRATED locally; 52 A02 + 70 C01 + 8 login passed",
-    "A03": "P1 task draft pending coordinator check and dispatch",
+    "at": "2026-10-16T17:04:52.771180+00:00",
+    "task_id": "A01",
+    "action": "R2 frozen delivery handed to original independent reviewer",
+    "A02": "INTEGRATED locally ec1b4def; 52+70+8 checks passed",
+    "A03": "P1 execution and independent review preparation acknowledged",
     "remote_push": false
   },
   "limitations": [
@@ -1019,10 +1100,13 @@
     "checked_task_ids": [
       "A01",
       "A02",
+      "A03",
       "A04"
     ],
     "platform_actions": 0,
-    "paid_model_calls": 0
+    "paid_model_calls": 0,
+    "completed_at": "2026-10-16T17:05:32.648656+00:00",
+    "root_head_at_dispatch": "a354f95f1d0b40a8f0847b57fa3978cac999e7a2"
   },
   "prepared_next_batch": {
     "status": "DISPATCHED",
@@ -1086,12 +1170,12 @@
   },
   "next_stage_preparation": {
     "task": "A03",
-    "status": "P1_TASKS_READY_FOR_DISPATCH",
+    "status": "P1_DISPATCHED",
     "document": "docs/tasks/A03-preparation.md",
     "preparation_agent": "/root/a03_preparation_review",
     "kind": "Internal offline scope preparation only, not stage execution or acceptance.",
     "next_dependency": "A02 accepted exact commit and public API; coordinator-approved versioned reconciliation contract extension before resumption can pass C01.",
-    "dispatch_result": "INTENT_RECORDED",
+    "dispatch_result": "CREATED_EXECUTION_AND_REVIEW",
     "draft_sha256": "8569ae63cbac643598f1a92f186d74dbb1fc73488688b4629b62f236b3d813eb",
     "prepared_at": "2026-10-16T21:29:34.322691+08:00",
     "coordinator_document_check": {
@@ -1148,6 +1232,8 @@
       "B_confirmation": "NOT_CONFIRMED",
       "record_commit": "83d14c8b98c1d2b43d75a686005a5ed23950976c",
       "remote_push": false
-    }
+    },
+    "execution_thread_id": "01a145aa-2fea-7942-97f9-ad260acf4e30",
+    "review_thread_id": "01a145aa-8d59-7c70-8d81-731712103a9a"
   }
 }
