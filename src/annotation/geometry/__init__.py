@@ -1,13 +1,15 @@
 """A-internal a01-geometry-1; continuous pixel boundaries, no browser semantics."""
 import math
 from dataclasses import dataclass
+from fractions import Fraction
 from typing import Optional, Tuple
 
 from annotation.contracts import OriginalBox
 from annotation.contracts.models import ImageBinding
 
 SPEC_VERSION = "a01-geometry-1"
-TOLERANCE = 1e-9
+IMPLEMENTATION_VERSION = "a01-geometry-1-r1"
+MAX_PIXEL_INTEGER = 2**53
 
 
 class GeometryError(ValueError):
@@ -25,6 +27,8 @@ def _numbers(values, count, location):
         _fail("SHAPE", location, "expected {} numbers".format(count))
     if any(isinstance(v, bool) or not isinstance(v, (int, float)) for v in values):
         _fail("NUMBER", location, "expected real numbers")
+    if any(isinstance(v,int) and abs(v) > MAX_PIXEL_INTEGER for v in values):
+        _fail("REPRESENTATION", location, "integer exceeds the exact pixel range 2**53")
     try:
         result = tuple(float(v) for v in values)
     except (ValueError, OverflowError):
@@ -99,6 +103,8 @@ class Transform:
 
     def __post_init__(self):
         image = _binding(self.image)
+        if max(image.width,image.height) > MAX_PIXEL_INTEGER:
+            _fail("REPRESENTATION", "image", "image dimensions exceed 2**53")
         object.__setattr__(self, "image", image)
         if self.spec_version != SPEC_VERSION:
             _fail("SPEC_VERSION", "spec_version", "explicit a01-geometry-1 required")
@@ -112,6 +118,8 @@ class Transform:
         padding = _numbers(self.padding, 4, "padding")
         if any(p < 0 or not p.is_integer() for p in padding):
             _fail("PADDING", "padding", "nonnegative integer processing pixels required")
+        if any(p > MAX_PIXEL_INTEGER for p in padding):
+            _fail("REPRESENTATION", "padding", "padding exceeds the exact pixel range 2**53")
         degrees = self.rotation_degrees
         if isinstance(degrees, bool) or not isinstance(degrees, int) or degrees % 90:
             _fail("UNSUPPORTED_ROTATION", "rotation_degrees", "integer multiples of 90 required")
@@ -136,8 +144,35 @@ class Transform:
             _fail("DIMENSIONS", "scaled_size", "positive integer pixel dimensions required")
         left, top, right, bottom = self.padding
         width, height = int(sizes[0])+left+right, int(sizes[1])+top+bottom
+        if max(width,height) > MAX_PIXEL_INTEGER:
+            _fail("REPRESENTATION", "padded_size", "canvas dimensions exceed 2**53")
         _numbers((width,height), 2, "padded_size")
         return width, height
+
+    @property
+    def content_bounds(self):
+        """Exact integer processing domain, checked BEFORE any inverse arithmetic."""
+        left,top,right,bottom = self.padding
+        width,height = self.padded_size
+        right,bottom = width-right,height-bottom
+        if self.rotation_degrees == 90:
+            return height-bottom,left,height-top,right
+        if self.rotation_degrees == 180:
+            return width-right,height-bottom,width-left,height-top
+        if self.rotation_degrees == 270:
+            return top,width-right,bottom,width-left
+        return left,top,right,bottom
+
+    def _rotate(self, point, inverse=False):
+        x,y = point
+        width,height = self.padded_size
+        if self.rotation_degrees == 90:
+            return (y,height-x) if inverse else (height-y,x)
+        if self.rotation_degrees == 180:
+            return width-x,height-y
+        if self.rotation_degrees == 270:
+            return (width-y,x) if inverse else (y,width-x)
+        return x,y
 
     @property
     def output_size(self):
@@ -173,14 +208,30 @@ class Transform:
 
     def forward_point(self, point, image):
         _same(image, self.image)
-        width,height = self.output_size
-        return _point(_apply(self.matrix, _point(point, self.crop, "point")),(0,0,width,height),"processed_point")
+        x,y = _point(point,self.crop,"point")
+        left,top,_,_ = self.crop
+        sx,sy = self.scale
+        pad_left,pad_top,_,_ = self.padding
+        # Execute the declared order. Expanding sx*x - sx*left loses endpoints.
+        scaled = ((x-left)*sx+pad_left,(y-top)*sy+pad_top)
+        return _point(self._rotate(scaled),self.content_bounds,"processed_point")
 
     def inverse_point(self, point, processed_image, expected_processed_image):
         binding = self._processed(expected_processed_image)
         _same(processed_image, binding)
-        point = _point(point, (0,0,binding.width,binding.height), "processed_point")
-        return _point(_apply(invert_affine(self.matrix), point), self.crop, "original_point")
+        point = _point(point,self.content_bounds,"processed_point")
+        x,y = self._rotate(point,inverse=True)
+        left,top,right,bottom = self.padding
+        width,height = self.padded_size
+        x1,y1,x2,y2 = self.crop
+        def unscale(value,pad,extent,start,end):
+            # Equivalent affine interval interpolation using the already
+            # validated pixel extents. Exact rational operations keep endpoints
+            # and their interior ordered; one final float conversion, no clamp.
+            ratio = (Fraction(value)-pad)/(extent-pad)
+            return float(Fraction(start)*(1-ratio)+Fraction(end)*ratio)
+        original = (unscale(x,left,width-right,x1,x2),unscale(y,top,height-bottom,y1,y2))
+        return _point(original,self.crop,"original_point")
 
     def forward_box(self, box, processed_image):
         binding = self._processed(processed_image)
@@ -189,7 +240,7 @@ class Transform:
 
     def inverse_box(self, box, expected_processed_image):
         binding = self._processed(expected_processed_image)
-        corners = _box(box, binding, (0,0,binding.width,binding.height))
+        corners = _box(box, binding, self.content_bounds)
         return self._envelope([self.inverse_point(p,binding,binding) for p in corners], self.image)
 
     @staticmethod
@@ -198,4 +249,4 @@ class Transform:
         return OriginalBox(image=image, bbox=[min(xs),min(ys),max(xs),max(ys)])
 
 
-__all__ = ["Transform", "GeometryError", "ImageBinding", "OriginalBox", "invert_affine", "SPEC_VERSION"]
+__all__ = ["Transform", "GeometryError", "ImageBinding", "OriginalBox", "invert_affine", "SPEC_VERSION", "IMPLEMENTATION_VERSION"]

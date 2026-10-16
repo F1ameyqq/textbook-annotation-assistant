@@ -11,7 +11,7 @@ from annotation.contracts import (SCHEMA_VERSION, SourceBundle, artifact_ref, lo
                                   seal_artifact, seal_policy, validate_bundle, write_bundle)
 from annotation.contracts.models import Resource
 
-VERSION = "a01-static-1"
+VERSION = "a01-static-1-r1"
 OLD = "技术证据/只读样本-46006966"
 NEW = "docs/evidence/A05/review"
 EXECUTION = "docs/evidence/A05/execution"
@@ -448,4 +448,7 @@ def load_static_bundle(path, expected_book_id):
         fail("METADATA_CONFLICT","metadata_page_count","source and provenance totals differ")
     if len(source.payload.scope_manifest) != limitations["reference_count"] or "REFERENCE_ONLY" not in source.payload.scope_manifest_basis:
         fail("DENOMINATOR_UNKNOWN","scope_manifest","reference-only scope basis/count required")
+    from .consistency import validate_archive_records
+    integrity = parse(safe_path(path.parent,"input-integrity.json").read_bytes())
+    validate_archive_records(path.parent,source,provenance,limitations,integrity)
     return bundle
