@@ -2,7 +2,7 @@
 
 日期：2026-10-16。状态：**DRAFT / NOT_DISPATCHED**。本文件是主调度在 C01 独立验收期间准备的范围与检查清单，不是开工令，也不释放依赖。
 
-依据：[A 侧调度](../coordination.md)、[开发计划](../development-plan.md)、[公共合同](../contracts-v1.md)、[实时状态](../coordination-state.json)。C01 当前候选交付为 `b8c4341d277d205dddfae22b26c245b646a1cea2`（代码 `4660e8e4120af1b8550c2e0ee3dd02593aa38aac`）；尚无独立验收结论，后续任务不得直接把此候选当作接受基线。正式派发时须替换为实际接受、集成后的确切版本，并各建执行与验收任务单。
+依据：[A 侧调度](../coordination.md)、[开发计划](../development-plan.md)、[公共合同](../contracts-v1.md)、[实时状态](../coordination-state.json)。C01 当前 R1 候选交付为 `4e42668ab28eda37a37285285d2f6c595d3bba12`（修复代码 `cb684f90a2cd7bd7064ce1f30b7d024a49389132`）；首轮结论为 REWORK，R1 尚待独立复验，后续任务不得直接把此候选当作接受基线。正式派发时须替换为实际接受、集成后的确切版本，并各建执行与验收任务单。
 
 ## 共同派发前提
 
@@ -28,6 +28,20 @@
 5. 拒绝错误尺寸/摘要、非有限坐标、不可逆变换和越界框；不通过自动裁边掩盖错误。声明支持的变换范围及误差容限，范围外显式失败。
 
 结果只证明静态来源可追溯和受支持的几何运算成立，不证明全书采集、切题、配答或历史答案正确。
+
+### A01 输入预检（2026-10-16，只读）
+
+| 来源 | 当前可用的最小集合 | 导入必须保留的限制 |
+|---|---|---|
+| 旧书 46006966 | `技术证据/只读样本-46006966/` 的四张 `viewer-page-0008/0009/0010/0234.jpg`、`source-images-complete.json`、`directory.json`、`manual-annotations.json`、14 行 `paper-questions-original.jsonl` | 四张图的摘要/尺寸与清单一致；清单含本机绝对路径，输出须转换为包内相对引用，原清单只读保留。 |
+| 旧书额外原图 | `data/raw/images/` 的六图及 `data/derived/manifest.json` | 六图摘要与清单相符，其中四图与上一组重复；按摘要去重但保留各来源，不把六张加四张记为十张。来源记录与页映射不能直接全盘信任，见下文。 |
+| 新书 46007447 | `docs/evidence/A05/review/` 的 `independent-original-question.jpg`、`independent-original-answer.jpg`、`independent-originals.json`、两份 `independent-source-page14/173.json`，配合已脱敏的实际目录/书响应和 `docs/evidence/A05/execution/source-metadata.json` | 两张原图与 originals 摘要一致，且与 execution 两图字节相同；仍只覆盖两页。历史目录/书响应要保留观察时间，不冒充当前平台快照。 |
+
+`data/derived/manifest.json` 的 provenance 有五条外部绝对来源路径，当前原路径不可用；其中 `netdetail1.json`、`netdetail2.json`、`netdetail3.json`、`savectx.json` 四份原始 JSON 在仓库中缺失。可使用现存脱敏材料建立另一条明确来源链，不能把重建的来源冒称为缺失原件，也不将该 manifest 当作完整可搬运来源包。
+
+旧派生 manifest 中的部分页图配对与坐标推断已被 [页映射更正](../../data/derived/CORRECTION-page-mapping.md) 更正；`tools/page_mapping.py` 还保留页 234 坐标空间未定的旧说明，与 [开发计划](../development-plan.md) 中的清理项一致。A01 应把四个已核对页面的明确来源与更新证据绑定，不用旧派生推断覆盖原始来源，也不把这四页的偏移外推到所有页面或所有书。
+
+旧书 250 页、新书 214 页是来源元数据总量；本次可见的不同原图分别为六页、两页。历史导出、答案和 A05 单题成功都不能提供完整的全页漏题清单。正式任务仍须说明 scope_manifest 的独立依据；范围尚不完整时不得伪造完整性 PASS。本次预检未下载资源、运行识别算法或操作平台。
 
 ## A02：计划、目标检查与模拟执行
 
