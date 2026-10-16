@@ -59,3 +59,9 @@ C01 强制非空 scope_manifest，且下游把它称为独立分母，无法机�
 - 观察归档 source 身份须对应保留输入；新书 observation_index_source 的路径和SHA256须与对应输入 before/after 摘要一致。不通过重新计算改写内容替换保留摘要，也不访问包外原网络索引。
 
 N15的precision标签不作为认证门禁，R2没有扩成实时观测或网络信任系统；该标签不能证明PlatformSnapshot或当前平台状态。S01公共完整性门禁和D01根Pillow依赖仍由主调度处理，B确认未取得。
+
+## R3 URL path及跨表示复现
+
+来源实现 `a01-static-1-r3` 仅从 `urlsplit(url).path` 的完整直接JPEG路径解析两个书籍标识及源索引。query/fragment（包括空分隔符）均明确报SOURCE_URL_COMPONENT；不得用这些组件补造或覆盖资源身份。保留合法直接HTTP(S)URL及主机文本，不增加主机认证、签名URL或网络访问。R2分区/观察摘要逻辑及geometry字节不改。
+
+新最短入口 `python -B examples/a01/R3/verify.py '<新的证据目录>'` 可在受控Windows工作树和Git原字节无Git导出中运行。它读取已提交的固定Git参照，分别记录Git原件SHA256与磁盘表示，仅为明确25个旧Git text文件接受预先计算的LF/CRLF摘要；历史/二进制和未列明文件严格原字节，正文损坏或混合换行拒绝，运行中磁盘变化也拒绝。旧R2入口、磁盘基线及其导出失败均原样保留，不通过重新计算当前文件作为期望值解决差异。详见 [R3入口](../examples/a01/R3/README.md) 和 [R3执行报告](tasks/A01-rework-R3-report.md)。

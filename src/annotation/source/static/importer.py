@@ -12,7 +12,7 @@ from annotation.contracts import (SCHEMA_VERSION, SourceBundle, artifact_ref, lo
                                   seal_artifact, seal_policy, validate_bundle, write_bundle)
 from annotation.contracts.models import Resource
 
-VERSION = "a01-static-1-r2"
+VERSION = "a01-static-1-r3"
 OLD = "技术证据/只读样本-46006966"
 NEW = "docs/evidence/A05/review"
 EXECUTION = "docs/evidence/A05/execution"
@@ -105,7 +105,9 @@ def url_index(url, book, location):
         valid = False
     if not valid:
         fail("SOURCE_URL",location,"archived image URL must be an absolute HTTP(S) string")
-    match = re.search(r"/upload_images/([0-9]+)/([0-9]+)_page_([0-9]+)\.jpg$", url)
+    if "?" in url or "#" in url:
+        fail("SOURCE_URL_COMPONENT",location,"query and fragment components are outside the direct-image URL format")
+    match = re.fullmatch(r"/upload_images/([0-9]+)/([0-9]+)_page_([0-9]+)\.jpg", parsed.path)
     if not match or match[1] != book or match[2] != book:
         fail("BOOK_CONFLICT", location, "archived image URL belongs to a different book or is malformed")
     return int(match[3])

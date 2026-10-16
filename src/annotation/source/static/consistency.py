@@ -102,7 +102,7 @@ def validate_archive_records(folder,source,provenance,limitations,integrity):
         require(before == after,"INPUT_CHANGED",loc+".after_sha256","before/after digests differ")
         inputs[path] = before
 
-    require(provenance.get("format_version") in ("a01-static-1","a01-static-1-r1","a01-static-1-r2"),
+    require(provenance.get("format_version") in ("a01-static-1","a01-static-1-r1","a01-static-1-r2","a01-static-1-r3"),
             "SOURCE_FORMAT","provenance.format_version","unknown archive format")
     validate_scope_partition(source,provenance)
     require(limitations.get("scope_manifest_status") == "REFERENCE_ONLY", "DENOMINATOR_UNKNOWN",
