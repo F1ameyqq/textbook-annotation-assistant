@@ -2,7 +2,7 @@
   "schema_version": 1,
   "project": "D:\\1800",
   "coordinator_thread_id": "01a13f26-7567-75e1-99ee-c9d2194e78bb",
-  "updated_at": "2026-10-16T20:51:06.083009+08:00",
+  "updated_at": "2026-10-16T20:55:23.691637+08:00",
   "automation": {
     "id": "1800-a",
     "kind": "heartbeat",
@@ -47,7 +47,7 @@
       "submission_status": "NOT_SUBMITTED"
     },
     "C01": {
-      "status": "ACCEPTED",
+      "status": "INTEGRATED",
       "execution_task": "docs/tasks/C01-contracts-implementation.md",
       "review_task": "docs/tasks/C01-independent-review.md",
       "base_commit": "30bc00cbaa3e40d78fd8d5cac98e81bd354763b2",
@@ -85,7 +85,7 @@
         "turn_id": "01a144b4-8045-7f02-aa82-cc1e276b9f9a"
       },
       "B_contract_confirmation": "NOT_CONFIRMED",
-      "next_dependency": "Scoped local integration and affected checks before A01/A02/A04 dispatch.",
+      "next_dependency": "A01/A02/A04 execution and independent-review dispatch; A04 coordinate integration waits for accepted A01 geometry.",
       "review_handoff": {
         "state": "ACKNOWLEDGED",
         "round": "R1",
@@ -160,9 +160,53 @@
         "first_review_evidence_files_verified": 159
       },
       "integration": {
-        "status": "PENDING",
+        "status": "PASSED",
         "source_commit": "4e42668ab28eda37a37285285d2f6c595d3bba12",
-        "strategy": "normal non-fast-forward merge of exact accepted commit; preserve unrelated working changes; verify affected tests before INTEGRATED"
+        "strategy": "normal non-fast-forward merge of exact accepted commit; preserve unrelated working changes; verify affected tests before INTEGRATED",
+        "commit": "223b0b3d9ae0bd50ef2ac045219a41ad41611856",
+        "checks": "docs/evidence/C01/coordinator/integration/checks.json",
+        "contracts_tests": 70,
+        "login_tests": 8,
+        "remote_push": false
+      },
+      "integration_commit": "223b0b3d9ae0bd50ef2ac045219a41ad41611856"
+    },
+    "A01": {
+      "status": "READY",
+      "depends_on": [
+        "C01"
+      ],
+      "execution_task": "docs/tasks/A01-source-geometry.md",
+      "review_task": "docs/tasks/A01-independent-review.md",
+      "acceptance_scope": "Static sources for two separate books and declared geometry; no platform/model actions.",
+      "dispatch_status": "NOT_STARTED",
+      "next_dependency": "Frozen execution delivery followed by independent review."
+    },
+    "A02": {
+      "status": "READY",
+      "depends_on": [
+        "C01"
+      ],
+      "execution_task": "docs/tasks/A02-planner-mock.md",
+      "review_task": "docs/tasks/A02-independent-review.md",
+      "acceptance_scope": "Planner, targetcheck and in-memory mock; no real writes or cross-process recovery.",
+      "dispatch_status": "NOT_STARTED",
+      "next_dependency": "Frozen execution delivery followed by independent review."
+    },
+    "A04": {
+      "status": "READY",
+      "depends_on": [
+        "C01"
+      ],
+      "execution_task": "docs/tasks/A04-headless-readonly.md",
+      "review_task": "docs/tasks/A04-independent-review.md",
+      "acceptance_scope": "Headless read-only book46007447 pages14/173 and one adjacent body page; coordinates after accepted A01.",
+      "dispatch_status": "NOT_STARTED",
+      "next_dependency": "Frozen execution delivery followed by independent review.",
+      "geometry_dependency": {
+        "task": "A01",
+        "status": "WAITING_ACCEPTED_COMMIT",
+        "blocks": "Formal coordinate integration only; offline adapter work can proceed."
       }
     }
   },
@@ -223,29 +267,33 @@
       "thread_id": "01a14481-d20d-7e21-898a-a650d52f9a9e"
     }
   ],
-  "last_action": "C01 R1 independently accepted and coordinator-reproduced; preparing scoped local integration.",
+  "last_action": "Integrated accepted C01 and passed affected checks; prepared disjoint A01/A02/A04 task pairs.",
   "limitations": [
     "Current route uses mock B artifacts until independently agreed interface/artifact versions exist.",
     "Local integration is not remote publication.",
     "Platform test is single-book serial, no book submission, no unbudgeted paid models."
   ],
   "last_check": {
-    "observed_at": "2026-10-16T20:51:06.083009+08:00",
+    "observed_at": "2026-10-16T20:55:23.691637+08:00",
     "automation_tick": "2026-10-16T12:47:38.523Z",
-    "coordinator_head": "5cf69579719b16abf2183b244965f99d83370f56",
+    "coordinator_head": "223b0b3d9ae0bd50ef2ac045219a41ad41611856",
     "execution_head": "4e42668ab28eda37a37285285d2f6c595d3bba12",
     "execution_worktree_dirty": false,
     "repair_report_present": true,
     "r1_review_report_present": true,
-    "result": "C01 ACCEPTED after coordinator reproduction; local integration pending.",
+    "result": "C01 INTEGRATED locally; three next tasks formally ready for dispatch.",
     "new_dispatches": 0,
     "tests_rerun": true,
     "tests_scope": "16 targeted tests, original F1/F2 default CLI and four consumers; archive hashes checked.",
     "platform_actions": false,
-    "user_action_required": false
+    "user_action_required": false,
+    "integration_tests": {
+      "contracts": 70,
+      "login": 8
+    }
   },
   "prepared_next_batch": {
-    "status": "DRAFT_NOT_DISPATCHED",
+    "status": "FORMAL_TASKS_READY",
     "document": "docs/tasks/A01-A02-A04-preparation.md",
     "tasks": [
       "A01",
