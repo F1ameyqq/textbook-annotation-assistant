@@ -2,7 +2,7 @@
   "schema_version": 1,
   "project": "D:\\1800",
   "coordinator_thread_id": "01a13f26-7567-75e1-99ee-c9d2194e78bb",
-  "updated_at": "2026-10-16T19:34:52+08:00",
+  "updated_at": "2026-10-16T19:39:14.645116+08:00",
   "automation": {
     "id": "1800-a",
     "kind": "heartbeat",
@@ -20,7 +20,7 @@
   },
   "tasks": {
     "A05": {
-      "status": "ACCEPTED",
+      "status": "INTEGRATED",
       "acceptance_scope": "One saved Q/A frame pair for question 22; refreshed and independently reopened; CONTENT_PENDING",
       "execution": {
         "thread_id": "01a14454-610f-75f0-8baa-225518a51136",
@@ -41,20 +41,34 @@
         "session_released": true
       },
       "coordinator_report": "docs/tasks/A05-coordinator-acceptance.md",
-      "integration_commit": null,
+      "integration_commit": "30bc00cbaa3e40d78fd8d5cac98e81bd354763b2",
       "do_not_replay_question_order": 22,
       "content_check_status": "PENDING",
       "submission_status": "NOT_SUBMITTED"
     },
     "C01": {
-      "status": "READY",
+      "status": "RUNNING",
       "execution_task": "docs/tasks/C01-contracts-implementation.md",
       "review_task": "docs/tasks/C01-independent-review.md",
-      "base_commit": null,
-      "workflow_commit": null,
-      "worktree": null,
-      "execution": null,
-      "review": null,
+      "base_commit": "30bc00cbaa3e40d78fd8d5cac98e81bd354763b2",
+      "workflow_commit": "30bc00cbaa3e40d78fd8d5cac98e81bd354763b2",
+      "worktree": "C:/Users/ASUS/.codex/worktrees/c01-contracts/1800",
+      "execution": {
+        "thread_id": "01a14481-79b3-7ed3-a29e-fdbeb11e0da9",
+        "host_id": "local",
+        "turn_status": "inProgress",
+        "cursor": "d5d8c3eb-82d6-40e0-9c04-b8d4221e172b:1",
+        "report": "C:/Users/ASUS/.codex/worktrees/c01-contracts/1800/docs/tasks/C01-execution-report.md",
+        "branch": "codex/c01-contracts"
+      },
+      "review": {
+        "thread_id": "01a14481-d20d-7e21-898a-a650d52f9a9e",
+        "host_id": "local",
+        "turn_status": "inProgress",
+        "phase": "PREPARING_WAITING_FOR_EXECUTION",
+        "cursor": "6c52ac96-a20c-406a-9abc-6c5ae6f89183:1",
+        "report": "docs/tasks/C01-review-report.md"
+      },
       "B_contract_confirmation": "NOT_CONFIRMED"
     }
   },
@@ -96,8 +110,26 @@
       ]
     }
   ],
-  "dispatch_intents": [],
-  "last_action": "A05 independent acceptance reproduced; scheduled follow-up activated; preparing C01 workflow baseline.",
+  "dispatch_intents": [
+    {
+      "key": "C01:execution:30bc00cbaa3e40d78fd8d5cac98e81bd354763b2",
+      "task": "C01",
+      "stage": "execution",
+      "state": "CREATED",
+      "title": "C01 合同实现与固定样例",
+      "worktree_operation_id": "677dfd1f-9c61-4dbb-8c76-1820e366a492",
+      "thread_id": "01a14481-79b3-7ed3-a29e-fdbeb11e0da9"
+    },
+    {
+      "key": "C01:review:30bc00cbaa3e40d78fd8d5cac98e81bd354763b2",
+      "task": "C01",
+      "stage": "review",
+      "state": "CREATED",
+      "title": "C01 合同独立验收",
+      "thread_id": "01a14481-d20d-7e21-898a-a650d52f9a9e"
+    }
+  ],
+  "last_action": "C01 execution and independent review dispatched to separate threads; A05 evidence locally integrated.",
   "limitations": [
     "Current route uses mock B artifacts until independently agreed interface/artifact versions exist.",
     "Local integration is not remote publication.",
