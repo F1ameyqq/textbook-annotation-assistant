@@ -36,6 +36,29 @@ def _document_ref(value):
     return {"artifact_id":value["artifact_id"],"content_hash":digest(value)}
 
 
+def _content_plan_input(path):
+    """Independently bind even malformed plans to a failed stage's raw input."""
+    raw,plan=None,None
+    try:
+        raw=Path(path).read_bytes()
+        def pairs(items):
+            result={}
+            for key,value in items:
+                if key in result:raise ValueError("duplicate plan JSON field")
+                result[key]=value
+            return result
+        def invalid(value):raise ValueError("nonfinite plan JSON")
+        plan=json.loads(raw.decode("utf-8"),object_pairs_hook=pairs,parse_constant=invalid)
+    except (OSError,ValueError,RecursionError):pass
+    reference=None
+    if (isinstance(plan,dict)and isinstance(plan.get("artifact_id"),str)and plan["artifact_id"].strip()
+            and type(plan.get("revision"))is int and plan["revision"]>=1
+            and isinstance(plan.get("content_hash"),str)and len(plan["content_hash"])==64
+            and set(plan["content_hash"])<=set("0123456789abcdef")):
+        reference=_ref(plan)
+    return plan,{"file_sha256":hashlib.sha256(raw).hexdigest()if raw is not None else None,"reference":reference}
+
+
 def _checked(value,schemas,kind=None):
     return (isinstance(value,dict) and value.get("schema_version") in schemas
             and (kind is None or value.get("kind") == kind)
@@ -311,7 +334,7 @@ def _recognizer_current(receipt,*,use_ocr,synthetic):
 
 
 def _audit_pipeline(source_path,context_path,review_path,report,workdir,*,evidence_path=None,recovery_path=None,
-                    continuation_path=None,adjacent_source_path=None,inline_path=None,inline_source_path=None):
+                    continuation_path=None,adjacent_source_path=None,inline_path=None,inline_source_path=None,content_revision_path=None):
     issues,summary = [],{}
 
     def emit(code,stage=None,detail=None):
@@ -351,6 +374,10 @@ def _audit_pipeline(source_path,context_path,review_path,report,workdir,*,eviden
         receipts["continuation"] = inspect_continuation_package(continuation_path,source_path,adjacent_source_path)["receipt"]
     if (inline_path is None)!=(inline_source_path is None):raise ValueError("inline package and original are required together")
     if inline_path is not None:receipts["inline"]=inspect_inline_package(inline_path,inline_source_path)["receipt"]
+    content_plan=None
+    if content_revision_path is not None:
+        if inline_path is None:raise ValueError("content revision requires explicit inline inputs")
+        content_plan,receipts["content_revision"]=_content_plan_input(content_revision_path)
     mode = "CACHED_INPUT"if imported is not None else"LIVE_BATCH"
     if (context.get("schema_version") != "b-context-trial/0.1"or review.get("schema_version") != "b-review-trial/0.1"
             or any(document.get(k) != source[k]for document in (context,review)for k in ("book_id","scope_id"))
@@ -396,6 +423,8 @@ def _audit_pipeline(source_path,context_path,review_path,report,workdir,*,eviden
     if continuation_path is not None: stage_order.extend(continuation_stages)
     inline_stages=("inline_prepare","inline_apply","inline_quality")
     if inline_path is not None:stage_order.extend(inline_stages)
+    content_stages=("content_apply","content_quality")
+    if content_revision_path is not None:stage_order.extend(content_stages)
     stages = p.get("stages",[])
     if [s.get("stage_id")for s in stages] != stage_order:
         emit("PIPELINE_STAGE_SCOPE_MISMATCH")
@@ -476,6 +505,7 @@ def _audit_pipeline(source_path,context_path,review_path,report,workdir,*,eviden
         source_functions.update(continuation_stage=_function_hashes(Path(__file__).with_name("continuation_stage.py")),
             continued_quality=_function_hashes(Path(__file__).with_name("continued_quality.py")))
     if inline_path is not None:source_functions["inline_stage"]=_function_hashes(Path(__file__).with_name("inline_stage.py"))
+    if content_revision_path is not None:source_functions["content_revision"]=_function_hashes(Path(__file__).with_name("content_revision.py"))
     offline_globals = _offline_global_values(offline_path)
     expected_dependencies = {distribution:{"version":importlib.metadata.version(distribution),
         "package_entry_sha256":file_digest(Path(importlib.util.find_spec(module).origin))}for distribution,module in (("numpy","numpy"),("Pillow","PIL"))}
@@ -529,6 +559,14 @@ def _audit_pipeline(source_path,context_path,review_path,report,workdir,*,eviden
         elif stage == "inline_apply":dependencies.update(prepared=bindings["inline_prepare"],inline=receipts["inline"])
         elif stage == "inline_quality":dependencies.update(prepared=bindings["inline_prepare"],application=bindings["inline_apply"],
             base_check=bindings["continuation_quality"if continuation_path is not None else"quality"],inline=receipts["inline"])
+        elif stage in content_stages:
+            e=results["inline_prepare"]["payload"]["base_evidence_archive"]
+            g=results["inline_apply"]["payload"]["graph"]
+            dependencies.update(evidence={**bindings["inline_prepare"],"result_ref":_ref(e)},
+                graph={**bindings["inline_apply"],"result_ref":_ref(g)},base_check=bindings["inline_quality"],content_revision=receipts["content_revision"])
+            if stage=="content_quality":
+                review_dependency={**bindings["recovery_review"],"reference":_document_ref(results["active_review"])}if recovery_path is not None else receipts["review"]
+                dependencies.update(application=bindings["content_apply"],application_graph_ref=_ref(results["content_apply"]["payload"]["graph"]),review=review_dependency)
         if entry.get("reason") == "STAGE_SETUP_FAILED":
             current = entry.get("current_run_receipt")or{}
             associated = [e for e in run_events if e["event_id"] == current.get("event_id")]
@@ -553,12 +591,14 @@ def _audit_pipeline(source_path,context_path,review_path,report,workdir,*,eviden
             "continuation_apply":("continuation_stage","apply_continuation_stage"),
             "continuation_quality":("continued_quality","build_continued_quality")}
         inline_functions={"inline_prepare":("inline_stage","prepare_inline_stage"),"inline_apply":("inline_stage","apply_inline_stage"),"inline_quality":("inline_stage","build_inline_quality")}
-        function_owner,function_name = inline_functions[stage]if stage in inline_stages else continued_functions[stage]if stage in continuation_stages else("batch","run_batch")if stage == "recognition"else("pipeline","_validate_evidence")if stage == "evidence"else("recovery_stage","recover_evidence"if stage == "recover"else"build_recovery_review")if stage in {"recover","recovery_review"}else("offline","quality_check"if stage == "quality"else stage)
+        content_functions={"content_apply":("content_revision","apply_content_revision"),"content_quality":("content_revision","build_content_quality")}
+        function_owner,function_name = content_functions[stage]if stage in content_stages else inline_functions[stage]if stage in inline_stages else continued_functions[stage]if stage in continuation_stages else("batch","run_batch")if stage == "recognition"else("pipeline","_validate_evidence")if stage == "evidence"else("recovery_stage","recover_evidence"if stage == "recover"else"build_recovery_review")if stage in {"recover","recovery_review"}else("offline","quality_check"if stage == "quality"else stage)
         helper_names = []if stage == "recognition"else["check_artifact","validate_context"]if stage == "evidence"else["artifact","ref","check_artifact"]+{
             "refine":["validate_context","detect_columns","locate"],"assemble":["entity_id","scope_key"],"quality":["scalar_issues","scope_key"],"recover":["validate_context"],"recovery_review":[],
-            "continuation_prepare":["assemble","entity_id","scope_key"],"continuation_proof":[],"continuation_apply":[],"continuation_quality":[],**{s:[]for s in inline_stages}}[stage]
+            "continuation_prepare":["assemble","entity_id","scope_key"],"continuation_proof":[],"continuation_apply":[],"continuation_quality":[],**{s:[]for s in inline_stages+content_stages}}[stage]
         if stage in {"continuation_proof","continuation_apply",*inline_stages}: helper_names = []
         if stage == "continuation_quality": helper_names = ["scalar_issues","scope_key"]
+        if stage in content_stages:helper_names=["artifact","ref","check_artifact","scope_key","scalar_issues"]
         expected_helpers = {n:source_functions["offline"][n]for n in helper_names}
         module_names = {"recognition":["batch","baseline"],"evidence":["baseline"],
             "recover":["recovery_stage","recovery_apply","baseline"],"recovery_review":["recovery_stage","recovery_apply","baseline"],
@@ -566,12 +606,13 @@ def _audit_pipeline(source_path,context_path,review_path,report,workdir,*,eviden
             "quality":["baseline","question_quality","answer_quality","recovery_quality","recovery_apply","policy"],
             **{name:["continuation_stage","continuation","continuation_apply","continuation_quality","boundary","image_regions","baseline","offline","answer_assembly","policy"]
                 for name in continuation_stages},**{name:["inline_stage","inline_continuity","inline_ocr","inline_ocr_quality","inline_math","inline_formula",
-                    "inline_candidates","inline_formula_quality","formula_canvas","formula_canvas_quality","formula_syntax","formula_quality","formula_backend","batch","baseline"]for name in inline_stages}}[stage]
+                    "inline_candidates","inline_formula_quality","formula_canvas","formula_canvas_quality","formula_syntax","formula_quality","formula_backend","batch","baseline"]for name in inline_stages},
+            **{name:["content_revision","content_revision_quality","question_quality","offline","policy","baseline"]for name in content_stages}}[stage]
         if stage == "continuation_quality": module_names += ["continued_quality","continuation_stage_quality","question_quality","answer_quality","recovery_quality","recovery_apply","policy"]
         global_names = {"recognition":[],"evidence":["CONTEXT_SCHEMA","EVIDENCE_SCHEMA"],"refine":["CONTEXT_SCHEMA","EVIDENCE_SCHEMA","ASTART"],
             "recover":["EVIDENCE_SCHEMA","CONTEXT_SCHEMA"],"recovery_review":["EVIDENCE_SCHEMA"],
             "assemble":["EVIDENCE_SCHEMA","GRAPH_SCHEMA","QSTART","ASTART","OPTION","CAPTION","DECORATION"],
-            "quality":["EVIDENCE_SCHEMA","GRAPH_SCHEMA","CHECK_SCHEMA"],**{name:[]for name in continuation_stages+inline_stages}}[stage]
+            "quality":["EVIDENCE_SCHEMA","GRAPH_SCHEMA","CHECK_SCHEMA"],**{name:[]for name in continuation_stages+inline_stages+content_stages}}[stage]
         if stage == "continuation_prepare": global_names = ["EVIDENCE_SCHEMA","GRAPH_SCHEMA","QSTART","ASTART","OPTION","CAPTION","DECORATION"]
         module_paths = {n:(Path(__file__).resolve().parents[3]/"tools/route_a_layout.py"if n == "legacy"else Path(__file__).with_name(n+".py"))for n in module_names}
         refinement_mode = implementation.get("configuration",{}).get("refinement_mode")
@@ -583,6 +624,7 @@ def _audit_pipeline(source_path,context_path,review_path,report,workdir,*,eviden
             "refinement_mode":"SYNTHETIC_TEST_OVERRIDE"if synthetic_override else"CPU_OCR"if stage == "refine"else None}
         if stage in {"recover","recovery_review"}: expected_configuration["recovery_policy"] = POLICY
         if stage in inline_stages:expected_configuration["inline_policy"]="EXACT_SELECTED_PAGE_EQUIVALENCE_ONLY/0.1"
+        if stage in content_stages:expected_configuration["content_revision_policy"]="EXPLICIT_CURRENT_E_G05_CHECK05/0.1"
         stage_dependencies = expected_dependencies
         if stage in continuation_stages+inline_stages:
             if stage in continuation_stages:expected_configuration["continuation_policy"] = "CURRENT_REFERENCE_REBUILD_ONLY/0.1"
@@ -718,6 +760,19 @@ def _audit_pipeline(source_path,context_path,review_path,report,workdir,*,eviden
                 elif stage=="inline_apply":checked=audit_inline_application(results["inline_prepare"],result,inline_path,inline_source_path)
                 else:checked=audit_inline_quality(results["inline_prepare"],results["inline_apply"],results["continuation_quality"if continuation_path is not None else"quality"],result,inline_path,inline_source_path)
                 if not checked["payload"]["accepted"]:emit("PIPELINE_INLINE_STAGE_REJECTED",stage,checked["payload"]["issues"])
+            elif stage in content_stages:
+                from .content_revision_quality import audit_content_application,audit_content_quality
+                e=results["inline_prepare"]["payload"]["base_evidence_archive"]
+                g=results["inline_apply"]["payload"]["graph"]
+                c=results["inline_quality"]
+                checked=(audit_content_application(e,g,c,content_plan,result)if stage=="content_apply"else
+                    audit_content_quality(e,g,c,content_plan,results["content_apply"],results.get("active_review",review),result))
+                cp=checked.get("payload",{})
+                flags=dict(decision="HOLD",complete=False,transcription_verified=False,business_acceptance=False,platform_actions=[],new_model_calls=0)
+                if (checked.get("schema_version")!="b-content-revision-check-trial/0.1"or checked.get("kind")!="ContentRevisionCheckTrial"
+                        or checked.get("content_hash")!=digest(cp)or cp.get("accepted")is not True
+                        or digest({k:cp.get(k)for k in flags})!=digest(flags)):
+                    emit("PIPELINE_CONTENT_REVISION_STAGE_REJECTED",stage,cp.get("issues",[]))
             if state == "DONE":
                 results[stage] = result
                 bindings[stage] = {"output":entry["output"],"result_ref":_ref(result)}
@@ -750,18 +805,27 @@ def _audit_pipeline(source_path,context_path,review_path,report,workdir,*,eviden
         if expected_pipeline_state=="READY"and all(name in results for name in inline_stages):
             expected_final={"evidence_ref":results["inline_prepare"]["payload"]["base_evidence_ref"],
                 "graph_ref":_ref(results["inline_apply"]["payload"]["graph"]),"quality_ref":_ref(results["inline_quality"])}
-        if digest(p.get("final_outputs"))!=digest(expected_final):emit("PIPELINE_INLINE_FINAL_OUTPUTS_MISMATCH")
+        if content_revision_path is None and digest(p.get("final_outputs"))!=digest(expected_final):emit("PIPELINE_INLINE_FINAL_OUTPUTS_MISMATCH")
+    if content_revision_path is not None:
+        expected_scope={"plan_receipt":receipts["content_revision"],"new_model_calls":0,"draft_only":True}
+        if digest(p.get("content_revision_scope"))!=digest(expected_scope):emit("PIPELINE_CONTENT_REVISION_SCOPE_MISMATCH")
+        expected_final=None
+        if expected_pipeline_state=="READY"and all(name in results for name in content_stages):
+            expected_final={"evidence_ref":results["inline_prepare"]["payload"]["base_evidence_ref"],
+                "graph_ref":_ref(results["content_apply"]["payload"]["graph"]),"quality_ref":_ref(results["content_quality"])}
+        if digest(p.get("final_outputs"))!=digest(expected_final):emit("PIPELINE_CONTENT_REVISION_FINAL_OUTPUTS_MISMATCH")
     summary.update(stage_count=len(stage_order),completed_stage_count=counts["done"],pipeline_state=expected_pipeline_state,
                    execution_kind=kind,counts=counts,current_run_attempt_count=sum(a["run_id"] == run_id for a in attempts))
     return finish()
 
 
 def audit_pipeline(source_path,context_path,review_path,report,workdir,*,evidence_path=None,recovery_path=None,
-                   continuation_path=None,adjacent_source_path=None,inline_path=None,inline_source_path=None):
+                   continuation_path=None,adjacent_source_path=None,inline_path=None,inline_source_path=None,content_revision_path=None):
     """Fail closed on bad inputs; do not certify business or execution signatures."""
     try:
         return _audit_pipeline(source_path,context_path,review_path,report,workdir,evidence_path=evidence_path,recovery_path=recovery_path,
-            continuation_path=continuation_path,adjacent_source_path=adjacent_source_path,inline_path=inline_path,inline_source_path=inline_source_path)
+            continuation_path=continuation_path,adjacent_source_path=adjacent_source_path,inline_path=inline_path,inline_source_path=inline_source_path,
+            content_revision_path=content_revision_path)
     except (OSError,ValueError,TypeError,KeyError,AttributeError,IndexError,sqlite3.Error)as exc:
         payload = {"accepted":False,"decision":"HOLD","issues":[{"code":"PIPELINE_PERSISTED_DATA_INVALID","severity":"ERROR",
             "detail":type(exc).__name__+": "+str(exc)}],"summary":{},"business_acceptance":False,

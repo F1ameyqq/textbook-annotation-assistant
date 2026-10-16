@@ -38,6 +38,8 @@ SCHEMA = "b-pipeline-report-trial/0.1"
 STAGE_SCHEMA = "b-pipeline-stage-trial/0.1"
 CONTINUATION_STAGES = ("continuation_prepare", "continuation_proof", "continuation_apply", "continuation_quality")
 INLINE_STAGES = ("inline_prepare", "inline_apply", "inline_quality")
+CONTENT_STAGES = ("content_apply", "content_quality")
+CONTENT_POLICY = "EXPLICIT_CURRENT_E_G05_CHECK05/0.1"
 SQL = """
 CREATE TABLE IF NOT EXISTS stage_attempts (
  attempt_id TEXT PRIMARY KEY, run_id TEXT NOT NULL, stage_id TEXT NOT NULL,
@@ -68,6 +70,48 @@ def _ref(value):
 def _receipt(path, value, *, artifact=False):
     return {"file_sha256": file_digest(Path(path)), "reference": _ref(value) if artifact else
             {"artifact_id": value["artifact_id"], "content_hash": digest(value)}}
+
+
+def _read_content_plan(path):
+    """Retain bad user input for an explicit failed content stage, not a skip."""
+    raw, plan, error = None, None, None
+    try:
+        raw = Path(path).read_bytes()
+        def unique(pairs):
+            value = {}
+            for key, item in pairs:
+                if key in value: raise ValueError("duplicate content plan JSON key")
+                value[key] = item
+            return value
+        def invalid(value): raise ValueError("nonfinite content plan JSON")
+        plan = json.loads(raw.decode("utf-8"), object_pairs_hook=unique, parse_constant=invalid)
+    except (OSError, ValueError, RecursionError) as exc:
+        error = type(exc).__name__+": "+str(exc)
+    reference = None
+    if (isinstance(plan, dict) and isinstance(plan.get("artifact_id"), str) and plan["artifact_id"].strip()
+            and type(plan.get("revision")) is int and plan["revision"] >= 1
+            and isinstance(plan.get("content_hash"), str) and len(plan["content_hash"]) == 64
+            and set(plan["content_hash"]) <= set("0123456789abcdef")):
+        reference = _ref(plan)
+    return plan, {"file_sha256": hashlib.sha256(raw).hexdigest() if raw is not None else None, "reference": reference}, error
+
+
+def _content_inputs(results):
+    return (results["inline_prepare"]["payload"]["base_evidence_archive"],
+            results["inline_apply"]["payload"]["graph"], results["inline_quality"])
+
+
+def _audit_content_result(stage, result, results, plan):
+    from .content_revision_quality import audit_content_application, audit_content_quality
+    evidence, graph, base_check = _content_inputs(results)
+    check = (audit_content_application(evidence, graph, base_check, plan, result) if stage == "content_apply"
+             else audit_content_quality(evidence, graph, base_check, plan, results["content_apply"], results["active_review"], result))
+    p = check.get("payload", {})
+    if (check.get("schema_version") != "b-content-revision-check-trial/0.1" or check.get("kind") != "ContentRevisionCheckTrial"
+            or check.get("content_hash") != digest(p) or p.get("accepted") is not True
+            or digest({key:p.get(key) for key in ("decision", "complete", "transcription_verified", "business_acceptance", "platform_actions", "new_model_calls")})
+               != digest(dict(decision="HOLD",complete=False,transcription_verified=False,business_acceptance=False,platform_actions=[],new_model_calls=0))):
+        raise ValueError("independent content stage audit rejected: "+_json(p.get("issues", [])))
 
 
 def _event(db, run_id, event_type, *, stage_id=None, attempt_id=None, **details):
@@ -118,12 +162,18 @@ def _implementation(stage, mode, kind, use_ocr, worker, *, continuation_enabled=
         continuation_quality=continued_quality.build_continued_quality)
     functions.update(inline_prepare=inline_stage.prepare_inline_stage, inline_apply=inline_stage.apply_inline_stage,
                      inline_quality=inline_stage.build_inline_quality)
+    if stage in CONTENT_STAGES:
+        from . import content_revision
+        functions.update(content_apply=content_revision.apply_content_revision, content_quality=content_revision.build_content_quality)
     helpers, names = {}, []
     if stage == "recognition":
         names = ["batch", "baseline"]
     elif stage == "evidence":
         names = ["baseline"]
         helpers = {name: _function_sha(getattr(offline, name)) for name in ("check_artifact", "validate_context")}
+    elif stage in CONTENT_STAGES:
+        names = ["content_revision", "content_revision_quality", "question_quality", "offline", "policy", "baseline"]
+        helpers = {name: _function_sha(getattr(offline, name)) for name in ("artifact", "ref", "check_artifact", "scope_key", "scalar_issues")}
     elif stage in INLINE_STAGES:
         names = ["inline_stage", "inline_continuity", "inline_ocr", "inline_ocr_quality", "inline_math", "inline_formula",
                  "inline_candidates", "inline_formula_quality", "formula_canvas", "formula_canvas_quality", "formula_syntax", "formula_quality", "baseline", "formula_backend", "batch"]
@@ -157,6 +207,7 @@ def _implementation(stage, mode, kind, use_ocr, worker, *, continuation_enabled=
                         "quality": ["EVIDENCE_SCHEMA", "GRAPH_SCHEMA", "CHECK_SCHEMA"]}
     globals_by_stage.update({name: [] for name in CONTINUATION_STAGES})
     globals_by_stage.update({name: [] for name in INLINE_STAGES})
+    globals_by_stage.update({name: [] for name in CONTENT_STAGES})
     globals_by_stage["continuation_prepare"] = ["EVIDENCE_SCHEMA", "GRAPH_SCHEMA", "QSTART", "ASTART", "OPTION", "CAPTION", "DECORATION"]
     global_values = {}
     for name in globals_by_stage[stage]:
@@ -168,6 +219,7 @@ def _implementation(stage, mode, kind, use_ocr, worker, *, continuation_enabled=
     if stage in ("recover", "recovery_review"): configuration["recovery_policy"] = recovery_stage.POLICY
     if stage in CONTINUATION_STAGES: configuration["continuation_policy"] = continuation_stage.POLICY
     if stage in INLINE_STAGES: configuration["inline_policy"] = inline_stage.POLICY
+    if stage in CONTENT_STAGES: configuration["content_revision_policy"] = CONTENT_POLICY
     if (stage == "assemble" and (continuation_enabled or inline_enabled)) or (stage == "quality" and inline_enabled):
         configuration["artifact_time_policy"] = "EXECUTION_TIME_IN_STAGE_JOURNAL/0.1"
     dependencies = _dependencies()
@@ -239,6 +291,28 @@ def _validate_evidence(value, source, context):
 
 
 def _validate_result(stage, value, source, context, review, dependencies, recognition_dir, current_evidence=None):
+    if stage in CONTENT_STAGES:
+        schema = "b-content-revision-application-trial/0.1" if stage == "content_apply" else "b-check-trial/0.6"
+        kind = "ContentRevisionApplicationTrial" if stage == "content_apply" else "CheckReportTrial"
+        offline.check_artifact(value, {schema})
+        p = value["payload"]
+        flags = dict(decision="HOLD",complete=False,transcription_verified=False,business_acceptance=False,platform_actions=[],new_model_calls=0)
+        if (value.get("kind") != kind or type(value.get("revision")) is not int or value["revision"] < 1
+                or current_evidence is None or any(value.get(k) != current_evidence[k] for k in ("book_id", "scope_id"))
+                or digest({k:p.get(k) for k in flags}) != digest(flags) or "created_at" in value):
+            raise ValueError("content revision stage changed scope, nonacceptance or no-clock identity")
+        expected = [dependencies["evidence"]["result_ref"], dependencies["graph"]["result_ref"],
+                    dependencies["base_check"]["result_ref"], dependencies["content_revision"]["reference"]]
+        if stage == "content_apply":
+            if value.get("input_refs") != expected:
+                raise ValueError("content application is not bound to current E/G05/Check05/plan")
+            offline.check_artifact(p["graph"], {"b-graph-trial/0.6"})
+        else:
+            expected[1] = dependencies["application_graph_ref"]
+            expected += [dependencies["application"]["result_ref"], dependencies["review"]["reference"]]
+            if value.get("input_refs") != expected:
+                raise ValueError("content quality is not bound to current E/G06/Check05/plan/application/review")
+        return
     if stage in INLINE_STAGES:
         schema = {"inline_prepare": inline_stage.PREPARE_SCHEMA, "inline_apply": inline_stage.APPLY_SCHEMA, "inline_quality": "b-check-trial/0.5"}[stage]
         kind = {"inline_prepare": "InlinePreparationTrial", "inline_apply": "InlineApplyStageTrial", "inline_quality": "CheckReportTrial"}[stage]
@@ -379,7 +453,8 @@ def _read_stage(db, workdir, descriptor, source, mode, stage, key, dependencies,
 
 def run_pipeline(source_path, context_path, review_path, workdir, *, use_ocr=False, max_items=None,
                  stop_after=None, evidence_path=None, worker=None, recovery_path=None,
-                 continuation_path=None, adjacent_source_path=None, inline_path=None, inline_source_path=None):
+                 continuation_path=None, adjacent_source_path=None, inline_path=None, inline_source_path=None,
+                 content_revision_path=None):
     """Resume source-bound local stages; READY still means HOLD for business use."""
     if type(use_ocr) is not bool or (max_items is not None and (type(max_items) is not int or max_items < 1)):
         raise ValueError("invalid pipeline OCR flag or batch budget")
@@ -394,6 +469,9 @@ def run_pipeline(source_path, context_path, review_path, workdir, *, use_ocr=Fal
     if (inline_path is None) != (inline_source_path is None):
         raise ValueError("inline package and explicit original source are required together")
     if inline_path is not None: stages.extend(INLINE_STAGES)
+    if content_revision_path is not None:
+        if inline_path is None: raise ValueError("content revision requires an explicit inline package and original")
+        stages.extend(CONTENT_STAGES)
     if mode == "CACHED_INPUT" and stop_after == "recognition": stop_after = "evidence"
     if stop_after is not None and stop_after not in stages:
         raise ValueError("stop_after must name a stage present in this pipeline mode")
@@ -431,6 +509,10 @@ def run_pipeline(source_path, context_path, review_path, workdir, *, use_ocr=Fal
         inline_path, inline_source_path = Path(inline_path), Path(inline_source_path)
         inline_package = inline_stage.load_inline_package(inline_path, inline_source_path)
         receipts["inline"] = inline_package["receipt"]
+    content_plan, content_plan_error = None, None
+    if content_revision_path is not None:
+        content_revision_path = Path(content_revision_path)
+        content_plan, receipts["content_revision"], content_plan_error = _read_content_plan(content_revision_path)
     source_ref = receipts["source"]["reference"]
     kind = "CACHED_INPUT" if cached_evidence else "SYNTHETIC_TEST" if worker else "LIVE_CPU_OCR" if use_ocr else "LIVE_GEOMETRY"
     run_id = "pipeline-run-"+uuid4().hex
@@ -440,12 +522,14 @@ def run_pipeline(source_path, context_path, review_path, workdir, *, use_ocr=Fal
         return _run(source_path, context_path, review_path, evidence_path, workdir, source, context, review,
                     receipts, source_ref, cached_evidence, mode, kind, stages, run_id, use_ocr, max_items, stop_after, worker, recognition_dir,
                     recovery_path=recovery_path, continuation_path=continuation_path, adjacent_source_path=adjacent_source_path,
-                    inline_path=inline_path, inline_source_path=inline_source_path)
+                    inline_path=inline_path, inline_source_path=inline_source_path,
+                    content_revision_path=content_revision_path, content_plan=content_plan, content_plan_error=content_plan_error)
 
 
 def _run(source_path, context_path, review_path, evidence_path, workdir, source, context, review,
          receipts, source_ref, cached_evidence, mode, kind, stages, run_id, use_ocr, max_items, stop_after, worker, recognition_dir,
-         recovery_path=None, continuation_path=None, adjacent_source_path=None, inline_path=None, inline_source_path=None):
+         recovery_path=None, continuation_path=None, adjacent_source_path=None, inline_path=None, inline_source_path=None,
+         content_revision_path=None, content_plan=None, content_plan_error=None):
     db = sqlite3.connect(workdir / "pipeline.sqlite3")
     db.row_factory = sqlite3.Row
     db.execute("PRAGMA journal_mode=WAL")
@@ -511,6 +595,18 @@ def _run(source_path, context_path, review_path, evidence_path, workdir, source,
             elif stage == "inline_quality":
                 dep.update(prepared=observations["inline_prepare"], application=observations["inline_apply"],
                     base_check=observations["continuation_quality" if continuation_path is not None else "quality"], inline=receipts["inline"])
+            elif stage in CONTENT_STAGES:
+                e, g, _ = _content_inputs(results)
+                dep.update(evidence={**observations["inline_prepare"], "result_ref": _ref(e)},
+                    graph={**observations["inline_apply"], "result_ref": _ref(g)},
+                    base_check=observations["inline_quality"], content_revision=receipts["content_revision"])
+                if stage == "content_quality":
+                    review_dependency = receipts["review"]
+                    if recovery_path is not None:
+                        review_dependency = {**observations["recovery_review"],
+                            "reference": {"artifact_id": results["active_review"]["artifact_id"], "content_hash": digest(results["active_review"])}}
+                    dep.update(application=observations["content_apply"], application_graph_ref=_ref(results["content_apply"]["payload"]["graph"]),
+                        review=review_dependency)
             entry["dependencies"] = dep
             try:
                 implementation_options = {"continuation_enabled": continuation_path is not None}
@@ -534,7 +630,9 @@ def _run(source_path, context_path, review_path, evidence_path, workdir, source,
                     if (cached["stage_id"] != stage or cached["attempt_id"] != value["payload"]["attempt_id"]
                             or json.loads(cached["result_ref_json"]) != _ref(result)):
                         raise ValueError("stage cache row differs from the immutable origin")
-                    _validate_result(stage, result, source, context, results["active_review"], dep, recognition_dir, results.get("evidence"))
+                    current_evidence = _content_inputs(results)[0] if stage in CONTENT_STAGES else results.get("evidence")
+                    _validate_result(stage, result, source, context, results["active_review"], dep, recognition_dir, current_evidence)
+                    if stage in CONTENT_STAGES: _audit_content_result(stage, result, results, content_plan)
                     if stage == "recognition" and not audit_batch(source_path, recognition_dir, result)["payload"]["accepted"]:
                         raise ValueError("child recognition journal or source artifacts are invalid")
                 except (ValueError, OSError, KeyError, TypeError) as exc:
@@ -585,13 +683,23 @@ def _run(source_path, context_path, review_path, evidence_path, workdir, source,
                     elif stage == "inline_quality":
                         result = inline_stage.build_inline_quality(results["inline_prepare"], results["inline_apply"],
                             results["continuation_quality" if continuation_path is not None else "quality"])
+                    elif stage in CONTENT_STAGES:
+                        from . import content_revision
+                        if content_plan_error is not None: raise ValueError("content revision plan is unreadable: "+content_plan_error)
+                        e, g, base_check = _content_inputs(results)
+                        if stage == "content_apply": result = content_revision.apply_content_revision(e, g, base_check, content_plan)
+                        else:
+                            result = content_revision.build_content_quality(e, g, base_check, content_plan,
+                                results["content_apply"], results["active_review"])
                     else:
                         result = quality_check(results["evidence"], results["assemble"], results["active_review"])
                         if inline_path is not None:
                             # Only this newly produced, unpublished check loses
                             # its clock; historical input/archive objects do not.
                             result.pop("created_at", None)
-                    _validate_result(stage, result, source, context, results["active_review"], dep, recognition_dir, results.get("evidence"))
+                    current_evidence = _content_inputs(results)[0] if stage in CONTENT_STAGES else results.get("evidence")
+                    _validate_result(stage, result, source, context, results["active_review"], dep, recognition_dir, current_evidence)
+                    if stage in CONTENT_STAGES: _audit_content_result(stage, result, results, content_plan)
                     if stage == "recognition" and not audit_batch(source_path, recognition_dir, result)["payload"]["accepted"]:
                         raise ValueError("child recognition run failed independent integrity audit")
                     state = "DONE"
@@ -635,6 +743,8 @@ def _run(source_path, context_path, review_path, evidence_path, workdir, source,
                 raise ValueError("continuation input files changed during pipeline execution")
             if inline_path is not None and inline_stage.load_inline_package(inline_path, inline_source_path)["receipt"] != receipts["inline"]:
                 raise ValueError("inline package/journal/source files changed during pipeline execution")
+            if content_revision_path is not None and _read_content_plan(content_revision_path)[1] != receipts["content_revision"]:
+                raise ValueError("content revision plan changed during pipeline execution")
         except Exception as exc:
             run_error = {"code": "INPUT_CHANGED_DURING_RUN", "error": str(exc), "error_type": type(exc).__name__}
             with db: _event(db, run_id, "RUN_INPUT_CHANGED", **run_error)
@@ -666,6 +776,12 @@ def _run(source_path, context_path, review_path, evidence_path, workdir, source,
             if state == "READY":
                 payload["final_outputs"] = {"evidence_ref": results["inline_prepare"]["payload"]["base_evidence_ref"],
                     "graph_ref": _ref(results["inline_apply"]["payload"]["graph"]), "quality_ref": _ref(results["inline_quality"])}
+        if content_revision_path is not None:
+            payload["content_revision_scope"] = {"plan_receipt": receipts["content_revision"], "new_model_calls": 0, "draft_only": True}
+            payload["final_outputs"] = None
+            if state == "READY":
+                payload["final_outputs"] = {"evidence_ref": results["inline_prepare"]["payload"]["base_evidence_ref"],
+                    "graph_ref": _ref(results["content_apply"]["payload"]["graph"]), "quality_ref": _ref(results["content_quality"])}
         producer = {"module": __name__, "version": "0.1.0", "code_sha256": code_digest(Path(__file__))}
         report = {"schema_version": SCHEMA, "kind": "PipelineReportTrial",
                   "artifact_id": "pipeline-report-"+digest([source_ref, producer, payload])[:24], "revision": 1,
