@@ -1,5 +1,7 @@
 # 试题标注辅助自动化
 
+本轮 B 侧入口：[协作与交接](docs/collaboration.md) · [B 状态](docs/status/b.md) · [A 材料清单](docs/a-side-request.md) · [最小离线识别](docs/b-recognition.md)。公共合同仍为草案，识别模块使用隔离的试验格式。
+
 面向教辅标注平台的辅助自动化项目：自动框选题干、选项、答案与解析，完成题答对应，由人工最终检查与提交。
 
 平台：`https://www.usense.com/qieti/`　样书：`46006966`《通城学典课时作业本九年级数学上册》（苏科版），250 页。

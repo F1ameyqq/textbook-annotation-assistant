@@ -17,39 +17,37 @@ tools/page_mapping.py — 标注 page_index 与 OSS 页图的**权威映射**
     两个编号只差 1，用错不会抛异常——只会让所有坐标"看起来有点错但又不完全错"，
     从而被误判成"缩放/平移问题"。这是本项目踩过的最贵的一个坑。
 
-坐标系差异（重要，别和 off-by-one 混为一谈）：
-    * 页 8/9/10 的框：与 page_7/8/9.jpg 是**同一坐标空间**，尺度 1:1，
-      可以把 rect_bbox 当像素真值直接用。
-    * 页 234 的框：内容能在 page_233.jpg 上匹配到（NCC≈0.85），但框只用到
-      x 0–594、y 254–1164，说明它记录在一个**窄画布（约 594×≤1165）**上，
-      而不是 3467×1615 的拼合图。该页坐标**不可直接复用**，需单独标定。
+适用范围：仅样书 46006966 的已验证页 8/9/10/234。其他书和页须由来源适配器提供证据。
+    页 234 正确对应 page_233.jpg；局部框只占宽图一部分，不说明坐标需缩放。
+    四页均有原图尺度 1:1 的几何对齐证据；历史框仍未核准为业务真值。
 """
 from __future__ import annotations
 
-# 页 8/9/10 的框与对应页图同坐标空间、1:1，可作评测真值
-COORD_SPACE_OK = {8, 9, 10}
-# 页 234 的框坐标系未定，不可直接作真值
-COORD_SPACE_UNDETERMINED = {234}
+VERIFIED_BOOK_ID = "46006966"
+COORD_SPACE_OK = {8, 9, 10, 234}
+COORD_SPACE_UNDETERMINED: set[int] = set()
 
 
-def oss_page_index(page_index: int) -> int:
-    """标注 page_index -> OSS 页图索引。"""
+def oss_page_index(page_index: int, file_id: str | int = VERIFIED_BOOK_ID) -> int:
+    """已验证样书页映射；不向其他书或未验证页推广。"""
+    if str(file_id) != VERIFIED_BOOK_ID or type(page_index) is not int or page_index not in COORD_SPACE_OK:
+        raise ValueError("page mapping has not been verified for this book/page")
     return page_index - 1
 
 
 def image_name(file_id: str | int, page_index: int) -> str:
     """标注 page_index -> OSS 文件名。"""
-    return f"{file_id}_page_{oss_page_index(page_index)}.jpg"
+    return f"{file_id}_page_{oss_page_index(page_index, file_id)}.jpg"
 
 
-def is_coord_space_usable(page_index: int) -> bool:
-    """该页的 rect_bbox 能否直接当像素坐标真值使用。"""
-    return page_index in COORD_SPACE_OK
+def is_coord_space_usable(page_index: int, file_id: str | int = VERIFIED_BOOK_ID) -> bool:
+    """仅表示几何对齐已验证，不表示内容/角色/题答关系正确。"""
+    return str(file_id) == VERIFIED_BOOK_ID and type(page_index) is int and page_index in COORD_SPACE_OK
 
 
 def describe() -> str:
     lines = [
-        "标注 page_index -> OSS 页图（权威映射）",
+        "样书 46006966 已验证页：标注 page_index -> OSS 页图",
         "  page_index N  ->  {file_id}_page_{N-1}.jpg",
         "",
         "可直接用坐标的页: " + ", ".join(str(p) for p in sorted(COORD_SPACE_OK)),
