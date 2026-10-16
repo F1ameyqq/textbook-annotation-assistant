@@ -25,4 +25,8 @@ python -B docs/evidence/A02/review-R1/probe_history_pair.py --output docs/eviden
 
 ## 本地集成
 
-待执行：归档本次验收证据后，正常合并上述确切提交，检查实际合并结果并运行 A02、C01 和登录工具回归。通过前保持 ACCEPTED，不能记为 INTEGRATED。未推送、未共享给 B。
+INTEGRATED：验收归档提交 `7cb581a4cfa6ff8141cdf7942724c434ed578993`；正常合并确切目标于 `ec1b4defbfa3ec0f181d291106fb53313983e493`。1,355 个新增／变更路径中，生产实现只涉及 targetcheck、planner、mock 三个模块，合同与根依赖未变。
+
+[实际集成版本回归](../evidence/A02/coordinator/integration/checks.json)及[原始输出清单](../evidence/A02/coordinator/integration/sha256-manifest.json)：52 项 A02、70 项 C01、8 项登录工具测试全部通过。命令为 `python -B -m unittest discover -s tests -p "test_a02*.py" -v`、对应 `test_contracts*.py`，以及 `-s tools -p test_usense_login.py`；环境及完整参数见检查记录。
+
+释放 A03 的 A02 依赖。A03 先做 P1 恢复合同与公开适配设计，经独立审查及主调度批准后才在同一组对话内继续 P2 实现。未推送、未共享给 B。

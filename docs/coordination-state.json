@@ -2,7 +2,7 @@
   "schema_version": 1,
   "project": "D:\\1800",
   "coordinator_thread_id": "01a13f26-7567-75e1-99ee-c9d2194e78bb",
-  "updated_at": "2026-10-17T00:38:13.957419+08:00",
+  "updated_at": "2026-10-16T17:01:00.934526+00:00",
   "automation": {
     "id": "1800-a",
     "kind": "heartbeat",
@@ -192,7 +192,7 @@
         "thread_id": "01a144ca-ed53-7303-ace2-21a4ca42e13c",
         "host_id": "local",
         "turn_status": "inProgress",
-        "cursor": "a5b9aa07-1d6e-4e48-9581-b1789646eed2:14",
+        "cursor": "a5b9aa07-1d6e-4e48-9581-b1789646eed2:15",
         "report": "C:/Users/ASUS/.codex/worktrees/a01-source-geometry/1800/docs/tasks/A01-rework-R2-report.md",
         "turn_id": "01a14568-62db-7913-b11c-412f5d246638",
         "last_progress": "R2 remains active: four formal and five portable negative cases retained, ten added tests passing; full regression and byte preservation pending.",
@@ -473,7 +473,7 @@
       }
     },
     "A02": {
-      "status": "ACCEPTED",
+      "status": "INTEGRATED",
       "depends_on": [
         "C01"
       ],
@@ -481,7 +481,7 @@
       "review_task": "docs/tasks/A02-independent-review.md",
       "acceptance_scope": "Planner, targetcheck and in-memory mock; no real writes or cross-process recovery.",
       "dispatch_status": "EXECUTION_AND_REVIEW_ACKNOWLEDGED",
-      "next_dependency": "Archive accepted evidence, merge exact target and run integration checks before A03 dispatch.",
+      "next_dependency": "A03-P1 design dispatch; P2 implementation waits independently reviewed and coordinator-approved P1.",
       "base_commit": "39341c98d73c354d639f3beeb55429f55d0e9be5",
       "workflow_commit": "39341c98d73c354d639f3beeb55429f55d0e9be5",
       "worktree_name": "a02-planner-mock",
@@ -735,12 +735,25 @@
         "full_suite_rerun": false
       },
       "review_R1_archive": {
-        "status": "VERIFIED_READY_TO_COMMIT",
+        "status": "ARCHIVED_LOCALLY",
         "evidence_manifest_entries": 2874,
         "coordinator_manifest_entries": 241,
         "raw_index_checks": 3117,
         "local_links": 16,
         "checks": "docs/evidence/A02/coordinator/archive-R1/checks.json",
+        "remote_push": false,
+        "commit": "7cb581a4cfa6ff8141cdf7942724c434ed578993"
+      },
+      "integration_commit": "ec1b4defbfa3ec0f181d291106fb53313983e493",
+      "integration": {
+        "status": "PASSED",
+        "source_commit": "38aca9dcc8d027409b95193e9cc142c2336b76d3",
+        "commit": "ec1b4defbfa3ec0f181d291106fb53313983e493",
+        "strategy": "Normal non-fast-forward merge of exact accepted commit",
+        "checks": "docs/evidence/A02/coordinator/integration/checks.json",
+        "a02_tests": 52,
+        "contracts_tests": 70,
+        "login_tests": 8,
         "remote_push": false
       }
     },
@@ -841,6 +854,20 @@
       "dispatch_record_commit": "d6738cf239b203496c9e84cb87178eb82f2d4f89",
       "blocked_reason": "Read-only partial delivery frozen; coordinate integration awaits A01 source R2 repair, independent acceptance and scoped integration.",
       "resume_condition": "Coordinator supplies accepted and integrated exact A01 geometry commit; execution completes coordinate integration and releases session before full review."
+    },
+    "A03": {
+      "status": "DISPATCH_PREPARED",
+      "phase": "P1_DESIGN_ONLY",
+      "depends_on": [
+        "A02"
+      ],
+      "base_commit": "ec1b4defbfa3ec0f181d291106fb53313983e493",
+      "execution_task": "docs/tasks/A03-runtime-recovery.md",
+      "review_task": "docs/tasks/A03-independent-review.md",
+      "acceptance_scope": "P1 design of versioned recovery contracts and four A02 public adapters only; P2 requires independent design acceptance and coordinator approval.",
+      "next_dependency": "Create isolated A03 worktree and separate execution/review chats; no runtime implementation authorized yet.",
+      "dispatch_status": "INTENT_RECORDED",
+      "B_confirmation": "NOT_CONFIRMED"
     }
   },
   "route": [
@@ -955,13 +982,29 @@
       "base_commit": "39341c98d73c354d639f3beeb55429f55d0e9be5",
       "created_at": "2026-10-16T20:56:35.339368+08:00",
       "thread_id": "01a144cc-e93d-7841-a259-d6aac22c94f4"
+    },
+    {
+      "key": "A03:execution:ec1b4defbfa3ec0f181d291106fb53313983e493",
+      "task": "A03",
+      "stage": "execution",
+      "state": "INTENT",
+      "created_at": "2026-10-16T17:01:00.934526+00:00",
+      "base_commit": "ec1b4defbfa3ec0f181d291106fb53313983e493"
+    },
+    {
+      "key": "A03:review:ec1b4defbfa3ec0f181d291106fb53313983e493",
+      "task": "A03",
+      "stage": "review",
+      "state": "INTENT",
+      "created_at": "2026-10-16T17:01:00.934526+00:00",
+      "base_commit": "ec1b4defbfa3ec0f181d291106fb53313983e493"
     }
   ],
   "last_action": {
-    "at": "2026-10-17T00:38:13.957419+08:00",
+    "at": "2026-10-16T16:57:32.620946+00:00",
     "task_id": "A02",
-    "action": "Coordinator accepted exact R1; integration pending",
-    "A03": "P1/P2 task drafts being prepared, not dispatched",
+    "action": "INTEGRATED locally; 52 A02 + 70 C01 + 8 login passed",
+    "A03": "P1 task draft pending coordinator check and dispatch",
     "remote_push": false
   },
   "limitations": [
@@ -1043,12 +1086,12 @@
   },
   "next_stage_preparation": {
     "task": "A03",
-    "status": "DRAFT_WAITING_A02",
+    "status": "P1_TASKS_READY_FOR_DISPATCH",
     "document": "docs/tasks/A03-preparation.md",
     "preparation_agent": "/root/a03_preparation_review",
     "kind": "Internal offline scope preparation only, not stage execution or acceptance.",
     "next_dependency": "A02 accepted exact commit and public API; coordinator-approved versioned reconciliation contract extension before resumption can pass C01.",
-    "dispatch_result": "NO_STAGE_DISPATCH",
+    "dispatch_result": "INTENT_RECORDED",
     "draft_sha256": "8569ae63cbac643598f1a92f186d74dbb1fc73488688b4629b62f236b3d813eb",
     "prepared_at": "2026-10-16T21:29:34.322691+08:00",
     "coordinator_document_check": {
@@ -1056,7 +1099,7 @@
       "missing_links": [],
       "implementation_tests_run": false
     },
-    "preparation_agent_status": "INTERRUPTED_AFTER_DRAFT; coordinator reviewed and completed bounded wording correction",
+    "preparation_agent_status": "COMPLETED; coordinator reviewed and finalized P1-only boundaries",
     "contract_gaps": [
       "Explicit immutable reconciliation evidence and public eligibility/batch consumption",
       "Intent-without-receipt and multi-action partial execution representation",
