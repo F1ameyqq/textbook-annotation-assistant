@@ -1,0 +1,19 @@
+{
+  "spec_version": "a01-geometry-1",
+  "basis": "Independent boundary formulas: crop subtraction, x/y multiplication, padding addition, then (H-y,x)/(W-x,H-y)/(y,W-x). Expected values are literal hand calculations.",
+  "image_size": [100, 60],
+  "cases": [
+    {"name":"identity","config":{},"point":[20,10],"expected_point":[20,10],"box":[10,5,40,25],"expected_box":[10,5,40,25],"output_size":[100,60]},
+    {"name":"crop","config":{"crop":[10,5,50,25]},"point":[12,8],"expected_point":[2,3],"box":[12,8,22,12],"expected_box":[2,3,12,7],"output_size":[40,20]},
+    {"name":"anisotropic-scale","config":{"scale":[2,3]},"point":[20,10],"expected_point":[40,30],"box":[10,5,40,25],"expected_box":[20,15,80,75],"output_size":[200,180]},
+    {"name":"asymmetric-padding","config":{"padding":[3,7,11,13]},"point":[20,10],"expected_point":[23,17],"box":[10,5,40,25],"expected_box":[13,12,43,32],"output_size":[114,80]},
+    {"name":"clockwise90","config":{"rotation_degrees":90},"point":[20,10],"expected_point":[50,20],"box":[10,5,40,25],"expected_box":[35,10,55,40],"output_size":[60,100]},
+    {"name":"clockwise180","config":{"rotation_degrees":180},"point":[20,10],"expected_point":[80,50],"box":[10,5,40,25],"expected_box":[60,35,90,55],"output_size":[100,60]},
+    {"name":"clockwise270","config":{"rotation_degrees":270},"point":[20,10],"expected_point":[10,80],"box":[10,5,40,25],"expected_box":[5,60,25,90],"output_size":[60,100]},
+    {"name":"crop-before-scale","config":{"crop":[10,5,50,25],"scale":[2,3]},"point":[12,8],"expected_point":[4,9],"box":[12,8,22,12],"expected_box":[4,9,24,21],"output_size":[80,60]},
+    {"name":"combined0","config":{"crop":[10,5,50,25],"scale":[2,3],"padding":[3,7,11,13]},"point":[12,8],"expected_point":[7,16],"box":[12,8,22,12],"expected_box":[7,16,27,28],"output_size":[94,80]},
+    {"name":"combined90","config":{"crop":[10,5,50,25],"scale":[2,3],"padding":[3,7,11,13],"rotation_degrees":90},"point":[12,8],"expected_point":[64,7],"box":[12,8,22,12],"expected_box":[52,7,64,27],"output_size":[80,94]},
+    {"name":"combined180","config":{"crop":[10,5,50,25],"scale":[2,3],"padding":[3,7,11,13],"rotation_degrees":180},"point":[12,8],"expected_point":[87,64],"box":[12,8,22,12],"expected_box":[67,52,87,64],"output_size":[94,80]},
+    {"name":"combined270","config":{"crop":[10,5,50,25],"scale":[2,3],"padding":[3,7,11,13],"rotation_degrees":270},"point":[12,8],"expected_point":[16,87],"box":[12,8,22,12],"expected_box":[16,67,28,87],"output_size":[80,94]}
+  ]
+}
