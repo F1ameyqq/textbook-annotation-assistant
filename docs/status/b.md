@@ -2,7 +2,7 @@
 
 更新时间：2026-10-17，Asia/Shanghai。负责人：xiaoshanqingpro 一侧。
 
-- 本轮基线：`69f9f498c04c14b2407eff1f4b6373ec929a746f`（上一轮本地续接与回滚交付）。分支 `b-side/readonly-book-46007447`，PR #2；代码版本以本页所在提交及 PR head 为准。
+- 本轮基线：`6aa4ba89b720b3c7fcf1887015eb85b07446d601`（上一轮数学角色与局部来源身份交付）。分支 `b-side/readonly-book-46007447`，PR #2；代码版本以本页所在提交及 PR head 为准。
 - 公共 `contracts-v1.md` 仍为设计草案。原始证据0.2及恢复视图/图谱/检查0.3保留；本轮数学/图像/组合标题为B trial0.1，附区域的续接证明为trial0.2，最新本地应用图谱为trial0.4、呈现区域为trial0.1，未宣称公共合同兼容或冻结。
 - 已读取定稿需求，继续 B 离线识别、配答、质量检查；平台规则不再重复请求确认。没有网站标注修改或提交。
 
@@ -58,3 +58,11 @@ python tools/verify_continuation_b.py --evidence data/runs/46007447-recovered/ev
 - 原19条数学来源逐条定位到4组9个局部材料候选（例题2、未编号阅读材料1、未编号例题1、训练题5），绑定19旧行、47个不同CPU回执和8裁片。与本地原JPG逐像素核对通过；对应题页/公共ID仍缺，19条继续UNASSIGNED。
 - 新入口tools/replay_math_reading_b.py与tools/verify_identity_review_b.py；301项回归通过（此前235+本轮66），Git独立目录导出后的4个数学产物payload摘要一致、身份检查通过。完整证据见evaluation/book-46007447-math-reading.json，说明docs/b-math-reading-46007447.md。本地验证与推送后head分别核对，A接收验证仍PENDING_A。
 - 为固定发布源码重采最终44调用，加首次集成44调用和隔离小字2调用，本增量实际新增90次本地CPU调用。缓存重放0调用。无标注平台请求/动作或另行付费模型调用；专门公式后端仍待实际验证，长期目标继续进行。
+
+## 2026-10-17 专门公式与离线批次增量
+
+- 专门公式CPU环境和三个ONNX/tokenizer已安装并实际验证，依赖检查通过，模型与依赖摘要保留。11完整分式×两预处理=22次实际推理、0执行失败，逐次调用墙钟回执合计约17.19秒（不含安装、加载和准备）；20条支持当前语法投影、2条未知语法、8组分歧，全部未核准。
+- 最后分式新增a²+1候选，另一变体幻觉π+1；四次幂仍误读，模型结果没有覆盖旧OCR或图谱。独立AST逐token/spans核对，保留未知命令和源风险。冻结输入在两个NumPy/OpenCV/Pillow版本环境下禁止模型导入/网络仍可重放且结果一致。
+- B离线batch支持声明全范围、逐资产缓存、SQLite意图/attempt/事件、immutable对象、真实进程死亡后的恢复和版本失效。真实5页默认几何模式验证2→5续跑、cache2→cache5，以及单页变化/缓存损坏只重做1页；原图不变。不是全书214页或内容OCR验收，不接管A平台runtime。
+- 新说明docs/b-formula-batch-46007447.md；两个入口tools/replay_formula_b.py、tools/run_batch_b.py；435项回归通过（此前301+新增134），Git导出后同样通过、四个公式payload摘要跨两个运行时一致；完整回归与Git导出证据evaluation/book-46007447-formula-batch.json。模型权重不入库，optional环境锁定requirements-formula-cpu.txt和evaluation/formula-cpu-runtime-lock.json。
+- 本轮新增22次专门公式CPU推理，批次真实运行无新OCR；标注平台请求/修改、样本上传和额外付费模型调用均为0。公共合同/消费者及A接收验证仍PENDING_A，长期目标继续进行。
