@@ -1,0 +1,397 @@
+{
+  "design_only": true,
+  "schema_version": "1.1.0-a-recovery-proposal",
+  "format_version": "a03-exchange-1",
+  "functionality_executed": false,
+  "local_intent_commits": 0,
+  "recovery_calls": 0,
+  "platform_calls": 0,
+  "static_check_scope": [
+    "JSON",
+    "JSON_SCHEMA_SUBSET",
+    "RESOURCE_BYTES",
+    "CONTENT_HASH",
+    "ORDINARY_REFERENCES",
+    "REFERENCE_DAG"
+  ],
+  "cases": [
+    {
+      "case_id": "normal",
+      "path": "cases/normal.json",
+      "expected_layer": "SEMANTIC",
+      "expected_code": "PENDING_NOT_SUBMITTED",
+      "expected_static": "PASS",
+      "semantic_execution": "EXPECTED_NOT_EXECUTED",
+      "note": "New design receipt/postcheck/batch use archived normal payload as a structural template, not a migrated outcome or qualification. Final content remains PENDING. Not a local commit proof."
+    },
+    {
+      "case_id": "intent-no-receipt-match",
+      "path": "cases/intent-no-receipt-match.json",
+      "expected_layer": "SEMANTIC",
+      "expected_code": "RESOLVED_APPLIED_NO_REPLAY",
+      "expected_static": "PASS",
+      "semantic_execution": "EXPECTED_NOT_EXECUTED",
+      "note": ""
+    },
+    {
+      "case_id": "intent-no-receipt-absent",
+      "path": "cases/intent-no-receipt-absent.json",
+      "expected_layer": "SEMANTIC",
+      "expected_code": "RESOLVED_NOT_APPLIED_REPLAN_REQUIRED",
+      "expected_static": "PASS",
+      "semantic_execution": "EXPECTED_NOT_EXECUTED",
+      "note": ""
+    },
+    {
+      "case_id": "partial-without-absent",
+      "path": "cases/partial-without-absent.json",
+      "expected_layer": "SEMANTIC",
+      "expected_code": "PROGRESS_ONLY_BOOK_PENDING",
+      "expected_static": "PASS",
+      "semantic_execution": "EXPECTED_NOT_EXECUTED",
+      "note": "No receipt fabricated for the unattempted tail; action list remains complete. Prior APPLIED ActionResult event is explicitly retained."
+    },
+    {
+      "case_id": "partial-with-complete-absent",
+      "path": "cases/partial-with-complete-absent.json",
+      "expected_layer": "SEMANTIC",
+      "expected_code": "NOT_ATTEMPTED_NOT_APPLIED_BOOK_PENDING",
+      "expected_static": "PASS",
+      "semantic_execution": "EXPECTED_NOT_EXECUTED",
+      "note": "Whole-scope design readback has no tail action identity and explicitly records not_attempted; attempt fact is independently declared. A02 adapter must compare each action and account for legitimate predecessors."
+    },
+    {
+      "case_id": "partial-fabricated-receipt",
+      "path": "cases/partial-fabricated-receipt.json",
+      "expected_layer": "REFERENCE",
+      "expected_code": "ACTION_FACT_RESULT_MISMATCH",
+      "expected_static": "DESIGN_FIELD_FAIL",
+      "semantic_execution": "EXPECTED_NOT_EXECUTED",
+      "note": "Readback removed from NOT_ATTEMPTED receipt result while immutable fact remains unchanged; static exact-fact binding rejects the fabricated aggregation. No recovery semantics are run."
+    },
+    {
+      "case_id": "conflict",
+      "path": "cases/conflict.json",
+      "expected_layer": "SEMANTIC",
+      "expected_code": "STILL_UNKNOWN",
+      "expected_static": "PASS",
+      "semantic_execution": "EXPECTED_NOT_EXECUTED",
+      "note": ""
+    },
+    {
+      "case_id": "indeterminate",
+      "path": "cases/indeterminate.json",
+      "expected_layer": "SEMANTIC",
+      "expected_code": "STILL_UNKNOWN",
+      "expected_static": "PASS",
+      "semantic_execution": "EXPECTED_NOT_EXECUTED",
+      "note": ""
+    },
+    {
+      "case_id": "original-unknown-preserved",
+      "path": "cases/original-unknown-preserved.json",
+      "expected_layer": "SEMANTIC",
+      "expected_code": "RESOLVED_APPLIED_ORIGINAL_UNKNOWN_RETAINED",
+      "expected_static": "PASS",
+      "semantic_execution": "EXPECTED_NOT_EXECUTED",
+      "note": ""
+    },
+    {
+      "case_id": "recovered-report-binding",
+      "path": "cases/recovered-report-binding.json",
+      "expected_layer": "SEMANTIC",
+      "expected_code": "RECOVERY_REPORT_PENDING_NOT_SUBMITTED",
+      "expected_static": "PASS",
+      "semantic_execution": "EXPECTED_NOT_EXECUTED",
+      "note": ""
+    },
+    {
+      "case_id": "new-read-unchanged-state-version",
+      "path": "cases/new-read-unchanged-state-version.json",
+      "expected_layer": "SEMANTIC",
+      "expected_code": "FRESH_READ_SAME_EFFECT_VERSION",
+      "expected_static": "PASS",
+      "semantic_execution": "EXPECTED_NOT_EXECUTED",
+      "note": "Read sequence and observation/time are new; no effect version increment is required."
+    },
+    {
+      "case_id": "cross-scope-only-one-resolved",
+      "path": "cases/cross-scope-only-one-resolved.json",
+      "expected_layer": "RUNTIME_TRANSACTION",
+      "expected_code": "BOOK_PENDING_SCOPE_SWITCH_UNSUPPORTED",
+      "expected_static": "PASS",
+      "semantic_execution": "EXPECTED_NOT_EXECUTED",
+      "note": ""
+    },
+    {
+      "case_id": "legacy-unrecorded-no-intent",
+      "path": "cases/legacy-unrecorded-no-intent.json",
+      "expected_layer": "RUNTIME_TRANSACTION",
+      "expected_code": "LEGACY_UNRECORDED",
+      "expected_static": "PASS",
+      "semantic_execution": "EXPECTED_NOT_EXECUTED",
+      "note": ""
+    },
+    {
+      "case_id": "wrong-schema-version",
+      "path": "cases/wrong-schema-version.json",
+      "expected_layer": "STRUCTURE",
+      "expected_code": "RECOVERY_VERSION_UNSUPPORTED",
+      "expected_static": "STRUCTURE_FAIL",
+      "semantic_execution": "EXPECTED_NOT_EXECUTED",
+      "note": "Single explicit mutation of the complete baseline; not an executed rejection."
+    },
+    {
+      "case_id": "wrong-exchange-version",
+      "path": "cases/wrong-exchange-version.json",
+      "expected_layer": "STRUCTURE",
+      "expected_code": "RECOVERY_VERSION_UNSUPPORTED",
+      "expected_static": "STRUCTURE_FAIL",
+      "semantic_execution": "EXPECTED_NOT_EXECUTED",
+      "note": "Single explicit mutation of the complete baseline; not an executed rejection."
+    },
+    {
+      "case_id": "wrong-action-digest",
+      "path": "cases/wrong-action-digest.json",
+      "expected_layer": "SEMANTIC",
+      "expected_code": "ACTION_DIGEST_MISMATCH",
+      "expected_static": "PASS",
+      "semantic_execution": "EXPECTED_NOT_EXECUTED",
+      "note": "Single explicit mutation of the complete baseline; not an executed rejection."
+    },
+    {
+      "case_id": "wrong-target-identity",
+      "path": "cases/wrong-target-identity.json",
+      "expected_layer": "SEMANTIC",
+      "expected_code": "TARGET_IDENTITY_MISMATCH",
+      "expected_static": "PASS",
+      "semantic_execution": "EXPECTED_NOT_EXECUTED",
+      "note": "Single explicit mutation of the complete baseline; not an executed rejection."
+    },
+    {
+      "case_id": "wrong-book-identity",
+      "path": "cases/wrong-book-identity.json",
+      "expected_layer": "REFERENCE",
+      "expected_code": "CROSS_BOOK_REFERENCE",
+      "expected_static": "REFERENCE_FAIL",
+      "semantic_execution": "EXPECTED_NOT_EXECUTED",
+      "note": "Single explicit mutation of the complete baseline; not an executed rejection."
+    },
+    {
+      "case_id": "wrong-scope-reference",
+      "path": "cases/wrong-scope-reference.json",
+      "expected_layer": "REFERENCE",
+      "expected_code": "CROSS_SCOPE_REFERENCE",
+      "expected_static": "REFERENCE_FAIL",
+      "semantic_execution": "EXPECTED_NOT_EXECUTED",
+      "note": "Single explicit mutation of the complete baseline; not an executed rejection."
+    },
+    {
+      "case_id": "missing-plan-reference",
+      "path": "cases/missing-plan-reference.json",
+      "expected_layer": "REFERENCE",
+      "expected_code": "MISSING_REFERENCE",
+      "expected_static": "REFERENCE_FAIL",
+      "semantic_execution": "EXPECTED_NOT_EXECUTED",
+      "note": "Single explicit mutation of the complete baseline; not an executed rejection."
+    },
+    {
+      "case_id": "wrong-resource-hash",
+      "path": "cases/wrong-resource-hash.json",
+      "expected_layer": "RESOURCE",
+      "expected_code": "RESOURCE_HASH_MISMATCH",
+      "expected_static": "RESOURCE_FAIL",
+      "semantic_execution": "EXPECTED_NOT_EXECUTED",
+      "note": "Single explicit mutation of the complete baseline; not an executed rejection."
+    },
+    {
+      "case_id": "missing-readback",
+      "path": "cases/missing-readback.json",
+      "expected_layer": "SEMANTIC",
+      "expected_code": "CONCLUSIVE_READBACK_REQUIRED",
+      "expected_static": "PASS",
+      "semantic_execution": "EXPECTED_NOT_EXECUTED",
+      "note": "Single explicit mutation of the complete baseline; not an executed rejection."
+    },
+    {
+      "case_id": "wrong-observed-state-hash",
+      "path": "cases/wrong-observed-state-hash.json",
+      "expected_layer": "SEMANTIC",
+      "expected_code": "OBSERVATION_BINDING_MISMATCH",
+      "expected_static": "PASS",
+      "semantic_execution": "EXPECTED_NOT_EXECUTED",
+      "note": "Single explicit mutation of the complete baseline; not an executed rejection."
+    },
+    {
+      "case_id": "wrong-obligation-identity",
+      "path": "cases/wrong-obligation-identity.json",
+      "expected_layer": "SEMANTIC",
+      "expected_code": "OBLIGATION_MISMATCH",
+      "expected_static": "PASS",
+      "semantic_execution": "EXPECTED_NOT_EXECUTED",
+      "note": "Single explicit mutation of the complete baseline; not an executed rejection."
+    },
+    {
+      "case_id": "real-original-rejected",
+      "path": "cases/real-original-rejected.json",
+      "expected_layer": "SYNTHETIC_ADMISSION",
+      "expected_code": "SYNTHETIC_ONLY",
+      "expected_static": "PASS",
+      "semantic_execution": "EXPECTED_NOT_EXECUTED",
+      "note": "Single explicit mutation of the complete baseline; not an executed rejection."
+    },
+    {
+      "case_id": "observed-producer-rejected",
+      "path": "cases/observed-producer-rejected.json",
+      "expected_layer": "SYNTHETIC_ADMISSION",
+      "expected_code": "SYNTHETIC_ONLY",
+      "expected_static": "PASS",
+      "semantic_execution": "EXPECTED_NOT_EXECUTED",
+      "note": "Single explicit mutation of the complete baseline; not an executed rejection."
+    },
+    {
+      "case_id": "observed-resource-rejected",
+      "path": "cases/observed-resource-rejected.json",
+      "expected_layer": "SYNTHETIC_ADMISSION",
+      "expected_code": "SYNTHETIC_ONLY",
+      "expected_static": "PASS",
+      "semantic_execution": "EXPECTED_NOT_EXECUTED",
+      "note": "Single explicit mutation of the complete baseline; not an executed rejection."
+    },
+    {
+      "case_id": "observed-evidence-rejected",
+      "path": "cases/observed-evidence-rejected.json",
+      "expected_layer": "SYNTHETIC_ADMISSION",
+      "expected_code": "SYNTHETIC_ONLY",
+      "expected_static": "PASS",
+      "semantic_execution": "EXPECTED_NOT_EXECUTED",
+      "note": "Single explicit mutation of the complete baseline; not an executed rejection."
+    },
+    {
+      "case_id": "real-policy-rejected",
+      "path": "cases/real-policy-rejected.json",
+      "expected_layer": "SYNTHETIC_ADMISSION",
+      "expected_code": "SYNTHETIC_ONLY",
+      "expected_static": "PASS",
+      "semantic_execution": "EXPECTED_NOT_EXECUTED",
+      "note": "Single explicit mutation of the complete baseline; not an executed rejection."
+    },
+    {
+      "case_id": "platform-mode-rejected",
+      "path": "cases/platform-mode-rejected.json",
+      "expected_layer": "SYNTHETIC_ADMISSION",
+      "expected_code": "SYNTHETIC_ONLY",
+      "expected_static": "PASS",
+      "semantic_execution": "EXPECTED_NOT_EXECUTED",
+      "note": "Single explicit mutation of the complete baseline; not an executed rejection."
+    },
+    {
+      "case_id": "unknown-scope-integrity",
+      "path": "cases/unknown-scope-integrity.json",
+      "expected_layer": "SYNTHETIC_ADMISSION",
+      "expected_code": "SYNTHETIC_COMPLETE_REQUIRED",
+      "expected_static": "PASS",
+      "semantic_execution": "EXPECTED_NOT_EXECUTED",
+      "note": "Single explicit mutation of the complete baseline; not an executed rejection."
+    },
+    {
+      "case_id": "stale-owner-generation",
+      "path": "cases/stale-owner-generation.json",
+      "expected_layer": "RUNTIME_TRANSACTION",
+      "expected_code": "OWNER_GENERATION_STALE",
+      "expected_static": "PASS",
+      "semantic_execution": "EXPECTED_NOT_EXECUTED",
+      "note": "Single explicit mutation of the complete baseline; not an executed rejection."
+    },
+    {
+      "case_id": "wrong-state-directory",
+      "path": "cases/wrong-state-directory.json",
+      "expected_layer": "RUNTIME_TRANSACTION",
+      "expected_code": "STATE_DIRECTORY_IDENTITY_MISMATCH",
+      "expected_static": "PASS",
+      "semantic_execution": "EXPECTED_NOT_EXECUTED",
+      "note": "Single explicit mutation of the complete baseline; not an executed rejection."
+    },
+    {
+      "case_id": "fake-empty-ledger",
+      "path": "cases/fake-empty-ledger.json",
+      "expected_layer": "RUNTIME_TRANSACTION",
+      "expected_code": "BOOK_WRITE_PAUSED",
+      "expected_static": "PASS",
+      "semantic_execution": "EXPECTED_NOT_EXECUTED",
+      "note": "Single explicit mutation of the complete baseline; not an executed rejection."
+    },
+    {
+      "case_id": "intent-not-locally-committed",
+      "path": "cases/intent-not-locally-committed.json",
+      "expected_layer": "RUNTIME_TRANSACTION",
+      "expected_code": "LOCAL_INTENT_COMMIT_REQUIRED",
+      "expected_static": "PASS",
+      "semantic_execution": "EXPECTED_NOT_EXECUTED",
+      "note": "Single explicit mutation of the complete baseline; not an executed rejection."
+    },
+    {
+      "case_id": "attempt-limit-four",
+      "path": "cases/attempt-limit-four.json",
+      "expected_layer": "STRUCTURE",
+      "expected_code": "RECONCILE_ATTEMPT_LIMIT",
+      "expected_static": "STRUCTURE_FAIL",
+      "semantic_execution": "EXPECTED_NOT_EXECUTED",
+      "note": "Single explicit mutation of the complete baseline; not an executed rejection."
+    },
+    {
+      "case_id": "old-observation-reuse",
+      "path": "cases/old-observation-reuse.json",
+      "expected_layer": "RUNTIME_TRANSACTION",
+      "expected_code": "OBSERVATION_NOT_FRESH",
+      "expected_static": "PASS",
+      "semantic_execution": "EXPECTED_NOT_EXECUTED",
+      "note": "Single explicit mutation of the complete baseline; not an executed rejection."
+    },
+    {
+      "case_id": "resolved-chain-successor",
+      "path": "cases/resolved-chain-successor.json",
+      "expected_layer": "SEMANTIC",
+      "expected_code": "RESOLUTION_TERMINAL",
+      "expected_static": "PASS",
+      "semantic_execution": "EXPECTED_NOT_EXECUTED",
+      "note": "Single explicit mutation of the complete baseline; not an executed rejection."
+    },
+    {
+      "case_id": "resolution-fork",
+      "path": "cases/resolution-fork.json",
+      "expected_layer": "SEMANTIC",
+      "expected_code": "RESOLUTION_FORK",
+      "expected_static": "PASS",
+      "semantic_execution": "EXPECTED_NOT_EXECUTED",
+      "note": "Two root resolution heads for the same intent. Both refs remain same-scope."
+    },
+    {
+      "case_id": "resolution-cycle",
+      "path": "cases/resolution-cycle.json",
+      "expected_layer": "REFERENCE",
+      "expected_code": "DEPENDENCY_CYCLE",
+      "expected_static": "REFERENCE_FAIL",
+      "semantic_execution": "EXPECTED_NOT_EXECUTED",
+      "note": "A content-addressed self-cycle cannot have a consistent fixed-point digest; reject the reference cycle before digest resolution."
+    },
+    {
+      "case_id": "source-only-unknown-denominator",
+      "path": "cases/source-only-unknown-denominator.json",
+      "expected_layer": "SYNTHETIC_ADMISSION",
+      "expected_code": "SYNTHETIC_COMPLETE_REQUIRED",
+      "expected_static": "PASS",
+      "semantic_execution": "EXPECTED_NOT_EXECUTED",
+      "note": "Source-only diagnostic: no fabricated graph, plan, receipt or BatchReport; existing Batch nonzero/known denominator requirements remain unchanged."
+    },
+    {
+      "case_id": "source-only-zero-actions",
+      "path": "cases/source-only-zero-actions.json",
+      "expected_layer": "SEMANTIC",
+      "expected_code": "NO_ACTIONS",
+      "expected_static": "PASS",
+      "semantic_execution": "EXPECTED_NOT_EXECUTED",
+      "note": "Source-only diagnostic: no fabricated graph, plan, receipt or BatchReport; existing Batch nonzero/known denominator requirements remain unchanged."
+    }
+  ]
+}

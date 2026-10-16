@@ -1,0 +1,127 @@
+{
+  "phase": "P1_STATIC_ONLY",
+  "cwd": "C:/Users/ASUS/.codex/worktrees/a03-runtime-recovery/1800",
+  "design_commit": "6ac0256f05169570605fcb921a773ff2ae0f4aef",
+  "commands": [
+    {
+      "argv": [
+        "python",
+        "--version"
+      ],
+      "exit_code": 0,
+      "result": "Python 3.9.13"
+    },
+    {
+      "argv": [
+        "python",
+        "-B",
+        "docs/evidence/A03/execution/P1/verify_delivery.py",
+        "baseline"
+      ],
+      "exit_code": 0,
+      "result": "7993 baseline files; tracked original diff empty",
+      "output": "baseline-files.json"
+    },
+    {
+      "argv": [
+        "git",
+        "merge-base",
+        "--is-ancestor",
+        "13ddf83083224ffafc17a4f57cf2c1a1a1ae02b2",
+        "ec1b4defbfa3ec0f181d291106fb53313983e493"
+      ],
+      "exit_code": 0
+    },
+    {
+      "argv": [
+        "python",
+        "-B",
+        "examples/a03/P1/check_design.py"
+      ],
+      "exit_code": 0,
+      "output": "static-check.txt",
+      "result": "42 static expectations match; archived originals match; semantic/recovery execution false"
+    },
+    {
+      "argv": [
+        "python",
+        "-B",
+        "docs/evidence/A03/execution/P1/check_api_design.py"
+      ],
+      "exit_code": 0,
+      "output": "api-check-attempt-01.txt",
+      "result": "94 JSON, 4 groups, 18 group interfaces, 7 authority methods; errors=[]"
+    },
+    {
+      "argv": [
+        "python",
+        "-B",
+        "docs/evidence/A03/execution/P1/verify_git_bytes.py",
+        "index"
+      ],
+      "exit_code": 0,
+      "output": "git-index-byte-check.txt",
+      "result": "132 design files match Git index byte-for-byte"
+    },
+    {
+      "argv": [
+        "git",
+        "diff",
+        "--cached",
+        "--check"
+      ],
+      "exit_code": 0,
+      "result": "No whitespace errors"
+    },
+    {
+      "argv": [
+        "git",
+        "commit",
+        "-m",
+        "docs(a03): freeze P1 recovery contract and candidate examples"
+      ],
+      "exit_code": 0,
+      "result": "6ac0256f05169570605fcb921a773ff2ae0f4aef"
+    },
+    {
+      "argv": [
+        "python",
+        "-B",
+        "docs/evidence/A03/execution/P1/verify_delivery.py",
+        "audit"
+      ],
+      "attempt": 1,
+      "exit_code": 1,
+      "output": "delivery-audit-attempt-01.json",
+      "result": "Baseline 7993 unchanged; packaging self-output link handling error"
+    },
+    {
+      "argv": [
+        "python",
+        "-B",
+        "docs/evidence/A03/execution/P1/verify_delivery.py",
+        "audit"
+      ],
+      "attempt": 2,
+      "exit_code": 0,
+      "output": "delivery-audit.json",
+      "result": "Baseline 7993 unchanged, allowed paths and 30 local links; final output links checked again by verify-manifest"
+    }
+  ],
+  "final_packaging_commands": [
+    "python -B docs/evidence/A03/execution/P1/verify_delivery.py audit",
+    "python -B docs/evidence/A03/execution/P1/verify_delivery.py manifest",
+    "python -B docs/evidence/A03/execution/P1/verify_delivery.py verify-manifest",
+    "git diff --cached --check",
+    "git status --porcelain=v1"
+  ],
+  "final_result_location": "delivery-audit.json plus final shell results returned in the chat; manifest final digest is returned in final delivery message to avoid a self-referential hash cycle",
+  "failures_preserved": [
+    "packaging-attempts.json",
+    "candidate-checker-failures.txt",
+    "delivery-audit-attempt-01.json"
+  ],
+  "functional_tests": "NOT_EXECUTED",
+  "owned_background_processes_started": 0,
+  "pending_owned_sessions": 0
+}

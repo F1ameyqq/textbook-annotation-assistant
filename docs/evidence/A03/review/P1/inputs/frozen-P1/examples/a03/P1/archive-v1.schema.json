@@ -1,0 +1,3179 @@
+{
+  "$defs": {
+    "Action": {
+      "additionalProperties": false,
+      "properties": {
+        "action_id": {
+          "pattern": "^[A-Za-z][A-Za-z0-9_.:-]{0,127}$",
+          "title": "Action Id",
+          "type": "string"
+        },
+        "target": {
+          "$ref": "#/$defs/ActionTarget"
+        },
+        "source_entity_ids": {
+          "items": {
+            "pattern": "^[A-Za-z][A-Za-z0-9_.:-]{0,127}$",
+            "type": "string"
+          },
+          "minItems": 1,
+          "title": "Source Entity Ids",
+          "type": "array"
+        },
+        "expected_before": {
+          "additionalProperties": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "integer"
+              },
+              {
+                "type": "number"
+              },
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "minProperties": 1,
+          "title": "Expected Before",
+          "type": "object"
+        },
+        "operation": {
+          "enum": [
+            "CREATE_FRAMES",
+            "UPDATE_FRAMES"
+          ],
+          "title": "Operation",
+          "type": "string"
+        },
+        "expected_after": {
+          "additionalProperties": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "integer"
+              },
+              {
+                "type": "number"
+              },
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "minProperties": 1,
+          "title": "Expected After",
+          "type": "object"
+        },
+        "depends_on": {
+          "items": {
+            "pattern": "^[A-Za-z][A-Za-z0-9_.:-]{0,127}$",
+            "type": "string"
+          },
+          "title": "Depends On",
+          "type": "array"
+        }
+      },
+      "required": [
+        "action_id",
+        "target",
+        "source_entity_ids",
+        "expected_before",
+        "operation",
+        "expected_after",
+        "depends_on"
+      ],
+      "title": "Action",
+      "type": "object"
+    },
+    "ActionResult": {
+      "additionalProperties": false,
+      "properties": {
+        "action_id": {
+          "pattern": "^[A-Za-z][A-Za-z0-9_.:-]{0,127}$",
+          "title": "Action Id",
+          "type": "string"
+        },
+        "outcome": {
+          "enum": [
+            "APPLIED",
+            "NOT_APPLIED",
+            "UNKNOWN"
+          ],
+          "title": "Outcome",
+          "type": "string"
+        },
+        "platform_ids": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Platform Ids",
+          "type": "array"
+        },
+        "before_evidence_refs": {
+          "items": {
+            "pattern": "^[A-Za-z][A-Za-z0-9_.:-]{0,127}$",
+            "type": "string"
+          },
+          "minItems": 1,
+          "title": "Before Evidence Refs",
+          "type": "array"
+        },
+        "after_evidence_refs": {
+          "items": {
+            "pattern": "^[A-Za-z][A-Za-z0-9_.:-]{0,127}$",
+            "type": "string"
+          },
+          "title": "After Evidence Refs",
+          "type": "array"
+        },
+        "readback": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Resource"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "effect_match": {
+          "enum": [
+            "MATCH",
+            "ABSENT",
+            "INDETERMINATE"
+          ],
+          "title": "Effect Match",
+          "type": "string"
+        },
+        "next_step": {
+          "enum": [
+            "POSTCHECK",
+            "RECHECK_TARGET",
+            "RECONCILE"
+          ],
+          "title": "Next Step",
+          "type": "string"
+        },
+        "replay_allowed": {
+          "const": false,
+          "title": "Replay Allowed",
+          "type": "boolean"
+        },
+        "reason": {
+          "minLength": 1,
+          "title": "Reason",
+          "type": "string"
+        }
+      },
+      "required": [
+        "action_id",
+        "outcome",
+        "platform_ids",
+        "before_evidence_refs",
+        "after_evidence_refs",
+        "readback",
+        "effect_match",
+        "next_step",
+        "replay_allowed",
+        "reason"
+      ],
+      "title": "ActionResult",
+      "type": "object"
+    },
+    "ActionTarget": {
+      "additionalProperties": false,
+      "properties": {
+        "target_id": {
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9_.:-]{0,127}$",
+          "title": "Target Id",
+          "type": "string"
+        },
+        "question_id": {
+          "pattern": "^[A-Za-z][A-Za-z0-9_.:-]{0,127}$",
+          "title": "Question Id",
+          "type": "string"
+        },
+        "platform_question_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Platform Question Id"
+        }
+      },
+      "required": [
+        "target_id",
+        "question_id",
+        "platform_question_id"
+      ],
+      "title": "ActionTarget",
+      "type": "object"
+    },
+    "AnswerRelation": {
+      "additionalProperties": false,
+      "properties": {
+        "relation_id": {
+          "pattern": "^[A-Za-z][A-Za-z0-9_.:-]{0,127}$",
+          "title": "Relation Id",
+          "type": "string"
+        },
+        "question_id": {
+          "pattern": "^[A-Za-z][A-Za-z0-9_.:-]{0,127}$",
+          "title": "Question Id",
+          "type": "string"
+        },
+        "candidate_fragment_ids": {
+          "items": {
+            "pattern": "^[A-Za-z][A-Za-z0-9_.:-]{0,127}$",
+            "type": "string"
+          },
+          "title": "Candidate Fragment Ids",
+          "type": "array"
+        },
+        "selected_fragment_ids": {
+          "items": {
+            "pattern": "^[A-Za-z][A-Za-z0-9_.:-]{0,127}$",
+            "type": "string"
+          },
+          "title": "Selected Fragment Ids",
+          "type": "array"
+        },
+        "status": {
+          "enum": [
+            "SELECTED",
+            "AMBIGUOUS",
+            "UNRESOLVED"
+          ],
+          "title": "Status",
+          "type": "string"
+        },
+        "evidence_refs": {
+          "items": {
+            "pattern": "^[A-Za-z][A-Za-z0-9_.:-]{0,127}$",
+            "type": "string"
+          },
+          "minItems": 1,
+          "title": "Evidence Refs",
+          "type": "array"
+        }
+      },
+      "required": [
+        "relation_id",
+        "question_id",
+        "candidate_fragment_ids",
+        "selected_fragment_ids",
+        "status",
+        "evidence_refs"
+      ],
+      "title": "AnswerRelation",
+      "type": "object"
+    },
+    "ApplyPlan": {
+      "additionalProperties": false,
+      "properties": {
+        "schema_version": {
+          "const": "1.0.0-a-proposal",
+          "title": "Schema Version",
+          "type": "string"
+        },
+        "artifact_id": {
+          "pattern": "^[A-Za-z][A-Za-z0-9_.:-]{0,127}$",
+          "title": "Artifact Id",
+          "type": "string"
+        },
+        "revision": {
+          "exclusiveMinimum": 0,
+          "title": "Revision",
+          "type": "integer"
+        },
+        "kind": {
+          "const": "ApplyPlan",
+          "title": "Kind",
+          "type": "string"
+        },
+        "run_id": {
+          "pattern": "^[A-Za-z][A-Za-z0-9_.:-]{0,127}$",
+          "title": "Run Id",
+          "type": "string"
+        },
+        "book_id": {
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9_.:-]{0,127}$",
+          "title": "Book Id",
+          "type": "string"
+        },
+        "scope_id": {
+          "pattern": "^[A-Za-z][A-Za-z0-9_.:-]{0,127}$",
+          "title": "Scope Id",
+          "type": "string"
+        },
+        "input_refs": {
+          "items": {
+            "$ref": "#/$defs/ArtifactRef"
+          },
+          "title": "Input Refs",
+          "type": "array"
+        },
+        "producer": {
+          "$ref": "#/$defs/Producer"
+        },
+        "content_hash": {
+          "pattern": "^[0-9a-f]{64}$",
+          "title": "Content Hash",
+          "type": "string"
+        },
+        "created_at": {
+          "title": "Created At",
+          "type": "string"
+        },
+        "payload": {
+          "$ref": "#/$defs/PlanPayload"
+        }
+      },
+      "required": [
+        "schema_version",
+        "artifact_id",
+        "revision",
+        "kind",
+        "run_id",
+        "book_id",
+        "scope_id",
+        "input_refs",
+        "producer",
+        "content_hash",
+        "created_at",
+        "payload"
+      ],
+      "title": "ApplyPlan",
+      "type": "object"
+    },
+    "ArtifactRef": {
+      "additionalProperties": false,
+      "properties": {
+        "artifact_id": {
+          "pattern": "^[A-Za-z][A-Za-z0-9_.:-]{0,127}$",
+          "title": "Artifact Id",
+          "type": "string"
+        },
+        "revision": {
+          "exclusiveMinimum": 0,
+          "title": "Revision",
+          "type": "integer"
+        },
+        "kind": {
+          "enum": [
+            "SourceBundle",
+            "EvidenceBundle",
+            "QuestionGraph",
+            "PlatformSnapshot",
+            "CheckReport",
+            "ApplyPlan",
+            "ExecutionReceipt",
+            "ReviewPatch",
+            "BatchReport"
+          ],
+          "title": "Kind",
+          "type": "string"
+        },
+        "content_hash": {
+          "pattern": "^[0-9a-f]{64}$",
+          "title": "Content Hash",
+          "type": "string"
+        }
+      },
+      "required": [
+        "artifact_id",
+        "revision",
+        "kind",
+        "content_hash"
+      ],
+      "title": "ArtifactRef",
+      "type": "object"
+    },
+    "Asset": {
+      "additionalProperties": false,
+      "properties": {
+        "path": {
+          "title": "Path",
+          "type": "string"
+        },
+        "sha256": {
+          "pattern": "^[0-9a-f]{64}$",
+          "title": "Sha256",
+          "type": "string"
+        },
+        "media_type": {
+          "enum": [
+            "image/png",
+            "image/jpeg",
+            "image/x-portable-graymap",
+            "text/plain",
+            "application/json"
+          ],
+          "title": "Media Type",
+          "type": "string"
+        },
+        "asset_id": {
+          "pattern": "^[A-Za-z][A-Za-z0-9_.:-]{0,127}$",
+          "title": "Asset Id",
+          "type": "string"
+        },
+        "width": {
+          "exclusiveMinimum": 0,
+          "title": "Width",
+          "type": "integer"
+        },
+        "height": {
+          "exclusiveMinimum": 0,
+          "title": "Height",
+          "type": "integer"
+        },
+        "source_label": {
+          "minLength": 1,
+          "title": "Source Label",
+          "type": "string"
+        },
+        "provenance": {
+          "enum": [
+            "SYNTHETIC",
+            "ORIGINAL"
+          ],
+          "title": "Provenance",
+          "type": "string"
+        }
+      },
+      "required": [
+        "path",
+        "sha256",
+        "media_type",
+        "asset_id",
+        "width",
+        "height",
+        "source_label",
+        "provenance"
+      ],
+      "title": "Asset",
+      "type": "object"
+    },
+    "BatchPayload": {
+      "additionalProperties": false,
+      "properties": {
+        "source": {
+          "$ref": "#/$defs/ArtifactRef"
+        },
+        "graph": {
+          "$ref": "#/$defs/ArtifactRef"
+        },
+        "receipt": {
+          "$ref": "#/$defs/ArtifactRef"
+        },
+        "postcheck": {
+          "$ref": "#/$defs/ArtifactRef"
+        },
+        "scope_manifest": {
+          "items": {
+            "pattern": "^[A-Za-z][A-Za-z0-9_.:-]{0,127}$",
+            "type": "string"
+          },
+          "minItems": 1,
+          "title": "Scope Manifest",
+          "type": "array"
+        },
+        "questions": {
+          "items": {
+            "$ref": "#/$defs/QuestionStatus"
+          },
+          "minItems": 1,
+          "title": "Questions",
+          "type": "array"
+        },
+        "total_expected": {
+          "exclusiveMinimum": 0,
+          "title": "Total Expected",
+          "type": "integer"
+        },
+        "coverage": {
+          "$ref": "#/$defs/Coverage"
+        },
+        "cost": {
+          "$ref": "#/$defs/Cost"
+        },
+        "unresolved_issue_ids": {
+          "items": {
+            "pattern": "^[A-Za-z][A-Za-z0-9_.:-]{0,127}$",
+            "type": "string"
+          },
+          "title": "Unresolved Issue Ids",
+          "type": "array"
+        },
+        "submission_status": {
+          "enum": [
+            "NOT_SUBMITTED",
+            "CONFIRMED",
+            "UNKNOWN"
+          ],
+          "title": "Submission Status",
+          "type": "string"
+        },
+        "submission_evidence_refs": {
+          "items": {
+            "pattern": "^[A-Za-z][A-Za-z0-9_.:-]{0,127}$",
+            "type": "string"
+          },
+          "title": "Submission Evidence Refs",
+          "type": "array"
+        },
+        "content_check_status": {
+          "enum": [
+            "PENDING",
+            "VERIFIED",
+            "MISMATCH",
+            "UNAVAILABLE"
+          ],
+          "title": "Content Check Status",
+          "type": "string"
+        },
+        "frame_check_status": {
+          "enum": [
+            "PASS",
+            "FAIL",
+            "UNAVAILABLE"
+          ],
+          "title": "Frame Check Status",
+          "type": "string"
+        },
+        "state": {
+          "enum": [
+            "NEEDS_REVIEW",
+            "NEEDS_RECONCILIATION",
+            "CONTENT_PENDING",
+            "AWAITING_HUMAN_SUBMIT_FOR_OCR",
+            "READY_FOR_SUBMISSION",
+            "COMPLETED"
+          ],
+          "title": "State",
+          "type": "string"
+        }
+      },
+      "required": [
+        "source",
+        "graph",
+        "receipt",
+        "postcheck",
+        "scope_manifest",
+        "questions",
+        "total_expected",
+        "coverage",
+        "cost",
+        "unresolved_issue_ids",
+        "submission_status",
+        "submission_evidence_refs",
+        "content_check_status",
+        "frame_check_status",
+        "state"
+      ],
+      "title": "BatchPayload",
+      "type": "object"
+    },
+    "BatchReport": {
+      "additionalProperties": false,
+      "properties": {
+        "schema_version": {
+          "const": "1.0.0-a-proposal",
+          "title": "Schema Version",
+          "type": "string"
+        },
+        "artifact_id": {
+          "pattern": "^[A-Za-z][A-Za-z0-9_.:-]{0,127}$",
+          "title": "Artifact Id",
+          "type": "string"
+        },
+        "revision": {
+          "exclusiveMinimum": 0,
+          "title": "Revision",
+          "type": "integer"
+        },
+        "kind": {
+          "const": "BatchReport",
+          "title": "Kind",
+          "type": "string"
+        },
+        "run_id": {
+          "pattern": "^[A-Za-z][A-Za-z0-9_.:-]{0,127}$",
+          "title": "Run Id",
+          "type": "string"
+        },
+        "book_id": {
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9_.:-]{0,127}$",
+          "title": "Book Id",
+          "type": "string"
+        },
+        "scope_id": {
+          "pattern": "^[A-Za-z][A-Za-z0-9_.:-]{0,127}$",
+          "title": "Scope Id",
+          "type": "string"
+        },
+        "input_refs": {
+          "items": {
+            "$ref": "#/$defs/ArtifactRef"
+          },
+          "title": "Input Refs",
+          "type": "array"
+        },
+        "producer": {
+          "$ref": "#/$defs/Producer"
+        },
+        "content_hash": {
+          "pattern": "^[0-9a-f]{64}$",
+          "title": "Content Hash",
+          "type": "string"
+        },
+        "created_at": {
+          "title": "Created At",
+          "type": "string"
+        },
+        "payload": {
+          "$ref": "#/$defs/BatchPayload"
+        }
+      },
+      "required": [
+        "schema_version",
+        "artifact_id",
+        "revision",
+        "kind",
+        "run_id",
+        "book_id",
+        "scope_id",
+        "input_refs",
+        "producer",
+        "content_hash",
+        "created_at",
+        "payload"
+      ],
+      "title": "BatchReport",
+      "type": "object"
+    },
+    "Capability": {
+      "additionalProperties": false,
+      "properties": {
+        "name": {
+          "enum": [
+            "persistent_draft",
+            "frame_readback",
+            "content_readback",
+            "ocr_before_submit",
+            "resume_after_restart",
+            "multi_session",
+            "same_session_handoff",
+            "frame_update"
+          ],
+          "title": "Name",
+          "type": "string"
+        },
+        "status": {
+          "enum": [
+            "VERIFIED",
+            "UNKNOWN",
+            "UNSUPPORTED"
+          ],
+          "title": "Status",
+          "type": "string"
+        },
+        "platform_version": {
+          "minLength": 1,
+          "title": "Platform Version",
+          "type": "string"
+        },
+        "evidence_refs": {
+          "items": {
+            "pattern": "^[A-Za-z][A-Za-z0-9_.:-]{0,127}$",
+            "type": "string"
+          },
+          "title": "Evidence Refs",
+          "type": "array"
+        }
+      },
+      "required": [
+        "name",
+        "status",
+        "platform_version",
+        "evidence_refs"
+      ],
+      "title": "Capability",
+      "type": "object"
+    },
+    "CheckPayload": {
+      "additionalProperties": false,
+      "properties": {
+        "stage": {
+          "enum": [
+            "PRE_APPLY",
+            "TARGET",
+            "POST_APPLY"
+          ],
+          "title": "Stage",
+          "type": "string"
+        },
+        "subject": {
+          "$ref": "#/$defs/ArtifactRef"
+        },
+        "graph": {
+          "$ref": "#/$defs/ArtifactRef"
+        },
+        "policy": {
+          "$ref": "#/$defs/PolicyRef"
+        },
+        "snapshot": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/ArtifactRef"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "receipt": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/ArtifactRef"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "coverage": {
+          "$ref": "#/$defs/Coverage"
+        },
+        "checks": {
+          "items": {
+            "$ref": "#/$defs/CheckResult"
+          },
+          "minItems": 1,
+          "title": "Checks",
+          "type": "array"
+        },
+        "issues": {
+          "items": {
+            "$ref": "#/$defs/Issue"
+          },
+          "title": "Issues",
+          "type": "array"
+        },
+        "decision": {
+          "enum": [
+            "PASS",
+            "RETRY",
+            "EXCEPTION",
+            "HOLD"
+          ],
+          "title": "Decision",
+          "type": "string"
+        },
+        "reason": {
+          "minLength": 1,
+          "title": "Reason",
+          "type": "string"
+        }
+      },
+      "required": [
+        "stage",
+        "subject",
+        "graph",
+        "policy",
+        "snapshot",
+        "receipt",
+        "coverage",
+        "checks",
+        "issues",
+        "decision",
+        "reason"
+      ],
+      "title": "CheckPayload",
+      "type": "object"
+    },
+    "CheckReport": {
+      "additionalProperties": false,
+      "properties": {
+        "schema_version": {
+          "const": "1.0.0-a-proposal",
+          "title": "Schema Version",
+          "type": "string"
+        },
+        "artifact_id": {
+          "pattern": "^[A-Za-z][A-Za-z0-9_.:-]{0,127}$",
+          "title": "Artifact Id",
+          "type": "string"
+        },
+        "revision": {
+          "exclusiveMinimum": 0,
+          "title": "Revision",
+          "type": "integer"
+        },
+        "kind": {
+          "const": "CheckReport",
+          "title": "Kind",
+          "type": "string"
+        },
+        "run_id": {
+          "pattern": "^[A-Za-z][A-Za-z0-9_.:-]{0,127}$",
+          "title": "Run Id",
+          "type": "string"
+        },
+        "book_id": {
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9_.:-]{0,127}$",
+          "title": "Book Id",
+          "type": "string"
+        },
+        "scope_id": {
+          "pattern": "^[A-Za-z][A-Za-z0-9_.:-]{0,127}$",
+          "title": "Scope Id",
+          "type": "string"
+        },
+        "input_refs": {
+          "items": {
+            "$ref": "#/$defs/ArtifactRef"
+          },
+          "title": "Input Refs",
+          "type": "array"
+        },
+        "producer": {
+          "$ref": "#/$defs/Producer"
+        },
+        "content_hash": {
+          "pattern": "^[0-9a-f]{64}$",
+          "title": "Content Hash",
+          "type": "string"
+        },
+        "created_at": {
+          "title": "Created At",
+          "type": "string"
+        },
+        "payload": {
+          "$ref": "#/$defs/CheckPayload"
+        }
+      },
+      "required": [
+        "schema_version",
+        "artifact_id",
+        "revision",
+        "kind",
+        "run_id",
+        "book_id",
+        "scope_id",
+        "input_refs",
+        "producer",
+        "content_hash",
+        "created_at",
+        "payload"
+      ],
+      "title": "CheckReport",
+      "type": "object"
+    },
+    "CheckResult": {
+      "additionalProperties": false,
+      "properties": {
+        "check_id": {
+          "enum": [
+            "source_integrity",
+            "structure",
+            "answer_matching",
+            "coverage",
+            "policy",
+            "target_version",
+            "authorized_scope",
+            "capabilities",
+            "frame_structure",
+            "final_content"
+          ],
+          "title": "Check Id",
+          "type": "string"
+        },
+        "outcome": {
+          "enum": [
+            "PASS",
+            "FAIL",
+            "UNAVAILABLE"
+          ],
+          "title": "Outcome",
+          "type": "string"
+        },
+        "evidence_refs": {
+          "items": {
+            "pattern": "^[A-Za-z][A-Za-z0-9_.:-]{0,127}$",
+            "type": "string"
+          },
+          "minItems": 1,
+          "title": "Evidence Refs",
+          "type": "array"
+        },
+        "reason": {
+          "minLength": 1,
+          "title": "Reason",
+          "type": "string"
+        }
+      },
+      "required": [
+        "check_id",
+        "outcome",
+        "evidence_refs",
+        "reason"
+      ],
+      "title": "CheckResult",
+      "type": "object"
+    },
+    "Cost": {
+      "additionalProperties": false,
+      "properties": {
+        "model_calls": {
+          "minimum": 0,
+          "title": "Model Calls",
+          "type": "integer"
+        },
+        "amount": {
+          "anyOf": [
+            {
+              "minimum": 0,
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Amount"
+        },
+        "currency": {
+          "title": "Currency",
+          "type": "string"
+        },
+        "billing_status": {
+          "enum": [
+            "KNOWN",
+            "UNKNOWN"
+          ],
+          "title": "Billing Status",
+          "type": "string"
+        },
+        "human_minutes": {
+          "minimum": 0,
+          "title": "Human Minutes",
+          "type": "number"
+        }
+      },
+      "required": [
+        "model_calls",
+        "amount",
+        "currency",
+        "billing_status",
+        "human_minutes"
+      ],
+      "title": "Cost",
+      "type": "object"
+    },
+    "Coverage": {
+      "additionalProperties": false,
+      "properties": {
+        "scope_id": {
+          "pattern": "^[A-Za-z][A-Za-z0-9_.:-]{0,127}$",
+          "title": "Scope Id",
+          "type": "string"
+        },
+        "pages_expected": {
+          "items": {
+            "pattern": "^[A-Za-z][A-Za-z0-9_.:-]{0,127}$",
+            "type": "string"
+          },
+          "minItems": 1,
+          "title": "Pages Expected",
+          "type": "array"
+        },
+        "pages_checked": {
+          "items": {
+            "pattern": "^[A-Za-z][A-Za-z0-9_.:-]{0,127}$",
+            "type": "string"
+          },
+          "title": "Pages Checked",
+          "type": "array"
+        },
+        "clue_ids": {
+          "items": {
+            "pattern": "^[A-Za-z][A-Za-z0-9_.:-]{0,127}$",
+            "type": "string"
+          },
+          "minItems": 1,
+          "title": "Clue Ids",
+          "type": "array"
+        },
+        "unassigned_region_ids": {
+          "items": {
+            "pattern": "^[A-Za-z][A-Za-z0-9_.:-]{0,127}$",
+            "type": "string"
+          },
+          "title": "Unassigned Region Ids",
+          "type": "array"
+        }
+      },
+      "required": [
+        "scope_id",
+        "pages_expected",
+        "pages_checked",
+        "clue_ids",
+        "unassigned_region_ids"
+      ],
+      "title": "Coverage",
+      "type": "object"
+    },
+    "CoverageClue": {
+      "additionalProperties": false,
+      "properties": {
+        "clue_id": {
+          "pattern": "^[A-Za-z][A-Za-z0-9_.:-]{0,127}$",
+          "title": "Clue Id",
+          "type": "string"
+        },
+        "box": {
+          "$ref": "#/$defs/OriginalBox"
+        },
+        "source": {
+          "enum": [
+            "WHOLE_PAGE_SCAN",
+            "INDEPENDENT_REVIEW",
+            "SHARED_RECOGNITION",
+            "SYNTHETIC"
+          ],
+          "title": "Source",
+          "type": "string"
+        },
+        "disposition": {
+          "enum": [
+            "ASSIGNED",
+            "EXCLUDED",
+            "UNASSIGNED"
+          ],
+          "title": "Disposition",
+          "type": "string"
+        },
+        "region_ids": {
+          "items": {
+            "pattern": "^[A-Za-z][A-Za-z0-9_.:-]{0,127}$",
+            "type": "string"
+          },
+          "title": "Region Ids",
+          "type": "array"
+        },
+        "reason": {
+          "minLength": 1,
+          "title": "Reason",
+          "type": "string"
+        },
+        "evidence_refs": {
+          "items": {
+            "pattern": "^[A-Za-z][A-Za-z0-9_.:-]{0,127}$",
+            "type": "string"
+          },
+          "minItems": 1,
+          "title": "Evidence Refs",
+          "type": "array"
+        }
+      },
+      "required": [
+        "clue_id",
+        "box",
+        "source",
+        "disposition",
+        "region_ids",
+        "reason",
+        "evidence_refs"
+      ],
+      "title": "CoverageClue",
+      "type": "object"
+    },
+    "CropTransform": {
+      "additionalProperties": false,
+      "properties": {
+        "scale_x": {
+          "exclusiveMinimum": 0,
+          "title": "Scale X",
+          "type": "number"
+        },
+        "scale_y": {
+          "exclusiveMinimum": 0,
+          "title": "Scale Y",
+          "type": "number"
+        },
+        "offset_x": {
+          "title": "Offset X",
+          "type": "number"
+        },
+        "offset_y": {
+          "title": "Offset Y",
+          "type": "number"
+        },
+        "rotation_degrees": {
+          "title": "Rotation Degrees",
+          "type": "number"
+        },
+        "padding": {
+          "items": {
+            "minimum": 0,
+            "type": "number"
+          },
+          "maxItems": 4,
+          "minItems": 4,
+          "title": "Padding",
+          "type": "array"
+        },
+        "processed_width": {
+          "exclusiveMinimum": 0,
+          "title": "Processed Width",
+          "type": "integer"
+        },
+        "processed_height": {
+          "exclusiveMinimum": 0,
+          "title": "Processed Height",
+          "type": "integer"
+        },
+        "invertible": {
+          "title": "Invertible",
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "scale_x",
+        "scale_y",
+        "offset_x",
+        "offset_y",
+        "rotation_degrees",
+        "padding",
+        "processed_width",
+        "processed_height",
+        "invertible"
+      ],
+      "title": "CropTransform",
+      "type": "object"
+    },
+    "Directory": {
+      "additionalProperties": false,
+      "properties": {
+        "directory_id": {
+          "pattern": "^[A-Za-z][A-Za-z0-9_.:-]{0,127}$",
+          "title": "Directory Id",
+          "type": "string"
+        },
+        "parent_id": {
+          "anyOf": [
+            {
+              "pattern": "^[A-Za-z][A-Za-z0-9_.:-]{0,127}$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Parent Id"
+        },
+        "label": {
+          "title": "Label",
+          "type": "string"
+        }
+      },
+      "required": [
+        "directory_id",
+        "parent_id",
+        "label"
+      ],
+      "title": "Directory",
+      "type": "object"
+    },
+    "EvidenceBundle": {
+      "additionalProperties": false,
+      "properties": {
+        "schema_version": {
+          "const": "1.0.0-a-proposal",
+          "title": "Schema Version",
+          "type": "string"
+        },
+        "artifact_id": {
+          "pattern": "^[A-Za-z][A-Za-z0-9_.:-]{0,127}$",
+          "title": "Artifact Id",
+          "type": "string"
+        },
+        "revision": {
+          "exclusiveMinimum": 0,
+          "title": "Revision",
+          "type": "integer"
+        },
+        "kind": {
+          "const": "EvidenceBundle",
+          "title": "Kind",
+          "type": "string"
+        },
+        "run_id": {
+          "pattern": "^[A-Za-z][A-Za-z0-9_.:-]{0,127}$",
+          "title": "Run Id",
+          "type": "string"
+        },
+        "book_id": {
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9_.:-]{0,127}$",
+          "title": "Book Id",
+          "type": "string"
+        },
+        "scope_id": {
+          "pattern": "^[A-Za-z][A-Za-z0-9_.:-]{0,127}$",
+          "title": "Scope Id",
+          "type": "string"
+        },
+        "input_refs": {
+          "items": {
+            "$ref": "#/$defs/ArtifactRef"
+          },
+          "title": "Input Refs",
+          "type": "array"
+        },
+        "producer": {
+          "$ref": "#/$defs/Producer"
+        },
+        "content_hash": {
+          "pattern": "^[0-9a-f]{64}$",
+          "title": "Content Hash",
+          "type": "string"
+        },
+        "created_at": {
+          "title": "Created At",
+          "type": "string"
+        },
+        "payload": {
+          "$ref": "#/$defs/EvidencePayload"
+        }
+      },
+      "required": [
+        "schema_version",
+        "artifact_id",
+        "revision",
+        "kind",
+        "run_id",
+        "book_id",
+        "scope_id",
+        "input_refs",
+        "producer",
+        "content_hash",
+        "created_at",
+        "payload"
+      ],
+      "title": "EvidenceBundle",
+      "type": "object"
+    },
+    "EvidencePayload": {
+      "additionalProperties": false,
+      "properties": {
+        "source": {
+          "$ref": "#/$defs/ArtifactRef"
+        },
+        "regions": {
+          "items": {
+            "$ref": "#/$defs/Region"
+          },
+          "title": "Regions",
+          "type": "array"
+        },
+        "coverage_clues": {
+          "items": {
+            "$ref": "#/$defs/CoverageClue"
+          },
+          "minItems": 1,
+          "title": "Coverage Clues",
+          "type": "array"
+        }
+      },
+      "required": [
+        "source",
+        "regions",
+        "coverage_clues"
+      ],
+      "title": "EvidencePayload",
+      "type": "object"
+    },
+    "EvidenceRecord": {
+      "additionalProperties": false,
+      "properties": {
+        "evidence_id": {
+          "pattern": "^[A-Za-z][A-Za-z0-9_.:-]{0,127}$",
+          "title": "Evidence Id",
+          "type": "string"
+        },
+        "resource": {
+          "$ref": "#/$defs/Resource"
+        },
+        "description": {
+          "minLength": 1,
+          "title": "Description",
+          "type": "string"
+        },
+        "mode": {
+          "enum": [
+            "SYNTHETIC",
+            "OBSERVED"
+          ],
+          "title": "Mode",
+          "type": "string"
+        }
+      },
+      "required": [
+        "evidence_id",
+        "resource",
+        "description",
+        "mode"
+      ],
+      "title": "EvidenceRecord",
+      "type": "object"
+    },
+    "ExecutionReceipt": {
+      "additionalProperties": false,
+      "properties": {
+        "schema_version": {
+          "const": "1.0.0-a-proposal",
+          "title": "Schema Version",
+          "type": "string"
+        },
+        "artifact_id": {
+          "pattern": "^[A-Za-z][A-Za-z0-9_.:-]{0,127}$",
+          "title": "Artifact Id",
+          "type": "string"
+        },
+        "revision": {
+          "exclusiveMinimum": 0,
+          "title": "Revision",
+          "type": "integer"
+        },
+        "kind": {
+          "const": "ExecutionReceipt",
+          "title": "Kind",
+          "type": "string"
+        },
+        "run_id": {
+          "pattern": "^[A-Za-z][A-Za-z0-9_.:-]{0,127}$",
+          "title": "Run Id",
+          "type": "string"
+        },
+        "book_id": {
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9_.:-]{0,127}$",
+          "title": "Book Id",
+          "type": "string"
+        },
+        "scope_id": {
+          "pattern": "^[A-Za-z][A-Za-z0-9_.:-]{0,127}$",
+          "title": "Scope Id",
+          "type": "string"
+        },
+        "input_refs": {
+          "items": {
+            "$ref": "#/$defs/ArtifactRef"
+          },
+          "title": "Input Refs",
+          "type": "array"
+        },
+        "producer": {
+          "$ref": "#/$defs/Producer"
+        },
+        "content_hash": {
+          "pattern": "^[0-9a-f]{64}$",
+          "title": "Content Hash",
+          "type": "string"
+        },
+        "created_at": {
+          "title": "Created At",
+          "type": "string"
+        },
+        "payload": {
+          "$ref": "#/$defs/ReceiptPayload"
+        }
+      },
+      "required": [
+        "schema_version",
+        "artifact_id",
+        "revision",
+        "kind",
+        "run_id",
+        "book_id",
+        "scope_id",
+        "input_refs",
+        "producer",
+        "content_hash",
+        "created_at",
+        "payload"
+      ],
+      "title": "ExecutionReceipt",
+      "type": "object"
+    },
+    "ExternalRefs": {
+      "additionalProperties": false,
+      "properties": {
+        "printed_number": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Printed Number"
+        },
+        "platform_question_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Platform Question Id"
+        },
+        "platform_order": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Platform Order"
+        }
+      },
+      "required": [
+        "printed_number",
+        "platform_question_id",
+        "platform_order"
+      ],
+      "title": "ExternalRefs",
+      "type": "object"
+    },
+    "Fragment": {
+      "additionalProperties": false,
+      "properties": {
+        "fragment_id": {
+          "pattern": "^[A-Za-z][A-Za-z0-9_.:-]{0,127}$",
+          "title": "Fragment Id",
+          "type": "string"
+        },
+        "region_ids": {
+          "items": {
+            "pattern": "^[A-Za-z][A-Za-z0-9_.:-]{0,127}$",
+            "type": "string"
+          },
+          "minItems": 1,
+          "title": "Region Ids",
+          "type": "array"
+        },
+        "role": {
+          "enum": [
+            "stem",
+            "option",
+            "answer",
+            "explanation",
+            "shared_material"
+          ],
+          "title": "Role",
+          "type": "string"
+        },
+        "content_type": {
+          "enum": [
+            "text",
+            "formula",
+            "image",
+            "table"
+          ],
+          "title": "Content Type",
+          "type": "string"
+        },
+        "reading_order": {
+          "minimum": 0,
+          "title": "Reading Order",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "fragment_id",
+        "region_ids",
+        "role",
+        "content_type",
+        "reading_order"
+      ],
+      "title": "Fragment",
+      "type": "object"
+    },
+    "GraphPayload": {
+      "additionalProperties": false,
+      "properties": {
+        "source": {
+          "$ref": "#/$defs/ArtifactRef"
+        },
+        "evidence": {
+          "$ref": "#/$defs/ArtifactRef"
+        },
+        "questions": {
+          "items": {
+            "$ref": "#/$defs/Question"
+          },
+          "minItems": 1,
+          "title": "Questions",
+          "type": "array"
+        },
+        "fragments": {
+          "items": {
+            "$ref": "#/$defs/Fragment"
+          },
+          "minItems": 1,
+          "title": "Fragments",
+          "type": "array"
+        },
+        "answer_relations": {
+          "items": {
+            "$ref": "#/$defs/AnswerRelation"
+          },
+          "title": "Answer Relations",
+          "type": "array"
+        },
+        "identity_notes": {
+          "minLength": 1,
+          "title": "Identity Notes",
+          "type": "string"
+        }
+      },
+      "required": [
+        "source",
+        "evidence",
+        "questions",
+        "fragments",
+        "answer_relations",
+        "identity_notes"
+      ],
+      "title": "GraphPayload",
+      "type": "object"
+    },
+    "HistoryReference": {
+      "additionalProperties": false,
+      "properties": {
+        "resource": {
+          "$ref": "#/$defs/Resource"
+        },
+        "quality": {
+          "enum": [
+            "UNVERIFIED",
+            "REVIEWED",
+            "REJECTED"
+          ],
+          "title": "Quality",
+          "type": "string"
+        },
+        "reason": {
+          "minLength": 1,
+          "title": "Reason",
+          "type": "string"
+        }
+      },
+      "required": [
+        "resource",
+        "quality",
+        "reason"
+      ],
+      "title": "HistoryReference",
+      "type": "object"
+    },
+    "ImageBinding": {
+      "additionalProperties": false,
+      "properties": {
+        "asset_id": {
+          "pattern": "^[A-Za-z][A-Za-z0-9_.:-]{0,127}$",
+          "title": "Asset Id",
+          "type": "string"
+        },
+        "width": {
+          "exclusiveMinimum": 0,
+          "title": "Width",
+          "type": "integer"
+        },
+        "height": {
+          "exclusiveMinimum": 0,
+          "title": "Height",
+          "type": "integer"
+        },
+        "sha256": {
+          "pattern": "^[0-9a-f]{64}$",
+          "title": "Sha256",
+          "type": "string"
+        }
+      },
+      "required": [
+        "asset_id",
+        "width",
+        "height",
+        "sha256"
+      ],
+      "title": "ImageBinding",
+      "type": "object"
+    },
+    "Issue": {
+      "additionalProperties": false,
+      "properties": {
+        "issue_id": {
+          "pattern": "^[A-Za-z][A-Za-z0-9_.:-]{0,127}$",
+          "title": "Issue Id",
+          "type": "string"
+        },
+        "code": {
+          "enum": [
+            "SOURCE_MISSING",
+            "PAGE_MAPPING_UNCERTAIN",
+            "UNASSIGNED_CONTENT",
+            "CROSS_PAGE_OPEN",
+            "OPTION_INCOMPLETE",
+            "ANSWER_AMBIGUOUS",
+            "POLICY_UNRESOLVED",
+            "UNSUPPORTED_LAYOUT",
+            "TARGET_CHANGED",
+            "CONTENT_MISMATCH",
+            "SAVE_UNKNOWN",
+            "LOGIN_REQUIRED",
+            "BUDGET_LIMIT"
+          ],
+          "title": "Code",
+          "type": "string"
+        },
+        "scope_type": {
+          "enum": [
+            "book",
+            "scope",
+            "page",
+            "question",
+            "fragment",
+            "region",
+            "action"
+          ],
+          "title": "Scope Type",
+          "type": "string"
+        },
+        "scope_id": {
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9_.:-]{0,127}$",
+          "title": "Scope Id",
+          "type": "string"
+        },
+        "evidence_refs": {
+          "items": {
+            "pattern": "^[A-Za-z][A-Za-z0-9_.:-]{0,127}$",
+            "type": "string"
+          },
+          "minItems": 1,
+          "title": "Evidence Refs",
+          "type": "array"
+        },
+        "severity": {
+          "enum": [
+            "blocking",
+            "warning",
+            "info"
+          ],
+          "title": "Severity",
+          "type": "string"
+        },
+        "blocks": {
+          "items": {
+            "enum": [
+              "PLAN",
+              "APPLY",
+              "COMPLETE"
+            ],
+            "type": "string"
+          },
+          "title": "Blocks",
+          "type": "array"
+        },
+        "suggested_strategy": {
+          "$ref": "#/$defs/Strategy"
+        },
+        "reason": {
+          "minLength": 1,
+          "title": "Reason",
+          "type": "string"
+        }
+      },
+      "required": [
+        "issue_id",
+        "code",
+        "scope_type",
+        "scope_id",
+        "evidence_refs",
+        "severity",
+        "blocks",
+        "suggested_strategy",
+        "reason"
+      ],
+      "title": "Issue",
+      "type": "object"
+    },
+    "OriginalBox": {
+      "additionalProperties": false,
+      "properties": {
+        "image": {
+          "$ref": "#/$defs/ImageBinding"
+        },
+        "bbox": {
+          "items": {
+            "type": "number"
+          },
+          "maxItems": 4,
+          "minItems": 4,
+          "title": "Bbox",
+          "type": "array"
+        }
+      },
+      "required": [
+        "image",
+        "bbox"
+      ],
+      "title": "OriginalBox",
+      "type": "object"
+    },
+    "PageMapping": {
+      "additionalProperties": false,
+      "properties": {
+        "asset_id": {
+          "pattern": "^[A-Za-z][A-Za-z0-9_.:-]{0,127}$",
+          "title": "Asset Id",
+          "type": "string"
+        },
+        "directory_id": {
+          "pattern": "^[A-Za-z][A-Za-z0-9_.:-]{0,127}$",
+          "title": "Directory Id",
+          "type": "string"
+        },
+        "external_page": {
+          "title": "External Page",
+          "type": "string"
+        },
+        "mapping_status": {
+          "enum": [
+            "CONFIRMED",
+            "UNCERTAIN"
+          ],
+          "title": "Mapping Status",
+          "type": "string"
+        },
+        "evidence_refs": {
+          "items": {
+            "pattern": "^[A-Za-z][A-Za-z0-9_.:-]{0,127}$",
+            "type": "string"
+          },
+          "minItems": 1,
+          "title": "Evidence Refs",
+          "type": "array"
+        }
+      },
+      "required": [
+        "asset_id",
+        "directory_id",
+        "external_page",
+        "mapping_status",
+        "evidence_refs"
+      ],
+      "title": "PageMapping",
+      "type": "object"
+    },
+    "PatchChange": {
+      "additionalProperties": false,
+      "properties": {
+        "entity_id": {
+          "pattern": "^[A-Za-z][A-Za-z0-9_.:-]{0,127}$",
+          "title": "Entity Id",
+          "type": "string"
+        },
+        "field": {
+          "enum": [
+            "role",
+            "printed_number",
+            "selected_fragment_ids"
+          ],
+          "title": "Field",
+          "type": "string"
+        },
+        "before": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "items": {
+                "pattern": "^[A-Za-z][A-Za-z0-9_.:-]{0,127}$",
+                "type": "string"
+              },
+              "type": "array"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Before"
+        },
+        "after": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "items": {
+                "pattern": "^[A-Za-z][A-Za-z0-9_.:-]{0,127}$",
+                "type": "string"
+              },
+              "type": "array"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "After"
+        }
+      },
+      "required": [
+        "entity_id",
+        "field",
+        "before",
+        "after"
+      ],
+      "title": "PatchChange",
+      "type": "object"
+    },
+    "PatchPayload": {
+      "additionalProperties": false,
+      "properties": {
+        "baseline": {
+          "$ref": "#/$defs/ArtifactRef"
+        },
+        "result_revision": {
+          "exclusiveMinimum": 0,
+          "title": "Result Revision",
+          "type": "integer"
+        },
+        "changes": {
+          "items": {
+            "$ref": "#/$defs/PatchChange"
+          },
+          "minItems": 1,
+          "title": "Changes",
+          "type": "array"
+        },
+        "operator": {
+          "pattern": "^[A-Za-z][A-Za-z0-9_.:-]{0,127}$",
+          "title": "Operator",
+          "type": "string"
+        },
+        "reason": {
+          "minLength": 1,
+          "title": "Reason",
+          "type": "string"
+        },
+        "related_issue_ids": {
+          "items": {
+            "pattern": "^[A-Za-z][A-Za-z0-9_.:-]{0,127}$",
+            "type": "string"
+          },
+          "title": "Related Issue Ids",
+          "type": "array"
+        },
+        "requires_recheck": {
+          "const": true,
+          "title": "Requires Recheck",
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "baseline",
+        "result_revision",
+        "changes",
+        "operator",
+        "reason",
+        "related_issue_ids",
+        "requires_recheck"
+      ],
+      "title": "PatchPayload",
+      "type": "object"
+    },
+    "PlanPayload": {
+      "additionalProperties": false,
+      "properties": {
+        "graph": {
+          "$ref": "#/$defs/ArtifactRef"
+        },
+        "precheck": {
+          "$ref": "#/$defs/ArtifactRef"
+        },
+        "targetcheck": {
+          "$ref": "#/$defs/ArtifactRef"
+        },
+        "snapshot": {
+          "$ref": "#/$defs/ArtifactRef"
+        },
+        "policy": {
+          "$ref": "#/$defs/PolicyRef"
+        },
+        "readiness": {
+          "enum": [
+            "READY",
+            "BLOCKED"
+          ],
+          "title": "Readiness",
+          "type": "string"
+        },
+        "execution_mode": {
+          "enum": [
+            "SIMULATED",
+            "PLATFORM"
+          ],
+          "title": "Execution Mode",
+          "type": "string"
+        },
+        "session_mode": {
+          "enum": [
+            "PERSISTENT",
+            "SAME_SESSION_HANDOFF"
+          ],
+          "title": "Session Mode",
+          "type": "string"
+        },
+        "required_capabilities": {
+          "items": {
+            "enum": [
+              "persistent_draft",
+              "frame_readback",
+              "content_readback",
+              "ocr_before_submit",
+              "resume_after_restart",
+              "multi_session",
+              "same_session_handoff",
+              "frame_update"
+            ],
+            "type": "string"
+          },
+          "minItems": 1,
+          "title": "Required Capabilities",
+          "type": "array"
+        },
+        "actions": {
+          "items": {
+            "$ref": "#/$defs/Action"
+          },
+          "title": "Actions",
+          "type": "array"
+        },
+        "blocked_issue_ids": {
+          "items": {
+            "pattern": "^[A-Za-z][A-Za-z0-9_.:-]{0,127}$",
+            "type": "string"
+          },
+          "title": "Blocked Issue Ids",
+          "type": "array"
+        },
+        "previous_receipt": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/ArtifactRef"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "final_submission": {
+          "const": "HUMAN_ONLY",
+          "title": "Final Submission",
+          "type": "string"
+        }
+      },
+      "required": [
+        "graph",
+        "precheck",
+        "targetcheck",
+        "snapshot",
+        "policy",
+        "readiness",
+        "execution_mode",
+        "session_mode",
+        "required_capabilities",
+        "actions",
+        "blocked_issue_ids",
+        "previous_receipt",
+        "final_submission"
+      ],
+      "title": "PlanPayload",
+      "type": "object"
+    },
+    "PlatformFrame": {
+      "additionalProperties": false,
+      "properties": {
+        "platform_frame_id": {
+          "title": "Platform Frame Id",
+          "type": "string"
+        },
+        "platform_question_id": {
+          "title": "Platform Question Id",
+          "type": "string"
+        },
+        "box": {
+          "$ref": "#/$defs/OriginalBox"
+        },
+        "platform_role": {
+          "enum": [
+            "Q",
+            "W",
+            "A",
+            "E"
+          ],
+          "title": "Platform Role",
+          "type": "string"
+        }
+      },
+      "required": [
+        "platform_frame_id",
+        "platform_question_id",
+        "box",
+        "platform_role"
+      ],
+      "title": "PlatformFrame",
+      "type": "object"
+    },
+    "PlatformPolicy": {
+      "additionalProperties": false,
+      "properties": {
+        "policy_id": {
+          "pattern": "^[A-Za-z][A-Za-z0-9_.:-]{0,127}$",
+          "title": "Policy Id",
+          "type": "string"
+        },
+        "revision": {
+          "exclusiveMinimum": 0,
+          "title": "Revision",
+          "type": "integer"
+        },
+        "content_hash": {
+          "pattern": "^[0-9a-f]{64}$",
+          "title": "Content Hash",
+          "type": "string"
+        },
+        "confirmation_status": {
+          "enum": [
+            "UNRESOLVED",
+            "A_INTERNAL_PROPOSAL",
+            "JOINT_CONFIRMED",
+            "SYNTHETIC_ASSUMPTION"
+          ],
+          "title": "Confirmation Status",
+          "type": "string"
+        },
+        "option_grouping": {
+          "enum": [
+            "UNRESOLVED",
+            "SEPARATE",
+            "COMBINED"
+          ],
+          "title": "Option Grouping",
+          "type": "string"
+        },
+        "role_mapping": {
+          "additionalProperties": {
+            "enum": [
+              "Q",
+              "W",
+              "A",
+              "E"
+            ],
+            "type": "string"
+          },
+          "propertyNames": {
+            "enum": [
+              "stem",
+              "option",
+              "answer",
+              "explanation",
+              "shared_material"
+            ]
+          },
+          "title": "Role Mapping",
+          "type": "object"
+        },
+        "source_notes": {
+          "items": {
+            "type": "string"
+          },
+          "minItems": 1,
+          "title": "Source Notes",
+          "type": "array"
+        },
+        "frame_save_status": {
+          "enum": [
+            "UNVERIFIED",
+            "BOUNDED_A05_OBSERVED",
+            "SYNTHETIC"
+          ],
+          "title": "Frame Save Status",
+          "type": "string"
+        },
+        "ocr_status": {
+          "enum": [
+            "UNVERIFIED",
+            "VERIFIED",
+            "SYNTHETIC"
+          ],
+          "title": "Ocr Status",
+          "type": "string"
+        },
+        "applicability": {
+          "enum": [
+            "PROPOSAL_ONLY",
+            "SYNTHETIC_ONLY",
+            "JOINT_CONFIRMED"
+          ],
+          "title": "Applicability",
+          "type": "string"
+        }
+      },
+      "required": [
+        "policy_id",
+        "revision",
+        "content_hash",
+        "confirmation_status",
+        "option_grouping",
+        "role_mapping",
+        "source_notes",
+        "frame_save_status",
+        "ocr_status",
+        "applicability"
+      ],
+      "title": "PlatformPolicy",
+      "type": "object"
+    },
+    "PlatformQuestion": {
+      "additionalProperties": false,
+      "properties": {
+        "platform_question_id": {
+          "title": "Platform Question Id",
+          "type": "string"
+        },
+        "directory_id": {
+          "title": "Directory Id",
+          "type": "string"
+        },
+        "platform_order": {
+          "title": "Platform Order",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "platform_question_id",
+        "directory_id",
+        "platform_order"
+      ],
+      "title": "PlatformQuestion",
+      "type": "object"
+    },
+    "PlatformSnapshot": {
+      "additionalProperties": false,
+      "properties": {
+        "schema_version": {
+          "const": "1.0.0-a-proposal",
+          "title": "Schema Version",
+          "type": "string"
+        },
+        "artifact_id": {
+          "pattern": "^[A-Za-z][A-Za-z0-9_.:-]{0,127}$",
+          "title": "Artifact Id",
+          "type": "string"
+        },
+        "revision": {
+          "exclusiveMinimum": 0,
+          "title": "Revision",
+          "type": "integer"
+        },
+        "kind": {
+          "const": "PlatformSnapshot",
+          "title": "Kind",
+          "type": "string"
+        },
+        "run_id": {
+          "pattern": "^[A-Za-z][A-Za-z0-9_.:-]{0,127}$",
+          "title": "Run Id",
+          "type": "string"
+        },
+        "book_id": {
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9_.:-]{0,127}$",
+          "title": "Book Id",
+          "type": "string"
+        },
+        "scope_id": {
+          "pattern": "^[A-Za-z][A-Za-z0-9_.:-]{0,127}$",
+          "title": "Scope Id",
+          "type": "string"
+        },
+        "input_refs": {
+          "items": {
+            "$ref": "#/$defs/ArtifactRef"
+          },
+          "title": "Input Refs",
+          "type": "array"
+        },
+        "producer": {
+          "$ref": "#/$defs/Producer"
+        },
+        "content_hash": {
+          "pattern": "^[0-9a-f]{64}$",
+          "title": "Content Hash",
+          "type": "string"
+        },
+        "created_at": {
+          "title": "Created At",
+          "type": "string"
+        },
+        "payload": {
+          "$ref": "#/$defs/SnapshotPayload"
+        }
+      },
+      "required": [
+        "schema_version",
+        "artifact_id",
+        "revision",
+        "kind",
+        "run_id",
+        "book_id",
+        "scope_id",
+        "input_refs",
+        "producer",
+        "content_hash",
+        "created_at",
+        "payload"
+      ],
+      "title": "PlatformSnapshot",
+      "type": "object"
+    },
+    "PolicyRef": {
+      "additionalProperties": false,
+      "properties": {
+        "policy_id": {
+          "pattern": "^[A-Za-z][A-Za-z0-9_.:-]{0,127}$",
+          "title": "Policy Id",
+          "type": "string"
+        },
+        "revision": {
+          "exclusiveMinimum": 0,
+          "title": "Revision",
+          "type": "integer"
+        },
+        "content_hash": {
+          "pattern": "^[0-9a-f]{64}$",
+          "title": "Content Hash",
+          "type": "string"
+        }
+      },
+      "required": [
+        "policy_id",
+        "revision",
+        "content_hash"
+      ],
+      "title": "PolicyRef",
+      "type": "object"
+    },
+    "Producer": {
+      "additionalProperties": false,
+      "properties": {
+        "module": {
+          "pattern": "^[A-Za-z][A-Za-z0-9_.:-]{0,127}$",
+          "title": "Module",
+          "type": "string"
+        },
+        "implementation_version": {
+          "minLength": 1,
+          "title": "Implementation Version",
+          "type": "string"
+        },
+        "config_version": {
+          "minLength": 1,
+          "title": "Config Version",
+          "type": "string"
+        },
+        "policy_versions": {
+          "items": {
+            "$ref": "#/$defs/PolicyRef"
+          },
+          "title": "Policy Versions",
+          "type": "array"
+        },
+        "model_version": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Model Version"
+        },
+        "prompt_version": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Prompt Version"
+        },
+        "evidence_mode": {
+          "enum": [
+            "SYNTHETIC",
+            "OBSERVED"
+          ],
+          "title": "Evidence Mode",
+          "type": "string"
+        }
+      },
+      "required": [
+        "module",
+        "implementation_version",
+        "config_version",
+        "policy_versions",
+        "model_version",
+        "prompt_version",
+        "evidence_mode"
+      ],
+      "title": "Producer",
+      "type": "object"
+    },
+    "Question": {
+      "additionalProperties": false,
+      "properties": {
+        "question_id": {
+          "pattern": "^[A-Za-z][A-Za-z0-9_.:-]{0,127}$",
+          "title": "Question Id",
+          "type": "string"
+        },
+        "directory_id": {
+          "pattern": "^[A-Za-z][A-Za-z0-9_.:-]{0,127}$",
+          "title": "Directory Id",
+          "type": "string"
+        },
+        "question_type": {
+          "enum": [
+            "ordinary_choice",
+            "free_response",
+            "combination",
+            "seven_choice",
+            "unsupported"
+          ],
+          "title": "Question Type",
+          "type": "string"
+        },
+        "fragment_ids": {
+          "items": {
+            "pattern": "^[A-Za-z][A-Za-z0-9_.:-]{0,127}$",
+            "type": "string"
+          },
+          "minItems": 1,
+          "title": "Fragment Ids",
+          "type": "array"
+        },
+        "parent_question_id": {
+          "anyOf": [
+            {
+              "pattern": "^[A-Za-z][A-Za-z0-9_.:-]{0,127}$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Parent Question Id"
+        },
+        "shared_fragment_ids": {
+          "items": {
+            "pattern": "^[A-Za-z][A-Za-z0-9_.:-]{0,127}$",
+            "type": "string"
+          },
+          "title": "Shared Fragment Ids",
+          "type": "array"
+        },
+        "cross_page": {
+          "title": "Cross Page",
+          "type": "boolean"
+        },
+        "external_refs": {
+          "$ref": "#/$defs/ExternalRefs"
+        }
+      },
+      "required": [
+        "question_id",
+        "directory_id",
+        "question_type",
+        "fragment_ids",
+        "parent_question_id",
+        "shared_fragment_ids",
+        "cross_page",
+        "external_refs"
+      ],
+      "title": "Question",
+      "type": "object"
+    },
+    "QuestionGraph": {
+      "additionalProperties": false,
+      "properties": {
+        "schema_version": {
+          "const": "1.0.0-a-proposal",
+          "title": "Schema Version",
+          "type": "string"
+        },
+        "artifact_id": {
+          "pattern": "^[A-Za-z][A-Za-z0-9_.:-]{0,127}$",
+          "title": "Artifact Id",
+          "type": "string"
+        },
+        "revision": {
+          "exclusiveMinimum": 0,
+          "title": "Revision",
+          "type": "integer"
+        },
+        "kind": {
+          "const": "QuestionGraph",
+          "title": "Kind",
+          "type": "string"
+        },
+        "run_id": {
+          "pattern": "^[A-Za-z][A-Za-z0-9_.:-]{0,127}$",
+          "title": "Run Id",
+          "type": "string"
+        },
+        "book_id": {
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9_.:-]{0,127}$",
+          "title": "Book Id",
+          "type": "string"
+        },
+        "scope_id": {
+          "pattern": "^[A-Za-z][A-Za-z0-9_.:-]{0,127}$",
+          "title": "Scope Id",
+          "type": "string"
+        },
+        "input_refs": {
+          "items": {
+            "$ref": "#/$defs/ArtifactRef"
+          },
+          "title": "Input Refs",
+          "type": "array"
+        },
+        "producer": {
+          "$ref": "#/$defs/Producer"
+        },
+        "content_hash": {
+          "pattern": "^[0-9a-f]{64}$",
+          "title": "Content Hash",
+          "type": "string"
+        },
+        "created_at": {
+          "title": "Created At",
+          "type": "string"
+        },
+        "payload": {
+          "$ref": "#/$defs/GraphPayload"
+        }
+      },
+      "required": [
+        "schema_version",
+        "artifact_id",
+        "revision",
+        "kind",
+        "run_id",
+        "book_id",
+        "scope_id",
+        "input_refs",
+        "producer",
+        "content_hash",
+        "created_at",
+        "payload"
+      ],
+      "title": "QuestionGraph",
+      "type": "object"
+    },
+    "QuestionStatus": {
+      "additionalProperties": false,
+      "properties": {
+        "question_id": {
+          "pattern": "^[A-Za-z][A-Za-z0-9_.:-]{0,127}$",
+          "title": "Question Id",
+          "type": "string"
+        },
+        "state": {
+          "enum": [
+            "PENDING",
+            "VERIFIED",
+            "EXCEPTION",
+            "SKIPPED",
+            "UNKNOWN"
+          ],
+          "title": "State",
+          "type": "string"
+        },
+        "reason": {
+          "minLength": 1,
+          "title": "Reason",
+          "type": "string"
+        }
+      },
+      "required": [
+        "question_id",
+        "state",
+        "reason"
+      ],
+      "title": "QuestionStatus",
+      "type": "object"
+    },
+    "ReceiptPayload": {
+      "additionalProperties": false,
+      "properties": {
+        "plan": {
+          "$ref": "#/$defs/ArtifactRef"
+        },
+        "execution_mode": {
+          "enum": [
+            "SIMULATED",
+            "PLATFORM_OBSERVED",
+            "NOT_EXECUTED"
+          ],
+          "title": "Execution Mode",
+          "type": "string"
+        },
+        "results": {
+          "items": {
+            "$ref": "#/$defs/ActionResult"
+          },
+          "title": "Results",
+          "type": "array"
+        },
+        "unresolved_issue_ids": {
+          "items": {
+            "pattern": "^[A-Za-z][A-Za-z0-9_.:-]{0,127}$",
+            "type": "string"
+          },
+          "title": "Unresolved Issue Ids",
+          "type": "array"
+        },
+        "write_disposition": {
+          "enum": [
+            "POSTCHECK",
+            "RECHECK_TARGET",
+            "PAUSE_RECONCILE",
+            "NOT_EXECUTED"
+          ],
+          "title": "Write Disposition",
+          "type": "string"
+        }
+      },
+      "required": [
+        "plan",
+        "execution_mode",
+        "results",
+        "unresolved_issue_ids",
+        "write_disposition"
+      ],
+      "title": "ReceiptPayload",
+      "type": "object"
+    },
+    "Region": {
+      "additionalProperties": false,
+      "properties": {
+        "region_id": {
+          "pattern": "^[A-Za-z][A-Za-z0-9_.:-]{0,127}$",
+          "title": "Region Id",
+          "type": "string"
+        },
+        "box": {
+          "$ref": "#/$defs/OriginalBox"
+        },
+        "crop_transform": {
+          "$ref": "#/$defs/CropTransform"
+        },
+        "content_type": {
+          "enum": [
+            "text",
+            "formula",
+            "image",
+            "table"
+          ],
+          "title": "Content Type",
+          "type": "string"
+        },
+        "text": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Text"
+        },
+        "source": {
+          "enum": [
+            "SYNTHETIC",
+            "OCR",
+            "DETECTOR",
+            "HUMAN",
+            "HISTORICAL"
+          ],
+          "title": "Source",
+          "type": "string"
+        },
+        "evidence_refs": {
+          "items": {
+            "pattern": "^[A-Za-z][A-Za-z0-9_.:-]{0,127}$",
+            "type": "string"
+          },
+          "minItems": 1,
+          "title": "Evidence Refs",
+          "type": "array"
+        },
+        "printed_number_candidates": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Printed Number Candidates",
+          "type": "array"
+        },
+        "certainty": {
+          "enum": [
+            "CONFIRMED",
+            "UNCERTAIN"
+          ],
+          "title": "Certainty",
+          "type": "string"
+        }
+      },
+      "required": [
+        "region_id",
+        "box",
+        "crop_transform",
+        "content_type",
+        "text",
+        "source",
+        "evidence_refs",
+        "printed_number_candidates",
+        "certainty"
+      ],
+      "title": "Region",
+      "type": "object"
+    },
+    "Resource": {
+      "additionalProperties": false,
+      "properties": {
+        "path": {
+          "title": "Path",
+          "type": "string"
+        },
+        "sha256": {
+          "pattern": "^[0-9a-f]{64}$",
+          "title": "Sha256",
+          "type": "string"
+        },
+        "media_type": {
+          "enum": [
+            "image/png",
+            "image/jpeg",
+            "image/x-portable-graymap",
+            "text/plain",
+            "application/json"
+          ],
+          "title": "Media Type",
+          "type": "string"
+        }
+      },
+      "required": [
+        "path",
+        "sha256",
+        "media_type"
+      ],
+      "title": "Resource",
+      "type": "object"
+    },
+    "ReviewPatch": {
+      "additionalProperties": false,
+      "properties": {
+        "schema_version": {
+          "const": "1.0.0-a-proposal",
+          "title": "Schema Version",
+          "type": "string"
+        },
+        "artifact_id": {
+          "pattern": "^[A-Za-z][A-Za-z0-9_.:-]{0,127}$",
+          "title": "Artifact Id",
+          "type": "string"
+        },
+        "revision": {
+          "exclusiveMinimum": 0,
+          "title": "Revision",
+          "type": "integer"
+        },
+        "kind": {
+          "const": "ReviewPatch",
+          "title": "Kind",
+          "type": "string"
+        },
+        "run_id": {
+          "pattern": "^[A-Za-z][A-Za-z0-9_.:-]{0,127}$",
+          "title": "Run Id",
+          "type": "string"
+        },
+        "book_id": {
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9_.:-]{0,127}$",
+          "title": "Book Id",
+          "type": "string"
+        },
+        "scope_id": {
+          "pattern": "^[A-Za-z][A-Za-z0-9_.:-]{0,127}$",
+          "title": "Scope Id",
+          "type": "string"
+        },
+        "input_refs": {
+          "items": {
+            "$ref": "#/$defs/ArtifactRef"
+          },
+          "title": "Input Refs",
+          "type": "array"
+        },
+        "producer": {
+          "$ref": "#/$defs/Producer"
+        },
+        "content_hash": {
+          "pattern": "^[0-9a-f]{64}$",
+          "title": "Content Hash",
+          "type": "string"
+        },
+        "created_at": {
+          "title": "Created At",
+          "type": "string"
+        },
+        "payload": {
+          "$ref": "#/$defs/PatchPayload"
+        }
+      },
+      "required": [
+        "schema_version",
+        "artifact_id",
+        "revision",
+        "kind",
+        "run_id",
+        "book_id",
+        "scope_id",
+        "input_refs",
+        "producer",
+        "content_hash",
+        "created_at",
+        "payload"
+      ],
+      "title": "ReviewPatch",
+      "type": "object"
+    },
+    "SnapshotPayload": {
+      "additionalProperties": false,
+      "properties": {
+        "target_id": {
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9_.:-]{0,127}$",
+          "title": "Target Id",
+          "type": "string"
+        },
+        "platform_version": {
+          "minLength": 1,
+          "title": "Platform Version",
+          "type": "string"
+        },
+        "observed_at": {
+          "title": "Observed At",
+          "type": "string"
+        },
+        "observed_version": {
+          "minLength": 1,
+          "title": "Observed Version",
+          "type": "string"
+        },
+        "observed_hash": {
+          "pattern": "^[0-9a-f]{64}$",
+          "title": "Observed Hash",
+          "type": "string"
+        },
+        "authorized_scope_id": {
+          "pattern": "^[A-Za-z][A-Za-z0-9_.:-]{0,127}$",
+          "title": "Authorized Scope Id",
+          "type": "string"
+        },
+        "directories": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Directories",
+          "type": "array"
+        },
+        "questions": {
+          "items": {
+            "$ref": "#/$defs/PlatformQuestion"
+          },
+          "title": "Questions",
+          "type": "array"
+        },
+        "frames": {
+          "items": {
+            "$ref": "#/$defs/PlatformFrame"
+          },
+          "title": "Frames",
+          "type": "array"
+        },
+        "capabilities": {
+          "items": {
+            "$ref": "#/$defs/Capability"
+          },
+          "title": "Capabilities",
+          "type": "array"
+        },
+        "evidence_refs": {
+          "items": {
+            "pattern": "^[A-Za-z][A-Za-z0-9_.:-]{0,127}$",
+            "type": "string"
+          },
+          "minItems": 1,
+          "title": "Evidence Refs",
+          "type": "array"
+        }
+      },
+      "required": [
+        "target_id",
+        "platform_version",
+        "observed_at",
+        "observed_version",
+        "observed_hash",
+        "authorized_scope_id",
+        "directories",
+        "questions",
+        "frames",
+        "capabilities",
+        "evidence_refs"
+      ],
+      "title": "SnapshotPayload",
+      "type": "object"
+    },
+    "SourceBundle": {
+      "additionalProperties": false,
+      "properties": {
+        "schema_version": {
+          "const": "1.0.0-a-proposal",
+          "title": "Schema Version",
+          "type": "string"
+        },
+        "artifact_id": {
+          "pattern": "^[A-Za-z][A-Za-z0-9_.:-]{0,127}$",
+          "title": "Artifact Id",
+          "type": "string"
+        },
+        "revision": {
+          "exclusiveMinimum": 0,
+          "title": "Revision",
+          "type": "integer"
+        },
+        "kind": {
+          "const": "SourceBundle",
+          "title": "Kind",
+          "type": "string"
+        },
+        "run_id": {
+          "pattern": "^[A-Za-z][A-Za-z0-9_.:-]{0,127}$",
+          "title": "Run Id",
+          "type": "string"
+        },
+        "book_id": {
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9_.:-]{0,127}$",
+          "title": "Book Id",
+          "type": "string"
+        },
+        "scope_id": {
+          "pattern": "^[A-Za-z][A-Za-z0-9_.:-]{0,127}$",
+          "title": "Scope Id",
+          "type": "string"
+        },
+        "input_refs": {
+          "items": {
+            "$ref": "#/$defs/ArtifactRef"
+          },
+          "title": "Input Refs",
+          "type": "array"
+        },
+        "producer": {
+          "$ref": "#/$defs/Producer"
+        },
+        "content_hash": {
+          "pattern": "^[0-9a-f]{64}$",
+          "title": "Content Hash",
+          "type": "string"
+        },
+        "created_at": {
+          "title": "Created At",
+          "type": "string"
+        },
+        "payload": {
+          "$ref": "#/$defs/SourcePayload"
+        }
+      },
+      "required": [
+        "schema_version",
+        "artifact_id",
+        "revision",
+        "kind",
+        "run_id",
+        "book_id",
+        "scope_id",
+        "input_refs",
+        "producer",
+        "content_hash",
+        "created_at",
+        "payload"
+      ],
+      "title": "SourceBundle",
+      "type": "object"
+    },
+    "SourcePayload": {
+      "additionalProperties": false,
+      "properties": {
+        "assets": {
+          "items": {
+            "$ref": "#/$defs/Asset"
+          },
+          "minItems": 1,
+          "title": "Assets",
+          "type": "array"
+        },
+        "directories": {
+          "items": {
+            "$ref": "#/$defs/Directory"
+          },
+          "minItems": 1,
+          "title": "Directories",
+          "type": "array"
+        },
+        "pages_expected": {
+          "items": {
+            "pattern": "^[A-Za-z][A-Za-z0-9_.:-]{0,127}$",
+            "type": "string"
+          },
+          "minItems": 1,
+          "title": "Pages Expected",
+          "type": "array"
+        },
+        "pages_acquired": {
+          "items": {
+            "pattern": "^[A-Za-z][A-Za-z0-9_.:-]{0,127}$",
+            "type": "string"
+          },
+          "minItems": 1,
+          "title": "Pages Acquired",
+          "type": "array"
+        },
+        "external_page_mappings": {
+          "items": {
+            "$ref": "#/$defs/PageMapping"
+          },
+          "title": "External Page Mappings",
+          "type": "array"
+        },
+        "history": {
+          "items": {
+            "$ref": "#/$defs/HistoryReference"
+          },
+          "title": "History",
+          "type": "array"
+        },
+        "scope_manifest": {
+          "items": {
+            "pattern": "^[A-Za-z][A-Za-z0-9_.:-]{0,127}$",
+            "type": "string"
+          },
+          "minItems": 1,
+          "title": "Scope Manifest",
+          "type": "array"
+        },
+        "scope_manifest_basis": {
+          "minLength": 1,
+          "title": "Scope Manifest Basis",
+          "type": "string"
+        },
+        "metadata_page_count": {
+          "anyOf": [
+            {
+              "exclusiveMinimum": 0,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Metadata Page Count"
+        }
+      },
+      "required": [
+        "assets",
+        "directories",
+        "pages_expected",
+        "pages_acquired",
+        "external_page_mappings",
+        "history",
+        "scope_manifest",
+        "scope_manifest_basis",
+        "metadata_page_count"
+      ],
+      "title": "SourcePayload",
+      "type": "object"
+    },
+    "Strategy": {
+      "additionalProperties": false,
+      "properties": {
+        "strategy_id": {
+          "enum": [
+            "NONE",
+            "LOAD_ADJACENT_PAGE",
+            "EXPAND_CROP",
+            "ADD_ANSWER_CONTEXT",
+            "SWITCH_RECOGNIZER",
+            "HUMAN_REVIEW",
+            "RECONCILE",
+            "RECHECK_TARGET",
+            "WAIT_CONTENT",
+            "HUMAN_SUBMIT",
+            "LOGIN",
+            "RAISE_BUDGET"
+          ],
+          "title": "Strategy Id",
+          "type": "string"
+        },
+        "max_attempts": {
+          "minimum": 0,
+          "title": "Max Attempts",
+          "type": "integer"
+        },
+        "max_cost": {
+          "minimum": 0,
+          "title": "Max Cost",
+          "type": "number"
+        }
+      },
+      "required": [
+        "strategy_id",
+        "max_attempts",
+        "max_cost"
+      ],
+      "title": "Strategy",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "format_version": {
+      "const": "c01-exchange-1",
+      "title": "Format Version",
+      "type": "string"
+    },
+    "evidence": {
+      "items": {
+        "$ref": "#/$defs/EvidenceRecord"
+      },
+      "minItems": 1,
+      "title": "Evidence",
+      "type": "array"
+    },
+    "policies": {
+      "items": {
+        "$ref": "#/$defs/PlatformPolicy"
+      },
+      "minItems": 1,
+      "title": "Policies",
+      "type": "array"
+    },
+    "artifacts": {
+      "items": {
+        "discriminator": {
+          "mapping": {
+            "ApplyPlan": "#/$defs/ApplyPlan",
+            "BatchReport": "#/$defs/BatchReport",
+            "CheckReport": "#/$defs/CheckReport",
+            "EvidenceBundle": "#/$defs/EvidenceBundle",
+            "ExecutionReceipt": "#/$defs/ExecutionReceipt",
+            "PlatformSnapshot": "#/$defs/PlatformSnapshot",
+            "QuestionGraph": "#/$defs/QuestionGraph",
+            "ReviewPatch": "#/$defs/ReviewPatch",
+            "SourceBundle": "#/$defs/SourceBundle"
+          },
+          "propertyName": "kind"
+        },
+        "oneOf": [
+          {
+            "$ref": "#/$defs/SourceBundle"
+          },
+          {
+            "$ref": "#/$defs/EvidenceBundle"
+          },
+          {
+            "$ref": "#/$defs/QuestionGraph"
+          },
+          {
+            "$ref": "#/$defs/PlatformSnapshot"
+          },
+          {
+            "$ref": "#/$defs/CheckReport"
+          },
+          {
+            "$ref": "#/$defs/ApplyPlan"
+          },
+          {
+            "$ref": "#/$defs/ExecutionReceipt"
+          },
+          {
+            "$ref": "#/$defs/ReviewPatch"
+          },
+          {
+            "$ref": "#/$defs/BatchReport"
+          }
+        ]
+      },
+      "minItems": 1,
+      "title": "Artifacts",
+      "type": "array"
+    }
+  },
+  "required": [
+    "format_version",
+    "evidence",
+    "policies",
+    "artifacts"
+  ],
+  "title": "ExchangeBundle",
+  "type": "object",
+  "$comment": "DESIGN_ONLY static public schema export from ec1b4def; archive read shape only, no new recovery eligibility."
+}

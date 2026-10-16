@@ -1,0 +1,35 @@
+{
+  "evidence_type": "INDEPENDENT_STATIC_DESIGN_COUNTEREXAMPLE",
+  "status": "NOT_EXECUTED",
+  "reviewed_commit": "2d5ae2a53945a7fa20ef60a6b61e7b31c91dbea9",
+  "design_commit": "6ac0256f05169570605fcb921a773ff2ae0f4aef",
+  "scope": ["P1-03", "P1-04", "P1-07", "D04"],
+  "finding_id": "A03-P1-API-01",
+  "finding": "The proposed committed fact/receipt path for NOT_ATTEMPTED plus complete ABSENT is not closed by any listed public commit entry.",
+  "minimal_static_state": {
+    "plan_actions": ["A", "B", "C"],
+    "plan_state": "INTERRUPTED",
+    "actions": [
+      {"action_id": "A", "attempt_fact": "ATTEMPTED", "effective_outcome": "APPLIED", "has_committed_intent": true, "has_committed_action_fact": true},
+      {"action_id": "B", "attempt_fact": "MAY_HAVE_BEEN_ATTEMPTED", "effective_outcome": "UNKNOWN", "has_committed_intent": true, "has_committed_action_fact": true},
+      {"action_id": "C", "attempt_fact": "NOT_ATTEMPTED", "intent_ref": null, "obligation_id": null, "complete_independent_absent": true, "desired_effective_outcome": "NOT_APPLIED", "has_committed_action_fact": false}
+    ],
+    "evidence_assumption": "Assume C has complete independent actual ABSENT evidence and a verified full event prefix proving NOT_ATTEMPTED; this is a design premise, not a performed read or recovery result."
+  },
+  "frozen_rules": [
+    {"path": "docs/a03-recovery-contract-v1-proposal.md", "lines": [74, 76], "rule": "progress is a projection of committed facts; NOT_APPLIED/UNKNOWN interrupts the old plan; NOT_ATTEMPTED ABSENT may have a fact with null intent/obligation."},
+    {"path": "docs/a03-recovery-contract-v1-proposal.md", "lines": [100, 108], "rule": "complete receipt requires sufficient results/facts for every action; tail must not be invented or dispatched; recovery facts use commit_reconciliation."},
+    {"path": "examples/a03/P1/api-proposal.json", "lines": [328, 348], "rule": "commit_action_result requires current original committed_intent, original ACTIVE owner and RUNNING cursor, and rejects INTERRUPTED/restarted intents."},
+    {"path": "examples/a03/P1/api-proposal.json", "lines": [1081, 1089], "rule": "commit_reconciliation verifies original obligation/committed intent and may create RECOVERY fact bound to exact resolution_ref."},
+    {"path": "examples/a03/P1/api-proposal.json", "lines": [982, 984], "rule": "NOT_ATTEMPTED fact has null intent/obligation; RECOVERY requires exact committed resolution_ref."},
+    {"path": "examples/a03/P1/assets/action-fact-partial-not-attempted-absent.json", "lines": [4, 13], "rule": "the supplied positive design fact has origin_phase EXECUTION, resolution_ref null, intent_ref null and obligation_id null."}
+  ],
+  "public_paths": [
+    {"entry": "runtime.storage.commit_action_result", "mismatch": ["C has no committed intent", "old plan is INTERRUPTED"]},
+    {"entry": "runtime.storage.commit_reconciliation", "mismatch": ["C has no original intent/obligation", "a ReconciliationResult for C would require fabricating the mandatory intent/obligation"]}
+  ],
+  "consequence": "D04 permits an immutable committed C fact and full receipt, but the frozen public API does not assign a valid producer/transaction/event/authority path for it after B interrupts the plan. Implementation must guess a new path or remain progress-only despite complete ABSENT evidence.",
+  "required_design_resolution": "Specify an explicit public unattempted-fact commit entry or a precisely bounded nullable branch of an existing entry, including event type, plan-state/owner/generation rules, full NOT_ATTEMPTED prefix evidence, fresh independent ABSENT validation, uniqueness/CAS, allowed fact origin, and receipt aggregation. Do not fabricate intent/obligation/resolution or resume the old tail.",
+  "functional_result": "NOT_RUN",
+  "browser_network_platform_credentials_profile_ocr_model_api_operations": 0
+}

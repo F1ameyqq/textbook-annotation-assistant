@@ -1,0 +1,87 @@
+{
+  "phase": "A03-P1",
+  "scope": "Packaging scripts only; no recovery implementation or function executed",
+  "preserve_failures": true,
+  "attempts": [
+    {
+      "id": "root-proposal-edit-python39-newline",
+      "cwd": "C:/Users/ASUS/.codex/worktrees/a03-runtime-recovery/1800",
+      "command": "python -B - (inline proposal text-edit script)",
+      "exit_code": 1,
+      "stderr": "Traceback (most recent call last):\n  File \"<stdin>\", line 11, in <module>\nTypeError: write_text() got an unexpected keyword argument 'newline'\n",
+      "cause": "Python 3.9 pathlib.write_text has no newline argument",
+      "file_modified_by_failed_attempt": false,
+      "correction": "Use open(..., newline='\\n') and write; corrected command exited 0"
+    },
+    {
+      "id": "root-proposal-edit-stdin-encoding",
+      "cwd": "C:/Users/ASUS/.codex/worktrees/a03-runtime-recovery/1800",
+      "command": "python -B - (inline proposal text-edit script)",
+      "exit_code": 1,
+      "stderr": "SyntaxError: Non-UTF-8 code starting with '\\xe4' in file <stdin> on line 5, but no encoding declared; see https://python.org/dev/peps/pep-0263/ for details\n",
+      "cause": "Inline source transfer encoding failure",
+      "file_modified_by_failed_attempt": false,
+      "correction": "Applied explicit patch to the absolute worktree proposal path"
+    },
+    {
+      "id": "candidate-checker-attempt-01",
+      "cwd": "C:/Users/ASUS/.codex/worktrees/a03-runtime-recovery/1800",
+      "command": "python -B examples/a03/P1/check_design.py",
+      "exit_code": 1,
+      "reported_error": "ValueError unsupported structural schema keywords ['minProperties'] at check_design.py line93",
+      "cause": "New static packaging checker did not yet support an existing JSON Schema keyword",
+      "recovery_semantics_executed": false,
+      "correction": "Add pure structural minProperties/maxProperties support; later attempt recorded separately"
+    },
+    {
+      "id": "api-generator-preparation-errors",
+      "source": "Read-only API delegate final report",
+      "reported_failures": [
+        "Windows command-length limit",
+        "Python 3.9 Path.write_text newline argument"
+      ],
+      "exit_code": "not separately retained by delegate",
+      "recovery_semantics_executed": false,
+      "correction": "Completed API JSON with compatible writing method; static verification exited 0"
+    },
+    {
+      "id": "candidate-checker-attempt-02",
+      "command": "python -B examples/a03/P1/check_design.py",
+      "exit_code": 1,
+      "cause": "Unsupported propertyNames structural keyword; corrected pure checker",
+      "output": "candidate-checker-failures.txt",
+      "recovery_semantics_executed": false
+    },
+    {
+      "id": "candidate-keyword-quote-probe",
+      "command": "python -B -c (inline keyword inventory)",
+      "exit_code": 1,
+      "cause": "PowerShell quoting, EOL while scanning string literal",
+      "output": "candidate-checker-failures.txt",
+      "recovery_semantics_executed": false
+    },
+    {
+      "id": "root-api-key-probe",
+      "command": "python -B -c (read API signatures)",
+      "exit_code": 1,
+      "cause": "KeyError contracts_adapters; corrected to actual contracts_api key",
+      "file_modified": false
+    },
+    {
+      "id": "root-audit-attempt-01",
+      "command": "python -B docs/evidence/A03/execution/P1/verify_delivery.py audit",
+      "exit_code": 1,
+      "output": "delivery-audit-attempt-01.json",
+      "cause": "Auditor checked its own not-yet-created output link; corrected and separate final audit exited 0",
+      "recovery_semantics_executed": false
+    }
+  ],
+  "ignored_cache_inventory": [
+    "src/annotation/__pycache__/__init__.cpython-39.pyc",
+    "src/annotation/contracts/__pycache__/__init__.cpython-39.pyc",
+    "src/annotation/contracts/__pycache__/integrity.cpython-39.pyc",
+    "src/annotation/contracts/__pycache__/models.cpython-39.pyc",
+    "src/annotation/contracts/__pycache__/validation.cpython-39.pyc"
+  ],
+  "ignored_cache_note": "The earliest two schema-generator invocations omitted -B. Five ignored import cache files are present; origin not proven, no removal of possibly existing cache, no cache committed. All later invocations use -B. Tracked source bytes are checked against the 7993-file baseline."
+}

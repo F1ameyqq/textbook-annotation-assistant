@@ -1,0 +1,15 @@
+Offline interpreter availability probes (all used -B; no install/network):
+Python39: ModuleNotFoundError: No module named 'jsonschema'
+Python311: ModuleNotFoundError: No module named 'jsonschema'
+Python312: ModuleNotFoundError: No module named 'jsonschema'
+
+Original read-only inspection script failure, before final archived audit:
+Traceback (most recent call last):
+  File "<stdin>", line 14, in <module>
+  File "<stdin>", line 14, in <listcomp>
+KeyError: 'frame_check_status'
+Cause: reviewer incorrectly assumed each BatchReport QuestionStatus row contained frame_check_status.
+Classification: review-script inspection error, not a candidate design error.
+Correction: no input mutation; later projection reads only existing receipt/progress/fact fields. Final audit_static.py does not make that assumption.
+
+All probes were foreground finite child processes and had returned before completion.
