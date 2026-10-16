@@ -1,0 +1,1279 @@
+{
+  "format_version": "c01-exchange-1",
+  "evidence": [
+    {
+      "evidence_id": "proof-source",
+      "resource": {
+        "path": "assets/proof-source.txt",
+        "sha256": "1f36e585be64bf251bd9377e4a6dd62602a1d30855ad356821b98d7727985700",
+        "media_type": "text/plain"
+      },
+      "description": "Synthetic original assets and external page mapping.",
+      "mode": "SYNTHETIC"
+    },
+    {
+      "evidence_id": "proof-geometry",
+      "resource": {
+        "path": "assets/proof-geometry.txt",
+        "sha256": "e81a4a5245db90f68da55b69cffadb234df70a4a2dbf5b8c660a24c638fe74d6",
+        "media_type": "text/plain"
+      },
+      "description": "Hand-authored original boxes, coverage and invertible transform; not detector output.",
+      "mode": "SYNTHETIC"
+    },
+    {
+      "evidence_id": "proof-checks",
+      "resource": {
+        "path": "assets/proof-checks.txt",
+        "sha256": "a674f58c3a7ebc30cd00d9f52106655169f2228436ecc027b1cae73ebaba1d46",
+        "media_type": "text/plain"
+      },
+      "description": "Constructed quality assertions, never platform acceptance.",
+      "mode": "SYNTHETIC"
+    },
+    {
+      "evidence_id": "proof-target",
+      "resource": {
+        "path": "assets/proof-target.txt",
+        "sha256": "c77d1a442645b7677759706f1ca1c993deb96f967b9e00ffe51bc0d1c407c38f",
+        "media_type": "text/plain"
+      },
+      "description": "Invented same-session target state and capabilities.",
+      "mode": "SYNTHETIC"
+    },
+    {
+      "evidence_id": "proof-before",
+      "resource": {
+        "path": "assets/proof-before.txt",
+        "sha256": "c14b6e590e4253ff847a0b486c289a93be9bf3aa3a991070a3a810253c58ad61",
+        "media_type": "text/plain"
+      },
+      "description": "Invented per-action state before simulated write.",
+      "mode": "SYNTHETIC"
+    },
+    {
+      "evidence_id": "proof-after",
+      "resource": {
+        "path": "assets/proof-after.txt",
+        "sha256": "0ed35e1f765f34e8b59ca41acbb3b84a80d4cb720db99dbbb6727ae442f2773e",
+        "media_type": "text/plain"
+      },
+      "description": "Invented readback including final synthetic content.",
+      "mode": "SYNTHETIC"
+    },
+    {
+      "evidence_id": "proof-timeout",
+      "resource": {
+        "path": "assets/proof-timeout.txt",
+        "sha256": "d1029a7ebe16a7e3f46b537013510f6852bd23054f4fd6c443fb55a88c75948b",
+        "media_type": "text/plain"
+      },
+      "description": "Simulated response timeout with no conclusive readback; no duplicate dispatch permitted.",
+      "mode": "SYNTHETIC"
+    },
+    {
+      "evidence_id": "proof-patch",
+      "resource": {
+        "path": "assets/proof-patch.txt",
+        "sha256": "1196f4c02fafc7482147b5dc932f019f6eee8f5d55c835012d714cff18aedf58",
+        "media_type": "text/plain"
+      },
+      "description": "Synthetic review changed printed label; baseline and result revisions remain separate.",
+      "mode": "SYNTHETIC"
+    }
+  ],
+  "policies": [
+    {
+      "policy_id": "synthetic-a02-policy",
+      "revision": 1,
+      "content_hash": "5d914617cad7f10009ff34919b1c313d5c73bd322069b77cde54659a407ebc32",
+      "confirmation_status": "SYNTHETIC_ASSUMPTION",
+      "option_grouping": "SEPARATE",
+      "role_mapping": {
+        "stem": "Q",
+        "option": "W",
+        "answer": "A",
+        "explanation": "E",
+        "shared_material": "Q"
+      },
+      "source_notes": [
+        "SYNTHETIC A02 simulation assumption; no A/B or platform confirmation.",
+        "SEPARATE options are supported only by this offline simulator."
+      ],
+      "frame_save_status": "SYNTHETIC",
+      "ocr_status": "SYNTHETIC",
+      "applicability": "SYNTHETIC_ONLY"
+    }
+  ],
+  "artifacts": [
+    {
+      "schema_version": "1.0.0-a-proposal",
+      "artifact_id": "a02-source",
+      "revision": 1,
+      "kind": "SourceBundle",
+      "run_id": "a02-fixture-run",
+      "book_id": "synthetic-book",
+      "scope_id": "synthetic-scope",
+      "input_refs": [],
+      "producer": {
+        "module": "a02-synthetic-input",
+        "implementation_version": "a02-fixtures-1",
+        "config_version": "normal",
+        "policy_versions": [
+          {
+            "policy_id": "synthetic-a02-policy",
+            "revision": 1,
+            "content_hash": "5d914617cad7f10009ff34919b1c313d5c73bd322069b77cde54659a407ebc32"
+          }
+        ],
+        "model_version": null,
+        "prompt_version": null,
+        "evidence_mode": "SYNTHETIC"
+      },
+      "content_hash": "4d5b05d683550f87a8f35350c95bddee6eadb0316d2efc61448f7f335ae243da",
+      "created_at": "2026-10-16T00:00:00Z",
+      "payload": {
+        "assets": [
+          {
+            "path": "assets/asset-page-a1.pgm",
+            "sha256": "8c1f2dc9061d60bad2a28778bf18f0356409b9fa8c370a0db6bd737012db2a75",
+            "media_type": "image/x-portable-graymap",
+            "asset_id": "asset-page-a1",
+            "width": 80,
+            "height": 100,
+            "source_label": "Synthetic original page 1",
+            "provenance": "SYNTHETIC"
+          },
+          {
+            "path": "assets/asset-page-a2.pgm",
+            "sha256": "9f4ab681d43e03b397154a2ba6dabf9b77e1bbfe576c62955d4385755f6d5d1b",
+            "media_type": "image/x-portable-graymap",
+            "asset_id": "asset-page-a2",
+            "width": 80,
+            "height": 100,
+            "source_label": "Synthetic original page 2",
+            "provenance": "SYNTHETIC"
+          },
+          {
+            "path": "assets/asset-page-b1.pgm",
+            "sha256": "f4d0189a5c4953e4401ef67acdc922d73a4414b7e86328e44b0ca98955243b84",
+            "media_type": "image/x-portable-graymap",
+            "asset_id": "asset-page-b1",
+            "width": 80,
+            "height": 100,
+            "source_label": "Synthetic original page 3",
+            "provenance": "SYNTHETIC"
+          }
+        ],
+        "directories": [
+          {
+            "directory_id": "directory-a",
+            "parent_id": null,
+            "label": "Unit A"
+          },
+          {
+            "directory_id": "directory-b",
+            "parent_id": null,
+            "label": "Unit B"
+          }
+        ],
+        "pages_expected": [
+          "asset-page-a1",
+          "asset-page-a2",
+          "asset-page-b1"
+        ],
+        "pages_acquired": [
+          "asset-page-a1",
+          "asset-page-a2",
+          "asset-page-b1"
+        ],
+        "external_page_mappings": [
+          {
+            "asset_id": "asset-page-a1",
+            "directory_id": "directory-a",
+            "external_page": "1",
+            "mapping_status": "CONFIRMED",
+            "evidence_refs": [
+              "proof-source"
+            ]
+          },
+          {
+            "asset_id": "asset-page-a2",
+            "directory_id": "directory-a",
+            "external_page": "2",
+            "mapping_status": "CONFIRMED",
+            "evidence_refs": [
+              "proof-source"
+            ]
+          },
+          {
+            "asset_id": "asset-page-b1",
+            "directory_id": "directory-b",
+            "external_page": "3",
+            "mapping_status": "CONFIRMED",
+            "evidence_refs": [
+              "proof-source"
+            ]
+          }
+        ],
+        "history": [
+          {
+            "resource": {
+              "path": "assets/history.json",
+              "sha256": "1fa9779f95b307cb6dbf78b95c16d40326321569ca64f3ce00870866144a1e88",
+              "media_type": "application/json"
+            },
+            "quality": "UNVERIFIED",
+            "reason": "Fabricated history is not gold data."
+          }
+        ],
+        "scope_manifest": [
+          "question-alpha",
+          "question-child",
+          "question-beta"
+        ],
+        "scope_manifest_basis": "Explicit synthetic independent question inventory; omitted candidates remain in denominator.",
+        "metadata_page_count": 250
+      }
+    },
+    {
+      "schema_version": "1.0.0-a-proposal",
+      "artifact_id": "a02-evidence",
+      "revision": 1,
+      "kind": "EvidenceBundle",
+      "run_id": "a02-fixture-run",
+      "book_id": "synthetic-book",
+      "scope_id": "synthetic-scope",
+      "input_refs": [
+        {
+          "artifact_id": "a02-source",
+          "revision": 1,
+          "kind": "SourceBundle",
+          "content_hash": "4d5b05d683550f87a8f35350c95bddee6eadb0316d2efc61448f7f335ae243da"
+        }
+      ],
+      "producer": {
+        "module": "a02-synthetic-input",
+        "implementation_version": "a02-fixtures-1",
+        "config_version": "normal",
+        "policy_versions": [
+          {
+            "policy_id": "synthetic-a02-policy",
+            "revision": 1,
+            "content_hash": "5d914617cad7f10009ff34919b1c313d5c73bd322069b77cde54659a407ebc32"
+          }
+        ],
+        "model_version": null,
+        "prompt_version": null,
+        "evidence_mode": "SYNTHETIC"
+      },
+      "content_hash": "c1cb2cb9cbc1e1701b6ad17988d2b61d98254a81f6e7fafcdf95f9b3112b5aef",
+      "created_at": "2026-10-16T00:00:00Z",
+      "payload": {
+        "source": {
+          "artifact_id": "a02-source",
+          "revision": 1,
+          "kind": "SourceBundle",
+          "content_hash": "4d5b05d683550f87a8f35350c95bddee6eadb0316d2efc61448f7f335ae243da"
+        },
+        "regions": [
+          {
+            "region_id": "region-alpha-start",
+            "box": {
+              "image": {
+                "asset_id": "asset-page-a1",
+                "width": 80,
+                "height": 100,
+                "sha256": "8c1f2dc9061d60bad2a28778bf18f0356409b9fa8c370a0db6bd737012db2a75"
+              },
+              "bbox": [
+                5.0,
+                5.0,
+                65.0,
+                20.0
+              ]
+            },
+            "crop_transform": {
+              "scale_x": 1.0,
+              "scale_y": 1.0,
+              "offset_x": 0.0,
+              "offset_y": 0.0,
+              "rotation_degrees": 0.0,
+              "padding": [
+                0.0,
+                0.0,
+                0.0,
+                0.0
+              ],
+              "processed_width": 80,
+              "processed_height": 100,
+              "invertible": true
+            },
+            "content_type": "text",
+            "text": "1. Parent problem begins; continues on next page.",
+            "source": "SYNTHETIC",
+            "evidence_refs": [
+              "proof-geometry"
+            ],
+            "printed_number_candidates": [
+              "1"
+            ],
+            "certainty": "CONFIRMED"
+          },
+          {
+            "region_id": "region-shared",
+            "box": {
+              "image": {
+                "asset_id": "asset-page-a1",
+                "width": 80,
+                "height": 100,
+                "sha256": "8c1f2dc9061d60bad2a28778bf18f0356409b9fa8c370a0db6bd737012db2a75"
+              },
+              "bbox": [
+                5.0,
+                25.0,
+                65.0,
+                35.0
+              ]
+            },
+            "crop_transform": {
+              "scale_x": 1.0,
+              "scale_y": 1.0,
+              "offset_x": 0.0,
+              "offset_y": 0.0,
+              "rotation_degrees": 0.0,
+              "padding": [
+                0.0,
+                0.0,
+                0.0,
+                0.0
+              ],
+              "processed_width": 80,
+              "processed_height": 100,
+              "invertible": true
+            },
+            "content_type": "text",
+            "text": "Shared material for alpha and its child.",
+            "source": "SYNTHETIC",
+            "evidence_refs": [
+              "proof-geometry"
+            ],
+            "printed_number_candidates": [],
+            "certainty": "CONFIRMED"
+          },
+          {
+            "region_id": "region-alpha-end",
+            "box": {
+              "image": {
+                "asset_id": "asset-page-a2",
+                "width": 80,
+                "height": 100,
+                "sha256": "9f4ab681d43e03b397154a2ba6dabf9b77e1bbfe576c62955d4385755f6d5d1b"
+              },
+              "bbox": [
+                5.0,
+                5.0,
+                65.0,
+                20.0
+              ]
+            },
+            "crop_transform": {
+              "scale_x": 1.0,
+              "scale_y": 1.0,
+              "offset_x": 0.0,
+              "offset_y": 0.0,
+              "rotation_degrees": 0.0,
+              "padding": [
+                0.0,
+                0.0,
+                0.0,
+                0.0
+              ],
+              "processed_width": 80,
+              "processed_height": 100,
+              "invertible": true
+            },
+            "content_type": "formula",
+            "text": "Parent continuation: x + 1 = 3.",
+            "source": "SYNTHETIC",
+            "evidence_refs": [
+              "proof-geometry"
+            ],
+            "printed_number_candidates": [],
+            "certainty": "CONFIRMED"
+          },
+          {
+            "region_id": "region-alpha-answer",
+            "box": {
+              "image": {
+                "asset_id": "asset-page-a2",
+                "width": 80,
+                "height": 100,
+                "sha256": "9f4ab681d43e03b397154a2ba6dabf9b77e1bbfe576c62955d4385755f6d5d1b"
+              },
+              "bbox": [
+                5.0,
+                25.0,
+                65.0,
+                35.0
+              ]
+            },
+            "crop_transform": {
+              "scale_x": 2.0,
+              "scale_y": 2.0,
+              "offset_x": 10.0,
+              "offset_y": 200.0,
+              "rotation_degrees": 0.0,
+              "padding": [
+                0.0,
+                0.0,
+                0.0,
+                0.0
+              ],
+              "processed_width": 170,
+              "processed_height": 400,
+              "invertible": true
+            },
+            "content_type": "formula",
+            "text": "x = 2",
+            "source": "SYNTHETIC",
+            "evidence_refs": [
+              "proof-geometry"
+            ],
+            "printed_number_candidates": [],
+            "certainty": "CONFIRMED"
+          },
+          {
+            "region_id": "region-child-stem",
+            "box": {
+              "image": {
+                "asset_id": "asset-page-a2",
+                "width": 80,
+                "height": 100,
+                "sha256": "9f4ab681d43e03b397154a2ba6dabf9b77e1bbfe576c62955d4385755f6d5d1b"
+              },
+              "bbox": [
+                5.0,
+                40.0,
+                65.0,
+                50.0
+              ]
+            },
+            "crop_transform": {
+              "scale_x": 1.0,
+              "scale_y": 1.0,
+              "offset_x": 0.0,
+              "offset_y": 0.0,
+              "rotation_degrees": 0.0,
+              "padding": [
+                0.0,
+                0.0,
+                0.0,
+                0.0
+              ],
+              "processed_width": 80,
+              "processed_height": 100,
+              "invertible": true
+            },
+            "content_type": "text",
+            "text": "(a) Explain the shared material.",
+            "source": "SYNTHETIC",
+            "evidence_refs": [
+              "proof-geometry"
+            ],
+            "printed_number_candidates": [
+              "1"
+            ],
+            "certainty": "CONFIRMED"
+          },
+          {
+            "region_id": "region-child-answer",
+            "box": {
+              "image": {
+                "asset_id": "asset-page-a2",
+                "width": 80,
+                "height": 100,
+                "sha256": "9f4ab681d43e03b397154a2ba6dabf9b77e1bbfe576c62955d4385755f6d5d1b"
+              },
+              "bbox": [
+                5.0,
+                55.0,
+                65.0,
+                65.0
+              ]
+            },
+            "crop_transform": {
+              "scale_x": 1.0,
+              "scale_y": 1.0,
+              "offset_x": 0.0,
+              "offset_y": 0.0,
+              "rotation_degrees": 0.0,
+              "padding": [
+                0.0,
+                0.0,
+                0.0,
+                0.0
+              ],
+              "processed_width": 80,
+              "processed_height": 100,
+              "invertible": true
+            },
+            "content_type": "text",
+            "text": "Synthetic explanation.",
+            "source": "SYNTHETIC",
+            "evidence_refs": [
+              "proof-geometry"
+            ],
+            "printed_number_candidates": [],
+            "certainty": "CONFIRMED"
+          },
+          {
+            "region_id": "region-beta-stem",
+            "box": {
+              "image": {
+                "asset_id": "asset-page-b1",
+                "width": 80,
+                "height": 100,
+                "sha256": "f4d0189a5c4953e4401ef67acdc922d73a4414b7e86328e44b0ca98955243b84"
+              },
+              "bbox": [
+                5.0,
+                5.0,
+                65.0,
+                20.0
+              ]
+            },
+            "crop_transform": {
+              "scale_x": 1.0,
+              "scale_y": 1.0,
+              "offset_x": 0.0,
+              "offset_y": 0.0,
+              "rotation_degrees": 0.0,
+              "padding": [
+                0.0,
+                0.0,
+                0.0,
+                0.0
+              ],
+              "processed_width": 80,
+              "processed_height": 100,
+              "invertible": true
+            },
+            "content_type": "text",
+            "text": "1. Independent Unit B problem.",
+            "source": "SYNTHETIC",
+            "evidence_refs": [
+              "proof-geometry"
+            ],
+            "printed_number_candidates": [
+              "1"
+            ],
+            "certainty": "CONFIRMED"
+          },
+          {
+            "region_id": "region-beta-answer",
+            "box": {
+              "image": {
+                "asset_id": "asset-page-b1",
+                "width": 80,
+                "height": 100,
+                "sha256": "f4d0189a5c4953e4401ef67acdc922d73a4414b7e86328e44b0ca98955243b84"
+              },
+              "bbox": [
+                5.0,
+                60.0,
+                65.0,
+                70.0
+              ]
+            },
+            "crop_transform": {
+              "scale_x": 1.0,
+              "scale_y": 1.0,
+              "offset_x": 0.0,
+              "offset_y": 0.0,
+              "rotation_degrees": 0.0,
+              "padding": [
+                0.0,
+                0.0,
+                0.0,
+                0.0
+              ],
+              "processed_width": 80,
+              "processed_height": 100,
+              "invertible": true
+            },
+            "content_type": "text",
+            "text": "Unit B answer; cannot match Unit A by printed label.",
+            "source": "SYNTHETIC",
+            "evidence_refs": [
+              "proof-geometry"
+            ],
+            "printed_number_candidates": [],
+            "certainty": "CONFIRMED"
+          }
+        ],
+        "coverage_clues": [
+          {
+            "clue_id": "clue-alpha-start",
+            "box": {
+              "image": {
+                "asset_id": "asset-page-a1",
+                "width": 80,
+                "height": 100,
+                "sha256": "8c1f2dc9061d60bad2a28778bf18f0356409b9fa8c370a0db6bd737012db2a75"
+              },
+              "bbox": [
+                5.0,
+                5.0,
+                65.0,
+                20.0
+              ]
+            },
+            "source": "SYNTHETIC",
+            "disposition": "ASSIGNED",
+            "region_ids": [
+              "region-alpha-start"
+            ],
+            "reason": "Independent synthetic full-page inventory assigns this content region.",
+            "evidence_refs": [
+              "proof-geometry"
+            ]
+          },
+          {
+            "clue_id": "clue-shared",
+            "box": {
+              "image": {
+                "asset_id": "asset-page-a1",
+                "width": 80,
+                "height": 100,
+                "sha256": "8c1f2dc9061d60bad2a28778bf18f0356409b9fa8c370a0db6bd737012db2a75"
+              },
+              "bbox": [
+                5.0,
+                25.0,
+                65.0,
+                35.0
+              ]
+            },
+            "source": "SYNTHETIC",
+            "disposition": "ASSIGNED",
+            "region_ids": [
+              "region-shared"
+            ],
+            "reason": "Independent synthetic full-page inventory assigns this content region.",
+            "evidence_refs": [
+              "proof-geometry"
+            ]
+          },
+          {
+            "clue_id": "clue-alpha-end",
+            "box": {
+              "image": {
+                "asset_id": "asset-page-a2",
+                "width": 80,
+                "height": 100,
+                "sha256": "9f4ab681d43e03b397154a2ba6dabf9b77e1bbfe576c62955d4385755f6d5d1b"
+              },
+              "bbox": [
+                5.0,
+                5.0,
+                65.0,
+                20.0
+              ]
+            },
+            "source": "SYNTHETIC",
+            "disposition": "ASSIGNED",
+            "region_ids": [
+              "region-alpha-end"
+            ],
+            "reason": "Independent synthetic full-page inventory assigns this content region.",
+            "evidence_refs": [
+              "proof-geometry"
+            ]
+          },
+          {
+            "clue_id": "clue-alpha-answer",
+            "box": {
+              "image": {
+                "asset_id": "asset-page-a2",
+                "width": 80,
+                "height": 100,
+                "sha256": "9f4ab681d43e03b397154a2ba6dabf9b77e1bbfe576c62955d4385755f6d5d1b"
+              },
+              "bbox": [
+                5.0,
+                25.0,
+                65.0,
+                35.0
+              ]
+            },
+            "source": "SYNTHETIC",
+            "disposition": "ASSIGNED",
+            "region_ids": [
+              "region-alpha-answer"
+            ],
+            "reason": "Independent synthetic full-page inventory assigns this content region.",
+            "evidence_refs": [
+              "proof-geometry"
+            ]
+          },
+          {
+            "clue_id": "clue-child-stem",
+            "box": {
+              "image": {
+                "asset_id": "asset-page-a2",
+                "width": 80,
+                "height": 100,
+                "sha256": "9f4ab681d43e03b397154a2ba6dabf9b77e1bbfe576c62955d4385755f6d5d1b"
+              },
+              "bbox": [
+                5.0,
+                40.0,
+                65.0,
+                50.0
+              ]
+            },
+            "source": "SYNTHETIC",
+            "disposition": "ASSIGNED",
+            "region_ids": [
+              "region-child-stem"
+            ],
+            "reason": "Independent synthetic full-page inventory assigns this content region.",
+            "evidence_refs": [
+              "proof-geometry"
+            ]
+          },
+          {
+            "clue_id": "clue-child-answer",
+            "box": {
+              "image": {
+                "asset_id": "asset-page-a2",
+                "width": 80,
+                "height": 100,
+                "sha256": "9f4ab681d43e03b397154a2ba6dabf9b77e1bbfe576c62955d4385755f6d5d1b"
+              },
+              "bbox": [
+                5.0,
+                55.0,
+                65.0,
+                65.0
+              ]
+            },
+            "source": "SYNTHETIC",
+            "disposition": "ASSIGNED",
+            "region_ids": [
+              "region-child-answer"
+            ],
+            "reason": "Independent synthetic full-page inventory assigns this content region.",
+            "evidence_refs": [
+              "proof-geometry"
+            ]
+          },
+          {
+            "clue_id": "clue-beta-stem",
+            "box": {
+              "image": {
+                "asset_id": "asset-page-b1",
+                "width": 80,
+                "height": 100,
+                "sha256": "f4d0189a5c4953e4401ef67acdc922d73a4414b7e86328e44b0ca98955243b84"
+              },
+              "bbox": [
+                5.0,
+                5.0,
+                65.0,
+                20.0
+              ]
+            },
+            "source": "SYNTHETIC",
+            "disposition": "ASSIGNED",
+            "region_ids": [
+              "region-beta-stem"
+            ],
+            "reason": "Independent synthetic full-page inventory assigns this content region.",
+            "evidence_refs": [
+              "proof-geometry"
+            ]
+          },
+          {
+            "clue_id": "clue-beta-answer",
+            "box": {
+              "image": {
+                "asset_id": "asset-page-b1",
+                "width": 80,
+                "height": 100,
+                "sha256": "f4d0189a5c4953e4401ef67acdc922d73a4414b7e86328e44b0ca98955243b84"
+              },
+              "bbox": [
+                5.0,
+                60.0,
+                65.0,
+                70.0
+              ]
+            },
+            "source": "SYNTHETIC",
+            "disposition": "ASSIGNED",
+            "region_ids": [
+              "region-beta-answer"
+            ],
+            "reason": "Independent synthetic full-page inventory assigns this content region.",
+            "evidence_refs": [
+              "proof-geometry"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "schema_version": "1.0.0-a-proposal",
+      "artifact_id": "a02-graph",
+      "revision": 1,
+      "kind": "QuestionGraph",
+      "run_id": "a02-fixture-run",
+      "book_id": "synthetic-book",
+      "scope_id": "synthetic-scope",
+      "input_refs": [
+        {
+          "artifact_id": "a02-source",
+          "revision": 1,
+          "kind": "SourceBundle",
+          "content_hash": "4d5b05d683550f87a8f35350c95bddee6eadb0316d2efc61448f7f335ae243da"
+        },
+        {
+          "artifact_id": "a02-evidence",
+          "revision": 1,
+          "kind": "EvidenceBundle",
+          "content_hash": "c1cb2cb9cbc1e1701b6ad17988d2b61d98254a81f6e7fafcdf95f9b3112b5aef"
+        }
+      ],
+      "producer": {
+        "module": "a02-synthetic-input",
+        "implementation_version": "a02-fixtures-1",
+        "config_version": "normal",
+        "policy_versions": [
+          {
+            "policy_id": "synthetic-a02-policy",
+            "revision": 1,
+            "content_hash": "5d914617cad7f10009ff34919b1c313d5c73bd322069b77cde54659a407ebc32"
+          }
+        ],
+        "model_version": null,
+        "prompt_version": null,
+        "evidence_mode": "SYNTHETIC"
+      },
+      "content_hash": "0ac16823cda12bd08c185852ffb419729ed2da86b0636f5842be4eff4a5546aa",
+      "created_at": "2026-10-16T00:00:00Z",
+      "payload": {
+        "source": {
+          "artifact_id": "a02-source",
+          "revision": 1,
+          "kind": "SourceBundle",
+          "content_hash": "4d5b05d683550f87a8f35350c95bddee6eadb0316d2efc61448f7f335ae243da"
+        },
+        "evidence": {
+          "artifact_id": "a02-evidence",
+          "revision": 1,
+          "kind": "EvidenceBundle",
+          "content_hash": "c1cb2cb9cbc1e1701b6ad17988d2b61d98254a81f6e7fafcdf95f9b3112b5aef"
+        },
+        "questions": [
+          {
+            "question_id": "question-alpha",
+            "directory_id": "directory-a",
+            "question_type": "free_response",
+            "fragment_ids": [
+              "fragment-alpha-start",
+              "fragment-alpha-end",
+              "fragment-alpha-answer"
+            ],
+            "parent_question_id": null,
+            "shared_fragment_ids": [
+              "fragment-shared"
+            ],
+            "cross_page": true,
+            "external_refs": {
+              "printed_number": "1",
+              "platform_question_id": null,
+              "platform_order": null
+            }
+          },
+          {
+            "question_id": "question-child",
+            "directory_id": "directory-a",
+            "question_type": "free_response",
+            "fragment_ids": [
+              "fragment-child-stem",
+              "fragment-child-answer"
+            ],
+            "parent_question_id": null,
+            "shared_fragment_ids": [
+              "fragment-shared"
+            ],
+            "cross_page": true,
+            "external_refs": {
+              "printed_number": "(a)",
+              "platform_question_id": null,
+              "platform_order": null
+            }
+          },
+          {
+            "question_id": "question-beta",
+            "directory_id": "directory-b",
+            "question_type": "free_response",
+            "fragment_ids": [
+              "fragment-beta-stem",
+              "fragment-beta-answer"
+            ],
+            "parent_question_id": null,
+            "shared_fragment_ids": [],
+            "cross_page": false,
+            "external_refs": {
+              "printed_number": "1",
+              "platform_question_id": null,
+              "platform_order": null
+            }
+          }
+        ],
+        "fragments": [
+          {
+            "fragment_id": "fragment-alpha-start",
+            "region_ids": [
+              "region-alpha-start"
+            ],
+            "role": "stem",
+            "content_type": "text",
+            "reading_order": 0
+          },
+          {
+            "fragment_id": "fragment-shared",
+            "region_ids": [
+              "region-shared"
+            ],
+            "role": "shared_material",
+            "content_type": "text",
+            "reading_order": 1
+          },
+          {
+            "fragment_id": "fragment-alpha-end",
+            "region_ids": [
+              "region-alpha-end"
+            ],
+            "role": "stem",
+            "content_type": "formula",
+            "reading_order": 2
+          },
+          {
+            "fragment_id": "fragment-alpha-answer",
+            "region_ids": [
+              "region-alpha-answer"
+            ],
+            "role": "answer",
+            "content_type": "formula",
+            "reading_order": 3
+          },
+          {
+            "fragment_id": "fragment-child-stem",
+            "region_ids": [
+              "region-child-stem"
+            ],
+            "role": "stem",
+            "content_type": "text",
+            "reading_order": 4
+          },
+          {
+            "fragment_id": "fragment-child-answer",
+            "region_ids": [
+              "region-child-answer"
+            ],
+            "role": "answer",
+            "content_type": "text",
+            "reading_order": 5
+          },
+          {
+            "fragment_id": "fragment-beta-stem",
+            "region_ids": [
+              "region-beta-stem"
+            ],
+            "role": "stem",
+            "content_type": "text",
+            "reading_order": 6
+          },
+          {
+            "fragment_id": "fragment-beta-answer",
+            "region_ids": [
+              "region-beta-answer"
+            ],
+            "role": "answer",
+            "content_type": "text",
+            "reading_order": 7
+          }
+        ],
+        "answer_relations": [
+          {
+            "relation_id": "relation-alpha",
+            "question_id": "question-alpha",
+            "candidate_fragment_ids": [
+              "fragment-alpha-answer"
+            ],
+            "selected_fragment_ids": [
+              "fragment-alpha-answer"
+            ],
+            "status": "SELECTED",
+            "evidence_refs": [
+              "proof-checks"
+            ]
+          },
+          {
+            "relation_id": "relation-child",
+            "question_id": "question-child",
+            "candidate_fragment_ids": [
+              "fragment-child-answer"
+            ],
+            "selected_fragment_ids": [
+              "fragment-child-answer"
+            ],
+            "status": "SELECTED",
+            "evidence_refs": [
+              "proof-checks"
+            ]
+          },
+          {
+            "relation_id": "relation-beta",
+            "question_id": "question-beta",
+            "candidate_fragment_ids": [
+              "fragment-beta-answer"
+            ],
+            "selected_fragment_ids": [
+              "fragment-beta-answer"
+            ],
+            "status": "SELECTED",
+            "evidence_refs": [
+              "proof-checks"
+            ]
+          }
+        ],
+        "identity_notes": "SYNTHETIC stable entity IDs; two directories repeat printed 1. Shared/cross-page regions are manually authored."
+      }
+    },
+    {
+      "schema_version": "1.0.0-a-proposal",
+      "artifact_id": "a02-snapshot",
+      "revision": 1,
+      "kind": "PlatformSnapshot",
+      "run_id": "a02-fixture-run",
+      "book_id": "synthetic-book",
+      "scope_id": "synthetic-scope",
+      "input_refs": [],
+      "producer": {
+        "module": "a02-synthetic-input",
+        "implementation_version": "a02-fixtures-1",
+        "config_version": "normal",
+        "policy_versions": [
+          {
+            "policy_id": "synthetic-a02-policy",
+            "revision": 1,
+            "content_hash": "5d914617cad7f10009ff34919b1c313d5c73bd322069b77cde54659a407ebc32"
+          }
+        ],
+        "model_version": null,
+        "prompt_version": null,
+        "evidence_mode": "SYNTHETIC"
+      },
+      "content_hash": "be10c4782733dcf675f881aa26229fad9b442b66244934cf01173af414414106",
+      "created_at": "2026-10-16T00:00:00Z",
+      "payload": {
+        "target_id": "synthetic-target",
+        "platform_version": "a02-synthetic-platform-1",
+        "observed_at": "2026-10-16T00:00:00Z",
+        "observed_version": "synthetic-empty-v1",
+        "observed_hash": "19504cada003e99b9295e1338c62bcd58ffea7877ad1cd7f76018342372c02cf",
+        "authorized_scope_id": "synthetic-scope",
+        "directories": [],
+        "questions": [
+          {
+            "platform_question_id": "kept-question-north",
+            "directory_id": "platform-unit-a",
+            "platform_order": 23
+          }
+        ],
+        "frames": [],
+        "capabilities": [
+          {
+            "name": "persistent_draft",
+            "status": "UNKNOWN",
+            "platform_version": "a02-synthetic-platform-1",
+            "evidence_refs": []
+          },
+          {
+            "name": "frame_readback",
+            "status": "VERIFIED",
+            "platform_version": "a02-synthetic-platform-1",
+            "evidence_refs": [
+              "proof-target"
+            ]
+          },
+          {
+            "name": "content_readback",
+            "status": "UNKNOWN",
+            "platform_version": "a02-synthetic-platform-1",
+            "evidence_refs": []
+          },
+          {
+            "name": "ocr_before_submit",
+            "status": "UNKNOWN",
+            "platform_version": "a02-synthetic-platform-1",
+            "evidence_refs": []
+          },
+          {
+            "name": "resume_after_restart",
+            "status": "UNKNOWN",
+            "platform_version": "a02-synthetic-platform-1",
+            "evidence_refs": []
+          },
+          {
+            "name": "multi_session",
+            "status": "UNKNOWN",
+            "platform_version": "a02-synthetic-platform-1",
+            "evidence_refs": []
+          },
+          {
+            "name": "same_session_handoff",
+            "status": "VERIFIED",
+            "platform_version": "a02-synthetic-platform-1",
+            "evidence_refs": [
+              "proof-target"
+            ]
+          }
+        ],
+        "evidence_refs": [
+          "proof-target"
+        ]
+      }
+    },
+    {
+      "schema_version": "1.0.0-a-proposal",
+      "artifact_id": "a02-precheck-stub",
+      "revision": 1,
+      "kind": "CheckReport",
+      "run_id": "a02-fixture-run",
+      "book_id": "synthetic-book",
+      "scope_id": "synthetic-scope",
+      "input_refs": [
+        {
+          "artifact_id": "a02-graph",
+          "revision": 1,
+          "kind": "QuestionGraph",
+          "content_hash": "0ac16823cda12bd08c185852ffb419729ed2da86b0636f5842be4eff4a5546aa"
+        }
+      ],
+      "producer": {
+        "module": "a02-precheck-stub",
+        "implementation_version": "a02-1",
+        "config_version": "a02-fixtures-1",
+        "policy_versions": [
+          {
+            "policy_id": "synthetic-a02-policy",
+            "revision": 1,
+            "content_hash": "5d914617cad7f10009ff34919b1c313d5c73bd322069b77cde54659a407ebc32"
+          }
+        ],
+        "model_version": null,
+        "prompt_version": null,
+        "evidence_mode": "SYNTHETIC"
+      },
+      "content_hash": "48635bd8c0bbf962a6383000f6375f11a76afdfb71e0d54afc7482252eb1d212",
+      "created_at": "2026-10-16T00:00:00Z",
+      "payload": {
+        "stage": "PRE_APPLY",
+        "subject": {
+          "artifact_id": "a02-graph",
+          "revision": 1,
+          "kind": "QuestionGraph",
+          "content_hash": "0ac16823cda12bd08c185852ffb419729ed2da86b0636f5842be4eff4a5546aa"
+        },
+        "graph": {
+          "artifact_id": "a02-graph",
+          "revision": 1,
+          "kind": "QuestionGraph",
+          "content_hash": "0ac16823cda12bd08c185852ffb419729ed2da86b0636f5842be4eff4a5546aa"
+        },
+        "policy": {
+          "policy_id": "synthetic-a02-policy",
+          "revision": 1,
+          "content_hash": "5d914617cad7f10009ff34919b1c313d5c73bd322069b77cde54659a407ebc32"
+        },
+        "snapshot": null,
+        "receipt": null,
+        "coverage": {
+          "scope_id": "synthetic-scope",
+          "pages_expected": [
+            "asset-page-a1",
+            "asset-page-a2",
+            "asset-page-b1"
+          ],
+          "pages_checked": [
+            "asset-page-a1",
+            "asset-page-a2",
+            "asset-page-b1"
+          ],
+          "clue_ids": [
+            "clue-alpha-start",
+            "clue-shared",
+            "clue-alpha-end",
+            "clue-alpha-answer",
+            "clue-child-stem",
+            "clue-child-answer",
+            "clue-beta-stem",
+            "clue-beta-answer"
+          ],
+          "unassigned_region_ids": []
+        },
+        "checks": [
+          {
+            "check_id": "source_integrity",
+            "outcome": "PASS",
+            "evidence_refs": [
+              "proof-checks"
+            ],
+            "reason": "SYNTHETIC CONTRACT STUB; not algorithm quality evidence"
+          },
+          {
+            "check_id": "structure",
+            "outcome": "PASS",
+            "evidence_refs": [
+              "proof-checks"
+            ],
+            "reason": "SYNTHETIC CONTRACT STUB; not algorithm quality evidence"
+          },
+          {
+            "check_id": "answer_matching",
+            "outcome": "PASS",
+            "evidence_refs": [
+              "proof-checks"
+            ],
+            "reason": "SYNTHETIC CONTRACT STUB; not algorithm quality evidence"
+          },
+          {
+            "check_id": "coverage",
+            "outcome": "PASS",
+            "evidence_refs": [
+              "proof-checks"
+            ],
+            "reason": "SYNTHETIC CONTRACT STUB; not algorithm quality evidence"
+          },
+          {
+            "check_id": "policy",
+            "outcome": "PASS",
+            "evidence_refs": [
+              "proof-checks"
+            ],
+            "reason": "SYNTHETIC CONTRACT STUB; not algorithm quality evidence"
+          }
+        ],
+        "issues": [],
+        "decision": "PASS",
+        "reason": "SYNTHETIC PRE_APPLY stub; B implementation not invoked or evaluated"
+      }
+    }
+  ]
+}

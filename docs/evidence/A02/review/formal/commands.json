@@ -1,0 +1,47 @@
+[
+  {
+    "label": "environment",
+    "command": [
+      "C:\\Users\\ASUS\\AppData\\Local\\Programs\\Python\\Python39\\python.exe",
+      "-c",
+      "import sys,json,pydantic,annotation.contracts,annotation.delivery.mock;print(json.dumps({\"python\":sys.version,\"executable\":sys.executable,\"pydantic\":pydantic.__version__,\"contracts\":annotation.contracts.__file__,\"mock\":annotation.delivery.mock.__file__}))"
+    ],
+    "cwd": "D:\\1800\\.local\\stages\\A02-review\\frozen-5c928572",
+    "exit_code": 0,
+    "stdout": "environment.stdout.txt",
+    "stderr": "environment.stderr.txt",
+    "PYTHONPATH": "D:\\1800\\.local\\stages\\A02-review\\frozen-5c928572\\src",
+    "TEMP": "D:\\1800\\.local\\stages\\A02-review\\tmp"
+  },
+  {
+    "label": "author-reproduction",
+    "command": [
+      "C:\\Users\\ASUS\\AppData\\Local\\Programs\\Python\\Python39\\python.exe",
+      "examples/a02/verify.py",
+      "--output",
+      "D:\\1800\\docs\\evidence\\A02\\review\\formal\\reproduction"
+    ],
+    "cwd": "D:\\1800\\.local\\stages\\A02-review\\frozen-5c928572",
+    "exit_code": 0,
+    "stdout": "author-reproduction.stdout.txt",
+    "stderr": "author-reproduction.stderr.txt",
+    "PYTHONPATH": "D:\\1800\\.local\\stages\\A02-review\\frozen-5c928572\\src",
+    "TEMP": "D:\\1800\\.local\\stages\\A02-review\\tmp"
+  },
+  {
+    "label": "portable-final-cli",
+    "command": [
+      "C:\\Users\\ASUS\\AppData\\Local\\Programs\\Python\\Python39\\python.exe",
+      "-m",
+      "annotation.contracts",
+      "validate",
+      "D:\\1800\\docs\\evidence\\A02\\review\\formal\\reproduction\\cases\\normal\\final.json"
+    ],
+    "cwd": "D:\\1800\\.local\\stages\\A02-review\\tmp",
+    "exit_code": 0,
+    "stdout": "portable-final-cli.stdout.txt",
+    "stderr": "portable-final-cli.stderr.txt",
+    "PYTHONPATH": "D:\\1800\\.local\\stages\\A02-review\\frozen-5c928572\\src",
+    "TEMP": "D:\\1800\\.local\\stages\\A02-review\\tmp"
+  }
+]

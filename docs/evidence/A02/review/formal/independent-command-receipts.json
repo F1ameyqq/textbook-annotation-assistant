@@ -1,0 +1,67 @@
+{
+  "frozen_commit": "5c9285720c8628c5198bedeadfc9f6bc7826a914",
+  "cwd": "D:/1800",
+  "environment": {
+    "PYTHONDONTWRITEBYTECODE": "1",
+    "PYTHONPATH": "D:\\1800\\.local\\stages\\A02-review\\frozen-5c928572\\src"
+  },
+  "commands": [
+    {
+      "command": "python docs/evidence/A02/review/formal/export_frozen.py",
+      "exit_code": 0,
+      "evidence": "frozen-export.json"
+    },
+    {
+      "command": "python docs/evidence/A02/review/formal/run_commands.py",
+      "exit_code": 0,
+      "evidence": "commands.json"
+    },
+    {
+      "command": "python docs/evidence/A02/review/formal/independent_review.py",
+      "exit_code": 1,
+      "evidence": "independent/results.json",
+      "reason": "60 pass, 1 reviewer shallow-copy input bug; no product failure counted here."
+    },
+    {
+      "command": "python -B docs/evidence/A02/review/formal/independent_review.py --supplement",
+      "exit_code": 0,
+      "evidence": "independent/supplement-results.json",
+      "reason": "9 pass including corrected stale-policy case; original error evidence preserved."
+    },
+    {
+      "command": "python -B docs/evidence/A02/review/formal/probe_crossbook.py",
+      "exit_code": 0,
+      "evidence": "counterexamples/crossbook/observations.json",
+      "reason": "Asserts and reproduces product defect R1."
+    },
+    {
+      "command": "python -B docs/evidence/A02/review/formal/probe_coverage_labels.py",
+      "exit_code": 0,
+      "evidence": "counterexamples/coverage-labels/summary.json",
+      "reason": "Asserts two supplementary boundary observations; no executor invoked."
+    },
+    {
+      "command": "python -B docs/evidence/A02/review/formal/supplement_final.py",
+      "exit_code": 0,
+      "evidence": "independent/final-supplement-results.json",
+      "reason": "2 targeted checks pass."
+    },
+    {
+      "command": "python -B docs/evidence/A02/review/formal/consolidate.py",
+      "exit_code": 0,
+      "evidence": "matrix-results.json"
+    },
+    {
+      "command": "python -B docs/evidence/A02/review/formal/validate_formal.py",
+      "exit_code": 0,
+      "evidence": "formal-validation.json",
+      "reason": "Final evidence/public reload, report links, preserved preparation and unified SHA verification."
+    }
+  ],
+  "script_revision_note": "The reviewer shallow-copy bug was corrected and only the affected policy check plus previously uncovered scenarios were run. Scripts now accept new output directories where applicable; original observations are retained.",
+  "platform_actions": 0,
+  "browser_actions": 0,
+  "credential_access": 0,
+  "external_model_calls": 0,
+  "external_model_cost": 0
+}

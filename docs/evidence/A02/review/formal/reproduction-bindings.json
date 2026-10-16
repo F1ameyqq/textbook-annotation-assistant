@@ -1,0 +1,214 @@
+{
+  "frozen_commit": "5c9285720c8628c5198bedeadfc9f6bc7826a914",
+  "actual_source_integrity": "source-integrity.json",
+  "author_reproducer_manifest_code_commit": "402170b7361e4a47c12e5726cc73f684340a4f6d",
+  "author_manifest_code_commit_trusted": false,
+  "explanation": "The exported tree has no .git. The author verify.py git rev-parse walks to the concurrently maintained D:/1800 parent repository. Its code_commit field is not used as source identity; every imported source file is bound to the fixed Git blob export instead.",
+  "author_commands": [
+    {
+      "name": "environment",
+      "argv": [
+        "python",
+        "-c",
+        "import sys,pydantic,annotation.contracts,annotation.delivery.planner; print(sys.version); print('pydantic',pydantic.__version__); print(annotation.contracts.__file__); print(annotation.delivery.planner.__file__)"
+      ],
+      "exit_code": 0
+    },
+    {
+      "name": "a02-tests",
+      "argv": [
+        "python",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "tests",
+        "-p",
+        "test_a02*.py",
+        "-v"
+      ],
+      "exit_code": 0
+    },
+    {
+      "name": "c01-tests",
+      "argv": [
+        "python",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "tests",
+        "-p",
+        "test_contracts*.py",
+        "-v"
+      ],
+      "exit_code": 0
+    },
+    {
+      "name": "demo-normal",
+      "argv": [
+        "python",
+        "<checkout>\\examples\\a02\\run.py",
+        "--input",
+        "<checkout>\\tests\\fixtures\\a02\\normal\\input.json",
+        "--output",
+        "<output>\\cases\\normal",
+        "--fault",
+        "applied",
+        "--fault-index",
+        "0"
+      ],
+      "exit_code": 0
+    },
+    {
+      "name": "demo-choice",
+      "argv": [
+        "python",
+        "<checkout>\\examples\\a02\\run.py",
+        "--input",
+        "<checkout>\\tests\\fixtures\\a02\\choice\\input.json",
+        "--output",
+        "<output>\\cases\\choice",
+        "--fault",
+        "applied",
+        "--fault-index",
+        "0"
+      ],
+      "exit_code": 0
+    },
+    {
+      "name": "demo-exceptions",
+      "argv": [
+        "python",
+        "<checkout>\\examples\\a02\\run.py",
+        "--input",
+        "<checkout>\\tests\\fixtures\\a02\\exceptions\\input.json",
+        "--output",
+        "<output>\\cases\\exceptions",
+        "--fault",
+        "applied",
+        "--fault-index",
+        "0"
+      ],
+      "exit_code": 0
+    },
+    {
+      "name": "demo-not-applied",
+      "argv": [
+        "python",
+        "<checkout>\\examples\\a02\\run.py",
+        "--input",
+        "<checkout>\\tests\\fixtures\\a02\\normal\\input.json",
+        "--output",
+        "<output>\\cases\\not-applied",
+        "--fault",
+        "not_applied",
+        "--fault-index",
+        "0"
+      ],
+      "exit_code": 0
+    },
+    {
+      "name": "demo-lost-response",
+      "argv": [
+        "python",
+        "<checkout>\\examples\\a02\\run.py",
+        "--input",
+        "<checkout>\\tests\\fixtures\\a02\\normal\\input.json",
+        "--output",
+        "<output>\\cases\\lost-response",
+        "--fault",
+        "lost_response",
+        "--fault-index",
+        "0"
+      ],
+      "exit_code": 0
+    },
+    {
+      "name": "demo-response-lost-readable",
+      "argv": [
+        "python",
+        "<checkout>\\examples\\a02\\run.py",
+        "--input",
+        "<checkout>\\tests\\fixtures\\a02\\normal\\input.json",
+        "--output",
+        "<output>\\cases\\response-lost-readable",
+        "--fault",
+        "response_lost_readable",
+        "--fault-index",
+        "0"
+      ],
+      "exit_code": 0
+    },
+    {
+      "name": "demo-contradictory",
+      "argv": [
+        "python",
+        "<checkout>\\examples\\a02\\run.py",
+        "--input",
+        "<checkout>\\tests\\fixtures\\a02\\normal\\input.json",
+        "--output",
+        "<output>\\cases\\contradictory",
+        "--fault",
+        "contradictory",
+        "--fault-index",
+        "0"
+      ],
+      "exit_code": 0
+    },
+    {
+      "name": "demo-partial",
+      "argv": [
+        "python",
+        "<checkout>\\examples\\a02\\run.py",
+        "--input",
+        "<checkout>\\tests\\fixtures\\a02\\normal\\input.json",
+        "--output",
+        "<output>\\cases\\partial",
+        "--fault",
+        "partial",
+        "--fault-index",
+        "0"
+      ],
+      "exit_code": 0
+    },
+    {
+      "name": "demo-readback-failure",
+      "argv": [
+        "python",
+        "<checkout>\\examples\\a02\\run.py",
+        "--input",
+        "<checkout>\\tests\\fixtures\\a02\\normal\\input.json",
+        "--output",
+        "<output>\\cases\\readback-failure",
+        "--fault",
+        "readback_failure",
+        "--fault-index",
+        "0"
+      ],
+      "exit_code": 0
+    },
+    {
+      "name": "demo-lost-second",
+      "argv": [
+        "python",
+        "<checkout>\\examples\\a02\\run.py",
+        "--input",
+        "<checkout>\\tests\\fixtures\\a02\\normal\\input.json",
+        "--output",
+        "<output>\\cases\\lost-second",
+        "--fault",
+        "lost_response",
+        "--fault-index",
+        "1"
+      ],
+      "exit_code": 0
+    }
+  ],
+  "author_test_totals": {
+    "a02": 44,
+    "c01": 70,
+    "demos": 10
+  },
+  "all_author_command_exits_zero": true
+}

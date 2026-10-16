@@ -1,0 +1,185 @@
+{
+  "name": "plan-no-operation",
+  "matrix_ids": [
+    "G12"
+  ],
+  "status": "PASS",
+  "observations": {
+    "target": {
+      "stage": "TARGET",
+      "subject": {
+        "artifact_id": "a02-snapshot",
+        "revision": 1,
+        "kind": "PlatformSnapshot",
+        "content_hash": "be10c4782733dcf675f881aa26229fad9b442b66244934cf01173af414414106"
+      },
+      "graph": {
+        "artifact_id": "a02-graph",
+        "revision": 1,
+        "kind": "QuestionGraph",
+        "content_hash": "0ac16823cda12bd08c185852ffb419729ed2da86b0636f5842be4eff4a5546aa"
+      },
+      "policy": {
+        "policy_id": "synthetic-a02-policy",
+        "revision": 1,
+        "content_hash": "5d914617cad7f10009ff34919b1c313d5c73bd322069b77cde54659a407ebc32"
+      },
+      "snapshot": {
+        "artifact_id": "a02-snapshot",
+        "revision": 1,
+        "kind": "PlatformSnapshot",
+        "content_hash": "be10c4782733dcf675f881aa26229fad9b442b66244934cf01173af414414106"
+      },
+      "receipt": null,
+      "coverage": {
+        "scope_id": "synthetic-scope",
+        "pages_expected": [
+          "asset-page-a1",
+          "asset-page-a2",
+          "asset-page-b1"
+        ],
+        "pages_checked": [
+          "asset-page-a1",
+          "asset-page-a2",
+          "asset-page-b1"
+        ],
+        "clue_ids": [
+          "clue-alpha-start",
+          "clue-shared",
+          "clue-alpha-end",
+          "clue-alpha-answer",
+          "clue-child-stem",
+          "clue-child-answer",
+          "clue-beta-stem",
+          "clue-beta-answer"
+        ],
+        "unassigned_region_ids": []
+      },
+      "checks": [
+        {
+          "check_id": "target_version",
+          "outcome": "PASS",
+          "evidence_refs": [
+            "proof-target"
+          ],
+          "reason": "SYNTHETIC facts checked by A02: target_version"
+        },
+        {
+          "check_id": "authorized_scope",
+          "outcome": "FAIL",
+          "evidence_refs": [
+            "proof-target"
+          ],
+          "reason": "CREATE_FRAMES is not authorized"
+        },
+        {
+          "check_id": "capabilities",
+          "outcome": "PASS",
+          "evidence_refs": [
+            "proof-target"
+          ],
+          "reason": "SYNTHETIC facts checked by A02: capabilities"
+        },
+        {
+          "check_id": "policy",
+          "outcome": "PASS",
+          "evidence_refs": [
+            "proof-target"
+          ],
+          "reason": "SYNTHETIC facts checked by A02: policy"
+        },
+        {
+          "check_id": "coverage",
+          "outcome": "PASS",
+          "evidence_refs": [
+            "proof-target"
+          ],
+          "reason": "SYNTHETIC facts checked by A02: coverage"
+        }
+      ],
+      "issues": [
+        {
+          "issue_id": "issue-a02-b5e81834e8c0e530269e-authorized_scope",
+          "code": "TARGET_CHANGED",
+          "scope_type": "scope",
+          "scope_id": "synthetic-scope",
+          "evidence_refs": [
+            "proof-target"
+          ],
+          "severity": "blocking",
+          "blocks": [
+            "PLAN",
+            "APPLY"
+          ],
+          "suggested_strategy": {
+            "strategy_id": "HUMAN_REVIEW",
+            "max_attempts": 0,
+            "max_cost": 0.0
+          },
+          "reason": "CREATE_FRAMES is not authorized"
+        }
+      ],
+      "decision": "HOLD",
+      "reason": "SYNTHETIC target conditions computed by A02; no algorithm or platform acceptance"
+    },
+    "plan": {
+      "graph": {
+        "artifact_id": "a02-graph",
+        "revision": 1,
+        "kind": "QuestionGraph",
+        "content_hash": "0ac16823cda12bd08c185852ffb419729ed2da86b0636f5842be4eff4a5546aa"
+      },
+      "precheck": {
+        "artifact_id": "a02-precheck-stub",
+        "revision": 1,
+        "kind": "CheckReport",
+        "content_hash": "48635bd8c0bbf962a6383000f6375f11a76afdfb71e0d54afc7482252eb1d212"
+      },
+      "targetcheck": {
+        "artifact_id": "review-target-plan-no-operation-1",
+        "revision": 1,
+        "kind": "CheckReport",
+        "content_hash": "2ea1d206a86fa8e4dbbc065fd72527011e694d91e5e9b911006aba7a66dc0683"
+      },
+      "snapshot": {
+        "artifact_id": "a02-snapshot",
+        "revision": 1,
+        "kind": "PlatformSnapshot",
+        "content_hash": "be10c4782733dcf675f881aa26229fad9b442b66244934cf01173af414414106"
+      },
+      "policy": {
+        "policy_id": "synthetic-a02-policy",
+        "revision": 1,
+        "content_hash": "5d914617cad7f10009ff34919b1c313d5c73bd322069b77cde54659a407ebc32"
+      },
+      "readiness": "BLOCKED",
+      "execution_mode": "SIMULATED",
+      "session_mode": "SAME_SESSION_HANDOFF",
+      "required_capabilities": [
+        "frame_readback",
+        "same_session_handoff"
+      ],
+      "actions": [],
+      "blocked_issue_ids": [
+        "issue-a02-b5e81834e8c0e530269e-authorized_scope"
+      ],
+      "previous_receipt": null,
+      "final_submission": "HUMAN_ONLY"
+    },
+    "receipt": {
+      "plan": {
+        "artifact_id": "review-plan-plan-no-operation-1",
+        "revision": 1,
+        "kind": "ApplyPlan",
+        "content_hash": "5ddcea26d6de2d62db3dd58df6d35799ca42a2b02dbe6c487c454c4e4ddeb585"
+      },
+      "execution_mode": "NOT_EXECUTED",
+      "results": [],
+      "unresolved_issue_ids": [
+        "issue-a02-b5e81834e8c0e530269e-authorized_scope"
+      ],
+      "write_disposition": "NOT_EXECUTED"
+    },
+    "book_paused": false
+  }
+}
