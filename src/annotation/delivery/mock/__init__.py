@@ -46,7 +46,8 @@ class MockSession:
 
     def is_paused(self, book_id):
         return book_id in self._pending or any(
-            a["kind"] == "ExecutionReceipt" and any(r["outcome"] == "UNKNOWN" for r in a["payload"]["results"])
+            a["kind"] == "ExecutionReceipt" and a["book_id"] == book_id
+            and any(r["outcome"] == "UNKNOWN" for r in a["payload"]["results"])
             for b in self._history.get(book_id, []) for a in b["artifacts"])
 
     def register_target(self, bundle, snapshot_ref, *, asset_root, source_ref=None):
