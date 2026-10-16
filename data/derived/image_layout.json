@@ -1055,5 +1055,16 @@
     "mean_ink_pct_shift_dx71": 2.828,
     "mean_ink_pct_shift_dx1100": 1.953,
     "note": "四个假设都试过：原坐标 / 按 3465/594≈5.8333 缩放 / +71 平移 / +1100 平移。缩放反而使覆盖率下降，平移基本不变，故 3465×1615 这张图与记录坐标空间之间不存在可离线复原的简单平移-缩放关系。"
+  },
+  "m0_deprecation": {
+    "deprecated_fields": [
+      "coordinate_integrity",
+      "scale_hypothesis_probe"
+    ],
+    "reason": "Historical audit paired annotation page N with resource page N; page 234 narrow-canvas inference is superseded.",
+    "correction": "data/derived/CORRECTION-page-mapping.md",
+    "replacement_command": "python tools/verify_data.py --out data/runs/m0-audit",
+    "raw_historical_values_preserved": true,
+    "business_ground_truth": false
   }
 }
