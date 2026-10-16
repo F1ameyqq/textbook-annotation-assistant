@@ -126,6 +126,7 @@ def assemble_answers(evidence, make_id):
     """
     answers, issues, coverage = [], [], []
     ledger = {}
+    exclusions = {item["line_id"]: item for item in evidence["payload"].get("reviewed_exclusions", [])}
 
     def issue(code, answer=None, refs=(), detail=None):
         item = {"code": code, "evidence_refs": list(refs)}
@@ -161,6 +162,10 @@ def assemble_answers(evidence, make_id):
         return answer
 
     def add_element(answer, page, parent, element, start=0, end=None):
+        if (parent.get("reading_order_status") == "UNRESOLVED_2D_FORMULA"
+                and "ANSWER_2D_READING_ORDER_UNRESOLVED" not in answer["assembly_flags"]):
+            mark_open(answer, "ANSWER_2D_READING_ORDER_UNRESOLVED", [parent["line_id"]],
+                      "The recovered primary anchor is observed, but fractions and other elevated formula atoms lack a verified 2D reading order.")
         raw = element["text"]
         end = len(raw) if end is None else end
         pieces, final_role = _role_pieces(raw, start, end, answer["_role"])
@@ -265,7 +270,7 @@ def assemble_answers(evidence, make_id):
                           for _, window in reviewed_windows for title in window["path"]}
         for line in page.get("ocr_lines", []):
             text = line["text"].strip()
-            explicit_heading = bool(TIER.fullmatch(text) or TITLE.fullmatch(text)
+            explicit_heading = bool(line["line_id"] in exclusions or TIER.fullmatch(text) or TITLE.fullmatch(text)
                                     or re.sub(r"\s+", "", text) in known_headings)
             row = {"asset_id": page["asset_id"], "line_id": line["line_id"],
                    "status": "EXCLUDED" if explicit_heading else "UNASSIGNED",
@@ -282,7 +287,7 @@ def assemble_answers(evidence, make_id):
         windows = reviewed_windows
         grouped = {index: sorted((line for line in page.get("ocr_lines", [])
                                   if _location(line).get("window_index") == index),
-                                 key=lambda line: (line["bbox"][1], line["bbox"][0], line["line_id"]))
+                                 key=lambda line: tuple(line.get("assembly_order", [line["bbox"][1], line["bbox"][0], 0])) + (line["line_id"],))
                    for index, _ in windows}
         current, carry, expected_number = None, False, None
         for position, (index, window) in enumerate(windows):
@@ -327,13 +332,14 @@ def assemble_answers(evidence, make_id):
                     continue
                 match = PRIMARY.match(line["text"])
                 is_primary = False
-                if match and line["bbox"][0] <= margin + 12:
+                reviewed_primary = match and line.get("reviewed_primary_number") == match[1]
+                if match and (line["bbox"][0] <= margin + 12 or reviewed_primary):
                     value = match[2]
                     # Prefixes inside decimals/fractions or solution arithmetic
                     # are not a primary number just because they contain a dot.
                     semantic_value = bool(re.match(r"[\u4e00-\u9fffA-G（(【]", value))
                     numeric_value = bool(re.fullmatch(r"[+-]?\d+(?:\.\d+)?(?:cm|mm|m|km|°)?", value.strip()))
-                    is_primary = semantic_value or (numeric_value and (int(match[1]) == expected_number
+                    is_primary = reviewed_primary or semantic_value or (numeric_value and (int(match[1]) == expected_number
                                                                                   or current is None and int(match[1]) == 1))
                 if is_primary:
                     finish(current, "NEXT_PRIMARY_ANSWER", [line["line_id"]])

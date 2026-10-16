@@ -53,3 +53,7 @@ python tools/replay_b.py --source data/runs/46007447-source/source.json --out da
 整批仍为 HOLD。38 条未归属记录、4 处已知原图/OCR 缺口、识别分歧、图像/公式范围等均保留。134 条报告问题包含不同检查维度，不能与旧版本问题总数直接比较。数值和产物摘要见 `evaluation/book-46007447-multiline.json`。
 
 下一步先回补缺失公式/题号的来源证据，再建立可靠跨页续接与 A 的正式目录/题身份适配；本轮没有平台动作或提交计划。
+
+## 后续增量
+
+上述为上一轮固定结果；本轮38条处理、缺失题号/公式回补和真实跨页检查见`docs/b-recovery-46007447.md`，当前数值见`evaluation/book-46007447-recovery.json`。旧OCR和9例源区间预期保持不变。

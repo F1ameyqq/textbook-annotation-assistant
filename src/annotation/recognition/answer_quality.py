@@ -146,6 +146,7 @@ def audit_answers(evidence, graph, review):
               detail={"missing": sorted(set(raw_lines)-set(counts)), "unexpected": sorted(set(counts)-set(raw_lines)),
                       "duplicated": sorted(k for k,v in counts.items() if v != 1)})
     unassigned = 0
+    exclusions = {item["line_id"]: item for item in evidence["payload"].get("reviewed_exclusions", [])}
     for row in ledger:
         ref = row["line_id"]
         if ref not in raw_lines:
@@ -173,7 +174,13 @@ def audit_answers(evidence, graph, review):
                             for window in entry.get("windows", []) for title in window["path"]}
             title = re.fullmatch(r"(?:参考答案|第[一二三四五六七八九十\d]+章|第\d+课时|小专题|☆?问题解决策略)", text)
             tier = re.fullmatch(r"(?:[A-C]?基础题|[A-C]?中档题|[A-C]?综合题|针对训练|巩固训练)", text)
-            if not title and not tier and text not in known_titles:
+            item = exclusions.get(ref)
+            reviewed = (item and item["source_sha256"] == raw_lines[ref][0]["source"]["sha256"]
+                        and item["source_text_sha256"] == hashlib.sha256(raw_lines[ref][1]["text"].encode()).hexdigest()
+                        and ((item["kind"] == "title" and re.fullmatch(r"(?:小专题[12].+|漫话勾股世界.+|☆问题解决策略：反思)", text))
+                             or (item["kind"] == "footer" and raw_lines[ref][1]["bbox"][1] >= .94*raw_lines[ref][0]["source"]["height"]
+                                 and re.fullmatch(r"(?:\d{1,3}|数学·八年级上·BS)", text))))
+            if not title and not tier and text not in known_titles and not reviewed:
                 issue("ANSWER_EXCLUSION_WITHOUT_EVIDENCE", evidence["scope_id"], [ref], row.get("reason"))
 
     for case in review.get("multiline_checks", []):

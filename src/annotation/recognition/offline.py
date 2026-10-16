@@ -17,6 +17,7 @@ from .baseline import code_digest, digest, legacy_backend, load_source, valid_bb
 from .policy import classify, choice_answer_valid, option_set_valid
 from .answer_assembly import assemble_answers
 from .answer_quality import audit_answers
+from .recovery_quality import audit_recovery
 
 CONTEXT_SCHEMA = "b-context-trial/0.1"
 EVIDENCE_SCHEMA = "b-evidence-trial/0.2"
@@ -182,7 +183,7 @@ def scope_key(book, path, number):
 
 
 def assemble(evidence):
-    check_artifact(evidence, {EVIDENCE_SCHEMA})
+    check_artifact(evidence, {EVIDENCE_SCHEMA, "b-evidence-trial/0.3"})
     questions, answers, assembly_issues = [], [], []
     for page in evidence["payload"]["pages"]:
         lines = sorted((a for a in page["ocr_lines"] if a.get("location")),
@@ -258,7 +259,8 @@ def assemble(evidence):
                "unmatched_answer_ids": [a["answer_id"] for a in answers if not any(
                    a["answer_id"] in q["candidate_answer_ids"] for q in questions)],
                "selection_status": "DRAFT_UNVERIFIED", "platform_actions": []}
-    return artifact(GRAPH_SCHEMA, "QuestionGraphTrial", evidence, payload, [ref(evidence)],
+    schema = "b-graph-trial/0.3" if evidence["schema_version"].endswith("/0.3") else GRAPH_SCHEMA
+    return artifact(schema, "QuestionGraphTrial", evidence, payload, [ref(evidence)],
                     {"module": __name__ + ".assemble", "version": "0.2.0", "code_sha256": code_digest(Path(__file__)),
                      "policy_code_sha256": code_digest(Path(__file__).with_name("policy.py")),
                      "answer_assembly_code_sha256": code_digest(Path(__file__).with_name("answer_assembly.py"))})
@@ -274,8 +276,8 @@ def scalar_issues(value, expected):
 
 
 def quality_check(evidence, graph, review):
-    check_artifact(evidence, {EVIDENCE_SCHEMA})
-    check_artifact(graph, {GRAPH_SCHEMA})
+    check_artifact(evidence, {EVIDENCE_SCHEMA, "b-evidence-trial/0.3"})
+    check_artifact(graph, {GRAPH_SCHEMA, "b-graph-trial/0.3"})
     if (graph["book_id"], graph["scope_id"], graph["input_refs"]) != (evidence["book_id"], evidence["scope_id"], [ref(evidence)]):
         raise ValueError("graph not bound to this evidence revision")
     if review.get("schema_version") != "b-review-trial/0.1":
@@ -367,6 +369,9 @@ def quality_check(evidence, graph, review):
                 for code in scalar_issues(a["text"], case["expected_scalar"]):
                     add(code, qid, a["evidence_refs"], detail={"expected": case["expected_scalar"], "actual": a["text"], "case_id": case["case_id"]})
     answer_findings, answer_metrics = audit_answers(evidence, graph, review)
+    recovery_findings, recovery_metrics = audit_recovery(evidence, graph)
+    answer_findings.extend(recovery_findings)
+    answer_metrics.update(recovery_metrics)
     for finding in answer_findings:
         add(finding["code"], finding["scope_id"], finding["evidence_refs"], finding["severity"], finding["detail"])
     # This independent development census catches a removed whole question, but
@@ -382,7 +387,8 @@ def quality_check(evidence, graph, review):
                "summary": {"questions": len(questions), "answers": len(answers),
                            "unique_candidate_links": sum(q["selected_answer_id"] is not None for q in questions),
                            "issues": len(issues), **answer_metrics}}
-    return artifact(CHECK_SCHEMA, "CheckReportTrial", evidence, payload,
+    schema = "b-check-trial/0.3" if evidence["schema_version"].endswith("/0.3") else CHECK_SCHEMA
+    return artifact(schema, "CheckReportTrial", evidence, payload,
                     [ref(evidence), ref(graph), {"artifact_id": review["artifact_id"], "content_hash": digest(review)}],
                     {"module": __name__ + ".quality_check", "version": "0.2.0", "code_sha256": code_digest(Path(__file__)),
                      "answer_quality_code_sha256": code_digest(Path(__file__).with_name("answer_quality.py"))})
