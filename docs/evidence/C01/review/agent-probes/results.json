@@ -1,0 +1,190 @@
+{
+  "metadata": {
+    "preparation_only": false,
+    "commit": "b8c4341d277d205dddfae22b26c245b646a1cea2",
+    "tree": "D:\\1800\\.local\\stages\\C01-review\\frozen\\tree",
+    "python": "3.9.13",
+    "source_hashes": {
+      "models.py": "592601b8049980c38e9fb837b7e47e90352409da5562b1b086a208904eb8e1ec",
+      "validation.py": "779d61270e62ced51642727cc9ed5d94ab53dbcb14394633f227d5489f1f3908",
+      "integrity.py": "378cc52d6b701011b6d074e5cbed35811bf3d927e5a3bbeb08f6acef04ee45a0"
+    },
+    "manifest": {
+      "commit": "b8c4341d277d205dddfae22b26c245b646a1cea2",
+      "files_checked": 82,
+      "all_match": true,
+      "failures": []
+    }
+  },
+  "probes": [
+    {
+      "probe": "baseline-eligibility",
+      "outcome": "ACCEPTED",
+      "classification": "ACCEPTED_VALID_CONTROL",
+      "stage": "frozen-contract-audit",
+      "resources_verified": true,
+      "eligible_checked": true,
+      "note": null
+    },
+    {
+      "probe": "snapshot-question-missing-directory",
+      "outcome": "ACCEPTED",
+      "classification": "ACCEPTED_INVALID",
+      "stage": "frozen-contract-audit",
+      "resources_verified": true,
+      "eligible_checked": true,
+      "note": null
+    },
+    {
+      "probe": "snapshot-frame-missing-question-control",
+      "outcome": "REJECTED",
+      "classification": "REJECTED_INVALID_CONTROL",
+      "issues": [
+        {
+          "path": "$.artifacts[3].payload.frames[0][0]",
+          "code": "MISSING_REFERENCE",
+          "message": "unknown reference missing-question"
+        }
+      ]
+    },
+    {
+      "probe": "action-missing-platform-question",
+      "outcome": "ACCEPTED",
+      "classification": "ACCEPTED_INVALID",
+      "stage": "frozen-contract-audit",
+      "resources_verified": true,
+      "eligible_checked": true,
+      "note": null
+    },
+    {
+      "probe": "noninvertible-transform-original-box-already-bound",
+      "outcome": "ACCEPTED",
+      "classification": "INTERPRETATION_REQUIRED",
+      "stage": "frozen-contract-audit",
+      "resources_verified": true,
+      "eligible_checked": true,
+      "note": "INTERPRETATION_REQUIRED: original bbox is already supplied and bound; do not infer inaccurate backprojection merely from invertible=False. Geometry computation is outside C01."
+    },
+    {
+      "probe": "plan-new-graph-old-check-control",
+      "outcome": "REJECTED",
+      "classification": "REJECTED_INVALID_CONTROL",
+      "issues": [
+        {
+          "path": "$.artifacts[7].payload.precheck",
+          "code": "VERSION_CONFLICT",
+          "message": "check graph/policy version differs from plan"
+        }
+      ]
+    },
+    {
+      "probe": "patch-result-correct-control",
+      "outcome": "ACCEPTED",
+      "classification": "ACCEPTED_VALID_CONTROL",
+      "stage": "frozen-contract-audit",
+      "resources_verified": true,
+      "eligible_checked": false,
+      "note": null
+    },
+    {
+      "probe": "patch-result-lost-control",
+      "outcome": "REJECTED",
+      "classification": "REJECTED_INVALID_CONTROL",
+      "issues": [
+        {
+          "path": "$.artifacts[4].payload",
+          "code": "PATCH_DERIVATION",
+          "message": "derived graph differs from exact baseline plus declared patch; re-recognition needs explicit conflict handling"
+        }
+      ]
+    },
+    {
+      "probe": "shadow-unknown-batch-ready",
+      "outcome": "ACCEPTED",
+      "classification": "ACCEPTED_INVALID",
+      "stage": "frozen-contract-audit",
+      "resources_verified": true,
+      "eligible_checked": false,
+      "note": null
+    },
+    {
+      "probe": "shadow-unknown-batch-completed",
+      "outcome": "ACCEPTED",
+      "classification": "ACCEPTED_INVALID",
+      "stage": "frozen-contract-audit",
+      "resources_verified": true,
+      "eligible_checked": false,
+      "note": null
+    },
+    {
+      "probe": "shadow-unknown-eligibility-control",
+      "outcome": "REJECTED",
+      "classification": "REJECTED_INVALID_CONTROL",
+      "issues": [
+        {
+          "path": "$.plan",
+          "code": "BOOK_WRITE_PAUSED",
+          "message": "UNKNOWN receipt requires reconciliation before any book write"
+        }
+      ]
+    }
+  ],
+  "minimal_cli": [
+    {
+      "probe": "snapshot-question-missing-directory",
+      "command": [
+        "C:\\Users\\ASUS\\AppData\\Local\\Programs\\Python\\Python39\\python.exe",
+        "-B",
+        "-m",
+        "annotation.contracts",
+        "validate",
+        "D:\\1800\\.local\\stages\\C01-review\\agent-probes\\snapshot-question-missing-directory\\minimal-input.json"
+      ],
+      "exit_code": 0,
+      "stdout": "{\"valid\": true, \"schema_version\": \"1.0.0-a-proposal\", \"artifacts\": 1, \"resources_verified\": true, \"validation_layer\": \"OFFLINE_CONTRACT\"}\n",
+      "stderr": ""
+    },
+    {
+      "probe": "action-missing-platform-question",
+      "command": [
+        "C:\\Users\\ASUS\\AppData\\Local\\Programs\\Python\\Python39\\python.exe",
+        "-B",
+        "-m",
+        "annotation.contracts",
+        "validate",
+        "D:\\1800\\.local\\stages\\C01-review\\agent-probes\\action-missing-platform-question\\minimal-input.json"
+      ],
+      "exit_code": 0,
+      "stdout": "{\"valid\": true, \"schema_version\": \"1.0.0-a-proposal\", \"artifacts\": 7, \"resources_verified\": true, \"validation_layer\": \"OFFLINE_CONTRACT\"}\n",
+      "stderr": ""
+    },
+    {
+      "probe": "shadow-unknown-batch-ready",
+      "command": [
+        "C:\\Users\\ASUS\\AppData\\Local\\Programs\\Python\\Python39\\python.exe",
+        "-B",
+        "-m",
+        "annotation.contracts",
+        "validate",
+        "D:\\1800\\.local\\stages\\C01-review\\agent-probes\\shadow-unknown-batch-ready\\minimal-input.json"
+      ],
+      "exit_code": 0,
+      "stdout": "{\"valid\": true, \"schema_version\": \"1.0.0-a-proposal\", \"artifacts\": 12, \"resources_verified\": true, \"validation_layer\": \"OFFLINE_CONTRACT\"}\n",
+      "stderr": ""
+    },
+    {
+      "probe": "shadow-unknown-batch-completed",
+      "command": [
+        "C:\\Users\\ASUS\\AppData\\Local\\Programs\\Python\\Python39\\python.exe",
+        "-B",
+        "-m",
+        "annotation.contracts",
+        "validate",
+        "D:\\1800\\.local\\stages\\C01-review\\agent-probes\\shadow-unknown-batch-completed\\minimal-input.json"
+      ],
+      "exit_code": 0,
+      "stdout": "{\"valid\": true, \"schema_version\": \"1.0.0-a-proposal\", \"artifacts\": 12, \"resources_verified\": true, \"validation_layer\": \"OFFLINE_CONTRACT\"}\n",
+      "stderr": ""
+    }
+  ]
+}

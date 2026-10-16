@@ -1,0 +1,37 @@
+{
+  "task_id": "C01",
+  "observed_at": "2026-10-16T20:11:33.896714+08:00",
+  "delivery_commit": "b8c4341d277d205dddfae22b26c245b646a1cea2",
+  "implementation_commit": "4660e8e4120af1b8550c2e0ee3dd02593aa38aac",
+  "module_path": "src\\annotation\\contracts\\__init__.py",
+  "python_version": "3.9.13",
+  "input_source": "reviewer re-sealed normal-fixture mutations; full resource bytes checked",
+  "cases": [
+    {
+      "case": "snapshot_question_missing_directory",
+      "input_sha256": "91315dde2e4cdefdb0069301047c0e02f35123ca84439c1030ca19a968710101",
+      "resource_bytes_checked": true,
+      "public_api_load": "ACCEPTED",
+      "public_api_ready": "ACCEPTED",
+      "cli_exit": 0,
+      "cli_stdout": "{\"valid\": true, \"schema_version\": \"1.0.0-a-proposal\", \"artifacts\": 12, \"resources_verified\": true, \"validation_layer\": \"OFFLINE_CONTRACT\"}",
+      "cli_stderr": "",
+      "expected": "REJECT dangling reference",
+      "coordinator_result": "REPRODUCED_REVIEW_FAILURE"
+    },
+    {
+      "case": "action_missing_platform_question",
+      "input_sha256": "d0bc9967abae687a450975d25043183563f3226676c6c003b46e4ec96e55366d",
+      "resource_bytes_checked": true,
+      "public_api_load": "ACCEPTED",
+      "public_api_ready": "ACCEPTED",
+      "cli_exit": 0,
+      "cli_stdout": "{\"valid\": true, \"schema_version\": \"1.0.0-a-proposal\", \"artifacts\": 12, \"resources_verified\": true, \"validation_layer\": \"OFFLINE_CONTRACT\"}",
+      "cli_stderr": "",
+      "expected": "REJECT dangling reference",
+      "coordinator_result": "REPRODUCED_REVIEW_FAILURE"
+    }
+  ],
+  "result": "REWORK_REQUIRED",
+  "scope": "Only two independent-review reference gaps reproduced; not full acceptance or platform verification."
+}

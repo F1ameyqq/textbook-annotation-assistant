@@ -2,7 +2,7 @@
   "schema_version": 1,
   "project": "D:\\1800",
   "coordinator_thread_id": "01a13f26-7567-75e1-99ee-c9d2194e78bb",
-  "updated_at": "2026-10-16T19:39:14.645116+08:00",
+  "updated_at": "2026-10-16T20:18:43.335416+08:00",
   "automation": {
     "id": "1800-a",
     "kind": "heartbeat",
@@ -47,7 +47,7 @@
       "submission_status": "NOT_SUBMITTED"
     },
     "C01": {
-      "status": "RUNNING",
+      "status": "REWORK",
       "execution_task": "docs/tasks/C01-contracts-implementation.md",
       "review_task": "docs/tasks/C01-independent-review.md",
       "base_commit": "30bc00cbaa3e40d78fd8d5cac98e81bd354763b2",
@@ -57,19 +57,64 @@
         "thread_id": "01a14481-79b3-7ed3-a29e-fdbeb11e0da9",
         "host_id": "local",
         "turn_status": "inProgress",
-        "cursor": "d5d8c3eb-82d6-40e0-9c04-b8d4221e172b:1",
+        "cursor": "d5d8c3eb-82d6-40e0-9c04-b8d4221e172b:32",
         "report": "C:/Users/ASUS/.codex/worktrees/c01-contracts/1800/docs/tasks/C01-execution-report.md",
-        "branch": "codex/c01-contracts"
+        "branch": "codex/c01-contracts",
+        "last_progress": "R1 implementation in progress; executor reproduced original F1/F2, adding reference/mapping checks while preserving null new targets.",
+        "commit": "b8c4341d277d205dddfae22b26c245b646a1cea2",
+        "implementation_commit": "4660e8e4120af1b8550c2e0ee3dd02593aa38aac",
+        "working_tree_clean": false,
+        "session_released": true,
+        "session_release_basis": "Offline-only execution; report confirms no browser/profile was opened.",
+        "phase": "R1_REPAIR_RUNNING",
+        "turn_id": "01a144a2-3034-7293-8e11-697756bca125"
       },
       "review": {
         "thread_id": "01a14481-d20d-7e21-898a-a650d52f9a9e",
         "host_id": "local",
-        "turn_status": "inProgress",
-        "phase": "PREPARING_WAITING_FOR_EXECUTION",
-        "cursor": "6c52ac96-a20c-406a-9abc-6c5ae6f89183:1",
-        "report": "docs/tasks/C01-review-report.md"
+        "turn_status": "completed",
+        "phase": "FIRST_REVIEW_COMPLETE_WAITING_R1",
+        "cursor": "6c52ac96-a20c-406a-9abc-6c5ae6f89183:9",
+        "report": "docs/tasks/C01-review-report.md",
+        "last_progress": "First independent review completed on b8c4341; 80 independent checks: 78 passed, 2 missed rejection; no repair acceptance yet.",
+        "target_commit": "b8c4341d277d205dddfae22b26c245b646a1cea2",
+        "decision": "REWORK",
+        "report_sha256": "848bbe03ec698092ca15b3c50207618e76dae02555d2eb571ddaf3e2f28089fb",
+        "evidence_manifest": "docs/evidence/C01/review/sha256-manifest.json"
       },
-      "B_contract_confirmation": "NOT_CONFIRMED"
+      "B_contract_confirmation": "NOT_CONFIRMED",
+      "next_dependency": "R1 exact repair delivery then original independent-review thread re-review; A01/A02/A04 remain blocked.",
+      "review_handoff": {
+        "state": "SENT",
+        "target_commit": "b8c4341d277d205dddfae22b26c245b646a1cea2",
+        "at": "2026-10-16T20:08:26.692391+08:00"
+      },
+      "coordinator_reproduction": {
+        "at": "2026-10-16T20:12:02.415782+08:00",
+        "commit": "b8c4341d277d205dddfae22b26c245b646a1cea2",
+        "report": "docs/evidence/C01/coordinator/reference-gaps-reproduced.json",
+        "result": "TWO_REFERENCE_FAILURES_REPRODUCED",
+        "checks": 2,
+        "full_suite_rerun": false
+      },
+      "rework_round": 1,
+      "repair_requests": [
+        {
+          "round": "R1",
+          "state": "ACKNOWLEDGED",
+          "task": "docs/tasks/C01-rework-R1.md",
+          "task_sha256": "10d76d71edd33fae59b943199c180836e8a80aa8db4fb17cd536f0fe5d1c5e84",
+          "thread_id": "01a14481-79b3-7ed3-a29e-fdbeb11e0da9",
+          "base_commit": "b8c4341d277d205dddfae22b26c245b646a1cea2",
+          "issues": [
+            "F1 snapshot question references nonexistent directory",
+            "F2 action references nonexistent platform question or wrong mapping"
+          ],
+          "created_at": "2026-10-16T20:14:02.085342+08:00",
+          "sent_at": "2026-10-16T20:14:03.057874+08:00",
+          "execution_turn_id": "01a144a2-3034-7293-8e11-697756bca125"
+        }
+      ]
     }
   },
   "route": [
@@ -129,10 +174,37 @@
       "thread_id": "01a14481-d20d-7e21-898a-a650d52f9a9e"
     }
   ],
-  "last_action": "C01 execution and independent review dispatched to separate threads; A05 evidence locally integrated.",
+  "last_action": "C01 REWORK confirmed and R1 repair dispatched to original executor; downstream task boundary draft prepared.",
   "limitations": [
     "Current route uses mock B artifacts until independently agreed interface/artifact versions exist.",
     "Local integration is not remote publication.",
     "Platform test is single-book serial, no book submission, no unbudgeted paid models."
-  ]
+  ],
+  "last_check": {
+    "observed_at": "2026-10-16T20:18:43.335416+08:00",
+    "automation_tick": "2026-10-16T12:17:38.110Z",
+    "coordinator_head": "dae00e97c40fb6988e098b6bd91700ca6d73f38d",
+    "execution_head": "b8c4341d277d205dddfae22b26c245b646a1cea2",
+    "execution_worktree_dirty": true,
+    "execution_report_present": true,
+    "repair_report_present": false,
+    "review_report_present": true,
+    "result": "R1 repair remains active; first review now complete. No duplicate dispatch, integration or downstream release.",
+    "new_dispatches": 0,
+    "tests_rerun": false,
+    "platform_actions": false,
+    "user_action_required": false
+  },
+  "prepared_next_batch": {
+    "status": "DRAFT_NOT_DISPATCHED",
+    "document": "docs/tasks/A01-A02-A04-preparation.md",
+    "tasks": [
+      "A01",
+      "A02",
+      "A04"
+    ],
+    "geometry_owner": "A01",
+    "shared_contract_and_dependencies_owner": "A coordinator",
+    "requires": "C01 accepted and integrated; A04 coordinate integration also needs accepted A01 geometry and profile exclusivity."
+  }
 }
