@@ -1,0 +1,3715 @@
+{
+  "format_version": "c01-exchange-1",
+  "evidence": [
+    {
+      "evidence_id": "proof-source",
+      "resource": {
+        "path": "assets/proof-source.txt",
+        "sha256": "1f36e585be64bf251bd9377e4a6dd62602a1d30855ad356821b98d7727985700",
+        "media_type": "text/plain"
+      },
+      "description": "Synthetic original assets and external page mapping.",
+      "mode": "SYNTHETIC"
+    },
+    {
+      "evidence_id": "proof-geometry",
+      "resource": {
+        "path": "assets/proof-geometry.txt",
+        "sha256": "e81a4a5245db90f68da55b69cffadb234df70a4a2dbf5b8c660a24c638fe74d6",
+        "media_type": "text/plain"
+      },
+      "description": "Hand-authored original boxes, coverage and invertible transform; not detector output.",
+      "mode": "SYNTHETIC"
+    },
+    {
+      "evidence_id": "proof-checks",
+      "resource": {
+        "path": "assets/proof-checks.txt",
+        "sha256": "a674f58c3a7ebc30cd00d9f52106655169f2228436ecc027b1cae73ebaba1d46",
+        "media_type": "text/plain"
+      },
+      "description": "Constructed quality assertions, never platform acceptance.",
+      "mode": "SYNTHETIC"
+    },
+    {
+      "evidence_id": "proof-target",
+      "resource": {
+        "path": "assets/proof-target.txt",
+        "sha256": "c77d1a442645b7677759706f1ca1c993deb96f967b9e00ffe51bc0d1c407c38f",
+        "media_type": "text/plain"
+      },
+      "description": "Invented same-session target state and capabilities.",
+      "mode": "SYNTHETIC"
+    },
+    {
+      "evidence_id": "proof-before",
+      "resource": {
+        "path": "assets/proof-before.txt",
+        "sha256": "c14b6e590e4253ff847a0b486c289a93be9bf3aa3a991070a3a810253c58ad61",
+        "media_type": "text/plain"
+      },
+      "description": "Invented per-action state before simulated write.",
+      "mode": "SYNTHETIC"
+    },
+    {
+      "evidence_id": "proof-after",
+      "resource": {
+        "path": "assets/proof-after.txt",
+        "sha256": "0ed35e1f765f34e8b59ca41acbb3b84a80d4cb720db99dbbb6727ae442f2773e",
+        "media_type": "text/plain"
+      },
+      "description": "Invented readback including final synthetic content.",
+      "mode": "SYNTHETIC"
+    },
+    {
+      "evidence_id": "proof-timeout",
+      "resource": {
+        "path": "assets/proof-timeout.txt",
+        "sha256": "d1029a7ebe16a7e3f46b537013510f6852bd23054f4fd6c443fb55a88c75948b",
+        "media_type": "text/plain"
+      },
+      "description": "Simulated response timeout with no conclusive readback; no duplicate dispatch permitted.",
+      "mode": "SYNTHETIC"
+    },
+    {
+      "evidence_id": "proof-patch",
+      "resource": {
+        "path": "assets/proof-patch.txt",
+        "sha256": "1196f4c02fafc7482147b5dc932f019f6eee8f5d55c835012d714cff18aedf58",
+        "media_type": "text/plain"
+      },
+      "description": "Synthetic review changed printed label; baseline and result revisions remain separate.",
+      "mode": "SYNTHETIC"
+    }
+  ],
+  "policies": [
+    {
+      "policy_id": "synthetic-a02-policy",
+      "revision": 1,
+      "content_hash": "5d914617cad7f10009ff34919b1c313d5c73bd322069b77cde54659a407ebc32",
+      "confirmation_status": "SYNTHETIC_ASSUMPTION",
+      "option_grouping": "SEPARATE",
+      "role_mapping": {
+        "stem": "Q",
+        "option": "W",
+        "answer": "A",
+        "explanation": "E",
+        "shared_material": "Q"
+      },
+      "source_notes": [
+        "SYNTHETIC A02 simulation assumption; no A/B or platform confirmation.",
+        "SEPARATE options are supported only by this offline simulator."
+      ],
+      "frame_save_status": "SYNTHETIC",
+      "ocr_status": "SYNTHETIC",
+      "applicability": "SYNTHETIC_ONLY"
+    },
+    {
+      "policy_id": "usense-v1-proposal",
+      "revision": 1,
+      "content_hash": "e5658f6abde137fb1e4b355b119c2dbebded8417689f81493b48b20a3480646b",
+      "confirmation_status": "A_INTERNAL_PROPOSAL",
+      "option_grouping": "UNRESOLVED",
+      "role_mapping": {
+        "stem": "Q",
+        "option": "W",
+        "answer": "A",
+        "explanation": "E",
+        "shared_material": "Q"
+      },
+      "source_notes": [
+        "A-side v1 implementation proposal; no joint A/B confirmation is asserted.",
+        "DOCX separate option boxes and sampled video combined option box remain unresolved.",
+        "A05 observed only bounded frame-save/readback behavior; OCR was not accepted."
+      ],
+      "frame_save_status": "BOUNDED_A05_OBSERVED",
+      "ocr_status": "UNVERIFIED",
+      "applicability": "PROPOSAL_ONLY"
+    }
+  ],
+  "artifacts": [
+    {
+      "schema_version": "1.0.0-a-proposal",
+      "artifact_id": "a02-source",
+      "revision": 1,
+      "kind": "SourceBundle",
+      "run_id": "a02-fixture-run",
+      "book_id": "other-book",
+      "scope_id": "synthetic-scope",
+      "input_refs": [],
+      "producer": {
+        "module": "a02-synthetic-input",
+        "implementation_version": "a02-fixtures-1",
+        "config_version": "exceptions",
+        "policy_versions": [
+          {
+            "policy_id": "synthetic-a02-policy",
+            "revision": 1,
+            "content_hash": "5d914617cad7f10009ff34919b1c313d5c73bd322069b77cde54659a407ebc32"
+          }
+        ],
+        "model_version": null,
+        "prompt_version": null,
+        "evidence_mode": "SYNTHETIC"
+      },
+      "content_hash": "576a60cc5063ce88838f0d5e2793dc18c18277d21d87031079562d016c5c6d99",
+      "created_at": "2026-10-16T00:00:00Z",
+      "payload": {
+        "assets": [
+          {
+            "path": "assets/asset-page-a1.pgm",
+            "sha256": "8c1f2dc9061d60bad2a28778bf18f0356409b9fa8c370a0db6bd737012db2a75",
+            "media_type": "image/x-portable-graymap",
+            "asset_id": "asset-page-a1",
+            "width": 80,
+            "height": 100,
+            "source_label": "Synthetic original page 1",
+            "provenance": "SYNTHETIC"
+          },
+          {
+            "path": "assets/asset-page-a2.pgm",
+            "sha256": "9f4ab681d43e03b397154a2ba6dabf9b77e1bbfe576c62955d4385755f6d5d1b",
+            "media_type": "image/x-portable-graymap",
+            "asset_id": "asset-page-a2",
+            "width": 80,
+            "height": 100,
+            "source_label": "Synthetic original page 2",
+            "provenance": "SYNTHETIC"
+          },
+          {
+            "path": "assets/asset-page-b1.pgm",
+            "sha256": "f4d0189a5c4953e4401ef67acdc922d73a4414b7e86328e44b0ca98955243b84",
+            "media_type": "image/x-portable-graymap",
+            "asset_id": "asset-page-b1",
+            "width": 80,
+            "height": 100,
+            "source_label": "Synthetic original page 3",
+            "provenance": "SYNTHETIC"
+          }
+        ],
+        "directories": [
+          {
+            "directory_id": "directory-a",
+            "parent_id": null,
+            "label": "Unit A"
+          },
+          {
+            "directory_id": "directory-b",
+            "parent_id": null,
+            "label": "Unit B"
+          }
+        ],
+        "pages_expected": [
+          "asset-page-a1",
+          "asset-page-a2",
+          "asset-page-b1"
+        ],
+        "pages_acquired": [
+          "asset-page-a1",
+          "asset-page-a2",
+          "asset-page-b1"
+        ],
+        "external_page_mappings": [
+          {
+            "asset_id": "asset-page-a1",
+            "directory_id": "directory-a",
+            "external_page": "1",
+            "mapping_status": "CONFIRMED",
+            "evidence_refs": [
+              "proof-source"
+            ]
+          },
+          {
+            "asset_id": "asset-page-a2",
+            "directory_id": "directory-a",
+            "external_page": "2",
+            "mapping_status": "CONFIRMED",
+            "evidence_refs": [
+              "proof-source"
+            ]
+          },
+          {
+            "asset_id": "asset-page-b1",
+            "directory_id": "directory-b",
+            "external_page": "3",
+            "mapping_status": "CONFIRMED",
+            "evidence_refs": [
+              "proof-source"
+            ]
+          }
+        ],
+        "history": [
+          {
+            "resource": {
+              "path": "assets/history.json",
+              "sha256": "1fa9779f95b307cb6dbf78b95c16d40326321569ca64f3ce00870866144a1e88",
+              "media_type": "application/json"
+            },
+            "quality": "UNVERIFIED",
+            "reason": "Fabricated history is not gold data."
+          }
+        ],
+        "scope_manifest": [
+          "question-alpha",
+          "question-child",
+          "question-beta",
+          "question-missing"
+        ],
+        "scope_manifest_basis": "Explicit synthetic independent question inventory; omitted candidates remain in denominator.",
+        "metadata_page_count": 250
+      }
+    },
+    {
+      "schema_version": "1.0.0-a-proposal",
+      "artifact_id": "a02-evidence",
+      "revision": 1,
+      "kind": "EvidenceBundle",
+      "run_id": "a02-fixture-run",
+      "book_id": "other-book",
+      "scope_id": "synthetic-scope",
+      "input_refs": [
+        {
+          "artifact_id": "a02-source",
+          "revision": 1,
+          "kind": "SourceBundle",
+          "content_hash": "576a60cc5063ce88838f0d5e2793dc18c18277d21d87031079562d016c5c6d99"
+        }
+      ],
+      "producer": {
+        "module": "a02-synthetic-input",
+        "implementation_version": "a02-fixtures-1",
+        "config_version": "exceptions",
+        "policy_versions": [
+          {
+            "policy_id": "synthetic-a02-policy",
+            "revision": 1,
+            "content_hash": "5d914617cad7f10009ff34919b1c313d5c73bd322069b77cde54659a407ebc32"
+          }
+        ],
+        "model_version": null,
+        "prompt_version": null,
+        "evidence_mode": "SYNTHETIC"
+      },
+      "content_hash": "1ece58336267284cacaa42e562e9ead5faf34a908496a276b2fc9bca9b6fd1c2",
+      "created_at": "2026-10-16T00:00:00Z",
+      "payload": {
+        "source": {
+          "artifact_id": "a02-source",
+          "revision": 1,
+          "kind": "SourceBundle",
+          "content_hash": "576a60cc5063ce88838f0d5e2793dc18c18277d21d87031079562d016c5c6d99"
+        },
+        "regions": [
+          {
+            "region_id": "region-alpha-start",
+            "box": {
+              "image": {
+                "asset_id": "asset-page-a1",
+                "width": 80,
+                "height": 100,
+                "sha256": "8c1f2dc9061d60bad2a28778bf18f0356409b9fa8c370a0db6bd737012db2a75"
+              },
+              "bbox": [
+                5.0,
+                5.0,
+                65.0,
+                20.0
+              ]
+            },
+            "crop_transform": {
+              "scale_x": 1.0,
+              "scale_y": 1.0,
+              "offset_x": 0.0,
+              "offset_y": 0.0,
+              "rotation_degrees": 0.0,
+              "padding": [
+                0.0,
+                0.0,
+                0.0,
+                0.0
+              ],
+              "processed_width": 80,
+              "processed_height": 100,
+              "invertible": true
+            },
+            "content_type": "text",
+            "text": "1. Parent problem begins; continues on next page.",
+            "source": "SYNTHETIC",
+            "evidence_refs": [
+              "proof-geometry"
+            ],
+            "printed_number_candidates": [
+              "1"
+            ],
+            "certainty": "CONFIRMED"
+          },
+          {
+            "region_id": "region-shared",
+            "box": {
+              "image": {
+                "asset_id": "asset-page-a1",
+                "width": 80,
+                "height": 100,
+                "sha256": "8c1f2dc9061d60bad2a28778bf18f0356409b9fa8c370a0db6bd737012db2a75"
+              },
+              "bbox": [
+                5.0,
+                25.0,
+                65.0,
+                35.0
+              ]
+            },
+            "crop_transform": {
+              "scale_x": 1.0,
+              "scale_y": 1.0,
+              "offset_x": 0.0,
+              "offset_y": 0.0,
+              "rotation_degrees": 0.0,
+              "padding": [
+                0.0,
+                0.0,
+                0.0,
+                0.0
+              ],
+              "processed_width": 80,
+              "processed_height": 100,
+              "invertible": true
+            },
+            "content_type": "text",
+            "text": "Shared material for alpha and its child.",
+            "source": "SYNTHETIC",
+            "evidence_refs": [
+              "proof-geometry"
+            ],
+            "printed_number_candidates": [],
+            "certainty": "CONFIRMED"
+          },
+          {
+            "region_id": "region-alpha-end",
+            "box": {
+              "image": {
+                "asset_id": "asset-page-a2",
+                "width": 80,
+                "height": 100,
+                "sha256": "9f4ab681d43e03b397154a2ba6dabf9b77e1bbfe576c62955d4385755f6d5d1b"
+              },
+              "bbox": [
+                5.0,
+                5.0,
+                65.0,
+                20.0
+              ]
+            },
+            "crop_transform": {
+              "scale_x": 1.0,
+              "scale_y": 1.0,
+              "offset_x": 0.0,
+              "offset_y": 0.0,
+              "rotation_degrees": 0.0,
+              "padding": [
+                0.0,
+                0.0,
+                0.0,
+                0.0
+              ],
+              "processed_width": 80,
+              "processed_height": 100,
+              "invertible": true
+            },
+            "content_type": "formula",
+            "text": "Parent continuation: x + 1 = 3.",
+            "source": "SYNTHETIC",
+            "evidence_refs": [
+              "proof-geometry"
+            ],
+            "printed_number_candidates": [],
+            "certainty": "CONFIRMED"
+          },
+          {
+            "region_id": "region-alpha-answer",
+            "box": {
+              "image": {
+                "asset_id": "asset-page-a2",
+                "width": 80,
+                "height": 100,
+                "sha256": "9f4ab681d43e03b397154a2ba6dabf9b77e1bbfe576c62955d4385755f6d5d1b"
+              },
+              "bbox": [
+                5.0,
+                25.0,
+                65.0,
+                35.0
+              ]
+            },
+            "crop_transform": {
+              "scale_x": 2.0,
+              "scale_y": 2.0,
+              "offset_x": 10.0,
+              "offset_y": 200.0,
+              "rotation_degrees": 0.0,
+              "padding": [
+                0.0,
+                0.0,
+                0.0,
+                0.0
+              ],
+              "processed_width": 170,
+              "processed_height": 400,
+              "invertible": true
+            },
+            "content_type": "formula",
+            "text": "x = 2",
+            "source": "SYNTHETIC",
+            "evidence_refs": [
+              "proof-geometry"
+            ],
+            "printed_number_candidates": [],
+            "certainty": "CONFIRMED"
+          },
+          {
+            "region_id": "region-child-stem",
+            "box": {
+              "image": {
+                "asset_id": "asset-page-a2",
+                "width": 80,
+                "height": 100,
+                "sha256": "9f4ab681d43e03b397154a2ba6dabf9b77e1bbfe576c62955d4385755f6d5d1b"
+              },
+              "bbox": [
+                5.0,
+                40.0,
+                65.0,
+                50.0
+              ]
+            },
+            "crop_transform": {
+              "scale_x": 1.0,
+              "scale_y": 1.0,
+              "offset_x": 0.0,
+              "offset_y": 0.0,
+              "rotation_degrees": 0.0,
+              "padding": [
+                0.0,
+                0.0,
+                0.0,
+                0.0
+              ],
+              "processed_width": 80,
+              "processed_height": 100,
+              "invertible": true
+            },
+            "content_type": "text",
+            "text": "(a) Explain the shared material.",
+            "source": "SYNTHETIC",
+            "evidence_refs": [
+              "proof-geometry"
+            ],
+            "printed_number_candidates": [
+              "1"
+            ],
+            "certainty": "CONFIRMED"
+          },
+          {
+            "region_id": "region-child-answer",
+            "box": {
+              "image": {
+                "asset_id": "asset-page-a2",
+                "width": 80,
+                "height": 100,
+                "sha256": "9f4ab681d43e03b397154a2ba6dabf9b77e1bbfe576c62955d4385755f6d5d1b"
+              },
+              "bbox": [
+                5.0,
+                55.0,
+                65.0,
+                65.0
+              ]
+            },
+            "crop_transform": {
+              "scale_x": 1.0,
+              "scale_y": 1.0,
+              "offset_x": 0.0,
+              "offset_y": 0.0,
+              "rotation_degrees": 0.0,
+              "padding": [
+                0.0,
+                0.0,
+                0.0,
+                0.0
+              ],
+              "processed_width": 80,
+              "processed_height": 100,
+              "invertible": true
+            },
+            "content_type": "text",
+            "text": "Synthetic explanation.",
+            "source": "SYNTHETIC",
+            "evidence_refs": [
+              "proof-geometry"
+            ],
+            "printed_number_candidates": [],
+            "certainty": "CONFIRMED"
+          },
+          {
+            "region_id": "region-beta-stem",
+            "box": {
+              "image": {
+                "asset_id": "asset-page-b1",
+                "width": 80,
+                "height": 100,
+                "sha256": "f4d0189a5c4953e4401ef67acdc922d73a4414b7e86328e44b0ca98955243b84"
+              },
+              "bbox": [
+                5.0,
+                5.0,
+                65.0,
+                20.0
+              ]
+            },
+            "crop_transform": {
+              "scale_x": 1.0,
+              "scale_y": 1.0,
+              "offset_x": 0.0,
+              "offset_y": 0.0,
+              "rotation_degrees": 0.0,
+              "padding": [
+                0.0,
+                0.0,
+                0.0,
+                0.0
+              ],
+              "processed_width": 80,
+              "processed_height": 100,
+              "invertible": true
+            },
+            "content_type": "text",
+            "text": "1. Independent Unit B problem.",
+            "source": "SYNTHETIC",
+            "evidence_refs": [
+              "proof-geometry"
+            ],
+            "printed_number_candidates": [
+              "1"
+            ],
+            "certainty": "CONFIRMED"
+          },
+          {
+            "region_id": "region-beta-answer",
+            "box": {
+              "image": {
+                "asset_id": "asset-page-b1",
+                "width": 80,
+                "height": 100,
+                "sha256": "f4d0189a5c4953e4401ef67acdc922d73a4414b7e86328e44b0ca98955243b84"
+              },
+              "bbox": [
+                5.0,
+                60.0,
+                65.0,
+                70.0
+              ]
+            },
+            "crop_transform": {
+              "scale_x": 1.0,
+              "scale_y": 1.0,
+              "offset_x": 0.0,
+              "offset_y": 0.0,
+              "rotation_degrees": 0.0,
+              "padding": [
+                0.0,
+                0.0,
+                0.0,
+                0.0
+              ],
+              "processed_width": 80,
+              "processed_height": 100,
+              "invertible": true
+            },
+            "content_type": "text",
+            "text": "Unit B answer; cannot match Unit A by printed label.",
+            "source": "SYNTHETIC",
+            "evidence_refs": [
+              "proof-geometry"
+            ],
+            "printed_number_candidates": [],
+            "certainty": "CONFIRMED"
+          }
+        ],
+        "coverage_clues": [
+          {
+            "clue_id": "clue-alpha-start",
+            "box": {
+              "image": {
+                "asset_id": "asset-page-a1",
+                "width": 80,
+                "height": 100,
+                "sha256": "8c1f2dc9061d60bad2a28778bf18f0356409b9fa8c370a0db6bd737012db2a75"
+              },
+              "bbox": [
+                5.0,
+                5.0,
+                65.0,
+                20.0
+              ]
+            },
+            "source": "SYNTHETIC",
+            "disposition": "ASSIGNED",
+            "region_ids": [
+              "region-alpha-start"
+            ],
+            "reason": "Independent synthetic full-page inventory assigns this content region.",
+            "evidence_refs": [
+              "proof-geometry"
+            ]
+          },
+          {
+            "clue_id": "clue-shared",
+            "box": {
+              "image": {
+                "asset_id": "asset-page-a1",
+                "width": 80,
+                "height": 100,
+                "sha256": "8c1f2dc9061d60bad2a28778bf18f0356409b9fa8c370a0db6bd737012db2a75"
+              },
+              "bbox": [
+                5.0,
+                25.0,
+                65.0,
+                35.0
+              ]
+            },
+            "source": "SYNTHETIC",
+            "disposition": "ASSIGNED",
+            "region_ids": [
+              "region-shared"
+            ],
+            "reason": "Independent synthetic full-page inventory assigns this content region.",
+            "evidence_refs": [
+              "proof-geometry"
+            ]
+          },
+          {
+            "clue_id": "clue-alpha-end",
+            "box": {
+              "image": {
+                "asset_id": "asset-page-a2",
+                "width": 80,
+                "height": 100,
+                "sha256": "9f4ab681d43e03b397154a2ba6dabf9b77e1bbfe576c62955d4385755f6d5d1b"
+              },
+              "bbox": [
+                5.0,
+                5.0,
+                65.0,
+                20.0
+              ]
+            },
+            "source": "SYNTHETIC",
+            "disposition": "ASSIGNED",
+            "region_ids": [
+              "region-alpha-end"
+            ],
+            "reason": "Independent synthetic full-page inventory assigns this content region.",
+            "evidence_refs": [
+              "proof-geometry"
+            ]
+          },
+          {
+            "clue_id": "clue-alpha-answer",
+            "box": {
+              "image": {
+                "asset_id": "asset-page-a2",
+                "width": 80,
+                "height": 100,
+                "sha256": "9f4ab681d43e03b397154a2ba6dabf9b77e1bbfe576c62955d4385755f6d5d1b"
+              },
+              "bbox": [
+                5.0,
+                25.0,
+                65.0,
+                35.0
+              ]
+            },
+            "source": "SYNTHETIC",
+            "disposition": "ASSIGNED",
+            "region_ids": [
+              "region-alpha-answer"
+            ],
+            "reason": "Independent synthetic full-page inventory assigns this content region.",
+            "evidence_refs": [
+              "proof-geometry"
+            ]
+          },
+          {
+            "clue_id": "clue-child-stem",
+            "box": {
+              "image": {
+                "asset_id": "asset-page-a2",
+                "width": 80,
+                "height": 100,
+                "sha256": "9f4ab681d43e03b397154a2ba6dabf9b77e1bbfe576c62955d4385755f6d5d1b"
+              },
+              "bbox": [
+                5.0,
+                40.0,
+                65.0,
+                50.0
+              ]
+            },
+            "source": "SYNTHETIC",
+            "disposition": "ASSIGNED",
+            "region_ids": [
+              "region-child-stem"
+            ],
+            "reason": "Independent synthetic full-page inventory assigns this content region.",
+            "evidence_refs": [
+              "proof-geometry"
+            ]
+          },
+          {
+            "clue_id": "clue-child-answer",
+            "box": {
+              "image": {
+                "asset_id": "asset-page-a2",
+                "width": 80,
+                "height": 100,
+                "sha256": "9f4ab681d43e03b397154a2ba6dabf9b77e1bbfe576c62955d4385755f6d5d1b"
+              },
+              "bbox": [
+                5.0,
+                55.0,
+                65.0,
+                65.0
+              ]
+            },
+            "source": "SYNTHETIC",
+            "disposition": "ASSIGNED",
+            "region_ids": [
+              "region-child-answer"
+            ],
+            "reason": "Independent synthetic full-page inventory assigns this content region.",
+            "evidence_refs": [
+              "proof-geometry"
+            ]
+          },
+          {
+            "clue_id": "clue-beta-stem",
+            "box": {
+              "image": {
+                "asset_id": "asset-page-b1",
+                "width": 80,
+                "height": 100,
+                "sha256": "f4d0189a5c4953e4401ef67acdc922d73a4414b7e86328e44b0ca98955243b84"
+              },
+              "bbox": [
+                5.0,
+                5.0,
+                65.0,
+                20.0
+              ]
+            },
+            "source": "SYNTHETIC",
+            "disposition": "ASSIGNED",
+            "region_ids": [
+              "region-beta-stem"
+            ],
+            "reason": "Independent synthetic full-page inventory assigns this content region.",
+            "evidence_refs": [
+              "proof-geometry"
+            ]
+          },
+          {
+            "clue_id": "clue-beta-answer",
+            "box": {
+              "image": {
+                "asset_id": "asset-page-b1",
+                "width": 80,
+                "height": 100,
+                "sha256": "f4d0189a5c4953e4401ef67acdc922d73a4414b7e86328e44b0ca98955243b84"
+              },
+              "bbox": [
+                5.0,
+                60.0,
+                65.0,
+                70.0
+              ]
+            },
+            "source": "SYNTHETIC",
+            "disposition": "ASSIGNED",
+            "region_ids": [
+              "region-beta-answer"
+            ],
+            "reason": "Independent synthetic full-page inventory assigns this content region.",
+            "evidence_refs": [
+              "proof-geometry"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "schema_version": "1.0.0-a-proposal",
+      "artifact_id": "a02-graph",
+      "revision": 1,
+      "kind": "QuestionGraph",
+      "run_id": "a02-fixture-run",
+      "book_id": "other-book",
+      "scope_id": "synthetic-scope",
+      "input_refs": [
+        {
+          "artifact_id": "a02-source",
+          "revision": 1,
+          "kind": "SourceBundle",
+          "content_hash": "576a60cc5063ce88838f0d5e2793dc18c18277d21d87031079562d016c5c6d99"
+        },
+        {
+          "artifact_id": "a02-evidence",
+          "revision": 1,
+          "kind": "EvidenceBundle",
+          "content_hash": "1ece58336267284cacaa42e562e9ead5faf34a908496a276b2fc9bca9b6fd1c2"
+        }
+      ],
+      "producer": {
+        "module": "a02-synthetic-input",
+        "implementation_version": "a02-fixtures-1",
+        "config_version": "exceptions",
+        "policy_versions": [
+          {
+            "policy_id": "synthetic-a02-policy",
+            "revision": 1,
+            "content_hash": "5d914617cad7f10009ff34919b1c313d5c73bd322069b77cde54659a407ebc32"
+          }
+        ],
+        "model_version": null,
+        "prompt_version": null,
+        "evidence_mode": "SYNTHETIC"
+      },
+      "content_hash": "6017217c628216c01d4c079c498b1be2f0f3474216f9f51a17c57d82264212ba",
+      "created_at": "2026-10-16T00:00:00Z",
+      "payload": {
+        "source": {
+          "artifact_id": "a02-source",
+          "revision": 1,
+          "kind": "SourceBundle",
+          "content_hash": "576a60cc5063ce88838f0d5e2793dc18c18277d21d87031079562d016c5c6d99"
+        },
+        "evidence": {
+          "artifact_id": "a02-evidence",
+          "revision": 1,
+          "kind": "EvidenceBundle",
+          "content_hash": "1ece58336267284cacaa42e562e9ead5faf34a908496a276b2fc9bca9b6fd1c2"
+        },
+        "questions": [
+          {
+            "question_id": "question-alpha",
+            "directory_id": "directory-a",
+            "question_type": "free_response",
+            "fragment_ids": [
+              "fragment-alpha-start",
+              "fragment-alpha-end",
+              "fragment-alpha-answer"
+            ],
+            "parent_question_id": null,
+            "shared_fragment_ids": [
+              "fragment-shared"
+            ],
+            "cross_page": true,
+            "external_refs": {
+              "printed_number": "1",
+              "platform_question_id": null,
+              "platform_order": null
+            }
+          },
+          {
+            "question_id": "question-child",
+            "directory_id": "directory-a",
+            "question_type": "free_response",
+            "fragment_ids": [
+              "fragment-child-stem",
+              "fragment-child-answer"
+            ],
+            "parent_question_id": null,
+            "shared_fragment_ids": [
+              "fragment-shared"
+            ],
+            "cross_page": true,
+            "external_refs": {
+              "printed_number": "(a)",
+              "platform_question_id": null,
+              "platform_order": null
+            }
+          },
+          {
+            "question_id": "question-beta",
+            "directory_id": "directory-b",
+            "question_type": "free_response",
+            "fragment_ids": [
+              "fragment-beta-stem",
+              "fragment-beta-answer"
+            ],
+            "parent_question_id": null,
+            "shared_fragment_ids": [],
+            "cross_page": false,
+            "external_refs": {
+              "printed_number": "1",
+              "platform_question_id": null,
+              "platform_order": null
+            }
+          }
+        ],
+        "fragments": [
+          {
+            "fragment_id": "fragment-alpha-start",
+            "region_ids": [
+              "region-alpha-start"
+            ],
+            "role": "stem",
+            "content_type": "text",
+            "reading_order": 0
+          },
+          {
+            "fragment_id": "fragment-shared",
+            "region_ids": [
+              "region-shared"
+            ],
+            "role": "shared_material",
+            "content_type": "text",
+            "reading_order": 1
+          },
+          {
+            "fragment_id": "fragment-alpha-end",
+            "region_ids": [
+              "region-alpha-end"
+            ],
+            "role": "stem",
+            "content_type": "formula",
+            "reading_order": 2
+          },
+          {
+            "fragment_id": "fragment-alpha-answer",
+            "region_ids": [
+              "region-alpha-answer"
+            ],
+            "role": "answer",
+            "content_type": "formula",
+            "reading_order": 3
+          },
+          {
+            "fragment_id": "fragment-child-stem",
+            "region_ids": [
+              "region-child-stem"
+            ],
+            "role": "stem",
+            "content_type": "text",
+            "reading_order": 4
+          },
+          {
+            "fragment_id": "fragment-child-answer",
+            "region_ids": [
+              "region-child-answer"
+            ],
+            "role": "answer",
+            "content_type": "text",
+            "reading_order": 5
+          },
+          {
+            "fragment_id": "fragment-beta-stem",
+            "region_ids": [
+              "region-beta-stem"
+            ],
+            "role": "stem",
+            "content_type": "text",
+            "reading_order": 6
+          },
+          {
+            "fragment_id": "fragment-beta-answer",
+            "region_ids": [
+              "region-beta-answer"
+            ],
+            "role": "answer",
+            "content_type": "text",
+            "reading_order": 7
+          }
+        ],
+        "answer_relations": [
+          {
+            "relation_id": "relation-alpha",
+            "question_id": "question-alpha",
+            "candidate_fragment_ids": [
+              "fragment-alpha-answer"
+            ],
+            "selected_fragment_ids": [
+              "fragment-alpha-answer"
+            ],
+            "status": "SELECTED",
+            "evidence_refs": [
+              "proof-checks"
+            ]
+          },
+          {
+            "relation_id": "relation-child",
+            "question_id": "question-child",
+            "candidate_fragment_ids": [
+              "fragment-child-answer"
+            ],
+            "selected_fragment_ids": [
+              "fragment-child-answer"
+            ],
+            "status": "SELECTED",
+            "evidence_refs": [
+              "proof-checks"
+            ]
+          },
+          {
+            "relation_id": "relation-beta",
+            "question_id": "question-beta",
+            "candidate_fragment_ids": [
+              "fragment-beta-answer"
+            ],
+            "selected_fragment_ids": [
+              "fragment-beta-answer"
+            ],
+            "status": "SELECTED",
+            "evidence_refs": [
+              "proof-checks"
+            ]
+          }
+        ],
+        "identity_notes": "SYNTHETIC stable entity IDs; two directories repeat printed 1. Shared/cross-page regions are manually authored."
+      }
+    },
+    {
+      "schema_version": "1.0.0-a-proposal",
+      "artifact_id": "a02-snapshot",
+      "revision": 1,
+      "kind": "PlatformSnapshot",
+      "run_id": "a02-fixture-run",
+      "book_id": "other-book",
+      "scope_id": "synthetic-scope",
+      "input_refs": [],
+      "producer": {
+        "module": "a02-synthetic-input",
+        "implementation_version": "a02-fixtures-1",
+        "config_version": "exceptions",
+        "policy_versions": [
+          {
+            "policy_id": "synthetic-a02-policy",
+            "revision": 1,
+            "content_hash": "5d914617cad7f10009ff34919b1c313d5c73bd322069b77cde54659a407ebc32"
+          }
+        ],
+        "model_version": null,
+        "prompt_version": null,
+        "evidence_mode": "SYNTHETIC"
+      },
+      "content_hash": "d15850eb1b4c27ca90e78b15249041524e8a8b5897a1f59b2cf8a970465c541e",
+      "created_at": "2026-10-16T00:00:00Z",
+      "payload": {
+        "target_id": "synthetic-target",
+        "platform_version": "a02-synthetic-platform-1",
+        "observed_at": "2026-10-16T00:00:00Z",
+        "observed_version": "synthetic-empty-v1",
+        "observed_hash": "19504cada003e99b9295e1338c62bcd58ffea7877ad1cd7f76018342372c02cf",
+        "authorized_scope_id": "synthetic-scope",
+        "directories": [
+          "platform-unit-a",
+          "platform-unit-b"
+        ],
+        "questions": [],
+        "frames": [],
+        "capabilities": [
+          {
+            "name": "persistent_draft",
+            "status": "UNKNOWN",
+            "platform_version": "a02-synthetic-platform-1",
+            "evidence_refs": []
+          },
+          {
+            "name": "frame_readback",
+            "status": "VERIFIED",
+            "platform_version": "a02-synthetic-platform-1",
+            "evidence_refs": [
+              "proof-target"
+            ]
+          },
+          {
+            "name": "content_readback",
+            "status": "UNKNOWN",
+            "platform_version": "a02-synthetic-platform-1",
+            "evidence_refs": []
+          },
+          {
+            "name": "ocr_before_submit",
+            "status": "UNKNOWN",
+            "platform_version": "a02-synthetic-platform-1",
+            "evidence_refs": []
+          },
+          {
+            "name": "resume_after_restart",
+            "status": "UNKNOWN",
+            "platform_version": "a02-synthetic-platform-1",
+            "evidence_refs": []
+          },
+          {
+            "name": "multi_session",
+            "status": "UNKNOWN",
+            "platform_version": "a02-synthetic-platform-1",
+            "evidence_refs": []
+          },
+          {
+            "name": "same_session_handoff",
+            "status": "VERIFIED",
+            "platform_version": "a02-synthetic-platform-1",
+            "evidence_refs": [
+              "proof-target"
+            ]
+          }
+        ],
+        "evidence_refs": [
+          "proof-target"
+        ]
+      }
+    },
+    {
+      "schema_version": "1.0.0-a-proposal",
+      "artifact_id": "a02-precheck-stub",
+      "revision": 1,
+      "kind": "CheckReport",
+      "run_id": "a02-fixture-run",
+      "book_id": "other-book",
+      "scope_id": "synthetic-scope",
+      "input_refs": [
+        {
+          "artifact_id": "a02-graph",
+          "revision": 1,
+          "kind": "QuestionGraph",
+          "content_hash": "6017217c628216c01d4c079c498b1be2f0f3474216f9f51a17c57d82264212ba"
+        }
+      ],
+      "producer": {
+        "module": "a02-precheck-stub",
+        "implementation_version": "a02-1",
+        "config_version": "a02-fixtures-1",
+        "policy_versions": [
+          {
+            "policy_id": "synthetic-a02-policy",
+            "revision": 1,
+            "content_hash": "5d914617cad7f10009ff34919b1c313d5c73bd322069b77cde54659a407ebc32"
+          }
+        ],
+        "model_version": null,
+        "prompt_version": null,
+        "evidence_mode": "SYNTHETIC"
+      },
+      "content_hash": "e3a490d3ff202be2c150a734b0a2e8f5eb107e37e058833c150b30ea918ae972",
+      "created_at": "2026-10-16T00:00:00Z",
+      "payload": {
+        "stage": "PRE_APPLY",
+        "subject": {
+          "artifact_id": "a02-graph",
+          "revision": 1,
+          "kind": "QuestionGraph",
+          "content_hash": "6017217c628216c01d4c079c498b1be2f0f3474216f9f51a17c57d82264212ba"
+        },
+        "graph": {
+          "artifact_id": "a02-graph",
+          "revision": 1,
+          "kind": "QuestionGraph",
+          "content_hash": "6017217c628216c01d4c079c498b1be2f0f3474216f9f51a17c57d82264212ba"
+        },
+        "policy": {
+          "policy_id": "synthetic-a02-policy",
+          "revision": 1,
+          "content_hash": "5d914617cad7f10009ff34919b1c313d5c73bd322069b77cde54659a407ebc32"
+        },
+        "snapshot": null,
+        "receipt": null,
+        "coverage": {
+          "scope_id": "synthetic-scope",
+          "pages_expected": [
+            "asset-page-a1",
+            "asset-page-a2",
+            "asset-page-b1"
+          ],
+          "pages_checked": [
+            "asset-page-a1",
+            "asset-page-a2",
+            "asset-page-b1"
+          ],
+          "clue_ids": [
+            "clue-alpha-start",
+            "clue-shared",
+            "clue-alpha-end",
+            "clue-alpha-answer",
+            "clue-child-stem",
+            "clue-child-answer",
+            "clue-beta-stem",
+            "clue-beta-answer"
+          ],
+          "unassigned_region_ids": []
+        },
+        "checks": [
+          {
+            "check_id": "source_integrity",
+            "outcome": "PASS",
+            "evidence_refs": [
+              "proof-checks"
+            ],
+            "reason": "SYNTHETIC CONTRACT STUB; not algorithm quality evidence"
+          },
+          {
+            "check_id": "structure",
+            "outcome": "PASS",
+            "evidence_refs": [
+              "proof-checks"
+            ],
+            "reason": "SYNTHETIC CONTRACT STUB; not algorithm quality evidence"
+          },
+          {
+            "check_id": "answer_matching",
+            "outcome": "PASS",
+            "evidence_refs": [
+              "proof-checks"
+            ],
+            "reason": "SYNTHETIC CONTRACT STUB; not algorithm quality evidence"
+          },
+          {
+            "check_id": "coverage",
+            "outcome": "FAIL",
+            "evidence_refs": [
+              "proof-checks"
+            ],
+            "reason": "SYNTHETIC CONTRACT STUB; not algorithm quality evidence"
+          },
+          {
+            "check_id": "policy",
+            "outcome": "PASS",
+            "evidence_refs": [
+              "proof-checks"
+            ],
+            "reason": "SYNTHETIC CONTRACT STUB; not algorithm quality evidence"
+          }
+        ],
+        "issues": [
+          {
+            "issue_id": "issue-a02-missing-input",
+            "code": "UNASSIGNED_CONTENT",
+            "scope_type": "question",
+            "scope_id": "question-missing",
+            "evidence_refs": [
+              "proof-checks"
+            ],
+            "severity": "blocking",
+            "blocks": [
+              "PLAN",
+              "APPLY",
+              "COMPLETE"
+            ],
+            "suggested_strategy": {
+              "strategy_id": "HUMAN_REVIEW",
+              "max_attempts": 0,
+              "max_cost": 0.0
+            },
+            "reason": "SYNTHETIC independent inventory contains a question missing from graph"
+          }
+        ],
+        "decision": "EXCEPTION",
+        "reason": "SYNTHETIC PRE_APPLY stub; B implementation not invoked or evaluated"
+      }
+    },
+    {
+      "schema_version": "1.0.0-a-proposal",
+      "artifact_id": "source-unknown",
+      "revision": 1,
+      "kind": "SourceBundle",
+      "run_id": "synthetic-run-unknown",
+      "book_id": "synthetic-book",
+      "scope_id": "synthetic-scope",
+      "input_refs": [],
+      "producer": {
+        "module": "synthetic-fixtures",
+        "implementation_version": "c01-fixtures-1",
+        "config_version": "fixed-1",
+        "policy_versions": [
+          {
+            "policy_id": "usense-v1-proposal",
+            "revision": 1,
+            "content_hash": "e5658f6abde137fb1e4b355b119c2dbebded8417689f81493b48b20a3480646b"
+          }
+        ],
+        "model_version": null,
+        "prompt_version": null,
+        "evidence_mode": "SYNTHETIC"
+      },
+      "content_hash": "1d4d7899ce11e804299d7be06941ad750b847afee3e220875355d505bc857e16",
+      "created_at": "2026-10-16T00:00:00Z",
+      "payload": {
+        "assets": [
+          {
+            "path": "assets/asset-page-a1.pgm",
+            "sha256": "8c1f2dc9061d60bad2a28778bf18f0356409b9fa8c370a0db6bd737012db2a75",
+            "media_type": "image/x-portable-graymap",
+            "asset_id": "asset-page-a1",
+            "width": 80,
+            "height": 100,
+            "source_label": "Synthetic original page 1",
+            "provenance": "SYNTHETIC"
+          },
+          {
+            "path": "assets/asset-page-a2.pgm",
+            "sha256": "9f4ab681d43e03b397154a2ba6dabf9b77e1bbfe576c62955d4385755f6d5d1b",
+            "media_type": "image/x-portable-graymap",
+            "asset_id": "asset-page-a2",
+            "width": 80,
+            "height": 100,
+            "source_label": "Synthetic original page 2",
+            "provenance": "SYNTHETIC"
+          },
+          {
+            "path": "assets/asset-page-b1.pgm",
+            "sha256": "f4d0189a5c4953e4401ef67acdc922d73a4414b7e86328e44b0ca98955243b84",
+            "media_type": "image/x-portable-graymap",
+            "asset_id": "asset-page-b1",
+            "width": 80,
+            "height": 100,
+            "source_label": "Synthetic original page 3",
+            "provenance": "SYNTHETIC"
+          }
+        ],
+        "directories": [
+          {
+            "directory_id": "directory-a",
+            "parent_id": null,
+            "label": "Unit A"
+          },
+          {
+            "directory_id": "directory-b",
+            "parent_id": null,
+            "label": "Unit B"
+          }
+        ],
+        "pages_expected": [
+          "asset-page-a1",
+          "asset-page-a2",
+          "asset-page-b1"
+        ],
+        "pages_acquired": [
+          "asset-page-a1",
+          "asset-page-a2",
+          "asset-page-b1"
+        ],
+        "external_page_mappings": [
+          {
+            "asset_id": "asset-page-a1",
+            "directory_id": "directory-a",
+            "external_page": "1",
+            "mapping_status": "CONFIRMED",
+            "evidence_refs": [
+              "proof-source"
+            ]
+          },
+          {
+            "asset_id": "asset-page-a2",
+            "directory_id": "directory-a",
+            "external_page": "2",
+            "mapping_status": "CONFIRMED",
+            "evidence_refs": [
+              "proof-source"
+            ]
+          },
+          {
+            "asset_id": "asset-page-b1",
+            "directory_id": "directory-b",
+            "external_page": "3",
+            "mapping_status": "CONFIRMED",
+            "evidence_refs": [
+              "proof-source"
+            ]
+          }
+        ],
+        "history": [
+          {
+            "resource": {
+              "path": "assets/history.json",
+              "sha256": "1fa9779f95b307cb6dbf78b95c16d40326321569ca64f3ce00870866144a1e88",
+              "media_type": "application/json"
+            },
+            "quality": "UNVERIFIED",
+            "reason": "Fabricated history is not gold data."
+          }
+        ],
+        "scope_manifest": [
+          "question-alpha",
+          "question-child",
+          "question-beta"
+        ],
+        "scope_manifest_basis": "Explicit synthetic independent question inventory; omitted candidates remain in denominator.",
+        "metadata_page_count": 250
+      }
+    },
+    {
+      "schema_version": "1.0.0-a-proposal",
+      "artifact_id": "evidence-unknown",
+      "revision": 1,
+      "kind": "EvidenceBundle",
+      "run_id": "synthetic-run-unknown",
+      "book_id": "synthetic-book",
+      "scope_id": "synthetic-scope",
+      "input_refs": [
+        {
+          "artifact_id": "source-unknown",
+          "revision": 1,
+          "kind": "SourceBundle",
+          "content_hash": "1d4d7899ce11e804299d7be06941ad750b847afee3e220875355d505bc857e16"
+        }
+      ],
+      "producer": {
+        "module": "synthetic-fixtures",
+        "implementation_version": "c01-fixtures-1",
+        "config_version": "fixed-1",
+        "policy_versions": [
+          {
+            "policy_id": "usense-v1-proposal",
+            "revision": 1,
+            "content_hash": "e5658f6abde137fb1e4b355b119c2dbebded8417689f81493b48b20a3480646b"
+          }
+        ],
+        "model_version": null,
+        "prompt_version": null,
+        "evidence_mode": "SYNTHETIC"
+      },
+      "content_hash": "a0e6bab900e1ba3edf9c4543f61fa5efd40deef465f6238e2c054d6cad9abe1b",
+      "created_at": "2026-10-16T00:00:00Z",
+      "payload": {
+        "source": {
+          "artifact_id": "source-unknown",
+          "revision": 1,
+          "kind": "SourceBundle",
+          "content_hash": "1d4d7899ce11e804299d7be06941ad750b847afee3e220875355d505bc857e16"
+        },
+        "regions": [
+          {
+            "region_id": "region-alpha-start",
+            "box": {
+              "image": {
+                "asset_id": "asset-page-a1",
+                "width": 80,
+                "height": 100,
+                "sha256": "8c1f2dc9061d60bad2a28778bf18f0356409b9fa8c370a0db6bd737012db2a75"
+              },
+              "bbox": [
+                5.0,
+                5.0,
+                65.0,
+                20.0
+              ]
+            },
+            "crop_transform": {
+              "scale_x": 1.0,
+              "scale_y": 1.0,
+              "offset_x": 0.0,
+              "offset_y": 0.0,
+              "rotation_degrees": 0.0,
+              "padding": [
+                0.0,
+                0.0,
+                0.0,
+                0.0
+              ],
+              "processed_width": 80,
+              "processed_height": 100,
+              "invertible": true
+            },
+            "content_type": "text",
+            "text": "1. Parent problem begins; continues on next page.",
+            "source": "SYNTHETIC",
+            "evidence_refs": [
+              "proof-geometry"
+            ],
+            "printed_number_candidates": [
+              "1"
+            ],
+            "certainty": "CONFIRMED"
+          },
+          {
+            "region_id": "region-shared",
+            "box": {
+              "image": {
+                "asset_id": "asset-page-a1",
+                "width": 80,
+                "height": 100,
+                "sha256": "8c1f2dc9061d60bad2a28778bf18f0356409b9fa8c370a0db6bd737012db2a75"
+              },
+              "bbox": [
+                5.0,
+                25.0,
+                65.0,
+                35.0
+              ]
+            },
+            "crop_transform": {
+              "scale_x": 1.0,
+              "scale_y": 1.0,
+              "offset_x": 0.0,
+              "offset_y": 0.0,
+              "rotation_degrees": 0.0,
+              "padding": [
+                0.0,
+                0.0,
+                0.0,
+                0.0
+              ],
+              "processed_width": 80,
+              "processed_height": 100,
+              "invertible": true
+            },
+            "content_type": "text",
+            "text": "Shared material for alpha and its child.",
+            "source": "SYNTHETIC",
+            "evidence_refs": [
+              "proof-geometry"
+            ],
+            "printed_number_candidates": [],
+            "certainty": "CONFIRMED"
+          },
+          {
+            "region_id": "region-alpha-end",
+            "box": {
+              "image": {
+                "asset_id": "asset-page-a2",
+                "width": 80,
+                "height": 100,
+                "sha256": "9f4ab681d43e03b397154a2ba6dabf9b77e1bbfe576c62955d4385755f6d5d1b"
+              },
+              "bbox": [
+                5.0,
+                5.0,
+                65.0,
+                20.0
+              ]
+            },
+            "crop_transform": {
+              "scale_x": 1.0,
+              "scale_y": 1.0,
+              "offset_x": 0.0,
+              "offset_y": 0.0,
+              "rotation_degrees": 0.0,
+              "padding": [
+                0.0,
+                0.0,
+                0.0,
+                0.0
+              ],
+              "processed_width": 80,
+              "processed_height": 100,
+              "invertible": true
+            },
+            "content_type": "formula",
+            "text": "Parent continuation: x + 1 = 3.",
+            "source": "SYNTHETIC",
+            "evidence_refs": [
+              "proof-geometry"
+            ],
+            "printed_number_candidates": [],
+            "certainty": "CONFIRMED"
+          },
+          {
+            "region_id": "region-alpha-answer",
+            "box": {
+              "image": {
+                "asset_id": "asset-page-a2",
+                "width": 80,
+                "height": 100,
+                "sha256": "9f4ab681d43e03b397154a2ba6dabf9b77e1bbfe576c62955d4385755f6d5d1b"
+              },
+              "bbox": [
+                5.0,
+                25.0,
+                65.0,
+                35.0
+              ]
+            },
+            "crop_transform": {
+              "scale_x": 2.0,
+              "scale_y": 2.0,
+              "offset_x": 10.0,
+              "offset_y": 200.0,
+              "rotation_degrees": 0.0,
+              "padding": [
+                0.0,
+                0.0,
+                0.0,
+                0.0
+              ],
+              "processed_width": 170,
+              "processed_height": 400,
+              "invertible": true
+            },
+            "content_type": "formula",
+            "text": "x = 2",
+            "source": "SYNTHETIC",
+            "evidence_refs": [
+              "proof-geometry"
+            ],
+            "printed_number_candidates": [],
+            "certainty": "CONFIRMED"
+          },
+          {
+            "region_id": "region-child-stem",
+            "box": {
+              "image": {
+                "asset_id": "asset-page-a2",
+                "width": 80,
+                "height": 100,
+                "sha256": "9f4ab681d43e03b397154a2ba6dabf9b77e1bbfe576c62955d4385755f6d5d1b"
+              },
+              "bbox": [
+                5.0,
+                40.0,
+                65.0,
+                50.0
+              ]
+            },
+            "crop_transform": {
+              "scale_x": 1.0,
+              "scale_y": 1.0,
+              "offset_x": 0.0,
+              "offset_y": 0.0,
+              "rotation_degrees": 0.0,
+              "padding": [
+                0.0,
+                0.0,
+                0.0,
+                0.0
+              ],
+              "processed_width": 80,
+              "processed_height": 100,
+              "invertible": true
+            },
+            "content_type": "text",
+            "text": "(a) Explain the shared material.",
+            "source": "SYNTHETIC",
+            "evidence_refs": [
+              "proof-geometry"
+            ],
+            "printed_number_candidates": [
+              "1"
+            ],
+            "certainty": "CONFIRMED"
+          },
+          {
+            "region_id": "region-child-answer",
+            "box": {
+              "image": {
+                "asset_id": "asset-page-a2",
+                "width": 80,
+                "height": 100,
+                "sha256": "9f4ab681d43e03b397154a2ba6dabf9b77e1bbfe576c62955d4385755f6d5d1b"
+              },
+              "bbox": [
+                5.0,
+                55.0,
+                65.0,
+                65.0
+              ]
+            },
+            "crop_transform": {
+              "scale_x": 1.0,
+              "scale_y": 1.0,
+              "offset_x": 0.0,
+              "offset_y": 0.0,
+              "rotation_degrees": 0.0,
+              "padding": [
+                0.0,
+                0.0,
+                0.0,
+                0.0
+              ],
+              "processed_width": 80,
+              "processed_height": 100,
+              "invertible": true
+            },
+            "content_type": "text",
+            "text": "Synthetic explanation.",
+            "source": "SYNTHETIC",
+            "evidence_refs": [
+              "proof-geometry"
+            ],
+            "printed_number_candidates": [],
+            "certainty": "CONFIRMED"
+          },
+          {
+            "region_id": "region-beta-stem",
+            "box": {
+              "image": {
+                "asset_id": "asset-page-b1",
+                "width": 80,
+                "height": 100,
+                "sha256": "f4d0189a5c4953e4401ef67acdc922d73a4414b7e86328e44b0ca98955243b84"
+              },
+              "bbox": [
+                5.0,
+                5.0,
+                65.0,
+                20.0
+              ]
+            },
+            "crop_transform": {
+              "scale_x": 1.0,
+              "scale_y": 1.0,
+              "offset_x": 0.0,
+              "offset_y": 0.0,
+              "rotation_degrees": 0.0,
+              "padding": [
+                0.0,
+                0.0,
+                0.0,
+                0.0
+              ],
+              "processed_width": 80,
+              "processed_height": 100,
+              "invertible": true
+            },
+            "content_type": "text",
+            "text": "1. Independent Unit B problem.",
+            "source": "SYNTHETIC",
+            "evidence_refs": [
+              "proof-geometry"
+            ],
+            "printed_number_candidates": [
+              "1"
+            ],
+            "certainty": "CONFIRMED"
+          },
+          {
+            "region_id": "region-beta-answer",
+            "box": {
+              "image": {
+                "asset_id": "asset-page-b1",
+                "width": 80,
+                "height": 100,
+                "sha256": "f4d0189a5c4953e4401ef67acdc922d73a4414b7e86328e44b0ca98955243b84"
+              },
+              "bbox": [
+                5.0,
+                60.0,
+                65.0,
+                70.0
+              ]
+            },
+            "crop_transform": {
+              "scale_x": 1.0,
+              "scale_y": 1.0,
+              "offset_x": 0.0,
+              "offset_y": 0.0,
+              "rotation_degrees": 0.0,
+              "padding": [
+                0.0,
+                0.0,
+                0.0,
+                0.0
+              ],
+              "processed_width": 80,
+              "processed_height": 100,
+              "invertible": true
+            },
+            "content_type": "text",
+            "text": "Unit B answer; cannot match Unit A by printed label.",
+            "source": "SYNTHETIC",
+            "evidence_refs": [
+              "proof-geometry"
+            ],
+            "printed_number_candidates": [],
+            "certainty": "CONFIRMED"
+          }
+        ],
+        "coverage_clues": [
+          {
+            "clue_id": "clue-alpha-start",
+            "box": {
+              "image": {
+                "asset_id": "asset-page-a1",
+                "width": 80,
+                "height": 100,
+                "sha256": "8c1f2dc9061d60bad2a28778bf18f0356409b9fa8c370a0db6bd737012db2a75"
+              },
+              "bbox": [
+                5.0,
+                5.0,
+                65.0,
+                20.0
+              ]
+            },
+            "source": "SYNTHETIC",
+            "disposition": "ASSIGNED",
+            "region_ids": [
+              "region-alpha-start"
+            ],
+            "reason": "Independent synthetic full-page inventory assigns this content region.",
+            "evidence_refs": [
+              "proof-geometry"
+            ]
+          },
+          {
+            "clue_id": "clue-shared",
+            "box": {
+              "image": {
+                "asset_id": "asset-page-a1",
+                "width": 80,
+                "height": 100,
+                "sha256": "8c1f2dc9061d60bad2a28778bf18f0356409b9fa8c370a0db6bd737012db2a75"
+              },
+              "bbox": [
+                5.0,
+                25.0,
+                65.0,
+                35.0
+              ]
+            },
+            "source": "SYNTHETIC",
+            "disposition": "ASSIGNED",
+            "region_ids": [
+              "region-shared"
+            ],
+            "reason": "Independent synthetic full-page inventory assigns this content region.",
+            "evidence_refs": [
+              "proof-geometry"
+            ]
+          },
+          {
+            "clue_id": "clue-alpha-end",
+            "box": {
+              "image": {
+                "asset_id": "asset-page-a2",
+                "width": 80,
+                "height": 100,
+                "sha256": "9f4ab681d43e03b397154a2ba6dabf9b77e1bbfe576c62955d4385755f6d5d1b"
+              },
+              "bbox": [
+                5.0,
+                5.0,
+                65.0,
+                20.0
+              ]
+            },
+            "source": "SYNTHETIC",
+            "disposition": "ASSIGNED",
+            "region_ids": [
+              "region-alpha-end"
+            ],
+            "reason": "Independent synthetic full-page inventory assigns this content region.",
+            "evidence_refs": [
+              "proof-geometry"
+            ]
+          },
+          {
+            "clue_id": "clue-alpha-answer",
+            "box": {
+              "image": {
+                "asset_id": "asset-page-a2",
+                "width": 80,
+                "height": 100,
+                "sha256": "9f4ab681d43e03b397154a2ba6dabf9b77e1bbfe576c62955d4385755f6d5d1b"
+              },
+              "bbox": [
+                5.0,
+                25.0,
+                65.0,
+                35.0
+              ]
+            },
+            "source": "SYNTHETIC",
+            "disposition": "ASSIGNED",
+            "region_ids": [
+              "region-alpha-answer"
+            ],
+            "reason": "Independent synthetic full-page inventory assigns this content region.",
+            "evidence_refs": [
+              "proof-geometry"
+            ]
+          },
+          {
+            "clue_id": "clue-child-stem",
+            "box": {
+              "image": {
+                "asset_id": "asset-page-a2",
+                "width": 80,
+                "height": 100,
+                "sha256": "9f4ab681d43e03b397154a2ba6dabf9b77e1bbfe576c62955d4385755f6d5d1b"
+              },
+              "bbox": [
+                5.0,
+                40.0,
+                65.0,
+                50.0
+              ]
+            },
+            "source": "SYNTHETIC",
+            "disposition": "ASSIGNED",
+            "region_ids": [
+              "region-child-stem"
+            ],
+            "reason": "Independent synthetic full-page inventory assigns this content region.",
+            "evidence_refs": [
+              "proof-geometry"
+            ]
+          },
+          {
+            "clue_id": "clue-child-answer",
+            "box": {
+              "image": {
+                "asset_id": "asset-page-a2",
+                "width": 80,
+                "height": 100,
+                "sha256": "9f4ab681d43e03b397154a2ba6dabf9b77e1bbfe576c62955d4385755f6d5d1b"
+              },
+              "bbox": [
+                5.0,
+                55.0,
+                65.0,
+                65.0
+              ]
+            },
+            "source": "SYNTHETIC",
+            "disposition": "ASSIGNED",
+            "region_ids": [
+              "region-child-answer"
+            ],
+            "reason": "Independent synthetic full-page inventory assigns this content region.",
+            "evidence_refs": [
+              "proof-geometry"
+            ]
+          },
+          {
+            "clue_id": "clue-beta-stem",
+            "box": {
+              "image": {
+                "asset_id": "asset-page-b1",
+                "width": 80,
+                "height": 100,
+                "sha256": "f4d0189a5c4953e4401ef67acdc922d73a4414b7e86328e44b0ca98955243b84"
+              },
+              "bbox": [
+                5.0,
+                5.0,
+                65.0,
+                20.0
+              ]
+            },
+            "source": "SYNTHETIC",
+            "disposition": "ASSIGNED",
+            "region_ids": [
+              "region-beta-stem"
+            ],
+            "reason": "Independent synthetic full-page inventory assigns this content region.",
+            "evidence_refs": [
+              "proof-geometry"
+            ]
+          },
+          {
+            "clue_id": "clue-beta-answer",
+            "box": {
+              "image": {
+                "asset_id": "asset-page-b1",
+                "width": 80,
+                "height": 100,
+                "sha256": "f4d0189a5c4953e4401ef67acdc922d73a4414b7e86328e44b0ca98955243b84"
+              },
+              "bbox": [
+                5.0,
+                60.0,
+                65.0,
+                70.0
+              ]
+            },
+            "source": "SYNTHETIC",
+            "disposition": "ASSIGNED",
+            "region_ids": [
+              "region-beta-answer"
+            ],
+            "reason": "Independent synthetic full-page inventory assigns this content region.",
+            "evidence_refs": [
+              "proof-geometry"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "schema_version": "1.0.0-a-proposal",
+      "artifact_id": "graph-unknown",
+      "revision": 1,
+      "kind": "QuestionGraph",
+      "run_id": "synthetic-run-unknown",
+      "book_id": "synthetic-book",
+      "scope_id": "synthetic-scope",
+      "input_refs": [
+        {
+          "artifact_id": "source-unknown",
+          "revision": 1,
+          "kind": "SourceBundle",
+          "content_hash": "1d4d7899ce11e804299d7be06941ad750b847afee3e220875355d505bc857e16"
+        },
+        {
+          "artifact_id": "evidence-unknown",
+          "revision": 1,
+          "kind": "EvidenceBundle",
+          "content_hash": "a0e6bab900e1ba3edf9c4543f61fa5efd40deef465f6238e2c054d6cad9abe1b"
+        }
+      ],
+      "producer": {
+        "module": "synthetic-fixtures",
+        "implementation_version": "c01-fixtures-1",
+        "config_version": "fixed-1",
+        "policy_versions": [
+          {
+            "policy_id": "usense-v1-proposal",
+            "revision": 1,
+            "content_hash": "e5658f6abde137fb1e4b355b119c2dbebded8417689f81493b48b20a3480646b"
+          }
+        ],
+        "model_version": null,
+        "prompt_version": null,
+        "evidence_mode": "SYNTHETIC"
+      },
+      "content_hash": "9d12b00fcd863820f78a45d2ae31ead366a1e45ef029487e4a2aa30c6ead25a9",
+      "created_at": "2026-10-16T00:00:00Z",
+      "payload": {
+        "source": {
+          "artifact_id": "source-unknown",
+          "revision": 1,
+          "kind": "SourceBundle",
+          "content_hash": "1d4d7899ce11e804299d7be06941ad750b847afee3e220875355d505bc857e16"
+        },
+        "evidence": {
+          "artifact_id": "evidence-unknown",
+          "revision": 1,
+          "kind": "EvidenceBundle",
+          "content_hash": "a0e6bab900e1ba3edf9c4543f61fa5efd40deef465f6238e2c054d6cad9abe1b"
+        },
+        "questions": [
+          {
+            "question_id": "question-alpha",
+            "directory_id": "directory-a",
+            "question_type": "combination",
+            "fragment_ids": [
+              "fragment-alpha-start",
+              "fragment-alpha-end",
+              "fragment-alpha-answer"
+            ],
+            "parent_question_id": null,
+            "shared_fragment_ids": [
+              "fragment-shared"
+            ],
+            "cross_page": true,
+            "external_refs": {
+              "printed_number": "1?",
+              "platform_question_id": null,
+              "platform_order": null
+            }
+          },
+          {
+            "question_id": "question-child",
+            "directory_id": "directory-a",
+            "question_type": "free_response",
+            "fragment_ids": [
+              "fragment-child-stem",
+              "fragment-child-answer"
+            ],
+            "parent_question_id": "question-alpha",
+            "shared_fragment_ids": [
+              "fragment-shared"
+            ],
+            "cross_page": true,
+            "external_refs": {
+              "printed_number": "(a)",
+              "platform_question_id": null,
+              "platform_order": null
+            }
+          },
+          {
+            "question_id": "question-beta",
+            "directory_id": "directory-b",
+            "question_type": "free_response",
+            "fragment_ids": [
+              "fragment-beta-stem",
+              "fragment-beta-answer"
+            ],
+            "parent_question_id": null,
+            "shared_fragment_ids": [],
+            "cross_page": false,
+            "external_refs": {
+              "printed_number": "1",
+              "platform_question_id": null,
+              "platform_order": null
+            }
+          }
+        ],
+        "fragments": [
+          {
+            "fragment_id": "fragment-alpha-start",
+            "region_ids": [
+              "region-alpha-start"
+            ],
+            "role": "stem",
+            "content_type": "text",
+            "reading_order": 0
+          },
+          {
+            "fragment_id": "fragment-shared",
+            "region_ids": [
+              "region-shared"
+            ],
+            "role": "shared_material",
+            "content_type": "text",
+            "reading_order": 1
+          },
+          {
+            "fragment_id": "fragment-alpha-end",
+            "region_ids": [
+              "region-alpha-end"
+            ],
+            "role": "stem",
+            "content_type": "formula",
+            "reading_order": 2
+          },
+          {
+            "fragment_id": "fragment-alpha-answer",
+            "region_ids": [
+              "region-alpha-answer"
+            ],
+            "role": "answer",
+            "content_type": "formula",
+            "reading_order": 3
+          },
+          {
+            "fragment_id": "fragment-child-stem",
+            "region_ids": [
+              "region-child-stem"
+            ],
+            "role": "stem",
+            "content_type": "text",
+            "reading_order": 4
+          },
+          {
+            "fragment_id": "fragment-child-answer",
+            "region_ids": [
+              "region-child-answer"
+            ],
+            "role": "answer",
+            "content_type": "text",
+            "reading_order": 5
+          },
+          {
+            "fragment_id": "fragment-beta-stem",
+            "region_ids": [
+              "region-beta-stem"
+            ],
+            "role": "stem",
+            "content_type": "text",
+            "reading_order": 6
+          },
+          {
+            "fragment_id": "fragment-beta-answer",
+            "region_ids": [
+              "region-beta-answer"
+            ],
+            "role": "answer",
+            "content_type": "text",
+            "reading_order": 7
+          }
+        ],
+        "answer_relations": [
+          {
+            "relation_id": "relation-alpha",
+            "question_id": "question-alpha",
+            "candidate_fragment_ids": [
+              "fragment-alpha-answer"
+            ],
+            "selected_fragment_ids": [
+              "fragment-alpha-answer"
+            ],
+            "status": "SELECTED",
+            "evidence_refs": [
+              "proof-checks"
+            ]
+          },
+          {
+            "relation_id": "relation-child",
+            "question_id": "question-child",
+            "candidate_fragment_ids": [
+              "fragment-child-answer"
+            ],
+            "selected_fragment_ids": [
+              "fragment-child-answer"
+            ],
+            "status": "SELECTED",
+            "evidence_refs": [
+              "proof-checks"
+            ]
+          },
+          {
+            "relation_id": "relation-beta",
+            "question_id": "question-beta",
+            "candidate_fragment_ids": [
+              "fragment-beta-answer"
+            ],
+            "selected_fragment_ids": [
+              "fragment-beta-answer"
+            ],
+            "status": "SELECTED",
+            "evidence_refs": [
+              "proof-checks"
+            ]
+          }
+        ],
+        "identity_notes": "Stable IDs do not derive from bbox, printed label or platform order; repeated printed 1 remains in distinct directories."
+      }
+    },
+    {
+      "schema_version": "1.0.0-a-proposal",
+      "artifact_id": "patch-unknown",
+      "revision": 1,
+      "kind": "ReviewPatch",
+      "run_id": "synthetic-run-unknown",
+      "book_id": "synthetic-book",
+      "scope_id": "synthetic-scope",
+      "input_refs": [
+        {
+          "artifact_id": "graph-unknown",
+          "revision": 1,
+          "kind": "QuestionGraph",
+          "content_hash": "9d12b00fcd863820f78a45d2ae31ead366a1e45ef029487e4a2aa30c6ead25a9"
+        }
+      ],
+      "producer": {
+        "module": "synthetic-fixtures",
+        "implementation_version": "c01-fixtures-1",
+        "config_version": "fixed-1",
+        "policy_versions": [
+          {
+            "policy_id": "usense-v1-proposal",
+            "revision": 1,
+            "content_hash": "e5658f6abde137fb1e4b355b119c2dbebded8417689f81493b48b20a3480646b"
+          }
+        ],
+        "model_version": null,
+        "prompt_version": null,
+        "evidence_mode": "SYNTHETIC"
+      },
+      "content_hash": "60dcb2469a5b5f799a51f8899c5fad848975e908a09b9323a06ce9fb5605bfbe",
+      "created_at": "2026-10-16T00:00:00Z",
+      "payload": {
+        "baseline": {
+          "artifact_id": "graph-unknown",
+          "revision": 1,
+          "kind": "QuestionGraph",
+          "content_hash": "9d12b00fcd863820f78a45d2ae31ead366a1e45ef029487e4a2aa30c6ead25a9"
+        },
+        "result_revision": 2,
+        "changes": [
+          {
+            "entity_id": "question-alpha",
+            "field": "printed_number",
+            "before": "1?",
+            "after": "1"
+          }
+        ],
+        "operator": "synthetic-reviewer",
+        "reason": "Demonstrate immutable baseline and explicitly rechecked new revision.",
+        "related_issue_ids": [],
+        "requires_recheck": true
+      }
+    },
+    {
+      "schema_version": "1.0.0-a-proposal",
+      "artifact_id": "graph-unknown",
+      "revision": 2,
+      "kind": "QuestionGraph",
+      "run_id": "synthetic-run-unknown",
+      "book_id": "synthetic-book",
+      "scope_id": "synthetic-scope",
+      "input_refs": [
+        {
+          "artifact_id": "source-unknown",
+          "revision": 1,
+          "kind": "SourceBundle",
+          "content_hash": "1d4d7899ce11e804299d7be06941ad750b847afee3e220875355d505bc857e16"
+        },
+        {
+          "artifact_id": "evidence-unknown",
+          "revision": 1,
+          "kind": "EvidenceBundle",
+          "content_hash": "a0e6bab900e1ba3edf9c4543f61fa5efd40deef465f6238e2c054d6cad9abe1b"
+        },
+        {
+          "artifact_id": "graph-unknown",
+          "revision": 1,
+          "kind": "QuestionGraph",
+          "content_hash": "9d12b00fcd863820f78a45d2ae31ead366a1e45ef029487e4a2aa30c6ead25a9"
+        },
+        {
+          "artifact_id": "patch-unknown",
+          "revision": 1,
+          "kind": "ReviewPatch",
+          "content_hash": "60dcb2469a5b5f799a51f8899c5fad848975e908a09b9323a06ce9fb5605bfbe"
+        }
+      ],
+      "producer": {
+        "module": "synthetic-fixtures",
+        "implementation_version": "c01-fixtures-1",
+        "config_version": "fixed-1",
+        "policy_versions": [
+          {
+            "policy_id": "usense-v1-proposal",
+            "revision": 1,
+            "content_hash": "e5658f6abde137fb1e4b355b119c2dbebded8417689f81493b48b20a3480646b"
+          }
+        ],
+        "model_version": null,
+        "prompt_version": null,
+        "evidence_mode": "SYNTHETIC"
+      },
+      "content_hash": "ff3cf3e11019a523e025c64e949958caa504b0e4c50d66656cbe586d057087f0",
+      "created_at": "2026-10-16T00:00:00Z",
+      "payload": {
+        "source": {
+          "artifact_id": "source-unknown",
+          "revision": 1,
+          "kind": "SourceBundle",
+          "content_hash": "1d4d7899ce11e804299d7be06941ad750b847afee3e220875355d505bc857e16"
+        },
+        "evidence": {
+          "artifact_id": "evidence-unknown",
+          "revision": 1,
+          "kind": "EvidenceBundle",
+          "content_hash": "a0e6bab900e1ba3edf9c4543f61fa5efd40deef465f6238e2c054d6cad9abe1b"
+        },
+        "questions": [
+          {
+            "question_id": "question-alpha",
+            "directory_id": "directory-a",
+            "question_type": "combination",
+            "fragment_ids": [
+              "fragment-alpha-start",
+              "fragment-alpha-end",
+              "fragment-alpha-answer"
+            ],
+            "parent_question_id": null,
+            "shared_fragment_ids": [
+              "fragment-shared"
+            ],
+            "cross_page": true,
+            "external_refs": {
+              "printed_number": "1",
+              "platform_question_id": null,
+              "platform_order": null
+            }
+          },
+          {
+            "question_id": "question-child",
+            "directory_id": "directory-a",
+            "question_type": "free_response",
+            "fragment_ids": [
+              "fragment-child-stem",
+              "fragment-child-answer"
+            ],
+            "parent_question_id": "question-alpha",
+            "shared_fragment_ids": [
+              "fragment-shared"
+            ],
+            "cross_page": true,
+            "external_refs": {
+              "printed_number": "(a)",
+              "platform_question_id": null,
+              "platform_order": null
+            }
+          },
+          {
+            "question_id": "question-beta",
+            "directory_id": "directory-b",
+            "question_type": "free_response",
+            "fragment_ids": [
+              "fragment-beta-stem",
+              "fragment-beta-answer"
+            ],
+            "parent_question_id": null,
+            "shared_fragment_ids": [],
+            "cross_page": false,
+            "external_refs": {
+              "printed_number": "1",
+              "platform_question_id": null,
+              "platform_order": null
+            }
+          }
+        ],
+        "fragments": [
+          {
+            "fragment_id": "fragment-alpha-start",
+            "region_ids": [
+              "region-alpha-start"
+            ],
+            "role": "stem",
+            "content_type": "text",
+            "reading_order": 0
+          },
+          {
+            "fragment_id": "fragment-shared",
+            "region_ids": [
+              "region-shared"
+            ],
+            "role": "shared_material",
+            "content_type": "text",
+            "reading_order": 1
+          },
+          {
+            "fragment_id": "fragment-alpha-end",
+            "region_ids": [
+              "region-alpha-end"
+            ],
+            "role": "stem",
+            "content_type": "formula",
+            "reading_order": 2
+          },
+          {
+            "fragment_id": "fragment-alpha-answer",
+            "region_ids": [
+              "region-alpha-answer"
+            ],
+            "role": "answer",
+            "content_type": "formula",
+            "reading_order": 3
+          },
+          {
+            "fragment_id": "fragment-child-stem",
+            "region_ids": [
+              "region-child-stem"
+            ],
+            "role": "stem",
+            "content_type": "text",
+            "reading_order": 4
+          },
+          {
+            "fragment_id": "fragment-child-answer",
+            "region_ids": [
+              "region-child-answer"
+            ],
+            "role": "answer",
+            "content_type": "text",
+            "reading_order": 5
+          },
+          {
+            "fragment_id": "fragment-beta-stem",
+            "region_ids": [
+              "region-beta-stem"
+            ],
+            "role": "stem",
+            "content_type": "text",
+            "reading_order": 6
+          },
+          {
+            "fragment_id": "fragment-beta-answer",
+            "region_ids": [
+              "region-beta-answer"
+            ],
+            "role": "answer",
+            "content_type": "text",
+            "reading_order": 7
+          }
+        ],
+        "answer_relations": [
+          {
+            "relation_id": "relation-alpha",
+            "question_id": "question-alpha",
+            "candidate_fragment_ids": [
+              "fragment-alpha-answer"
+            ],
+            "selected_fragment_ids": [
+              "fragment-alpha-answer"
+            ],
+            "status": "SELECTED",
+            "evidence_refs": [
+              "proof-checks"
+            ]
+          },
+          {
+            "relation_id": "relation-child",
+            "question_id": "question-child",
+            "candidate_fragment_ids": [
+              "fragment-child-answer"
+            ],
+            "selected_fragment_ids": [
+              "fragment-child-answer"
+            ],
+            "status": "SELECTED",
+            "evidence_refs": [
+              "proof-checks"
+            ]
+          },
+          {
+            "relation_id": "relation-beta",
+            "question_id": "question-beta",
+            "candidate_fragment_ids": [
+              "fragment-beta-answer"
+            ],
+            "selected_fragment_ids": [
+              "fragment-beta-answer"
+            ],
+            "status": "SELECTED",
+            "evidence_refs": [
+              "proof-checks"
+            ]
+          }
+        ],
+        "identity_notes": "Stable IDs do not derive from bbox, printed label or platform order; repeated printed 1 remains in distinct directories."
+      }
+    },
+    {
+      "schema_version": "1.0.0-a-proposal",
+      "artifact_id": "snapshot-unknown",
+      "revision": 1,
+      "kind": "PlatformSnapshot",
+      "run_id": "synthetic-run-unknown",
+      "book_id": "synthetic-book",
+      "scope_id": "synthetic-scope",
+      "input_refs": [],
+      "producer": {
+        "module": "synthetic-fixtures",
+        "implementation_version": "c01-fixtures-1",
+        "config_version": "fixed-1",
+        "policy_versions": [
+          {
+            "policy_id": "usense-v1-proposal",
+            "revision": 1,
+            "content_hash": "e5658f6abde137fb1e4b355b119c2dbebded8417689f81493b48b20a3480646b"
+          }
+        ],
+        "model_version": null,
+        "prompt_version": null,
+        "evidence_mode": "SYNTHETIC"
+      },
+      "content_hash": "72f5f1510f320ac877fb6ed429dd14278623c0733a1a0b7eec30af6f1e727d99",
+      "created_at": "2026-10-16T00:00:00Z",
+      "payload": {
+        "target_id": "synthetic-target",
+        "platform_version": "synthetic-platform-1",
+        "observed_at": "2026-10-16T00:00:00Z",
+        "observed_version": "synthetic-empty-v1",
+        "observed_hash": "19504cada003e99b9295e1338c62bcd58ffea7877ad1cd7f76018342372c02cf",
+        "authorized_scope_id": "synthetic-scope",
+        "directories": [
+          "directory-a",
+          "directory-b"
+        ],
+        "questions": [],
+        "frames": [],
+        "capabilities": [
+          {
+            "name": "persistent_draft",
+            "status": "UNKNOWN",
+            "platform_version": "synthetic-platform-1",
+            "evidence_refs": []
+          },
+          {
+            "name": "frame_readback",
+            "status": "VERIFIED",
+            "platform_version": "synthetic-platform-1",
+            "evidence_refs": [
+              "proof-target"
+            ]
+          },
+          {
+            "name": "content_readback",
+            "status": "UNKNOWN",
+            "platform_version": "synthetic-platform-1",
+            "evidence_refs": []
+          },
+          {
+            "name": "ocr_before_submit",
+            "status": "UNKNOWN",
+            "platform_version": "synthetic-platform-1",
+            "evidence_refs": []
+          },
+          {
+            "name": "resume_after_restart",
+            "status": "UNKNOWN",
+            "platform_version": "synthetic-platform-1",
+            "evidence_refs": []
+          },
+          {
+            "name": "multi_session",
+            "status": "UNKNOWN",
+            "platform_version": "synthetic-platform-1",
+            "evidence_refs": []
+          },
+          {
+            "name": "same_session_handoff",
+            "status": "VERIFIED",
+            "platform_version": "synthetic-platform-1",
+            "evidence_refs": [
+              "proof-target"
+            ]
+          }
+        ],
+        "evidence_refs": [
+          "proof-target"
+        ]
+      }
+    },
+    {
+      "schema_version": "1.0.0-a-proposal",
+      "artifact_id": "precheck-unknown",
+      "revision": 1,
+      "kind": "CheckReport",
+      "run_id": "synthetic-run-unknown",
+      "book_id": "synthetic-book",
+      "scope_id": "synthetic-scope",
+      "input_refs": [
+        {
+          "artifact_id": "graph-unknown",
+          "revision": 2,
+          "kind": "QuestionGraph",
+          "content_hash": "ff3cf3e11019a523e025c64e949958caa504b0e4c50d66656cbe586d057087f0"
+        },
+        {
+          "artifact_id": "snapshot-unknown",
+          "revision": 1,
+          "kind": "PlatformSnapshot",
+          "content_hash": "72f5f1510f320ac877fb6ed429dd14278623c0733a1a0b7eec30af6f1e727d99"
+        }
+      ],
+      "producer": {
+        "module": "synthetic-fixtures",
+        "implementation_version": "c01-fixtures-1",
+        "config_version": "fixed-1",
+        "policy_versions": [
+          {
+            "policy_id": "usense-v1-proposal",
+            "revision": 1,
+            "content_hash": "e5658f6abde137fb1e4b355b119c2dbebded8417689f81493b48b20a3480646b"
+          }
+        ],
+        "model_version": null,
+        "prompt_version": null,
+        "evidence_mode": "SYNTHETIC"
+      },
+      "content_hash": "642ec8f4de5bdcc8688eded68aa071c61ccfcf97d0407efd334a87e075585b8b",
+      "created_at": "2026-10-16T00:00:00Z",
+      "payload": {
+        "stage": "PRE_APPLY",
+        "subject": {
+          "artifact_id": "graph-unknown",
+          "revision": 2,
+          "kind": "QuestionGraph",
+          "content_hash": "ff3cf3e11019a523e025c64e949958caa504b0e4c50d66656cbe586d057087f0"
+        },
+        "graph": {
+          "artifact_id": "graph-unknown",
+          "revision": 2,
+          "kind": "QuestionGraph",
+          "content_hash": "ff3cf3e11019a523e025c64e949958caa504b0e4c50d66656cbe586d057087f0"
+        },
+        "policy": {
+          "policy_id": "usense-v1-proposal",
+          "revision": 1,
+          "content_hash": "e5658f6abde137fb1e4b355b119c2dbebded8417689f81493b48b20a3480646b"
+        },
+        "snapshot": null,
+        "receipt": null,
+        "coverage": {
+          "scope_id": "synthetic-scope",
+          "pages_expected": [
+            "asset-page-a1",
+            "asset-page-a2",
+            "asset-page-b1"
+          ],
+          "pages_checked": [
+            "asset-page-a1",
+            "asset-page-a2",
+            "asset-page-b1"
+          ],
+          "clue_ids": [
+            "clue-alpha-start",
+            "clue-shared",
+            "clue-alpha-end",
+            "clue-alpha-answer",
+            "clue-child-stem",
+            "clue-child-answer",
+            "clue-beta-stem",
+            "clue-beta-answer"
+          ],
+          "unassigned_region_ids": []
+        },
+        "checks": [
+          {
+            "check_id": "source_integrity",
+            "outcome": "PASS",
+            "evidence_refs": [
+              "proof-checks"
+            ],
+            "reason": "Explicit synthetic check: source_integrity passed for the declared synthetic scope."
+          },
+          {
+            "check_id": "structure",
+            "outcome": "PASS",
+            "evidence_refs": [
+              "proof-checks"
+            ],
+            "reason": "Explicit synthetic check: structure passed for the declared synthetic scope."
+          },
+          {
+            "check_id": "answer_matching",
+            "outcome": "PASS",
+            "evidence_refs": [
+              "proof-checks"
+            ],
+            "reason": "Explicit synthetic check: answer_matching passed for the declared synthetic scope."
+          },
+          {
+            "check_id": "coverage",
+            "outcome": "PASS",
+            "evidence_refs": [
+              "proof-checks"
+            ],
+            "reason": "Explicit synthetic check: coverage passed for the declared synthetic scope."
+          },
+          {
+            "check_id": "policy",
+            "outcome": "PASS",
+            "evidence_refs": [
+              "proof-checks"
+            ],
+            "reason": "Explicit synthetic check: policy passed for the declared synthetic scope."
+          }
+        ],
+        "issues": [],
+        "decision": "PASS",
+        "reason": "Diagnostic contract fixture; not measured algorithm quality or platform acceptance."
+      }
+    },
+    {
+      "schema_version": "1.0.0-a-proposal",
+      "artifact_id": "targetcheck-unknown",
+      "revision": 1,
+      "kind": "CheckReport",
+      "run_id": "synthetic-run-unknown",
+      "book_id": "synthetic-book",
+      "scope_id": "synthetic-scope",
+      "input_refs": [
+        {
+          "artifact_id": "graph-unknown",
+          "revision": 2,
+          "kind": "QuestionGraph",
+          "content_hash": "ff3cf3e11019a523e025c64e949958caa504b0e4c50d66656cbe586d057087f0"
+        },
+        {
+          "artifact_id": "snapshot-unknown",
+          "revision": 1,
+          "kind": "PlatformSnapshot",
+          "content_hash": "72f5f1510f320ac877fb6ed429dd14278623c0733a1a0b7eec30af6f1e727d99"
+        }
+      ],
+      "producer": {
+        "module": "synthetic-fixtures",
+        "implementation_version": "c01-fixtures-1",
+        "config_version": "fixed-1",
+        "policy_versions": [
+          {
+            "policy_id": "usense-v1-proposal",
+            "revision": 1,
+            "content_hash": "e5658f6abde137fb1e4b355b119c2dbebded8417689f81493b48b20a3480646b"
+          }
+        ],
+        "model_version": null,
+        "prompt_version": null,
+        "evidence_mode": "SYNTHETIC"
+      },
+      "content_hash": "c454d303c5448f953abd52de0ab3eb142f0dfdb494eb9e0ccf94366c19c538f6",
+      "created_at": "2026-10-16T00:00:00Z",
+      "payload": {
+        "stage": "TARGET",
+        "subject": {
+          "artifact_id": "snapshot-unknown",
+          "revision": 1,
+          "kind": "PlatformSnapshot",
+          "content_hash": "72f5f1510f320ac877fb6ed429dd14278623c0733a1a0b7eec30af6f1e727d99"
+        },
+        "graph": {
+          "artifact_id": "graph-unknown",
+          "revision": 2,
+          "kind": "QuestionGraph",
+          "content_hash": "ff3cf3e11019a523e025c64e949958caa504b0e4c50d66656cbe586d057087f0"
+        },
+        "policy": {
+          "policy_id": "usense-v1-proposal",
+          "revision": 1,
+          "content_hash": "e5658f6abde137fb1e4b355b119c2dbebded8417689f81493b48b20a3480646b"
+        },
+        "snapshot": {
+          "artifact_id": "snapshot-unknown",
+          "revision": 1,
+          "kind": "PlatformSnapshot",
+          "content_hash": "72f5f1510f320ac877fb6ed429dd14278623c0733a1a0b7eec30af6f1e727d99"
+        },
+        "receipt": null,
+        "coverage": {
+          "scope_id": "synthetic-scope",
+          "pages_expected": [
+            "asset-page-a1",
+            "asset-page-a2",
+            "asset-page-b1"
+          ],
+          "pages_checked": [
+            "asset-page-a1",
+            "asset-page-a2",
+            "asset-page-b1"
+          ],
+          "clue_ids": [
+            "clue-alpha-start",
+            "clue-shared",
+            "clue-alpha-end",
+            "clue-alpha-answer",
+            "clue-child-stem",
+            "clue-child-answer",
+            "clue-beta-stem",
+            "clue-beta-answer"
+          ],
+          "unassigned_region_ids": []
+        },
+        "checks": [
+          {
+            "check_id": "target_version",
+            "outcome": "PASS",
+            "evidence_refs": [
+              "proof-checks"
+            ],
+            "reason": "Explicit synthetic check: target_version passed for the declared synthetic scope."
+          },
+          {
+            "check_id": "authorized_scope",
+            "outcome": "PASS",
+            "evidence_refs": [
+              "proof-checks"
+            ],
+            "reason": "Explicit synthetic check: authorized_scope passed for the declared synthetic scope."
+          },
+          {
+            "check_id": "capabilities",
+            "outcome": "PASS",
+            "evidence_refs": [
+              "proof-checks"
+            ],
+            "reason": "Explicit synthetic check: capabilities passed for the declared synthetic scope."
+          },
+          {
+            "check_id": "policy",
+            "outcome": "PASS",
+            "evidence_refs": [
+              "proof-checks"
+            ],
+            "reason": "Explicit synthetic check: policy passed for the declared synthetic scope."
+          }
+        ],
+        "issues": [],
+        "decision": "PASS",
+        "reason": "Diagnostic contract fixture; not measured algorithm quality or platform acceptance."
+      }
+    },
+    {
+      "schema_version": "1.0.0-a-proposal",
+      "artifact_id": "plan-unknown",
+      "revision": 1,
+      "kind": "ApplyPlan",
+      "run_id": "synthetic-run-unknown",
+      "book_id": "synthetic-book",
+      "scope_id": "synthetic-scope",
+      "input_refs": [
+        {
+          "artifact_id": "graph-unknown",
+          "revision": 2,
+          "kind": "QuestionGraph",
+          "content_hash": "ff3cf3e11019a523e025c64e949958caa504b0e4c50d66656cbe586d057087f0"
+        },
+        {
+          "artifact_id": "precheck-unknown",
+          "revision": 1,
+          "kind": "CheckReport",
+          "content_hash": "642ec8f4de5bdcc8688eded68aa071c61ccfcf97d0407efd334a87e075585b8b"
+        },
+        {
+          "artifact_id": "targetcheck-unknown",
+          "revision": 1,
+          "kind": "CheckReport",
+          "content_hash": "c454d303c5448f953abd52de0ab3eb142f0dfdb494eb9e0ccf94366c19c538f6"
+        },
+        {
+          "artifact_id": "snapshot-unknown",
+          "revision": 1,
+          "kind": "PlatformSnapshot",
+          "content_hash": "72f5f1510f320ac877fb6ed429dd14278623c0733a1a0b7eec30af6f1e727d99"
+        }
+      ],
+      "producer": {
+        "module": "synthetic-fixtures",
+        "implementation_version": "c01-fixtures-1",
+        "config_version": "fixed-1",
+        "policy_versions": [
+          {
+            "policy_id": "usense-v1-proposal",
+            "revision": 1,
+            "content_hash": "e5658f6abde137fb1e4b355b119c2dbebded8417689f81493b48b20a3480646b"
+          }
+        ],
+        "model_version": null,
+        "prompt_version": null,
+        "evidence_mode": "SYNTHETIC"
+      },
+      "content_hash": "346a953e0b6c968de9dfe812a61e35591d234c54f59252bdb7faea35f505682b",
+      "created_at": "2026-10-16T00:00:00Z",
+      "payload": {
+        "graph": {
+          "artifact_id": "graph-unknown",
+          "revision": 2,
+          "kind": "QuestionGraph",
+          "content_hash": "ff3cf3e11019a523e025c64e949958caa504b0e4c50d66656cbe586d057087f0"
+        },
+        "precheck": {
+          "artifact_id": "precheck-unknown",
+          "revision": 1,
+          "kind": "CheckReport",
+          "content_hash": "642ec8f4de5bdcc8688eded68aa071c61ccfcf97d0407efd334a87e075585b8b"
+        },
+        "targetcheck": {
+          "artifact_id": "targetcheck-unknown",
+          "revision": 1,
+          "kind": "CheckReport",
+          "content_hash": "c454d303c5448f953abd52de0ab3eb142f0dfdb494eb9e0ccf94366c19c538f6"
+        },
+        "snapshot": {
+          "artifact_id": "snapshot-unknown",
+          "revision": 1,
+          "kind": "PlatformSnapshot",
+          "content_hash": "72f5f1510f320ac877fb6ed429dd14278623c0733a1a0b7eec30af6f1e727d99"
+        },
+        "policy": {
+          "policy_id": "usense-v1-proposal",
+          "revision": 1,
+          "content_hash": "e5658f6abde137fb1e4b355b119c2dbebded8417689f81493b48b20a3480646b"
+        },
+        "readiness": "READY",
+        "execution_mode": "SIMULATED",
+        "session_mode": "SAME_SESSION_HANDOFF",
+        "required_capabilities": [
+          "frame_readback",
+          "same_session_handoff"
+        ],
+        "actions": [
+          {
+            "action_id": "action-alpha",
+            "target": {
+              "target_id": "synthetic-target",
+              "question_id": "question-alpha",
+              "platform_question_id": null
+            },
+            "source_entity_ids": [
+              "fragment-alpha-start",
+              "fragment-alpha-end",
+              "fragment-alpha-answer",
+              "fragment-shared"
+            ],
+            "expected_before": {
+              "question_exists": false
+            },
+            "operation": "CREATE_FRAMES",
+            "expected_after": {
+              "question_exists": true,
+              "fragment_count": 4
+            },
+            "depends_on": []
+          },
+          {
+            "action_id": "action-child",
+            "target": {
+              "target_id": "synthetic-target",
+              "question_id": "question-child",
+              "platform_question_id": null
+            },
+            "source_entity_ids": [
+              "fragment-child-stem",
+              "fragment-child-answer",
+              "fragment-shared"
+            ],
+            "expected_before": {
+              "question_exists": false
+            },
+            "operation": "CREATE_FRAMES",
+            "expected_after": {
+              "question_exists": true,
+              "fragment_count": 3
+            },
+            "depends_on": []
+          },
+          {
+            "action_id": "action-beta",
+            "target": {
+              "target_id": "synthetic-target",
+              "question_id": "question-beta",
+              "platform_question_id": null
+            },
+            "source_entity_ids": [
+              "fragment-beta-stem",
+              "fragment-beta-answer"
+            ],
+            "expected_before": {
+              "question_exists": false
+            },
+            "operation": "CREATE_FRAMES",
+            "expected_after": {
+              "question_exists": true,
+              "fragment_count": 2
+            },
+            "depends_on": []
+          }
+        ],
+        "blocked_issue_ids": [],
+        "previous_receipt": null,
+        "final_submission": "HUMAN_ONLY"
+      }
+    },
+    {
+      "schema_version": "1.0.0-a-proposal",
+      "artifact_id": "receipt-unknown",
+      "revision": 1,
+      "kind": "ExecutionReceipt",
+      "run_id": "synthetic-run-unknown",
+      "book_id": "synthetic-book",
+      "scope_id": "synthetic-scope",
+      "input_refs": [
+        {
+          "artifact_id": "plan-unknown",
+          "revision": 1,
+          "kind": "ApplyPlan",
+          "content_hash": "346a953e0b6c968de9dfe812a61e35591d234c54f59252bdb7faea35f505682b"
+        }
+      ],
+      "producer": {
+        "module": "synthetic-fixtures",
+        "implementation_version": "c01-fixtures-1",
+        "config_version": "fixed-1",
+        "policy_versions": [
+          {
+            "policy_id": "usense-v1-proposal",
+            "revision": 1,
+            "content_hash": "e5658f6abde137fb1e4b355b119c2dbebded8417689f81493b48b20a3480646b"
+          }
+        ],
+        "model_version": null,
+        "prompt_version": null,
+        "evidence_mode": "SYNTHETIC"
+      },
+      "content_hash": "c465d744bb2a6e0b2a3fbaf2e524480da6e0b42d6559d769d6607205623ccc5a",
+      "created_at": "2026-10-16T00:00:00Z",
+      "payload": {
+        "plan": {
+          "artifact_id": "plan-unknown",
+          "revision": 1,
+          "kind": "ApplyPlan",
+          "content_hash": "346a953e0b6c968de9dfe812a61e35591d234c54f59252bdb7faea35f505682b"
+        },
+        "execution_mode": "SIMULATED",
+        "results": [
+          {
+            "action_id": "action-alpha",
+            "outcome": "UNKNOWN",
+            "platform_ids": [],
+            "before_evidence_refs": [
+              "proof-before"
+            ],
+            "after_evidence_refs": [
+              "proof-timeout"
+            ],
+            "readback": null,
+            "effect_match": "INDETERMINATE",
+            "next_step": "RECONCILE",
+            "replay_allowed": false,
+            "reason": "Simulated timeout; reconcile before any further writing."
+          },
+          {
+            "action_id": "action-child",
+            "outcome": "UNKNOWN",
+            "platform_ids": [],
+            "before_evidence_refs": [
+              "proof-before"
+            ],
+            "after_evidence_refs": [
+              "proof-timeout"
+            ],
+            "readback": null,
+            "effect_match": "INDETERMINATE",
+            "next_step": "RECONCILE",
+            "replay_allowed": false,
+            "reason": "Simulated timeout; reconcile before any further writing."
+          },
+          {
+            "action_id": "action-beta",
+            "outcome": "UNKNOWN",
+            "platform_ids": [],
+            "before_evidence_refs": [
+              "proof-before"
+            ],
+            "after_evidence_refs": [
+              "proof-timeout"
+            ],
+            "readback": null,
+            "effect_match": "INDETERMINATE",
+            "next_step": "RECONCILE",
+            "replay_allowed": false,
+            "reason": "Simulated timeout; reconcile before any further writing."
+          }
+        ],
+        "unresolved_issue_ids": [
+          "issue-save-unknown"
+        ],
+        "write_disposition": "PAUSE_RECONCILE"
+      }
+    },
+    {
+      "schema_version": "1.0.0-a-proposal",
+      "artifact_id": "postcheck-unknown",
+      "revision": 1,
+      "kind": "CheckReport",
+      "run_id": "synthetic-run-unknown",
+      "book_id": "synthetic-book",
+      "scope_id": "synthetic-scope",
+      "input_refs": [
+        {
+          "artifact_id": "graph-unknown",
+          "revision": 2,
+          "kind": "QuestionGraph",
+          "content_hash": "ff3cf3e11019a523e025c64e949958caa504b0e4c50d66656cbe586d057087f0"
+        },
+        {
+          "artifact_id": "receipt-unknown",
+          "revision": 1,
+          "kind": "ExecutionReceipt",
+          "content_hash": "c465d744bb2a6e0b2a3fbaf2e524480da6e0b42d6559d769d6607205623ccc5a"
+        },
+        {
+          "artifact_id": "snapshot-unknown",
+          "revision": 1,
+          "kind": "PlatformSnapshot",
+          "content_hash": "72f5f1510f320ac877fb6ed429dd14278623c0733a1a0b7eec30af6f1e727d99"
+        }
+      ],
+      "producer": {
+        "module": "synthetic-fixtures",
+        "implementation_version": "c01-fixtures-1",
+        "config_version": "fixed-1",
+        "policy_versions": [
+          {
+            "policy_id": "usense-v1-proposal",
+            "revision": 1,
+            "content_hash": "e5658f6abde137fb1e4b355b119c2dbebded8417689f81493b48b20a3480646b"
+          }
+        ],
+        "model_version": null,
+        "prompt_version": null,
+        "evidence_mode": "SYNTHETIC"
+      },
+      "content_hash": "31ff1ae13cb0eccb259630aae5c8ed963e832c7640c596030223474dd5bf37fd",
+      "created_at": "2026-10-16T00:00:00Z",
+      "payload": {
+        "stage": "POST_APPLY",
+        "subject": {
+          "artifact_id": "receipt-unknown",
+          "revision": 1,
+          "kind": "ExecutionReceipt",
+          "content_hash": "c465d744bb2a6e0b2a3fbaf2e524480da6e0b42d6559d769d6607205623ccc5a"
+        },
+        "graph": {
+          "artifact_id": "graph-unknown",
+          "revision": 2,
+          "kind": "QuestionGraph",
+          "content_hash": "ff3cf3e11019a523e025c64e949958caa504b0e4c50d66656cbe586d057087f0"
+        },
+        "policy": {
+          "policy_id": "usense-v1-proposal",
+          "revision": 1,
+          "content_hash": "e5658f6abde137fb1e4b355b119c2dbebded8417689f81493b48b20a3480646b"
+        },
+        "snapshot": {
+          "artifact_id": "snapshot-unknown",
+          "revision": 1,
+          "kind": "PlatformSnapshot",
+          "content_hash": "72f5f1510f320ac877fb6ed429dd14278623c0733a1a0b7eec30af6f1e727d99"
+        },
+        "receipt": {
+          "artifact_id": "receipt-unknown",
+          "revision": 1,
+          "kind": "ExecutionReceipt",
+          "content_hash": "c465d744bb2a6e0b2a3fbaf2e524480da6e0b42d6559d769d6607205623ccc5a"
+        },
+        "coverage": {
+          "scope_id": "synthetic-scope",
+          "pages_expected": [
+            "asset-page-a1",
+            "asset-page-a2",
+            "asset-page-b1"
+          ],
+          "pages_checked": [
+            "asset-page-a1",
+            "asset-page-a2",
+            "asset-page-b1"
+          ],
+          "clue_ids": [
+            "clue-alpha-start",
+            "clue-shared",
+            "clue-alpha-end",
+            "clue-alpha-answer",
+            "clue-child-stem",
+            "clue-child-answer",
+            "clue-beta-stem",
+            "clue-beta-answer"
+          ],
+          "unassigned_region_ids": []
+        },
+        "checks": [
+          {
+            "check_id": "frame_structure",
+            "outcome": "UNAVAILABLE",
+            "evidence_refs": [
+              "proof-checks"
+            ],
+            "reason": "Explicit synthetic check: frame_structure cannot pass in this constructed case."
+          },
+          {
+            "check_id": "final_content",
+            "outcome": "UNAVAILABLE",
+            "evidence_refs": [
+              "proof-checks"
+            ],
+            "reason": "Explicit synthetic check: final_content cannot pass in this constructed case."
+          }
+        ],
+        "issues": [
+          {
+            "issue_id": "issue-save-unknown",
+            "code": "SAVE_UNKNOWN",
+            "scope_type": "action",
+            "scope_id": "action-alpha",
+            "evidence_refs": [
+              "proof-timeout"
+            ],
+            "severity": "blocking",
+            "blocks": [
+              "APPLY",
+              "COMPLETE"
+            ],
+            "suggested_strategy": {
+              "strategy_id": "RECONCILE",
+              "max_attempts": 0,
+              "max_cost": 0.0
+            },
+            "reason": "Simulated save may have succeeded; do not automatically resend."
+          }
+        ],
+        "decision": "HOLD",
+        "reason": "Diagnostic contract fixture; not measured algorithm quality or platform acceptance."
+      }
+    },
+    {
+      "schema_version": "1.0.0-a-proposal",
+      "artifact_id": "batch-unknown",
+      "revision": 1,
+      "kind": "BatchReport",
+      "run_id": "synthetic-run-unknown",
+      "book_id": "synthetic-book",
+      "scope_id": "synthetic-scope",
+      "input_refs": [
+        {
+          "artifact_id": "source-unknown",
+          "revision": 1,
+          "kind": "SourceBundle",
+          "content_hash": "1d4d7899ce11e804299d7be06941ad750b847afee3e220875355d505bc857e16"
+        },
+        {
+          "artifact_id": "graph-unknown",
+          "revision": 2,
+          "kind": "QuestionGraph",
+          "content_hash": "ff3cf3e11019a523e025c64e949958caa504b0e4c50d66656cbe586d057087f0"
+        },
+        {
+          "artifact_id": "receipt-unknown",
+          "revision": 1,
+          "kind": "ExecutionReceipt",
+          "content_hash": "c465d744bb2a6e0b2a3fbaf2e524480da6e0b42d6559d769d6607205623ccc5a"
+        },
+        {
+          "artifact_id": "postcheck-unknown",
+          "revision": 1,
+          "kind": "CheckReport",
+          "content_hash": "31ff1ae13cb0eccb259630aae5c8ed963e832c7640c596030223474dd5bf37fd"
+        }
+      ],
+      "producer": {
+        "module": "synthetic-fixtures",
+        "implementation_version": "c01-fixtures-1",
+        "config_version": "fixed-1",
+        "policy_versions": [
+          {
+            "policy_id": "usense-v1-proposal",
+            "revision": 1,
+            "content_hash": "e5658f6abde137fb1e4b355b119c2dbebded8417689f81493b48b20a3480646b"
+          }
+        ],
+        "model_version": null,
+        "prompt_version": null,
+        "evidence_mode": "SYNTHETIC"
+      },
+      "content_hash": "7d7e6dd1613f9864bbbcbe9da65020b97cb5dee3eec1c0415a11d0817ae22b77",
+      "created_at": "2026-10-16T00:00:00Z",
+      "payload": {
+        "source": {
+          "artifact_id": "source-unknown",
+          "revision": 1,
+          "kind": "SourceBundle",
+          "content_hash": "1d4d7899ce11e804299d7be06941ad750b847afee3e220875355d505bc857e16"
+        },
+        "graph": {
+          "artifact_id": "graph-unknown",
+          "revision": 2,
+          "kind": "QuestionGraph",
+          "content_hash": "ff3cf3e11019a523e025c64e949958caa504b0e4c50d66656cbe586d057087f0"
+        },
+        "receipt": {
+          "artifact_id": "receipt-unknown",
+          "revision": 1,
+          "kind": "ExecutionReceipt",
+          "content_hash": "c465d744bb2a6e0b2a3fbaf2e524480da6e0b42d6559d769d6607205623ccc5a"
+        },
+        "postcheck": {
+          "artifact_id": "postcheck-unknown",
+          "revision": 1,
+          "kind": "CheckReport",
+          "content_hash": "31ff1ae13cb0eccb259630aae5c8ed963e832c7640c596030223474dd5bf37fd"
+        },
+        "scope_manifest": [
+          "question-alpha",
+          "question-child",
+          "question-beta"
+        ],
+        "questions": [
+          {
+            "question_id": "question-alpha",
+            "state": "UNKNOWN",
+            "reason": "Constructed unknown contract state."
+          },
+          {
+            "question_id": "question-child",
+            "state": "UNKNOWN",
+            "reason": "Constructed unknown contract state."
+          },
+          {
+            "question_id": "question-beta",
+            "state": "UNKNOWN",
+            "reason": "Constructed unknown contract state."
+          }
+        ],
+        "total_expected": 3,
+        "coverage": {
+          "scope_id": "synthetic-scope",
+          "pages_expected": [
+            "asset-page-a1",
+            "asset-page-a2",
+            "asset-page-b1"
+          ],
+          "pages_checked": [
+            "asset-page-a1",
+            "asset-page-a2",
+            "asset-page-b1"
+          ],
+          "clue_ids": [
+            "clue-alpha-start",
+            "clue-shared",
+            "clue-alpha-end",
+            "clue-alpha-answer",
+            "clue-child-stem",
+            "clue-child-answer",
+            "clue-beta-stem",
+            "clue-beta-answer"
+          ],
+          "unassigned_region_ids": []
+        },
+        "cost": {
+          "model_calls": 0,
+          "amount": 0.0,
+          "currency": "CNY",
+          "billing_status": "KNOWN",
+          "human_minutes": 0.0
+        },
+        "unresolved_issue_ids": [
+          "issue-save-unknown"
+        ],
+        "submission_status": "NOT_SUBMITTED",
+        "submission_evidence_refs": [],
+        "content_check_status": "PENDING",
+        "frame_check_status": "UNAVAILABLE",
+        "state": "NEEDS_RECONCILIATION"
+      }
+    },
+    {
+      "schema_version": "1.0.0-a-proposal",
+      "artifact_id": "blocked-target",
+      "revision": 1,
+      "kind": "CheckReport",
+      "run_id": "a02-fixture-run",
+      "book_id": "other-book",
+      "scope_id": "synthetic-scope",
+      "input_refs": [
+        {
+          "artifact_id": "a02-graph",
+          "revision": 1,
+          "kind": "QuestionGraph",
+          "content_hash": "6017217c628216c01d4c079c498b1be2f0f3474216f9f51a17c57d82264212ba"
+        },
+        {
+          "artifact_id": "a02-snapshot",
+          "revision": 1,
+          "kind": "PlatformSnapshot",
+          "content_hash": "d15850eb1b4c27ca90e78b15249041524e8a8b5897a1f59b2cf8a970465c541e"
+        }
+      ],
+      "producer": {
+        "module": "a02-targetcheck",
+        "implementation_version": "a02-1",
+        "config_version": "a02-config-ec37df8a4c1ff1e9d85be14093f4c7172f2549ef72467b62958bba97f44a7123",
+        "policy_versions": [
+          {
+            "policy_id": "synthetic-a02-policy",
+            "revision": 1,
+            "content_hash": "5d914617cad7f10009ff34919b1c313d5c73bd322069b77cde54659a407ebc32"
+          }
+        ],
+        "model_version": null,
+        "prompt_version": null,
+        "evidence_mode": "SYNTHETIC"
+      },
+      "content_hash": "8c11ca2b663f361827cf6e6ac467bafa9591bb8c1bc7b0421ad201b9c8572b69",
+      "created_at": "2026-10-16T00:00:00Z",
+      "payload": {
+        "stage": "TARGET",
+        "subject": {
+          "artifact_id": "a02-snapshot",
+          "revision": 1,
+          "kind": "PlatformSnapshot",
+          "content_hash": "d15850eb1b4c27ca90e78b15249041524e8a8b5897a1f59b2cf8a970465c541e"
+        },
+        "graph": {
+          "artifact_id": "a02-graph",
+          "revision": 1,
+          "kind": "QuestionGraph",
+          "content_hash": "6017217c628216c01d4c079c498b1be2f0f3474216f9f51a17c57d82264212ba"
+        },
+        "policy": {
+          "policy_id": "synthetic-a02-policy",
+          "revision": 1,
+          "content_hash": "5d914617cad7f10009ff34919b1c313d5c73bd322069b77cde54659a407ebc32"
+        },
+        "snapshot": {
+          "artifact_id": "a02-snapshot",
+          "revision": 1,
+          "kind": "PlatformSnapshot",
+          "content_hash": "d15850eb1b4c27ca90e78b15249041524e8a8b5897a1f59b2cf8a970465c541e"
+        },
+        "receipt": null,
+        "coverage": {
+          "scope_id": "synthetic-scope",
+          "pages_expected": [
+            "asset-page-a1",
+            "asset-page-a2",
+            "asset-page-b1"
+          ],
+          "pages_checked": [
+            "asset-page-a1",
+            "asset-page-a2",
+            "asset-page-b1"
+          ],
+          "clue_ids": [
+            "clue-alpha-start",
+            "clue-shared",
+            "clue-alpha-end",
+            "clue-alpha-answer",
+            "clue-child-stem",
+            "clue-child-answer",
+            "clue-beta-stem",
+            "clue-beta-answer"
+          ],
+          "unassigned_region_ids": []
+        },
+        "checks": [
+          {
+            "check_id": "target_version",
+            "outcome": "PASS",
+            "evidence_refs": [
+              "proof-target"
+            ],
+            "reason": "SYNTHETIC facts checked by A02: target_version"
+          },
+          {
+            "check_id": "authorized_scope",
+            "outcome": "PASS",
+            "evidence_refs": [
+              "proof-target"
+            ],
+            "reason": "SYNTHETIC facts checked by A02: authorized_scope"
+          },
+          {
+            "check_id": "capabilities",
+            "outcome": "PASS",
+            "evidence_refs": [
+              "proof-target"
+            ],
+            "reason": "SYNTHETIC facts checked by A02: capabilities"
+          },
+          {
+            "check_id": "policy",
+            "outcome": "PASS",
+            "evidence_refs": [
+              "proof-target"
+            ],
+            "reason": "SYNTHETIC facts checked by A02: policy"
+          },
+          {
+            "check_id": "coverage",
+            "outcome": "FAIL",
+            "evidence_refs": [
+              "proof-target"
+            ],
+            "reason": "independent scope/pages/clues are incomplete"
+          }
+        ],
+        "issues": [
+          {
+            "issue_id": "issue-a02-ec4f870aa853a496a3de-coverage",
+            "code": "UNASSIGNED_CONTENT",
+            "scope_type": "scope",
+            "scope_id": "synthetic-scope",
+            "evidence_refs": [
+              "proof-target"
+            ],
+            "severity": "blocking",
+            "blocks": [
+              "PLAN",
+              "APPLY"
+            ],
+            "suggested_strategy": {
+              "strategy_id": "HUMAN_REVIEW",
+              "max_attempts": 0,
+              "max_cost": 0.0
+            },
+            "reason": "independent scope/pages/clues are incomplete"
+          }
+        ],
+        "decision": "EXCEPTION",
+        "reason": "SYNTHETIC target conditions computed by A02; no algorithm or platform acceptance"
+      }
+    },
+    {
+      "schema_version": "1.0.0-a-proposal",
+      "artifact_id": "blocked-plan",
+      "revision": 1,
+      "kind": "ApplyPlan",
+      "run_id": "a02-fixture-run",
+      "book_id": "other-book",
+      "scope_id": "synthetic-scope",
+      "input_refs": [
+        {
+          "artifact_id": "a02-graph",
+          "revision": 1,
+          "kind": "QuestionGraph",
+          "content_hash": "6017217c628216c01d4c079c498b1be2f0f3474216f9f51a17c57d82264212ba"
+        },
+        {
+          "artifact_id": "a02-precheck-stub",
+          "revision": 1,
+          "kind": "CheckReport",
+          "content_hash": "e3a490d3ff202be2c150a734b0a2e8f5eb107e37e058833c150b30ea918ae972"
+        },
+        {
+          "artifact_id": "blocked-target",
+          "revision": 1,
+          "kind": "CheckReport",
+          "content_hash": "8c11ca2b663f361827cf6e6ac467bafa9591bb8c1bc7b0421ad201b9c8572b69"
+        },
+        {
+          "artifact_id": "a02-snapshot",
+          "revision": 1,
+          "kind": "PlatformSnapshot",
+          "content_hash": "d15850eb1b4c27ca90e78b15249041524e8a8b5897a1f59b2cf8a970465c541e"
+        }
+      ],
+      "producer": {
+        "module": "a02-planner",
+        "implementation_version": "a02-1",
+        "config_version": "a02-config-ec37df8a4c1ff1e9d85be14093f4c7172f2549ef72467b62958bba97f44a7123",
+        "policy_versions": [
+          {
+            "policy_id": "synthetic-a02-policy",
+            "revision": 1,
+            "content_hash": "5d914617cad7f10009ff34919b1c313d5c73bd322069b77cde54659a407ebc32"
+          }
+        ],
+        "model_version": null,
+        "prompt_version": null,
+        "evidence_mode": "SYNTHETIC"
+      },
+      "content_hash": "55ec0ff34e25cf136fff2ffb014f11250cfcbe92c4c8733df7dffac7f289a8f9",
+      "created_at": "2026-10-16T00:00:00Z",
+      "payload": {
+        "graph": {
+          "artifact_id": "a02-graph",
+          "revision": 1,
+          "kind": "QuestionGraph",
+          "content_hash": "6017217c628216c01d4c079c498b1be2f0f3474216f9f51a17c57d82264212ba"
+        },
+        "precheck": {
+          "artifact_id": "a02-precheck-stub",
+          "revision": 1,
+          "kind": "CheckReport",
+          "content_hash": "e3a490d3ff202be2c150a734b0a2e8f5eb107e37e058833c150b30ea918ae972"
+        },
+        "targetcheck": {
+          "artifact_id": "blocked-target",
+          "revision": 1,
+          "kind": "CheckReport",
+          "content_hash": "8c11ca2b663f361827cf6e6ac467bafa9591bb8c1bc7b0421ad201b9c8572b69"
+        },
+        "snapshot": {
+          "artifact_id": "a02-snapshot",
+          "revision": 1,
+          "kind": "PlatformSnapshot",
+          "content_hash": "d15850eb1b4c27ca90e78b15249041524e8a8b5897a1f59b2cf8a970465c541e"
+        },
+        "policy": {
+          "policy_id": "synthetic-a02-policy",
+          "revision": 1,
+          "content_hash": "5d914617cad7f10009ff34919b1c313d5c73bd322069b77cde54659a407ebc32"
+        },
+        "readiness": "BLOCKED",
+        "execution_mode": "SIMULATED",
+        "session_mode": "SAME_SESSION_HANDOFF",
+        "required_capabilities": [
+          "frame_readback",
+          "same_session_handoff"
+        ],
+        "actions": [],
+        "blocked_issue_ids": [
+          "issue-a02-missing-input",
+          "issue-a02-ec4f870aa853a496a3de-coverage"
+        ],
+        "previous_receipt": null,
+        "final_submission": "HUMAN_ONLY"
+      }
+    }
+  ]
+}
