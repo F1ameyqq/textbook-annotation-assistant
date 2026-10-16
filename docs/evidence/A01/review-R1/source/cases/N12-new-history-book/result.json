@@ -1,0 +1,14 @@
+{
+  "actual": "REJECT",
+  "code": "BOOK_CONFLICT",
+  "description": "History/input hashes consistently updated; raw book_id conflicts with bundle book_id.",
+  "error": "history.docs/evidence/A05/review/independent-source-page14.json.file_id: [BOOK_CONFLICT] book identifier differs from requested archive",
+  "error_type": "StaticSourceError",
+  "expected": "REJECT",
+  "expected_code": "BOOK_CONFLICT",
+  "id": "N12-new-history-book",
+  "issues": null,
+  "location": "history.docs/evidence/A05/review/independent-source-page14.json.file_id",
+  "matches_expectation": true,
+  "traceback": "Traceback (most recent call last):\n  File \"D:\\1800\\docs\\evidence\\A01\\review-R1\\source\\probe.py\", line 72, in run\n    result.update(actual='ACCEPT', detail=action(identifier))\n  File \"D:\\1800\\docs\\evidence\\A01\\review-R1\\source\\probe.py\", line 225, in <lambda>\n    lambda n: semantic_history(n, lambda p: p['data'].update(file_id='46006966')), 'BOOK_CONFLICT')\n  File \"D:\\1800\\docs\\evidence\\A01\\review-R1\\source\\probe.py\", line 221, in semantic_history\n    return mutate(identifier, lambda path: history_with_consistent_digest(path, NEW_RELATIVE, NEW_ARCHIVE, mutation), '46007447')\n  File \"D:\\1800\\docs\\evidence\\A01\\review-R1\\source\\probe.py\", line 139, in mutate\n    return inspect(identifier, path, book, before)\n  File \"D:\\1800\\docs\\evidence\\A01\\review-R1\\source\\probe.py\", line 129, in inspect\n    accepted = load_static_bundle(path, expected_book_id=book)\n  File \"D:\\1800\\.local\\stages\\A01-review-R1\\03c1af41a134945c406a52a48e3d4f6f0da33eb2\\snapshot\\src\\annotation\\source\\static\\importer.py\", line 453, in load_static_bundle\n    validate_archive_records(path.parent,source,provenance,limitations,integrity)\n  File \"D:\\1800\\.local\\stages\\A01-review-R1\\03c1af41a134945c406a52a48e3d4f6f0da33eb2\\snapshot\\src\\annotation\\source\\static\\consistency.py\", line 177, in validate_archive_records\n    check_book(data.get(\"file_id\"),book,\"history.\"+archive+\".file_id\")\n  File \"D:\\1800\\.local\\stages\\A01-review-R1\\03c1af41a134945c406a52a48e3d4f6f0da33eb2\\snapshot\\src\\annotation\\source\\static\\importer.py\", line 106, in check_book\n    fail(\"BOOK_CONFLICT\", location, \"book identifier differs from requested archive\")\n  File \"D:\\1800\\.local\\stages\\A01-review-R1\\03c1af41a134945c406a52a48e3d4f6f0da33eb2\\snapshot\\src\\annotation\\source\\static\\importer.py\", line 27, in fail\n    raise StaticSourceError(code, location, message)\nannotation.source.static.importer.StaticSourceError: history.docs/evidence/A05/review/independent-source-page14.json.file_id: [BOOK_CONFLICT] book identifier differs from requested archive\n"
+}

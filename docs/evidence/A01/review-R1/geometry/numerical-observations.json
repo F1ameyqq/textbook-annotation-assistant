@@ -1,0 +1,273 @@
+[
+  {
+    "id": "N01.configured-scale-inverse",
+    "input": {
+      "image": {
+        "asset_id": "original",
+        "width": 30000000,
+        "height": 1,
+        "sha256": "1111111111111111111111111111111111111111111111111111111111111111"
+      },
+      "config": {
+        "crop": [
+          0,
+          0,
+          30000000,
+          1
+        ],
+        "scale": [
+          2.3333333333333335,
+          1
+        ],
+        "padding": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "rotation_degrees": 0
+      },
+      "point": [
+        35000000.0,
+        0.5
+      ],
+      "exact_expected_x": "78812993478983680000000/5254199565265579"
+    },
+    "expected": [
+      14999999.999999998,
+      0.5
+    ],
+    "actual": {
+      "returned": [
+        15000000.0,
+        0.5
+      ]
+    },
+    "outcome": "OBSERVATION",
+    "comparison_outcome": "FAIL",
+    "blocking": false,
+    "classification": "configured binary scale inverse versus documented endpoint normalization; numerical semantic observation"
+  },
+  {
+    "id": "N01.configured-scale-inverse-box",
+    "input": {
+      "image": {
+        "asset_id": "original",
+        "width": 30000000,
+        "height": 1,
+        "sha256": "1111111111111111111111111111111111111111111111111111111111111111"
+      },
+      "config": {
+        "crop": [
+          0,
+          0,
+          30000000,
+          1
+        ],
+        "scale": [
+          2.3333333333333335,
+          1
+        ],
+        "padding": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "rotation_degrees": 0
+      },
+      "bbox": [
+        35000000.0,
+        0.0,
+        49000000.0,
+        1.0
+      ]
+    },
+    "expected": [
+      14999999.999999998,
+      0.0,
+      21000000.0,
+      1.0
+    ],
+    "actual": {
+      "returned": [
+        15000000.0,
+        0.0,
+        21000000.0,
+        1.0
+      ]
+    },
+    "outcome": "OBSERVATION",
+    "comparison_outcome": "FAIL",
+    "blocking": false,
+    "classification": "configured binary scale inverse versus documented endpoint normalization; numerical semantic observation"
+  },
+  {
+    "id": "N02.neighbor-positive-box-forward",
+    "input": {
+      "image": {
+        "asset_id": "original",
+        "width": 4,
+        "height": 1,
+        "sha256": "1111111111111111111111111111111111111111111111111111111111111111"
+      },
+      "config": {
+        "crop": [
+          1,
+          0,
+          4,
+          1
+        ],
+        "scale": [
+          2,
+          1
+        ],
+        "padding": [
+          1,
+          0,
+          0,
+          0
+        ],
+        "rotation_degrees": 180
+      },
+      "bbox": [
+        1.0,
+        0.0,
+        1.0000000000000002,
+        1.0
+      ],
+      "exact_transformed_x_bounds": [
+        "13510798882111487/2251799813685248",
+        "6"
+      ]
+    },
+    "expected": "positive-area transformed box in declared supported domain",
+    "actual": {
+      "exception": "ValidationError",
+      "code": null,
+      "message": "1 validation error for OriginalBox\n  Value error, bbox must have positive area within bound original image [type=value_error, input_value={'image': ImageBinding(as...': [6.0, 0.0, 6.0, 1.0]}, input_type=dict]\n    For further information visit https://errors.pydantic.dev/2.12/v/value_error"
+    },
+    "outcome": "OBSERVATION",
+    "comparison_outcome": "FAIL",
+    "blocking": false,
+    "classification": "nonrepresentable neighboring positive box explicitly fails validation; representation limitation"
+  },
+  {
+    "id": "N02.neighbor-positive-box-inverse",
+    "input": {
+      "image": {
+        "asset_id": "original",
+        "width": 4,
+        "height": 1,
+        "sha256": "1111111111111111111111111111111111111111111111111111111111111111"
+      },
+      "config": {
+        "crop": [
+          1,
+          0,
+          4,
+          1
+        ],
+        "scale": [
+          2,
+          1
+        ],
+        "padding": [
+          1,
+          0,
+          0,
+          0
+        ],
+        "rotation_degrees": 0
+      },
+      "bbox": [
+        1.0,
+        0.0,
+        1.0000000000000002,
+        1.0
+      ],
+      "exact_original_x_bounds": [
+        "1",
+        "9007199254740993/9007199254740992"
+      ]
+    },
+    "expected": "positive-area inverse box in declared supported domain",
+    "actual": {
+      "exception": "ValidationError",
+      "code": null,
+      "message": "1 validation error for OriginalBox\n  Value error, bbox must have positive area within bound original image [type=value_error, input_value={'image': ImageBinding(as...': [1.0, 0.0, 1.0, 1.0]}, input_type=dict]\n    For further information visit https://errors.pydantic.dev/2.12/v/value_error"
+    },
+    "outcome": "OBSERVATION",
+    "comparison_outcome": "FAIL",
+    "blocking": false,
+    "classification": "nonrepresentable neighboring positive box explicitly fails validation; representation limitation"
+  },
+  {
+    "id": "N03.accepted-range-roundtrip.100000000",
+    "input": {
+      "image": {
+        "asset_id": "original",
+        "width": 100000000,
+        "height": 1,
+        "sha256": "1111111111111111111111111111111111111111111111111111111111111111"
+      },
+      "rotation": 180,
+      "original_point": [
+        0.1,
+        0.5
+      ],
+      "forward_actual": [
+        99999999.9,
+        0.5
+      ]
+    },
+    "expected": [
+      0.1,
+      0.5
+    ],
+    "actual": {
+      "returned": [
+        0.09999999403953552,
+        0.5
+      ]
+    },
+    "outcome": "OBSERVATION",
+    "comparison_outcome": "FAIL",
+    "blocking": false,
+    "classification": "accepted large canvas loses subpixel detail under float rotation; representation limitation, not a new 1e-9 global guarantee"
+  },
+  {
+    "id": "N03.accepted-range-roundtrip.9007199254740992",
+    "input": {
+      "image": {
+        "asset_id": "original",
+        "width": 9007199254740992,
+        "height": 1,
+        "sha256": "1111111111111111111111111111111111111111111111111111111111111111"
+      },
+      "rotation": 180,
+      "original_point": [
+        0.1,
+        0.5
+      ],
+      "forward_actual": [
+        9007199254740992.0,
+        0.5
+      ]
+    },
+    "expected": [
+      0.1,
+      0.5
+    ],
+    "actual": {
+      "returned": [
+        0.0,
+        0.5
+      ]
+    },
+    "outcome": "OBSERVATION",
+    "comparison_outcome": "FAIL",
+    "blocking": false,
+    "classification": "accepted large canvas loses subpixel detail under float rotation; representation limitation, not a new 1e-9 global guarantee"
+  }
+]

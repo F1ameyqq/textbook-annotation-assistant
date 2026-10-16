@@ -1,0 +1,14 @@
+{
+  "actual": "REJECT",
+  "code": "MAPPING_EVIDENCE",
+  "description": "Replay original same invented printed_page=999 in provenance/public mapping.",
+  "error": "provenance.mappings[0].printed_page: [MAPPING_EVIDENCE] assigned archive has no printed-page mapping evidence",
+  "error_type": "StaticSourceError",
+  "expected": "REJECT",
+  "expected_code": "MAPPING_EVIDENCE",
+  "id": "S14-unfounded-printed-page",
+  "issues": null,
+  "location": "provenance.mappings[0].printed_page",
+  "matches_expectation": true,
+  "traceback": "Traceback (most recent call last):\n  File \"D:\\1800\\docs\\evidence\\A01\\review-R1\\source\\probe.py\", line 72, in run\n    result.update(actual='ACCEPT', detail=action(identifier))\n  File \"D:\\1800\\docs\\evidence\\A01\\review-R1\\source\\probe.py\", line 168, in <lambda>\n    lambda n: mutate(n, invented_printed), 'MAPPING_EVIDENCE')\n  File \"D:\\1800\\docs\\evidence\\A01\\review-R1\\source\\probe.py\", line 139, in mutate\n    return inspect(identifier, path, book, before)\n  File \"D:\\1800\\docs\\evidence\\A01\\review-R1\\source\\probe.py\", line 129, in inspect\n    accepted = load_static_bundle(path, expected_book_id=book)\n  File \"D:\\1800\\.local\\stages\\A01-review-R1\\03c1af41a134945c406a52a48e3d4f6f0da33eb2\\snapshot\\src\\annotation\\source\\static\\importer.py\", line 453, in load_static_bundle\n    validate_archive_records(path.parent,source,provenance,limitations,integrity)\n  File \"D:\\1800\\.local\\stages\\A01-review-R1\\03c1af41a134945c406a52a48e3d4f6f0da33eb2\\snapshot\\src\\annotation\\source\\static\\consistency.py\", line 127, in validate_archive_records\n    require(mapping.get(\"printed_page\") is None,\"MAPPING_EVIDENCE\",\"provenance.mappings[{}].printed_page\".format(i),\"assigned archive has no printed-page mapping evidence\")\n  File \"D:\\1800\\.local\\stages\\A01-review-R1\\03c1af41a134945c406a52a48e3d4f6f0da33eb2\\snapshot\\src\\annotation\\source\\static\\consistency.py\", line 13, in require\n    fail(code,location,message)\n  File \"D:\\1800\\.local\\stages\\A01-review-R1\\03c1af41a134945c406a52a48e3d4f6f0da33eb2\\snapshot\\src\\annotation\\source\\static\\importer.py\", line 27, in fail\n    raise StaticSourceError(code, location, message)\nannotation.source.static.importer.StaticSourceError: provenance.mappings[0].printed_page: [MAPPING_EVIDENCE] assigned archive has no printed-page mapping evidence\n"
+}

@@ -1,0 +1,132 @@
+{
+  "task": "A01-R1",
+  "decision": "REWORK",
+  "reviewed_at": "2026-10-16T23:38:09.104758+08:00",
+  "target_commit": "03c1af41a134945c406a52a48e3d4f6f0da33eb2",
+  "implementation_commit": "0ee7e836e3bc1849f91840b4271d233bbd8e72dd",
+  "R1_base": "a8d5e96d128e10d341de935d4856682e50df79d9",
+  "original_base_workflow": "39341c98d73c354d639f3beeb55429f55d0e9be5",
+  "execution_report_sha256": "61eb2ec6c666d112caf7eb07367f5d35d48ce596453215d92001614000bf2b40",
+  "review_report_sha256": "394001a09bb61565816c2a06dc3e8f478e4cb3e295d221cc4563aad1a3bb36cf",
+  "temporary_root": "C:\\Users\\ASUS\\AppData\\Local\\Temp\\A01-review-R1-03c1af41-v5hlrfgb",
+  "author_commands": 11,
+  "author_command_exit_codes": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+  ],
+  "author_tests": {
+    "A01_pass": 30,
+    "A01_skip": 1,
+    "C01_pass": 70,
+    "original_replay": 16
+  },
+  "original_repairs": {
+    "R01": "ACCEPTED limited to listed checks",
+    "R02": "ACCEPTED limited to listed checks",
+    "R03": "ACCEPTED explicit integer limits",
+    "R04_original_S12_to_S20": "ACCEPTED",
+    "R04_neighbor_consistency": "REWORK"
+  },
+  "geometry": {
+    "pass": 630,
+    "fail": 0,
+    "observations": 6,
+    "original_regressions_pass": 7
+  },
+  "source": {
+    "counts": {
+      "ACCEPT": 10,
+      "REJECT": 22
+    },
+    "unexpected_accepts": [
+      "N13-acquired-page-declared-missing",
+      "N14-selected-page-declared-outside-unacquired",
+      "N15-date-only-precision-promoted-live",
+      "N16-new-history-image-wrong-book",
+      "N17-new-history-image-wrong-index",
+      "N18-observation-index-digest"
+    ]
+  },
+  "preservation": {
+    "pass": 223,
+    "fail": 0,
+    "legacy_files": 45,
+    "original_inputs": 31,
+    "relocated_packages": 4
+  },
+  "primary_neighbor_confirmation": {
+    "pass": 0,
+    "fail": 4,
+    "expected_script_exit_code": 1
+  },
+  "remaining_findings": [
+    "R1-F01 acquired/missing scope partition contradictions",
+    "R1-F02 history image URL book/index contradictions",
+    "R1-F03 observation index digest contradiction"
+  ],
+  "known_integration_gaps": [
+    "S01 public completeness gate not implemented",
+    "D01 Pillow missing from root dependency declarations"
+  ],
+  "unverified": [
+    "Windows file symlink branch WinError1314",
+    "clean installation",
+    "A04/CSS-DPR/browser/platform",
+    "OCR/recognition/answer quality",
+    "whole-page/book independent denominator",
+    "B confirmation"
+  ],
+  "command_results": [
+    {
+      "command": [
+        "C:\\Users\\ASUS\\AppData\\Local\\Programs\\Python\\Python39\\python.exe",
+        "-B",
+        "D:\\1800\\docs\\evidence\\A01\\review-R1\\bootstrap.py"
+      ],
+      "exit_code": 0,
+      "output": "bootstrap.json"
+    },
+    {
+      "command": [
+        "C:\\Users\\ASUS\\AppData\\Local\\Programs\\Python\\Python39\\python.exe",
+        "-B",
+        "D:\\1800\\docs\\evidence\\A01\\review-R1\\reproduce.py"
+      ],
+      "exit_code": 0,
+      "output": "reproduction/commands.json"
+    },
+    {
+      "command": [
+        "C:\\Users\\ASUS\\AppData\\Local\\Programs\\Python\\Python39\\python.exe",
+        "-B",
+        "D:\\1800\\docs\\evidence\\A01\\review-R1\\preservation-relocation.py"
+      ],
+      "exit_code": 0,
+      "output": "preservation-relocation/results.json"
+    },
+    {
+      "command": [
+        "C:\\Users\\ASUS\\AppData\\Local\\Programs\\Python\\Python39\\python.exe",
+        "-B",
+        "D:\\1800\\docs\\evidence\\A01\\review-R1\\primary-source-confirmation.py"
+      ],
+      "exit_code": 1,
+      "output": "primary-source-confirmation/results.json"
+    }
+  ],
+  "no_implementation_modification": true,
+  "no_contract_state_modification": true,
+  "integrated": false,
+  "A04_dependency_released": false,
+  "network_browser_platform_OCR_model_tool_calls": 0,
+  "paid_model_tool_cost": 0
+}

@@ -1,0 +1,14 @@
+{
+  "actual": "REJECT",
+  "code": "MISSING_SOURCES",
+  "description": "Available workspace declaration digest conflicts with history/input inventory.",
+  "error": "limitations.missing_sources[4]: [MISSING_SOURCES] local screenshot conflicts with its retained original",
+  "error_type": "StaticSourceError",
+  "expected": "REJECT",
+  "expected_code": "MISSING_SOURCES",
+  "id": "N08-workspace-declared-digest",
+  "issues": null,
+  "location": "limitations.missing_sources[4]",
+  "matches_expectation": true,
+  "traceback": "Traceback (most recent call last):\n  File \"D:\\1800\\docs\\evidence\\A01\\review-R1\\source\\probe.py\", line 72, in run\n    result.update(actual='ACCEPT', detail=action(identifier))\n  File \"D:\\1800\\docs\\evidence\\A01\\review-R1\\source\\probe.py\", line 212, in <lambda>\n    lambda n: mutate_sidecar(n, 'limitations.json', lambda p: next(e for e in p['missing_sources'] if e['file']=='workspace1.jpg').update(declared_sha256='0'*64)), 'MISSING_SOURCES')\n  File \"D:\\1800\\docs\\evidence\\A01\\review-R1\\source\\probe.py\", line 142, in mutate_sidecar\n    return mutate(identifier, lambda path: sidecar(path, relative, mutation), book)\n  File \"D:\\1800\\docs\\evidence\\A01\\review-R1\\source\\probe.py\", line 139, in mutate\n    return inspect(identifier, path, book, before)\n  File \"D:\\1800\\docs\\evidence\\A01\\review-R1\\source\\probe.py\", line 129, in inspect\n    accepted = load_static_bundle(path, expected_book_id=book)\n  File \"D:\\1800\\.local\\stages\\A01-review-R1\\03c1af41a134945c406a52a48e3d4f6f0da33eb2\\snapshot\\src\\annotation\\source\\static\\importer.py\", line 453, in load_static_bundle\n    validate_archive_records(path.parent,source,provenance,limitations,integrity)\n  File \"D:\\1800\\.local\\stages\\A01-review-R1\\03c1af41a134945c406a52a48e3d4f6f0da33eb2\\snapshot\\src\\annotation\\source\\static\\consistency.py\", line 143, in validate_archive_records\n    require(item.get(\"available_local_copy\") == local and item[\"declared_sha256\"] == inputs[local],\n  File \"D:\\1800\\.local\\stages\\A01-review-R1\\03c1af41a134945c406a52a48e3d4f6f0da33eb2\\snapshot\\src\\annotation\\source\\static\\consistency.py\", line 13, in require\n    fail(code,location,message)\n  File \"D:\\1800\\.local\\stages\\A01-review-R1\\03c1af41a134945c406a52a48e3d4f6f0da33eb2\\snapshot\\src\\annotation\\source\\static\\importer.py\", line 27, in fail\n    raise StaticSourceError(code, location, message)\nannotation.source.static.importer.StaticSourceError: limitations.missing_sources[4]: [MISSING_SOURCES] local screenshot conflicts with its retained original\n"
+}

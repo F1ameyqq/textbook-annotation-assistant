@@ -1,0 +1,14 @@
+{
+  "actual": "REJECT",
+  "code": "SOURCE_ORIGINS",
+  "description": "Origin inventory length unchanged but one origin duplicated.",
+  "error": "provenance.origins[9].archive_path: [SOURCE_ORIGINS] origin path missing, duplicated or outside assigned inventory",
+  "error_type": "StaticSourceError",
+  "expected": "REJECT",
+  "expected_code": "SOURCE_ORIGINS",
+  "id": "N02-origin-duplicated",
+  "issues": null,
+  "location": "provenance.origins[9].archive_path",
+  "matches_expectation": true,
+  "traceback": "Traceback (most recent call last):\n  File \"D:\\1800\\docs\\evidence\\A01\\review-R1\\source\\probe.py\", line 72, in run\n    result.update(actual='ACCEPT', detail=action(identifier))\n  File \"D:\\1800\\docs\\evidence\\A01\\review-R1\\source\\probe.py\", line 195, in <lambda>\n    lambda n: mutate_sidecar(n, 'provenance.json', lambda p: p['origins'].__setitem__(-1, dict(p['origins'][0]))), 'SOURCE_ORIGINS')\n  File \"D:\\1800\\docs\\evidence\\A01\\review-R1\\source\\probe.py\", line 142, in mutate_sidecar\n    return mutate(identifier, lambda path: sidecar(path, relative, mutation), book)\n  File \"D:\\1800\\docs\\evidence\\A01\\review-R1\\source\\probe.py\", line 139, in mutate\n    return inspect(identifier, path, book, before)\n  File \"D:\\1800\\docs\\evidence\\A01\\review-R1\\source\\probe.py\", line 129, in inspect\n    accepted = load_static_bundle(path, expected_book_id=book)\n  File \"D:\\1800\\.local\\stages\\A01-review-R1\\03c1af41a134945c406a52a48e3d4f6f0da33eb2\\snapshot\\src\\annotation\\source\\static\\importer.py\", line 453, in load_static_bundle\n    validate_archive_records(path.parent,source,provenance,limitations,integrity)\n  File \"D:\\1800\\.local\\stages\\A01-review-R1\\03c1af41a134945c406a52a48e3d4f6f0da33eb2\\snapshot\\src\\annotation\\source\\static\\consistency.py\", line 118, in validate_archive_records\n    require(path in expected_origins and path not in seen,\"SOURCE_ORIGINS\",loc+\".archive_path\",\"origin path missing, duplicated or outside assigned inventory\")\n  File \"D:\\1800\\.local\\stages\\A01-review-R1\\03c1af41a134945c406a52a48e3d4f6f0da33eb2\\snapshot\\src\\annotation\\source\\static\\consistency.py\", line 13, in require\n    fail(code,location,message)\n  File \"D:\\1800\\.local\\stages\\A01-review-R1\\03c1af41a134945c406a52a48e3d4f6f0da33eb2\\snapshot\\src\\annotation\\source\\static\\importer.py\", line 27, in fail\n    raise StaticSourceError(code, location, message)\nannotation.source.static.importer.StaticSourceError: provenance.origins[9].archive_path: [SOURCE_ORIGINS] origin path missing, duplicated or outside assigned inventory\n"
+}

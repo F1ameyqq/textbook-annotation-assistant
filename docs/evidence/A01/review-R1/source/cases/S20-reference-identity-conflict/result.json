@@ -1,0 +1,14 @@
+{
+  "actual": "REJECT",
+  "code": "REFERENCE_RECORDS",
+  "description": "Replay original reference identity differs from public scope_manifest.",
+  "error": "provenance.reference_records: [REFERENCE_RECORDS] reference identities/positions conflict with archived input",
+  "error_type": "StaticSourceError",
+  "expected": "REJECT",
+  "expected_code": "REFERENCE_RECORDS",
+  "id": "S20-reference-identity-conflict",
+  "issues": null,
+  "location": "provenance.reference_records",
+  "matches_expectation": true,
+  "traceback": "Traceback (most recent call last):\n  File \"D:\\1800\\docs\\evidence\\A01\\review-R1\\source\\probe.py\", line 72, in run\n    result.update(actual='ACCEPT', detail=action(identifier))\n  File \"D:\\1800\\docs\\evidence\\A01\\review-R1\\source\\probe.py\", line 190, in <lambda>\n    lambda n: mutate_sidecar(n, 'provenance.json', lambda p: p['reference_records'][0].update(reference_id='reference-unrelated')), 'REFERENCE_RECORDS')\n  File \"D:\\1800\\docs\\evidence\\A01\\review-R1\\source\\probe.py\", line 142, in mutate_sidecar\n    return mutate(identifier, lambda path: sidecar(path, relative, mutation), book)\n  File \"D:\\1800\\docs\\evidence\\A01\\review-R1\\source\\probe.py\", line 139, in mutate\n    return inspect(identifier, path, book, before)\n  File \"D:\\1800\\docs\\evidence\\A01\\review-R1\\source\\probe.py\", line 129, in inspect\n    accepted = load_static_bundle(path, expected_book_id=book)\n  File \"D:\\1800\\.local\\stages\\A01-review-R1\\03c1af41a134945c406a52a48e3d4f6f0da33eb2\\snapshot\\src\\annotation\\source\\static\\importer.py\", line 453, in load_static_bundle\n    validate_archive_records(path.parent,source,provenance,limitations,integrity)\n  File \"D:\\1800\\.local\\stages\\A01-review-R1\\03c1af41a134945c406a52a48e3d4f6f0da33eb2\\snapshot\\src\\annotation\\source\\static\\consistency.py\", line 193, in validate_archive_records\n    require(provenance.get(\"reference_records\") == expected_refs,\"REFERENCE_RECORDS\",\"provenance.reference_records\",\"reference identities/positions conflict with archived input\")\n  File \"D:\\1800\\.local\\stages\\A01-review-R1\\03c1af41a134945c406a52a48e3d4f6f0da33eb2\\snapshot\\src\\annotation\\source\\static\\consistency.py\", line 13, in require\n    fail(code,location,message)\n  File \"D:\\1800\\.local\\stages\\A01-review-R1\\03c1af41a134945c406a52a48e3d4f6f0da33eb2\\snapshot\\src\\annotation\\source\\static\\importer.py\", line 27, in fail\n    raise StaticSourceError(code, location, message)\nannotation.source.static.importer.StaticSourceError: provenance.reference_records: [REFERENCE_RECORDS] reference identities/positions conflict with archived input\n"
+}

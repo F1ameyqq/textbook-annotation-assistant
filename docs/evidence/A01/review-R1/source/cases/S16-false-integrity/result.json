@@ -1,0 +1,14 @@
+{
+  "actual": "REJECT",
+  "code": "INPUT_CHANGED",
+  "description": "Replay original unchanged=false and before/after contradiction.",
+  "error": "input-integrity.unchanged: [INPUT_CHANGED] archive import must retain an unchanged before/after record",
+  "error_type": "StaticSourceError",
+  "expected": "REJECT",
+  "expected_code": "INPUT_CHANGED",
+  "id": "S16-false-integrity",
+  "issues": null,
+  "location": "input-integrity.unchanged",
+  "matches_expectation": true,
+  "traceback": "Traceback (most recent call last):\n  File \"D:\\1800\\docs\\evidence\\A01\\review-R1\\source\\probe.py\", line 72, in run\n    result.update(actual='ACCEPT', detail=action(identifier))\n  File \"D:\\1800\\docs\\evidence\\A01\\review-R1\\source\\probe.py\", line 172, in <lambda>\n    lambda n: mutate_sidecar(n, 'input-integrity.json', lambda p: (p.update(unchanged=False), p['inputs'][0].update(after_sha256='0'*64))), 'INPUT_CHANGED')\n  File \"D:\\1800\\docs\\evidence\\A01\\review-R1\\source\\probe.py\", line 142, in mutate_sidecar\n    return mutate(identifier, lambda path: sidecar(path, relative, mutation), book)\n  File \"D:\\1800\\docs\\evidence\\A01\\review-R1\\source\\probe.py\", line 139, in mutate\n    return inspect(identifier, path, book, before)\n  File \"D:\\1800\\docs\\evidence\\A01\\review-R1\\source\\probe.py\", line 129, in inspect\n    accepted = load_static_bundle(path, expected_book_id=book)\n  File \"D:\\1800\\.local\\stages\\A01-review-R1\\03c1af41a134945c406a52a48e3d4f6f0da33eb2\\snapshot\\src\\annotation\\source\\static\\importer.py\", line 453, in load_static_bundle\n    validate_archive_records(path.parent,source,provenance,limitations,integrity)\n  File \"D:\\1800\\.local\\stages\\A01-review-R1\\03c1af41a134945c406a52a48e3d4f6f0da33eb2\\snapshot\\src\\annotation\\source\\static\\consistency.py\", line 35, in validate_archive_records\n    require(integrity.get(\"unchanged\") is True,\"INPUT_CHANGED\",\"input-integrity.unchanged\",\n  File \"D:\\1800\\.local\\stages\\A01-review-R1\\03c1af41a134945c406a52a48e3d4f6f0da33eb2\\snapshot\\src\\annotation\\source\\static\\consistency.py\", line 13, in require\n    fail(code,location,message)\n  File \"D:\\1800\\.local\\stages\\A01-review-R1\\03c1af41a134945c406a52a48e3d4f6f0da33eb2\\snapshot\\src\\annotation\\source\\static\\importer.py\", line 27, in fail\n    raise StaticSourceError(code, location, message)\nannotation.source.static.importer.StaticSourceError: input-integrity.unchanged: [INPUT_CHANGED] archive import must retain an unchanged before/after record\n"
+}

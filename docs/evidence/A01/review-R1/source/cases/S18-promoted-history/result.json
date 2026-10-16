@@ -1,0 +1,14 @@
+{
+  "actual": "REJECT",
+  "code": "HISTORY_QUALITY",
+  "description": "Replay original history promoted with no approval evidence.",
+  "error": "history[0].quality: [HISTORY_QUALITY] A01 archive has no independent business approval",
+  "error_type": "StaticSourceError",
+  "expected": "REJECT",
+  "expected_code": "HISTORY_QUALITY",
+  "id": "S18-promoted-history",
+  "issues": null,
+  "location": "history[0].quality",
+  "matches_expectation": true,
+  "traceback": "Traceback (most recent call last):\n  File \"D:\\1800\\docs\\evidence\\A01\\review-R1\\source\\probe.py\", line 72, in run\n    result.update(actual='ACCEPT', detail=action(identifier))\n  File \"D:\\1800\\docs\\evidence\\A01\\review-R1\\source\\probe.py\", line 186, in <lambda>\n    lambda n: mutate(n, promote), 'HISTORY_QUALITY')\n  File \"D:\\1800\\docs\\evidence\\A01\\review-R1\\source\\probe.py\", line 139, in mutate\n    return inspect(identifier, path, book, before)\n  File \"D:\\1800\\docs\\evidence\\A01\\review-R1\\source\\probe.py\", line 129, in inspect\n    accepted = load_static_bundle(path, expected_book_id=book)\n  File \"D:\\1800\\.local\\stages\\A01-review-R1\\03c1af41a134945c406a52a48e3d4f6f0da33eb2\\snapshot\\src\\annotation\\source\\static\\importer.py\", line 453, in load_static_bundle\n    validate_archive_records(path.parent,source,provenance,limitations,integrity)\n  File \"D:\\1800\\.local\\stages\\A01-review-R1\\03c1af41a134945c406a52a48e3d4f6f0da33eb2\\snapshot\\src\\annotation\\source\\static\\consistency.py\", line 68, in validate_archive_records\n    require(item.quality == \"UNVERIFIED\",\"HISTORY_QUALITY\",\"history[{}].quality\".format(i),\n  File \"D:\\1800\\.local\\stages\\A01-review-R1\\03c1af41a134945c406a52a48e3d4f6f0da33eb2\\snapshot\\src\\annotation\\source\\static\\consistency.py\", line 13, in require\n    fail(code,location,message)\n  File \"D:\\1800\\.local\\stages\\A01-review-R1\\03c1af41a134945c406a52a48e3d4f6f0da33eb2\\snapshot\\src\\annotation\\source\\static\\importer.py\", line 27, in fail\n    raise StaticSourceError(code, location, message)\nannotation.source.static.importer.StaticSourceError: history[0].quality: [HISTORY_QUALITY] A01 archive has no independent business approval\n"
+}

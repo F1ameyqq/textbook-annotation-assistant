@@ -1,0 +1,14 @@
+{
+  "actual": "REJECT",
+  "code": "OBSERVATION_CONFLICT",
+  "description": "Historical observation date conflicts with retained session receipt.",
+  "error": "provenance.observation.date: [OBSERVATION_CONFLICT] historical date differs from archived session",
+  "error_type": "StaticSourceError",
+  "expected": "REJECT",
+  "expected_code": "OBSERVATION_CONFLICT",
+  "id": "N10-historical-date",
+  "issues": null,
+  "location": "provenance.observation.date",
+  "matches_expectation": true,
+  "traceback": "Traceback (most recent call last):\n  File \"D:\\1800\\docs\\evidence\\A01\\review-R1\\source\\probe.py\", line 72, in run\n    result.update(actual='ACCEPT', detail=action(identifier))\n  File \"D:\\1800\\docs\\evidence\\A01\\review-R1\\source\\probe.py\", line 216, in <lambda>\n    lambda n: mutate_sidecar(n, 'provenance.json', lambda p: p['observation'].update(date='2000-01-01')), 'OBSERVATION_CONFLICT')\n  File \"D:\\1800\\docs\\evidence\\A01\\review-R1\\source\\probe.py\", line 142, in mutate_sidecar\n    return mutate(identifier, lambda path: sidecar(path, relative, mutation), book)\n  File \"D:\\1800\\docs\\evidence\\A01\\review-R1\\source\\probe.py\", line 139, in mutate\n    return inspect(identifier, path, book, before)\n  File \"D:\\1800\\docs\\evidence\\A01\\review-R1\\source\\probe.py\", line 129, in inspect\n    accepted = load_static_bundle(path, expected_book_id=book)\n  File \"D:\\1800\\.local\\stages\\A01-review-R1\\03c1af41a134945c406a52a48e3d4f6f0da33eb2\\snapshot\\src\\annotation\\source\\static\\importer.py\", line 453, in load_static_bundle\n    validate_archive_records(path.parent,source,provenance,limitations,integrity)\n  File \"D:\\1800\\.local\\stages\\A01-review-R1\\03c1af41a134945c406a52a48e3d4f6f0da33eb2\\snapshot\\src\\annotation\\source\\static\\consistency.py\", line 161, in validate_archive_records\n    require(provenance[\"observation\"].get(\"date\") == originals[raw[4]][\"date\"],\"OBSERVATION_CONFLICT\",\"provenance.observation.date\",\"historical date differs from archived session\")\n  File \"D:\\1800\\.local\\stages\\A01-review-R1\\03c1af41a134945c406a52a48e3d4f6f0da33eb2\\snapshot\\src\\annotation\\source\\static\\consistency.py\", line 13, in require\n    fail(code,location,message)\n  File \"D:\\1800\\.local\\stages\\A01-review-R1\\03c1af41a134945c406a52a48e3d4f6f0da33eb2\\snapshot\\src\\annotation\\source\\static\\importer.py\", line 27, in fail\n    raise StaticSourceError(code, location, message)\nannotation.source.static.importer.StaticSourceError: provenance.observation.date: [OBSERVATION_CONFLICT] historical date differs from archived session\n"
+}

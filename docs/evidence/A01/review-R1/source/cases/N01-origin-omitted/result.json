@@ -1,0 +1,14 @@
+{
+  "actual": "REJECT",
+  "code": "SOURCE_ORIGINS",
+  "description": "Only one required origin removed.",
+  "error": "provenance.origins: [SOURCE_ORIGINS] assigned origin inventory is missing or duplicated",
+  "error_type": "StaticSourceError",
+  "expected": "REJECT",
+  "expected_code": "SOURCE_ORIGINS",
+  "id": "N01-origin-omitted",
+  "issues": null,
+  "location": "provenance.origins",
+  "matches_expectation": true,
+  "traceback": "Traceback (most recent call last):\n  File \"D:\\1800\\docs\\evidence\\A01\\review-R1\\source\\probe.py\", line 72, in run\n    result.update(actual='ACCEPT', detail=action(identifier))\n  File \"D:\\1800\\docs\\evidence\\A01\\review-R1\\source\\probe.py\", line 193, in <lambda>\n    lambda n: mutate_sidecar(n, 'provenance.json', lambda p: p['origins'].pop()), 'SOURCE_ORIGINS')\n  File \"D:\\1800\\docs\\evidence\\A01\\review-R1\\source\\probe.py\", line 142, in mutate_sidecar\n    return mutate(identifier, lambda path: sidecar(path, relative, mutation), book)\n  File \"D:\\1800\\docs\\evidence\\A01\\review-R1\\source\\probe.py\", line 139, in mutate\n    return inspect(identifier, path, book, before)\n  File \"D:\\1800\\docs\\evidence\\A01\\review-R1\\source\\probe.py\", line 129, in inspect\n    accepted = load_static_bundle(path, expected_book_id=book)\n  File \"D:\\1800\\.local\\stages\\A01-review-R1\\03c1af41a134945c406a52a48e3d4f6f0da33eb2\\snapshot\\src\\annotation\\source\\static\\importer.py\", line 453, in load_static_bundle\n    validate_archive_records(path.parent,source,provenance,limitations,integrity)\n  File \"D:\\1800\\.local\\stages\\A01-review-R1\\03c1af41a134945c406a52a48e3d4f6f0da33eb2\\snapshot\\src\\annotation\\source\\static\\consistency.py\", line 111, in validate_archive_records\n    require(isinstance(origins,list) and len(origins) == len(expected_origins),\"SOURCE_ORIGINS\",\n  File \"D:\\1800\\.local\\stages\\A01-review-R1\\03c1af41a134945c406a52a48e3d4f6f0da33eb2\\snapshot\\src\\annotation\\source\\static\\consistency.py\", line 13, in require\n    fail(code,location,message)\n  File \"D:\\1800\\.local\\stages\\A01-review-R1\\03c1af41a134945c406a52a48e3d4f6f0da33eb2\\snapshot\\src\\annotation\\source\\static\\importer.py\", line 27, in fail\n    raise StaticSourceError(code, location, message)\nannotation.source.static.importer.StaticSourceError: provenance.origins: [SOURCE_ORIGINS] assigned origin inventory is missing or duplicated\n"
+}
