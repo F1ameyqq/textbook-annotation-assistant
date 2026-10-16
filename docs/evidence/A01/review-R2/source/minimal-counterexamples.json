@@ -1,0 +1,72 @@
+{
+  "R2-03_bounded_decision": "ACCEPTED; P04 and O01-O15 comply with expected behavior.",
+  "counterexamples": [
+    {
+      "actual": "ACCEPT",
+      "changed_input_directory": "D:\\1800\\docs\\evidence\\A01\\review-R2\\source\\cases\\U23-query-masks-wrong-path-book\\changed-inputs",
+      "complete_temporary_exchange": "C:\\Users\\ASUS\\AppData\\Local\\Temp\\A01-review-R2-c3aff959-__n2y2in\\source\\run-01\\U23-query-masks-wrong-path-book\\bundle\\exchange.json",
+      "exchange_sha256": "7ecadf8a76531cc9bee67a79c865065af86f9b3b64506ad5f13c7d5e3bf613bd",
+      "expected": "REJECT",
+      "field": "history/00-independent-source-page14.json:data.pages[0].image",
+      "id": "U23-query-masks-wrong-path-book",
+      "image": "https://archive.example.invalid/upload_images/46006966/46006966_page_13.jpg?ignored=/upload_images/46007447/46007447_page_13.jpg",
+      "parsed_components": {
+        "fragment": "",
+        "netloc": "archive.example.invalid",
+        "path": "/upload_images/46006966/46006966_page_13.jpg",
+        "query": "ignored=/upload_images/46007447/46007447_page_13.jpg",
+        "scheme": "https"
+      },
+      "public_resource_validation_passed": true,
+      "raw_file_id": "46007447",
+      "raw_page_index": 13,
+      "root_cause": "importer.py:108 applies path suffix regex to whole url rather than parsed.path"
+    },
+    {
+      "actual": "ACCEPT",
+      "changed_input_directory": "D:\\1800\\docs\\evidence\\A01\\review-R2\\source\\cases\\U24-fragment-masks-wrong-path-index\\changed-inputs",
+      "complete_temporary_exchange": "C:\\Users\\ASUS\\AppData\\Local\\Temp\\A01-review-R2-c3aff959-__n2y2in\\source\\run-01\\U24-fragment-masks-wrong-path-index\\bundle\\exchange.json",
+      "exchange_sha256": "687f07308d57b2defbf9b9db1304c5d3acd92d214dc2d0ae24edb91f03f8712b",
+      "expected": "REJECT",
+      "field": "history/00-independent-source-page14.json:data.pages[0].image",
+      "id": "U24-fragment-masks-wrong-path-index",
+      "image": "https://archive.example.invalid/upload_images/46007447/46007447_page_172.jpg#/upload_images/46007447/46007447_page_13.jpg",
+      "parsed_components": {
+        "fragment": "/upload_images/46007447/46007447_page_13.jpg",
+        "netloc": "archive.example.invalid",
+        "path": "/upload_images/46007447/46007447_page_172.jpg",
+        "query": "",
+        "scheme": "https"
+      },
+      "public_resource_validation_passed": true,
+      "raw_file_id": "46007447",
+      "raw_page_index": 13,
+      "root_cause": "importer.py:108 applies path suffix regex to whole url rather than parsed.path"
+    },
+    {
+      "actual": "ACCEPT",
+      "changed_input_directory": "D:\\1800\\docs\\evidence\\A01\\review-R2\\source\\cases\\U25-query-masks-wrong-path-index\\changed-inputs",
+      "complete_temporary_exchange": "C:\\Users\\ASUS\\AppData\\Local\\Temp\\A01-review-R2-c3aff959-__n2y2in\\source\\run-01\\U25-query-masks-wrong-path-index\\bundle\\exchange.json",
+      "exchange_sha256": "9a50ee9e037afd3475ff2ddb8916ee3c47ef9814f5fbbae55adc47ec5572b00c",
+      "expected": "REJECT",
+      "field": "history/00-independent-source-page14.json:data.pages[0].image",
+      "id": "U25-query-masks-wrong-path-index",
+      "image": "https://archive.example.invalid/upload_images/46007447/46007447_page_172.jpg?ignored=/upload_images/46007447/46007447_page_13.jpg",
+      "parsed_components": {
+        "fragment": "",
+        "netloc": "archive.example.invalid",
+        "path": "/upload_images/46007447/46007447_page_172.jpg",
+        "query": "ignored=/upload_images/46007447/46007447_page_13.jpg",
+        "scheme": "https"
+      },
+      "public_resource_validation_passed": true,
+      "raw_file_id": "46007447",
+      "raw_page_index": 13,
+      "root_cause": "importer.py:108 applies path suffix regex to whole url rather than parsed.path"
+    }
+  ],
+  "scope_limits": "No host authentication, external authenticity, N15, S01 or D01 expansion.",
+  "single_residual_defect": "R2-02 URL path identity is taken from query/fragment suffix.",
+  "source_subdecision": "REWORK",
+  "target_commit": "c3aff9598b6705ab4122062615a13ae3774698b2"
+}

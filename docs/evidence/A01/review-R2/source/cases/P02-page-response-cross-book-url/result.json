@@ -1,0 +1,15 @@
+{
+  "actual": "REJECT",
+  "code": "BOOK_CONFLICT",
+  "description": "Replay exact byte-preserved R1 formal package.",
+  "error": "history.docs/evidence/A05/review/independent-source-page14.json.pages[0].image: [BOOK_CONFLICT] archived image URL belongs to a different book or is malformed",
+  "error_type": "StaticSourceError",
+  "expected": "REJECT",
+  "expected_code": "BOOK_CONFLICT",
+  "id": "P02-page-response-cross-book-url",
+  "issues": null,
+  "location": "history.docs/evidence/A05/review/independent-source-page14.json.pages[0].image",
+  "matches_expectation": true,
+  "public_resource_validation_passed": true,
+  "traceback": "Traceback (most recent call last):\n  File \"D:\\1800\\docs\\evidence\\A01\\review-R2\\source\\probe.py\", line 96, in run\n    detail=action(identifier)\n  File \"D:\\1800\\docs\\evidence\\A01\\review-R2\\source\\probe.py\", line 166, in replay\n    return consume(identifier,target/'exchange.json',book)\n  File \"D:\\1800\\docs\\evidence\\A01\\review-R2\\source\\probe.py\", line 139, in consume\n    source=load_static_bundle(path,expected_book_id=book)\n  File \"D:\\1800\\.local\\stages\\A01-review-R2\\c3aff9598b6705ab4122062615a13ae3774698b2\\snapshot\\src\\annotation\\source\\static\\importer.py\", line 463, in load_static_bundle\n    validate_archive_records(path.parent,source,provenance,limitations,integrity)\n  File \"D:\\1800\\.local\\stages\\A01-review-R2\\c3aff9598b6705ab4122062615a13ae3774698b2\\snapshot\\src\\annotation\\source\\static\\consistency.py\", line 242, in validate_archive_records\n    index = url_index(page.get(\"image\"),book,loc+\".image\")\n  File \"D:\\1800\\.local\\stages\\A01-review-R2\\c3aff9598b6705ab4122062615a13ae3774698b2\\snapshot\\src\\annotation\\source\\static\\importer.py\", line 110, in url_index\n    fail(\"BOOK_CONFLICT\", location, \"archived image URL belongs to a different book or is malformed\")\n  File \"D:\\1800\\.local\\stages\\A01-review-R2\\c3aff9598b6705ab4122062615a13ae3774698b2\\snapshot\\src\\annotation\\source\\static\\importer.py\", line 28, in fail\n    raise StaticSourceError(code, location, message)\nannotation.source.static.importer.StaticSourceError: history.docs/evidence/A05/review/independent-source-page14.json.pages[0].image: [BOOK_CONFLICT] archived image URL belongs to a different book or is malformed\n"
+}

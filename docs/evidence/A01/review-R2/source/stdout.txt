@@ -1,0 +1,66 @@
+C-legacy-46006966: ACCEPT expected
+C-legacy-46007447: ACCEPT expected
+C-R1-46006966: ACCEPT expected
+C-R1-46007447: ACCEPT expected
+C-R2-46006966: ACCEPT expected
+C-R2-46007447: ACCEPT expected
+P01-acquired-also-missing: REJECT expected
+P02-page-response-cross-book-url: REJECT expected
+P03-page-response-index-url-conflict: REJECT expected
+P04-observation-index-digest-conflict: REJECT expected
+U01-first-book-wrong: REJECT expected
+U02-second-book-wrong: REJECT expected
+U03-both-books-wrong: REJECT expected
+U04-index-left: REJECT expected
+U05-index-right: REJECT expected
+U06-index-other-acquired: REJECT expected
+U07-ftp: REJECT expected
+U08-relative: REJECT expected
+U09-missing-host: REJECT expected
+U10-file-scheme: REJECT expected
+U11-null: REJECT expected
+U12-list: REJECT expected
+U13-broken-jpeg-suffix: REJECT expected
+U14-valid-https: ACCEPT expected
+U15-valid-http: ACCEPT expected
+U16-valid-uppercase-scheme: ACCEPT expected
+U17-host-text-not-book-auth: ACCEPT expected
+U18-page-index-bool: REJECT expected
+U19-page-index-float: REJECT expected
+U20-page-index-string: REJECT expected
+U21-answer-legitimate: ACCEPT expected
+U22-answer-wrong-source: REJECT expected
+U23-query-masks-wrong-path-book: ACCEPT UNEXPECTED
+U24-fragment-masks-wrong-path-index: ACCEPT UNEXPECTED
+U25-query-masks-wrong-path-index: ACCEPT UNEXPECTED
+O01-sha-zero: REJECT expected
+O02-index-none: REJECT expected
+O03-path-absent: REJECT expected
+O04-path-traversal: REJECT expected
+O05-sha-malformed: REJECT expected
+O06-sha-wrong-type: REJECT expected
+O07-index-list: REJECT expected
+O08-source-wrong-identity: REJECT expected
+O09-input-index-absent: REJECT expected
+O10-wrong-existing-index-binding: REJECT expected
+O11-existing-sha-wrong-path-binding: REJECT expected
+O12-inventory-order-legal: ACCEPT expected
+O13-old-source-wrong-identity: REJECT expected
+O14-old-optional-index-consistent: ACCEPT expected
+O15-old-optional-index-digest-wrong: REJECT expected
+{
+  "counts": {
+    "ACCEPT": 16,
+    "REJECT": 34
+  },
+  "all_public_resource_checks_passed": true,
+  "frozen_P01_P04_all_rejected": true,
+  "old_R1_R2_two_books_all_accepted": true,
+  "unexpected_cases": [
+    "U23-query-masks-wrong-path-book",
+    "U24-fragment-masks-wrong-path-index",
+    "U25-query-masks-wrong-path-index"
+  ],
+  "snapshot_unchanged": true,
+  "old_formal_replays_unchanged": true
+}

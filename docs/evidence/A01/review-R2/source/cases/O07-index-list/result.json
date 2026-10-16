@@ -1,0 +1,15 @@
+{
+  "actual": "REJECT",
+  "code": "OBSERVATION_SOURCE",
+  "description": "Observation index/source identity or digest contradicts retained input inventory.",
+  "error": "provenance.observation.observation_index_source: [OBSERVATION_SOURCE] observation index source record is required",
+  "error_type": "StaticSourceError",
+  "expected": "REJECT",
+  "expected_code": "OBSERVATION_SOURCE",
+  "id": "O07-index-list",
+  "issues": null,
+  "location": "provenance.observation.observation_index_source",
+  "matches_expectation": true,
+  "public_resource_validation_passed": true,
+  "traceback": "Traceback (most recent call last):\n  File \"D:\\1800\\docs\\evidence\\A01\\review-R2\\source\\probe.py\", line 96, in run\n    detail=action(identifier)\n  File \"D:\\1800\\docs\\evidence\\A01\\review-R2\\source\\probe.py\", line 214, in <lambda>\n    run(label,'REJECT','Observation index/source identity or digest contradicts retained input inventory.',lambda n,m=mutation:observation_case(n,m),code)\n  File \"D:\\1800\\docs\\evidence\\A01\\review-R2\\source\\probe.py\", line 151, in observation_case\n    return mutated(identifier,lambda p:sidecar(p,'provenance.json',mutation),book)\n  File \"D:\\1800\\docs\\evidence\\A01\\review-R2\\source\\probe.py\", line 147, in mutated\n    return consume(identifier,path,book,before)\n  File \"D:\\1800\\docs\\evidence\\A01\\review-R2\\source\\probe.py\", line 139, in consume\n    source=load_static_bundle(path,expected_book_id=book)\n  File \"D:\\1800\\.local\\stages\\A01-review-R2\\c3aff9598b6705ab4122062615a13ae3774698b2\\snapshot\\src\\annotation\\source\\static\\importer.py\", line 463, in load_static_bundle\n    validate_archive_records(path.parent,source,provenance,limitations,integrity)\n  File \"D:\\1800\\.local\\stages\\A01-review-R2\\c3aff9598b6705ab4122062615a13ae3774698b2\\snapshot\\src\\annotation\\source\\static\\consistency.py\", line 251, in validate_archive_records\n    validate_observation_source(provenance[\"observation\"],inputs,book,raw[5])\n  File \"D:\\1800\\.local\\stages\\A01-review-R2\\c3aff9598b6705ab4122062615a13ae3774698b2\\snapshot\\src\\annotation\\source\\static\\consistency.py\", line 70, in validate_observation_source\n    require(isinstance(index,dict),\"OBSERVATION_SOURCE\",loc,\"observation index source record is required\")\n  File \"D:\\1800\\.local\\stages\\A01-review-R2\\c3aff9598b6705ab4122062615a13ae3774698b2\\snapshot\\src\\annotation\\source\\static\\consistency.py\", line 13, in require\n    fail(code,location,message)\n  File \"D:\\1800\\.local\\stages\\A01-review-R2\\c3aff9598b6705ab4122062615a13ae3774698b2\\snapshot\\src\\annotation\\source\\static\\importer.py\", line 28, in fail\n    raise StaticSourceError(code, location, message)\nannotation.source.static.importer.StaticSourceError: provenance.observation.observation_index_source: [OBSERVATION_SOURCE] observation index source record is required\n"
+}

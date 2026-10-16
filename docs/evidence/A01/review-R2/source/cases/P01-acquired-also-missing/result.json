@@ -1,0 +1,15 @@
+{
+  "actual": "REJECT",
+  "code": "SCOPE_PARTITION",
+  "description": "Replay exact byte-preserved R1 formal package.",
+  "error": "provenance.selected_missing_source_indices: [SCOPE_PARTITION] selected missing must equal selected minus actual acquired inventory",
+  "error_type": "StaticSourceError",
+  "expected": "REJECT",
+  "expected_code": "SCOPE_PARTITION",
+  "id": "P01-acquired-also-missing",
+  "issues": null,
+  "location": "provenance.selected_missing_source_indices",
+  "matches_expectation": true,
+  "public_resource_validation_passed": true,
+  "traceback": "Traceback (most recent call last):\n  File \"D:\\1800\\docs\\evidence\\A01\\review-R2\\source\\probe.py\", line 96, in run\n    detail=action(identifier)\n  File \"D:\\1800\\docs\\evidence\\A01\\review-R2\\source\\probe.py\", line 166, in replay\n    return consume(identifier,target/'exchange.json',book)\n  File \"D:\\1800\\docs\\evidence\\A01\\review-R2\\source\\probe.py\", line 139, in consume\n    source=load_static_bundle(path,expected_book_id=book)\n  File \"D:\\1800\\.local\\stages\\A01-review-R2\\c3aff9598b6705ab4122062615a13ae3774698b2\\snapshot\\src\\annotation\\source\\static\\importer.py\", line 463, in load_static_bundle\n    validate_archive_records(path.parent,source,provenance,limitations,integrity)\n  File \"D:\\1800\\.local\\stages\\A01-review-R2\\c3aff9598b6705ab4122062615a13ae3774698b2\\snapshot\\src\\annotation\\source\\static\\consistency.py\", line 107, in validate_archive_records\n    validate_scope_partition(source,provenance)\n  File \"D:\\1800\\.local\\stages\\A01-review-R2\\c3aff9598b6705ab4122062615a13ae3774698b2\\snapshot\\src\\annotation\\source\\static\\consistency.py\", line 51, in validate_scope_partition\n    require(acquired.isdisjoint(missing) and missing == selected-acquired,\"SCOPE_PARTITION\",\n  File \"D:\\1800\\.local\\stages\\A01-review-R2\\c3aff9598b6705ab4122062615a13ae3774698b2\\snapshot\\src\\annotation\\source\\static\\consistency.py\", line 13, in require\n    fail(code,location,message)\n  File \"D:\\1800\\.local\\stages\\A01-review-R2\\c3aff9598b6705ab4122062615a13ae3774698b2\\snapshot\\src\\annotation\\source\\static\\importer.py\", line 28, in fail\n    raise StaticSourceError(code, location, message)\nannotation.source.static.importer.StaticSourceError: provenance.selected_missing_source_indices: [SCOPE_PARTITION] selected missing must equal selected minus actual acquired inventory\n"
+}
