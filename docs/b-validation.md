@@ -1,5 +1,7 @@
 # B 本轮验证记录
 
+本页下方保留 PR #1 的 M0 历史验证。本轮 46007447 增量：29 项回归通过，34 个题目候选、26 个唯一配答候选，4 页主编号开发清点相符，整批 HOLD。具体命令、限制及定稿需求对照见 `docs/b-offline-46007447.md`、`docs/requirements-confirmed.md` 和 `evaluation/book-46007447-offline.json`。没有平台写入。
+
 日期：2026-10-16（Asia/Shanghai）。基线：架构提交 `79b7195`。接收方验证：待 A 记录。
 
 - `python -m unittest discover -s tests -v`：10 项通过，0 失败。覆盖摘要/尺寸不匹配、路径逃逸、重复身份、临时合同隔离、宽图回投、空页、输入变化及新书映射拒用。
