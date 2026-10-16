@@ -1,0 +1,429 @@
+{
+  "schema_version": 1,
+  "phase": "WAITING_EXECUTION",
+  "target_commit": null,
+  "execution_status": "NOT_RUN",
+  "failure_input_binding": "Pending frozen public API; scenario descriptions are not executable tests",
+  "mandatory_clause_coverage": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16
+  ],
+  "administrative_clauses": {
+    "3": "Read-only target; write only report/evidence and own temporary stage",
+    "16": "BLOCKED for missing prerequisites; coordinator controls integration"
+  },
+  "scenarios": [
+    {
+      "id": "P01",
+      "level": "静态",
+      "clauses": [
+        1,
+        2,
+        4
+      ],
+      "independent_input_or_observation": "固定提交与基线差异、公开依赖及 A01 来源",
+      "expected": "范围合规，未改合同/根依赖/父入口；geometry 为指定接受版本",
+      "status": "NOT_RUN",
+      "actual": null,
+      "command": null,
+      "evidence_refs": []
+    },
+    {
+      "id": "O01",
+      "level": "离线",
+      "clauses": [
+        5,
+        12
+      ],
+      "independent_input_or_observation": "最小合法完整固定响应，由公开入口产生两种视图",
+      "expected": "C01 校验通过，来源与目标一致，引用闭合",
+      "status": "NOT_RUN",
+      "actual": null,
+      "command": null,
+      "evidence_refs": []
+    },
+    {
+      "id": "O02",
+      "level": "离线",
+      "clauses": [
+        5
+      ],
+      "independent_input_or_observation": "完整包复制到另一含空格目录，改变当前目录再消费",
+      "expected": "相对路径可搬运，无本机路径依赖，输入文件不被修改",
+      "status": "NOT_RUN",
+      "actual": null,
+      "command": null,
+      "evidence_refs": []
+    },
+    {
+      "id": "O03",
+      "level": "离线",
+      "clauses": [
+        5,
+        12
+      ],
+      "independent_input_or_observation": "独立重算原图 SHA-256、解码尺寸，与输出比较",
+      "expected": "摘要和真实尺寸一致；总页数与已取得页数分开",
+      "status": "NOT_RUN",
+      "actual": null,
+      "command": null,
+      "evidence_refs": []
+    },
+    {
+      "id": "F01",
+      "level": "离线",
+      "clauses": [
+        6,
+        8
+      ],
+      "independent_input_or_observation": "请求目标 46007447，响应改为 46006966；另例缺目标身份",
+      "expected": "可定位错书/缺身份，不产生目标正确的成功产物",
+      "status": "NOT_RUN",
+      "actual": null,
+      "command": null,
+      "evidence_refs": []
+    },
+    {
+      "id": "F02",
+      "level": "离线",
+      "clauses": [
+        6,
+        12
+      ],
+      "independent_input_or_observation": "从完整范围删除正文页/答案页，各单独运行",
+      "expected": "指明缺页与范围；不伪造完整 SourceBundle",
+      "status": "NOT_RUN",
+      "actual": null,
+      "command": null,
+      "evidence_refs": []
+    },
+    {
+      "id": "F03",
+      "level": "离线",
+      "clauses": [
+        6,
+        12
+      ],
+      "independent_input_or_observation": "截断 JSON、错误结构、缺必填字段分别注入",
+      "expected": "定位结构错误；不因 HTTP 200 视为有效响应",
+      "status": "NOT_RUN",
+      "actual": null,
+      "command": null,
+      "evidence_refs": []
+    },
+    {
+      "id": "F04",
+      "level": "离线",
+      "clauses": [
+        5,
+        6,
+        12
+      ],
+      "independent_input_or_observation": "题指向不存在目录、框指向不存在题/原图，分别注入",
+      "expected": "逐例拒绝悬空引用并提供安全定位",
+      "status": "NOT_RUN",
+      "actual": null,
+      "command": null,
+      "evidence_refs": []
+    },
+    {
+      "id": "F05",
+      "level": "离线",
+      "clauses": [
+        5,
+        6,
+        12
+      ],
+      "independent_input_or_observation": "篡改资产一个字节；另例仅改声明尺寸",
+      "expected": "摘要或尺寸不符被发现，不采用旧摘要补齐",
+      "status": "NOT_RUN",
+      "actual": null,
+      "command": null,
+      "evidence_refs": []
+    },
+    {
+      "id": "F06",
+      "level": "离线",
+      "clauses": [
+        6,
+        12
+      ],
+      "independent_input_or_observation": "原图请求 404、截断字节、返回 HTML，分别注入",
+      "expected": "明确资源失败；不把非图像当成功原图",
+      "status": "NOT_RUN",
+      "actual": null,
+      "command": null,
+      "evidence_refs": []
+    },
+    {
+      "id": "F07",
+      "level": "离线",
+      "clauses": [
+        6,
+        12
+      ],
+      "independent_input_or_observation": "同一采集内版本冲突/过期标记或已知来源变更",
+      "expected": "不伪造当前一致快照；按公开新鲜度契约报告限制；无政策时保留缺口",
+      "status": "NOT_RUN",
+      "actual": null,
+      "command": null,
+      "evidence_refs": []
+    },
+    {
+      "id": "F08",
+      "level": "离线",
+      "clauses": [
+        6,
+        9
+      ],
+      "independent_input_or_observation": "401/登录重定向；另例 URL正确但仅登录/空白界面",
+      "expected": "不报告登录成功；有限停止、脱敏、不持续尝试密码",
+      "status": "NOT_RUN",
+      "actual": null,
+      "command": null,
+      "evidence_refs": []
+    },
+    {
+      "id": "F09",
+      "level": "离线",
+      "clauses": [
+        6,
+        14
+      ],
+      "independent_input_or_observation": "资源或保护界面确认阶段注入超时",
+      "expected": "可定位超时，所有自有资源释放；无成功快照伪装",
+      "status": "NOT_RUN",
+      "actual": null,
+      "command": null,
+      "evidence_refs": []
+    },
+    {
+      "id": "F10",
+      "level": "离线",
+      "clauses": [
+        6,
+        7,
+        14
+      ],
+      "independent_input_or_observation": "测试拥有者持锁，第二实例尝试获取同一专用 profile",
+      "expected": "第二实例不启动，不删除/覆盖首实例锁，不关闭首实例",
+      "status": "NOT_RUN",
+      "actual": null,
+      "command": null,
+      "evidence_refs": []
+    },
+    {
+      "id": "F11",
+      "level": "离线",
+      "clauses": [
+        6,
+        7,
+        14
+      ],
+      "independent_input_or_observation": "获锁后在浏览器创建、导航、采集阶段分别抛异常",
+      "expected": "每条退出路径释放自有资源；下一次可正常获取并关闭",
+      "status": "NOT_RUN",
+      "actual": null,
+      "command": null,
+      "evidence_refs": []
+    },
+    {
+      "id": "F12",
+      "level": "离线",
+      "clauses": [
+        7,
+        10
+      ],
+      "independent_input_or_observation": "本地请求替身输入 POST/PUT/PATCH/DELETE及未知业务方法",
+      "expected": "非白名单在实际发送前被阻断；本地服务器对应变更接收数为0",
+      "status": "NOT_RUN",
+      "actual": null,
+      "command": null,
+      "evidence_refs": []
+    },
+    {
+      "id": "F13",
+      "level": "离线",
+      "clauses": [
+        7,
+        9,
+        10
+      ],
+      "independent_input_or_observation": "已确认登录路径必要请求；近似路径/跨域/其他 POST 为反例",
+      "expected": "登录例外收窄；不能凭“登录”放行任意请求",
+      "status": "NOT_RUN",
+      "actual": null,
+      "command": null,
+      "evidence_refs": []
+    },
+    {
+      "id": "F14",
+      "level": "离线",
+      "clauses": [
+        7,
+        10
+      ],
+      "independent_input_or_observation": "禁止业务动作经公开动作入口调用，另检查绕过入口的请求",
+      "expected": "动作白名单与网络拦截两层都有效；平台接收数不可用模拟替代",
+      "status": "NOT_RUN",
+      "actual": null,
+      "command": null,
+      "evidence_refs": []
+    },
+    {
+      "id": "F15",
+      "level": "离线",
+      "clauses": [
+        6,
+        9,
+        10
+      ],
+      "independent_input_or_observation": "替身异常携带合成敏感标记、query、请求体和auth信息",
+      "expected": "仅受控字段审计；敏感标记不落输出/日志/产物；不用真实凭据",
+      "status": "NOT_RUN",
+      "actual": null,
+      "command": null,
+      "evidence_refs": []
+    },
+    {
+      "id": "F16",
+      "level": "离线",
+      "clauses": [
+        5,
+        12
+      ],
+      "independent_input_or_observation": "交换页码/外部映射，增加重复或无法证明的映射",
+      "expected": "错页/歧义可定位；不把历史 N→N-1 当固定全局规则",
+      "status": "NOT_RUN",
+      "actual": null,
+      "command": null,
+      "evidence_refs": []
+    },
+    {
+      "id": "F17",
+      "level": "离线",
+      "clauses": [
+        12,
+        13
+      ],
+      "independent_input_or_observation": "元数据页数大于实采页数、缺范围数据；能力无实测证据",
+      "expected": "不称整书完整；未测能力保持未验证，遵守固定 C01 字段枚举",
+      "status": "NOT_RUN",
+      "actual": null,
+      "command": null,
+      "evidence_refs": []
+    },
+    {
+      "id": "R01",
+      "level": "真实只读",
+      "clauses": [
+        8,
+        9
+      ],
+      "independent_input_or_observation": "独立无头会话、实际目标及受保护界面内容",
+      "expected": "书为46007447，界面/内容加载证据充分；URL/200单独不足",
+      "status": "NOT_RUN",
+      "actual": null,
+      "command": null,
+      "evidence_refs": []
+    },
+    {
+      "id": "R02",
+      "level": "真实只读",
+      "clauses": [
+        8,
+        12
+      ],
+      "independent_input_or_observation": "正文14、答案173及一个相邻正文页",
+      "expected": "每页实时资源映射、原图字节摘要和实际尺寸；不扩扫整书",
+      "status": "NOT_RUN",
+      "actual": null,
+      "command": null,
+      "evidence_refs": []
+    },
+    {
+      "id": "R03",
+      "level": "真实只读",
+      "clauses": [
+        8,
+        12
+      ],
+      "independent_input_or_observation": "正文14→核对后的相邻正文页→14；两侧页态前后记录",
+      "expected": "原图和页态可对应，返回后仍为目标正文页及预期答案页",
+      "status": "NOT_RUN",
+      "actual": null,
+      "command": null,
+      "evidence_refs": []
+    },
+    {
+      "id": "R04",
+      "level": "真实只读",
+      "clauses": [
+        10,
+        12,
+        13
+      ],
+      "independent_input_or_observation": "本次目录/题/框快照和脱敏网络审计",
+      "expected": "当前数量据实；业务仅GET/导航；必要登录单列；不复用22/68旧结论",
+      "status": "NOT_RUN",
+      "actual": null,
+      "command": null,
+      "evidence_refs": []
+    },
+    {
+      "id": "R05",
+      "level": "真实只读",
+      "clauses": [
+        11
+      ],
+      "independent_input_or_observation": "接受geometry+实测viewport/缩放/平移+独立图像参考点",
+      "expected": "独立正向预期、反向检查及非平凡偏移/缩放可发现错误；不只自洽",
+      "status": "NOT_RUN",
+      "actual": null,
+      "command": null,
+      "evidence_refs": []
+    },
+    {
+      "id": "R06",
+      "level": "真实只读",
+      "clauses": [
+        14
+      ],
+      "independent_input_or_observation": "自有会话正常关闭前后生命周期、锁/进程核对",
+      "expected": "只关闭自有资源；本任务profile释放有可核对证明",
+      "status": "NOT_RUN",
+      "actual": null,
+      "command": null,
+      "evidence_refs": []
+    },
+    {
+      "id": "D01",
+      "level": "证据",
+      "clauses": [
+        13,
+        15,
+        16
+      ],
+      "independent_input_or_observation": "分层结果、未测能力、失败最小输入、费用、限制、摘要",
+      "expected": "ACCEPTED需全部必需项；否则具体REWORK/BLOCKED；集成由主调度决定",
+      "status": "NOT_RUN",
+      "actual": null,
+      "command": null,
+      "evidence_refs": []
+    }
+  ]
+}

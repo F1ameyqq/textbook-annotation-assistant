@@ -1,0 +1,169 @@
+{
+  "schema_version": 1,
+  "kind": "A04_REVIEW_PREPARATION_ONLY",
+  "written_at": "2026-10-16T21:07:02.766554+08:00",
+  "timezone": "Asia/Shanghai",
+  "phase": "WAITING_EXECUTION",
+  "decision": "BLOCKED",
+  "decision_scope": "Missing formal review prerequisites; no implementation tests run",
+  "base_commit": "39341c98d73c354d639f3beeb55429f55d0e9be5",
+  "workflow_commit": "39341c98d73c354d639f3beeb55429f55d0e9be5",
+  "target_commit": null,
+  "review_thread_id": "01a144cc-e93d-7841-a259-d6aac22c94f4",
+  "execution_thread_id": "01a144cc-dde4-73a1-9e83-be485380ea25",
+  "state_updated_at": "2026-10-16T21:02:49.939204+08:00",
+  "state_selection": {
+    "A04": {
+      "status": "RUNNING",
+      "depends_on": [
+        "C01"
+      ],
+      "execution_task": "docs/tasks/A04-headless-readonly.md",
+      "review_task": "docs/tasks/A04-independent-review.md",
+      "acceptance_scope": "Headless read-only book46007447 pages14/173 and one adjacent body page; coordinates after accepted A01.",
+      "dispatch_status": "EXECUTION_AND_REVIEW_ACKNOWLEDGED",
+      "next_dependency": "Offline/read-only adapter work; formal coordinate integration awaits accepted A01 geometry and exclusive profile.",
+      "geometry_dependency": {
+        "task": "A01",
+        "status": "WAITING_ACCEPTED_COMMIT",
+        "blocks": "Formal coordinate integration only; offline adapter work can proceed."
+      },
+      "base_commit": "39341c98d73c354d639f3beeb55429f55d0e9be5",
+      "workflow_commit": "39341c98d73c354d639f3beeb55429f55d0e9be5",
+      "worktree_name": "a04-headless-readonly",
+      "branch": "codex/a04-headless-readonly",
+      "worktree_operation_id": "18214190-b960-40ef-b299-0461629725aa",
+      "worktree": "C:/Users/ASUS/.codex/worktrees/a04-headless-readonly/1800",
+      "worktree_status": "READY",
+      "execution": {
+        "thread_id": "01a144cc-dde4-73a1-9e83-be485380ea25",
+        "host_id": "local",
+        "turn_status": "inProgress",
+        "cursor": "974d5ca7-8768-480c-81ed-d8fd0f02ab83:1",
+        "report": "C:/Users/ASUS/.codex/worktrees/a04-headless-readonly/1800/docs/tasks/A04-execution-report.md",
+        "turn_id": "01a144cc-e1a4-7523-bf4b-11cce1462585",
+        "last_progress": "我先核对 A04 的任务边界、工作树和最新调度状态，再开始离线采集与解析实现；真实只读探测前会检查独立 profile 的进程和锁占用。",
+        "phase": "EXECUTING"
+      },
+      "review": {
+        "thread_id": "01a144cc-e93d-7841-a259-d6aac22c94f4",
+        "host_id": "local",
+        "turn_status": "inProgress",
+        "cursor": "8059c48e-775f-4749-bf6d-6f3fb0107430:1",
+        "report": "docs/tasks/A04-review-report.md",
+        "turn_id": "01a144cc-ed10-72e3-8b34-1eb3c12b5841",
+        "last_progress": "我会先核对 A04 的授权边界、交付状态和会话占用，只准备独立复验场景与证据清单；本轮不启动浏览器。",
+        "phase": "PREPARING_WAITING_EXECUTION"
+      },
+      "dispatch_record_commit": "d6738cf239b203496c9e84cb87178eb82f2d4f89"
+    },
+    "A01": {
+      "status": "RUNNING",
+      "review": {
+        "thread_id": "01a144cb-69e8-7981-a8d5-8832eae61829",
+        "host_id": "local",
+        "turn_status": "inProgress",
+        "cursor": "45744dd7-003f-41b4-a2c5-99d28971d2cc:1",
+        "report": "docs/tasks/A01-review-report.md",
+        "turn_id": "01a144cb-6d99-72e0-bf02-f725cab53967",
+        "last_progress": "当前状态为 RUNNING，执行工作树仍在基线提交 39341c9，尚无执行报告或冻结提交。正式验收条件未满足；本轮只准备资料清单和独立反例，不对实现下结论。",
+        "phase": "PREPARING_WAITING_EXECUTION"
+      }
+    },
+    "platform_session": {
+      "book_id": "46007447",
+      "reservation_task": "A04",
+      "reservation_stage": "execution",
+      "status": "RESERVED_NOT_OPENED",
+      "actual_process_and_lock_check_required": true,
+      "review_must_wait_release": true,
+      "operations": "Read only; no frame edits, OCR, save, review or delivery.",
+      "reservation_thread_id": "01a144cc-dde4-73a1-9e83-be485380ea25"
+    }
+  },
+  "execution_thread_single_observation": {
+    "tool": "read_thread",
+    "host_id": "local",
+    "turn_limit": 1,
+    "include_outputs": false,
+    "title": "A04 无头只读平台适配",
+    "status": "active",
+    "turn_id": "01a144cc-e1a4-7523-bf4b-11cce1462585",
+    "turn_status": "inProgress",
+    "continuous_polling": false,
+    "raw_tool_output_persisted": false
+  },
+  "execution_worktree_initial_observation": {
+    "path": "C:/Users/ASUS/.codex/worktrees/a04-headless-readonly/1800",
+    "head": "39341c98d73c354d639f3beeb55429f55d0e9be5",
+    "git_status_short": "",
+    "execution_report_present": false,
+    "is_frozen_delivery": false,
+    "limitation": "Initial read only; execution is active and may change later"
+  },
+  "existing_main_worktree_changes_at_initial_observation": [
+    " M docs/coordination-state.json",
+    "?? mermaid-diagram.png"
+  ],
+  "input_files": [
+    {
+      "path": "AGENTS.md",
+      "bytes": 2152,
+      "sha256": "1c484397a91613d35d01f8a44c58fd3c9bd6a7c0841046919e5fb9a153f03a75"
+    },
+    {
+      "path": "docs/architecture.md",
+      "bytes": 16154,
+      "sha256": "c2b5dce8b862d6d274d87ce75cbbb844d75b12e6c3e6885884984b0b5c321b5f"
+    },
+    {
+      "path": "docs/contracts-v1.md",
+      "bytes": 9954,
+      "sha256": "8fdc31e5b6671f4995ea95b3271b916d784c300336a9ee1420e79dfb3ccfcaae"
+    },
+    {
+      "path": "docs/coordination.md",
+      "bytes": 17739,
+      "sha256": "06374ff30db2ad07b93dcee78aa25f66fade359c9e179d13e991c00a9bd836e4"
+    },
+    {
+      "path": "docs/local-login.md",
+      "bytes": 3137,
+      "sha256": "aa1d70b4b92e34115481aafb9d57bf197470e386171b14582e177ae87b0dee65"
+    },
+    {
+      "path": "docs/tasks/A04-independent-review.md",
+      "bytes": 3629,
+      "sha256": "b01886d404a4633968a176081f1259d3cb56c324db785c0e8b086c13fb299ae6"
+    },
+    {
+      "path": "docs/tasks/A04-headless-readonly.md",
+      "bytes": 7518,
+      "sha256": "a5d160246df79899578380da8ed64cd2a972e320330f6ae27701ab703843b5a8"
+    },
+    {
+      "path": "docs/coordination-state.json",
+      "bytes": 21728,
+      "sha256": "6aa98415148b030ffa290e3ed86d2aaf0af48ebdd26f16d3c295ae2e4989e90b"
+    }
+  ],
+  "review_activity_record": {
+    "implementation_tests_run": 0,
+    "browser_launches": 0,
+    "session_acquisitions": 0,
+    "platform_requests": 0,
+    "credential_or_profile_files_read": 0,
+    "paid_model_calls": 0,
+    "paid_model_cost": 0,
+    "process_or_lock_inspection_performed": false,
+    "session_release": "NOT_ACQUIRED_NO_REVIEW_SESSION_TO_RELEASE",
+    "execution_session_release_verified": false,
+    "evidence_type": "Preparation activity record; not actual browser lifecycle proof"
+  },
+  "resume_requires": [
+    "Coordinator-confirmed exact frozen A04 delivery and public commands",
+    "Execution session/profile release evidence",
+    "Exact accepted A01 geometry commit",
+    "Coordinator grants review session followed by actual process/lock checks"
+  ]
+}
