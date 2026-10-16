@@ -2,7 +2,7 @@
 
 更新时间：2026-10-17，Asia/Shanghai。负责人：xiaoshanqingpro 一侧。
 
-- 本轮基线：`6aa4ba89b720b3c7fcf1887015eb85b07446d601`（上一轮数学角色与局部来源身份交付）。分支 `b-side/readonly-book-46007447`，PR #2；代码版本以本页所在提交及 PR head 为准。
+- 本轮基线：`9533cb7ebc23bcb594e870921f1adb0f1db9f6a6`（上一轮专门公式与单阶段批次交付）。分支 `b-side/readonly-book-46007447`，PR #2；代码版本以本页所在提交及 PR head 为准。
 - 公共 `contracts-v1.md` 仍为设计草案。原始证据0.2及恢复视图/图谱/检查0.3保留；本轮数学/图像/组合标题为B trial0.1，附区域的续接证明为trial0.2，最新本地应用图谱为trial0.4、呈现区域为trial0.1，未宣称公共合同兼容或冻结。
 - 已读取定稿需求，继续 B 离线识别、配答、质量检查；平台规则不再重复请求确认。没有网站标注修改或提交。
 
@@ -66,3 +66,12 @@ python tools/verify_continuation_b.py --evidence data/runs/46007447-recovered/ev
 - B离线batch支持声明全范围、逐资产缓存、SQLite意图/attempt/事件、immutable对象、真实进程死亡后的恢复和版本失效。真实5页默认几何模式验证2→5续跑、cache2→cache5，以及单页变化/缓存损坏只重做1页；原图不变。不是全书214页或内容OCR验收，不接管A平台runtime。
 - 新说明docs/b-formula-batch-46007447.md；两个入口tools/replay_formula_b.py、tools/run_batch_b.py；435项回归通过（此前301+新增134），Git导出后同样通过、四个公式payload摘要跨两个运行时一致；完整回归与Git导出证据evaluation/book-46007447-formula-batch.json。模型权重不入库，optional环境锁定requirements-formula-cpu.txt和evaluation/formula-cpu-runtime-lock.json。
 - 本轮新增22次专门公式CPU推理，批次真实运行无新OCR；标注平台请求/修改、样本上传和额外付费模型调用均为0。公共合同/消费者及A接收验证仍PENDING_A，长期目标继续进行。
+
+## 2026-10-17 离线多阶段恢复增量
+
+- B pipeline接通LIVE_BATCH逐页识别→答案细化→组题配答→质量检查，以及已有E0.2/0.3导入→组题配答→质量检查。默认几何模式在refine前OCR_REQUIRED/PARTIAL，只有显式--ocr允许新识别；已有E必须完整匹配源页和context。READY仅表示离线阶段执行完成，业务仍HOLD。
+- SQLite意图/attempt/事件、immutable阶段物件、相关函数/helpers/globals/模型依赖指纹与独立审计闭合；review只变更仅重质检，坏中间对象只重做该阶段及后继。真正执行中退出、物件已发布SQL未提交、setup失败和运行中输入变化均有回归/明确回执，未伪造成功或未构造的指纹。
+- 真实5页CPU按2/5保存→续识别3页并细化→组题/质检READY，重跑4阶段缓存命中、0新OCR。424原行+82细分的payload与旧E0.2完全相同；基础图谱34题/56答案/27链接、38未归属，134问题/HOLD。另将已有回补E0.3以无模型/网络进程导入，保留34题/66答案/34链接、19未归属与110问题；没有把基础链说成自动完成回补。
+- 真实控制组验证review元数据变化只重quality；故意损坏assemble物件先被独立拒绝，再只重assemble/quality、evidence命中，重复全缓存。原图SHA均不变。当前pipeline尚未自动串入局部回补、公式与Q9的0.4应用阶段，旧结果仍按原版本保留。
+- 492项回归通过（此前435+新增57：生产者16、独立审计25、CLI16）；入口tools/run_pipeline_b.py，说明docs/b-pipeline-46007447.md及evaluation/book-46007447-pipeline.json。来源/执行完整性通过不代表内容或业务验收，A状态未代填。
+- 本轮实际普通OCR入口37次（5页各1次、细化32次）；续跑35次由原始code-object profiler计数，首2次用真实成功裁片和固定路径核对，保留扁平profiler漏计的旧回执及校准说明。缓存重放/几何/新专门公式、网站请求/动作、样本上传、额外付费调用均为0。长期目标继续进行，A接收验证PENDING_A。
