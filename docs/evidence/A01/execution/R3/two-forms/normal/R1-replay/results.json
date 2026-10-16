@@ -1,0 +1,462 @@
+{
+  "task": "A01-R1",
+  "cwd": "C:\\Users\\ASUS\\.codex\\worktrees\\a01-source-geometry\\1800",
+  "python": "3.9.13",
+  "command": [
+    "C:\\Users\\ASUS\\.codex\\worktrees\\a01-source-geometry\\1800\\examples\\a01\\R1\\probe.py",
+    "C:\\Users\\ASUS\\.codex\\worktrees\\a01-source-geometry\\1800\\docs\\evidence\\A01\\execution\\R3\\two-forms\\normal\\R1-replay"
+  ],
+  "imported_modules": {
+    "annotation.geometry": {
+      "path": "C:\\Users\\ASUS\\.codex\\worktrees\\a01-source-geometry\\1800\\src\\annotation\\geometry\\__init__.py",
+      "sha256": "3b707579cd586887da3b5125048b17c5baf548010fccf6cb21cc386baddaacf0"
+    },
+    "annotation.source.static.importer": {
+      "path": "C:\\Users\\ASUS\\.codex\\worktrees\\a01-source-geometry\\1800\\src\\annotation\\source\\static\\importer.py",
+      "sha256": "72e9d876103e2cb4e949f4fa9a28596787cb00327ca3cb37c6632d4221e6404f"
+    },
+    "annotation.contracts": {
+      "path": "C:\\Users\\ASUS\\.codex\\worktrees\\a01-source-geometry\\1800\\src\\annotation\\contracts\\__init__.py",
+      "sha256": "3f1b276cc0bcdfc74877ca06c3573f8ab06adb3ac22baa1f5fe1ccb64e7649b3"
+    }
+  },
+  "rows": [
+    {
+      "id": "R01-forward-point",
+      "input": {
+        "image": {
+          "asset_id": "original",
+          "width": 5,
+          "height": 1,
+          "sha256": "1111111111111111111111111111111111111111111111111111111111111111"
+        },
+        "config": {
+          "crop": [
+            2,
+            0,
+            5,
+            1
+          ],
+          "scale": [
+            2.3333333333333335,
+            1
+          ]
+        },
+        "coordinates": [
+          5,
+          0
+        ]
+      },
+      "expected": [
+        7,
+        0
+      ],
+      "actual": {
+        "returned": [
+          7.0,
+          0.0
+        ]
+      },
+      "matches_expectation": true
+    },
+    {
+      "id": "R01-forward-box",
+      "input": {
+        "image": {
+          "asset_id": "original",
+          "width": 5,
+          "height": 1,
+          "sha256": "1111111111111111111111111111111111111111111111111111111111111111"
+        },
+        "config": {
+          "crop": [
+            2,
+            0,
+            5,
+            1
+          ],
+          "scale": [
+            2.3333333333333335,
+            1
+          ]
+        },
+        "coordinates": [
+          2,
+          0,
+          5,
+          1
+        ]
+      },
+      "expected": [
+        0,
+        0,
+        7,
+        1
+      ],
+      "actual": {
+        "returned": [
+          0.0,
+          0.0,
+          7.0,
+          1.0
+        ]
+      },
+      "matches_expectation": true
+    },
+    {
+      "id": "R01-inverse-point",
+      "input": {
+        "image": {
+          "asset_id": "original",
+          "width": 3,
+          "height": 7,
+          "sha256": "1111111111111111111111111111111111111111111111111111111111111111"
+        },
+        "config": {
+          "crop": [
+            0,
+            1,
+            3,
+            7
+          ],
+          "scale": [
+            0.3333333333333333,
+            1
+          ],
+          "rotation_degrees": 90
+        },
+        "coordinates": [
+          6,
+          0
+        ]
+      },
+      "expected": [
+        0,
+        1
+      ],
+      "actual": {
+        "returned": [
+          0.0,
+          1.0
+        ]
+      },
+      "matches_expectation": true
+    },
+    {
+      "id": "R01-inverse-box",
+      "input": {
+        "image": {
+          "asset_id": "original",
+          "width": 3,
+          "height": 7,
+          "sha256": "1111111111111111111111111111111111111111111111111111111111111111"
+        },
+        "config": {
+          "crop": [
+            0,
+            1,
+            3,
+            7
+          ],
+          "scale": [
+            0.3333333333333333,
+            1
+          ],
+          "rotation_degrees": 90
+        },
+        "coordinates": [
+          0,
+          0,
+          6,
+          1
+        ]
+      },
+      "expected": [
+        0,
+        1,
+        3,
+        7
+      ],
+      "actual": {
+        "returned": [
+          0.0,
+          1.0,
+          3.0,
+          7.0
+        ]
+      },
+      "matches_expectation": true
+    },
+    {
+      "id": "R02-padding-point",
+      "input": {
+        "image": {
+          "asset_id": "original",
+          "width": 4,
+          "height": 1,
+          "sha256": "1111111111111111111111111111111111111111111111111111111111111111"
+        },
+        "config": {
+          "crop": [
+            1,
+            0,
+            4,
+            1
+          ],
+          "scale": [
+            2,
+            1
+          ],
+          "padding": [
+            1,
+            0,
+            0,
+            0
+          ]
+        },
+        "coordinates": [
+          0.9999999999999999,
+          0
+        ]
+      },
+      "expected": "BOUNDS",
+      "actual": {
+        "exception": "GeometryError",
+        "code": "BOUNDS",
+        "location": "processed_point",
+        "message": "processed_point: [BOUNDS] point outside declared content domain"
+      },
+      "matches_expectation": true
+    },
+    {
+      "id": "R02-padding-box",
+      "input": {
+        "image": {
+          "asset_id": "original",
+          "width": 4,
+          "height": 1,
+          "sha256": "1111111111111111111111111111111111111111111111111111111111111111"
+        },
+        "config": {
+          "crop": [
+            1,
+            0,
+            4,
+            1
+          ],
+          "scale": [
+            2,
+            1
+          ],
+          "padding": [
+            1,
+            0,
+            0,
+            0
+          ]
+        },
+        "coordinates": [
+          0.9999999999999999,
+          0,
+          3,
+          1
+        ]
+      },
+      "expected": "BOUNDS",
+      "actual": {
+        "exception": "GeometryError",
+        "code": "BOUNDS",
+        "location": "bbox",
+        "message": "bbox: [BOUNDS] point outside declared content domain"
+      },
+      "matches_expectation": true
+    },
+    {
+      "id": "R03-integer",
+      "input": {
+        "image_size": [
+          1,
+          1
+        ],
+        "padding": [
+          9007199254740993,
+          0,
+          0,
+          0
+        ]
+      },
+      "expected": "GeometryError or exact integer preservation",
+      "actual": {
+        "exception": "GeometryError",
+        "code": "REPRESENTATION",
+        "location": "padding",
+        "message": "padding: [REPRESENTATION] integer exceeds the exact pixel range 2**53"
+      },
+      "matches_expectation": true
+    },
+    {
+      "id": "S12",
+      "input": {
+        "base": "examples/a01/bundles/46006966",
+        "changed_files": {
+          "exchange.json": "86a4e2139b750779551f59b51a1d12897a2d145c731fbf7d4e95935cb989b7c4",
+          "provenance.json": "ce837f7e4716e05c58aac44a3359b22d5dd7904a50f15d0502c36373811027ba"
+        }
+      },
+      "expected": "StaticSourceError with code and location",
+      "actual": {
+        "exception": "StaticSourceError",
+        "code": "SOURCE_ORIGINS",
+        "location": "provenance.origins",
+        "message": "provenance.origins: [SOURCE_ORIGINS] assigned origin inventory is missing or duplicated"
+      },
+      "matches_expectation": true
+    },
+    {
+      "id": "S13",
+      "input": {
+        "base": "examples/a01/bundles/46006966",
+        "changed_files": {
+          "exchange.json": "ac004b521051444aa3b441f646f409c397b33c1b16053cbbb2b8eb8b680c8e33",
+          "provenance.json": "89973d1a4f91ea45fa98879033e9bd8bac3ccf33c7cf7f934ac0d4368a88acbc"
+        }
+      },
+      "expected": "StaticSourceError with code and location",
+      "actual": {
+        "exception": "StaticSourceError",
+        "code": "SOURCE_MANIFEST",
+        "location": "provenance.origins[0].manifest_sha256",
+        "message": "provenance.origins[0].manifest_sha256: [SOURCE_MANIFEST] origin manifest digest conflicts with original_manifests"
+      },
+      "matches_expectation": true
+    },
+    {
+      "id": "S14",
+      "input": {
+        "base": "examples/a01/bundles/46006966",
+        "changed_files": {
+          "exchange.json": "6ac725704ed552a7031bda160acf3a739224bd6afa8533519effdfcbdd338eca",
+          "provenance.json": "618e842289e2e33fd584da4a5d6eb0cb506e78eb8f9b4de6ec53016bfdb691d8"
+        }
+      },
+      "expected": "StaticSourceError with code and location",
+      "actual": {
+        "exception": "StaticSourceError",
+        "code": "MAPPING_EVIDENCE",
+        "location": "provenance.mappings[0].printed_page",
+        "message": "provenance.mappings[0].printed_page: [MAPPING_EVIDENCE] assigned archive has no printed-page mapping evidence"
+      },
+      "matches_expectation": true
+    },
+    {
+      "id": "S15",
+      "input": {
+        "base": "examples/a01/bundles/46006966",
+        "changed_files": {
+          "exchange.json": "c28ab6fe6a0ceb0bd3ce06f1d44432d61f4dfc5845bf333e7c5c6b0ebeb6455f",
+          "limitations.json": "b924f68c2bb36730539f4c2b1fc56542a67d2d5c0d19d28af15603285dd0f2f0"
+        }
+      },
+      "expected": "StaticSourceError with code and location",
+      "actual": {
+        "exception": "StaticSourceError",
+        "code": "MISSING_SOURCES",
+        "location": "limitations.missing_sources",
+        "message": "limitations.missing_sources: [MISSING_SOURCES] known unavailable-source declarations cannot be erased"
+      },
+      "matches_expectation": true
+    },
+    {
+      "id": "S16",
+      "input": {
+        "base": "examples/a01/bundles/46006966",
+        "changed_files": {
+          "exchange.json": "9b2ee2f7f1dac3fe049b13a34a9a48e6dfd9a1a08a1c3d4d955cf5f90f4a9833",
+          "input-integrity.json": "48d0b28bee864dfd17beca123601e4181027d93baf49f640f7abe8dbcaf6ec96"
+        }
+      },
+      "expected": "StaticSourceError with code and location",
+      "actual": {
+        "exception": "StaticSourceError",
+        "code": "INPUT_CHANGED",
+        "location": "input-integrity.unchanged",
+        "message": "input-integrity.unchanged: [INPUT_CHANGED] archive import must retain an unchanged before/after record"
+      },
+      "matches_expectation": true
+    },
+    {
+      "id": "S17",
+      "input": {
+        "base": "examples/a01/bundles/46006966",
+        "changed_files": {
+          "exchange.json": "591c9ed64fd7a6fee26384e84fa0f14dbbe9477b4f6663e9a27bbe72572c69f5",
+          "history/01-manual-annotations.json": "b91360557269429bcc05749f17bdc11b932b64115608587eb38c3abca8eae007"
+        }
+      },
+      "expected": "StaticSourceError with code and location",
+      "actual": {
+        "exception": "StaticSourceError",
+        "code": "HISTORY_BYTES",
+        "location": "history/01-manual-annotations.json",
+        "message": "history/01-manual-annotations.json: [HISTORY_BYTES] history bytes conflict with retained original digest"
+      },
+      "matches_expectation": true
+    },
+    {
+      "id": "S18",
+      "input": {
+        "base": "examples/a01/bundles/46006966",
+        "changed_files": {
+          "exchange.json": "4138ae3ed1f5d6cee7765b08e205729b486e05bbbaeb9308f9259ca3dd842fbb"
+        }
+      },
+      "expected": "StaticSourceError with code and location",
+      "actual": {
+        "exception": "StaticSourceError",
+        "code": "HISTORY_QUALITY",
+        "location": "history[0].quality",
+        "message": "history[0].quality: [HISTORY_QUALITY] A01 archive has no independent business approval"
+      },
+      "matches_expectation": true
+    },
+    {
+      "id": "S19",
+      "input": {
+        "base": "examples/a01/bundles/46006966",
+        "changed_files": {
+          "exchange.json": "40547f31b197a116de57c27b93741710f7bd0183d2f9194cffc5a0e74b0618c4",
+          "limitations.json": "22709ac08ed64a7d8d1e606201cde51adc06b3d28318409a7fcc4b832a08c431"
+        }
+      },
+      "expected": "StaticSourceError with code and location",
+      "actual": {
+        "exception": "StaticSourceError",
+        "code": "DENOMINATOR_UNKNOWN",
+        "location": "limitations.scope_manifest_status",
+        "message": "limitations.scope_manifest_status: [DENOMINATOR_UNKNOWN] archive reference scope cannot claim independent completeness"
+      },
+      "matches_expectation": true
+    },
+    {
+      "id": "S20",
+      "input": {
+        "base": "examples/a01/bundles/46006966",
+        "changed_files": {
+          "exchange.json": "868fbb0e36be8c6d235ad1d9725e5cc86c937dd2403af63e8bf5a4c10b163c5e",
+          "provenance.json": "796d1e7b7a8289549f8bd017b663d488ef20f2ac317706796139fd78af02dd74"
+        }
+      },
+      "expected": "StaticSourceError with code and location",
+      "actual": {
+        "exception": "StaticSourceError",
+        "code": "REFERENCE_RECORDS",
+        "location": "provenance.reference_records",
+        "message": "provenance.reference_records: [REFERENCE_RECORDS] reference identities/positions conflict with archived input"
+      },
+      "matches_expectation": true
+    }
+  ],
+  "passed": 16,
+  "failed": 0,
+  "network_browser_platform_model_calls": 0
+}
