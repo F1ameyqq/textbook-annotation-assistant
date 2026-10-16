@@ -492,6 +492,18 @@ def _plan(ctx, a, path, current_snapshot=None):
             fail(path + ".required_capabilities", "CAPABILITY_VERSION", "capability was tested against a different platform version: " + cap)
     distinct([x.action_id for x in p.actions], path + ".actions")
     questions = {q.question_id: q for q in graph.payload.questions}
+    platform_questions = {q.platform_question_id: q for q in snapshot.payload.questions}
+    graph_path = ctx.paths[(graph.artifact_id, graph.revision)] + ".payload"
+    for i, question in enumerate(graph.payload.questions):
+        external = question.external_refs
+        if external.platform_question_id is None:
+            continue
+        loc = graph_path + ".questions[{}].external_refs".format(i)
+        if external.platform_question_id not in platform_questions:
+            fail(loc + ".platform_question_id", "MISSING_REFERENCE", "existing question mapping is absent from the plan snapshot")
+        existing = platform_questions[external.platform_question_id]
+        if external.platform_order is not None and external.platform_order != existing.platform_order:
+            fail(loc + ".platform_order", "PLATFORM_MAPPING_CONFLICT", "mapped question order differs from the plan snapshot")
     entities = set(questions) | {f.fragment_id for f in graph.payload.fragments}
     seen = set()
     for i, action in enumerate(p.actions):
@@ -507,6 +519,18 @@ def _plan(ctx, a, path, current_snapshot=None):
             fail(loc + ".source_entity_ids", "ACTION_OWNERSHIP", "action sources must belong to its target question")
         if action.target.target_id != snapshot.payload.target_id:
             fail(loc + ".target.target_id", "TARGET_CONFLICT", "action target differs from snapshot")
+        platform_id = action.target.platform_question_id
+        mapped_id = question.external_refs.platform_question_id
+        target_path = loc + ".target.platform_question_id"
+        if platform_id is not None:
+            if platform_id not in platform_questions:
+                fail(target_path, "MISSING_REFERENCE", "action platform question is absent from the plan snapshot")
+            if mapped_id is None:
+                fail(target_path, "PLATFORM_MAPPING_REQUIRED", "existing action target requires an explicit mapping on its internal question")
+            if platform_id != mapped_id:
+                fail(target_path, "PLATFORM_MAPPING_CONFLICT", "action target differs from its internal question's existing platform mapping")
+        elif mapped_id is not None:
+            fail(target_path, "PLATFORM_MAPPING_CONFLICT", "null target cannot replace an existing platform question mapping")
         if action.operation == "UPDATE_FRAMES" and p.previous_receipt is None:
             fail(loc, "DELTA_BASELINE", "updates must reference old receipt; actual delta support is out of C01")
         if action.operation == "UPDATE_FRAMES":
@@ -637,9 +661,13 @@ def validate_bundle(bundle, asset_root=None):
             handlers[artifact.kind](ctx, artifact, path)
         if artifact.kind == "PlatformSnapshot":
             p = artifact.payload
+            distinct(p.directories, path + ".directories")
             distinct([c.name for c in p.capabilities], path + ".capabilities")
             distinct([q.platform_question_id for q in p.questions], path + ".questions")
             distinct([f.platform_frame_id for f in p.frames], path + ".frames")
+            for i, question in enumerate(p.questions):
+                if question.directory_id not in p.directories:
+                    fail(path + ".questions[{}].directory_id".format(i), "MISSING_REFERENCE", "platform question directory is absent from this snapshot")
             for i, cap in enumerate(p.capabilities):
                 ctx.evrefs(cap.evidence_refs, path + ".capabilities[{}].evidence_refs".format(i))
             ctx.evrefs(p.evidence_refs, path + ".evidence_refs")

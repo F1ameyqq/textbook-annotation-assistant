@@ -75,6 +75,10 @@ CheckReport 必须保存 stage、subject、精确 graph/policy/snapshot/receipt 
 
 READY 计划必须绑定不同 stage 的 PRE_APPLY/TARGET 两份 PASS，同图谱同政策，目标检查与计划快照一致。检查资格时调用者还须传入**当前**快照；当前 revision/hash 变化使旧计划失效。能力需 VERIFIED、有证据、适用于同一个 snapshot.platform_version；frame_readback 始终必需，PERSISTENT 还需 persistent_draft，同会话方案需 same_session_handoff。该新增能力及 platform_version 字段是具体实现提案。
 
+R1 补充平台引用闭合：快照中每个题目的 `directory_id` 必须存在于该快照的 `directories`；READY 计划当前图谱的非 null 平台题目映射必须存在于其绑定快照，已记录的非 null 平台题序必须与该 ID 对应的快照题序一致。动作的非 null `target.platform_question_id` 必须存在于同一快照，并等于其内部目标题的 `external_refs.platform_question_id`；已有映射不得改用 null 目标。两个字段均 null 的新题流程保持合法，即使快照另有其他题目。空字符串属于非 null 引用，不能代替 null 绕过存在性检查。
+
+非 null 动作目标而图谱映射为 null 时，当前字段无法核实内部归属，故本轮实现提案要求先在既有 `external_refs` 显式记录映射并重新检查，不猜测题号/题序或默认匹配；这不是双方已确认的新业务口径。图谱目录与平台目录是不同命名空间，现合同没有二者的映射字段，不直接比较其 ID。组合父子如何投影仍未决，本轮不擅定多个内部题与平台题的一对一约束，也不要求平台题序全局唯一；只核对各个明确 ID 的引用和已有映射一致性。
+
 诊断 `BLOCKED` 计划必须引用具体未通过检查和 issue，actions 为空；其回执只能 NOT_EXECUTED。它方便异常组也保存完整链，不代表 planner 已运行或可执行。Action 仅支持 CREATE_FRAMES/UPDATE_FRAMES；不包含最终提交动作，`final_submission=HUMAN_ONLY`。动作来源必须属于目标题的片段/共享材料/选定答案闭包，不能使用别题实体。UPDATE 必须引用同图谱旧修订的 ExecutionReceipt、对应题有 APPLIED 基线，且 frame_update 能力已验证；实际差量能力和操作投影仍待 delivery 实现。
 
 默认 [Usense 政策](../config/policies/usense-v1-proposal.json) 保持普通选择题 W 独立/合并 UNRESOLVED；受影响题目不能输出前置/目标 PASS 或 READY。角色与平台映射位于政策层，通用角色只含 stem/option/answer/explanation/shared_material。A05 框保存/读回记录 `BOUNDED_A05_OBSERVED`，OCR 为 UNVERIFIED，不能互相代替。未涉及 option 的 free_response/combination 模拟样例可继续检查。
