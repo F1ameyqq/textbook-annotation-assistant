@@ -1,0 +1,185 @@
+{
+  "name": "mapping-directory",
+  "matrix_ids": [
+    "I08"
+  ],
+  "status": "PASS",
+  "observations": {
+    "target": {
+      "stage": "TARGET",
+      "subject": {
+        "artifact_id": "a02-snapshot",
+        "revision": 1,
+        "kind": "PlatformSnapshot",
+        "content_hash": "f3edac8eb8d0cb86e177676fa60ea711ce5381d39851bac2f8b8299dd2517822"
+      },
+      "graph": {
+        "artifact_id": "a02-graph",
+        "revision": 1,
+        "kind": "QuestionGraph",
+        "content_hash": "098267b38f58048396c398334ebe29ad02340af5bd0fbf516d6824d63983a549"
+      },
+      "policy": {
+        "policy_id": "synthetic-a02-policy",
+        "revision": 1,
+        "content_hash": "5d914617cad7f10009ff34919b1c313d5c73bd322069b77cde54659a407ebc32"
+      },
+      "snapshot": {
+        "artifact_id": "a02-snapshot",
+        "revision": 1,
+        "kind": "PlatformSnapshot",
+        "content_hash": "f3edac8eb8d0cb86e177676fa60ea711ce5381d39851bac2f8b8299dd2517822"
+      },
+      "receipt": null,
+      "coverage": {
+        "scope_id": "synthetic-scope",
+        "pages_expected": [
+          "asset-page-a1",
+          "asset-page-a2",
+          "asset-page-b1"
+        ],
+        "pages_checked": [
+          "asset-page-a1",
+          "asset-page-a2",
+          "asset-page-b1"
+        ],
+        "clue_ids": [
+          "clue-alpha-start",
+          "clue-shared",
+          "clue-alpha-end",
+          "clue-alpha-answer",
+          "clue-child-stem",
+          "clue-child-answer",
+          "clue-beta-stem",
+          "clue-beta-answer"
+        ],
+        "unassigned_region_ids": []
+      },
+      "checks": [
+        {
+          "check_id": "target_version",
+          "outcome": "FAIL",
+          "evidence_refs": [
+            "proof-target"
+          ],
+          "reason": "question-alpha: explicit directory mapping differs"
+        },
+        {
+          "check_id": "authorized_scope",
+          "outcome": "PASS",
+          "evidence_refs": [
+            "proof-target"
+          ],
+          "reason": "SYNTHETIC facts checked by A02: authorized_scope"
+        },
+        {
+          "check_id": "capabilities",
+          "outcome": "PASS",
+          "evidence_refs": [
+            "proof-target"
+          ],
+          "reason": "SYNTHETIC facts checked by A02: capabilities"
+        },
+        {
+          "check_id": "policy",
+          "outcome": "PASS",
+          "evidence_refs": [
+            "proof-target"
+          ],
+          "reason": "SYNTHETIC facts checked by A02: policy"
+        },
+        {
+          "check_id": "coverage",
+          "outcome": "PASS",
+          "evidence_refs": [
+            "proof-target"
+          ],
+          "reason": "SYNTHETIC facts checked by A02: coverage"
+        }
+      ],
+      "issues": [
+        {
+          "issue_id": "issue-a02-d00e65cf7d61a8b4d945-target_version",
+          "code": "TARGET_CHANGED",
+          "scope_type": "scope",
+          "scope_id": "synthetic-scope",
+          "evidence_refs": [
+            "proof-target"
+          ],
+          "severity": "blocking",
+          "blocks": [
+            "PLAN",
+            "APPLY"
+          ],
+          "suggested_strategy": {
+            "strategy_id": "RECHECK_TARGET",
+            "max_attempts": 0,
+            "max_cost": 0.0
+          },
+          "reason": "question-alpha: explicit directory mapping differs"
+        }
+      ],
+      "decision": "HOLD",
+      "reason": "SYNTHETIC target conditions computed by A02; no algorithm or platform acceptance"
+    },
+    "plan": {
+      "graph": {
+        "artifact_id": "a02-graph",
+        "revision": 1,
+        "kind": "QuestionGraph",
+        "content_hash": "098267b38f58048396c398334ebe29ad02340af5bd0fbf516d6824d63983a549"
+      },
+      "precheck": {
+        "artifact_id": "a02-precheck-stub",
+        "revision": 1,
+        "kind": "CheckReport",
+        "content_hash": "810a7e8bd69a6f166e7449d7309c829928eefd5666368c35de03cdd872c4f3c0"
+      },
+      "targetcheck": {
+        "artifact_id": "review-target-mapping-directory-1",
+        "revision": 1,
+        "kind": "CheckReport",
+        "content_hash": "8884af62c5e32462ac1868a93104e62359eaad5e8ed0e86a87a4049d916baefe"
+      },
+      "snapshot": {
+        "artifact_id": "a02-snapshot",
+        "revision": 1,
+        "kind": "PlatformSnapshot",
+        "content_hash": "f3edac8eb8d0cb86e177676fa60ea711ce5381d39851bac2f8b8299dd2517822"
+      },
+      "policy": {
+        "policy_id": "synthetic-a02-policy",
+        "revision": 1,
+        "content_hash": "5d914617cad7f10009ff34919b1c313d5c73bd322069b77cde54659a407ebc32"
+      },
+      "readiness": "BLOCKED",
+      "execution_mode": "SIMULATED",
+      "session_mode": "SAME_SESSION_HANDOFF",
+      "required_capabilities": [
+        "frame_readback",
+        "same_session_handoff"
+      ],
+      "actions": [],
+      "blocked_issue_ids": [
+        "issue-a02-d00e65cf7d61a8b4d945-target_version"
+      ],
+      "previous_receipt": null,
+      "final_submission": "HUMAN_ONLY"
+    },
+    "receipt": {
+      "plan": {
+        "artifact_id": "review-plan-mapping-directory-1",
+        "revision": 1,
+        "kind": "ApplyPlan",
+        "content_hash": "ba04367bfe459a585ac5884ef1e774caaf047e8928d0dc3d2ae39651893e9633"
+      },
+      "execution_mode": "NOT_EXECUTED",
+      "results": [],
+      "unresolved_issue_ids": [
+        "issue-a02-d00e65cf7d61a8b4d945-target_version"
+      ],
+      "write_disposition": "NOT_EXECUTED"
+    },
+    "book_paused": false
+  }
+}

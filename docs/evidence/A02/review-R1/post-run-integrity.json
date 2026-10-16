@@ -1,0 +1,65 @@
+{
+  "target_commit": "38aca9dcc8d027409b95193e9cc142c2336b76d3",
+  "source_files_reverified": 141,
+  "source_mismatches": [],
+  "old_review_files_preserved": 2039,
+  "old_review_mismatches": [],
+  "old_delivery_files_preserved": 382,
+  "format_checks": [
+    {
+      "name": "all-delivery",
+      "argv": [
+        "git",
+        "-C",
+        "C:\\Users\\ASUS\\.codex\\worktrees\\a02-planner-mock\\1800",
+        "diff",
+        "--check",
+        "5c9285720c8628c5198bedeadfc9f6bc7826a914",
+        "38aca9dcc8d027409b95193e9cc142c2336b76d3"
+      ],
+      "exit_code": 2,
+      "stdout": "all-delivery-diff-check.stdout.txt",
+      "stderr": "all-delivery-diff-check.stderr.txt"
+    },
+    {
+      "name": "source-tests-examples",
+      "argv": [
+        "git",
+        "-C",
+        "C:\\Users\\ASUS\\.codex\\worktrees\\a02-planner-mock\\1800",
+        "diff",
+        "--check",
+        "5c9285720c8628c5198bedeadfc9f6bc7826a914",
+        "38aca9dcc8d027409b95193e9cc142c2336b76d3",
+        "--",
+        "src",
+        "tests",
+        "examples"
+      ],
+      "exit_code": 0,
+      "stdout": "source-tests-examples-diff-check.stdout.txt",
+      "stderr": "source-tests-examples-diff-check.stderr.txt"
+    },
+    {
+      "name": "all-except-raw-failure",
+      "argv": [
+        "git",
+        "-C",
+        "C:\\Users\\ASUS\\.codex\\worktrees\\a02-planner-mock\\1800",
+        "diff",
+        "--check",
+        "5c9285720c8628c5198bedeadfc9f6bc7826a914",
+        "38aca9dcc8d027409b95193e9cc142c2336b76d3",
+        "--",
+        ".",
+        ":(exclude)docs/evidence/A02/execution/R1/before/r1-regression.stderr.txt"
+      ],
+      "exit_code": 0,
+      "stdout": "all-except-raw-failure-diff-check.stdout.txt",
+      "stderr": "all-except-raw-failure-diff-check.stderr.txt"
+    }
+  ],
+  "format_note": "Complete diff check preserves one raw failed-unittest stderr trailing-space finding; source/tests/examples and all other paths pass.",
+  "source_worktree_head": "38aca9dcc8d027409b95193e9cc142c2336b76d3",
+  "source_worktree_status": []
+}

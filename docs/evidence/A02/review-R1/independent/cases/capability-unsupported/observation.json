@@ -1,0 +1,185 @@
+{
+  "name": "capability-unsupported",
+  "matrix_ids": [
+    "G14"
+  ],
+  "status": "PASS",
+  "observations": {
+    "target": {
+      "stage": "TARGET",
+      "subject": {
+        "artifact_id": "a02-snapshot",
+        "revision": 1,
+        "kind": "PlatformSnapshot",
+        "content_hash": "11a9f6f2c5839fa67d4dac94f5fcb0df85852a2feb51df5956fb5247282ac611"
+      },
+      "graph": {
+        "artifact_id": "a02-graph",
+        "revision": 1,
+        "kind": "QuestionGraph",
+        "content_hash": "0ac16823cda12bd08c185852ffb419729ed2da86b0636f5842be4eff4a5546aa"
+      },
+      "policy": {
+        "policy_id": "synthetic-a02-policy",
+        "revision": 1,
+        "content_hash": "5d914617cad7f10009ff34919b1c313d5c73bd322069b77cde54659a407ebc32"
+      },
+      "snapshot": {
+        "artifact_id": "a02-snapshot",
+        "revision": 1,
+        "kind": "PlatformSnapshot",
+        "content_hash": "11a9f6f2c5839fa67d4dac94f5fcb0df85852a2feb51df5956fb5247282ac611"
+      },
+      "receipt": null,
+      "coverage": {
+        "scope_id": "synthetic-scope",
+        "pages_expected": [
+          "asset-page-a1",
+          "asset-page-a2",
+          "asset-page-b1"
+        ],
+        "pages_checked": [
+          "asset-page-a1",
+          "asset-page-a2",
+          "asset-page-b1"
+        ],
+        "clue_ids": [
+          "clue-alpha-start",
+          "clue-shared",
+          "clue-alpha-end",
+          "clue-alpha-answer",
+          "clue-child-stem",
+          "clue-child-answer",
+          "clue-beta-stem",
+          "clue-beta-answer"
+        ],
+        "unassigned_region_ids": []
+      },
+      "checks": [
+        {
+          "check_id": "target_version",
+          "outcome": "PASS",
+          "evidence_refs": [
+            "proof-target"
+          ],
+          "reason": "SYNTHETIC facts checked by A02: target_version"
+        },
+        {
+          "check_id": "authorized_scope",
+          "outcome": "PASS",
+          "evidence_refs": [
+            "proof-target"
+          ],
+          "reason": "SYNTHETIC facts checked by A02: authorized_scope"
+        },
+        {
+          "check_id": "capabilities",
+          "outcome": "FAIL",
+          "evidence_refs": [
+            "proof-target"
+          ],
+          "reason": "frame_readback: capability not VERIFIED with evidence"
+        },
+        {
+          "check_id": "policy",
+          "outcome": "PASS",
+          "evidence_refs": [
+            "proof-target"
+          ],
+          "reason": "SYNTHETIC facts checked by A02: policy"
+        },
+        {
+          "check_id": "coverage",
+          "outcome": "PASS",
+          "evidence_refs": [
+            "proof-target"
+          ],
+          "reason": "SYNTHETIC facts checked by A02: coverage"
+        }
+      ],
+      "issues": [
+        {
+          "issue_id": "issue-a02-015f5906a07b0a6d8898-capabilities",
+          "code": "TARGET_CHANGED",
+          "scope_type": "scope",
+          "scope_id": "synthetic-scope",
+          "evidence_refs": [
+            "proof-target"
+          ],
+          "severity": "blocking",
+          "blocks": [
+            "PLAN",
+            "APPLY"
+          ],
+          "suggested_strategy": {
+            "strategy_id": "HUMAN_REVIEW",
+            "max_attempts": 0,
+            "max_cost": 0.0
+          },
+          "reason": "frame_readback: capability not VERIFIED with evidence"
+        }
+      ],
+      "decision": "HOLD",
+      "reason": "SYNTHETIC target conditions computed by A02; no algorithm or platform acceptance"
+    },
+    "plan": {
+      "graph": {
+        "artifact_id": "a02-graph",
+        "revision": 1,
+        "kind": "QuestionGraph",
+        "content_hash": "0ac16823cda12bd08c185852ffb419729ed2da86b0636f5842be4eff4a5546aa"
+      },
+      "precheck": {
+        "artifact_id": "a02-precheck-stub",
+        "revision": 1,
+        "kind": "CheckReport",
+        "content_hash": "48635bd8c0bbf962a6383000f6375f11a76afdfb71e0d54afc7482252eb1d212"
+      },
+      "targetcheck": {
+        "artifact_id": "review-target-capability-unsupported-1",
+        "revision": 1,
+        "kind": "CheckReport",
+        "content_hash": "5b18cc3566bbfc5aedd8694cf5163a4b069cd1ea16305e7de34ef4bff1242dce"
+      },
+      "snapshot": {
+        "artifact_id": "a02-snapshot",
+        "revision": 1,
+        "kind": "PlatformSnapshot",
+        "content_hash": "11a9f6f2c5839fa67d4dac94f5fcb0df85852a2feb51df5956fb5247282ac611"
+      },
+      "policy": {
+        "policy_id": "synthetic-a02-policy",
+        "revision": 1,
+        "content_hash": "5d914617cad7f10009ff34919b1c313d5c73bd322069b77cde54659a407ebc32"
+      },
+      "readiness": "BLOCKED",
+      "execution_mode": "SIMULATED",
+      "session_mode": "SAME_SESSION_HANDOFF",
+      "required_capabilities": [
+        "frame_readback",
+        "same_session_handoff"
+      ],
+      "actions": [],
+      "blocked_issue_ids": [
+        "issue-a02-015f5906a07b0a6d8898-capabilities"
+      ],
+      "previous_receipt": null,
+      "final_submission": "HUMAN_ONLY"
+    },
+    "receipt": {
+      "plan": {
+        "artifact_id": "review-plan-capability-unsupported-1",
+        "revision": 1,
+        "kind": "ApplyPlan",
+        "content_hash": "f9a47053bd12e03aab81a2ad3aaee66259b2bfb7619b70d7fc6791b68125a854"
+      },
+      "execution_mode": "NOT_EXECUTED",
+      "results": [],
+      "unresolved_issue_ids": [
+        "issue-a02-015f5906a07b0a6d8898-capabilities"
+      ],
+      "write_disposition": "NOT_EXECUTED"
+    },
+    "book_paused": false
+  }
+}

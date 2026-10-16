@@ -1,0 +1,251 @@
+{
+  "name": "same-pre",
+  "matrix_ids": [
+    "G06"
+  ],
+  "status": "PASS",
+  "observations": {
+    "target": {
+      "stage": "TARGET",
+      "subject": {
+        "artifact_id": "a02-snapshot",
+        "revision": 1,
+        "kind": "PlatformSnapshot",
+        "content_hash": "be10c4782733dcf675f881aa26229fad9b442b66244934cf01173af414414106"
+      },
+      "graph": {
+        "artifact_id": "a02-graph",
+        "revision": 1,
+        "kind": "QuestionGraph",
+        "content_hash": "0ac16823cda12bd08c185852ffb419729ed2da86b0636f5842be4eff4a5546aa"
+      },
+      "policy": {
+        "policy_id": "synthetic-a02-policy",
+        "revision": 1,
+        "content_hash": "5d914617cad7f10009ff34919b1c313d5c73bd322069b77cde54659a407ebc32"
+      },
+      "snapshot": {
+        "artifact_id": "a02-snapshot",
+        "revision": 1,
+        "kind": "PlatformSnapshot",
+        "content_hash": "be10c4782733dcf675f881aa26229fad9b442b66244934cf01173af414414106"
+      },
+      "receipt": null,
+      "coverage": {
+        "scope_id": "synthetic-scope",
+        "pages_expected": [
+          "asset-page-a1",
+          "asset-page-a2",
+          "asset-page-b1"
+        ],
+        "pages_checked": [
+          "asset-page-a1",
+          "asset-page-a2",
+          "asset-page-b1"
+        ],
+        "clue_ids": [
+          "clue-alpha-start",
+          "clue-shared",
+          "clue-alpha-end",
+          "clue-alpha-answer",
+          "clue-child-stem",
+          "clue-child-answer",
+          "clue-beta-stem",
+          "clue-beta-answer"
+        ],
+        "unassigned_region_ids": []
+      },
+      "checks": [
+        {
+          "check_id": "target_version",
+          "outcome": "PASS",
+          "evidence_refs": [
+            "proof-target"
+          ],
+          "reason": "SYNTHETIC facts checked by A02: target_version"
+        },
+        {
+          "check_id": "authorized_scope",
+          "outcome": "PASS",
+          "evidence_refs": [
+            "proof-target"
+          ],
+          "reason": "SYNTHETIC facts checked by A02: authorized_scope"
+        },
+        {
+          "check_id": "capabilities",
+          "outcome": "PASS",
+          "evidence_refs": [
+            "proof-target"
+          ],
+          "reason": "SYNTHETIC facts checked by A02: capabilities"
+        },
+        {
+          "check_id": "policy",
+          "outcome": "PASS",
+          "evidence_refs": [
+            "proof-target"
+          ],
+          "reason": "SYNTHETIC facts checked by A02: policy"
+        },
+        {
+          "check_id": "coverage",
+          "outcome": "PASS",
+          "evidence_refs": [
+            "proof-target"
+          ],
+          "reason": "SYNTHETIC facts checked by A02: coverage"
+        }
+      ],
+      "issues": [],
+      "decision": "PASS",
+      "reason": "SYNTHETIC target conditions computed by A02; no algorithm or platform acceptance"
+    },
+    "plan": {
+      "graph": {
+        "artifact_id": "a02-graph",
+        "revision": 1,
+        "kind": "QuestionGraph",
+        "content_hash": "0ac16823cda12bd08c185852ffb419729ed2da86b0636f5842be4eff4a5546aa"
+      },
+      "precheck": {
+        "artifact_id": "a02-precheck-stub",
+        "revision": 1,
+        "kind": "CheckReport",
+        "content_hash": "48635bd8c0bbf962a6383000f6375f11a76afdfb71e0d54afc7482252eb1d212"
+      },
+      "targetcheck": {
+        "artifact_id": "review-target-same-pre-1",
+        "revision": 1,
+        "kind": "CheckReport",
+        "content_hash": "d71f358fd9a4b687a7c11d29e094c1983b238147377d7ef4be886a1dab2d79c7"
+      },
+      "snapshot": {
+        "artifact_id": "a02-snapshot",
+        "revision": 1,
+        "kind": "PlatformSnapshot",
+        "content_hash": "be10c4782733dcf675f881aa26229fad9b442b66244934cf01173af414414106"
+      },
+      "policy": {
+        "policy_id": "synthetic-a02-policy",
+        "revision": 1,
+        "content_hash": "5d914617cad7f10009ff34919b1c313d5c73bd322069b77cde54659a407ebc32"
+      },
+      "readiness": "READY",
+      "execution_mode": "SIMULATED",
+      "session_mode": "SAME_SESSION_HANDOFF",
+      "required_capabilities": [
+        "frame_readback",
+        "same_session_handoff"
+      ],
+      "actions": [
+        {
+          "action_id": "action-a02-5bfe2a34e088f3e55e4aa5f1e317a171",
+          "target": {
+            "target_id": "synthetic-target",
+            "question_id": "question-alpha",
+            "platform_question_id": null
+          },
+          "source_entity_ids": [
+            "question-alpha",
+            "fragment-alpha-start",
+            "fragment-shared",
+            "fragment-alpha-end",
+            "fragment-alpha-answer"
+          ],
+          "expected_before": {
+            "question_exists": false,
+            "platform_question_id": null,
+            "directory_id": "platform-unit-a",
+            "frame_count": 0,
+            "frames_hash": "2ac0a74c84218685193184e7b18963e5ff2b14ac42146d8b70282e7d6e23110f",
+            "next_order": 1
+          },
+          "operation": "CREATE_FRAMES",
+          "expected_after": {
+            "question_exists": true,
+            "directory_id": "platform-unit-a",
+            "platform_order": 1,
+            "frames": "[{\"box\":{\"bbox\":[5.0,5.0,65.0,20.0],\"image\":{\"asset_id\":\"asset-page-a1\",\"height\":100,\"sha256\":\"8c1f2dc9061d60bad2a28778bf18f0356409b9fa8c370a0db6bd737012db2a75\",\"width\":80}},\"fragment_id\":\"fragment-alpha-start\",\"platform_role\":\"Q\",\"platform_type\":\"text\",\"region_id\":\"region-alpha-start\"},{\"box\":{\"bbox\":[5.0,25.0,65.0,35.0],\"image\":{\"asset_id\":\"asset-page-a1\",\"height\":100,\"sha256\":\"8c1f2dc9061d60bad2a28778bf18f0356409b9fa8c370a0db6bd737012db2a75\",\"width\":80}},\"fragment_id\":\"fragment-shared\",\"platform_role\":\"Q\",\"platform_type\":\"text\",\"region_id\":\"region-shared\"},{\"box\":{\"bbox\":[5.0,5.0,65.0,20.0],\"image\":{\"asset_id\":\"asset-page-a2\",\"height\":100,\"sha256\":\"9f4ab681d43e03b397154a2ba6dabf9b77e1bbfe576c62955d4385755f6d5d1b\",\"width\":80}},\"fragment_id\":\"fragment-alpha-end\",\"platform_role\":\"Q\",\"platform_type\":\"text\",\"region_id\":\"region-alpha-end\"},{\"box\":{\"bbox\":[5.0,25.0,65.0,35.0],\"image\":{\"asset_id\":\"asset-page-a2\",\"height\":100,\"sha256\":\"9f4ab681d43e03b397154a2ba6dabf9b77e1bbfe576c62955d4385755f6d5d1b\",\"width\":80}},\"fragment_id\":\"fragment-alpha-answer\",\"platform_role\":\"A\",\"platform_type\":\"text\",\"region_id\":\"region-alpha-answer\"}]"
+          },
+          "depends_on": []
+        },
+        {
+          "action_id": "action-a02-ae16806509069fa90e92adc9a74bb22c",
+          "target": {
+            "target_id": "synthetic-target",
+            "question_id": "question-child",
+            "platform_question_id": null
+          },
+          "source_entity_ids": [
+            "question-child",
+            "fragment-shared",
+            "fragment-child-stem",
+            "fragment-child-answer"
+          ],
+          "expected_before": {
+            "question_exists": false,
+            "platform_question_id": null,
+            "directory_id": "platform-unit-a",
+            "frame_count": 0,
+            "frames_hash": "2ac0a74c84218685193184e7b18963e5ff2b14ac42146d8b70282e7d6e23110f",
+            "next_order": 2
+          },
+          "operation": "CREATE_FRAMES",
+          "expected_after": {
+            "question_exists": true,
+            "directory_id": "platform-unit-a",
+            "platform_order": 2,
+            "frames": "[{\"box\":{\"bbox\":[5.0,25.0,65.0,35.0],\"image\":{\"asset_id\":\"asset-page-a1\",\"height\":100,\"sha256\":\"8c1f2dc9061d60bad2a28778bf18f0356409b9fa8c370a0db6bd737012db2a75\",\"width\":80}},\"fragment_id\":\"fragment-shared\",\"platform_role\":\"Q\",\"platform_type\":\"text\",\"region_id\":\"region-shared\"},{\"box\":{\"bbox\":[5.0,40.0,65.0,50.0],\"image\":{\"asset_id\":\"asset-page-a2\",\"height\":100,\"sha256\":\"9f4ab681d43e03b397154a2ba6dabf9b77e1bbfe576c62955d4385755f6d5d1b\",\"width\":80}},\"fragment_id\":\"fragment-child-stem\",\"platform_role\":\"Q\",\"platform_type\":\"text\",\"region_id\":\"region-child-stem\"},{\"box\":{\"bbox\":[5.0,55.0,65.0,65.0],\"image\":{\"asset_id\":\"asset-page-a2\",\"height\":100,\"sha256\":\"9f4ab681d43e03b397154a2ba6dabf9b77e1bbfe576c62955d4385755f6d5d1b\",\"width\":80}},\"fragment_id\":\"fragment-child-answer\",\"platform_role\":\"A\",\"platform_type\":\"text\",\"region_id\":\"region-child-answer\"}]"
+          },
+          "depends_on": [
+            "action-a02-5bfe2a34e088f3e55e4aa5f1e317a171"
+          ]
+        },
+        {
+          "action_id": "action-a02-e36829de3ab4d0fe5303c3066b3f1891",
+          "target": {
+            "target_id": "synthetic-target",
+            "question_id": "question-beta",
+            "platform_question_id": null
+          },
+          "source_entity_ids": [
+            "question-beta",
+            "fragment-beta-stem",
+            "fragment-beta-answer"
+          ],
+          "expected_before": {
+            "question_exists": false,
+            "platform_question_id": null,
+            "directory_id": "platform-unit-b",
+            "frame_count": 0,
+            "frames_hash": "2ac0a74c84218685193184e7b18963e5ff2b14ac42146d8b70282e7d6e23110f",
+            "next_order": 1
+          },
+          "operation": "CREATE_FRAMES",
+          "expected_after": {
+            "question_exists": true,
+            "directory_id": "platform-unit-b",
+            "platform_order": 1,
+            "frames": "[{\"box\":{\"bbox\":[5.0,5.0,65.0,20.0],\"image\":{\"asset_id\":\"asset-page-b1\",\"height\":100,\"sha256\":\"f4d0189a5c4953e4401ef67acdc922d73a4414b7e86328e44b0ca98955243b84\",\"width\":80}},\"fragment_id\":\"fragment-beta-stem\",\"platform_role\":\"Q\",\"platform_type\":\"text\",\"region_id\":\"region-beta-stem\"},{\"box\":{\"bbox\":[5.0,60.0,65.0,70.0],\"image\":{\"asset_id\":\"asset-page-b1\",\"height\":100,\"sha256\":\"f4d0189a5c4953e4401ef67acdc922d73a4414b7e86328e44b0ca98955243b84\",\"width\":80}},\"fragment_id\":\"fragment-beta-answer\",\"platform_role\":\"A\",\"platform_type\":\"text\",\"region_id\":\"region-beta-answer\"}]"
+          },
+          "depends_on": [
+            "action-a02-ae16806509069fa90e92adc9a74bb22c"
+          ]
+        }
+      ],
+      "blocked_issue_ids": [],
+      "previous_receipt": null,
+      "final_submission": "HUMAN_ONLY"
+    },
+    "rejections": [
+      [
+        {
+          "path": "$.a02",
+          "code": "TWO_CHECK_STAGES",
+          "message": "distinct PRE_APPLY and TARGET required"
+        }
+      ]
+    ]
+  }
+}

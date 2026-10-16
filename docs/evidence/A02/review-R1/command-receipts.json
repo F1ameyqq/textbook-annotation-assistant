@@ -1,0 +1,128 @@
+{
+  "target_commit": "38aca9dcc8d027409b95193e9cc142c2336b76d3",
+  "cwd": "D:/1800",
+  "commands": [
+    {
+      "argv": [
+        "python",
+        "-B",
+        "docs/evidence/A02/review-R1/prepare.py"
+      ],
+      "exit_code": 0,
+      "evidence": "frozen-export.json"
+    },
+    {
+      "argv": [
+        "python",
+        "-B",
+        "docs/evidence/A02/review-R1/run_author.py"
+      ],
+      "exit_code": 0,
+      "evidence": "author-command.json"
+    },
+    {
+      "argv": [
+        "python",
+        "-B",
+        "docs/evidence/A02/review-R1/run_risk.py"
+      ],
+      "exit_code": 0,
+      "evidence": "risk-command-receipts.json"
+    },
+    {
+      "argv": [
+        "python",
+        "-B",
+        "docs/evidence/A02/review-R1/run_mixed.py"
+      ],
+      "exit_code": 1,
+      "evidence": "mixed-command.json",
+      "kind": "REVIEW_HARNESS_ERROR"
+    },
+    {
+      "argv": [
+        "python",
+        "-B",
+        "docs/evidence/A02/review-R1/run_mixed.py",
+        "--output",
+        "D:/1800/docs/evidence/A02/review-R1/independent/mixed-final"
+      ],
+      "exit_code": 0,
+      "evidence": "mixed-final-command.json"
+    },
+    {
+      "argv": [
+        "python",
+        "-B",
+        "docs/evidence/A02/review-R1/run_final_risk.py"
+      ],
+      "exit_code": 0,
+      "evidence": "risk-final-command.json"
+    },
+    {
+      "argv": [
+        "python",
+        "-B",
+        "docs/evidence/A02/review-R1/probe_history_pair.py",
+        "--output",
+        "D:/1800/docs/evidence/A02/review-R1/independent/history-pair"
+      ],
+      "exit_code": 1,
+      "evidence": "probe_history_pair_initial.py",
+      "kind": "REVIEW_HARNESS_ERROR",
+      "observed": "Pydantic ValidationError: history-a-source_integrity etc are invalid check_id enums; no mock called."
+    },
+    {
+      "argv": [
+        "python",
+        "-B",
+        "docs/evidence/A02/review-R1/probe_history_pair.py",
+        "--output",
+        "D:/1800/docs/evidence/A02/review-R1/independent/history-pair-final"
+      ],
+      "exit_code": 0,
+      "evidence": "independent/history-pair-final/actual.json"
+    },
+    {
+      "argv": [
+        "python",
+        "-B",
+        "docs/evidence/A02/review-R1/check_integrity.py"
+      ],
+      "exit_code": 0,
+      "evidence": "post-run-integrity.json"
+    },
+    {
+      "argv": [
+        "python",
+        "-B",
+        "docs/evidence/A02/review-R1/consolidate.py"
+      ],
+      "exit_code": 0,
+      "evidence": "matrix-results.json"
+    },
+    {
+      "argv": [
+        "python",
+        "-B",
+        "docs/evidence/A02/review-R1/validate_and_seal.py"
+      ],
+      "exit_code": 1,
+      "evidence": "validate_and_seal_initial.py",
+      "kind": "REVIEW_HARNESS_ERROR",
+      "observed": "Collector mistook fixed expected.json summary metadata with format_version for an ExchangeBundle. Schema rejection occurred in collector, not product execution."
+    },
+    {
+      "argv": [
+        "python",
+        "-B",
+        "docs/evidence/A02/review-R1/validate_and_seal.py"
+      ],
+      "exit_code": 0,
+      "evidence": "final-validation.json"
+    }
+  ],
+  "platform_browser_credential_network_ocr_model_calls": 0,
+  "environment_binding": "reproduction/source-binding.json",
+  "source_root": "D:\\1800\\docs\\evidence\\A02\\review-R1\\source-38aca9dc"
+}

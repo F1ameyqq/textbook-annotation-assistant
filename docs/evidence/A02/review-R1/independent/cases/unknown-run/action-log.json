@@ -1,0 +1,87 @@
+[
+  {
+    "event": "intent",
+    "book_id": "synthetic-book",
+    "plan": {
+      "artifact_id": "review-plan-unknown-run-1",
+      "revision": 1,
+      "kind": "ApplyPlan",
+      "content_hash": "5b37a8add208180dba0df358170ba60665d93bf9f2a5698e27bf99c926ace427"
+    },
+    "action": {
+      "action_id": "action-a02-2d5c1076b677ce4721a69696c51be60c",
+      "target": {
+        "target_id": "synthetic-target",
+        "question_id": "question-alpha",
+        "platform_question_id": null
+      },
+      "source_entity_ids": [
+        "question-alpha",
+        "fragment-alpha-start",
+        "fragment-shared",
+        "fragment-alpha-end",
+        "fragment-alpha-answer"
+      ],
+      "expected_before": {
+        "question_exists": false,
+        "platform_question_id": null,
+        "directory_id": "platform-unit-a",
+        "frame_count": 0,
+        "frames_hash": "2ac0a74c84218685193184e7b18963e5ff2b14ac42146d8b70282e7d6e23110f",
+        "next_order": 1
+      },
+      "operation": "CREATE_FRAMES",
+      "expected_after": {
+        "question_exists": true,
+        "directory_id": "platform-unit-a",
+        "platform_order": 1,
+        "frames": "[{\"box\":{\"bbox\":[5.0,5.0,65.0,20.0],\"image\":{\"asset_id\":\"asset-page-a1\",\"height\":100,\"sha256\":\"8c1f2dc9061d60bad2a28778bf18f0356409b9fa8c370a0db6bd737012db2a75\",\"width\":80}},\"fragment_id\":\"fragment-alpha-start\",\"platform_role\":\"Q\",\"platform_type\":\"text\",\"region_id\":\"region-alpha-start\"},{\"box\":{\"bbox\":[5.0,25.0,65.0,35.0],\"image\":{\"asset_id\":\"asset-page-a1\",\"height\":100,\"sha256\":\"8c1f2dc9061d60bad2a28778bf18f0356409b9fa8c370a0db6bd737012db2a75\",\"width\":80}},\"fragment_id\":\"fragment-shared\",\"platform_role\":\"Q\",\"platform_type\":\"text\",\"region_id\":\"region-shared\"},{\"box\":{\"bbox\":[5.0,5.0,65.0,20.0],\"image\":{\"asset_id\":\"asset-page-a2\",\"height\":100,\"sha256\":\"9f4ab681d43e03b397154a2ba6dabf9b77e1bbfe576c62955d4385755f6d5d1b\",\"width\":80}},\"fragment_id\":\"fragment-alpha-end\",\"platform_role\":\"Q\",\"platform_type\":\"text\",\"region_id\":\"region-alpha-end\"},{\"box\":{\"bbox\":[5.0,25.0,65.0,35.0],\"image\":{\"asset_id\":\"asset-page-a2\",\"height\":100,\"sha256\":\"9f4ab681d43e03b397154a2ba6dabf9b77e1bbfe576c62955d4385755f6d5d1b\",\"width\":80}},\"fragment_id\":\"fragment-alpha-answer\",\"platform_role\":\"A\",\"platform_type\":\"text\",\"region_id\":\"region-alpha-answer\"}]"
+      },
+      "depends_on": []
+    },
+    "before_evidence": "proof-a02-1-0-before"
+  },
+  {
+    "event": "response",
+    "book_id": "synthetic-book",
+    "action_id": "action-a02-2d5c1076b677ce4721a69696c51be60c",
+    "response": {
+      "status": "TIMEOUT"
+    }
+  },
+  {
+    "event": "readback",
+    "book_id": "synthetic-book",
+    "action_id": "action-a02-2d5c1076b677ce4721a69696c51be60c",
+    "dispatched": true,
+    "readback_evidence": "proof-a02-1-0-readback",
+    "outcome": "UNKNOWN"
+  },
+  {
+    "event": "readback",
+    "book_id": "synthetic-book",
+    "action_id": "action-a02-bc107ab467fe242b791714de54d76111",
+    "dispatched": false,
+    "readback_evidence": "proof-a02-1-1-readback",
+    "outcome": "NOT_APPLIED"
+  },
+  {
+    "event": "readback",
+    "book_id": "synthetic-book",
+    "action_id": "action-a02-931301c0dbd6007f157bcf09ed670288",
+    "dispatched": false,
+    "readback_evidence": "proof-a02-1-2-readback",
+    "outcome": "NOT_APPLIED"
+  },
+  {
+    "event": "receipt",
+    "book_id": "synthetic-book",
+    "receipt": {
+      "artifact_id": "review-receipt-unknown-run",
+      "revision": 1,
+      "kind": "ExecutionReceipt",
+      "content_hash": "d0015d565b940bbba38799b5b67f91e3f7355b2235e9476ce8cc854055a4bcfc"
+    },
+    "write_disposition": "PAUSE_RECONCILE"
+  }
+]

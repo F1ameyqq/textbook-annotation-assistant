@@ -1,0 +1,93 @@
+[
+  {
+    "event": "intent",
+    "book_id": "synthetic-book",
+    "plan": {
+      "artifact_id": "review-plan-outside-second-conflict-1",
+      "revision": 1,
+      "kind": "ApplyPlan",
+      "content_hash": "8605d12fa26825e9e152955ab64062b5775967af82fcfc80443e699556604509"
+    },
+    "action": {
+      "action_id": "action-a02-4bb4fc6de4f08cbfa41cbcd3a8af20a7",
+      "target": {
+        "target_id": "synthetic-target",
+        "question_id": "question-alpha",
+        "platform_question_id": null
+      },
+      "source_entity_ids": [
+        "question-alpha",
+        "fragment-alpha-start",
+        "fragment-shared",
+        "fragment-alpha-end",
+        "fragment-alpha-answer"
+      ],
+      "expected_before": {
+        "question_exists": false,
+        "platform_question_id": null,
+        "directory_id": "platform-unit-a",
+        "frame_count": 0,
+        "frames_hash": "2ac0a74c84218685193184e7b18963e5ff2b14ac42146d8b70282e7d6e23110f",
+        "next_order": 24
+      },
+      "operation": "CREATE_FRAMES",
+      "expected_after": {
+        "question_exists": true,
+        "directory_id": "platform-unit-a",
+        "platform_order": 24,
+        "frames": "[{\"box\":{\"bbox\":[5.0,5.0,65.0,20.0],\"image\":{\"asset_id\":\"asset-page-a1\",\"height\":100,\"sha256\":\"8c1f2dc9061d60bad2a28778bf18f0356409b9fa8c370a0db6bd737012db2a75\",\"width\":80}},\"fragment_id\":\"fragment-alpha-start\",\"platform_role\":\"Q\",\"platform_type\":\"text\",\"region_id\":\"region-alpha-start\"},{\"box\":{\"bbox\":[5.0,25.0,65.0,35.0],\"image\":{\"asset_id\":\"asset-page-a1\",\"height\":100,\"sha256\":\"8c1f2dc9061d60bad2a28778bf18f0356409b9fa8c370a0db6bd737012db2a75\",\"width\":80}},\"fragment_id\":\"fragment-shared\",\"platform_role\":\"Q\",\"platform_type\":\"text\",\"region_id\":\"region-shared\"},{\"box\":{\"bbox\":[5.0,5.0,65.0,20.0],\"image\":{\"asset_id\":\"asset-page-a2\",\"height\":100,\"sha256\":\"9f4ab681d43e03b397154a2ba6dabf9b77e1bbfe576c62955d4385755f6d5d1b\",\"width\":80}},\"fragment_id\":\"fragment-alpha-end\",\"platform_role\":\"Q\",\"platform_type\":\"text\",\"region_id\":\"region-alpha-end\"},{\"box\":{\"bbox\":[5.0,25.0,65.0,35.0],\"image\":{\"asset_id\":\"asset-page-a2\",\"height\":100,\"sha256\":\"9f4ab681d43e03b397154a2ba6dabf9b77e1bbfe576c62955d4385755f6d5d1b\",\"width\":80}},\"fragment_id\":\"fragment-alpha-answer\",\"platform_role\":\"A\",\"platform_type\":\"text\",\"region_id\":\"region-alpha-answer\"}]"
+      },
+      "depends_on": []
+    },
+    "before_evidence": "proof-a02-1-0-before"
+  },
+  {
+    "event": "external_change",
+    "book_id": "synthetic-book",
+    "epoch": 2
+  },
+  {
+    "event": "response",
+    "book_id": "synthetic-book",
+    "action_id": "action-a02-4bb4fc6de4f08cbfa41cbcd3a8af20a7",
+    "response": {
+      "status": "OK",
+      "platform_question_id": "mock-question-2"
+    }
+  },
+  {
+    "event": "readback",
+    "book_id": "synthetic-book",
+    "action_id": "action-a02-4bb4fc6de4f08cbfa41cbcd3a8af20a7",
+    "dispatched": true,
+    "readback_evidence": "proof-a02-1-0-readback",
+    "outcome": "APPLIED"
+  },
+  {
+    "event": "readback",
+    "book_id": "synthetic-book",
+    "action_id": "action-a02-37e12e0964157191967e2b328b3d108f",
+    "dispatched": false,
+    "readback_evidence": "proof-a02-1-1-readback",
+    "outcome": "UNKNOWN"
+  },
+  {
+    "event": "readback",
+    "book_id": "synthetic-book",
+    "action_id": "action-a02-12f3e0bfec9a7ab9d09219ac2a5f22fd",
+    "dispatched": false,
+    "readback_evidence": "proof-a02-1-2-readback",
+    "outcome": "NOT_APPLIED"
+  },
+  {
+    "event": "receipt",
+    "book_id": "synthetic-book",
+    "receipt": {
+      "artifact_id": "review-receipt-outside-second-conflict",
+      "revision": 1,
+      "kind": "ExecutionReceipt",
+      "content_hash": "c7a5f45daf6f7308aab06778f60b024c5296ff8b8dd0b1a3b0388e668bb03a37"
+    },
+    "write_disposition": "PAUSE_RECONCILE"
+  }
+]
