@@ -1,0 +1,107 @@
+{
+  "provenance": "SYNTHETIC",
+  "execution_mode": "SIMULATED",
+  "fault": "lost_response",
+  "readiness": "READY",
+  "outcomes": [
+    "APPLIED",
+    "UNKNOWN",
+    "NOT_APPLIED"
+  ],
+  "write_disposition": "PAUSE_RECONCILE",
+  "book_paused": true,
+  "target_question_count": 2,
+  "target_frame_count": 7,
+  "batch": {
+    "source": {
+      "artifact_id": "a02-source",
+      "revision": 1,
+      "kind": "SourceBundle",
+      "content_hash": "4d5b05d683550f87a8f35350c95bddee6eadb0316d2efc61448f7f335ae243da"
+    },
+    "graph": {
+      "artifact_id": "a02-graph",
+      "revision": 1,
+      "kind": "QuestionGraph",
+      "content_hash": "0ac16823cda12bd08c185852ffb419729ed2da86b0636f5842be4eff4a5546aa"
+    },
+    "receipt": {
+      "artifact_id": "a02-receipt",
+      "revision": 1,
+      "kind": "ExecutionReceipt",
+      "content_hash": "99b596c2e1b9cef32b4dbf598cf26474809978c4abf0607a05a5a3fcace8adc0"
+    },
+    "postcheck": {
+      "artifact_id": "demo-post-a02-receipt",
+      "revision": 1,
+      "kind": "CheckReport",
+      "content_hash": "6eae7b442a2296f10d0a1e7d91e02f8438a76952ff6d5adda5898c8c48dc02c5"
+    },
+    "scope_manifest": [
+      "question-alpha",
+      "question-child",
+      "question-beta"
+    ],
+    "questions": [
+      {
+        "question_id": "question-alpha",
+        "state": "PENDING",
+        "reason": "SYNTHETIC independent scope item; frames/content/submission kept distinct"
+      },
+      {
+        "question_id": "question-child",
+        "state": "UNKNOWN",
+        "reason": "SYNTHETIC independent scope item; frames/content/submission kept distinct"
+      },
+      {
+        "question_id": "question-beta",
+        "state": "PENDING",
+        "reason": "SYNTHETIC independent scope item; frames/content/submission kept distinct"
+      }
+    ],
+    "total_expected": 3,
+    "coverage": {
+      "scope_id": "synthetic-scope",
+      "pages_expected": [
+        "asset-page-a1",
+        "asset-page-a2",
+        "asset-page-b1"
+      ],
+      "pages_checked": [
+        "asset-page-a1",
+        "asset-page-a2",
+        "asset-page-b1"
+      ],
+      "clue_ids": [
+        "clue-alpha-start",
+        "clue-shared",
+        "clue-alpha-end",
+        "clue-alpha-answer",
+        "clue-child-stem",
+        "clue-child-answer",
+        "clue-beta-stem",
+        "clue-beta-answer"
+      ],
+      "unassigned_region_ids": []
+    },
+    "cost": {
+      "model_calls": 0,
+      "amount": 0.0,
+      "currency": "USD",
+      "billing_status": "KNOWN",
+      "human_minutes": 0.0
+    },
+    "unresolved_issue_ids": [
+      "issue-a02-save-a02-receipt-1",
+      "issue-a02-content-a02-receipt"
+    ],
+    "submission_status": "NOT_SUBMITTED",
+    "submission_evidence_refs": [],
+    "content_check_status": "PENDING",
+    "frame_check_status": "UNAVAILABLE",
+    "state": "NEEDS_RECONCILIATION"
+  },
+  "platform_actions": 0,
+  "model_calls": 0,
+  "reconciliation_interface": "MISSING; in-session pause only; persistence/restart recovery belongs to A03"
+}
