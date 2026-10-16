@@ -22,6 +22,7 @@
 - 当前扩展来源是原 5 张样本加 resource173 的观察前缀，共 6 个资产；有完整原图 SHA 不等于完整第 6 页已 OCR。resource173 的 viewer 页号未核准，整书页清单/目录和独立整书验收尚未完成。
 - 19 条数学来源仍未取得公共归属，已定位为 9 个局部材料候选。专题例题、针对训练和未编号阅读材料须有独立命名空间；请优先补对应题页与稳定 ID，不能跨组按同号配答或把无编号【例】变成例1。
 - 公式角色、完整 canvas 及当前 inline 正文/公式补读只形成未核准候选，尚未完整正确转写。字符位置为 CTC 时序估计，不能当精确字框；新旧候选可能一致地出错。原始结果、错误/分歧和修订过的 MODEL_VISUAL 来源参考都保留，不按参考回填 OCR、不冒充人工标准。
+- 最新行内候选持久链可生成B内部 `b-graph-trial/0.5` 和 `b-check-trial/0.5`：原图谱业务core不变，`inline_content` 保留全部调用、候选、当前来源绑定和跨行冲突；Check05显式记录原core复用依据及当前引用。兼容或拒绝须由固定消费者验证，不代表公共合同已冻结；说明见 [行内候选持久链](b-pipeline-inline-46007447.md)。
 
 ## 最小消费者需要守住的边界
 
@@ -29,7 +30,7 @@
 
 | 语义 | 最小行为与失败例 |
 |---|---|
-| 当前版本和范围 | stage wrapper 从 `payload.result` 读取；最终 E/G/check 引用必须相互绑定。PARTIAL/FAILED 不借用旧图谱的旧检查，前缀范围不冒充全页/全书，未知 schema 明确拒绝 |
+| 当前版本和范围 | stage wrapper 从 `payload.result` 读取；最终 E/G/check 引用必须相互绑定。PARTIAL/FAILED 不借用旧图谱的旧检查，前缀范围不冒充全页/全书，未知 schema 明确拒绝。消费0.5时保留`inline_content`全部未选候选和风险，核对Check05的当前G05及原core/检查复用依据，不把它当成正文已核准 |
 | 来源与呈现 | 区分 fragments 和 typed render_regions，保留 source refs、文字/图片/表格角色及图内诊断。当前 Q9 的 33 来源片段对应 15 呈现区，23 图内 OCR 仅诊断；不能每片段重复画框或因错误 parent 字段隐藏题干 |
 | 证据、迁移与回滚 | 原始 OCR、CPU 缓存、SYNTHETIC_TEST 和 MODEL_VISUAL 参考分开；旧 archive/ref 不改。局部回补要求完整基底 payload 精确等价，续接按当前实体重新证明；后续编辑必须使陈旧回滚/审核失效 |
 | 路径和失效 | 文档/裁片相对包 manifest，原图相对 source manifest。规范化 JSON 内容身份与运行时实际字节回执分开；原图/裁片 SHA 和像素核对不可放宽。review-only 只触发相关重检，坏来源/包/对象及执行中变更须有拒绝证据 |

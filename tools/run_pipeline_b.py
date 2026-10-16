@@ -6,6 +6,8 @@ an existing source-bound refined EvidenceBundle without running an OCR model.
 evidence and review stages; it never enables OCR by itself.
 --continuation and --adjacent-source explicitly add local source/proof/apply
 and independent continuation checks; they never enable a website operation.
+--inline and --inline-source attach saved inline observations and their journal
+without running an OCR or formula model.
 READY means the offline stages ran, while all business results remain HOLD.
 """
 from __future__ import annotations
@@ -70,6 +72,7 @@ def _save_check(workdir, report, check):
 def execute(source_path, context_path, review_path, workdir, *, use_ocr=False,
             max_items=None, stop_after=None, evidence_path=None, recovery_path=None,
             continuation_path=None, adjacent_source_path=None,
+            inline_path=None, inline_source_path=None,
             runner=None, auditor=None):
     try:
         if runner is None:
@@ -86,17 +89,20 @@ def execute(source_path, context_path, review_path, workdir, *, use_ocr=False,
     recovery_path = Path(recovery_path) if recovery_path is not None else None
     continuation_path = Path(continuation_path) if continuation_path is not None else None
     adjacent_source_path = Path(adjacent_source_path) if adjacent_source_path is not None else None
+    inline_path = Path(inline_path) if inline_path is not None else None
+    inline_source_path = Path(inline_source_path) if inline_source_path is not None else None
     try:
         report = runner(source_path, context_path, review_path, workdir, use_ocr=use_ocr,
             max_items=max_items, stop_after=stop_after, evidence_path=evidence_path,
             recovery_path=recovery_path, continuation_path=continuation_path,
-            adjacent_source_path=adjacent_source_path)
+            adjacent_source_path=adjacent_source_path, inline_path=inline_path, inline_source_path=inline_source_path)
     except Exception as exc:
         raise PipelineCLIError("RUN_FAILED", exc) from exc
     try:
         check = auditor(source_path, context_path, review_path, report, workdir,
             evidence_path=evidence_path, recovery_path=recovery_path,
-            continuation_path=continuation_path, adjacent_source_path=adjacent_source_path)
+            continuation_path=continuation_path, adjacent_source_path=adjacent_source_path,
+            inline_path=inline_path, inline_source_path=inline_source_path)
         payload, checked = report["payload"], check["payload"]
         if (check["schema_version"] != "b-pipeline-check-trial/0.1"
                 or type(checked["accepted"]) is not bool
@@ -129,11 +135,14 @@ def main(argv=None):
     parser.add_argument("--ocr", action="store_true", help="explicitly enable live baseline and answer-row CPU OCR")
     parser.add_argument("--max-items", type=positive_int, help="bound this live recognition invocation without shrinking scope")
     parser.add_argument("--stop-after", choices=("recognition", "refine", "recover", "assemble", "recovery_review", "quality",
-        "continuation_prepare", "continuation_proof", "continuation_apply", "continuation_quality"))
+        "continuation_prepare", "continuation_proof", "continuation_apply", "continuation_quality",
+        "inline_prepare", "inline_apply", "inline_quality"))
     parser.add_argument("--evidence", type=local_path, help="import an existing refined 0.2/0.3 EvidenceBundle; no new OCR")
     parser.add_argument("--recovery", type=local_path, help="explicit local source-bound recovery package; no new OCR")
     parser.add_argument("--continuation", type=local_path, help="explicit local continuation package; requires --adjacent-source")
     parser.add_argument("--adjacent-source", type=local_path, help="original adjacent image bound to --continuation")
+    parser.add_argument("--inline", type=local_path, help="saved inline package; requires --inline-source and runs no models")
+    parser.add_argument("--inline-source", type=local_path, help="original source image bound to --inline")
     args = parser.parse_args(argv)
     if args.evidence is not None and (args.ocr or args.max_items is not None):
         parser.error("--evidence cannot be combined with --ocr or --max-items")
@@ -145,11 +154,15 @@ def main(argv=None):
         parser.error("--continuation and --adjacent-source must be supplied together")
     if args.continuation is None and args.stop_after is not None and args.stop_after.startswith("continuation_"):
         parser.error("continuation stop stages require --continuation and --adjacent-source")
+    if (args.inline is None) != (args.inline_source is None):
+        parser.error("--inline and --inline-source must be supplied together")
+    if args.inline is None and args.stop_after is not None and args.stop_after.startswith("inline_"):
+        parser.error("inline stop stages require --inline and --inline-source")
     try:
         result = execute(args.source, args.context, args.review, args.workdir, use_ocr=args.ocr,
             max_items=args.max_items, stop_after=args.stop_after, evidence_path=args.evidence,
             recovery_path=args.recovery, continuation_path=args.continuation,
-            adjacent_source_path=args.adjacent_source)
+            adjacent_source_path=args.adjacent_source, inline_path=args.inline, inline_source_path=args.inline_source)
     except PipelineCLIError as exc:
         result = dict(schema_version="b-pipeline-cli-result-trial/0.1", pipeline_state="FAILED",
             mode="CACHED_INPUT" if args.evidence is not None else "LIVE_BATCH", decision="HOLD",

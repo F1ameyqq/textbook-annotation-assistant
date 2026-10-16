@@ -25,6 +25,7 @@ from .baseline import code_digest, digest, file_digest, load_source, valid_bbox
 from .batch_quality import audit_batch
 from . import recovery_stage
 from . import continuation_stage, continued_quality
+from . import inline_stage
 
 # Explicit bindings are also useful for synthetic fault tests; there is no
 # alternate runtime or hidden production backend in this module.
@@ -36,6 +37,7 @@ quality_check = offline.quality_check
 SCHEMA = "b-pipeline-report-trial/0.1"
 STAGE_SCHEMA = "b-pipeline-stage-trial/0.1"
 CONTINUATION_STAGES = ("continuation_prepare", "continuation_proof", "continuation_apply", "continuation_quality")
+INLINE_STAGES = ("inline_prepare", "inline_apply", "inline_quality")
 SQL = """
 CREATE TABLE IF NOT EXISTS stage_attempts (
  attempt_id TEXT PRIMARY KEY, run_id TEXT NOT NULL, stage_id TEXT NOT NULL,
@@ -106,7 +108,7 @@ def _pipeline_lock(workdir):
         stream.close()
 
 
-def _implementation(stage, mode, kind, use_ocr, worker, *, continuation_enabled=False):
+def _implementation(stage, mode, kind, use_ocr, worker, *, continuation_enabled=False, inline_enabled=False):
     functions = {"recognition": run_batch, "evidence": _validate_evidence, "refine": refine,
                  "recover": recovery_stage.recover_evidence, "recovery_review": recovery_stage.build_recovery_review,
                  "assemble": assemble, "quality": quality_check}
@@ -114,12 +116,17 @@ def _implementation(stage, mode, kind, use_ocr, worker, *, continuation_enabled=
         continuation_proof=continuation_stage.build_continuation_stage_proof,
         continuation_apply=continuation_stage.apply_continuation_stage,
         continuation_quality=continued_quality.build_continued_quality)
+    functions.update(inline_prepare=inline_stage.prepare_inline_stage, inline_apply=inline_stage.apply_inline_stage,
+                     inline_quality=inline_stage.build_inline_quality)
     helpers, names = {}, []
     if stage == "recognition":
         names = ["batch", "baseline"]
     elif stage == "evidence":
         names = ["baseline"]
         helpers = {name: _function_sha(getattr(offline, name)) for name in ("check_artifact", "validate_context")}
+    elif stage in INLINE_STAGES:
+        names = ["inline_stage", "inline_continuity", "inline_ocr", "inline_ocr_quality", "inline_math", "inline_formula",
+                 "inline_candidates", "inline_formula_quality", "formula_canvas", "formula_canvas_quality", "formula_syntax", "formula_quality", "baseline", "formula_backend", "batch"]
     elif stage in CONTINUATION_STAGES:
         names = ["continuation_stage", "continuation", "continuation_apply", "continuation_quality", "boundary", "image_regions", "baseline", "offline", "answer_assembly", "policy"]
         if stage == "continuation_prepare":
@@ -149,6 +156,7 @@ def _implementation(stage, mode, kind, use_ocr, worker, *, continuation_enabled=
                         "assemble": ["EVIDENCE_SCHEMA", "GRAPH_SCHEMA", "QSTART", "ASTART", "OPTION", "CAPTION", "DECORATION"],
                         "quality": ["EVIDENCE_SCHEMA", "GRAPH_SCHEMA", "CHECK_SCHEMA"]}
     globals_by_stage.update({name: [] for name in CONTINUATION_STAGES})
+    globals_by_stage.update({name: [] for name in INLINE_STAGES})
     globals_by_stage["continuation_prepare"] = ["EVIDENCE_SCHEMA", "GRAPH_SCHEMA", "QSTART", "ASTART", "OPTION", "CAPTION", "DECORATION"]
     global_values = {}
     for name in globals_by_stage[stage]:
@@ -159,10 +167,11 @@ def _implementation(stage, mode, kind, use_ocr, worker, *, continuation_enabled=
                      "refinement_mode": ("SYNTHETIC_TEST_OVERRIDE" if synthetic_refine else "CPU_OCR") if stage == "refine" else None}
     if stage in ("recover", "recovery_review"): configuration["recovery_policy"] = recovery_stage.POLICY
     if stage in CONTINUATION_STAGES: configuration["continuation_policy"] = continuation_stage.POLICY
-    if stage == "assemble" and continuation_enabled:
+    if stage in INLINE_STAGES: configuration["inline_policy"] = inline_stage.POLICY
+    if (stage == "assemble" and (continuation_enabled or inline_enabled)) or (stage == "quality" and inline_enabled):
         configuration["artifact_time_policy"] = "EXECUTION_TIME_IN_STAGE_JOURNAL/0.1"
     dependencies = _dependencies()
-    if stage in CONTINUATION_STAGES:
+    if stage in CONTINUATION_STAGES+INLINE_STAGES:
         import cv2
         native = Path(getattr(cv2, "_native", cv2).__file__)
         dependencies["opencv"] = {"version": cv2.__version__, "package_entry_sha256": file_digest(Path(cv2.__file__)),
@@ -230,6 +239,28 @@ def _validate_evidence(value, source, context):
 
 
 def _validate_result(stage, value, source, context, review, dependencies, recognition_dir, current_evidence=None):
+    if stage in INLINE_STAGES:
+        schema = {"inline_prepare": inline_stage.PREPARE_SCHEMA, "inline_apply": inline_stage.APPLY_SCHEMA, "inline_quality": "b-check-trial/0.5"}[stage]
+        kind = {"inline_prepare": "InlinePreparationTrial", "inline_apply": "InlineApplyStageTrial", "inline_quality": "CheckReportTrial"}[stage]
+        offline.check_artifact(value, {schema})
+        p = value["payload"]
+        if (value.get("kind") != kind or value["book_id"] != source["book_id"] or value["scope_id"] != dependencies["inline"]["scope_id"]
+                or p.get("package_receipt") != inline_stage.content_receipt(dependencies["inline"])
+                or digest({k: p.get(k) for k in inline_stage._flags()}) != digest(inline_stage._flags()) or "created_at" in value):
+            raise ValueError("inline stage changed scope, package, nonacceptance or identity policy")
+        if stage == "inline_prepare":
+            if (p.get("base_evidence_ref") != dependencies["evidence"]["result_ref"]
+                    or p.get("base_graph_ref") != dependencies["graph"]["result_ref"]
+                    or p.get("execution_state") not in {"READY", "PARTIAL", "FAILED"}):
+                raise ValueError("inline preparation is not bound to current E/G and declared execution scope")
+        elif stage == "inline_apply":
+            if p.get("prepared_ref") != dependencies["prepared"]["result_ref"]:
+                raise ValueError("inline attachment is not bound to current preparation")
+        elif (p.get("inline_basis", {}).get("prepared_ref") != dependencies["prepared"]["result_ref"]
+                or p["inline_basis"].get("application_ref") != dependencies["application"]["result_ref"]
+                or p["inline_basis"].get("base_check_ref") != dependencies["base_check"]["result_ref"]):
+            raise ValueError("inline quality is not bound to current preparation/application/base check")
+        return
     if stage in CONTINUATION_STAGES:
         schemas = {"continuation_prepare": "b-continuation-scope-trial/0.1",
             "continuation_proof": "b-continuation-proof-stage-trial/0.1",
@@ -348,7 +379,7 @@ def _read_stage(db, workdir, descriptor, source, mode, stage, key, dependencies,
 
 def run_pipeline(source_path, context_path, review_path, workdir, *, use_ocr=False, max_items=None,
                  stop_after=None, evidence_path=None, worker=None, recovery_path=None,
-                 continuation_path=None, adjacent_source_path=None):
+                 continuation_path=None, adjacent_source_path=None, inline_path=None, inline_source_path=None):
     """Resume source-bound local stages; READY still means HOLD for business use."""
     if type(use_ocr) is not bool or (max_items is not None and (type(max_items) is not int or max_items < 1)):
         raise ValueError("invalid pipeline OCR flag or batch budget")
@@ -360,6 +391,9 @@ def run_pipeline(source_path, context_path, review_path, workdir, *, use_ocr=Fal
     if (continuation_path is None) != (adjacent_source_path is None):
         raise ValueError("continuation package and adjacent original source are required together")
     if continuation_path is not None: stages.extend(CONTINUATION_STAGES)
+    if (inline_path is None) != (inline_source_path is None):
+        raise ValueError("inline package and explicit original source are required together")
+    if inline_path is not None: stages.extend(INLINE_STAGES)
     if mode == "CACHED_INPUT" and stop_after == "recognition": stop_after = "evidence"
     if stop_after is not None and stop_after not in stages:
         raise ValueError("stop_after must name a stage present in this pipeline mode")
@@ -393,6 +427,10 @@ def run_pipeline(source_path, context_path, review_path, workdir, *, use_ocr=Fal
         continuation_path, adjacent_source_path = Path(continuation_path), Path(adjacent_source_path)
         continuation_package = continuation_stage.load_continuation_package(continuation_path, source_path, adjacent_source_path)
         receipts["continuation"] = continuation_package["receipt"]
+    if inline_path is not None:
+        inline_path, inline_source_path = Path(inline_path), Path(inline_source_path)
+        inline_package = inline_stage.load_inline_package(inline_path, inline_source_path)
+        receipts["inline"] = inline_package["receipt"]
     source_ref = receipts["source"]["reference"]
     kind = "CACHED_INPUT" if cached_evidence else "SYNTHETIC_TEST" if worker else "LIVE_CPU_OCR" if use_ocr else "LIVE_GEOMETRY"
     run_id = "pipeline-run-"+uuid4().hex
@@ -401,12 +439,13 @@ def run_pipeline(source_path, context_path, review_path, workdir, *, use_ocr=Fal
     with _pipeline_lock(workdir):
         return _run(source_path, context_path, review_path, evidence_path, workdir, source, context, review,
                     receipts, source_ref, cached_evidence, mode, kind, stages, run_id, use_ocr, max_items, stop_after, worker, recognition_dir,
-                    recovery_path=recovery_path, continuation_path=continuation_path, adjacent_source_path=adjacent_source_path)
+                    recovery_path=recovery_path, continuation_path=continuation_path, adjacent_source_path=adjacent_source_path,
+                    inline_path=inline_path, inline_source_path=inline_source_path)
 
 
 def _run(source_path, context_path, review_path, evidence_path, workdir, source, context, review,
          receipts, source_ref, cached_evidence, mode, kind, stages, run_id, use_ocr, max_items, stop_after, worker, recognition_dir,
-         recovery_path=None, continuation_path=None, adjacent_source_path=None):
+         recovery_path=None, continuation_path=None, adjacent_source_path=None, inline_path=None, inline_source_path=None):
     db = sqlite3.connect(workdir / "pipeline.sqlite3")
     db.row_factory = sqlite3.Row
     db.execute("PRAGMA journal_mode=WAL")
@@ -461,9 +500,22 @@ def _run(source_path, context_path, review_path, evidence_path, workdir, source,
                     review_dependency = {**observations["recovery_review"], "reference": {"artifact_id": active["artifact_id"], "content_hash": digest(active)}}
                 dep.update(scope=observations["continuation_prepare"], proof=observations["continuation_proof"],
                     application=observations["continuation_apply"], review=review_dependency, continuation=receipts["continuation"])
+            elif stage == "inline_prepare":
+                if continuation_path is not None:
+                    e = results["continuation_prepare"]["payload"]["evidence"]
+                    g = results["continuation_apply"]["payload"]["graph"]
+                    dep.update(evidence={**observations["continuation_prepare"], "result_ref": _ref(e)},
+                               graph={**observations["continuation_apply"], "result_ref": _ref(g)}, inline=receipts["inline"])
+                else: dep.update(evidence=observations["evidence"], graph=observations["assemble"], inline=receipts["inline"])
+            elif stage == "inline_apply": dep.update(prepared=observations["inline_prepare"], inline=receipts["inline"])
+            elif stage == "inline_quality":
+                dep.update(prepared=observations["inline_prepare"], application=observations["inline_apply"],
+                    base_check=observations["continuation_quality" if continuation_path is not None else "quality"], inline=receipts["inline"])
             entry["dependencies"] = dep
             try:
-                implementation = _implementation(stage, mode, kind, use_ocr, worker, continuation_enabled=continuation_path is not None)
+                implementation_options = {"continuation_enabled": continuation_path is not None}
+                if inline_path is not None: implementation_options["inline_enabled"] = True
+                implementation = _implementation(stage, mode, kind, use_ocr, worker, **implementation_options)
             except Exception as exc:
                 with db:
                     event = _event(db, run_id, "STAGE_SETUP_FAILED", stage_id=stage,
@@ -510,7 +562,7 @@ def _run(source_path, context_path, review_path, evidence_path, workdir, source,
                     elif stage == "recover": result = recovery_stage.recover_evidence(results["evidence"], recovery_path, source_path, context)
                     elif stage == "assemble":
                         result = assemble(results["evidence"])
-                        if continuation_path is not None:
+                        if continuation_path is not None or inline_path is not None:
                             # This result has not been published. Historical
                             # input objects and archives remain untouched.
                             result.pop("created_at", None)
@@ -525,13 +577,27 @@ def _run(source_path, context_path, review_path, evidence_path, workdir, source,
                         result = continued_quality.build_continued_quality(results["continuation_prepare"], results["continuation_proof"],
                             results["continuation_apply"], results["active_review"], package_path=continuation_path,
                             source_path=source_path, adjacent_source_path=adjacent_source_path)
-                    else: result = quality_check(results["evidence"], results["assemble"], results["active_review"])
+                    elif stage == "inline_prepare":
+                        e = results["continuation_prepare"]["payload"]["evidence"] if continuation_path is not None else results["evidence"]
+                        g = results["continuation_apply"]["payload"]["graph"] if continuation_path is not None else results["assemble"]
+                        result = inline_stage.prepare_inline_stage(e, g, inline_path, inline_source_path)
+                    elif stage == "inline_apply": result = inline_stage.apply_inline_stage(results["inline_prepare"])
+                    elif stage == "inline_quality":
+                        result = inline_stage.build_inline_quality(results["inline_prepare"], results["inline_apply"],
+                            results["continuation_quality" if continuation_path is not None else "quality"])
+                    else:
+                        result = quality_check(results["evidence"], results["assemble"], results["active_review"])
+                        if inline_path is not None:
+                            # Only this newly produced, unpublished check loses
+                            # its clock; historical input/archive objects do not.
+                            result.pop("created_at", None)
                     _validate_result(stage, result, source, context, results["active_review"], dep, recognition_dir, results.get("evidence"))
                     if stage == "recognition" and not audit_batch(source_path, recognition_dir, result)["payload"]["accepted"]:
                         raise ValueError("child recognition run failed independent integrity audit")
                     state = "DONE"
                     if stage == "recognition" and not result["payload"]["batch_complete"]:
                         state = "FAILED" if result["payload"]["counts"]["failed"] else "PARTIAL"
+                    if stage == "inline_prepare": state = {"READY": "DONE", "PARTIAL": "PARTIAL", "FAILED": "FAILED"}[result["payload"]["execution_state"]]
                     descriptor = batch._put_object(workdir, _wrapper(source, mode, stage, key, dep, implementation, attempt_id, result))
                     with db:
                         db.execute("UPDATE stage_attempts SET state='SUCCEEDED',finished_at=?,output_json=?,result_ref_json=? WHERE attempt_id=?",
@@ -567,6 +633,8 @@ def _run(source_path, context_path, review_path, evidence_path, workdir, source,
                 raise ValueError("recovery package files changed during pipeline execution")
             if continuation_path is not None and continuation_stage.load_continuation_package(continuation_path, source_path, adjacent_source_path)["receipt"] != receipts["continuation"]:
                 raise ValueError("continuation input files changed during pipeline execution")
+            if inline_path is not None and inline_stage.load_inline_package(inline_path, inline_source_path)["receipt"] != receipts["inline"]:
+                raise ValueError("inline package/journal/source files changed during pipeline execution")
         except Exception as exc:
             run_error = {"code": "INPUT_CHANGED_DURING_RUN", "error": str(exc), "error_type": type(exc).__name__}
             with db: _event(db, run_id, "RUN_INPUT_CHANGED", **run_error)
@@ -591,6 +659,13 @@ def _run(source_path, context_path, review_path, evidence_path, workdir, source,
             if state == "READY":
                 payload["final_outputs"] = {"evidence_ref": _ref(results["continuation_prepare"]["payload"]["evidence"]),
                     "graph_ref": _ref(results["continuation_apply"]["payload"]["graph"]), "quality_ref": _ref(results["continuation_quality"])}
+        if inline_path is not None:
+            payload["inline_scope"] = {"package_receipt": receipts["inline"], "candidate_selection_performed": False,
+                                       "entire_answer_reconstructed": False, "new_model_calls": 0}
+            payload["final_outputs"] = None
+            if state == "READY":
+                payload["final_outputs"] = {"evidence_ref": results["inline_prepare"]["payload"]["base_evidence_ref"],
+                    "graph_ref": _ref(results["inline_apply"]["payload"]["graph"]), "quality_ref": _ref(results["inline_quality"])}
         producer = {"module": __name__, "version": "0.1.0", "code_sha256": code_digest(Path(__file__))}
         report = {"schema_version": SCHEMA, "kind": "PipelineReportTrial",
                   "artifact_id": "pipeline-report-"+digest([source_ref, producer, payload])[:24], "revision": 1,
