@@ -1,0 +1,19 @@
+{
+  "actual": "REJECT",
+  "code": null,
+  "description": "Unmodified reference-only A01 source must not count as independent complete denominator for PRE_APPLY PASS.",
+  "error": "$.artifacts[3].payload.policy: [UNDECLARED_POLICY] policy must also appear in producer.policy_versions",
+  "error_type": "ContractError",
+  "expected": "REJECT",
+  "id": "S23-S01-public-preapply-gate-gap",
+  "issues": [
+    {
+      "code": "UNDECLARED_POLICY",
+      "message": "policy must also appear in producer.policy_versions",
+      "path": "$.artifacts[3].payload.policy"
+    }
+  ],
+  "location": null,
+  "matches_expectation": true,
+  "traceback": "Traceback (most recent call last):\n  File \"D:\\1800\\docs\\evidence\\A01\\review\\formal\\source-independent\\probe.py\", line 106, in case\n    detail = action(name)\n  File \"D:\\1800\\docs\\evidence\\A01\\review\\formal\\source-independent\\probe.py\", line 386, in s01_machine_gap\n    accepted = load_bundle(path, verify_assets=True)\n  File \"D:\\1800\\.local\\stages\\A01-review\\a8d5e96d128e10d341de935d4856682e50df79d9\\snapshot-verified\\src\\annotation\\contracts\\validation.py\", line 695, in load_bundle\n    return validate_bundle(data, path.parent if verify_assets else None)\n  File \"D:\\1800\\.local\\stages\\A01-review\\a8d5e96d128e10d341de935d4856682e50df79d9\\snapshot-verified\\src\\annotation\\contracts\\validation.py\", line 652, in validate_bundle\n    _relationships(ctx)\n  File \"D:\\1800\\.local\\stages\\A01-review\\a8d5e96d128e10d341de935d4856682e50df79d9\\snapshot-verified\\src\\annotation\\contracts\\validation.py\", line 186, in _relationships\n    fail(location, \"UNDECLARED_POLICY\", \"policy must also appear in producer.policy_versions\")\n  File \"D:\\1800\\.local\\stages\\A01-review\\a8d5e96d128e10d341de935d4856682e50df79d9\\snapshot-verified\\src\\annotation\\contracts\\validation.py\", line 19, in fail\n    raise ContractError([{\"path\": path, \"code\": code, \"message\": message}])\nannotation.contracts.validation.ContractError: $.artifacts[3].payload.policy: [UNDECLARED_POLICY] policy must also appear in producer.policy_versions\n"
+}

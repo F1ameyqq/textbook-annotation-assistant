@@ -1,0 +1,13 @@
+{
+  "actual": "REJECT",
+  "code": "BOOK_CONFLICT",
+  "description": "New-book page response identifies old book.",
+  "error": "docs/evidence/A05/review/independent-source-page14.json: [BOOK_CONFLICT] book identifier differs from requested archive",
+  "error_type": "StaticSourceError",
+  "expected": "REJECT",
+  "id": "S05-import-wrong-book",
+  "issues": null,
+  "location": "docs/evidence/A05/review/independent-source-page14.json",
+  "matches_expectation": true,
+  "traceback": "Traceback (most recent call last):\n  File \"D:\\1800\\docs\\evidence\\A01\\review\\formal\\source-independent\\probe.py\", line 106, in case\n    detail = action(name)\n  File \"D:\\1800\\docs\\evidence\\A01\\review\\formal\\source-independent\\probe.py\", line 208, in <lambda>\n    case('S05-import-wrong-book', 'REJECT', 'New-book page response identifies old book.', lambda n: import_mutation(n, wrong_book, '46007447'))\n  File \"D:\\1800\\docs\\evidence\\A01\\review\\formal\\source-independent\\probe.py\", line 155, in import_mutation\n    result = import_book(root, book, target, created_at='2026-10-16T13:00:00Z')\n  File \"D:\\1800\\.local\\stages\\A01-review\\a8d5e96d128e10d341de935d4856682e50df79d9\\snapshot-verified\\src\\annotation\\source\\static\\importer.py\", line 279, in import_book\n    spec = prepare(inputs,book)\n  File \"D:\\1800\\.local\\stages\\A01-review\\a8d5e96d128e10d341de935d4856682e50df79d9\\snapshot-verified\\src\\annotation\\source\\static\\importer.py\", line 174, in prepare\n    check_book(page[\"file_id\"],book,page_path)\n  File \"D:\\1800\\.local\\stages\\A01-review\\a8d5e96d128e10d341de935d4856682e50df79d9\\snapshot-verified\\src\\annotation\\source\\static\\importer.py\", line 106, in check_book\n    fail(\"BOOK_CONFLICT\", location, \"book identifier differs from requested archive\")\n  File \"D:\\1800\\.local\\stages\\A01-review\\a8d5e96d128e10d341de935d4856682e50df79d9\\snapshot-verified\\src\\annotation\\source\\static\\importer.py\", line 27, in fail\n    raise StaticSourceError(code, location, message)\nannotation.source.static.importer.StaticSourceError: docs/evidence/A05/review/independent-source-page14.json: [BOOK_CONFLICT] book identifier differs from requested archive\n"
+}

@@ -1,0 +1,88 @@
+{
+  "task": "A01",
+  "phase": "FORMAL_INDEPENDENT_REVIEW",
+  "decision": "REWORK",
+  "reviewed_at": "2026-10-16T22:03:43.083361+08:00",
+  "target_commit": "a8d5e96d128e10d341de935d4856682e50df79d9",
+  "implementation_commit": "c8b8c6e158547954c59017211507755f67eda0e8",
+  "base_commit": "39341c98d73c354d639f3beeb55429f55d0e9be5",
+  "workflow_commit": "39341c98d73c354d639f3beeb55429f55d0e9be5",
+  "execution_report_sha256": "df8b5c0123cdb9f75146c345ae2301a83dfad0efdf93fd6db5f0672f0a260ae2",
+  "review_report": "docs/tasks/A01-review-final-report.md",
+  "review_report_sha256": "157dddf56287a1a3b3d1fd2714d63e8a068fb34b052fe949eb06b75c9901a8a3",
+  "reproduction_commands": 7,
+  "reproduction_exit_codes": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+  ],
+  "author_tests": {
+    "A01_pass": 22,
+    "A01_skip": 1,
+    "C01_pass": 70
+  },
+  "inventory_independent": {
+    "pass": 66,
+    "fail": 0
+  },
+  "geometry_independent": {
+    "assertions": 126,
+    "pass": 119,
+    "fail": 7
+  },
+  "source_independent": {
+    "cases": 28,
+    "counts": {
+      "ACCEPT": 11,
+      "REJECT": 16,
+      "SKIP": 1
+    },
+    "unexpected_accepts": [
+      "S12-rehashed-empty-origins",
+      "S13-rehashed-origin-manifest-digest",
+      "S14-rehashed-unfounded-printed-page",
+      "S15-rehashed-erased-missing-sources",
+      "S16-rehashed-false-integrity",
+      "S17-rehashed-history-book-and-bytes-conflict",
+      "S18-resealed-history-promoted-reviewed",
+      "S19-rehashed-scope-status-complete",
+      "S20-rehashed-wrong-reference-identities",
+      "S23-S01-public-preapply-gate-gap"
+    ]
+  },
+  "primary_confirmation": "primary-confirmation/results.json",
+  "S01_exact_frozen_source_proof": "primary-confirmation/S01-fixed-delivery-gate.json",
+  "required_repairs": [
+    "R01 valid forward/inverse boundary rejected",
+    "R02 padding-domain input incorrectly accepted",
+    "R03 integer padding silently changed",
+    "R04 source/history internal contradictions accepted"
+  ],
+  "integration_gaps": [
+    "S01 typed completeness/public PRE_APPLY eligibility gate absent",
+    "D01 Pillow undeclared in root dependencies"
+  ],
+  "not_executed": [
+    "Windows file symlink branch: WinError 1314",
+    "clean environment installation",
+    "A04/platform/browser/CSS-DPR",
+    "OCR/recognition/answer quality",
+    "whole-page/book denominator",
+    "B confirmation"
+  ],
+  "no_integration": true,
+  "A04_dependency_released": false,
+  "network_browser_platform_model_tool_calls": 0,
+  "paid_model_tool_cost": 0,
+  "reproduction_entries": {
+    "author": "reproduce.py",
+    "source_safe_replay": "replay-source.py",
+    "geometry": "geometry-independent/run_geometry_review.py",
+    "primary": "confirm-findings.py",
+    "S01_exact": "confirm-s01-fixed-delivery.py"
+  }
+}

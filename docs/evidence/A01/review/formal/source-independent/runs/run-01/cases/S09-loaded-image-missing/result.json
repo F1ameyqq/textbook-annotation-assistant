@@ -1,0 +1,19 @@
+{
+  "actual": "REJECT",
+  "code": null,
+  "description": "A required acquired resource removed after import.",
+  "error": "$.artifacts[0].payload.assets[0].path: [RESOURCE_MISSING] resource does not exist",
+  "error_type": "ContractError",
+  "expected": "REJECT",
+  "id": "S09-loaded-image-missing",
+  "issues": [
+    {
+      "code": "RESOURCE_MISSING",
+      "message": "resource does not exist",
+      "path": "$.artifacts[0].payload.assets[0].path"
+    }
+  ],
+  "location": null,
+  "matches_expectation": true,
+  "traceback": "Traceback (most recent call last):\n  File \"D:\\1800\\docs\\evidence\\A01\\review\\formal\\source-independent\\probe.py\", line 106, in case\n    detail = action(name)\n  File \"D:\\1800\\docs\\evidence\\A01\\review\\formal\\source-independent\\probe.py\", line 234, in loaded_missing\n    return inspect_bundle(name, path)\n  File \"D:\\1800\\docs\\evidence\\A01\\review\\formal\\source-independent\\probe.py\", line 140, in inspect_bundle\n    public = load_bundle(path, verify_assets=True)\n  File \"D:\\1800\\.local\\stages\\A01-review\\a8d5e96d128e10d341de935d4856682e50df79d9\\snapshot-verified\\src\\annotation\\contracts\\validation.py\", line 695, in load_bundle\n    return validate_bundle(data, path.parent if verify_assets else None)\n  File \"D:\\1800\\.local\\stages\\A01-review\\a8d5e96d128e10d341de935d4856682e50df79d9\\snapshot-verified\\src\\annotation\\contracts\\validation.py\", line 653, in validate_bundle\n    _resources(ctx, asset_root)\n  File \"D:\\1800\\.local\\stages\\A01-review\\a8d5e96d128e10d341de935d4856682e50df79d9\\snapshot-verified\\src\\annotation\\contracts\\validation.py\", line 214, in _resources\n    fail(path + \".path\", \"RESOURCE_MISSING\", \"resource does not exist\")\n  File \"D:\\1800\\.local\\stages\\A01-review\\a8d5e96d128e10d341de935d4856682e50df79d9\\snapshot-verified\\src\\annotation\\contracts\\validation.py\", line 19, in fail\n    raise ContractError([{\"path\": path, \"code\": code, \"message\": message}])\nannotation.contracts.validation.ContractError: $.artifacts[0].payload.assets[0].path: [RESOURCE_MISSING] resource does not exist\n"
+}
