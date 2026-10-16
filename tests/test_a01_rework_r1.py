@@ -9,6 +9,7 @@ from pathlib import Path
 from annotation import geometry
 from annotation.contracts import load_bundle, seal_artifact
 from annotation.source.static import StaticSourceError, import_book, load_static_bundle
+from annotation.source.static.importer import VERSION
 
 ROOT = Path(__file__).resolve().parents[1]
 spec = importlib.util.spec_from_file_location("a01_r1_cases",ROOT/"examples/a01/R1/cases.py")
@@ -145,7 +146,7 @@ class SourceR1Tests(unittest.TestCase):
                     self.assertEqual(legacy.artifacts[0].producer.implementation_version,"a01-static-1")
                     path = import_book(ROOT,book,Path(folder)/book)
                     current = load_static_bundle(path,expected_book_id=book)
-                    self.assertEqual(current.artifacts[0].producer.implementation_version,"a01-static-1-r1")
+                    self.assertEqual(current.artifacts[0].producer.implementation_version,VERSION)
                     self.assertEqual(current.artifacts[0].payload.assets,legacy.artifacts[0].payload.assets)
                     self.assertEqual(current.artifacts[0].payload.scope_manifest,legacy.artifacts[0].payload.scope_manifest)
                     self.assertFalse(json.loads((path.parent/"limitations.json").read_text(encoding="utf-8"))["coverage_eligible"])

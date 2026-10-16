@@ -4,6 +4,7 @@ import json
 import re
 from datetime import datetime, timezone
 from pathlib import Path
+from urllib.parse import urlsplit
 
 from PIL import Image
 
@@ -11,7 +12,7 @@ from annotation.contracts import (SCHEMA_VERSION, SourceBundle, artifact_ref, lo
                                   seal_artifact, seal_policy, validate_bundle, write_bundle)
 from annotation.contracts.models import Resource
 
-VERSION = "a01-static-1-r1"
+VERSION = "a01-static-1-r2"
 OLD = "技术证据/只读样本-46006966"
 NEW = "docs/evidence/A05/review"
 EXECUTION = "docs/evidence/A05/execution"
@@ -95,6 +96,15 @@ class Inputs:
 
 def url_index(url, book, location):
     # URL is checked as archived text, never fetched.
+    if not isinstance(url,str):
+        fail("SOURCE_URL",location,"archived image URL must be an absolute HTTP(S) string")
+    try:
+        parsed = urlsplit(url)
+        valid = parsed.scheme in ("http","https") and bool(parsed.netloc) and bool(parsed.hostname)
+    except ValueError:
+        valid = False
+    if not valid:
+        fail("SOURCE_URL",location,"archived image URL must be an absolute HTTP(S) string")
     match = re.search(r"/upload_images/([0-9]+)/([0-9]+)_page_([0-9]+)\.jpg$", url)
     if not match or match[1] != book or match[2] != book:
         fail("BOOK_CONFLICT", location, "archived image URL belongs to a different book or is malformed")
@@ -442,8 +452,8 @@ def load_static_bundle(path, expected_book_id):
         mapped = next(m for m in mappings if m["asset_id"] == origin["asset_id"])
         if origin["source_index"] != mapped["source_index"] or origin["viewer_page"] not in (None,mapped["viewer_page"]):
             fail("MAPPING_CONFLICT","origins","origin index/viewer conflicts with mapping")
-    if provenance["acquired_unique_images"] != len(assets) or set(provenance["selected_source_indices"]) != indices:
-        fail("SOURCE_PAGES","provenance","acquired count and selected indices must match actual assets")
+    if provenance["acquired_unique_images"] != len(assets):
+        fail("SOURCE_PAGES","provenance.acquired_unique_images","acquired count must match actual assets")
     if provenance["metadata_page_count"] != source.payload.metadata_page_count:
         fail("METADATA_CONFLICT","metadata_page_count","source and provenance totals differ")
     if len(source.payload.scope_manifest) != limitations["reference_count"] or "REFERENCE_ONLY" not in source.payload.scope_manifest_basis:

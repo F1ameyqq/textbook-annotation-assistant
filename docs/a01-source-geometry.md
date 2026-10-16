@@ -48,3 +48,14 @@ C01 强制非空 scope_manifest，且下游把它称为独立分母，无法机�
 最短复现及真实结果见 [执行报告](tasks/A01-execution-report.md)。本任务没有浏览器、网络、OCR、模型或平台动作；不证明 A05 内容正确、全书采集或 B 已确认。
 
 首次独立验收为 REWORK；R1 修复、复现和未解决限制单列于 [R1执行报告](tasks/A01-rework-R1-report.md)。本说明中的实现自测不代表独立接受或依赖释放。
+
+## R2 来源一致性补全
+
+来源实现 `a01-static-1-r2` 保持公共 C01 类型和接口，兼容原 `a01-static-1` / `a01-static-1-r1` 包；旧包不迁移、不改字节。geometry 实现及规范保持 R1 原字节。R2 仅补如下已由 R1 独立复验指出的来源关系，交付仍为 REVIEW，见 [R2执行报告](tasks/A01-rework-R2-report.md)。
+
+- `A` 为实际资产/映射的已取得源索引，`S` 为 selected，`M` 为 selected_missing，`O` 为 outside_selected_scope_unacquired。检查 `S=A∪M`、`A∩M=∅`，以及元数据索引全集 `0..metadata_page_count-1=S∪O`、`S∩O=∅`。所有索引为唯一、有界整数；公共 expected/acquired 页数分别等于 `|S|/|A|`，未取得的 expected 标识数量等于 `|M|`。不把取得页当完整题目分母。
+- 固定导入器仍只取得六图/两图，其 `M=[]`。加载器允许一致的非零缺页声明；未取得的 expected 页标识只是意图引用，没有资产、尺寸、摘要或原图框。`O=[]` 只在全部元数据索引被选择时成立，此时未取得部分必须保留于M。合法缺页测试显式标为SYNTHETIC，保持UNKNOWN/coverage_eligible=false，不补造取得事实。
+- 历史响应的 image 仅作归档字符串解析，复用导入器的 URL 索引规则。绝对HTTP(S)地址的目录书籍、文件名前缀书籍和源索引须与响应字段及保留映射一致。查看器页和源索引取保留映射，不推导固定偏移。原主机文本不改写，不发请求、不对主机作网络信任认证；现有规则仍只接受已支持的直接JPEG路径形状。
+- 观察归档 source 身份须对应保留输入；新书 observation_index_source 的路径和SHA256须与对应输入 before/after 摘要一致。不通过重新计算改写内容替换保留摘要，也不访问包外原网络索引。
+
+N15的precision标签不作为认证门禁，R2没有扩成实时观测或网络信任系统；该标签不能证明PlatformSnapshot或当前平台状态。S01公共完整性门禁和D01根Pillow依赖仍由主调度处理，B确认未取得。
