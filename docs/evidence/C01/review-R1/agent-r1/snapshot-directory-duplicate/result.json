@@ -1,0 +1,43 @@
+{
+  "case": "snapshot-directory-duplicate",
+  "expected": "REJECT",
+  "expected_code": "DUPLICATE_ID",
+  "expected_path_suffix": ".directories",
+  "passed": true,
+  "methods": {
+    "validate_bundle": {
+      "outcome": "REJECT",
+      "issues": [
+        {
+          "path": "$.artifacts[3].payload.directories",
+          "code": "DUPLICATE_ID",
+          "message": "identifiers must be unique in this collection"
+        }
+      ]
+    },
+    "assert_plan_ready": {
+      "outcome": "REJECT",
+      "issues": [
+        {
+          "path": "$.artifacts[3].payload.directories",
+          "code": "DUPLICATE_ID",
+          "message": "identifiers must be unique in this collection"
+        }
+      ]
+    }
+  },
+  "cli": {
+    "command": [
+      "C:\\Users\\ASUS\\AppData\\Local\\Programs\\Python\\Python39\\python.exe",
+      "-B",
+      "-m",
+      "annotation.contracts",
+      "validate",
+      "D:\\1800\\.local\\stages\\C01-review-R1\\agent-r1\\snapshot-directory-duplicate\\input.json"
+    ],
+    "exit_code": 1,
+    "stdout": "",
+    "stderr": "{\"valid\": false, \"issues\": [{\"path\": \"$.artifacts[3].payload.directories\", \"code\": \"DUPLICATE_ID\", \"message\": \"identifiers must be unique in this collection\"}]}\n"
+  },
+  "resources_provisioned": true
+}

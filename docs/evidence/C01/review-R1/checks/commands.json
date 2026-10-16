@@ -1,0 +1,234 @@
+[
+  {
+    "name": "delivered-unittest",
+    "command": [
+      "C:\\Users\\ASUS\\AppData\\Local\\Programs\\Python\\Python39\\python.exe",
+      "-B",
+      "-m",
+      "unittest",
+      "discover",
+      "-s",
+      "D:\\1800\\.local\\stages\\C01-review-R1\\tree\\tests",
+      "-p",
+      "test_contracts*.py",
+      "-v"
+    ],
+    "cwd": "D:\\1800\\.local\\stages\\C01-review-R1\\foreign cwd",
+    "returncode": 0,
+    "expected_returncode": 0,
+    "passed": true
+  },
+  {
+    "name": "original-80-matrix",
+    "command": [
+      "C:\\Users\\ASUS\\AppData\\Local\\Programs\\Python\\Python39\\python.exe",
+      "-B",
+      "D:\\1800\\docs\\evidence\\C01\\review\\scripts\\run_independent_review.py",
+      "--tree",
+      "D:\\1800\\.local\\stages\\C01-review-R1\\tree",
+      "--output",
+      "D:\\1800\\.local\\stages\\C01-review-R1\\original-matrix"
+    ],
+    "cwd": "D:\\1800\\.local\\stages\\C01-review-R1\\foreign cwd",
+    "returncode": 0,
+    "expected_returncode": 0,
+    "passed": true
+  },
+  {
+    "name": "install-package",
+    "command": [
+      "C:\\Users\\ASUS\\AppData\\Local\\Programs\\Python\\Python39\\python.exe",
+      "-B",
+      "-m",
+      "pip",
+      "install",
+      "--no-index",
+      "--no-deps",
+      "--no-build-isolation",
+      "--target",
+      "D:\\1800\\.local\\stages\\C01-review-R1\\installed-package",
+      "D:\\1800\\.local\\stages\\C01-review-R1\\tree"
+    ],
+    "cwd": "D:\\1800\\.local\\stages\\C01-review-R1\\foreign cwd",
+    "returncode": 0,
+    "expected_returncode": 0,
+    "passed": true
+  },
+  {
+    "name": "installed-provenance",
+    "command": [
+      "C:\\Users\\ASUS\\AppData\\Local\\Programs\\Python\\Python39\\python.exe",
+      "-B",
+      "-c",
+      "import annotation.contracts as c, sys, importlib.metadata as m; print(sys.version); print(c.__file__); print({n:m.version(n) for n in (\"annotation-contracts\",\"pydantic\",\"setuptools\")})"
+    ],
+    "cwd": "D:\\1800\\.local\\stages\\C01-review-R1\\foreign cwd",
+    "returncode": 0,
+    "expected_returncode": 0,
+    "passed": true
+  },
+  {
+    "name": "cli-normal",
+    "command": [
+      "C:\\Users\\ASUS\\AppData\\Local\\Programs\\Python\\Python39\\python.exe",
+      "-B",
+      "-m",
+      "annotation.contracts",
+      "validate",
+      "D:\\1800\\.local\\stages\\C01-review-R1\\copied-fixtures\\normal copied fixture\\input.json"
+    ],
+    "cwd": "D:\\1800\\.local\\stages\\C01-review-R1\\foreign cwd",
+    "returncode": 0,
+    "expected_returncode": 0,
+    "passed": true
+  },
+  {
+    "name": "consumer-normal",
+    "command": [
+      "C:\\Users\\ASUS\\AppData\\Local\\Programs\\Python\\Python39\\python.exe",
+      "-B",
+      "D:\\1800\\.local\\stages\\C01-review-R1\\tree\\examples\\contracts\\consume.py",
+      "D:\\1800\\.local\\stages\\C01-review-R1\\copied-fixtures\\normal copied fixture",
+      "--roundtrip",
+      "D:\\1800\\.local\\stages\\C01-review-R1\\roundtrips\\normal\\input.json"
+    ],
+    "cwd": "D:\\1800\\.local\\stages\\C01-review-R1\\foreign cwd",
+    "returncode": 0,
+    "expected_returncode": 0,
+    "passed": true
+  },
+  {
+    "name": "cli-exception",
+    "command": [
+      "C:\\Users\\ASUS\\AppData\\Local\\Programs\\Python\\Python39\\python.exe",
+      "-B",
+      "-m",
+      "annotation.contracts",
+      "validate",
+      "D:\\1800\\.local\\stages\\C01-review-R1\\copied-fixtures\\exception copied fixture\\input.json"
+    ],
+    "cwd": "D:\\1800\\.local\\stages\\C01-review-R1\\foreign cwd",
+    "returncode": 0,
+    "expected_returncode": 0,
+    "passed": true
+  },
+  {
+    "name": "consumer-exception",
+    "command": [
+      "C:\\Users\\ASUS\\AppData\\Local\\Programs\\Python\\Python39\\python.exe",
+      "-B",
+      "D:\\1800\\.local\\stages\\C01-review-R1\\tree\\examples\\contracts\\consume.py",
+      "D:\\1800\\.local\\stages\\C01-review-R1\\copied-fixtures\\exception copied fixture",
+      "--roundtrip",
+      "D:\\1800\\.local\\stages\\C01-review-R1\\roundtrips\\exception\\input.json"
+    ],
+    "cwd": "D:\\1800\\.local\\stages\\C01-review-R1\\foreign cwd",
+    "returncode": 0,
+    "expected_returncode": 0,
+    "passed": true
+  },
+  {
+    "name": "cli-unknown",
+    "command": [
+      "C:\\Users\\ASUS\\AppData\\Local\\Programs\\Python\\Python39\\python.exe",
+      "-B",
+      "-m",
+      "annotation.contracts",
+      "validate",
+      "D:\\1800\\.local\\stages\\C01-review-R1\\copied-fixtures\\unknown copied fixture\\input.json"
+    ],
+    "cwd": "D:\\1800\\.local\\stages\\C01-review-R1\\foreign cwd",
+    "returncode": 0,
+    "expected_returncode": 0,
+    "passed": true
+  },
+  {
+    "name": "consumer-unknown",
+    "command": [
+      "C:\\Users\\ASUS\\AppData\\Local\\Programs\\Python\\Python39\\python.exe",
+      "-B",
+      "D:\\1800\\.local\\stages\\C01-review-R1\\tree\\examples\\contracts\\consume.py",
+      "D:\\1800\\.local\\stages\\C01-review-R1\\copied-fixtures\\unknown copied fixture",
+      "--roundtrip",
+      "D:\\1800\\.local\\stages\\C01-review-R1\\roundtrips\\unknown\\input.json"
+    ],
+    "cwd": "D:\\1800\\.local\\stages\\C01-review-R1\\foreign cwd",
+    "returncode": 0,
+    "expected_returncode": 0,
+    "passed": true
+  },
+  {
+    "name": "cli-choice-assumption",
+    "command": [
+      "C:\\Users\\ASUS\\AppData\\Local\\Programs\\Python\\Python39\\python.exe",
+      "-B",
+      "-m",
+      "annotation.contracts",
+      "validate",
+      "D:\\1800\\.local\\stages\\C01-review-R1\\copied-fixtures\\choice-assumption copied fixture\\input.json"
+    ],
+    "cwd": "D:\\1800\\.local\\stages\\C01-review-R1\\foreign cwd",
+    "returncode": 0,
+    "expected_returncode": 0,
+    "passed": true
+  },
+  {
+    "name": "consumer-choice-assumption",
+    "command": [
+      "C:\\Users\\ASUS\\AppData\\Local\\Programs\\Python\\Python39\\python.exe",
+      "-B",
+      "D:\\1800\\.local\\stages\\C01-review-R1\\tree\\examples\\contracts\\consume.py",
+      "D:\\1800\\.local\\stages\\C01-review-R1\\copied-fixtures\\choice-assumption copied fixture",
+      "--roundtrip",
+      "D:\\1800\\.local\\stages\\C01-review-R1\\roundtrips\\choice-assumption\\input.json"
+    ],
+    "cwd": "D:\\1800\\.local\\stages\\C01-review-R1\\foreign cwd",
+    "returncode": 0,
+    "expected_returncode": 0,
+    "passed": true
+  },
+  {
+    "name": "original-cli-snapshot_question_missing_directory",
+    "command": [
+      "C:\\Users\\ASUS\\AppData\\Local\\Programs\\Python\\Python39\\python.exe",
+      "-B",
+      "-m",
+      "annotation.contracts",
+      "validate",
+      "D:\\1800\\docs\\evidence\\C01\\review\\counterexamples\\snapshot_question_missing_directory\\input.json"
+    ],
+    "cwd": "D:\\1800\\.local\\stages\\C01-review-R1\\foreign cwd",
+    "returncode": 1,
+    "expected_returncode": 1,
+    "passed": true
+  },
+  {
+    "name": "original-cli-action_missing_platform_question",
+    "command": [
+      "C:\\Users\\ASUS\\AppData\\Local\\Programs\\Python\\Python39\\python.exe",
+      "-B",
+      "-m",
+      "annotation.contracts",
+      "validate",
+      "D:\\1800\\docs\\evidence\\C01\\review\\counterexamples\\action_missing_platform_question\\input.json"
+    ],
+    "cwd": "D:\\1800\\.local\\stages\\C01-review-R1\\foreign cwd",
+    "returncode": 1,
+    "expected_returncode": 1,
+    "passed": true
+  },
+  {
+    "name": "original-public-apis",
+    "command": [
+      "C:\\Users\\ASUS\\AppData\\Local\\Programs\\Python\\Python39\\python.exe",
+      "-B",
+      "D:\\1800\\.local\\stages\\C01-review-R1\\verify_originals.py",
+      "--tree",
+      "D:\\1800\\.local\\stages\\C01-review-R1\\tree"
+    ],
+    "cwd": "D:\\1800\\.local\\stages\\C01-review-R1\\foreign cwd",
+    "returncode": 0,
+    "expected_returncode": 0,
+    "passed": true
+  }
+]

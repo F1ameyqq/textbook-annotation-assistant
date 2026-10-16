@@ -1,0 +1,43 @@
+{
+  "case": "snapshot-directory-missing",
+  "expected": "REJECT",
+  "expected_code": "MISSING_REFERENCE",
+  "expected_path_suffix": ".questions[0].directory_id",
+  "passed": true,
+  "methods": {
+    "validate_bundle": {
+      "outcome": "REJECT",
+      "issues": [
+        {
+          "path": "$.artifacts[3].payload.questions[0].directory_id",
+          "code": "MISSING_REFERENCE",
+          "message": "platform question directory is absent from this snapshot"
+        }
+      ]
+    },
+    "assert_plan_ready": {
+      "outcome": "REJECT",
+      "issues": [
+        {
+          "path": "$.artifacts[3].payload.questions[0].directory_id",
+          "code": "MISSING_REFERENCE",
+          "message": "platform question directory is absent from this snapshot"
+        }
+      ]
+    }
+  },
+  "cli": {
+    "command": [
+      "C:\\Users\\ASUS\\AppData\\Local\\Programs\\Python\\Python39\\python.exe",
+      "-B",
+      "-m",
+      "annotation.contracts",
+      "validate",
+      "D:\\1800\\.local\\stages\\C01-review-R1\\agent-r1\\snapshot-directory-missing\\input.json"
+    ],
+    "exit_code": 1,
+    "stdout": "",
+    "stderr": "{\"valid\": false, \"issues\": [{\"path\": \"$.artifacts[3].payload.questions[0].directory_id\", \"code\": \"MISSING_REFERENCE\", \"message\": \"platform question directory is absent from this snapshot\"}]}\n"
+  },
+  "resources_provisioned": true
+}

@@ -1,0 +1,801 @@
+{
+  "metadata": {
+    "commit": "4e42668ab28eda37a37285285d2f6c595d3bba12",
+    "code_commit": "cb684f90a2cd7bd7064ce1f30b7d024a49389132",
+    "tree": "D:\\1800\\.local\\stages\\C01-review-R1\\tree",
+    "python": "3.9.13",
+    "source_hashes": {
+      "models.py": "592601b8049980c38e9fb837b7e47e90352409da5562b1b086a208904eb8e1ec",
+      "validation.py": "ca4132322966b526c8e42d4bcff4d41bc43847cde8e5a1fe9c220da9c1b473b7",
+      "integrity.py": "378cc52d6b701011b6d074e5cbed35811bf3d927e5a3bbeb08f6acef04ee45a0"
+    },
+    "manifest": {
+      "commit": "4e42668ab28eda37a37285285d2f6c595d3bba12",
+      "files_checked": 84,
+      "all_match": true
+    }
+  },
+  "count": 22,
+  "passed": 22,
+  "failed": 0,
+  "cases": [
+    {
+      "case": "known-mapping-baseline",
+      "expected": "ACCEPT",
+      "expected_code": null,
+      "expected_path_suffix": null,
+      "passed": true,
+      "methods": {
+        "validate_bundle": {
+          "outcome": "ACCEPT"
+        },
+        "assert_plan_ready": {
+          "outcome": "ACCEPT"
+        }
+      },
+      "cli": {
+        "command": [
+          "C:\\Users\\ASUS\\AppData\\Local\\Programs\\Python\\Python39\\python.exe",
+          "-B",
+          "-m",
+          "annotation.contracts",
+          "validate",
+          "D:\\1800\\.local\\stages\\C01-review-R1\\agent-r1\\known-mapping-baseline\\input.json"
+        ],
+        "exit_code": 0,
+        "stdout": "{\"valid\": true, \"schema_version\": \"1.0.0-a-proposal\", \"artifacts\": 10, \"resources_verified\": true, \"validation_layer\": \"OFFLINE_CONTRACT\"}\n",
+        "stderr": ""
+      },
+      "resources_provisioned": true
+    },
+    {
+      "case": "snapshot-directory-missing",
+      "expected": "REJECT",
+      "expected_code": "MISSING_REFERENCE",
+      "expected_path_suffix": ".questions[0].directory_id",
+      "passed": true,
+      "methods": {
+        "validate_bundle": {
+          "outcome": "REJECT",
+          "issues": [
+            {
+              "path": "$.artifacts[3].payload.questions[0].directory_id",
+              "code": "MISSING_REFERENCE",
+              "message": "platform question directory is absent from this snapshot"
+            }
+          ]
+        },
+        "assert_plan_ready": {
+          "outcome": "REJECT",
+          "issues": [
+            {
+              "path": "$.artifacts[3].payload.questions[0].directory_id",
+              "code": "MISSING_REFERENCE",
+              "message": "platform question directory is absent from this snapshot"
+            }
+          ]
+        }
+      },
+      "cli": {
+        "command": [
+          "C:\\Users\\ASUS\\AppData\\Local\\Programs\\Python\\Python39\\python.exe",
+          "-B",
+          "-m",
+          "annotation.contracts",
+          "validate",
+          "D:\\1800\\.local\\stages\\C01-review-R1\\agent-r1\\snapshot-directory-missing\\input.json"
+        ],
+        "exit_code": 1,
+        "stdout": "",
+        "stderr": "{\"valid\": false, \"issues\": [{\"path\": \"$.artifacts[3].payload.questions[0].directory_id\", \"code\": \"MISSING_REFERENCE\", \"message\": \"platform question directory is absent from this snapshot\"}]}\n"
+      },
+      "resources_provisioned": true
+    },
+    {
+      "case": "snapshot-directory-duplicate",
+      "expected": "REJECT",
+      "expected_code": "DUPLICATE_ID",
+      "expected_path_suffix": ".directories",
+      "passed": true,
+      "methods": {
+        "validate_bundle": {
+          "outcome": "REJECT",
+          "issues": [
+            {
+              "path": "$.artifacts[3].payload.directories",
+              "code": "DUPLICATE_ID",
+              "message": "identifiers must be unique in this collection"
+            }
+          ]
+        },
+        "assert_plan_ready": {
+          "outcome": "REJECT",
+          "issues": [
+            {
+              "path": "$.artifacts[3].payload.directories",
+              "code": "DUPLICATE_ID",
+              "message": "identifiers must be unique in this collection"
+            }
+          ]
+        }
+      },
+      "cli": {
+        "command": [
+          "C:\\Users\\ASUS\\AppData\\Local\\Programs\\Python\\Python39\\python.exe",
+          "-B",
+          "-m",
+          "annotation.contracts",
+          "validate",
+          "D:\\1800\\.local\\stages\\C01-review-R1\\agent-r1\\snapshot-directory-duplicate\\input.json"
+        ],
+        "exit_code": 1,
+        "stdout": "",
+        "stderr": "{\"valid\": false, \"issues\": [{\"path\": \"$.artifacts[3].payload.directories\", \"code\": \"DUPLICATE_ID\", \"message\": \"identifiers must be unique in this collection\"}]}\n"
+      },
+      "resources_provisioned": true
+    },
+    {
+      "case": "action-platform-id-missing",
+      "expected": "REJECT",
+      "expected_code": "MISSING_REFERENCE",
+      "expected_path_suffix": ".target.platform_question_id",
+      "passed": true,
+      "methods": {
+        "validate_bundle": {
+          "outcome": "REJECT",
+          "issues": [
+            {
+              "path": "$.artifacts[6].payload.actions[0].target.platform_question_id",
+              "code": "MISSING_REFERENCE",
+              "message": "action platform question is absent from the plan snapshot"
+            }
+          ]
+        },
+        "assert_plan_ready": {
+          "outcome": "REJECT",
+          "issues": [
+            {
+              "path": "$.artifacts[6].payload.actions[0].target.platform_question_id",
+              "code": "MISSING_REFERENCE",
+              "message": "action platform question is absent from the plan snapshot"
+            }
+          ]
+        }
+      },
+      "cli": {
+        "command": [
+          "C:\\Users\\ASUS\\AppData\\Local\\Programs\\Python\\Python39\\python.exe",
+          "-B",
+          "-m",
+          "annotation.contracts",
+          "validate",
+          "D:\\1800\\.local\\stages\\C01-review-R1\\agent-r1\\action-platform-id-missing\\input.json"
+        ],
+        "exit_code": 1,
+        "stdout": "",
+        "stderr": "{\"valid\": false, \"issues\": [{\"path\": \"$.artifacts[6].payload.actions[0].target.platform_question_id\", \"code\": \"MISSING_REFERENCE\", \"message\": \"action platform question is absent from the plan snapshot\"}]}\n"
+      },
+      "resources_provisioned": true
+    },
+    {
+      "case": "graph-platform-id-missing",
+      "expected": "REJECT",
+      "expected_code": "MISSING_REFERENCE",
+      "expected_path_suffix": ".external_refs.platform_question_id",
+      "passed": true,
+      "methods": {
+        "validate_bundle": {
+          "outcome": "REJECT",
+          "issues": [
+            {
+              "path": "$.artifacts[2].payload.questions[0].external_refs.platform_question_id",
+              "code": "MISSING_REFERENCE",
+              "message": "existing question mapping is absent from the plan snapshot"
+            }
+          ]
+        },
+        "assert_plan_ready": {
+          "outcome": "REJECT",
+          "issues": [
+            {
+              "path": "$.artifacts[2].payload.questions[0].external_refs.platform_question_id",
+              "code": "MISSING_REFERENCE",
+              "message": "existing question mapping is absent from the plan snapshot"
+            }
+          ]
+        }
+      },
+      "cli": {
+        "command": [
+          "C:\\Users\\ASUS\\AppData\\Local\\Programs\\Python\\Python39\\python.exe",
+          "-B",
+          "-m",
+          "annotation.contracts",
+          "validate",
+          "D:\\1800\\.local\\stages\\C01-review-R1\\agent-r1\\graph-platform-id-missing\\input.json"
+        ],
+        "exit_code": 1,
+        "stdout": "",
+        "stderr": "{\"valid\": false, \"issues\": [{\"path\": \"$.artifacts[2].payload.questions[0].external_refs.platform_question_id\", \"code\": \"MISSING_REFERENCE\", \"message\": \"existing question mapping is absent from the plan snapshot\"}]}\n"
+      },
+      "resources_provisioned": true
+    },
+    {
+      "case": "action-other-existing-id-conflict",
+      "expected": "REJECT",
+      "expected_code": "PLATFORM_MAPPING_CONFLICT",
+      "expected_path_suffix": ".target.platform_question_id",
+      "passed": true,
+      "methods": {
+        "validate_bundle": {
+          "outcome": "REJECT",
+          "issues": [
+            {
+              "path": "$.artifacts[6].payload.actions[0].target.platform_question_id",
+              "code": "PLATFORM_MAPPING_CONFLICT",
+              "message": "action target differs from its internal question's existing platform mapping"
+            }
+          ]
+        },
+        "assert_plan_ready": {
+          "outcome": "REJECT",
+          "issues": [
+            {
+              "path": "$.artifacts[6].payload.actions[0].target.platform_question_id",
+              "code": "PLATFORM_MAPPING_CONFLICT",
+              "message": "action target differs from its internal question's existing platform mapping"
+            }
+          ]
+        }
+      },
+      "cli": {
+        "command": [
+          "C:\\Users\\ASUS\\AppData\\Local\\Programs\\Python\\Python39\\python.exe",
+          "-B",
+          "-m",
+          "annotation.contracts",
+          "validate",
+          "D:\\1800\\.local\\stages\\C01-review-R1\\agent-r1\\action-other-existing-id-conflict\\input.json"
+        ],
+        "exit_code": 1,
+        "stdout": "",
+        "stderr": "{\"valid\": false, \"issues\": [{\"path\": \"$.artifacts[6].payload.actions[0].target.platform_question_id\", \"code\": \"PLATFORM_MAPPING_CONFLICT\", \"message\": \"action target differs from its internal question's existing platform mapping\"}]}\n"
+      },
+      "resources_provisioned": true
+    },
+    {
+      "case": "existing-action-requires-explicit-mapping",
+      "expected": "REJECT",
+      "expected_code": "PLATFORM_MAPPING_REQUIRED",
+      "expected_path_suffix": ".target.platform_question_id",
+      "passed": true,
+      "methods": {
+        "validate_bundle": {
+          "outcome": "REJECT",
+          "issues": [
+            {
+              "path": "$.artifacts[6].payload.actions[0].target.platform_question_id",
+              "code": "PLATFORM_MAPPING_REQUIRED",
+              "message": "existing action target requires an explicit mapping on its internal question"
+            }
+          ]
+        },
+        "assert_plan_ready": {
+          "outcome": "REJECT",
+          "issues": [
+            {
+              "path": "$.artifacts[6].payload.actions[0].target.platform_question_id",
+              "code": "PLATFORM_MAPPING_REQUIRED",
+              "message": "existing action target requires an explicit mapping on its internal question"
+            }
+          ]
+        }
+      },
+      "cli": {
+        "command": [
+          "C:\\Users\\ASUS\\AppData\\Local\\Programs\\Python\\Python39\\python.exe",
+          "-B",
+          "-m",
+          "annotation.contracts",
+          "validate",
+          "D:\\1800\\.local\\stages\\C01-review-R1\\agent-r1\\existing-action-requires-explicit-mapping\\input.json"
+        ],
+        "exit_code": 1,
+        "stdout": "",
+        "stderr": "{\"valid\": false, \"issues\": [{\"path\": \"$.artifacts[6].payload.actions[0].target.platform_question_id\", \"code\": \"PLATFORM_MAPPING_REQUIRED\", \"message\": \"existing action target requires an explicit mapping on its internal question\"}]}\n"
+      },
+      "resources_provisioned": true
+    },
+    {
+      "case": "existing-mapping-action-null-conflict",
+      "expected": "REJECT",
+      "expected_code": "PLATFORM_MAPPING_CONFLICT",
+      "expected_path_suffix": ".target.platform_question_id",
+      "passed": true,
+      "methods": {
+        "validate_bundle": {
+          "outcome": "REJECT",
+          "issues": [
+            {
+              "path": "$.artifacts[6].payload.actions[0].target.platform_question_id",
+              "code": "PLATFORM_MAPPING_CONFLICT",
+              "message": "null target cannot replace an existing platform question mapping"
+            }
+          ]
+        },
+        "assert_plan_ready": {
+          "outcome": "REJECT",
+          "issues": [
+            {
+              "path": "$.artifacts[6].payload.actions[0].target.platform_question_id",
+              "code": "PLATFORM_MAPPING_CONFLICT",
+              "message": "null target cannot replace an existing platform question mapping"
+            }
+          ]
+        }
+      },
+      "cli": {
+        "command": [
+          "C:\\Users\\ASUS\\AppData\\Local\\Programs\\Python\\Python39\\python.exe",
+          "-B",
+          "-m",
+          "annotation.contracts",
+          "validate",
+          "D:\\1800\\.local\\stages\\C01-review-R1\\agent-r1\\existing-mapping-action-null-conflict\\input.json"
+        ],
+        "exit_code": 1,
+        "stdout": "",
+        "stderr": "{\"valid\": false, \"issues\": [{\"path\": \"$.artifacts[6].payload.actions[0].target.platform_question_id\", \"code\": \"PLATFORM_MAPPING_CONFLICT\", \"message\": \"null target cannot replace an existing platform question mapping\"}]}\n"
+      },
+      "resources_provisioned": true
+    },
+    {
+      "case": "new-null-target-nonempty-snapshot",
+      "expected": "ACCEPT",
+      "expected_code": null,
+      "expected_path_suffix": null,
+      "passed": true,
+      "methods": {
+        "validate_bundle": {
+          "outcome": "ACCEPT"
+        },
+        "assert_plan_ready": {
+          "outcome": "ACCEPT"
+        }
+      },
+      "cli": {
+        "command": [
+          "C:\\Users\\ASUS\\AppData\\Local\\Programs\\Python\\Python39\\python.exe",
+          "-B",
+          "-m",
+          "annotation.contracts",
+          "validate",
+          "D:\\1800\\.local\\stages\\C01-review-R1\\agent-r1\\new-null-target-nonempty-snapshot\\input.json"
+        ],
+        "exit_code": 0,
+        "stdout": "{\"valid\": true, \"schema_version\": \"1.0.0-a-proposal\", \"artifacts\": 10, \"resources_verified\": true, \"validation_layer\": \"OFFLINE_CONTRACT\"}\n",
+        "stderr": ""
+      },
+      "resources_provisioned": true
+    },
+    {
+      "case": "new-null-target-empty-snapshot",
+      "expected": "ACCEPT",
+      "expected_code": null,
+      "expected_path_suffix": null,
+      "passed": true,
+      "methods": {
+        "validate_bundle": {
+          "outcome": "ACCEPT"
+        },
+        "assert_plan_ready": {
+          "outcome": "ACCEPT"
+        }
+      },
+      "cli": {
+        "command": [
+          "C:\\Users\\ASUS\\AppData\\Local\\Programs\\Python\\Python39\\python.exe",
+          "-B",
+          "-m",
+          "annotation.contracts",
+          "validate",
+          "D:\\1800\\.local\\stages\\C01-review-R1\\agent-r1\\new-null-target-empty-snapshot\\input.json"
+        ],
+        "exit_code": 0,
+        "stdout": "{\"valid\": true, \"schema_version\": \"1.0.0-a-proposal\", \"artifacts\": 10, \"resources_verified\": true, \"validation_layer\": \"OFFLINE_CONTRACT\"}\n",
+        "stderr": ""
+      },
+      "resources_provisioned": true
+    },
+    {
+      "case": "empty-string-action-not-null",
+      "expected": "REJECT",
+      "expected_code": "MISSING_REFERENCE",
+      "expected_path_suffix": ".target.platform_question_id",
+      "passed": true,
+      "methods": {
+        "validate_bundle": {
+          "outcome": "REJECT",
+          "issues": [
+            {
+              "path": "$.artifacts[6].payload.actions[0].target.platform_question_id",
+              "code": "MISSING_REFERENCE",
+              "message": "action platform question is absent from the plan snapshot"
+            }
+          ]
+        },
+        "assert_plan_ready": {
+          "outcome": "REJECT",
+          "issues": [
+            {
+              "path": "$.artifacts[6].payload.actions[0].target.platform_question_id",
+              "code": "MISSING_REFERENCE",
+              "message": "action platform question is absent from the plan snapshot"
+            }
+          ]
+        }
+      },
+      "cli": {
+        "command": [
+          "C:\\Users\\ASUS\\AppData\\Local\\Programs\\Python\\Python39\\python.exe",
+          "-B",
+          "-m",
+          "annotation.contracts",
+          "validate",
+          "D:\\1800\\.local\\stages\\C01-review-R1\\agent-r1\\empty-string-action-not-null\\input.json"
+        ],
+        "exit_code": 1,
+        "stdout": "",
+        "stderr": "{\"valid\": false, \"issues\": [{\"path\": \"$.artifacts[6].payload.actions[0].target.platform_question_id\", \"code\": \"MISSING_REFERENCE\", \"message\": \"action platform question is absent from the plan snapshot\"}]}\n"
+      },
+      "resources_provisioned": true
+    },
+    {
+      "case": "empty-string-graph-not-null",
+      "expected": "REJECT",
+      "expected_code": "MISSING_REFERENCE",
+      "expected_path_suffix": ".external_refs.platform_question_id",
+      "passed": true,
+      "methods": {
+        "validate_bundle": {
+          "outcome": "REJECT",
+          "issues": [
+            {
+              "path": "$.artifacts[2].payload.questions[0].external_refs.platform_question_id",
+              "code": "MISSING_REFERENCE",
+              "message": "existing question mapping is absent from the plan snapshot"
+            }
+          ]
+        },
+        "assert_plan_ready": {
+          "outcome": "REJECT",
+          "issues": [
+            {
+              "path": "$.artifacts[2].payload.questions[0].external_refs.platform_question_id",
+              "code": "MISSING_REFERENCE",
+              "message": "existing question mapping is absent from the plan snapshot"
+            }
+          ]
+        }
+      },
+      "cli": {
+        "command": [
+          "C:\\Users\\ASUS\\AppData\\Local\\Programs\\Python\\Python39\\python.exe",
+          "-B",
+          "-m",
+          "annotation.contracts",
+          "validate",
+          "D:\\1800\\.local\\stages\\C01-review-R1\\agent-r1\\empty-string-graph-not-null\\input.json"
+        ],
+        "exit_code": 1,
+        "stdout": "",
+        "stderr": "{\"valid\": false, \"issues\": [{\"path\": \"$.artifacts[2].payload.questions[0].external_refs.platform_question_id\", \"code\": \"MISSING_REFERENCE\", \"message\": \"existing question mapping is absent from the plan snapshot\"}]}\n"
+      },
+      "resources_provisioned": true
+    },
+    {
+      "case": "known-order-conflict",
+      "expected": "REJECT",
+      "expected_code": "PLATFORM_MAPPING_CONFLICT",
+      "expected_path_suffix": ".external_refs.platform_order",
+      "passed": true,
+      "methods": {
+        "validate_bundle": {
+          "outcome": "REJECT",
+          "issues": [
+            {
+              "path": "$.artifacts[2].payload.questions[0].external_refs.platform_order",
+              "code": "PLATFORM_MAPPING_CONFLICT",
+              "message": "mapped question order differs from the plan snapshot"
+            }
+          ]
+        },
+        "assert_plan_ready": {
+          "outcome": "REJECT",
+          "issues": [
+            {
+              "path": "$.artifacts[2].payload.questions[0].external_refs.platform_order",
+              "code": "PLATFORM_MAPPING_CONFLICT",
+              "message": "mapped question order differs from the plan snapshot"
+            }
+          ]
+        }
+      },
+      "cli": {
+        "command": [
+          "C:\\Users\\ASUS\\AppData\\Local\\Programs\\Python\\Python39\\python.exe",
+          "-B",
+          "-m",
+          "annotation.contracts",
+          "validate",
+          "D:\\1800\\.local\\stages\\C01-review-R1\\agent-r1\\known-order-conflict\\input.json"
+        ],
+        "exit_code": 1,
+        "stdout": "",
+        "stderr": "{\"valid\": false, \"issues\": [{\"path\": \"$.artifacts[2].payload.questions[0].external_refs.platform_order\", \"code\": \"PLATFORM_MAPPING_CONFLICT\", \"message\": \"mapped question order differs from the plan snapshot\"}]}\n"
+      },
+      "resources_provisioned": true
+    },
+    {
+      "case": "unknown-order-accepted",
+      "expected": "ACCEPT",
+      "expected_code": null,
+      "expected_path_suffix": null,
+      "passed": true,
+      "methods": {
+        "validate_bundle": {
+          "outcome": "ACCEPT"
+        },
+        "assert_plan_ready": {
+          "outcome": "ACCEPT"
+        }
+      },
+      "cli": {
+        "command": [
+          "C:\\Users\\ASUS\\AppData\\Local\\Programs\\Python\\Python39\\python.exe",
+          "-B",
+          "-m",
+          "annotation.contracts",
+          "validate",
+          "D:\\1800\\.local\\stages\\C01-review-R1\\agent-r1\\unknown-order-accepted\\input.json"
+        ],
+        "exit_code": 0,
+        "stdout": "{\"valid\": true, \"schema_version\": \"1.0.0-a-proposal\", \"artifacts\": 10, \"resources_verified\": true, \"validation_layer\": \"OFFLINE_CONTRACT\"}\n",
+        "stderr": ""
+      },
+      "resources_provisioned": true
+    },
+    {
+      "case": "explicit-mapping-other-known-order",
+      "expected": "ACCEPT",
+      "expected_code": null,
+      "expected_path_suffix": null,
+      "passed": true,
+      "methods": {
+        "validate_bundle": {
+          "outcome": "ACCEPT"
+        },
+        "assert_plan_ready": {
+          "outcome": "ACCEPT"
+        }
+      },
+      "cli": {
+        "command": [
+          "C:\\Users\\ASUS\\AppData\\Local\\Programs\\Python\\Python39\\python.exe",
+          "-B",
+          "-m",
+          "annotation.contracts",
+          "validate",
+          "D:\\1800\\.local\\stages\\C01-review-R1\\agent-r1\\explicit-mapping-other-known-order\\input.json"
+        ],
+        "exit_code": 0,
+        "stdout": "{\"valid\": true, \"schema_version\": \"1.0.0-a-proposal\", \"artifacts\": 10, \"resources_verified\": true, \"validation_layer\": \"OFFLINE_CONTRACT\"}\n",
+        "stderr": ""
+      },
+      "resources_provisioned": true
+    },
+    {
+      "case": "two-internal-questions-share-platform-id",
+      "expected": "ACCEPT",
+      "expected_code": null,
+      "expected_path_suffix": null,
+      "passed": true,
+      "methods": {
+        "validate_bundle": {
+          "outcome": "ACCEPT"
+        },
+        "assert_plan_ready": {
+          "outcome": "ACCEPT"
+        }
+      },
+      "cli": {
+        "command": [
+          "C:\\Users\\ASUS\\AppData\\Local\\Programs\\Python\\Python39\\python.exe",
+          "-B",
+          "-m",
+          "annotation.contracts",
+          "validate",
+          "D:\\1800\\.local\\stages\\C01-review-R1\\agent-r1\\two-internal-questions-share-platform-id\\input.json"
+        ],
+        "exit_code": 0,
+        "stdout": "{\"valid\": true, \"schema_version\": \"1.0.0-a-proposal\", \"artifacts\": 10, \"resources_verified\": true, \"validation_layer\": \"OFFLINE_CONTRACT\"}\n",
+        "stderr": ""
+      },
+      "resources_provisioned": true
+    },
+    {
+      "case": "parent-child-share-platform-id",
+      "expected": "ACCEPT",
+      "expected_code": null,
+      "expected_path_suffix": null,
+      "passed": true,
+      "methods": {
+        "validate_bundle": {
+          "outcome": "ACCEPT"
+        },
+        "assert_plan_ready": {
+          "outcome": "ACCEPT"
+        }
+      },
+      "cli": {
+        "command": [
+          "C:\\Users\\ASUS\\AppData\\Local\\Programs\\Python\\Python39\\python.exe",
+          "-B",
+          "-m",
+          "annotation.contracts",
+          "validate",
+          "D:\\1800\\.local\\stages\\C01-review-R1\\agent-r1\\parent-child-share-platform-id\\input.json"
+        ],
+        "exit_code": 0,
+        "stdout": "{\"valid\": true, \"schema_version\": \"1.0.0-a-proposal\", \"artifacts\": 10, \"resources_verified\": true, \"validation_layer\": \"OFFLINE_CONTRACT\"}\n",
+        "stderr": ""
+      },
+      "resources_provisioned": true
+    },
+    {
+      "case": "two-internal-dirs-share-platform-id",
+      "expected": "ACCEPT",
+      "expected_code": null,
+      "expected_path_suffix": null,
+      "passed": true,
+      "methods": {
+        "validate_bundle": {
+          "outcome": "ACCEPT"
+        },
+        "assert_plan_ready": {
+          "outcome": "ACCEPT"
+        }
+      },
+      "cli": {
+        "command": [
+          "C:\\Users\\ASUS\\AppData\\Local\\Programs\\Python\\Python39\\python.exe",
+          "-B",
+          "-m",
+          "annotation.contracts",
+          "validate",
+          "D:\\1800\\.local\\stages\\C01-review-R1\\agent-r1\\two-internal-dirs-share-platform-id\\input.json"
+        ],
+        "exit_code": 0,
+        "stdout": "{\"valid\": true, \"schema_version\": \"1.0.0-a-proposal\", \"artifacts\": 10, \"resources_verified\": true, \"validation_layer\": \"OFFLINE_CONTRACT\"}\n",
+        "stderr": ""
+      },
+      "resources_provisioned": true
+    },
+    {
+      "case": "different-internal-platform-dirs-repeat-order",
+      "expected": "ACCEPT",
+      "expected_code": null,
+      "expected_path_suffix": null,
+      "passed": true,
+      "methods": {
+        "validate_bundle": {
+          "outcome": "ACCEPT"
+        },
+        "assert_plan_ready": {
+          "outcome": "ACCEPT"
+        }
+      },
+      "cli": {
+        "command": [
+          "C:\\Users\\ASUS\\AppData\\Local\\Programs\\Python\\Python39\\python.exe",
+          "-B",
+          "-m",
+          "annotation.contracts",
+          "validate",
+          "D:\\1800\\.local\\stages\\C01-review-R1\\agent-r1\\different-internal-platform-dirs-repeat-order\\input.json"
+        ],
+        "exit_code": 0,
+        "stdout": "{\"valid\": true, \"schema_version\": \"1.0.0-a-proposal\", \"artifacts\": 10, \"resources_verified\": true, \"validation_layer\": \"OFFLINE_CONTRACT\"}\n",
+        "stderr": ""
+      },
+      "resources_provisioned": true
+    },
+    {
+      "case": "repeat-order-same-platform-directory",
+      "expected": "ACCEPT",
+      "expected_code": null,
+      "expected_path_suffix": null,
+      "passed": true,
+      "methods": {
+        "validate_bundle": {
+          "outcome": "ACCEPT"
+        },
+        "assert_plan_ready": {
+          "outcome": "ACCEPT"
+        }
+      },
+      "cli": {
+        "command": [
+          "C:\\Users\\ASUS\\AppData\\Local\\Programs\\Python\\Python39\\python.exe",
+          "-B",
+          "-m",
+          "annotation.contracts",
+          "validate",
+          "D:\\1800\\.local\\stages\\C01-review-R1\\agent-r1\\repeat-order-same-platform-directory\\input.json"
+        ],
+        "exit_code": 0,
+        "stdout": "{\"valid\": true, \"schema_version\": \"1.0.0-a-proposal\", \"artifacts\": 10, \"resources_verified\": true, \"validation_layer\": \"OFFLINE_CONTRACT\"}\n",
+        "stderr": ""
+      },
+      "resources_provisioned": true
+    },
+    {
+      "case": "shared-platform-id-second-order-unknown",
+      "expected": "ACCEPT",
+      "expected_code": null,
+      "expected_path_suffix": null,
+      "passed": true,
+      "methods": {
+        "validate_bundle": {
+          "outcome": "ACCEPT"
+        },
+        "assert_plan_ready": {
+          "outcome": "ACCEPT"
+        }
+      },
+      "cli": {
+        "command": [
+          "C:\\Users\\ASUS\\AppData\\Local\\Programs\\Python\\Python39\\python.exe",
+          "-B",
+          "-m",
+          "annotation.contracts",
+          "validate",
+          "D:\\1800\\.local\\stages\\C01-review-R1\\agent-r1\\shared-platform-id-second-order-unknown\\input.json"
+        ],
+        "exit_code": 0,
+        "stdout": "{\"valid\": true, \"schema_version\": \"1.0.0-a-proposal\", \"artifacts\": 10, \"resources_verified\": true, \"validation_layer\": \"OFFLINE_CONTRACT\"}\n",
+        "stderr": ""
+      },
+      "resources_provisioned": true
+    },
+    {
+      "case": "two-new-null-internal-questions",
+      "expected": "ACCEPT",
+      "expected_code": null,
+      "expected_path_suffix": null,
+      "passed": true,
+      "methods": {
+        "validate_bundle": {
+          "outcome": "ACCEPT"
+        },
+        "assert_plan_ready": {
+          "outcome": "ACCEPT"
+        }
+      },
+      "cli": {
+        "command": [
+          "C:\\Users\\ASUS\\AppData\\Local\\Programs\\Python\\Python39\\python.exe",
+          "-B",
+          "-m",
+          "annotation.contracts",
+          "validate",
+          "D:\\1800\\.local\\stages\\C01-review-R1\\agent-r1\\two-new-null-internal-questions\\input.json"
+        ],
+        "exit_code": 0,
+        "stdout": "{\"valid\": true, \"schema_version\": \"1.0.0-a-proposal\", \"artifacts\": 10, \"resources_verified\": true, \"validation_layer\": \"OFFLINE_CONTRACT\"}\n",
+        "stderr": ""
+      },
+      "resources_provisioned": true
+    }
+  ]
+}

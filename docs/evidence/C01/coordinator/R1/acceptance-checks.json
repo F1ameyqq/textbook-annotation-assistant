@@ -1,0 +1,93 @@
+{
+  "observed_at": "2026-10-16T20:50:11.357350+08:00",
+  "delivery_commit": "4e42668ab28eda37a37285285d2f6c595d3bba12",
+  "implementation_commit": "cb684f90a2cd7bd7064ce1f30b7d024a49389132",
+  "R1_review_manifest_files": 201,
+  "first_review_manifest_files": 159,
+  "review_report_hash_verified": true,
+  "working_tree_clean_before_after": true,
+  "checks": [
+    {
+      "name": "platform-reference-tests",
+      "args": [
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "C:\\Users\\ASUS\\.codex\\worktrees\\c01-contracts\\1800\\tests",
+        "-p",
+        "test_contracts_platform_refs.py",
+        "-v"
+      ],
+      "expected_exit": 0,
+      "exit": 0,
+      "passed": true
+    },
+    {
+      "name": "original-snapshot_question_missing_directory",
+      "args": [
+        "-m",
+        "annotation.contracts",
+        "validate",
+        "D:\\1800\\docs\\evidence\\C01\\review\\counterexamples\\snapshot_question_missing_directory\\input.json"
+      ],
+      "expected_exit": 1,
+      "exit": 1,
+      "passed": true
+    },
+    {
+      "name": "original-action_missing_platform_question",
+      "args": [
+        "-m",
+        "annotation.contracts",
+        "validate",
+        "D:\\1800\\docs\\evidence\\C01\\review\\counterexamples\\action_missing_platform_question\\input.json"
+      ],
+      "expected_exit": 1,
+      "exit": 1,
+      "passed": true
+    },
+    {
+      "name": "consume-normal",
+      "args": [
+        "C:\\Users\\ASUS\\.codex\\worktrees\\c01-contracts\\1800\\examples\\contracts\\consume.py",
+        "C:\\Users\\ASUS\\.codex\\worktrees\\c01-contracts\\1800\\tests\\fixtures\\contracts\\normal"
+      ],
+      "expected_exit": 0,
+      "exit": 0,
+      "passed": true
+    },
+    {
+      "name": "consume-exception",
+      "args": [
+        "C:\\Users\\ASUS\\.codex\\worktrees\\c01-contracts\\1800\\examples\\contracts\\consume.py",
+        "C:\\Users\\ASUS\\.codex\\worktrees\\c01-contracts\\1800\\tests\\fixtures\\contracts\\exception"
+      ],
+      "expected_exit": 0,
+      "exit": 0,
+      "passed": true
+    },
+    {
+      "name": "consume-unknown",
+      "args": [
+        "C:\\Users\\ASUS\\.codex\\worktrees\\c01-contracts\\1800\\examples\\contracts\\consume.py",
+        "C:\\Users\\ASUS\\.codex\\worktrees\\c01-contracts\\1800\\tests\\fixtures\\contracts\\unknown"
+      ],
+      "expected_exit": 0,
+      "exit": 0,
+      "passed": true
+    },
+    {
+      "name": "consume-choice-assumption",
+      "args": [
+        "C:\\Users\\ASUS\\.codex\\worktrees\\c01-contracts\\1800\\examples\\contracts\\consume.py",
+        "C:\\Users\\ASUS\\.codex\\worktrees\\c01-contracts\\1800\\tests\\fixtures\\contracts\\choice-assumption"
+      ],
+      "expected_exit": 0,
+      "exit": 0,
+      "passed": true
+    }
+  ],
+  "decision": "ACCEPTED",
+  "acceptance_scope": "A-side offline contract implementation and synthetic fixtures only; not B confirmation, real platform, OCR or recovery."
+}

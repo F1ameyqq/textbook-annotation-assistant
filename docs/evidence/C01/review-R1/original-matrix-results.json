@@ -1,0 +1,1036 @@
+{
+  "python": "3.9.13 (tags/v3.9.13:6de2ca5, May 17 2022, 16:36:42) [MSC v.1929 64 bit (AMD64)]",
+  "source_tree": "D:\\1800\\.local\\stages\\C01-review-R1\\tree",
+  "total": 80,
+  "passed": 80,
+  "failed": 0,
+  "cases": [
+    {
+      "case": "fixture_normal",
+      "passed": true,
+      "artifacts": 12,
+      "kinds": [
+        "ApplyPlan",
+        "BatchReport",
+        "CheckReport",
+        "EvidenceBundle",
+        "ExecutionReceipt",
+        "PlatformSnapshot",
+        "QuestionGraph",
+        "ReviewPatch",
+        "SourceBundle"
+      ]
+    },
+    {
+      "case": "fixture_exception",
+      "passed": true,
+      "artifacts": 12,
+      "kinds": [
+        "ApplyPlan",
+        "BatchReport",
+        "CheckReport",
+        "EvidenceBundle",
+        "ExecutionReceipt",
+        "PlatformSnapshot",
+        "QuestionGraph",
+        "ReviewPatch",
+        "SourceBundle"
+      ]
+    },
+    {
+      "case": "fixture_unknown",
+      "passed": true,
+      "artifacts": 12,
+      "kinds": [
+        "ApplyPlan",
+        "BatchReport",
+        "CheckReport",
+        "EvidenceBundle",
+        "ExecutionReceipt",
+        "PlatformSnapshot",
+        "QuestionGraph",
+        "ReviewPatch",
+        "SourceBundle"
+      ]
+    },
+    {
+      "case": "fixture_choice-assumption",
+      "passed": true,
+      "artifacts": 12,
+      "kinds": [
+        "ApplyPlan",
+        "BatchReport",
+        "CheckReport",
+        "EvidenceBundle",
+        "ExecutionReceipt",
+        "PlatformSnapshot",
+        "QuestionGraph",
+        "ReviewPatch",
+        "SourceBundle"
+      ]
+    },
+    {
+      "case": "missing_region_reference",
+      "passed": true,
+      "expected": "REJECT",
+      "result": "REJECTED",
+      "expected_layer": "semantic",
+      "issues": [
+        {
+          "path": "$.artifacts[2].payload.fragments[0].region_ids[0]",
+          "code": "MISSING_REFERENCE",
+          "message": "unknown reference region-not-present"
+        }
+      ],
+      "input": "D:\\1800\\.local\\stages\\C01-review-R1\\original-matrix\\inputs\\missing_region_reference.json"
+    },
+    {
+      "case": "missing_asset_reference",
+      "passed": true,
+      "expected": "REJECT",
+      "result": "REJECTED",
+      "expected_layer": "semantic",
+      "issues": [
+        {
+          "path": "$.artifacts[1].payload.regions[0].box.image.asset_id",
+          "code": "MISSING_ASSET",
+          "message": "asset absent from bound SourceBundle"
+        }
+      ],
+      "input": "D:\\1800\\.local\\stages\\C01-review-R1\\original-matrix\\inputs\\missing_asset_reference.json"
+    },
+    {
+      "case": "asset_dimension_mismatch",
+      "passed": true,
+      "expected": "REJECT",
+      "result": "REJECTED",
+      "expected_layer": "semantic",
+      "issues": [
+        {
+          "path": "$.artifacts[1].payload.regions[0].box.image",
+          "code": "IMAGE_BINDING",
+          "message": "original dimensions/digest conflict with asset"
+        }
+      ],
+      "input": "D:\\1800\\.local\\stages\\C01-review-R1\\original-matrix\\inputs\\asset_dimension_mismatch.json"
+    },
+    {
+      "case": "asset_digest_mismatch",
+      "passed": true,
+      "expected": "REJECT",
+      "result": "REJECTED",
+      "expected_layer": "semantic",
+      "issues": [
+        {
+          "path": "$.artifacts[1].payload.regions[0].box.image",
+          "code": "IMAGE_BINDING",
+          "message": "original dimensions/digest conflict with asset"
+        }
+      ],
+      "input": "D:\\1800\\.local\\stages\\C01-review-R1\\original-matrix\\inputs\\asset_digest_mismatch.json"
+    },
+    {
+      "case": "bbox_negative",
+      "passed": true,
+      "expected": "REJECT",
+      "result": "REJECTED",
+      "expected_layer": "structural",
+      "issues": [
+        {
+          "path": "$.artifacts[1].EvidenceBundle.payload.regions[0].box",
+          "code": "SCHEMA",
+          "message": "Value error, bbox must have positive area within bound original image"
+        }
+      ],
+      "input": "D:\\1800\\.local\\stages\\C01-review-R1\\original-matrix\\inputs\\bbox_negative.json"
+    },
+    {
+      "case": "bbox_zero_area",
+      "passed": true,
+      "expected": "REJECT",
+      "result": "REJECTED",
+      "expected_layer": "structural",
+      "issues": [
+        {
+          "path": "$.artifacts[1].EvidenceBundle.payload.regions[0].box",
+          "code": "SCHEMA",
+          "message": "Value error, bbox must have positive area within bound original image"
+        }
+      ],
+      "input": "D:\\1800\\.local\\stages\\C01-review-R1\\original-matrix\\inputs\\bbox_zero_area.json"
+    },
+    {
+      "case": "bbox_reversed",
+      "passed": true,
+      "expected": "REJECT",
+      "result": "REJECTED",
+      "expected_layer": "structural",
+      "issues": [
+        {
+          "path": "$.artifacts[1].EvidenceBundle.payload.regions[0].box",
+          "code": "SCHEMA",
+          "message": "Value error, bbox must have positive area within bound original image"
+        }
+      ],
+      "input": "D:\\1800\\.local\\stages\\C01-review-R1\\original-matrix\\inputs\\bbox_reversed.json"
+    },
+    {
+      "case": "bbox_out_of_bounds",
+      "passed": true,
+      "expected": "REJECT",
+      "result": "REJECTED",
+      "expected_layer": "structural",
+      "issues": [
+        {
+          "path": "$.artifacts[1].EvidenceBundle.payload.regions[0].box",
+          "code": "SCHEMA",
+          "message": "Value error, bbox must have positive area within bound original image"
+        }
+      ],
+      "input": "D:\\1800\\.local\\stages\\C01-review-R1\\original-matrix\\inputs\\bbox_out_of_bounds.json"
+    },
+    {
+      "case": "bbox_nan",
+      "passed": true,
+      "expected": "REJECT",
+      "result": "REJECTED",
+      "expected_layer": "structural",
+      "issues": [
+        {
+          "path": "$.artifacts[1].EvidenceBundle.payload.regions[0].box.bbox[0]",
+          "code": "SCHEMA",
+          "message": "Input should be a finite number"
+        }
+      ],
+      "input": "D:\\1800\\.local\\stages\\C01-review-R1\\original-matrix\\inputs\\bbox_nan.json"
+    },
+    {
+      "case": "bbox_infinity",
+      "passed": true,
+      "expected": "REJECT",
+      "result": "REJECTED",
+      "expected_layer": "structural",
+      "issues": [
+        {
+          "path": "$.artifacts[1].EvidenceBundle.payload.regions[0].box.bbox[2]",
+          "code": "SCHEMA",
+          "message": "Input should be a finite number"
+        }
+      ],
+      "input": "D:\\1800\\.local\\stages\\C01-review-R1\\original-matrix\\inputs\\bbox_infinity.json"
+    },
+    {
+      "case": "duplicate_artifact_revision",
+      "passed": true,
+      "expected": "REJECT",
+      "result": "REJECTED",
+      "expected_layer": "semantic",
+      "issues": [
+        {
+          "path": "$.artifacts[12]",
+          "code": "DUPLICATE_ID",
+          "message": "duplicate immutable artifact revision"
+        }
+      ],
+      "input": "D:\\1800\\.local\\stages\\C01-review-R1\\original-matrix\\inputs\\duplicate_artifact_revision.json"
+    },
+    {
+      "case": "one_pass_used_twice",
+      "passed": true,
+      "expected": "REJECT",
+      "result": "REJECTED",
+      "expected_layer": "semantic",
+      "issues": [
+        {
+          "path": "$.artifacts[8].payload",
+          "code": "TWO_CHECK_STAGES",
+          "message": "plan needs distinct PRE_APPLY and TARGET reports"
+        }
+      ],
+      "input": "D:\\1800\\.local\\stages\\C01-review-R1\\original-matrix\\inputs\\one_pass_used_twice.json"
+    },
+    {
+      "case": "missing_target_pass",
+      "passed": true,
+      "expected": "REJECT",
+      "result": "REJECTED",
+      "expected_layer": "semantic",
+      "issues": [
+        {
+          "path": "$.artifacts[7].input_refs[2]",
+          "code": "MISSING_REFERENCE",
+          "message": "missing artifact revision"
+        }
+      ],
+      "input": "D:\\1800\\.local\\stages\\C01-review-R1\\original-matrix\\inputs\\missing_target_pass.json"
+    },
+    {
+      "case": "pass_missing_required_check",
+      "passed": true,
+      "expected": "REJECT",
+      "result": "REJECTED",
+      "expected_layer": "structural",
+      "issues": [
+        {
+          "path": "$.artifacts[6].CheckReport.payload",
+          "code": "SCHEMA",
+          "message": "Value error, missing required checks for PRE_APPLY"
+        }
+      ],
+      "input": "D:\\1800\\.local\\stages\\C01-review-R1\\original-matrix\\inputs\\pass_missing_required_check.json"
+    },
+    {
+      "case": "pass_with_failed_check",
+      "passed": true,
+      "expected": "REJECT",
+      "result": "REJECTED",
+      "expected_layer": "structural",
+      "issues": [
+        {
+          "path": "$.artifacts[6].CheckReport.payload",
+          "code": "SCHEMA",
+          "message": "Value error, PASS requires all checks PASS and no blocking issues"
+        }
+      ],
+      "input": "D:\\1800\\.local\\stages\\C01-review-R1\\original-matrix\\inputs\\pass_with_failed_check.json"
+    },
+    {
+      "case": "check_missing_evidence",
+      "passed": true,
+      "expected": "REJECT",
+      "result": "REJECTED",
+      "expected_layer": "semantic",
+      "issues": [
+        {
+          "path": "$.artifacts[6].payload.checks[0].evidence_refs[0]",
+          "code": "MISSING_REFERENCE",
+          "message": "unknown reference proof-not-present"
+        }
+      ],
+      "input": "D:\\1800\\.local\\stages\\C01-review-R1\\original-matrix\\inputs\\check_missing_evidence.json"
+    },
+    {
+      "case": "pass_incomplete_page_coverage",
+      "passed": true,
+      "expected": "REJECT",
+      "result": "REJECTED",
+      "expected_layer": "structural",
+      "issues": [
+        {
+          "path": "$.artifacts[6].CheckReport.payload",
+          "code": "SCHEMA",
+          "message": "Value error, PASS requires complete page coverage without unassigned content"
+        }
+      ],
+      "input": "D:\\1800\\.local\\stages\\C01-review-R1\\original-matrix\\inputs\\pass_incomplete_page_coverage.json"
+    },
+    {
+      "case": "pass_forged_page_coverage",
+      "passed": true,
+      "expected": "REJECT",
+      "result": "REJECTED",
+      "expected_layer": "semantic",
+      "issues": [
+        {
+          "path": "$.artifacts[6].payload.coverage",
+          "code": "COVERAGE_SCOPE",
+          "message": "coverage must bind complete original source scope"
+        }
+      ],
+      "input": "D:\\1800\\.local\\stages\\C01-review-R1\\original-matrix\\inputs\\pass_forged_page_coverage.json"
+    },
+    {
+      "case": "target_graph_revision_conflict",
+      "passed": true,
+      "expected": "REJECT",
+      "result": "REJECTED",
+      "expected_layer": "semantic",
+      "issues": [
+        {
+          "path": "$.artifacts[7].payload.graph",
+          "code": "MISSING_REFERENCE",
+          "message": "missing artifact revision"
+        }
+      ],
+      "input": "D:\\1800\\.local\\stages\\C01-review-R1\\original-matrix\\inputs\\target_graph_revision_conflict.json"
+    },
+    {
+      "case": "dependency_kind_conflict",
+      "passed": true,
+      "expected": "REJECT",
+      "result": "REJECTED",
+      "expected_layer": "semantic",
+      "issues": [
+        {
+          "path": "$.artifacts[8].payload.graph",
+          "code": "REFERENCE_CONFLICT",
+          "message": "kind/revision/hash does not match referenced artifact"
+        }
+      ],
+      "input": "D:\\1800\\.local\\stages\\C01-review-R1\\original-matrix\\inputs\\dependency_kind_conflict.json"
+    },
+    {
+      "case": "target_policy_version_conflict",
+      "passed": true,
+      "expected": "REJECT",
+      "result": "REJECTED",
+      "expected_layer": "semantic",
+      "issues": [
+        {
+          "path": "$.artifacts[7].payload.policy",
+          "code": "POLICY_CONFLICT",
+          "message": "missing policy or revision/hash mismatch"
+        }
+      ],
+      "input": "D:\\1800\\.local\\stages\\C01-review-R1\\original-matrix\\inputs\\target_policy_version_conflict.json"
+    },
+    {
+      "case": "synthetic_policy_cannot_authorize_platform",
+      "passed": true,
+      "expected": "REJECT",
+      "result": "REJECTED",
+      "expected_layer": "semantic",
+      "issues": [
+        {
+          "path": "$.artifacts[8].payload.policy",
+          "code": "SYNTHETIC_ONLY",
+          "message": "demo assumption cannot authorize platform execution"
+        }
+      ],
+      "input": "D:\\1800\\.local\\stages\\C01-review-R1\\original-matrix\\inputs\\synthetic_policy_cannot_authorize_platform.json"
+    },
+    {
+      "case": "required_capability_unknown",
+      "passed": true,
+      "expected": "REJECT",
+      "result": "REJECTED",
+      "expected_layer": "semantic",
+      "issues": [
+        {
+          "path": "$.artifacts[8].payload.required_capabilities",
+          "code": "CAPABILITY_UNVERIFIED",
+          "message": "required capability not verified: frame_readback"
+        }
+      ],
+      "input": "D:\\1800\\.local\\stages\\C01-review-R1\\original-matrix\\inputs\\required_capability_unknown.json"
+    },
+    {
+      "case": "verified_capability_without_evidence",
+      "passed": true,
+      "expected": "REJECT",
+      "result": "REJECTED",
+      "expected_layer": "structural",
+      "issues": [
+        {
+          "path": "$.artifacts[5].PlatformSnapshot.payload.capabilities[1]",
+          "code": "SCHEMA",
+          "message": "Value error, VERIFIED capability requires evidence"
+        }
+      ],
+      "input": "D:\\1800\\.local\\stages\\C01-review-R1\\original-matrix\\inputs\\verified_capability_without_evidence.json"
+    },
+    {
+      "case": "capability_wrong_platform_version",
+      "passed": true,
+      "expected": "REJECT",
+      "result": "REJECTED",
+      "expected_layer": "semantic",
+      "issues": [
+        {
+          "path": "$.artifacts[8].payload.required_capabilities",
+          "code": "CAPABILITY_VERSION",
+          "message": "capability was tested against a different platform version: frame_readback"
+        }
+      ],
+      "input": "D:\\1800\\.local\\stages\\C01-review-R1\\original-matrix\\inputs\\capability_wrong_platform_version.json"
+    },
+    {
+      "case": "action_missing_source_entity",
+      "passed": true,
+      "expected": "REJECT",
+      "result": "REJECTED",
+      "expected_layer": "semantic",
+      "issues": [
+        {
+          "path": "$.artifacts[8].payload.actions[0].source_entity_ids[0]",
+          "code": "MISSING_REFERENCE",
+          "message": "unknown reference entity-not-present"
+        }
+      ],
+      "input": "D:\\1800\\.local\\stages\\C01-review-R1\\original-matrix\\inputs\\action_missing_source_entity.json"
+    },
+    {
+      "case": "action_missing_dependency",
+      "passed": true,
+      "expected": "REJECT",
+      "result": "REJECTED",
+      "expected_layer": "semantic",
+      "issues": [
+        {
+          "path": "$.artifacts[8].payload.actions[0].depends_on[0]",
+          "code": "MISSING_REFERENCE",
+          "message": "unknown reference action-not-present"
+        }
+      ],
+      "input": "D:\\1800\\.local\\stages\\C01-review-R1\\original-matrix\\inputs\\action_missing_dependency.json"
+    },
+    {
+      "case": "action_dependency_cycle",
+      "passed": true,
+      "expected": "REJECT",
+      "result": "REJECTED",
+      "expected_layer": "semantic",
+      "issues": [
+        {
+          "path": "$.artifacts[8].payload.actions[0].depends_on[0]",
+          "code": "MISSING_REFERENCE",
+          "message": "unknown reference action-alpha"
+        }
+      ],
+      "input": "D:\\1800\\.local\\stages\\C01-review-R1\\original-matrix\\inputs\\action_dependency_cycle.json"
+    },
+    {
+      "case": "target_outside_authorized_scope",
+      "passed": true,
+      "expected": "REJECT",
+      "result": "REJECTED",
+      "expected_layer": "semantic",
+      "issues": [
+        {
+          "path": "$.artifacts[8].payload.snapshot",
+          "code": "AUTHORIZED_SCOPE",
+          "message": "snapshot authorization scope differs"
+        }
+      ],
+      "input": "D:\\1800\\.local\\stages\\C01-review-R1\\original-matrix\\inputs\\target_outside_authorized_scope.json"
+    },
+    {
+      "case": "snapshot_question_missing_directory",
+      "passed": true,
+      "expected": "REJECT",
+      "result": "REJECTED",
+      "expected_layer": "semantic",
+      "issues": [
+        {
+          "path": "$.artifacts[5].payload.questions[0].directory_id",
+          "code": "MISSING_REFERENCE",
+          "message": "platform question directory is absent from this snapshot"
+        }
+      ],
+      "input": "D:\\1800\\.local\\stages\\C01-review-R1\\original-matrix\\inputs\\snapshot_question_missing_directory.json"
+    },
+    {
+      "case": "action_missing_platform_question",
+      "passed": true,
+      "expected": "REJECT",
+      "result": "REJECTED",
+      "expected_layer": "semantic",
+      "issues": [
+        {
+          "path": "$.artifacts[8].payload.actions[0].target.platform_question_id",
+          "code": "MISSING_REFERENCE",
+          "message": "action platform question is absent from the plan snapshot"
+        }
+      ],
+      "input": "D:\\1800\\.local\\stages\\C01-review-R1\\original-matrix\\inputs\\action_missing_platform_question.json"
+    },
+    {
+      "case": "applied_without_readback",
+      "passed": true,
+      "expected": "REJECT",
+      "result": "REJECTED",
+      "expected_layer": "structural",
+      "issues": [
+        {
+          "path": "$.artifacts[9].ExecutionReceipt.payload.results[0]",
+          "code": "SCHEMA",
+          "message": "Value error, conclusive outcome requires after evidence and readback"
+        }
+      ],
+      "input": "D:\\1800\\.local\\stages\\C01-review-R1\\original-matrix\\inputs\\applied_without_readback.json"
+    },
+    {
+      "case": "unknown_direct_replay",
+      "passed": true,
+      "expected": "REJECT",
+      "result": "REJECTED",
+      "expected_layer": "structural",
+      "issues": [
+        {
+          "path": "$.artifacts[9].ExecutionReceipt.payload.results[0].replay_allowed",
+          "code": "SCHEMA",
+          "message": "Input should be False"
+        }
+      ],
+      "input": "D:\\1800\\.local\\stages\\C01-review-R1\\original-matrix\\inputs\\unknown_direct_replay.json"
+    },
+    {
+      "case": "unknown_disguised_as_applied",
+      "passed": true,
+      "expected": "REJECT",
+      "result": "REJECTED",
+      "expected_layer": "structural",
+      "issues": [
+        {
+          "path": "$.artifacts[9].ExecutionReceipt.payload.results[0]",
+          "code": "SCHEMA",
+          "message": "Value error, outcome/effect/next_step combination is inconsistent"
+        }
+      ],
+      "input": "D:\\1800\\.local\\stages\\C01-review-R1\\original-matrix\\inputs\\unknown_disguised_as_applied.json"
+    },
+    {
+      "case": "unknown_as_regular_retry",
+      "passed": true,
+      "expected": "REJECT",
+      "result": "REJECTED",
+      "expected_layer": "semantic",
+      "issues": [
+        {
+          "path": "$.artifacts[9].payload.write_disposition",
+          "code": "UNKNOWN_GUARD",
+          "message": "receipt disposition must follow worst unresolved action"
+        }
+      ],
+      "input": "D:\\1800\\.local\\stages\\C01-review-R1\\original-matrix\\inputs\\unknown_as_regular_retry.json"
+    },
+    {
+      "case": "unknown_batch_without_reconciliation",
+      "passed": true,
+      "expected": "REJECT",
+      "result": "REJECTED",
+      "expected_layer": "semantic",
+      "issues": [
+        {
+          "path": "$.artifacts[11].payload.state",
+          "code": "UNKNOWN_GUARD",
+          "message": "unknown write must pause batch for reconciliation"
+        }
+      ],
+      "input": "D:\\1800\\.local\\stages\\C01-review-R1\\original-matrix\\inputs\\unknown_batch_without_reconciliation.json"
+    },
+    {
+      "case": "unknown_receipt_but_completed_batch",
+      "passed": true,
+      "expected": "REJECT",
+      "result": "REJECTED",
+      "expected_layer": "semantic",
+      "issues": [
+        {
+          "path": "$.artifacts[11].payload.frame_check_status",
+          "code": "FRAME_EVIDENCE",
+          "message": "frame result differs from postcheck"
+        }
+      ],
+      "input": "D:\\1800\\.local\\stages\\C01-review-R1\\original-matrix\\inputs\\unknown_receipt_but_completed_batch.json"
+    },
+    {
+      "case": "completed_not_submitted",
+      "passed": true,
+      "expected": "REJECT",
+      "result": "REJECTED",
+      "expected_layer": "structural",
+      "issues": [
+        {
+          "path": "$.artifacts[11].BatchReport.payload",
+          "code": "SCHEMA",
+          "message": "Value error, COMPLETED requires confirmed human submission"
+        }
+      ],
+      "input": "D:\\1800\\.local\\stages\\C01-review-R1\\original-matrix\\inputs\\completed_not_submitted.json"
+    },
+    {
+      "case": "completed_content_pending",
+      "passed": true,
+      "expected": "REJECT",
+      "result": "REJECTED",
+      "expected_layer": "structural",
+      "issues": [
+        {
+          "path": "$.artifacts[11].BatchReport.payload",
+          "code": "SCHEMA",
+          "message": "Value error, completion/readiness requires verified content, frames and all questions"
+        }
+      ],
+      "input": "D:\\1800\\.local\\stages\\C01-review-R1\\original-matrix\\inputs\\completed_content_pending.json"
+    },
+    {
+      "case": "completed_frames_unavailable",
+      "passed": true,
+      "expected": "REJECT",
+      "result": "REJECTED",
+      "expected_layer": "structural",
+      "issues": [
+        {
+          "path": "$.artifacts[11].BatchReport.payload",
+          "code": "SCHEMA",
+          "message": "Value error, completion/readiness requires verified content, frames and all questions"
+        }
+      ],
+      "input": "D:\\1800\\.local\\stages\\C01-review-R1\\original-matrix\\inputs\\completed_frames_unavailable.json"
+    },
+    {
+      "case": "patch_bad_baseline_revision",
+      "passed": true,
+      "expected": "REJECT",
+      "result": "REJECTED",
+      "expected_layer": "semantic",
+      "issues": [
+        {
+          "path": "$.artifacts[3].payload.baseline",
+          "code": "REFERENCE_CONFLICT",
+          "message": "kind/revision/hash does not match referenced artifact"
+        }
+      ],
+      "input": "D:\\1800\\.local\\stages\\C01-review-R1\\original-matrix\\inputs\\patch_bad_baseline_revision.json"
+    },
+    {
+      "case": "patch_bad_baseline_digest",
+      "passed": true,
+      "expected": "REJECT",
+      "result": "REJECTED",
+      "expected_layer": "semantic",
+      "issues": [
+        {
+          "path": "$.artifacts[3].payload.baseline",
+          "code": "REFERENCE_CONFLICT",
+          "message": "kind/revision/hash does not match referenced artifact"
+        }
+      ],
+      "input": "D:\\1800\\.local\\stages\\C01-review-R1\\original-matrix\\inputs\\patch_bad_baseline_digest.json"
+    },
+    {
+      "case": "patch_overwrites_old_revision",
+      "passed": true,
+      "expected": "REJECT",
+      "result": "REJECTED",
+      "expected_layer": "semantic",
+      "issues": [
+        {
+          "path": "$.artifacts[3].payload.result_revision",
+          "code": "PATCH_REVISION",
+          "message": "patch must propose next immutable revision"
+        }
+      ],
+      "input": "D:\\1800\\.local\\stages\\C01-review-R1\\original-matrix\\inputs\\patch_overwrites_old_revision.json"
+    },
+    {
+      "case": "patch_missing_entity",
+      "passed": true,
+      "expected": "REJECT",
+      "result": "REJECTED",
+      "expected_layer": "semantic",
+      "issues": [
+        {
+          "path": "$.artifacts[3].payload.changes[0].entity_id",
+          "code": "MISSING_ENTITY",
+          "message": "patch entity absent from exact baseline"
+        }
+      ],
+      "input": "D:\\1800\\.local\\stages\\C01-review-R1\\original-matrix\\inputs\\patch_missing_entity.json"
+    },
+    {
+      "case": "patch_wrong_before",
+      "passed": true,
+      "expected": "REJECT",
+      "result": "REJECTED",
+      "expected_layer": "semantic",
+      "issues": [
+        {
+          "path": "$.artifacts[3].payload.changes[0].before",
+          "code": "PATCH_BASELINE",
+          "message": "expected old field does not match baseline"
+        }
+      ],
+      "input": "D:\\1800\\.local\\stages\\C01-review-R1\\original-matrix\\inputs\\patch_wrong_before.json"
+    },
+    {
+      "case": "scope_denominator_omits_question",
+      "passed": true,
+      "expected": "REJECT",
+      "result": "REJECTED",
+      "expected_layer": "semantic",
+      "issues": [
+        {
+          "path": "$.artifacts[11].payload.scope_manifest",
+          "code": "DENOMINATOR_CHANGED",
+          "message": "batch must retain independent source scope manifest"
+        }
+      ],
+      "input": "D:\\1800\\.local\\stages\\C01-review-R1\\original-matrix\\inputs\\scope_denominator_omits_question.json"
+    },
+    {
+      "case": "resource_path_drive_absolute",
+      "passed": true,
+      "expected": "REJECT",
+      "result": "REJECTED",
+      "expected_layer": "structural",
+      "issues": [
+        {
+          "path": "$.artifacts[0].SourceBundle.payload.assets[0].path",
+          "code": "SCHEMA",
+          "message": "Value error, resource path must be a portable relative path without traversal"
+        }
+      ],
+      "input": "D:\\1800\\.local\\stages\\C01-review-R1\\original-matrix\\inputs\\resource_path_drive_absolute.json"
+    },
+    {
+      "case": "resource_path_drive_relative",
+      "passed": true,
+      "expected": "REJECT",
+      "result": "REJECTED",
+      "expected_layer": "structural",
+      "issues": [
+        {
+          "path": "$.artifacts[0].SourceBundle.payload.assets[0].path",
+          "code": "SCHEMA",
+          "message": "Value error, resource path must be a portable relative path without traversal"
+        }
+      ],
+      "input": "D:\\1800\\.local\\stages\\C01-review-R1\\original-matrix\\inputs\\resource_path_drive_relative.json"
+    },
+    {
+      "case": "resource_path_unc",
+      "passed": true,
+      "expected": "REJECT",
+      "result": "REJECTED",
+      "expected_layer": "structural",
+      "issues": [
+        {
+          "path": "$.artifacts[0].SourceBundle.payload.assets[0].path",
+          "code": "SCHEMA",
+          "message": "Value error, resource path must be a portable relative path without traversal"
+        }
+      ],
+      "input": "D:\\1800\\.local\\stages\\C01-review-R1\\original-matrix\\inputs\\resource_path_unc.json"
+    },
+    {
+      "case": "resource_path_posix_absolute",
+      "passed": true,
+      "expected": "REJECT",
+      "result": "REJECTED",
+      "expected_layer": "structural",
+      "issues": [
+        {
+          "path": "$.artifacts[0].SourceBundle.payload.assets[0].path",
+          "code": "SCHEMA",
+          "message": "Value error, resource path must be a portable relative path without traversal"
+        }
+      ],
+      "input": "D:\\1800\\.local\\stages\\C01-review-R1\\original-matrix\\inputs\\resource_path_posix_absolute.json"
+    },
+    {
+      "case": "resource_path_parent_escape",
+      "passed": true,
+      "expected": "REJECT",
+      "result": "REJECTED",
+      "expected_layer": "structural",
+      "issues": [
+        {
+          "path": "$.artifacts[0].SourceBundle.payload.assets[0].path",
+          "code": "SCHEMA",
+          "message": "Value error, resource path must be a portable relative path without traversal"
+        }
+      ],
+      "input": "D:\\1800\\.local\\stages\\C01-review-R1\\original-matrix\\inputs\\resource_path_parent_escape.json"
+    },
+    {
+      "case": "resource_path_nested_escape",
+      "passed": true,
+      "expected": "REJECT",
+      "result": "REJECTED",
+      "expected_layer": "structural",
+      "issues": [
+        {
+          "path": "$.artifacts[0].SourceBundle.payload.assets[0].path",
+          "code": "SCHEMA",
+          "message": "Value error, resource path must be a portable relative path without traversal"
+        }
+      ],
+      "input": "D:\\1800\\.local\\stages\\C01-review-R1\\original-matrix\\inputs\\resource_path_nested_escape.json"
+    },
+    {
+      "case": "resource_path_backslash_escape",
+      "passed": true,
+      "expected": "REJECT",
+      "result": "REJECTED",
+      "expected_layer": "structural",
+      "issues": [
+        {
+          "path": "$.artifacts[0].SourceBundle.payload.assets[0].path",
+          "code": "SCHEMA",
+          "message": "Value error, resource path must be a portable relative path without traversal"
+        }
+      ],
+      "input": "D:\\1800\\.local\\stages\\C01-review-R1\\original-matrix\\inputs\\resource_path_backslash_escape.json"
+    },
+    {
+      "case": "resource_path_reserved_device",
+      "passed": true,
+      "expected": "REJECT",
+      "result": "REJECTED",
+      "expected_layer": "structural",
+      "issues": [
+        {
+          "path": "$.artifacts[0].SourceBundle.payload.assets[0].path",
+          "code": "SCHEMA",
+          "message": "Value error, resource path contains nonportable Windows path components"
+        }
+      ],
+      "input": "D:\\1800\\.local\\stages\\C01-review-R1\\original-matrix\\inputs\\resource_path_reserved_device.json"
+    },
+    {
+      "case": "independent_canonical_hash",
+      "passed": true,
+      "digest": "dacf2a92009e6ea01c3218005d6bfb9f0cc817dd904597391e7084f71bad8b0e"
+    },
+    {
+      "case": "hash_key_order_invariant",
+      "passed": true
+    },
+    {
+      "case": "hash_not_self_referential",
+      "passed": true
+    },
+    {
+      "case": "unsealed_tamper_rejected",
+      "passed": true,
+      "issues": [
+        {
+          "path": "$.artifacts[2].content_hash",
+          "code": "HASH_MISMATCH",
+          "message": "artifact digest differs from normalized content"
+        }
+      ]
+    },
+    {
+      "case": "half_open_full_image_boundary_valid",
+      "passed": true
+    },
+    {
+      "case": "eligibility_normal",
+      "passed": true,
+      "eligible": true
+    },
+    {
+      "case": "eligibility_exception",
+      "passed": true,
+      "eligible": false,
+      "issues": [
+        {
+          "path": "$.plan.readiness",
+          "code": "PLAN_BLOCKED",
+          "message": "diagnostic plan is not eligible"
+        }
+      ]
+    },
+    {
+      "case": "eligibility_unknown",
+      "passed": true,
+      "eligible": false,
+      "issues": [
+        {
+          "path": "$.plan",
+          "code": "BOOK_WRITE_PAUSED",
+          "message": "UNKNOWN receipt requires reconciliation before any book write"
+        }
+      ]
+    },
+    {
+      "case": "eligibility_choice-assumption",
+      "passed": true,
+      "eligible": true
+    },
+    {
+      "case": "unknown_cannot_bypass_with_fresh_plan_id",
+      "passed": true,
+      "issues": [
+        {
+          "path": "$.plan",
+          "code": "BOOK_WRITE_PAUSED",
+          "message": "UNKNOWN receipt requires reconciliation before any book write"
+        }
+      ]
+    },
+    {
+      "case": "fresh_target_rejects_old_plan",
+      "passed": true,
+      "issues": [
+        {
+          "path": "$.plan.payload.snapshot",
+          "code": "TARGET_CHANGED",
+          "message": "current snapshot differs; recheck and replan"
+        }
+      ]
+    },
+    {
+      "case": "patch_exact_baseline_valid",
+      "passed": true
+    },
+    {
+      "case": "patch_new_baseline_rejected",
+      "passed": true,
+      "issues": [
+        {
+          "path": "$.patch.payload.baseline",
+          "code": "PATCH_BASELINE",
+          "message": "patch may only apply to its exact baseline version"
+        }
+      ]
+    },
+    {
+      "case": "same_session_without_restart_recovery_valid",
+      "passed": true
+    },
+    {
+      "case": "transport_normal",
+      "passed": true,
+      "destination": "D:\\1800\\.local\\stages\\C01-review-R1\\original-matrix\\transport\\normal copied elsewhere"
+    },
+    {
+      "case": "transport_exception",
+      "passed": true,
+      "destination": "D:\\1800\\.local\\stages\\C01-review-R1\\original-matrix\\transport\\exception copied elsewhere"
+    },
+    {
+      "case": "transport_unknown",
+      "passed": true,
+      "destination": "D:\\1800\\.local\\stages\\C01-review-R1\\original-matrix\\transport\\unknown copied elsewhere"
+    },
+    {
+      "case": "transport_choice-assumption",
+      "passed": true,
+      "destination": "D:\\1800\\.local\\stages\\C01-review-R1\\original-matrix\\transport\\choice-assumption copied elsewhere"
+    },
+    {
+      "case": "duplicate_json_keys_rejected",
+      "passed": true,
+      "issues": [
+        {
+          "path": "$",
+          "code": "JSON_INPUT",
+          "message": "duplicate JSON key: format_version"
+        }
+      ]
+    },
+    {
+      "case": "resource_bytes_tamper_rejected",
+      "passed": true,
+      "issues": [
+        {
+          "path": "$.artifacts[0].payload.assets[0].sha256",
+          "code": "RESOURCE_HASH",
+          "message": "resource bytes differ"
+        }
+      ]
+    },
+    {
+      "case": "public_api_write_preserves_existing_file",
+      "passed": true
+    },
+    {
+      "case": "schema_generated_from_types",
+      "passed": true
+    }
+  ]
+}

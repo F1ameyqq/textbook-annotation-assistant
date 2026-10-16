@@ -2,7 +2,7 @@
   "schema_version": 1,
   "project": "D:\\1800",
   "coordinator_thread_id": "01a13f26-7567-75e1-99ee-c9d2194e78bb",
-  "updated_at": "2026-10-16T20:38:33.290342+08:00",
+  "updated_at": "2026-10-16T20:51:06.083009+08:00",
   "automation": {
     "id": "1800-a",
     "kind": "heartbeat",
@@ -47,7 +47,7 @@
       "submission_status": "NOT_SUBMITTED"
     },
     "C01": {
-      "status": "REVIEW",
+      "status": "ACCEPTED",
       "execution_task": "docs/tasks/C01-contracts-implementation.md",
       "review_task": "docs/tasks/C01-independent-review.md",
       "base_commit": "30bc00cbaa3e40d78fd8d5cac98e81bd354763b2",
@@ -73,25 +73,26 @@
       "review": {
         "thread_id": "01a14481-d20d-7e21-898a-a650d52f9a9e",
         "host_id": "local",
-        "turn_status": "inProgress",
-        "phase": "R1_REVIEW_RUNNING",
-        "cursor": "6c52ac96-a20c-406a-9abc-6c5ae6f89183:11",
+        "turn_status": "completed",
+        "phase": "R1_ACCEPTED",
+        "cursor": "6c52ac96-a20c-406a-9abc-6c5ae6f89183:12",
         "report": "docs/tasks/C01-review-R1-report.md",
-        "last_progress": "Reviewer confirmed R1 four-file scope and clean worktree; first-report/evidence protective hashes established; formal regression and original F1/F2 checks in progress.",
+        "last_progress": "R1 independent acceptance complete: 70 delivered tests, 80 original matrix, 22 independent mapping scenarios; original evidence unchanged.",
         "target_commit": "4e42668ab28eda37a37285285d2f6c595d3bba12",
-        "decision": null,
-        "report_sha256": null,
-        "evidence_manifest": null,
+        "decision": "ACCEPTED",
+        "report_sha256": "1829c96a2db583cd55991e63d8f9ddcddf4ea9e9bc42d53697d950f38669b158",
+        "evidence_manifest": "docs/evidence/C01/review-R1/sha256-manifest.json",
         "turn_id": "01a144b4-8045-7f02-aa82-cc1e276b9f9a"
       },
       "B_contract_confirmation": "NOT_CONFIRMED",
-      "next_dependency": "Original reviewer completes R1 re-review, coordinator reproduces relevant checks and integrates scoped accepted code before next stages.",
+      "next_dependency": "Scoped local integration and affected checks before A01/A02/A04 dispatch.",
       "review_handoff": {
         "state": "ACKNOWLEDGED",
         "round": "R1",
         "target_commit": "4e42668ab28eda37a37285285d2f6c595d3bba12",
         "at": "2026-10-16T20:34:02.211673+08:00",
-        "turn_id": "01a144b4-8045-7f02-aa82-cc1e276b9f9a"
+        "turn_id": "01a144b4-8045-7f02-aa82-cc1e276b9f9a",
+        "record_commit": "5cf69579719b16abf2183b244965f99d83370f56"
       },
       "coordinator_reproduction": {
         "at": "2026-10-16T20:12:02.415782+08:00",
@@ -145,7 +146,24 @@
           "report_sha256": "848bbe03ec698092ca15b3c50207618e76dae02555d2eb571ddaf3e2f28089fb",
           "evidence_manifest": "docs/evidence/C01/review/sha256-manifest.json"
         }
-      ]
+      ],
+      "acceptance_scope": "A-side offline contract implementation and synthetic fixtures; no B acceptance, real platform, OCR, algorithm quality or recovery.",
+      "coordinator_report": "docs/tasks/C01-coordinator-acceptance.md",
+      "coordinator_acceptance": {
+        "at": "2026-10-16T20:51:06.083009+08:00",
+        "commit": "4e42668ab28eda37a37285285d2f6c595d3bba12",
+        "decision": "ACCEPTED",
+        "report": "docs/evidence/C01/coordinator/R1/acceptance-checks.json",
+        "targeted_tests": 16,
+        "reproduction_commands": 7,
+        "R1_evidence_files_verified": 201,
+        "first_review_evidence_files_verified": 159
+      },
+      "integration": {
+        "status": "PENDING",
+        "source_commit": "4e42668ab28eda37a37285285d2f6c595d3bba12",
+        "strategy": "normal non-fast-forward merge of exact accepted commit; preserve unrelated working changes; verify affected tests before INTEGRATED"
+      }
     }
   },
   "route": [
@@ -205,28 +223,26 @@
       "thread_id": "01a14481-d20d-7e21-898a-a650d52f9a9e"
     }
   ],
-  "last_action": "Resumed C01 R1 independent review on exact frozen delivery and prepared A01 portable-input/provenance preflight.",
+  "last_action": "C01 R1 independently accepted and coordinator-reproduced; preparing scoped local integration.",
   "limitations": [
     "Current route uses mock B artifacts until independently agreed interface/artifact versions exist.",
     "Local integration is not remote publication.",
     "Platform test is single-book serial, no book submission, no unbudgeted paid models."
   ],
   "last_check": {
-    "observed_at": "2026-10-16T20:38:33.290342+08:00",
-    "automation_tick": "2026-10-16T12:32:38.322Z",
-    "coordinator_head": "ed15e94b451bb213ff0e8755fbacd6405aa888b6",
+    "observed_at": "2026-10-16T20:51:06.083009+08:00",
+    "automation_tick": "2026-10-16T12:47:38.523Z",
+    "coordinator_head": "5cf69579719b16abf2183b244965f99d83370f56",
     "execution_head": "4e42668ab28eda37a37285285d2f6c595d3bba12",
     "execution_worktree_dirty": false,
     "repair_report_present": true,
-    "review_report_present": true,
-    "r1_review_report_present": false,
-    "result": "C01 R1 re-review still running; A01 source preflight prepared. No integration or next-stage dispatch.",
+    "r1_review_report_present": true,
+    "result": "C01 ACCEPTED after coordinator reproduction; local integration pending.",
     "new_dispatches": 0,
-    "tests_rerun": false,
+    "tests_rerun": true,
+    "tests_scope": "16 targeted tests, original F1/F2 default CLI and four consumers; archive hashes checked.",
     "platform_actions": false,
-    "user_action_required": false,
-    "independent_work": "Prepared A01 source-input inventory and explicit historical provenance/page-mapping gaps; no downstream dispatch.",
-    "document_checks": "Updated coordination and preparation links/diff valid."
+    "user_action_required": false
   },
   "prepared_next_batch": {
     "status": "DRAFT_NOT_DISPATCHED",
@@ -258,7 +274,8 @@
         "No complete page-level question denominator or gold answer ground truth established."
       ],
       "platform_actions": false,
-      "algorithm_runs": false
+      "algorithm_runs": false,
+      "record_commit": "5cf69579719b16abf2183b244965f99d83370f56"
     }
   }
 }
