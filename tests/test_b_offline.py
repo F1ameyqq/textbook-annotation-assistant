@@ -76,12 +76,16 @@ class OfflineRegression(unittest.TestCase):
     def test_repeated_printed_one_does_not_cross_lessons(self):
         first = self.question("viewer-10", "1")
         later = self.question("viewer-14", "1")
-        missing = self.question("viewer-12", "1")
+        complex_one = self.question("viewer-12", "1")
         self.assertNotEqual(first["section_path"], later["section_path"])
         self.assertEqual(self.answer(first)["text"], "D")
         self.assertEqual(self.answer(later)["text"], "C")
         self.assertNotEqual(first["selected_answer_id"], later["selected_answer_id"])
-        self.assertIsNone(missing["selected_answer_id"])
+        complex_answer = self.answer(complex_one)
+        self.assertEqual(complex_answer["section_path"], complex_one["section_path"])
+        self.assertNotEqual(complex_one["selected_answer_id"], first["selected_answer_id"])
+        self.assertEqual(complex_answer["assembly_status"], "AMBIGUOUS")
+        self.assertFalse(complex_answer["transcription_verified"])
 
     def test_forged_cross_section_answer_is_blocked(self):
         q = self.question("viewer-10", "1")

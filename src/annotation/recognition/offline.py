@@ -15,11 +15,13 @@ from PIL import Image, ImageDraw
 
 from .baseline import code_digest, digest, legacy_backend, load_source, valid_bbox
 from .policy import classify, choice_answer_valid, option_set_valid
+from .answer_assembly import assemble_answers
+from .answer_quality import audit_answers
 
 CONTEXT_SCHEMA = "b-context-trial/0.1"
 EVIDENCE_SCHEMA = "b-evidence-trial/0.2"
-GRAPH_SCHEMA = "b-graph-trial/0.1"
-CHECK_SCHEMA = "b-check-trial/0.1"
+GRAPH_SCHEMA = "b-graph-trial/0.2"
+CHECK_SCHEMA = "b-check-trial/0.2"
 QSTART = re.compile(r"^\s*(\d{1,2})\s*[.．、]\s*(?=[\u4e00-\u9fffA-Za-z（(])")
 ASTART = re.compile(r"^\s*(\d{1,2})\s*[.．、]\s*(.+)$")
 OPTION = re.compile(r"^\s*([A-G])[.．、]")
@@ -234,45 +236,10 @@ def assemble(evidence):
                                                    "evidence_refs": [caption["line_id"]]})
                     targets[0]["flags"].append("FIGURE_EXTENT_UNVERIFIED")
         else:
-            details = {}
-            for token in page["answer_detail_lines"]:
-                details.setdefault(token["parent_line_id"], []).append(token)
-            for line in lines:
-                if not ASTART.match(line["text"]):
-                    continue
-                tokens = details.get(line["line_id"], [])
-                starts = [(i, ASTART.match(a["text"])) for i, a in enumerate(tokens) if ASTART.match(a["text"])]
-                sequence = [int(m[1]) for _, m in starts]
-                # Decimal values inside solutions must not become answer IDs.
-                dense_ok = len(sequence) >= 2 and all(b == a+1 for a, b in zip(sequence, sequence[1:]))
-                if not dense_ok:
-                    m = ASTART.match(line["text"])
-                    if not m[2].startswith(("解", "能", "合格", "不合格")):
-                        assembly_issues.append({"code": "AMBIGUOUS_ANSWER_ROW", "evidence_refs": [line["line_id"]]})
-                        continue
-                    starts, tokens = [(0, m)], [line]
-                for k, (i, m) in enumerate(starts):
-                    end = starts[k+1][0] if k+1 < len(starts) else len(tokens)
-                    used = tokens[i:end]
-                    value = " ".join([m[2]] + [a["text"] for a in used[1:]])
-                    variant_parts = re.split(r"【变式】", value, maxsplit=1)
-                    variant_boundary = next((j for j, a in enumerate(used) if a["text"].startswith("【变式】")), None)
-                    for v, val in enumerate(variant_parts):
-                        selected_tokens = (used[:variant_boundary] if not v else used[variant_boundary:]) if variant_boundary else used
-                        coarse_text = re.sub(r"\s+", "", line["text"])
-                        token_text = re.sub(r"\s+", "", ("【变式】" if v else m[1] + ".") + val)
-                        agreement = token_text in coarse_text.replace("．", ".").replace("、", ".")
-                        answers.append({"answer_id": entity_id(evidence, "a", [line["line_id"], i, v]),
-                                        "book_id": evidence["book_id"], "section_path": line["location"]["section_path"],
-                                        "printed_number": m[1] + (":variant" if v else ""),
-                                        "asset_id": page["asset_id"], "text": val.strip(),
-                                        "bbox": [min(a["bbox"][0] for a in selected_tokens), min(a["bbox"][1] for a in selected_tokens),
-                                                 max(a["bbox"][2] for a in selected_tokens), max(a["bbox"][3] for a in selected_tokens)],
-                                        "evidence_refs": [a["line_id"] for a in selected_tokens],
-                                        "variant_geometry_unresolved": len(variant_parts) > 1 and not variant_boundary,
-                                        "verification_status": "UNVERIFIED",
-                                        "coarse_detail_agreement": agreement,
-                                        "complete": dense_ok and bool(re.fullmatch(r"[A-G]+|\d+(?:\.\d+)?", val.strip()))})
+            continue
+    answers, answer_issues, answer_coverage = assemble_answers(
+        evidence, lambda role, anchor: entity_id(evidence, role, anchor))
+    assembly_issues.extend(answer_issues)
     for q in questions:
         qkey = scope_key(q["book_id"], q["section_path"], q["printed_number"])
         candidates = [a for a in answers if scope_key(a["book_id"], a["section_path"], a["printed_number"]) == qkey]
@@ -286,13 +253,15 @@ def assemble(evidence):
             q["flags"].append("SHARED_MATERIAL_STRUCTURE_REVIEW")
         q["flags"] = sorted(set(q["flags"]))
     payload = {"questions": questions, "answers": answers, "issues": assembly_issues,
+               "answer_coverage": answer_coverage,
                "matching": "book+reviewed_section_path+printed_number; unique candidate only",
                "unmatched_answer_ids": [a["answer_id"] for a in answers if not any(
                    a["answer_id"] in q["candidate_answer_ids"] for q in questions)],
                "selection_status": "DRAFT_UNVERIFIED", "platform_actions": []}
     return artifact(GRAPH_SCHEMA, "QuestionGraphTrial", evidence, payload, [ref(evidence)],
-                    {"module": __name__ + ".assemble", "version": "0.1.0", "code_sha256": code_digest(Path(__file__)),
-                     "policy_code_sha256": code_digest(Path(__file__).with_name("policy.py"))})
+                    {"module": __name__ + ".assemble", "version": "0.2.0", "code_sha256": code_digest(Path(__file__)),
+                     "policy_code_sha256": code_digest(Path(__file__).with_name("policy.py")),
+                     "answer_assembly_code_sha256": code_digest(Path(__file__).with_name("answer_assembly.py"))})
 
 
 def scalar_issues(value, expected):
@@ -321,7 +290,7 @@ def quality_check(evidence, graph, review):
 
     def add(code, scope, refs=(), severity="ERROR", detail=None):
         issues.append({"issue_id": "issue-" + digest([code, scope, refs, detail])[:24],
-                       "code": code, "scope_type": "question" if scope.startswith("q-") else "asset" if scope in pages else "scope",
+                       "code": code, "scope_type": "question" if scope.startswith("q-") else "answer" if scope.startswith("a-") else "asset" if scope in pages else "scope",
                        "scope_id": scope, "evidence_refs": list(refs), "severity": severity,
                        "blocks": ["PRE_APPLY"], "suggested_strategy": "REVIEW_OFFLINE", "detail": detail})
 
@@ -364,15 +333,13 @@ def quality_check(evidence, graph, review):
             add("ANSWER_MISSING_OR_AMBIGUOUS", qid, [q["anchor_ref"]])
         elif scope_key(a["book_id"], a["section_path"], a["printed_number"]) != key:
             add("CROSS_SCOPE_ANSWER", qid, a["evidence_refs"])
-        elif not a["complete"]:
-            add("ANSWER_TRANSCRIPTION_INCOMPLETE", qid, a["evidence_refs"])
         if a and not a["coarse_detail_agreement"]:
             add("OCR_RECOGNITION_DISAGREEMENT", qid, a["evidence_refs"])
         if a and a["variant_geometry_unresolved"]:
             add("ANSWER_VARIANT_REGION_UNSPLIT", qid, a["evidence_refs"])
         if a and q["selected_answer_id"] not in q["candidate_answer_ids"]:
             add("INVALID_SELECTED_ANSWER", qid, a["evidence_refs"])
-        if a and any(r not in evidence_lines or evidence_lines[r][0] != a["asset_id"] for r in a["evidence_refs"]):
+        if a and any(r not in evidence_lines for r in a["evidence_refs"]):
             add("UNKNOWN_ANSWER_EVIDENCE", qid, a["evidence_refs"])
         labels = [f["option_label"] for f in q["fragments"] if f.get("option_start")]
         if labels and not option_set_valid(labels):
@@ -399,20 +366,26 @@ def quality_check(evidence, graph, review):
             if a:
                 for code in scalar_issues(a["text"], case["expected_scalar"]):
                     add(code, qid, a["evidence_refs"], detail={"expected": case["expected_scalar"], "actual": a["text"], "case_id": case["case_id"]})
+    answer_findings, answer_metrics = audit_answers(evidence, graph, review)
+    for finding in answer_findings:
+        add(finding["code"], finding["scope_id"], finding["evidence_refs"], finding["severity"], finding["detail"])
     # This independent development census catches a removed whole question, but
     # does not certify diagram extents, formula transcription or business truth.
     add("BUSINESS_REVIEW_REQUIRED", evidence["scope_id"], severity="REVIEW",
         detail="Development visual references and shared OCR are not independent business acceptance.")
     for item in graph["payload"]["issues"]:
-        add(item["code"], evidence["scope_id"], item["evidence_refs"], "REVIEW")
+        if item["code"] == "UNASSIGNED_ANSWER_OCR_LINE":
+            continue  # The independent ledger audit reports every such source line.
+        add(item["code"], item.get("answer_id", evidence["scope_id"]), item["evidence_refs"], "REVIEW", item.get("detail"))
     payload = {"stage": "PRE_APPLY", "decision": "HOLD", "issues": issues, "page_coverage": coverage,
                "reason": "Unverified offline draft; blocking issues require review. No platform actions authorized.",
                "summary": {"questions": len(questions), "answers": len(answers),
                            "unique_candidate_links": sum(q["selected_answer_id"] is not None for q in questions),
-                           "issues": len(issues)}}
+                           "issues": len(issues), **answer_metrics}}
     return artifact(CHECK_SCHEMA, "CheckReportTrial", evidence, payload,
                     [ref(evidence), ref(graph), {"artifact_id": review["artifact_id"], "content_hash": digest(review)}],
-                    {"module": __name__ + ".quality_check", "version": "0.1.0", "code_sha256": code_digest(Path(__file__))})
+                    {"module": __name__ + ".quality_check", "version": "0.2.0", "code_sha256": code_digest(Path(__file__)),
+                     "answer_quality_code_sha256": code_digest(Path(__file__).with_name("answer_quality.py"))})
 
 
 def draw_graph(source_path, graph):
@@ -426,5 +399,12 @@ def draw_graph(source_path, graph):
                 if f["asset_id"] == asset["asset_id"]:
                     draw.rectangle(f["bbox"], outline="orange" if f["role"] == "figure_caption" else "red", width=2)
                     draw.text((f["bbox"][0], f["bbox"][1]-12), q["printed_number"], fill="blue")
+        for answer in graph["payload"]["answers"]:
+            for fragment in answer.get("fragments", []):
+                if fragment["asset_id"] == asset["asset_id"]:
+                    color = "purple" if fragment["role"] == "explanation" else "blue"
+                    draw.rectangle(fragment["bbox"], outline=color, width=2)
+                    label = ("E:" if fragment["role"] == "explanation" else "A:") + answer["printed_number"]
+                    draw.text((fragment["bbox"][0], fragment["bbox"][1]-12), label, fill=color)
         overlays[asset["asset_id"]] = image
     return overlays
