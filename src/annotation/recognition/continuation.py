@@ -14,9 +14,12 @@ import hashlib
 import re
 
 from .baseline import digest, valid_bbox
+from .boundary import validate_boundary
+from .image_regions import validate_image_regions
 
 RECEIPT_SCHEMA = "b-page-adjacency-trial/0.1"
 PROOF_SCHEMA = "b-continuation-proof-trial/0.1"
+PROOF_SCHEMA_WITH_REGIONS = "b-continuation-proof-trial/0.2"
 REPORT_SCHEMA = "b-continuation-check-trial/0.1"
 EVIDENCE_SCHEMAS = {"b-evidence-trial/0.2", "b-evidence-trial/0.3"}
 GRAPH_SCHEMAS = {"b-graph-trial/0.2", "b-graph-trial/0.3"}
@@ -88,7 +91,7 @@ def build_adjacency_receipt(evidence, from_asset_id, to_asset_id, *, observation
 
 def build_continuation_proof(evidence, graph, *, from_answer_id, to_asset_id,
                              to_line_ids, source_tail_line_id, adjacency_receipt,
-                             review_basis):
+                             review_basis, image_regions=None, boundary_candidate=None):
     """Create a reviewable proposal; creation itself does not validate it."""
     pages = {p.get("asset_id"): p for p in evidence.get("payload", {}).get("pages", [])}
     answers = graph.get("payload", {}).get("answers", [])
@@ -105,11 +108,16 @@ def build_continuation_proof(evidence, graph, *, from_answer_id, to_asset_id,
                "source_fragment_ids": [f.get("fragment_id") for f in source.get("fragments", [])],
                "adjacency_receipt": copy.deepcopy(adjacency_receipt),
                "review_basis": copy.deepcopy(review_basis), "operation": "PROPOSE_ONLY"}
-    return _artifact(PROOF_SCHEMA, "ContinuationProofTrial", evidence, payload,
-                     [_ref(evidence), _ref(graph), _ref(adjacency_receipt)])
+    inputs = [_ref(evidence), _ref(graph), _ref(adjacency_receipt)]
+    for key, value in (("image_regions",image_regions),("boundary_candidate",boundary_candidate)):
+        if value is not None:
+            payload[key]=copy.deepcopy(value)
+            inputs.append(_ref(value))
+    schema=PROOF_SCHEMA_WITH_REGIONS if image_regions is not None or boundary_candidate is not None else PROOF_SCHEMA
+    return _artifact(schema, "ContinuationProofTrial", evidence, payload, inputs)
 
 
-def validate_continuation(evidence, graph, proof):
+def validate_continuation(evidence, graph, proof, *, image_review=None, capture_root=None):
     """Return a verified proposal plan or explicit rejection, never mutate input.
 
     Acceptance means this version-bound proposal passed structural safeguards.
@@ -137,11 +145,14 @@ def validate_continuation(evidence, graph, proof):
         issue("CONTINUATION_EVIDENCE_INVALID")
     if not valid_artifact(graph, GRAPH_SCHEMAS):
         issue("CONTINUATION_GRAPH_INVALID")
-    if not valid_artifact(proof, {PROOF_SCHEMA}):
+    if not valid_artifact(proof, {PROOF_SCHEMA, PROOF_SCHEMA_WITH_REGIONS}):
         issue("CONTINUATION_PROOF_INVALID")
     if issues:
         return _report(evidence, graph, proof, issues)
     data = proof["payload"]
+    if any(data.get(key) is not None and not isinstance(data[key],dict) for key in ("image_regions","boundary_candidate")):
+        issue("CONTINUATION_SUPPLEMENT_SHAPE_INVALID")
+        return _report(evidence,graph,proof,issues)
     if (any(not isinstance(data.get(field), dict) for field in
             ("from_asset", "to_asset", "review_basis", "adjacency_receipt"))
             or not isinstance(data.get("line_snapshots"), list)
@@ -157,13 +168,18 @@ def validate_continuation(evidence, graph, proof):
         issue("CONTINUATION_GRAPH_SOURCE_MISMATCH")
     if _ref(evidence) not in graph.get("input_refs", []):
         issue("CONTINUATION_GRAPH_EVIDENCE_REVISION_MISMATCH")
-    if proof.get("input_refs") != [_ref(evidence), _ref(graph), _ref(receipt)]:
+    supplements=[data[key] for key in ("image_regions","boundary_candidate") if data.get(key) is not None]
+    if supplements and proof.get("schema_version") != PROOF_SCHEMA_WITH_REGIONS:
+        issue("CONTINUATION_SUPPLEMENT_SCHEMA_INVALID")
+    if proof.get("input_refs") != [_ref(evidence), _ref(graph), _ref(receipt)]+[_ref(s) for s in supplements]:
         issue("CONTINUATION_STALE_PROOF")
     if receipt.get("input_refs") != [_ref(evidence)] or receipt_data.get("source_manifest_hash") != _manifest_hash(evidence):
         issue("CONTINUATION_STALE_MAPPING_RECEIPT")
     if (data.get("book_id") != evidence.get("book_id") or receipt_data.get("book_id") != evidence.get("book_id")
             or proof.get("book_id") != evidence.get("book_id") or receipt.get("book_id") != evidence.get("book_id")):
         issue("CONTINUATION_BOOK_MISMATCH")
+    if proof.get("scope_id") != evidence.get("scope_id") or receipt.get("scope_id") != evidence.get("scope_id"):
+        issue("CONTINUATION_SCOPE_MISMATCH")
     if data.get("operation") != "PROPOSE_ONLY":
         issue("CONTINUATION_OPERATION_INVALID")
 
@@ -208,6 +224,29 @@ def validate_continuation(evidence, graph, proof):
     answer = matching[0] if len(matching) == 1 else None
     if answer is None:
         issue("CONTINUATION_ANSWER_MISSING_OR_DUPLICATE")
+    validated_images, composed_boundary = [], None
+    if data.get("image_regions") is not None:
+        if image_review is None or capture_root is None:
+            issue("CONTINUATION_IMAGE_PIXELS_NOT_RECHECKED")
+        else:
+            image_check=validate_image_regions(evidence,data["image_regions"],image_review,capture_root)
+            if not image_check["payload"]["accepted"]:
+                issue("CONTINUATION_IMAGE_EVIDENCE_INVALID",image_check["payload"]["issues"])
+            else:
+                validated_images=image_check["payload"]["validated_regions"]
+                for region in validated_images:
+                    if (not answer or region["section_path"] != answer["section_path"]
+                            or region["printed_number"] != answer["printed_number"]
+                            or region["asset_id"] not in {from_id,to_id}):
+                        issue("CONTINUATION_IMAGE_OWNERSHIP_MISMATCH",refs=[region["region_id"]])
+    if data.get("boundary_candidate") is not None:
+        boundary_check=validate_boundary(evidence,data["boundary_candidate"])
+        if not boundary_check["payload"]["accepted"]:
+            issue("CONTINUATION_BOUNDARY_EVIDENCE_INVALID",boundary_check["payload"]["issues"])
+        else:
+            composed_boundary=boundary_check["payload"]["boundary"]
+            if composed_boundary["asset"]["asset_id"] != to_id:
+                issue("CONTINUATION_BOUNDARY_ASSET_MISMATCH")
     lines = {}
     units = {}
     for page in pages_list:
@@ -235,6 +274,13 @@ def validate_continuation(evidence, graph, proof):
 
     review = data.get("review_basis", {})
     qualities = {review.get("reference_quality"), receipt_data.get("reference_quality")}
+    if "HUMAN_REVIEWED" in qualities:
+        issue("CONTINUATION_HUMAN_REVIEW_RECEIPT_MISSING",
+              "This trial has no independent human-acceptance receipt contract.")
+    known_qualities={evidence["payload"].get("context",{}).get("reference_quality")}
+    known_qualities.update(p["source"].get("reference_quality") for p in pages_list)
+    if "SYNTHETIC_TEST" in known_qualities and qualities != {"SYNTHETIC_TEST"}:
+        issue("CONTINUATION_REFERENCE_QUALITY_ESCALATION")
     if (review.get("kind") != "EXPLICIT_SOURCE_REVIEW" or not isinstance(review.get("reason"), str)
             or not review.get("reason", "").strip() or review.get("source_tail_open") is not True
             or review.get("target_prefix_unanchored") is not True
@@ -268,6 +314,7 @@ def validate_continuation(evidence, graph, proof):
                 and ((loc.get("column") == 0 and box[2] <= cut)
                      or (loc.get("column") == 1 and box[0] >= cut)))
 
+    canonical_fragment_parent={}
     if answer:
         if (answer.get("book_id") != evidence.get("book_id") or answer.get("asset_id") != from_id
                 or answer.get("section_path") != data.get("section_path")):
@@ -290,6 +337,9 @@ def validate_continuation(evidence, graph, proof):
                     continue
                 page, line = pair
                 parent = line.get("parent_line_id", r)
+                canonical_fragment_parent[fragment["fragment_id"]]=parent
+                if fragment.get("parent_line_id") != parent:
+                    issue("CONTINUATION_SOURCE_PARENT_MISMATCH",refs=[r])
                 if parent not in canonical_parents:
                     canonical_parents.append(parent)
                 span = fragment.get("text_span", [])
@@ -346,7 +396,10 @@ def validate_continuation(evidence, graph, proof):
                     issue("CONTINUATION_TARGET_WINDOW_INCONSISTENT", refs=[line["line_id"]])
                 if PRIMARY.match(line["text"]) or BOUNDARY.match(line["text"].strip()):
                     issue("CONTINUATION_TARGET_HAS_PRIMARY_OR_HEADING", refs=[line["line_id"]])
-                if re.search(r"如图\s*[\d一二三四五六七八九十]*|图\s*\d+", line["text"]):
+                numbers=set(re.findall(r"图\s*(\d+)",line["text"]))
+                proven_numbers={r["figure_number"] for r in validated_images}
+                if (re.search(r"如图\s*[\d一二三四五六七八九十]*|图\s*\d+", line["text"])
+                        and (not numbers or not numbers <= proven_numbers)):
                     issue("CONTINUATION_FIGURE_EXTENT_UNVERIFIED",
                           "OCR labels do not prove complete diagram extents; this trial has no executable image-region proof.",
                           [line["line_id"]])
@@ -361,7 +414,11 @@ def validate_continuation(evidence, graph, proof):
                     issue("CONTINUATION_PREFIX_SPATIAL_GAP", refs=[previous["line_id"], line["line_id"]])
             if len(ordered_target) > len(requested):
                 boundary = ordered_target[len(requested)]
-                if PRIMARY.match(boundary["text"]) or BOUNDARY.match(boundary["text"].strip()):
+                boundary_members=set(composed_boundary["line_ids"]) if composed_boundary else set()
+                following={l["line_id"] for l in ordered_target[len(requested):len(requested)+len(boundary_members)]}
+                if composed_boundary and boundary["line_id"] in boundary_members and following == boundary_members:
+                    boundary_ref=composed_boundary["candidate_ref"]["artifact_id"]
+                elif PRIMARY.match(boundary["text"]) or BOUNDARY.match(boundary["text"].strip()):
                     boundary_ref = boundary["line_id"]
                 else:
                     issue("CONTINUATION_PREFIX_INCOMPLETE", refs=[boundary["line_id"]])
@@ -376,6 +433,14 @@ def validate_continuation(evidence, graph, proof):
                 ownership.setdefault(parent, set()).add(candidate.get("answer_id"))
     if ownership.get(data.get("source_tail_line_id"), set()) != {data.get("from_answer_id")}:
         issue("CONTINUATION_TAIL_OWNERSHIP_CONFLICT", refs=[data.get("source_tail_line_id")])
+    for region in validated_images:
+        for r in region["diagnostic_ocr_refs"]:
+            pair=units.get(r)
+            parent=pair[1].get("parent_line_id",r) if pair else r
+            if region["asset_id"]==from_id and ownership.get(parent,set()) != {data.get("from_answer_id")}:
+                issue("CONTINUATION_SOURCE_IMAGE_OWNERSHIP_CONFLICT",refs=[r])
+            if region["asset_id"]==to_id and (r not in requested or ownership.get(parent)):
+                issue("CONTINUATION_TARGET_IMAGE_OWNERSHIP_CONFLICT",refs=[r])
     ledger = graph.get("payload", {}).get("answer_coverage", [])
     for r in requested:
         records = [row for row in ledger if row.get("line_id") == r]
@@ -387,6 +452,15 @@ def validate_continuation(evidence, graph, proof):
     quality = "SYNTHETIC_TEST" if "SYNTHETIC_TEST" in qualities else review.get("reference_quality")
     plan = None
     if accepted:
+        image_refs={ref:region["region_id"] for region in validated_images for ref in region["diagnostic_ocr_refs"]}
+        if len(image_refs) != sum(len(r["diagnostic_ocr_refs"]) for r in validated_images):
+            issue("CONTINUATION_IMAGE_LABEL_REUSED")
+            return _report(evidence,graph,proof,issues,quality=quality)
+        if validated_images:
+            mentioned=set(re.findall(r"图\s*(\d+)"," ".join(f["raw_text"] for f in answer["fragments"])+" "+" ".join(l["text"] for l in prefix)))
+            if mentioned != {r["figure_number"] for r in validated_images}:
+                issue("CONTINUATION_IMAGE_REFERENCE_SET_MISMATCH",{"mentioned":sorted(mentioned)})
+                return _report(evidence,graph,proof,issues,quality=quality)
         plan = {"operation": "PROPOSE_ONLY", "from_answer_id": data["from_answer_id"],
                 "source_fragment_ids_preserved": list(data["source_fragment_ids"]),
                 "source_tail_line_id": data["source_tail_line_id"],
@@ -398,4 +472,15 @@ def validate_continuation(evidence, graph, proof):
                 "input_refs": [_ref(evidence), _ref(graph), _ref(proof), _ref(receipt)],
                 "verification_status": "UNVERIFIED", "reference_quality": quality,
                 "business_acceptance": False, "platform_actions": []}
+        if validated_images:
+            plan["target_regions"]=[{**region,"content_type":"text"} for region in plan["target_regions"] if region["line_id"] not in image_refs]
+            plan["target_regions"].extend(copy.deepcopy(r) for r in validated_images if r["asset_id"]==to_id)
+            plan["source_image_regions"]=[copy.deepcopy(r) for r in validated_images if r["asset_id"]==from_id]
+            plan["source_fragment_representation"]=[{"fragment_id":f["fragment_id"],"represented_by_image_region":image_refs[canonical_fragment_parent[f["fragment_id"]]],
+                                                      "render_as_separate_region":False} for f in answer["fragments"] if canonical_fragment_parent.get(f["fragment_id"]) in image_refs]
+            plan["image_contained_ocr_refs"]=image_refs
+            plan["image_semantics_verified"]=False
+            plan["image_region_artifact_ref"]=_ref(data["image_regions"])
+        if composed_boundary:
+            plan["next_boundary_binding"]=copy.deepcopy(composed_boundary)
     return _report(evidence, graph, proof, issues, plan, quality)
