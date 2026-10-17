@@ -59,8 +59,8 @@ A 侧调度中心可以分派本地子代理，但不向 B 侧派单、催排期
 | A05 独立验收 | `01a14454-a318-72d1-ad1d-62243d475888` | completed；独立验收 ACCEPTED，主调度复现34+33项通过；[收口记录](tasks/A05-coordinator-acceptance.md) |
 | C01 合同实现 | `01a14481-79b3-7ed3-a29e-fdbeb11e0da9` | R1 completed；交付 `4e42668ab28eda37a37285285d2f6c595d3bba12`；已本地集成，原工作树保留冻结 |
 | C01 独立验收 | `01a14481-d20d-7e21-898a-a650d52f9a9e` | [R1 ACCEPTED](tasks/C01-review-R1-report.md)，主调度已复现并集成；[首轮 REWORK](tasks/C01-review-report.md) 保留 |
-| A01 来源与公共几何 | `01a144ca-ed53-7303-ace2-21a4ca42e13c` | R3 有界离线接受；首次集成失败并撤回，已续派[集成修订 R1](tasks/A01-integration-rework-R1.md) |
-| A01 独立验收 | `01a144cb-69e8-7981-a8d5-8832eae61829` | [R3 ACCEPTED](tasks/A01-review-R3-report.md)；等待集成修订的新交付再复验，旧失败保留 |
+| A01 来源与公共几何 | `01a144ca-ed53-7303-ace2-21a4ca42e13c` | 集成修订 R1 已冻结 `5f872150`；[独立复验](tasks/A01-integration-R1-review-handoff.md)已续派，尚未重新集成 |
+| A01 独立验收 | `01a144cb-69e8-7981-a8d5-8832eae61829` | [R3 ACCEPTED](tasks/A01-review-R3-report.md)保留；正在独立复验集成修订 R1，首次集成失败保留 |
 | A02 计划与模拟执行 | `01a144cc-23e9-7c80-9a90-02162ef99b64` | INTEGRATED；R1 `38aca9dc` 已验收，本地合并 `ec1b4def` |
 | A02 独立验收 | `01a144cc-2eae-7a23-b299-03f533e30951` | [R1复验通过](tasks/A02-review-R1-report.md)；[主调度收口](tasks/A02-coordinator-acceptance.md)，原失败证据保留 |
 | A04 无头只读适配 | `01a144cc-dde4-73a1-9e83-be485380ea25` | BLOCKED（geometry依赖）；只读部分冻结 `3e4dba5676c2dc4a71d7826827a76df11017a68b`，最后会话释放记录已核对；坐标联调等待A01 R3接受/集成 |
@@ -68,7 +68,7 @@ A 侧调度中心可以分派本地子代理，但不向 B 侧派单、催排期
 | A03 恢复合同与运行状态 | `01a145aa-2fea-7942-97f9-ad260acf4e30` | P1-R1 复验 REWORK；[P1-R2 有界设计修订](tasks/A03-P1-rework-R2.md)已续派原对话，P2 未授权 |
 | A03 独立验收 | `01a145aa-8d59-7c70-8d81-731712103a9a` | [P1-R1 复验 REWORK](tasks/A03-P1-R1-review-report.md)：成功事件前缀缺必要事件；原 API/引用修订结论及原 P1 失败保留 |
 
-上述任务属于 A 侧，不向 B 派单。A05 是范围受限的平台能力试验，不宣布主程序已实现；新题22的Q/A两框已经保存，不能重放旧写入。A05历史验收读回为22题/68框，内容PENDING；原21题66框保留为历史比较基线。A04最后只读运行再次观察到22题68框，前后状态相同，但仍是执行证据，不能代替独立验收。C01、A02已本地集成；A01 R3有界离线验收通过，但首次集成回归失败，合并已撤回并派原执行者修订测试适用边界。A04仍等待集成；A03 P1-R1独立复验及主调度精确Git静态复核确认成功前缀样例与规则矛盾，已续派P1-R2有界修订；原接口与引用修订的确认结论保留。P2仍须设计通过及调度批准。S01公共完整性门禁和Pillow根依赖声明仍由调度在后续集成处理，B确认未取得；各对话、worktree、基线及实时状态以[调度状态](coordination-state.json)为准。
+上述任务属于 A 侧，不向 B 派单。A05 是范围受限的平台能力试验，不宣布主程序已实现；新题22的Q/A两框已经保存，不能重放旧写入。A05历史验收读回为22题/68框，内容PENDING；原21题66框保留为历史比较基线。A04最后只读运行再次观察到22题68框，前后状态相同，但仍是执行证据，不能代替独立验收。C01、A02已本地集成；A01 R3有界离线验收通过，首次集成回归失败及撤回记录保留；集成修订R1已交付，原独立验收对话正在复验。新夹具清单/原Git的一处精确LF/CRLF差异已在交接明确双摘要；不冒称清单与Git全等。A04仍等待集成；A03 P1-R1独立复验及主调度精确Git静态复核确认成功前缀样例与规则矛盾，已续派P1-R2有界修订；原接口与引用修订的确认结论保留。P2仍须设计通过及调度批准。S01公共完整性门禁和Pillow根依赖声明仍由调度在后续集成处理，B确认未取得；各对话、worktree、基线及实时状态以[调度状态](coordination-state.json)为准。
 
 A 侧派发前记录实际 `base_commit` 和包含调度规则的 `workflow_commit`。上述架构提交不包含本轮新增规则，执行者必须获得实际采用的规则版本。向 B 分享信息时另外标明资料所在提交及“草案/已共同确认/已实现”状态；本地草拟不算已发布。A 侧分支名默认 `codex/<任务号>-<简短描述>`，每个任务有自己的工作目录或 worktree；B 自定开发流程。不得覆盖当前未提交文件，也不把本机登录文件/profile 传给另一开发侧。
 
@@ -93,7 +93,7 @@ A 负责维护共享合同实现、geometry 公共接口、根依赖文件、公
 | 任务 | 建议执行方 | 当前状态 | 依赖/产物 | 验收重点 |
 |---|---|---|---|---|
 | C01 | A | INTEGRATED（本地） | R1 被接受，合同实现及固定样例已集成 | 原失败证据保留；独立80项矩阵/22映射场景通过；B 确认仍未取得 |
-| A01 | A | REWORK（集成 R1） | [集成修订](tasks/A01-integration-rework-R1.md)；[主调度记录](tasks/A01-coordinator-acceptance.md) | R3 有界离线通过；首次集成 1 项测试失败，已撤回，A04 未释放 |
+| A01 | A | REVIEW（集成 R1） | [复验交接](tasks/A01-integration-R1-review-handoff.md)；[主调度记录](tasks/A01-coordinator-acceptance.md) | 修订已冻结、独立复验中；首次集成失败保留，A04 未释放 |
 | A02 | A | INTEGRATED（本地） | [主调度收口](tasks/A02-coordinator-acceptance.md)；[R1复验通过](tasks/A02-review-R1-report.md) | 跨书隔离及同书保护通过，52+70+8集成回归通过；A03的A02依赖释放 |
 | A04 | A | BLOCKED | [无头只读适配](tasks/A04-headless-readonly.md)；[独立验收](tasks/A04-independent-review.md) | 只读部分冻结；坐标联调等待A01 R3接受和集成；新会话仍需独占检查 |
 | A03 | A | REWORK（P1-R2） | [修订任务](tasks/A03-P1-rework-R2.md)；[P1-R1复验](tasks/A03-P1-R1-review-report.md) | 仅修完整事件/hash前缀与相邻反例；原接口/引用修订结论保留；P2 未授权，I01 不释放 |
