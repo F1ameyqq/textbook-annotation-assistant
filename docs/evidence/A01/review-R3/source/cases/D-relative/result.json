@@ -1,0 +1,15 @@
+{
+  "actual": "REJECT",
+  "code": "SOURCE_URL",
+  "description": "Absolute HTTP(S) source URL precondition remains explicit.",
+  "error": "history.docs/evidence/A05/review/independent-source-page14.json.pages[0].image: [SOURCE_URL] archived image URL must be an absolute HTTP(S) string",
+  "error_type": "StaticSourceError",
+  "expected": "REJECT",
+  "expected_code": "SOURCE_URL",
+  "id": "D-relative",
+  "issues": null,
+  "location": "history.docs/evidence/A05/review/independent-source-page14.json.pages[0].image",
+  "matches_expectation": true,
+  "public_resource_validation_passed": true,
+  "traceback": "Traceback (most recent call last):\n  File \"D:\\1800\\docs\\evidence\\A01\\review-R3\\source\\probe.py\", line 89, in run\n    result.update(actual='ACCEPT',detail=action(identifier))\n  File \"D:\\1800\\docs\\evidence\\A01\\review-R3\\source\\probe.py\", line 200, in <lambda>\n    run('D-'+label,'REJECT','Absolute HTTP(S) source URL precondition remains explicit.',lambda n,u=url:mutated_url(n,u),'SOURCE_URL')\n  File \"D:\\1800\\docs\\evidence\\A01\\review-R3\\source\\probe.py\", line 131, in mutated_url\n    return consume(identifier,path,'46007447',baseline)\n  File \"D:\\1800\\docs\\evidence\\A01\\review-R3\\source\\probe.py\", line 123, in consume\n    result=load_static_bundle(path,expected_book_id=book)\n  File \"D:\\1800\\.local\\stages\\A01-review-R3\\180bb1e86fb2a7eb1546be85af70f466f069daf5\\snapshot\\src\\annotation\\source\\static\\importer.py\", line 465, in load_static_bundle\n    validate_archive_records(path.parent,source,provenance,limitations,integrity)\n  File \"D:\\1800\\.local\\stages\\A01-review-R3\\180bb1e86fb2a7eb1546be85af70f466f069daf5\\snapshot\\src\\annotation\\source\\static\\consistency.py\", line 242, in validate_archive_records\n    index = url_index(page.get(\"image\"),book,loc+\".image\")\n  File \"D:\\1800\\.local\\stages\\A01-review-R3\\180bb1e86fb2a7eb1546be85af70f466f069daf5\\snapshot\\src\\annotation\\source\\static\\importer.py\", line 107, in url_index\n    fail(\"SOURCE_URL\",location,\"archived image URL must be an absolute HTTP(S) string\")\n  File \"D:\\1800\\.local\\stages\\A01-review-R3\\180bb1e86fb2a7eb1546be85af70f466f069daf5\\snapshot\\src\\annotation\\source\\static\\importer.py\", line 28, in fail\n    raise StaticSourceError(code, location, message)\nannotation.source.static.importer.StaticSourceError: history.docs/evidence/A05/review/independent-source-page14.json.pages[0].image: [SOURCE_URL] archived image URL must be an absolute HTTP(S) string\n"
+}

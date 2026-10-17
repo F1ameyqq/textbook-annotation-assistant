@@ -1,0 +1,357 @@
+{
+  "task": "A01-R3",
+  "status": "REVIEW",
+  "command": [
+    "C:\\Users\\ASUS\\AppData\\Local\\Temp\\A01-review-R3-180bb1e8-mfi1e3_v\\controlled checkout\\examples\\a01\\R3\\verify.py",
+    "D:\\1800\\docs\\evidence\\A01\\review-R3\\two-forms\\controlled-checkout"
+  ],
+  "cwd": "C:\\Users\\ASUS\\AppData\\Local\\Temp\\A01-review-R3-180bb1e8-mfi1e3_v\\controlled checkout",
+  "baseline_commit": "c3aff9598b6705ab4122062615a13ae3774698b2",
+  "implementation_commit": "31d715a5f2e6435af3a7e98a6c19b41b72d883bd",
+  "preserved_reference_sha256": "9ea7a71204c0417b16b232511010a781ad5a9c001287cc89c059b87a2b6ec795",
+  "code_reference_sha256": "0d2931977594acc93f1a9352163d0c4704b32bd35789d6b166306c11b797c3cf",
+  "preserved_files": 971,
+  "disk_changes": [],
+  "commands": [
+    {
+      "label": "A01 suite",
+      "command": [
+        "C:\\Users\\ASUS\\AppData\\Local\\Programs\\Python\\Python39\\python.exe",
+        "-B",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "tests",
+        "-p",
+        "test_a01_*.py",
+        "-v"
+      ],
+      "cwd": "C:\\Users\\ASUS\\AppData\\Local\\Temp\\A01-review-R3-180bb1e8-mfi1e3_v\\controlled checkout",
+      "exit_code": 0,
+      "stdout": "",
+      "stderr": "test_binding_conflicts_in_both_directions (test_a01_geometry.GeometryTests) ... ok\ntest_boundaries_are_not_pixel_center_indices (test_a01_geometry.GeometryTests) ... ok\ntest_finite_fractional_scale_and_negative_quarter_turn (test_a01_geometry.GeometryTests) ... ok\ntest_hand_calculated_points_and_four_corner_boxes (test_a01_geometry.GeometryTests) ... ok\ntest_invalid_points_boxes_and_padding_are_not_clipped (test_a01_geometry.GeometryTests) ... ok\ntest_invalid_transforms_are_rejected (test_a01_geometry.GeometryTests) ... ok\ntest_singular_and_nonfinite_matrix_rejected (test_a01_geometry.GeometryTests) ... ok\ntest_unknown_transform_types_and_ambiguous_contract_rejected (test_a01_geometry.GeometryTests) ... ok\ntest_exact_integer_limit_and_combined_canvas_limit (test_a01_rework_r1.GeometryR1Tests) ... ok\ntest_forward_crop_neighbors_checked_before_arithmetic (test_a01_rework_r1.GeometryR1Tests) ... ok\ntest_fractional_crop_nearest_interior_is_not_rejected_by_inverse_rounding (test_a01_rework_r1.GeometryR1Tests) ... ok\ntest_reciprocal_scale_inverse_neighbors_all_quarter_turns (test_a01_rework_r1.GeometryR1Tests) ... ok\ntest_rotated_domains_and_nearest_inside_outside_points_and_boxes (test_a01_rework_r1.GeometryR1Tests) ... ok\ntest_seven_formal_geometry_regressions (test_a01_rework_r1.GeometryR1Tests) ... ok\ntest_legacy_and_new_r1_imports_both_books_remain_valid (test_a01_rework_r1.SourceR1Tests) ... ok\ntest_nine_resealed_formal_source_regressions (test_a01_rework_r1.SourceR1Tests) ... ok\ntest_historical_url_book_and_index_binding_neighbors (test_a01_rework_r2.SourceR2Tests) ... ok\ntest_incomplete_and_overlapping_scope_partitions (test_a01_rework_r2.SourceR2Tests) ... ok\ntest_legacy_and_r1_two_book_normal_empty_missing_still_loads (test_a01_rework_r2.SourceR2Tests) ... ok\ntest_legal_archived_url_host_text_preserved_without_network_trust (test_a01_rework_r2.SourceR2Tests) ... ok\ntest_n15_precision_label_remains_a_documented_non_authentication_field (test_a01_rework_r2.SourceR2Tests) ... ok\ntest_observation_index_identity_digest_and_source_neighbors (test_a01_rework_r2.SourceR2Tests) ... ok\ntest_primary_five_resealed_counterexamples (test_a01_rework_r2.SourceR2Tests) ... ok\ntest_public_expected_counts_and_scalar_count_types (test_a01_rework_r2.SourceR2Tests) ... ok\ntest_scope_index_types_duplicates_and_metadata_bounds (test_a01_rework_r2.SourceR2Tests) ... ok\ntest_valid_nonzero_missing_and_empty_outside_are_preserved (test_a01_rework_r2.SourceR2Tests) ... ok\ntest_disk_representation_must_not_change_during_run (test_a01_rework_r3.PreservationR3Tests) ... ok\ntest_fixed_baseline_has_only_explicit_twenty_five_variants (test_a01_rework_r3.PreservationR3Tests) ... ok\ntest_history_and_binary_bytes_have_no_implicit_text_tolerance (test_a01_rework_r3.PreservationR3Tests) ... ok\ntest_only_two_fixed_uniform_text_hashes_are_accepted (test_a01_rework_r3.PreservationR3Tests) ... ok\ntest_actual_path_is_mandatory_and_direct_two_book_urls_remain_valid (test_a01_rework_r3.SourceR3Tests) ... ok\ntest_component_swaps_cannot_hide_wrong_actual_path (test_a01_rework_r3.SourceR3Tests) ... ok\ntest_components_explicitly_unsupported_even_for_correct_or_empty_tail (test_a01_rework_r3.SourceR3Tests) ... ok\ntest_exact_frozen_query_fragment_inputs_reconstruct_and_reject (test_a01_rework_r3.SourceR3Tests) ... ok\ntest_conflicting_mapping_and_wrong_book_inputs_rejected (test_a01_source.StaticSourceTests) ... ok\ntest_copy_to_space_directory_and_different_cwd (test_a01_source.StaticSourceTests) ... ok\ntest_corrupt_image_with_correct_new_digest_is_fully_decoded (test_a01_source.StaticSourceTests) ... ok\ntest_dedup_preserves_origins_and_only_evidenced_mapping (test_a01_source.StaticSourceTests) ... ok\ntest_directory_junction_escape_rejected (test_a01_source.StaticSourceTests) ... ok\ntest_hashed_mapping_conflict_and_fake_coverage_rejected (test_a01_source.StaticSourceTests) ... ok\ntest_loaded_resource_tampering_dimensions_and_missing_files (test_a01_source.StaticSourceTests) ... ok\ntest_missing_image_fails_before_output (test_a01_source.StaticSourceTests) ... ok\ntest_originals_preserved_and_personal_paths_omitted (test_a01_source.StaticSourceTests) ... ok\ntest_public_contract_consumer_and_separate_books (test_a01_source.StaticSourceTests) ... ok\ntest_repeat_import_and_new_revision_preserve_old_output (test_a01_source.StaticSourceTests) ... ok\ntest_resource_path_escape_and_protected_output_rejected (test_a01_source.StaticSourceTests) ... ok\ntest_symlink_escape_rejected_when_host_permits_symlinks (test_a01_source.StaticSourceTests) ... skipped 'host cannot create file symlinks; WinError=1314'\ntest_unknown_denominator_missing_origins_and_historical_outlier (test_a01_source.StaticSourceTests) ... ok\ntest_wrong_hash_and_dimensions_on_import_rejected (test_a01_source.StaticSourceTests) ... ok\n\n----------------------------------------------------------------------\nRan 49 tests in 21.735s\n\nOK (skipped=1)\n"
+    },
+    {
+      "label": "C01 suite",
+      "command": [
+        "C:\\Users\\ASUS\\AppData\\Local\\Programs\\Python\\Python39\\python.exe",
+        "-B",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "tests",
+        "-p",
+        "test_contracts*.py",
+        "-v"
+      ],
+      "cwd": "C:\\Users\\ASUS\\AppData\\Local\\Temp\\A01-review-R3-180bb1e8-mfi1e3_v\\controlled checkout",
+      "exit_code": 0,
+      "stdout": "",
+      "stderr": "test_action_may_not_consume_another_questions_identity_or_fragments (test_contracts.ContractTests) ... ok\ntest_all_three_complete_fixture_chains_validate (test_contracts.ContractTests) ... ok\ntest_bbox_rejects_nan_and_both_infinities_with_location (test_contracts.ContractTests) ... ok\ntest_bbox_rejects_out_of_bounds_and_nonpositive_area (test_contracts.ContractTests) ... ok\ntest_capability_evidence_for_an_old_platform_version_blocks_plan (test_contracts.ContractTests) ... ok\ntest_cli_rejects_invalid_exchange_with_nonzero_exit_and_location (test_contracts.ContractTests) ... ok\ntest_cli_schema_uses_the_public_schema_authority (test_contracts.ContractTests) ... ok\ntest_conclusive_not_applied_receipt_is_a_valid_noncompleted_state (test_contracts.ContractTests) ... ok\ntest_confirmed_submission_with_verified_content_and_frames_can_complete (test_contracts.ContractTests) ... ok\ntest_copied_sample_cli_and_public_consumer_work_from_another_cwd (test_contracts.ContractTests) ... ok\ntest_cross_book_dependency_is_rejected_even_with_valid_hashes (test_contracts.ContractTests) ... ok\ntest_current_target_change_invalidates_a_ready_plan (test_contracts.ContractTests) ... ok\ntest_declared_patch_result_cannot_discard_or_add_undeclared_edits (test_contracts.ContractTests) ... ok\ntest_delta_update_needs_verified_capability_and_applied_target_baseline (test_contracts.ContractTests) ... ok\ntest_duplicate_artifact_identity_and_revision_is_rejected (test_contracts.ContractTests) ... ok\ntest_duplicate_printed_numbers_in_separate_directories_are_legal (test_contracts.ContractTests) ... ok\ntest_each_unknown_action_target_remains_unknown_in_batch (test_contracts.ContractTests) ... ok\ntest_exception_and_skipped_questions_remain_in_denominator (test_contracts.ContractTests) ... ok\ntest_missing_artifact_version_is_rejected_after_resealing (test_contracts.ContractTests) ... ok\ntest_missing_fragment_entity_is_rejected (test_contracts.ContractTests) ... ok\ntest_missing_original_asset_is_rejected (test_contracts.ContractTests) ... ok\ntest_missing_region_entity_is_rejected (test_contracts.ContractTests) ... ok\ntest_missing_resource_and_tampered_asset_bytes_are_rejected (test_contracts.ContractTests) ... ok\ntest_modified_artifact_without_new_hash_is_rejected (test_contracts.ContractTests) ... ok\ntest_new_action_ids_do_not_authorize_replay_of_unknown_receipt (test_contracts.ContractTests) ... ok\ntest_not_applied_cannot_be_relabelled_ready_for_submission (test_contracts.ContractTests) ... ok\ntest_not_applied_without_readback_is_not_conclusive (test_contracts.ContractTests) ... ok\ntest_not_submitted_and_content_pending_cannot_complete (test_contracts.ContractTests) ... ok\ntest_numeric_book_and_target_identifiers_are_valid_strings (test_contracts.ContractTests) ... ok\ntest_only_one_pass_does_not_make_an_executable_plan (test_contracts.ContractTests) ... ok\ntest_original_dimensions_and_hash_are_bound_to_the_asset (test_contracts.ContractTests) ... ok\ntest_pass_cannot_omit_scoped_questions_or_use_orphan_fragment_coverage (test_contracts.ContractTests) ... ok\ntest_pass_without_required_check_evidence_is_rejected (test_contracts.ContractTests) ... ok\ntest_patch_assertion_rejects_a_different_baseline_revision (test_contracts.ContractTests) ... ok\ntest_patch_must_advance_the_baseline_revision (test_contracts.ContractTests) ... ok\ntest_patch_with_wrong_baseline_hash_is_rejected (test_contracts.ContractTests) ... ok\ntest_plan_cannot_replace_snapshot_without_new_target_check (test_contracts.ContractTests) ... ok\ntest_policy_sealing_and_public_references (test_contracts.ContractTests) ... ok\ntest_previous_receipt_requires_receipt_kind_and_prior_graph_revision (test_contracts.ContractTests) ... ok\ntest_recomputed_denominator_cannot_silently_erase_missing_question (test_contracts.ContractTests) ... ok\ntest_relative_symlink_may_not_escape_the_sample_root (test_contracts.ContractTests) ... ok\ntest_required_capability_without_verification_blocks_plan (test_contracts.ContractTests) ... ok\ntest_resource_paths_reject_absolute_traversal_and_windows_specials (test_contracts.ContractTests) ... ok\ntest_roundtrip_preserves_exchange_and_closed_references (test_contracts.ContractTests) ... ok\ntest_schema_is_json_and_contains_every_artifact_definition (test_contracts.ContractTests) ... ok\ntest_sealing_is_repeatable_order_independent_and_not_self_referential (test_contracts.ContractTests) ... ok\ntest_synthetic_choice_policy_cannot_switch_to_platform_execution (test_contracts.ContractTests) ... ok\ntest_two_preapply_passes_do_not_substitute_for_target_pass (test_contracts.ContractTests) ... ok\ntest_unknown_billing_uses_null_and_may_not_claim_zero_cost (test_contracts.ContractTests) ... ok\ntest_unknown_cannot_be_hidden_by_a_completed_batch (test_contracts.ContractTests) ... ok\ntest_unknown_cannot_claim_a_matching_effect (test_contracts.ContractTests) ... ok\ntest_unknown_cannot_claim_replay_permission (test_contracts.ContractTests) ... ok\ntest_unresolved_choice_grouping_cannot_authorize_a_ready_plan (test_contracts.ContractTests) ... ok\ntest_wrong_reference_digest_is_rejected_after_resealing (test_contracts.ContractTests) ... ok\ntest_action_cannot_select_a_different_existing_platform_question (test_contracts_platform_refs.PlatformReferenceTests) ... ok\ntest_empty_graph_mapping_is_not_a_new_question (test_contracts_platform_refs.PlatformReferenceTests) ... ok\ntest_existing_action_target_requires_its_internal_questions_mapping (test_contracts_platform_refs.PlatformReferenceTests) ... ok\ntest_existing_graph_mapping_must_exist_in_plan_snapshot (test_contracts_platform_refs.PlatformReferenceTests) ... ok\ntest_existing_mapping_without_known_order_is_valid (test_contracts_platform_refs.PlatformReferenceTests) ... ok\ntest_existing_target_has_explicit_mapping_and_snapshot_entry (test_contracts_platform_refs.PlatformReferenceTests) ... ok\ntest_f1_and_f2_default_loader_and_cli_reject_resealed_complete_inputs (test_contracts_platform_refs.PlatformReferenceTests) ... ok\ntest_f1_snapshot_question_missing_directory_is_rejected_at_field (test_contracts_platform_refs.PlatformReferenceTests) ... ok\ntest_f2_nonnull_action_must_exist_in_its_snapshot (test_contracts_platform_refs.PlatformReferenceTests) ... ok\ntest_internal_and_platform_directory_namespaces_remain_independent (test_contracts_platform_refs.PlatformReferenceTests) ... ok\ntest_known_mapped_order_must_match_the_snapshot (test_contracts_platform_refs.PlatformReferenceTests) ... ok\ntest_new_question_keeps_null_target_in_empty_snapshot (test_contracts_platform_refs.PlatformReferenceTests) ... ok\ntest_new_question_keeps_null_target_in_nonempty_snapshot (test_contracts_platform_refs.PlatformReferenceTests) ... ok\ntest_null_target_cannot_bypass_an_existing_mapping (test_contracts_platform_refs.PlatformReferenceTests) ... ok\ntest_parent_and_child_can_share_an_explicit_platform_projection (test_contracts_platform_refs.PlatformReferenceTests) ... ok\ntest_snapshot_question_in_its_declared_directory_is_valid (test_contracts_platform_refs.PlatformReferenceTests) ... ok\n\n----------------------------------------------------------------------\nRan 70 tests in 6.037s\n\nOK\n"
+    },
+    {
+      "label": "original 16",
+      "command": [
+        "C:\\Users\\ASUS\\AppData\\Local\\Programs\\Python\\Python39\\python.exe",
+        "-B",
+        "C:\\Users\\ASUS\\AppData\\Local\\Temp\\A01-review-R3-180bb1e8-mfi1e3_v\\controlled checkout\\examples\\a01\\R1\\probe.py",
+        "D:\\1800\\docs\\evidence\\A01\\review-R3\\two-forms\\controlled-checkout\\R1-replay"
+      ],
+      "cwd": "C:\\Users\\ASUS\\AppData\\Local\\Temp\\A01-review-R3-180bb1e8-mfi1e3_v\\controlled checkout",
+      "exit_code": 0,
+      "stdout": "{\"passed\": 16, \"failed\": 0, \"status\": \"REVIEW\"}\n",
+      "stderr": ""
+    },
+    {
+      "label": "R2 nine fixed cases",
+      "command": [
+        "C:\\Users\\ASUS\\AppData\\Local\\Programs\\Python\\Python39\\python.exe",
+        "-B",
+        "C:\\Users\\ASUS\\AppData\\Local\\Temp\\A01-review-R3-180bb1e8-mfi1e3_v\\controlled checkout\\examples\\a01\\R2\\probe.py",
+        "D:\\1800\\docs\\evidence\\A01\\review-R3\\two-forms\\controlled-checkout\\R2-replay",
+        "--official-inputs",
+        "C:\\Users\\ASUS\\AppData\\Local\\Temp\\A01-review-R3-180bb1e8-mfi1e3_v\\controlled checkout\\examples\\a01\\R3\\tmp\\a01 R3 work jk1fb1fb\\R2-fixed"
+      ],
+      "cwd": "C:\\Users\\ASUS\\AppData\\Local\\Temp\\A01-review-R3-180bb1e8-mfi1e3_v\\controlled checkout",
+      "exit_code": 0,
+      "stdout": "{\"passed\": 9, \"failed\": 0, \"status\": \"REVIEW\"}\n",
+      "stderr": ""
+    },
+    {
+      "label": "R3 five URL cases",
+      "command": [
+        "C:\\Users\\ASUS\\AppData\\Local\\Programs\\Python\\Python39\\python.exe",
+        "-B",
+        "C:\\Users\\ASUS\\AppData\\Local\\Temp\\A01-review-R3-180bb1e8-mfi1e3_v\\controlled checkout\\examples\\a01\\R3\\probe.py",
+        "D:\\1800\\docs\\evidence\\A01\\review-R3\\two-forms\\controlled-checkout\\R3-replay"
+      ],
+      "cwd": "C:\\Users\\ASUS\\AppData\\Local\\Temp\\A01-review-R3-180bb1e8-mfi1e3_v\\controlled checkout",
+      "exit_code": 0,
+      "stdout": "{\"passed\": 5, \"failed\": 0, \"status\": \"REVIEW\"}\n",
+      "stderr": ""
+    },
+    {
+      "label": "legacy consumer 46006966",
+      "command": [
+        "C:\\Users\\ASUS\\AppData\\Local\\Programs\\Python\\Python39\\python.exe",
+        "-B",
+        "C:\\Users\\ASUS\\AppData\\Local\\Temp\\A01-review-R3-180bb1e8-mfi1e3_v\\controlled checkout\\examples\\a01\\consume.py",
+        "C:\\Users\\ASUS\\AppData\\Local\\Temp\\A01-review-R3-180bb1e8-mfi1e3_v\\controlled checkout\\examples\\a01\\bundles\\46006966\\exchange.json",
+        "--book-id",
+        "46006966"
+      ],
+      "cwd": "C:\\Users\\ASUS\\AppData\\Local\\Temp\\A01-review-R3-180bb1e8-mfi1e3_v\\controlled checkout",
+      "exit_code": 0,
+      "stdout": "{\"asset_count\": 6, \"book_id\": \"46006966\", \"content_hash\": \"ff80470b7daf3a30d1d6c7a010dc600bbcf506fcf7e520bc1b1d57973a9118de\", \"coverage_eligible\": false, \"full_image_decode\": \"OK\", \"metadata_page_count\": 250, \"model_calls\": 0, \"model_cost\": 0, \"public_resource_validation\": \"OK\", \"reference_records\": 14, \"revision\": 1}\n",
+      "stderr": ""
+    },
+    {
+      "label": "relocated legacy 46006966",
+      "command": [
+        "C:\\Users\\ASUS\\AppData\\Local\\Programs\\Python\\Python39\\python.exe",
+        "-B",
+        "C:\\Users\\ASUS\\AppData\\Local\\Temp\\A01-review-R3-180bb1e8-mfi1e3_v\\controlled checkout\\examples\\a01\\consume.py",
+        "C:\\Users\\ASUS\\AppData\\Local\\Temp\\A01-review-R3-180bb1e8-mfi1e3_v\\controlled checkout\\examples\\a01\\R3\\tmp\\a01 R3 work jk1fb1fb\\copied legacy 46006966\\exchange.json",
+        "--book-id",
+        "46006966"
+      ],
+      "cwd": "C:\\Users\\ASUS\\AppData\\Local\\Temp\\A01-review-R3-180bb1e8-mfi1e3_v\\controlled checkout\\examples\\a01\\R3\\tmp\\a01 R3 work jk1fb1fb\\different cwd",
+      "exit_code": 0,
+      "stdout": "{\"asset_count\": 6, \"book_id\": \"46006966\", \"content_hash\": \"ff80470b7daf3a30d1d6c7a010dc600bbcf506fcf7e520bc1b1d57973a9118de\", \"coverage_eligible\": false, \"full_image_decode\": \"OK\", \"metadata_page_count\": 250, \"model_calls\": 0, \"model_cost\": 0, \"public_resource_validation\": \"OK\", \"reference_records\": 14, \"revision\": 1}\n",
+      "stderr": ""
+    },
+    {
+      "label": "legacy consumer 46007447",
+      "command": [
+        "C:\\Users\\ASUS\\AppData\\Local\\Programs\\Python\\Python39\\python.exe",
+        "-B",
+        "C:\\Users\\ASUS\\AppData\\Local\\Temp\\A01-review-R3-180bb1e8-mfi1e3_v\\controlled checkout\\examples\\a01\\consume.py",
+        "C:\\Users\\ASUS\\AppData\\Local\\Temp\\A01-review-R3-180bb1e8-mfi1e3_v\\controlled checkout\\examples\\a01\\bundles\\46007447\\exchange.json",
+        "--book-id",
+        "46007447"
+      ],
+      "cwd": "C:\\Users\\ASUS\\AppData\\Local\\Temp\\A01-review-R3-180bb1e8-mfi1e3_v\\controlled checkout",
+      "exit_code": 0,
+      "stdout": "{\"asset_count\": 2, \"book_id\": \"46007447\", \"content_hash\": \"1b662ac5c9ac56b4a0c2e9826ff4cc2c512365c58ca2fafda36df110f9cfc32d\", \"coverage_eligible\": false, \"full_image_decode\": \"OK\", \"metadata_page_count\": 214, \"model_calls\": 0, \"model_cost\": 0, \"public_resource_validation\": \"OK\", \"reference_records\": 1, \"revision\": 1}\n",
+      "stderr": ""
+    },
+    {
+      "label": "relocated legacy 46007447",
+      "command": [
+        "C:\\Users\\ASUS\\AppData\\Local\\Programs\\Python\\Python39\\python.exe",
+        "-B",
+        "C:\\Users\\ASUS\\AppData\\Local\\Temp\\A01-review-R3-180bb1e8-mfi1e3_v\\controlled checkout\\examples\\a01\\consume.py",
+        "C:\\Users\\ASUS\\AppData\\Local\\Temp\\A01-review-R3-180bb1e8-mfi1e3_v\\controlled checkout\\examples\\a01\\R3\\tmp\\a01 R3 work jk1fb1fb\\copied legacy 46007447\\exchange.json",
+        "--book-id",
+        "46007447"
+      ],
+      "cwd": "C:\\Users\\ASUS\\AppData\\Local\\Temp\\A01-review-R3-180bb1e8-mfi1e3_v\\controlled checkout\\examples\\a01\\R3\\tmp\\a01 R3 work jk1fb1fb\\different cwd",
+      "exit_code": 0,
+      "stdout": "{\"asset_count\": 2, \"book_id\": \"46007447\", \"content_hash\": \"1b662ac5c9ac56b4a0c2e9826ff4cc2c512365c58ca2fafda36df110f9cfc32d\", \"coverage_eligible\": false, \"full_image_decode\": \"OK\", \"metadata_page_count\": 214, \"model_calls\": 0, \"model_cost\": 0, \"public_resource_validation\": \"OK\", \"reference_records\": 1, \"revision\": 1}\n",
+      "stderr": ""
+    },
+    {
+      "label": "R1 consumer 46006966",
+      "command": [
+        "C:\\Users\\ASUS\\AppData\\Local\\Programs\\Python\\Python39\\python.exe",
+        "-B",
+        "C:\\Users\\ASUS\\AppData\\Local\\Temp\\A01-review-R3-180bb1e8-mfi1e3_v\\controlled checkout\\examples\\a01\\consume.py",
+        "C:\\Users\\ASUS\\AppData\\Local\\Temp\\A01-review-R3-180bb1e8-mfi1e3_v\\controlled checkout\\examples\\a01\\R1\\bundles\\46006966\\exchange.json",
+        "--book-id",
+        "46006966"
+      ],
+      "cwd": "C:\\Users\\ASUS\\AppData\\Local\\Temp\\A01-review-R3-180bb1e8-mfi1e3_v\\controlled checkout",
+      "exit_code": 0,
+      "stdout": "{\"asset_count\": 6, \"book_id\": \"46006966\", \"content_hash\": \"a51b6baabf0e9c6bc894c13880042acb6b6df0bfec3f7b60f3fe40c7fc5cf5c0\", \"coverage_eligible\": false, \"full_image_decode\": \"OK\", \"metadata_page_count\": 250, \"model_calls\": 0, \"model_cost\": 0, \"public_resource_validation\": \"OK\", \"reference_records\": 14, \"revision\": 1}\n",
+      "stderr": ""
+    },
+    {
+      "label": "relocated R1 46006966",
+      "command": [
+        "C:\\Users\\ASUS\\AppData\\Local\\Programs\\Python\\Python39\\python.exe",
+        "-B",
+        "C:\\Users\\ASUS\\AppData\\Local\\Temp\\A01-review-R3-180bb1e8-mfi1e3_v\\controlled checkout\\examples\\a01\\consume.py",
+        "C:\\Users\\ASUS\\AppData\\Local\\Temp\\A01-review-R3-180bb1e8-mfi1e3_v\\controlled checkout\\examples\\a01\\R3\\tmp\\a01 R3 work jk1fb1fb\\copied R1 46006966\\exchange.json",
+        "--book-id",
+        "46006966"
+      ],
+      "cwd": "C:\\Users\\ASUS\\AppData\\Local\\Temp\\A01-review-R3-180bb1e8-mfi1e3_v\\controlled checkout\\examples\\a01\\R3\\tmp\\a01 R3 work jk1fb1fb\\different cwd",
+      "exit_code": 0,
+      "stdout": "{\"asset_count\": 6, \"book_id\": \"46006966\", \"content_hash\": \"a51b6baabf0e9c6bc894c13880042acb6b6df0bfec3f7b60f3fe40c7fc5cf5c0\", \"coverage_eligible\": false, \"full_image_decode\": \"OK\", \"metadata_page_count\": 250, \"model_calls\": 0, \"model_cost\": 0, \"public_resource_validation\": \"OK\", \"reference_records\": 14, \"revision\": 1}\n",
+      "stderr": ""
+    },
+    {
+      "label": "R1 consumer 46007447",
+      "command": [
+        "C:\\Users\\ASUS\\AppData\\Local\\Programs\\Python\\Python39\\python.exe",
+        "-B",
+        "C:\\Users\\ASUS\\AppData\\Local\\Temp\\A01-review-R3-180bb1e8-mfi1e3_v\\controlled checkout\\examples\\a01\\consume.py",
+        "C:\\Users\\ASUS\\AppData\\Local\\Temp\\A01-review-R3-180bb1e8-mfi1e3_v\\controlled checkout\\examples\\a01\\R1\\bundles\\46007447\\exchange.json",
+        "--book-id",
+        "46007447"
+      ],
+      "cwd": "C:\\Users\\ASUS\\AppData\\Local\\Temp\\A01-review-R3-180bb1e8-mfi1e3_v\\controlled checkout",
+      "exit_code": 0,
+      "stdout": "{\"asset_count\": 2, \"book_id\": \"46007447\", \"content_hash\": \"4cf5646d232e1abd87917e7b5ca1ff741c2e54dc2efb0011712e717a7fe2462a\", \"coverage_eligible\": false, \"full_image_decode\": \"OK\", \"metadata_page_count\": 214, \"model_calls\": 0, \"model_cost\": 0, \"public_resource_validation\": \"OK\", \"reference_records\": 1, \"revision\": 1}\n",
+      "stderr": ""
+    },
+    {
+      "label": "relocated R1 46007447",
+      "command": [
+        "C:\\Users\\ASUS\\AppData\\Local\\Programs\\Python\\Python39\\python.exe",
+        "-B",
+        "C:\\Users\\ASUS\\AppData\\Local\\Temp\\A01-review-R3-180bb1e8-mfi1e3_v\\controlled checkout\\examples\\a01\\consume.py",
+        "C:\\Users\\ASUS\\AppData\\Local\\Temp\\A01-review-R3-180bb1e8-mfi1e3_v\\controlled checkout\\examples\\a01\\R3\\tmp\\a01 R3 work jk1fb1fb\\copied R1 46007447\\exchange.json",
+        "--book-id",
+        "46007447"
+      ],
+      "cwd": "C:\\Users\\ASUS\\AppData\\Local\\Temp\\A01-review-R3-180bb1e8-mfi1e3_v\\controlled checkout\\examples\\a01\\R3\\tmp\\a01 R3 work jk1fb1fb\\different cwd",
+      "exit_code": 0,
+      "stdout": "{\"asset_count\": 2, \"book_id\": \"46007447\", \"content_hash\": \"4cf5646d232e1abd87917e7b5ca1ff741c2e54dc2efb0011712e717a7fe2462a\", \"coverage_eligible\": false, \"full_image_decode\": \"OK\", \"metadata_page_count\": 214, \"model_calls\": 0, \"model_cost\": 0, \"public_resource_validation\": \"OK\", \"reference_records\": 1, \"revision\": 1}\n",
+      "stderr": ""
+    },
+    {
+      "label": "R2 consumer 46006966",
+      "command": [
+        "C:\\Users\\ASUS\\AppData\\Local\\Programs\\Python\\Python39\\python.exe",
+        "-B",
+        "C:\\Users\\ASUS\\AppData\\Local\\Temp\\A01-review-R3-180bb1e8-mfi1e3_v\\controlled checkout\\examples\\a01\\consume.py",
+        "C:\\Users\\ASUS\\AppData\\Local\\Temp\\A01-review-R3-180bb1e8-mfi1e3_v\\controlled checkout\\examples\\a01\\R2\\bundles\\46006966\\exchange.json",
+        "--book-id",
+        "46006966"
+      ],
+      "cwd": "C:\\Users\\ASUS\\AppData\\Local\\Temp\\A01-review-R3-180bb1e8-mfi1e3_v\\controlled checkout",
+      "exit_code": 0,
+      "stdout": "{\"asset_count\": 6, \"book_id\": \"46006966\", \"content_hash\": \"64004346cce96e7d5a393e3e1ce076f3fdba1896b24a5828d570001b7fefe0a1\", \"coverage_eligible\": false, \"full_image_decode\": \"OK\", \"metadata_page_count\": 250, \"model_calls\": 0, \"model_cost\": 0, \"public_resource_validation\": \"OK\", \"reference_records\": 14, \"revision\": 1}\n",
+      "stderr": ""
+    },
+    {
+      "label": "relocated R2 46006966",
+      "command": [
+        "C:\\Users\\ASUS\\AppData\\Local\\Programs\\Python\\Python39\\python.exe",
+        "-B",
+        "C:\\Users\\ASUS\\AppData\\Local\\Temp\\A01-review-R3-180bb1e8-mfi1e3_v\\controlled checkout\\examples\\a01\\consume.py",
+        "C:\\Users\\ASUS\\AppData\\Local\\Temp\\A01-review-R3-180bb1e8-mfi1e3_v\\controlled checkout\\examples\\a01\\R3\\tmp\\a01 R3 work jk1fb1fb\\copied R2 46006966\\exchange.json",
+        "--book-id",
+        "46006966"
+      ],
+      "cwd": "C:\\Users\\ASUS\\AppData\\Local\\Temp\\A01-review-R3-180bb1e8-mfi1e3_v\\controlled checkout\\examples\\a01\\R3\\tmp\\a01 R3 work jk1fb1fb\\different cwd",
+      "exit_code": 0,
+      "stdout": "{\"asset_count\": 6, \"book_id\": \"46006966\", \"content_hash\": \"64004346cce96e7d5a393e3e1ce076f3fdba1896b24a5828d570001b7fefe0a1\", \"coverage_eligible\": false, \"full_image_decode\": \"OK\", \"metadata_page_count\": 250, \"model_calls\": 0, \"model_cost\": 0, \"public_resource_validation\": \"OK\", \"reference_records\": 14, \"revision\": 1}\n",
+      "stderr": ""
+    },
+    {
+      "label": "R2 consumer 46007447",
+      "command": [
+        "C:\\Users\\ASUS\\AppData\\Local\\Programs\\Python\\Python39\\python.exe",
+        "-B",
+        "C:\\Users\\ASUS\\AppData\\Local\\Temp\\A01-review-R3-180bb1e8-mfi1e3_v\\controlled checkout\\examples\\a01\\consume.py",
+        "C:\\Users\\ASUS\\AppData\\Local\\Temp\\A01-review-R3-180bb1e8-mfi1e3_v\\controlled checkout\\examples\\a01\\R2\\bundles\\46007447\\exchange.json",
+        "--book-id",
+        "46007447"
+      ],
+      "cwd": "C:\\Users\\ASUS\\AppData\\Local\\Temp\\A01-review-R3-180bb1e8-mfi1e3_v\\controlled checkout",
+      "exit_code": 0,
+      "stdout": "{\"asset_count\": 2, \"book_id\": \"46007447\", \"content_hash\": \"5765c15e434ed5794236322982305108c049bf4ff6b7253316b966b3c9e45a03\", \"coverage_eligible\": false, \"full_image_decode\": \"OK\", \"metadata_page_count\": 214, \"model_calls\": 0, \"model_cost\": 0, \"public_resource_validation\": \"OK\", \"reference_records\": 1, \"revision\": 1}\n",
+      "stderr": ""
+    },
+    {
+      "label": "relocated R2 46007447",
+      "command": [
+        "C:\\Users\\ASUS\\AppData\\Local\\Programs\\Python\\Python39\\python.exe",
+        "-B",
+        "C:\\Users\\ASUS\\AppData\\Local\\Temp\\A01-review-R3-180bb1e8-mfi1e3_v\\controlled checkout\\examples\\a01\\consume.py",
+        "C:\\Users\\ASUS\\AppData\\Local\\Temp\\A01-review-R3-180bb1e8-mfi1e3_v\\controlled checkout\\examples\\a01\\R3\\tmp\\a01 R3 work jk1fb1fb\\copied R2 46007447\\exchange.json",
+        "--book-id",
+        "46007447"
+      ],
+      "cwd": "C:\\Users\\ASUS\\AppData\\Local\\Temp\\A01-review-R3-180bb1e8-mfi1e3_v\\controlled checkout\\examples\\a01\\R3\\tmp\\a01 R3 work jk1fb1fb\\different cwd",
+      "exit_code": 0,
+      "stdout": "{\"asset_count\": 2, \"book_id\": \"46007447\", \"content_hash\": \"5765c15e434ed5794236322982305108c049bf4ff6b7253316b966b3c9e45a03\", \"coverage_eligible\": false, \"full_image_decode\": \"OK\", \"metadata_page_count\": 214, \"model_calls\": 0, \"model_cost\": 0, \"public_resource_validation\": \"OK\", \"reference_records\": 1, \"revision\": 1}\n",
+      "stderr": ""
+    },
+    {
+      "label": "R3 consumer 46006966",
+      "command": [
+        "C:\\Users\\ASUS\\AppData\\Local\\Programs\\Python\\Python39\\python.exe",
+        "-B",
+        "C:\\Users\\ASUS\\AppData\\Local\\Temp\\A01-review-R3-180bb1e8-mfi1e3_v\\controlled checkout\\examples\\a01\\consume.py",
+        "C:\\Users\\ASUS\\AppData\\Local\\Temp\\A01-review-R3-180bb1e8-mfi1e3_v\\controlled checkout\\examples\\a01\\R3\\bundles\\46006966\\exchange.json",
+        "--book-id",
+        "46006966"
+      ],
+      "cwd": "C:\\Users\\ASUS\\AppData\\Local\\Temp\\A01-review-R3-180bb1e8-mfi1e3_v\\controlled checkout",
+      "exit_code": 0,
+      "stdout": "{\"asset_count\": 6, \"book_id\": \"46006966\", \"content_hash\": \"e114fac3012705449678d41b6a708d30cdab17035933baa30d754464d5c13bfd\", \"coverage_eligible\": false, \"full_image_decode\": \"OK\", \"metadata_page_count\": 250, \"model_calls\": 0, \"model_cost\": 0, \"public_resource_validation\": \"OK\", \"reference_records\": 14, \"revision\": 1}\n",
+      "stderr": ""
+    },
+    {
+      "label": "relocated R3 46006966",
+      "command": [
+        "C:\\Users\\ASUS\\AppData\\Local\\Programs\\Python\\Python39\\python.exe",
+        "-B",
+        "C:\\Users\\ASUS\\AppData\\Local\\Temp\\A01-review-R3-180bb1e8-mfi1e3_v\\controlled checkout\\examples\\a01\\consume.py",
+        "C:\\Users\\ASUS\\AppData\\Local\\Temp\\A01-review-R3-180bb1e8-mfi1e3_v\\controlled checkout\\examples\\a01\\R3\\tmp\\a01 R3 work jk1fb1fb\\copied R3 46006966\\exchange.json",
+        "--book-id",
+        "46006966"
+      ],
+      "cwd": "C:\\Users\\ASUS\\AppData\\Local\\Temp\\A01-review-R3-180bb1e8-mfi1e3_v\\controlled checkout\\examples\\a01\\R3\\tmp\\a01 R3 work jk1fb1fb\\different cwd",
+      "exit_code": 0,
+      "stdout": "{\"asset_count\": 6, \"book_id\": \"46006966\", \"content_hash\": \"e114fac3012705449678d41b6a708d30cdab17035933baa30d754464d5c13bfd\", \"coverage_eligible\": false, \"full_image_decode\": \"OK\", \"metadata_page_count\": 250, \"model_calls\": 0, \"model_cost\": 0, \"public_resource_validation\": \"OK\", \"reference_records\": 14, \"revision\": 1}\n",
+      "stderr": ""
+    },
+    {
+      "label": "R3 consumer 46007447",
+      "command": [
+        "C:\\Users\\ASUS\\AppData\\Local\\Programs\\Python\\Python39\\python.exe",
+        "-B",
+        "C:\\Users\\ASUS\\AppData\\Local\\Temp\\A01-review-R3-180bb1e8-mfi1e3_v\\controlled checkout\\examples\\a01\\consume.py",
+        "C:\\Users\\ASUS\\AppData\\Local\\Temp\\A01-review-R3-180bb1e8-mfi1e3_v\\controlled checkout\\examples\\a01\\R3\\bundles\\46007447\\exchange.json",
+        "--book-id",
+        "46007447"
+      ],
+      "cwd": "C:\\Users\\ASUS\\AppData\\Local\\Temp\\A01-review-R3-180bb1e8-mfi1e3_v\\controlled checkout",
+      "exit_code": 0,
+      "stdout": "{\"asset_count\": 2, \"book_id\": \"46007447\", \"content_hash\": \"308c9a22e4743ed12d2161a81a2e9a7618cbf53139ba76ba40cd66105fa03add\", \"coverage_eligible\": false, \"full_image_decode\": \"OK\", \"metadata_page_count\": 214, \"model_calls\": 0, \"model_cost\": 0, \"public_resource_validation\": \"OK\", \"reference_records\": 1, \"revision\": 1}\n",
+      "stderr": ""
+    },
+    {
+      "label": "relocated R3 46007447",
+      "command": [
+        "C:\\Users\\ASUS\\AppData\\Local\\Programs\\Python\\Python39\\python.exe",
+        "-B",
+        "C:\\Users\\ASUS\\AppData\\Local\\Temp\\A01-review-R3-180bb1e8-mfi1e3_v\\controlled checkout\\examples\\a01\\consume.py",
+        "C:\\Users\\ASUS\\AppData\\Local\\Temp\\A01-review-R3-180bb1e8-mfi1e3_v\\controlled checkout\\examples\\a01\\R3\\tmp\\a01 R3 work jk1fb1fb\\copied R3 46007447\\exchange.json",
+        "--book-id",
+        "46007447"
+      ],
+      "cwd": "C:\\Users\\ASUS\\AppData\\Local\\Temp\\A01-review-R3-180bb1e8-mfi1e3_v\\controlled checkout\\examples\\a01\\R3\\tmp\\a01 R3 work jk1fb1fb\\different cwd",
+      "exit_code": 0,
+      "stdout": "{\"asset_count\": 2, \"book_id\": \"46007447\", \"content_hash\": \"308c9a22e4743ed12d2161a81a2e9a7618cbf53139ba76ba40cd66105fa03add\", \"coverage_eligible\": false, \"full_image_decode\": \"OK\", \"metadata_page_count\": 214, \"model_calls\": 0, \"model_cost\": 0, \"public_resource_validation\": \"OK\", \"reference_records\": 1, \"revision\": 1}\n",
+      "stderr": ""
+    }
+  ],
+  "passed": true,
+  "modules": {
+    "annotation.contracts": {
+      "path": "C:\\Users\\ASUS\\AppData\\Local\\Temp\\A01-review-R3-180bb1e8-mfi1e3_v\\controlled checkout\\src\\annotation\\contracts\\__init__.py",
+      "disk_sha256": "3f1b276cc0bcdfc74877ca06c3573f8ab06adb3ac22baa1f5fe1ccb64e7649b3"
+    },
+    "annotation.geometry": {
+      "path": "C:\\Users\\ASUS\\AppData\\Local\\Temp\\A01-review-R3-180bb1e8-mfi1e3_v\\controlled checkout\\src\\annotation\\geometry\\__init__.py",
+      "disk_sha256": "3b707579cd586887da3b5125048b17c5baf548010fccf6cb21cc386baddaacf0"
+    },
+    "annotation.source.static.importer": {
+      "path": "C:\\Users\\ASUS\\AppData\\Local\\Temp\\A01-review-R3-180bb1e8-mfi1e3_v\\controlled checkout\\src\\annotation\\source\\static\\importer.py",
+      "disk_sha256": "2409a9db6ea201e4a0a7475b8d8de4d1a3a3927aaeaaf397834fc5ca14e62543"
+    },
+    "annotation.source.static.consistency": {
+      "path": "C:\\Users\\ASUS\\AppData\\Local\\Temp\\A01-review-R3-180bb1e8-mfi1e3_v\\controlled checkout\\src\\annotation\\source\\static\\consistency.py",
+      "disk_sha256": "8266c7a81515b0e8a3961250bc06e43eb0aa4c70e4c0890fa794984970dc0d80"
+    }
+  },
+  "platform_network_browser_model_calls": 0,
+  "sessions_to_release": 0
+}
