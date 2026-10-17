@@ -54,6 +54,20 @@ class ChapterScopeTests(unittest.TestCase):
         self.assertEqual(loaded["schema_version"], "b-source-trial/0.1")
         self.assertEqual([asset["asset_id"] for asset, _ in image_inputs], ["a1", "a2"])
 
+    def test_same_path_or_copied_bytes_cannot_count_as_two_assets(self):
+        for copied in (False, True):
+            with self.subTest(copied=copied):
+                self.assets[1].update(sha256=self.assets[0]["sha256"], width=12, height=18)
+                if copied:
+                    (self.root / "copy.png").write_bytes((self.root / "p1.png").read_bytes())
+                    self.assets[1]["path"] = "copy.png"
+                else:
+                    self.assets[1]["path"] = "p1.png"
+                self.write()
+                report = prepare(self.scope_path, self.out)
+                self.assertEqual(report["scope_state"], "PARTIAL")
+                self.assertIn("ALIASED_SOURCE_ASSET", {g["code"] for g in report["gaps"]})
+
     def test_missing_page_asset_keeps_partial_and_reports_missing_identity(self):
         self.scope["assets"].pop()
         self.write()

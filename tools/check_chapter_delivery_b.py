@@ -9,6 +9,7 @@ Internal trial graphs and Check07 are not accepted inputs until an adapter exist
 from __future__ import annotations
 
 import argparse
+import hashlib
 import json
 from pathlib import Path
 from typing import Any
@@ -16,6 +17,15 @@ from typing import Any
 
 SCHEMA = "chapter-delivery-b/1"
 CANDIDATE_SCHEMA = "chapter-candidate-b/1"
+
+
+def evidence_binding(manifest: dict[str, Any], candidate: dict[str, Any]) -> dict[str, str]:
+    """Bind declared checks to current inventory/content; this is not a signature."""
+    def digest(value):
+        raw = json.dumps(value, ensure_ascii=False, sort_keys=True, separators=(",", ":"), allow_nan=False)
+        return hashlib.sha256(raw.encode("utf-8")).hexdigest()
+    return {"manifest_sha256": digest(manifest),
+            "candidate_content_sha256": digest({k: v for k, v in candidate.items() if k not in {"checks", "human_review"}})}
 
 
 def input_contract() -> dict[str, Any]:
@@ -37,7 +47,7 @@ def input_contract() -> dict[str, Any]:
             "questions": "[{question_id, page_ids:[string,...], material_ids:[string,...], content_status:READY|OPEN}]",
             "answers": "[{answer_id, question_id, page_ids:[string,...], content_status:READY|OPEN}]",
             "materials": "[{material_id, page_ids:[string,...], identity_status:CONFIRMED|UNKNOWN}]",
-            "checks": "{status:PASS|HOLD, unresolved_count:nonnegative integer}",
+            "checks": "{status:PASS|HOLD, unresolved_count:nonnegative integer, binding:{manifest_sha256,candidate_content_sha256}}. Digests use canonical UTF-8 JSON (sorted keys, compact separators, ensure_ascii=false); candidate content excludes checks/human_review. Binding proves consistency only, never independent review.",
             "human_review": "Self-reported review fields only; they are never proof of independent review or G2 acceptance.",
         },
         "output": "machine_evidence_decision may be PASS/PARTIAL/HOLD. Overall decision is G2 acceptance and stays HOLD until a separate authorized acceptance record verifies source-bound independent human review.",
@@ -59,8 +69,10 @@ def _no_duplicate_keys(pairs: list[tuple[str, Any]]) -> dict[str, Any]:
 
 def _read(path: Path) -> tuple[Any, str | None]:
     try:
-        value = json.loads(path.read_text(encoding="utf-8"), object_pairs_hook=_no_duplicate_keys)
-    except (OSError, UnicodeError, json.JSONDecodeError, _DuplicateKey, RecursionError) as exc:
+        def invalid_constant(value):
+            raise ValueError("nonfinite JSON: " + value)
+        value = json.loads(path.read_text(encoding="utf-8"), object_pairs_hook=_no_duplicate_keys, parse_constant=invalid_constant)
+    except (OSError, UnicodeError, ValueError, RecursionError) as exc:
         return None, f"unreadable or malformed JSON ({type(exc).__name__})"
     return value, None
 
@@ -168,6 +180,7 @@ def check_delivery(manifest_path: Path, candidate_path: Path) -> dict[str, Any]:
         "materials": _index(manifest.get("materials"), "material_id"),
     }
 
+    seen_assets, seen_hashes = set(), set()
     for pid, row in declared_rows["pages"].items():
         role = row.get("role")
         if not isinstance(role, str) or role not in {"question", "answer", "contents", "material"} or row.get("complete_page") is not True:
@@ -176,6 +189,12 @@ def check_delivery(manifest_path: Path, candidate_path: Path) -> dict[str, Any]:
         if not isinstance(row.get("asset_id"), str) or not row["asset_id"] or not _is_sha256(row.get("sha256")):
             gaps.append(f"pages: {pid} lacks asset identity or recorded SHA-256")
             fatal = True
+        else:
+            if row["asset_id"] in seen_assets or row["sha256"].lower() in seen_hashes:
+                gaps.append(f"pages: {pid} aliases an already declared source asset or byte content")
+                fatal = True
+            seen_assets.add(row["asset_id"])
+            seen_hashes.add(row["sha256"].lower())
     for label, key, fields in (("questions", "question_id", ("page_ids", "material_ids")), ("answers", "answer_id", ("page_ids",)), ("materials", "material_id", ("page_ids",))):
         for item_id, row in declared_rows[label].items():
             for field in fields:
@@ -215,6 +234,13 @@ def check_delivery(manifest_path: Path, candidate_path: Path) -> dict[str, Any]:
         if m_pages is not None and not m_pages.issubset(page_ids):
             gaps.append(f"materials.{item_id}: references page IDs outside the declared page inventory")
             fatal = True
+
+    for label, role in (("questions", "question"), ("answers", "answer")):
+        for item_id, row in declared_rows[label].items():
+            refs = _valid_refs(row, "page_ids", f"{label}.{item_id}", gaps)
+            if refs is not None and any(declared_rows["pages"].get(pid, {}).get("role") != role for pid in refs):
+                gaps.append(f"{label}.{item_id}: source page role conflicts with {role} content")
+                fatal = True
 
     candidate_specs = (("pages", "source_pages", "page_id"), ("questions", "questions", "question_id"), ("answers", "answers", "answer_id"), ("materials", "materials", "material_id"))
     comparisons: dict[str, Any] = {}
@@ -278,6 +304,13 @@ def check_delivery(manifest_path: Path, candidate_path: Path) -> dict[str, Any]:
     elif checks["status"] != "PASS" or checks["unresolved_count"] != 0:
         gaps.append("checks: declared checks are non-PASS or unresolved findings remain")
         partial = True
+    if isinstance(checks, dict):
+        if set(checks) - {"status", "unresolved_count", "binding"}:
+            gaps.append("checks: unsupported fields cannot establish a current check binding")
+            fatal = True
+        if checks.get("binding") != evidence_binding(manifest, candidate):
+            gaps.append("checks: missing or stale manifest/candidate content binding")
+            partial = True
 
     review = candidate.get("human_review")
     review_claim = "INCOMPLETE_OR_MALFORMED"
@@ -286,7 +319,9 @@ def check_delivery(manifest_path: Path, candidate_path: Path) -> dict[str, Any]:
         # Validate shape only. These self-reported fields cannot authenticate a review.
         reviewers = review.get("reviewer_ids")
         rq, ra = review.get("reviewed_question_ids"), review.get("reviewed_answer_ids")
-        if not isinstance(reviewers, list) or any(not isinstance(x, str) for x in reviewers):
+        if (not isinstance(reviewers, list) or not reviewers
+                or any(not isinstance(x, str) or not x.strip() for x in reviewers)
+                or len(reviewers) != len(set(reviewers))):
             gaps.append("human review claim: reviewer_ids must be an array of strings")
             review_claim = "INCOMPLETE_OR_MALFORMED"
         if not isinstance(rq, list) or any(not isinstance(x, str) for x in rq) or set(rq) != set(declared["questions"] or []):
@@ -297,6 +332,9 @@ def check_delivery(manifest_path: Path, candidate_path: Path) -> dict[str, Any]:
             review_claim = "INCOMPLETE_OR_MALFORMED"
     else:
         gaps.append("human review claim: absent or malformed")
+    if review_claim != "COMPLETE_CLAIMED":
+        gaps.append("human review claim: incomplete; no independent acceptance established")
+        partial = True
 
     machine = "HOLD" if fatal else "PARTIAL" if partial else "PASS"
     # This utility only checks claims in unsigned JSON. G2 requires separately

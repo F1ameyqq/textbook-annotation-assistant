@@ -82,6 +82,8 @@ def prepare(scope_path: Path, out_dir: Path) -> dict[str, Any]:
 
     received: dict[str, dict[str, Any]] = {}
     resolved_files: dict[str, Path] = {}
+    observed_paths: dict[Path, str] = {}
+    observed_hashes: dict[str, str] = {}
     for index, asset in enumerate(assets):
         where = f"assets[{index}]"
         if not isinstance(asset, dict) or not _safe_id(asset.get("asset_id")):
@@ -111,6 +113,11 @@ def prepare(scope_path: Path, out_dir: Path) -> dict[str, Any]:
             continue
         resolved_files[aid] = source.resolve()
         actual_hash = _sha256(source)
+        if source.resolve() in observed_paths or actual_hash in observed_hashes:
+            gaps.append({"code": "ALIASED_SOURCE_ASSET", "item": aid,
+                         "detail": "same source path or byte content is declared under multiple asset identities; independent identity resolution required"})
+        observed_paths[source.resolve()] = aid
+        observed_hashes[actual_hash] = aid
         if not re.fullmatch(r"[0-9a-f]{64}", str(asset.get("sha256", ""))) or actual_hash != asset.get("sha256"):
             gaps.append({"code": "ASSET_SHA256_MISMATCH", "item": aid, "detail": "file bytes do not match declared SHA-256"})
         for dimension in ("width", "height"):

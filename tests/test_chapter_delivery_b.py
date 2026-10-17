@@ -5,7 +5,7 @@ import tempfile
 import unittest
 from pathlib import Path
 
-from tools.check_chapter_delivery_b import check_delivery, input_contract
+from tools.check_chapter_delivery_b import check_delivery, input_contract, evidence_binding
 from tools.report_source_coverage_b import DEFAULT_DESCRIPTOR, DEFAULT_EVALUATION
 
 
@@ -14,11 +14,76 @@ ROOT = Path(__file__).resolve().parents[1]
 
 class ChapterDeliveryGateTests(unittest.TestCase):
     def _write_pair(self, directory: Path, manifest: dict, candidate: dict):
+        if isinstance(candidate.get("checks"), dict):
+            candidate["checks"].setdefault("binding", evidence_binding(manifest, candidate))
         manifest_path = directory / "manifest.json"
         candidate_path = directory / "candidate.json"
         manifest_path.write_text(json.dumps(manifest), encoding="utf-8")
         candidate_path.write_text(json.dumps(candidate), encoding="utf-8")
         return manifest_path, candidate_path
+
+    def bound_pair(self):
+        manifest = {"schema": "chapter-delivery-b/1", "book_id": "b", "chapter_id": "ch", "toc_entry_id": "toc", "complete": True,
+            "pages": [{"page_id": "p", "asset_id": "x", "sha256": "a"*64, "role": "question", "complete_page": True},
+                      {"page_id": "a", "asset_id": "y", "sha256": "b"*64, "role": "answer", "complete_page": True}],
+            "questions": [{"question_id": "q", "page_ids": ["p"], "material_ids": []}],
+            "answers": [{"answer_id": "ans", "question_id": "q", "page_ids": ["a"]}], "materials": []}
+        candidate = {"schema": "chapter-candidate-b/1", "book_id": "b", "chapter_id": "ch",
+            "source_pages": [{"page_id": r["page_id"], "asset_id": r["asset_id"], "sha256": r["sha256"], "observed_scope": "FULL_PAGE"} for r in manifest["pages"]],
+            "questions": [dict(manifest["questions"][0], content_status="READY")],
+            "answers": [dict(manifest["answers"][0], content_status="READY")], "materials": [],
+            "checks": {"status": "PASS", "unresolved_count": 0},
+            "human_review": {"status": "COMPLETE", "reviewer_ids": ["r"], "reviewed_question_ids": ["q"], "reviewed_answer_ids": ["ans"]}}
+        candidate["checks"]["binding"] = evidence_binding(manifest, candidate)
+        return manifest, candidate
+
+    def test_unbound_or_stale_checks_cannot_pass(self):
+        for change in ("missing", "manifest", "content", "unknown_ref"):
+            with self.subTest(change=change), tempfile.TemporaryDirectory() as temp:
+                manifest, candidate = self.bound_pair()
+                if change == "missing":
+                    candidate["checks"]["binding"] = None
+                elif change == "manifest":
+                    manifest["toc_entry_id"] = "changed"
+                elif change == "content":
+                    candidate["questions"][0]["text"] = "changed text"
+                else:
+                    candidate["checks"]["stale_ref"] = {"revision": 1}
+                result = check_delivery(*self._write_pair(Path(temp), manifest, candidate))
+                self.assertNotEqual(result["machine_evidence_decision"], "PASS")
+                self.assertTrue(any("checks:" in g for g in result["gaps"]))
+                self.assertEqual(result["decision"], "HOLD")
+
+    def test_page_roles_and_asset_aliases_cannot_pass_even_with_fresh_binding(self):
+        for change in ("roles", "same_asset", "same_bytes", "missing_asset"):
+            with self.subTest(change=change), tempfile.TemporaryDirectory() as temp:
+                manifest, candidate = self.bound_pair()
+                if change == "roles":
+                    manifest["pages"][0]["role"], manifest["pages"][1]["role"] = "answer", "question"
+                elif change == "missing_asset":
+                    del manifest["pages"][1]["asset_id"]
+                else:
+                    field = "asset_id" if change == "same_asset" else "sha256"
+                    manifest["pages"][1][field] = manifest["pages"][0][field]
+                    candidate["source_pages"][1][field] = manifest["pages"][0][field]
+                candidate["checks"]["binding"] = evidence_binding(manifest, candidate)
+                result = check_delivery(*self._write_pair(Path(temp), manifest, candidate))
+                self.assertEqual(result["machine_evidence_decision"], "HOLD")
+
+    def test_incomplete_or_empty_reviewer_claim_is_explicit_partial(self):
+        for change in ("status", "reviewers", "absent"):
+            with self.subTest(change=change), tempfile.TemporaryDirectory() as temp:
+                manifest, candidate = self.bound_pair()
+                if change == "status":
+                    candidate["human_review"]["status"] = "INCOMPLETE"
+                elif change == "reviewers":
+                    candidate["human_review"]["reviewer_ids"] = []
+                else:
+                    del candidate["human_review"]
+                result = check_delivery(*self._write_pair(Path(temp), manifest, candidate))
+                self.assertEqual(result["machine_evidence_decision"], "PARTIAL")
+                self.assertTrue(any("human review claim:" in g for g in result["gaps"]))
+                self.assertEqual(result["decision"], "HOLD")
 
     def test_contract_declares_denominator_identity_and_independent_review(self):
         contract = input_contract()

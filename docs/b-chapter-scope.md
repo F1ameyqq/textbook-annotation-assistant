@@ -37,6 +37,14 @@ python tools/prepare_chapter_scope_b.py --scope path/to/chapter-scope.json --out
 经对账后得到 `DECLARED_COMPLETE_SOURCE_INVENTORY`，只表示所声明的冻结库存与当前本地文件吻合。它仍不是章节业务验收：题目/答案/共享材料的目录清点、身份映射、内容复核、异常处理回执及独立验收仍需完成，报告中的业务决定始终为 `HOLD`，`business_acceptance` 和 `transcription_verified` 始终为 false。
 报告把调用方的 `inventory_frozen` 记录为 `inventory_frozen_claim`，并始终令 `independent_denominator_verified: false`；单凭自报清单无法证实整章分母。
 
+## 独立质量复现后的收紧（2026-10-17）
+
+同一实际路径或相同文件 SHA 被声明为多个资产时报告 `ALIASED_SOURCE_ASSET`，不再计作完整来源库存；真实重复空白页等情况也需先独立解决身份歧义。章节交付门禁同时拒绝同资产/同字节别名页及题答页角色冲突。当前单角色格式不支持把同一页拆成多个身份来表达混合内容。
+
+章节门禁的 `checks.binding` 必须绑定当前 manifest 和候选内容，旧的 `PASS + 0` 自报检查不再足以得到机器 PASS。绑定字段为 `manifest_sha256` 与 `candidate_content_sha256`，对完整 manifest、去掉 `checks`/`human_review` 的 candidate 分别作 canonical JSON SHA-256（UTF-8、键排序、紧凑分隔符、`ensure_ascii=false`）；`--contract` 给出当前要求。内容/来源/身份或 manifest 改动后旧绑定失效，必须实际重检再出具新记录。绑定只是内容一致性证明，不认证检查作者或人工核对；G2 恒为 HOLD。缺失/不全的人工声明也明确列为机器 PARTIAL，不能借此签发人工验收。
+
+G07/Check07 适配器现在重新计算两份 payload 的摘要并校验精确图谱引用，拒绝重复答案 ID、悬空或格式错误的候选关系及重复 JSON 键。合成输入须按真实格式提供摘要；正常真实固定输入仍投影 34 题/66 答及 127 未决项，不补造章节身份。
+
 ## 与现有流水线的关系
 
 现有 `tools/run_pipeline_b.py` 接收一个 source manifest，其中 `assets` 可包含多个图像；批处理按资产记录恢复、缓存与失效，并以 source/scope 身份隔离运行。用生成的 `source-descriptor.json` 作为 `--source`，还须按这些资产准备现有 `--context` 和 `--review` 输入，再指定持久 `--workdir`。14 阶段内容修订链还需要显式提供其相应 recovery/continuation/inline/content-revision 输入；章节入口没有合成这些输入。具体停止阶段、恢复和依赖失效由现有 pipeline 管理。增加页面或修正原资产 SHA 会改变来源输入身份，受影响的阶段应按既有依赖键重检。

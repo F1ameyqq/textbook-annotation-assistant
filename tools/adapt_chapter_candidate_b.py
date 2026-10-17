@@ -6,6 +6,7 @@ chapter/page/question-material denominators and content approval unknown.
 from __future__ import annotations
 
 import argparse
+import hashlib
 import json
 from pathlib import Path
 from typing import Any
@@ -16,9 +17,25 @@ CHECK_SCHEMA = "b-check-trial/0.7"
 
 
 def _read_object(path: Path, label: str) -> dict[str, Any]:
-    value = json.loads(Path(path).read_text(encoding="utf-8"))
+    def unique(pairs):
+        result = {}
+        for key, item in pairs:
+            if key in result:
+                raise ValueError(f"{label} has duplicate JSON key: {key}")
+            result[key] = item
+        return result
+    value = json.loads(Path(path).read_text(encoding="utf-8"), object_pairs_hook=unique)
     if not isinstance(value, dict):
         raise ValueError(f"{label} must be a JSON object")
+    for key in ("artifact_id", "book_id", "scope_id"):
+        if not isinstance(value.get(key), str) or not value[key].strip():
+            raise ValueError(f"{label} requires non-empty {key}")
+    if type(value.get("revision")) is not int or value["revision"] < 1:
+        raise ValueError(f"{label} requires positive integer revision")
+    encoded = json.dumps(value.get("payload"), ensure_ascii=False, sort_keys=True,
+                         separators=(",", ":"), allow_nan=False).encode("utf-8")
+    if value.get("content_hash") != hashlib.sha256(encoded).hexdigest():
+        raise ValueError(f"{label} payload content_hash mismatch")
     return value
 
 
@@ -49,19 +66,33 @@ def adapt(graph_path: Path, check_path: Path) -> dict[str, Any]:
     graph_questions, graph_answers = gp.get("questions"), gp.get("answers")
     if not isinstance(graph_questions, list) or not isinstance(graph_answers, list):
         raise ValueError("G07 questions and answers must be arrays")
+    answer_ids = set()
+    for row in graph_answers:
+        if not isinstance(row, dict) or not isinstance(row.get("answer_id"), str) or not row["answer_id"].strip():
+            raise ValueError("G07 contains an answer without a stable internal answer_id")
+        if row["answer_id"] in answer_ids:
+            raise ValueError("G07 contains duplicate answer IDs")
+        answer_ids.add(row["answer_id"])
+    if not isinstance(cp.get("issues"), list) or any(not isinstance(issue, dict) for issue in cp["issues"]):
+        raise ValueError("Check07 issues must be an array of objects")
 
     qrows: dict[str, dict[str, Any]] = {}
     answer_to_questions: dict[str, list[str]] = {}
     for row in graph_questions:
-        if not isinstance(row, dict) or not isinstance(row.get("question_id"), str):
+        if not isinstance(row, dict) or not isinstance(row.get("question_id"), str) or not row["question_id"].strip():
             raise ValueError("G07 contains a question without a stable internal question_id")
         qid = row["question_id"]
         if qid in qrows:
             raise ValueError("G07 contains duplicate question IDs")
         qrows[qid] = row
-        for answer_id in row.get("candidate_answer_ids", []):
-            if isinstance(answer_id, str):
-                answer_to_questions.setdefault(answer_id, []).append(qid)
+        links = row.get("candidate_answer_ids", [])
+        if (not isinstance(links, list) or any(not isinstance(aid, str) or not aid.strip() for aid in links)
+                or len(links) != len(set(links))):
+            raise ValueError("G07 candidate_answer_ids must be unique non-empty strings")
+        for answer_id in links:
+            if answer_id not in answer_ids:
+                raise ValueError("G07 contains dangling candidate answer reference")
+            answer_to_questions.setdefault(answer_id, []).append(qid)
 
     questions = []
     for qid, row in qrows.items():

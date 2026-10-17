@@ -1,6 +1,8 @@
 from __future__ import annotations
 
 import json
+import hashlib
+import copy
 from pathlib import Path
 import tempfile
 import unittest
@@ -15,6 +17,7 @@ CHECK = ROOT / "data/runs/46007447-region-automatic-v1/check.json"
 
 class ChapterCandidateAdapterTests(unittest.TestCase):
     def write_pair(self, folder: Path, graph: dict, check: dict | None = None):
+        graph["content_hash"] = hashlib.sha256(json.dumps(graph["payload"], sort_keys=True, ensure_ascii=False, separators=(",", ":")).encode()).hexdigest()
         graph_path = folder / "graph.json"
         check_path = folder / "check.json"
         if check is None:
@@ -23,6 +26,7 @@ class ChapterCandidateAdapterTests(unittest.TestCase):
                 "payload": {"graph_ref": {k: graph[k] for k in ("artifact_id", "revision", "content_hash")},
                     "decision": "HOLD", "business_acceptance": False, "transcription_verified": False,
                     "issues": [{"code": "OPEN"}, {"code": "OPEN"}]}}
+        check["content_hash"] = hashlib.sha256(json.dumps(check["payload"], sort_keys=True, ensure_ascii=False, separators=(",", ":")).encode()).hexdigest()
         graph_path.write_text(json.dumps(graph), encoding="utf-8")
         check_path.write_text(json.dumps(check), encoding="utf-8")
         return graph_path, check_path
@@ -92,6 +96,37 @@ class ChapterCandidateAdapterTests(unittest.TestCase):
         self.assertEqual(len(unlinked), 1)
         self.assertTrue(all(row["page_ids"] == [] for row in linked + unlinked))
         self.assertTrue(all(row["question_id"] is None for row in unlinked))
+
+    def test_duplicate_dangling_and_malformed_links_are_rejected(self):
+        for case in ("duplicate", "dangling", "string_links", "repeated_link", "empty_id"):
+            with self.subTest(case=case), tempfile.TemporaryDirectory() as temp:
+                graph = self.synthetic_graph()
+                if case == "duplicate":
+                    graph["payload"]["answers"].append(copy.deepcopy(graph["payload"]["answers"][0]))
+                elif case == "dangling":
+                    graph["payload"]["questions"][0]["candidate_answer_ids"] = ["absent"]
+                elif case == "string_links":
+                    graph["payload"]["questions"][0]["candidate_answer_ids"] = "a-internal-1"
+                elif case == "repeated_link":
+                    graph["payload"]["questions"][0]["candidate_answer_ids"] *= 2
+                else:
+                    graph["payload"]["answers"][0]["answer_id"] = ""
+                paths = self.write_pair(Path(temp), graph)
+                with self.assertRaises(ValueError):
+                    adapt(*paths)
+
+    def test_changed_payload_without_new_hash_and_duplicate_json_are_rejected(self):
+        with tempfile.TemporaryDirectory() as temp:
+            paths = self.write_pair(Path(temp), self.synthetic_graph())
+            raw = json.loads(paths[0].read_text())
+            raw["payload"]["answers"].pop()
+            paths[0].write_text(json.dumps(raw), encoding="utf-8")
+            with self.assertRaisesRegex(ValueError, "content_hash"):
+                adapt(*paths)
+            paths = self.write_pair(Path(temp), self.synthetic_graph())
+            paths[0].write_text(paths[0].read_text().replace('{', '{"revision":1,', 1))
+            with self.assertRaisesRegex(ValueError, "duplicate JSON"):
+                adapt(*paths)
 
     @unittest.skipUnless(GRAPH.is_file() and CHECK.is_file(), "ignored local G07/Check07 objects are unavailable")
     def test_local_fixed_g07_check07_negative_case_when_run_objects_are_available(self):
