@@ -1,0 +1,8 @@
+{
+  "command": "python -X utf8 docs/evidence/coordinator/heartbeat-20261017-1229/check_r7_delivery.py",
+  "script_sha256": "ad0e806f1fcc11212e8377240a1d0322b92a07e96a5cf2d577bf87952a173fc5",
+  "exit_code": 1,
+  "failure": "AssertionError: pyproject.toml at checkout_sha256 comparison",
+  "cause": "Coordinator compared historical pre-change pyproject checkout pin to authorized changed target file. Raw baseline pin and target manifest checks had passed. No candidate code ran.",
+  "correction": "Keep raw baseline validation; do not compare historical checkout bytes of the explicitly authorized changed pyproject to target checkout."
+}
