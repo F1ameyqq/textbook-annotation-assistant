@@ -1,0 +1,44 @@
+{
+  "id": "artifact-resource-frame-mixed-cycle",
+  "bundle": "examples/a03/P2-R5-registration-context/cases/artifact-resource-frame-mixed-cycle/repair-01/bundle.json",
+  "bundle_sha256": "f2f5e5a032271d7890165d49e4c336dbcb5f628bbf18e372e0d7148a54535d67",
+  "resources": [
+    {
+      "logical": "r5-static/cycle-prefix.json",
+      "file": "examples/a03/P2-R5-registration-context/cases/artifact-resource-frame-mixed-cycle/repair-01/resources/0.json",
+      "raw_sha256": "4d153e82f0a75d233bb77bb7028a2a3dc2bdbcd4f22bda6514a15d0be4450de0",
+      "bytes": 22175
+    },
+    {
+      "logical": "r5-static/cycle-return.json",
+      "file": "examples/a03/P2-R5-registration-context/cases/artifact-resource-frame-mixed-cycle/repair-01/resources/1.json",
+      "raw_sha256": "b64910dbe49130c2b63cf0e499527aca88c2e7dcff817ae3e9f88b0a6e0ca8f5",
+      "bytes": 190
+    }
+  ],
+  "expected": "MIXED_CYCLE",
+  "expected_layer": "GLOBAL_MIXED_DAG",
+  "source": {
+    "commit": "e608b54b973b14ff55dd2c4530153f5fe7c931f4",
+    "bundle": "examples/a03/P2-R2-proposal/candidate-final/scope-session.json",
+    "prefix": "examples/a03/P2-R2-proposal/candidate-final/session/prefix.json"
+  },
+  "mutation": {
+    "repair_round": 1,
+    "reason": "initial control added evidence to a closed legacy PLAN_ACCEPTED payload; use a frozen event branch that already has the Resource field",
+    "checker_changed": false,
+    "old_versions_schema_pins_or_samples_changed": false,
+    "new_prefix_event_versions_unchanged": true,
+    "cycle": [
+      "new Source A",
+      "formal EvidenceRecord",
+      "new typed prefix Resource",
+      "existing frame A",
+      "new return Resource",
+      "same new Source A"
+    ],
+    "all_artifact_resource_and_event_hashes_correct": true,
+    "frame_reference_declared_same_scope": true
+  },
+  "native_qualification": false
+}

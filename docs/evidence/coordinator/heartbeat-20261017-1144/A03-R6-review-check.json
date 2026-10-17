@@ -1,0 +1,177 @@
+{
+  "task_id": "A03",
+  "target_commit": "81d3ec7e42e0a1a76ad744bf59536fc5f68adee4",
+  "decision": "ACCEPTED_STATIC_LIMITED",
+  "scope": "R6 single corrected mixed-cycle control proof only",
+  "review_manifest_entries": 157,
+  "raw_git_inputs_verified": 123,
+  "review_archive_unchanged_after_reproduction": true,
+  "report_sha256": "bd0735fde3f6980d7b38315a4aa9511c197e5c70617524626cfddb68e8ff4d25",
+  "manifest_sha256": "d8a220955728b327301c2602b7b0fe42d3dc5a65c0eef8964a025b18724744e7",
+  "data_only_verification": {
+    "changed_resources": [
+      "r5-static/cycle-prefix.json"
+    ],
+    "prefix_changed_paths": [
+      "/expected_book_head/hash",
+      "/frames/7/event/event_hash",
+      "/frames/7/event/payload/initial_event_head/hash",
+      "/frames/8/event/event_hash",
+      "/frames/8/event/previous_hash",
+      "/frames/9/event/event_hash",
+      "/frames/9/event/previous_hash",
+      "/frames/10/event/event_hash",
+      "/frames/10/event/previous_hash",
+      "/frames/11/event/event_hash",
+      "/frames/11/event/previous_hash",
+      "/frames/12/event/event_hash",
+      "/frames/12/event/previous_hash",
+      "/frames/13/event/event_hash",
+      "/frames/13/event/previous_hash"
+    ],
+    "bundle_changed_paths": [
+      "/evidence/1/resource/sha256"
+    ],
+    "event_chain_and_internal_heads_valid": true
+  },
+  "archive_command": {
+    "argv": [
+      "C:\\Users\\ASUS\\AppData\\Local\\Programs\\Python\\Python39\\python.exe",
+      "-X",
+      "utf8",
+      "-B",
+      "D:\\1800\\docs\\evidence\\A03\\review\\P2-R6-mixed-control\\scripts\\archive.py"
+    ],
+    "cwd": "D:\\1800",
+    "pid": 66296,
+    "exit_code": 0,
+    "expected_exit_code": 0,
+    "elapsed_seconds": 0.9839999999967404,
+    "timed_out": false,
+    "alive": false
+  },
+  "entry_command": {
+    "argv": [
+      "C:\\Users\\ASUS\\AppData\\Local\\Programs\\Python\\Python39\\python.exe",
+      "-X",
+      "utf8",
+      "-B",
+      "D:\\1800\\docs\\evidence\\A03\\review\\P2-R6-mixed-control\\input\\checkout\\examples\\a03\\P2-R6-mixed-control\\entry.py",
+      "--readonly"
+    ],
+    "cwd": "D:\\1800",
+    "pid": 44520,
+    "exit_code": 0,
+    "expected_exit_code": 0,
+    "elapsed_seconds": 0.8120000000053551,
+    "timed_out": false,
+    "alive": false
+  },
+  "entry_result": {
+    "status": "REVIEW_EXPECTED_MIXED_CYCLE_OBSERVED",
+    "candidate_count": 1,
+    "candidate_sha256": "6a39c873de02dab04d3efd831cb1032b87ba8323c35bfd2a7a31f0b2e48dabd2",
+    "precheck_sha256": "9902724d2abd372761335cebde071fa944293a7095d7210dd40d1c3a09337d92",
+    "actual": "MIXED_CYCLE",
+    "error": {
+      "code": "MIXED_CYCLE",
+      "path": "A:760b541bec881e9d98abb75f38bc7e34a75d2ed047edbc8ac657091c70fdc320"
+    },
+    "matched_specified_layer_and_counts": true,
+    "measured_calls": {
+      "R5_complete_entry": 1,
+      "R3_inherited_entry": 1,
+      "R2_inherited_entry": 1
+    },
+    "R3_entry_counter_before": 0,
+    "R3_entry_counter_after": 1,
+    "R3_entry_counter_delta": 1,
+    "reached_layers": [
+      "MIXED_DAG"
+    ],
+    "full_entry_returned": false,
+    "real_consumers": 44,
+    "none_book_real_consumers": 0,
+    "consumer_failures": [],
+    "actual_ring_edges": [
+      {
+        "from": "A:760b541bec881e9d98abb75f38bc7e34a75d2ed047edbc8ac657091c70fdc320",
+        "to": "E:proof-r5-mixed-cycle",
+        "observed_in_actual_graph": true
+      },
+      {
+        "from": "E:proof-r5-mixed-cycle",
+        "to": "R:r5-static/cycle-prefix.json:d946006863bac1a8862ba2b3652f0b62e0914c36625541d463c342721e508e5f",
+        "observed_in_actual_graph": true
+      },
+      {
+        "from": "R:r5-static/cycle-prefix.json:d946006863bac1a8862ba2b3652f0b62e0914c36625541d463c342721e508e5f",
+        "to": "R:r5-static/cycle-prefix.json:d946006863bac1a8862ba2b3652f0b62e0914c36625541d463c342721e508e5f/F:4",
+        "observed_in_actual_graph": true
+      },
+      {
+        "from": "R:r5-static/cycle-prefix.json:d946006863bac1a8862ba2b3652f0b62e0914c36625541d463c342721e508e5f/F:4",
+        "to": "R:r5-static/cycle-return.json:b64910dbe49130c2b63cf0e499527aca88c2e7dcff817ae3e9f88b0a6e0ca8f5",
+        "observed_in_actual_graph": true
+      },
+      {
+        "from": "R:r5-static/cycle-return.json:b64910dbe49130c2b63cf0e499527aca88c2e7dcff817ae3e9f88b0a6e0ca8f5",
+        "to": "A:760b541bec881e9d98abb75f38bc7e34a75d2ed047edbc8ac657091c70fdc320",
+        "observed_in_actual_graph": true
+      }
+    ],
+    "graph_nodes": 64,
+    "prefix_visits": [
+      {
+        "mode": "REAL_CONSUMER",
+        "path": "session/prefix.json",
+        "book_id": "synthetic-r2-book",
+        "outer_scope_id": "original-a"
+      },
+      {
+        "mode": "REAL_CONSUMER",
+        "path": "r5-static/cycle-prefix.json",
+        "book_id": "synthetic-r2-book",
+        "outer_scope_id": "original-a"
+      },
+      {
+        "mode": "GLOBAL_GRAPH",
+        "path": "r5-static/cycle-prefix.json",
+        "book_id": null,
+        "outer_scope_id": null
+      }
+    ],
+    "loader": {
+      "source": "examples/a03/P2-R3-evidence-closure/closure.py",
+      "source_sha256": "ff650507bca971f8c9418a09e6e4f8df7c7691016841ffe7bd15ff66382579a5",
+      "output_setup_only": [
+        "base.EVID=OUT/'r2-regression'/RUN_ID",
+        "base.EVID.mkdir(parents=True,exist_ok=True)"
+      ],
+      "replacement": "redirect unused EVID and omit mkdir; no validator/helper/main statement changed",
+      "fixed_R3_Package_AST_unchanged": true,
+      "fixed_R3_Package_AST_sha256": "df0133704f9cb876a1d530d629a8a65a1f5ff45bf86129a4d68612e66f8085e4",
+      "product_imports": 0,
+      "main_or_oracle_calls": 0
+    },
+    "fixed_registration_sha256": "3f0281c5cfc9aeec99b11fa2de30ba40e9984a19dd0e651b747d99ebe29772ba",
+    "fixed_loader_sha256": "734b8760b58f7778f4bd32608b77fc87f95a31c027ce457408d5fbdcf8166098",
+    "other_six_scenarios_run": 0,
+    "old_36_matrix_runs": 0,
+    "session_conversion_or_oracle_calls": 0,
+    "product_calls": 0,
+    "native_qualification": false,
+    "field_reset_probe": "NOT_EXECUTED_NO_RERUN_VARIANT_OR_DELEGATION"
+  },
+  "coordinator_Package_calls": 1,
+  "review_owned_runs_exited": 3,
+  "coordinator_owned_runs_exited": 2,
+  "product_native_DB_platform_model_calls": 0,
+  "full_suite_rerun": false,
+  "integrated": false,
+  "remote_push": false,
+  "oracle_adopted": false,
+  "A03_product_accepted": false,
+  "I01_released": false,
+  "field_reset": "NOT_EXECUTED_NO_RERUN_VARIANT_OR_DELEGATION"
+}
