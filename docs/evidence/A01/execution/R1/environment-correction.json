@@ -1,0 +1,14 @@
+{
+  "initial_command": "python -B examples/a01/verify.py docs/evidence/A01/execution/R1/regression",
+  "exit_code": 1,
+  "temporary_directory": ".local/a01-r1-temp",
+  "diagnostic": {
+    "exception": "StaticSourceError",
+    "code": "OUTPUT_LOCATION",
+    "location": "destination",
+    "message": "destination: [OUTPUT_LOCATION] output must not be inside original/archive/credential directories"
+  },
+  "reason": "Test outputs fell inside intentionally protected .local; suite setup/output errors, not loosened policy",
+  "corrected_temporary_directory": "examples/a01/R1/tmp",
+  "initial_evidence_directory_created": false
+}

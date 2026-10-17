@@ -1,0 +1,449 @@
+{
+  "task": "A01",
+  "status": "REVIEW",
+  "observed_at": "2026-10-16T14:51:43.619100+00:00",
+  "environment": {
+    "python": "3.9.13",
+    "python_implementation": "CPython",
+    "os": "Windows",
+    "pydantic": "2.12.5",
+    "Pillow": "11.3.0"
+  },
+  "commands": [
+    "python -m unittest discover -s tests -p 'test_a01_*.py' -v",
+    "python -m unittest discover -s tests -p 'test_contracts*.py'"
+  ],
+  "tests": [
+    {
+      "pattern": "test_a01_*.py",
+      "tests_run": 31,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 1,
+      "successful": true,
+      "tests": [
+        {
+          "test": "test_a01_geometry.GeometryTests.test_binding_conflicts_in_both_directions",
+          "result": "PASS"
+        },
+        {
+          "test": "test_a01_geometry.GeometryTests.test_boundaries_are_not_pixel_center_indices",
+          "result": "PASS"
+        },
+        {
+          "test": "test_a01_geometry.GeometryTests.test_finite_fractional_scale_and_negative_quarter_turn",
+          "result": "PASS"
+        },
+        {
+          "test": "test_a01_geometry.GeometryTests.test_hand_calculated_points_and_four_corner_boxes",
+          "result": "PASS"
+        },
+        {
+          "test": "test_a01_geometry.GeometryTests.test_invalid_points_boxes_and_padding_are_not_clipped",
+          "result": "PASS"
+        },
+        {
+          "test": "test_a01_geometry.GeometryTests.test_invalid_transforms_are_rejected",
+          "result": "PASS"
+        },
+        {
+          "test": "test_a01_geometry.GeometryTests.test_singular_and_nonfinite_matrix_rejected",
+          "result": "PASS"
+        },
+        {
+          "test": "test_a01_geometry.GeometryTests.test_unknown_transform_types_and_ambiguous_contract_rejected",
+          "result": "PASS"
+        },
+        {
+          "test": "test_a01_rework_r1.GeometryR1Tests.test_exact_integer_limit_and_combined_canvas_limit",
+          "result": "PASS"
+        },
+        {
+          "test": "test_a01_rework_r1.GeometryR1Tests.test_forward_crop_neighbors_checked_before_arithmetic",
+          "result": "PASS"
+        },
+        {
+          "test": "test_a01_rework_r1.GeometryR1Tests.test_fractional_crop_nearest_interior_is_not_rejected_by_inverse_rounding",
+          "result": "PASS"
+        },
+        {
+          "test": "test_a01_rework_r1.GeometryR1Tests.test_reciprocal_scale_inverse_neighbors_all_quarter_turns",
+          "result": "PASS"
+        },
+        {
+          "test": "test_a01_rework_r1.GeometryR1Tests.test_rotated_domains_and_nearest_inside_outside_points_and_boxes",
+          "result": "PASS"
+        },
+        {
+          "test": "test_a01_rework_r1.GeometryR1Tests.test_seven_formal_geometry_regressions",
+          "result": "PASS"
+        },
+        {
+          "test": "test_a01_rework_r1.SourceR1Tests.test_legacy_and_new_r1_imports_both_books_remain_valid",
+          "result": "PASS"
+        },
+        {
+          "test": "test_a01_rework_r1.SourceR1Tests.test_nine_resealed_formal_source_regressions",
+          "result": "PASS"
+        },
+        {
+          "test": "test_a01_source.StaticSourceTests.test_conflicting_mapping_and_wrong_book_inputs_rejected",
+          "result": "PASS"
+        },
+        {
+          "test": "test_a01_source.StaticSourceTests.test_copy_to_space_directory_and_different_cwd",
+          "result": "PASS"
+        },
+        {
+          "test": "test_a01_source.StaticSourceTests.test_corrupt_image_with_correct_new_digest_is_fully_decoded",
+          "result": "PASS"
+        },
+        {
+          "test": "test_a01_source.StaticSourceTests.test_dedup_preserves_origins_and_only_evidenced_mapping",
+          "result": "PASS"
+        },
+        {
+          "test": "test_a01_source.StaticSourceTests.test_directory_junction_escape_rejected",
+          "result": "PASS"
+        },
+        {
+          "test": "test_a01_source.StaticSourceTests.test_hashed_mapping_conflict_and_fake_coverage_rejected",
+          "result": "PASS"
+        },
+        {
+          "test": "test_a01_source.StaticSourceTests.test_loaded_resource_tampering_dimensions_and_missing_files",
+          "result": "PASS"
+        },
+        {
+          "test": "test_a01_source.StaticSourceTests.test_missing_image_fails_before_output",
+          "result": "PASS"
+        },
+        {
+          "test": "test_a01_source.StaticSourceTests.test_originals_preserved_and_personal_paths_omitted",
+          "result": "PASS"
+        },
+        {
+          "test": "test_a01_source.StaticSourceTests.test_public_contract_consumer_and_separate_books",
+          "result": "PASS"
+        },
+        {
+          "test": "test_a01_source.StaticSourceTests.test_repeat_import_and_new_revision_preserve_old_output",
+          "result": "PASS"
+        },
+        {
+          "test": "test_a01_source.StaticSourceTests.test_resource_path_escape_and_protected_output_rejected",
+          "result": "PASS"
+        },
+        {
+          "test": "test_a01_source.StaticSourceTests.test_symlink_escape_rejected_when_host_permits_symlinks",
+          "result": "NOT_EXECUTED",
+          "reason": "host cannot create file symlinks; WinError=1314"
+        },
+        {
+          "test": "test_a01_source.StaticSourceTests.test_unknown_denominator_missing_origins_and_historical_outlier",
+          "result": "PASS"
+        },
+        {
+          "test": "test_a01_source.StaticSourceTests.test_wrong_hash_and_dimensions_on_import_rejected",
+          "result": "PASS"
+        }
+      ]
+    },
+    {
+      "pattern": "test_contracts*.py",
+      "tests_run": 70,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "successful": true,
+      "tests": [
+        {
+          "test": "test_contracts.ContractTests.test_action_may_not_consume_another_questions_identity_or_fragments",
+          "result": "PASS"
+        },
+        {
+          "test": "test_contracts.ContractTests.test_all_three_complete_fixture_chains_validate",
+          "result": "PASS"
+        },
+        {
+          "test": "test_contracts.ContractTests.test_bbox_rejects_nan_and_both_infinities_with_location",
+          "result": "PASS"
+        },
+        {
+          "test": "test_contracts.ContractTests.test_bbox_rejects_out_of_bounds_and_nonpositive_area",
+          "result": "PASS"
+        },
+        {
+          "test": "test_contracts.ContractTests.test_capability_evidence_for_an_old_platform_version_blocks_plan",
+          "result": "PASS"
+        },
+        {
+          "test": "test_contracts.ContractTests.test_cli_rejects_invalid_exchange_with_nonzero_exit_and_location",
+          "result": "PASS"
+        },
+        {
+          "test": "test_contracts.ContractTests.test_cli_schema_uses_the_public_schema_authority",
+          "result": "PASS"
+        },
+        {
+          "test": "test_contracts.ContractTests.test_conclusive_not_applied_receipt_is_a_valid_noncompleted_state",
+          "result": "PASS"
+        },
+        {
+          "test": "test_contracts.ContractTests.test_confirmed_submission_with_verified_content_and_frames_can_complete",
+          "result": "PASS"
+        },
+        {
+          "test": "test_contracts.ContractTests.test_copied_sample_cli_and_public_consumer_work_from_another_cwd",
+          "result": "PASS"
+        },
+        {
+          "test": "test_contracts.ContractTests.test_cross_book_dependency_is_rejected_even_with_valid_hashes",
+          "result": "PASS"
+        },
+        {
+          "test": "test_contracts.ContractTests.test_current_target_change_invalidates_a_ready_plan",
+          "result": "PASS"
+        },
+        {
+          "test": "test_contracts.ContractTests.test_declared_patch_result_cannot_discard_or_add_undeclared_edits",
+          "result": "PASS"
+        },
+        {
+          "test": "test_contracts.ContractTests.test_delta_update_needs_verified_capability_and_applied_target_baseline",
+          "result": "PASS"
+        },
+        {
+          "test": "test_contracts.ContractTests.test_duplicate_artifact_identity_and_revision_is_rejected",
+          "result": "PASS"
+        },
+        {
+          "test": "test_contracts.ContractTests.test_duplicate_printed_numbers_in_separate_directories_are_legal",
+          "result": "PASS"
+        },
+        {
+          "test": "test_contracts.ContractTests.test_each_unknown_action_target_remains_unknown_in_batch",
+          "result": "PASS"
+        },
+        {
+          "test": "test_contracts.ContractTests.test_exception_and_skipped_questions_remain_in_denominator",
+          "result": "PASS"
+        },
+        {
+          "test": "test_contracts.ContractTests.test_missing_artifact_version_is_rejected_after_resealing",
+          "result": "PASS"
+        },
+        {
+          "test": "test_contracts.ContractTests.test_missing_fragment_entity_is_rejected",
+          "result": "PASS"
+        },
+        {
+          "test": "test_contracts.ContractTests.test_missing_original_asset_is_rejected",
+          "result": "PASS"
+        },
+        {
+          "test": "test_contracts.ContractTests.test_missing_region_entity_is_rejected",
+          "result": "PASS"
+        },
+        {
+          "test": "test_contracts.ContractTests.test_missing_resource_and_tampered_asset_bytes_are_rejected",
+          "result": "PASS"
+        },
+        {
+          "test": "test_contracts.ContractTests.test_modified_artifact_without_new_hash_is_rejected",
+          "result": "PASS"
+        },
+        {
+          "test": "test_contracts.ContractTests.test_new_action_ids_do_not_authorize_replay_of_unknown_receipt",
+          "result": "PASS"
+        },
+        {
+          "test": "test_contracts.ContractTests.test_not_applied_cannot_be_relabelled_ready_for_submission",
+          "result": "PASS"
+        },
+        {
+          "test": "test_contracts.ContractTests.test_not_applied_without_readback_is_not_conclusive",
+          "result": "PASS"
+        },
+        {
+          "test": "test_contracts.ContractTests.test_not_submitted_and_content_pending_cannot_complete",
+          "result": "PASS"
+        },
+        {
+          "test": "test_contracts.ContractTests.test_numeric_book_and_target_identifiers_are_valid_strings",
+          "result": "PASS"
+        },
+        {
+          "test": "test_contracts.ContractTests.test_only_one_pass_does_not_make_an_executable_plan",
+          "result": "PASS"
+        },
+        {
+          "test": "test_contracts.ContractTests.test_original_dimensions_and_hash_are_bound_to_the_asset",
+          "result": "PASS"
+        },
+        {
+          "test": "test_contracts.ContractTests.test_pass_cannot_omit_scoped_questions_or_use_orphan_fragment_coverage",
+          "result": "PASS"
+        },
+        {
+          "test": "test_contracts.ContractTests.test_pass_without_required_check_evidence_is_rejected",
+          "result": "PASS"
+        },
+        {
+          "test": "test_contracts.ContractTests.test_patch_assertion_rejects_a_different_baseline_revision",
+          "result": "PASS"
+        },
+        {
+          "test": "test_contracts.ContractTests.test_patch_must_advance_the_baseline_revision",
+          "result": "PASS"
+        },
+        {
+          "test": "test_contracts.ContractTests.test_patch_with_wrong_baseline_hash_is_rejected",
+          "result": "PASS"
+        },
+        {
+          "test": "test_contracts.ContractTests.test_plan_cannot_replace_snapshot_without_new_target_check",
+          "result": "PASS"
+        },
+        {
+          "test": "test_contracts.ContractTests.test_policy_sealing_and_public_references",
+          "result": "PASS"
+        },
+        {
+          "test": "test_contracts.ContractTests.test_previous_receipt_requires_receipt_kind_and_prior_graph_revision",
+          "result": "PASS"
+        },
+        {
+          "test": "test_contracts.ContractTests.test_recomputed_denominator_cannot_silently_erase_missing_question",
+          "result": "PASS"
+        },
+        {
+          "test": "test_contracts.ContractTests.test_relative_symlink_may_not_escape_the_sample_root",
+          "result": "PASS"
+        },
+        {
+          "test": "test_contracts.ContractTests.test_required_capability_without_verification_blocks_plan",
+          "result": "PASS"
+        },
+        {
+          "test": "test_contracts.ContractTests.test_resource_paths_reject_absolute_traversal_and_windows_specials",
+          "result": "PASS"
+        },
+        {
+          "test": "test_contracts.ContractTests.test_roundtrip_preserves_exchange_and_closed_references",
+          "result": "PASS"
+        },
+        {
+          "test": "test_contracts.ContractTests.test_schema_is_json_and_contains_every_artifact_definition",
+          "result": "PASS"
+        },
+        {
+          "test": "test_contracts.ContractTests.test_sealing_is_repeatable_order_independent_and_not_self_referential",
+          "result": "PASS"
+        },
+        {
+          "test": "test_contracts.ContractTests.test_synthetic_choice_policy_cannot_switch_to_platform_execution",
+          "result": "PASS"
+        },
+        {
+          "test": "test_contracts.ContractTests.test_two_preapply_passes_do_not_substitute_for_target_pass",
+          "result": "PASS"
+        },
+        {
+          "test": "test_contracts.ContractTests.test_unknown_billing_uses_null_and_may_not_claim_zero_cost",
+          "result": "PASS"
+        },
+        {
+          "test": "test_contracts.ContractTests.test_unknown_cannot_be_hidden_by_a_completed_batch",
+          "result": "PASS"
+        },
+        {
+          "test": "test_contracts.ContractTests.test_unknown_cannot_claim_a_matching_effect",
+          "result": "PASS"
+        },
+        {
+          "test": "test_contracts.ContractTests.test_unknown_cannot_claim_replay_permission",
+          "result": "PASS"
+        },
+        {
+          "test": "test_contracts.ContractTests.test_unresolved_choice_grouping_cannot_authorize_a_ready_plan",
+          "result": "PASS"
+        },
+        {
+          "test": "test_contracts.ContractTests.test_wrong_reference_digest_is_rejected_after_resealing",
+          "result": "PASS"
+        },
+        {
+          "test": "test_contracts_platform_refs.PlatformReferenceTests.test_action_cannot_select_a_different_existing_platform_question",
+          "result": "PASS"
+        },
+        {
+          "test": "test_contracts_platform_refs.PlatformReferenceTests.test_empty_graph_mapping_is_not_a_new_question",
+          "result": "PASS"
+        },
+        {
+          "test": "test_contracts_platform_refs.PlatformReferenceTests.test_existing_action_target_requires_its_internal_questions_mapping",
+          "result": "PASS"
+        },
+        {
+          "test": "test_contracts_platform_refs.PlatformReferenceTests.test_existing_graph_mapping_must_exist_in_plan_snapshot",
+          "result": "PASS"
+        },
+        {
+          "test": "test_contracts_platform_refs.PlatformReferenceTests.test_existing_mapping_without_known_order_is_valid",
+          "result": "PASS"
+        },
+        {
+          "test": "test_contracts_platform_refs.PlatformReferenceTests.test_existing_target_has_explicit_mapping_and_snapshot_entry",
+          "result": "PASS"
+        },
+        {
+          "test": "test_contracts_platform_refs.PlatformReferenceTests.test_f1_and_f2_default_loader_and_cli_reject_resealed_complete_inputs",
+          "result": "PASS"
+        },
+        {
+          "test": "test_contracts_platform_refs.PlatformReferenceTests.test_f1_snapshot_question_missing_directory_is_rejected_at_field",
+          "result": "PASS"
+        },
+        {
+          "test": "test_contracts_platform_refs.PlatformReferenceTests.test_f2_nonnull_action_must_exist_in_its_snapshot",
+          "result": "PASS"
+        },
+        {
+          "test": "test_contracts_platform_refs.PlatformReferenceTests.test_internal_and_platform_directory_namespaces_remain_independent",
+          "result": "PASS"
+        },
+        {
+          "test": "test_contracts_platform_refs.PlatformReferenceTests.test_known_mapped_order_must_match_the_snapshot",
+          "result": "PASS"
+        },
+        {
+          "test": "test_contracts_platform_refs.PlatformReferenceTests.test_new_question_keeps_null_target_in_empty_snapshot",
+          "result": "PASS"
+        },
+        {
+          "test": "test_contracts_platform_refs.PlatformReferenceTests.test_new_question_keeps_null_target_in_nonempty_snapshot",
+          "result": "PASS"
+        },
+        {
+          "test": "test_contracts_platform_refs.PlatformReferenceTests.test_null_target_cannot_bypass_an_existing_mapping",
+          "result": "PASS"
+        },
+        {
+          "test": "test_contracts_platform_refs.PlatformReferenceTests.test_parent_and_child_can_share_an_explicit_platform_projection",
+          "result": "PASS"
+        },
+        {
+          "test": "test_contracts_platform_refs.PlatformReferenceTests.test_snapshot_question_in_its_declared_directory_is_valid",
+          "result": "PASS"
+        }
+      ]
+    }
+  ],
+  "network_calls": 0,
+  "browser_calls": 0,
+  "model_calls": 0,
+  "model_cost": 0,
+  "real_platform_acceptance": "NOT_EXECUTED",
+  "independent_A01_acceptance": "PENDING"
+}
