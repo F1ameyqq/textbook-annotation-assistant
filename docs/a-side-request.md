@@ -25,6 +25,7 @@
 - 最新行内候选持久链可生成B内部 `b-graph-trial/0.5` 和 `b-check-trial/0.5`：原图谱业务core不变，`inline_content` 保留全部调用、候选、当前来源绑定和跨行冲突；Check05显式记录原core复用依据及当前引用。兼容或拒绝须由固定消费者验证，不代表公共合同已冻结；说明见 [行内候选持久链](b-pipeline-inline-46007447.md)。
 - 原单片段显式内容修订生成B内部G06/Check06（`b-graph-trial/0.6`、`b-check-trial/0.6`）：原fragments/账本/图片/行内候选仍为来源层，活动正文、解析和文字呈现区实际消费`content_fragments`及显式换行投影，不能再用“原业务core完全不变”的0.5规则处理。新检查逐项保留或重检旧问题，选择/开发编辑仍未核准；见 [内容修订说明](b-content-revision-46007447.md)。
 - 新区域计划0.2在同一14阶段生成G07/Check07：`content_fragments`可含绑定多原片段或无旧OCR片段的`REGION_DRAFT`块及plain/LaTeX runs，按`render_regions`和`content_fragment_ids`呈现，受区域重建影响答案的`regions`也更新为typed列表，旧legacy值完整归档。真实Q16是三行MODEL_DRAFT源图开发转写，不能称完整CPU识别或人工核准。请显式适配或拒绝0.7，不能按旧单片段画框或因空source_fragment_ids丢块；见 [区域重建说明](b-content-region-46007447.md)。
+- B已有[本机离线复核入口](b-content-review-46007447.md)，可以对照来源编辑、保存重检、恢复和导出当前完整计划；导出仍由既有14阶段链生成当前G07/Check07。A无需依赖本机UI、端口或内部head；请按前述共同版本/固定消费者接收计划和当前输出。草稿作者及来源一致性检查不构成人工内容签核，独立核对者和小批验收材料仍待落实。
 
 ## 最小消费者需要守住的边界
 
