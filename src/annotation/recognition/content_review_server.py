@@ -198,13 +198,15 @@ def make_server(workspace, *, host="127.0.0.1", port=0):
         do_OPTIONS = do_PUT = do_PATCH = do_DELETE = _method_not_allowed
 
     # Windows can occasionally choose an excluded ephemeral port for port=0.
-    # Retry the OS allocation only; a user-specified port still fails explicitly.
-    for attempt in range(8):
+    # A reserved range may exceed eight consecutive allocations. Keep the retry
+    # bounded; a user-specified port still fails explicitly without fallback.
+    allocation_attempts = 128
+    for attempt in range(allocation_attempts):
         try:
             server = ThreadingHTTPServer((host, port), Handler)
             break
         except PermissionError as exc:
-            if port != 0 or exc.errno != errno.EACCES or attempt == 7:
+            if port != 0 or exc.errno != errno.EACCES or attempt == allocation_attempts - 1:
                 raise
     server.daemon_threads = True
     server.review_token = secrets.token_urlsafe(32)
