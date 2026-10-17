@@ -2,7 +2,7 @@
   "schema_version": 1,
   "project": "D:\\1800",
   "coordinator_thread_id": "01a13f26-7567-75e1-99ee-c9d2194e78bb",
-  "updated_at": "2026-10-18T01:02:19.412941+08:00",
+  "updated_at": "2026-10-18T01:03:52.000532+08:00",
   "automation": {
     "id": "1800-a",
     "kind": "heartbeat",
@@ -1936,8 +1936,8 @@
       }
     },
     "A03": {
-      "status": "REWORK",
-      "phase": "P2_R8_R2_PROJECTION_REWORK_READY",
+      "status": "RUNNING",
+      "phase": "P2_R8_R2_PROJECTION_REWORK_RUNNING",
       "depends_on": [
         "A02"
       ],
@@ -1946,7 +1946,7 @@
       "review_task": "docs/tasks/A03-P2-R7-readonly-codec-review-handoff.md",
       "acceptance_scope": "P1 and limited R2-R6 scopes accepted; R7 read-only product locally INTEGRATED. Native P2/UNKNOWN recovery remains unaccepted.",
       "next_dependency": "Bounded attempt_fact projection repair from a0c40886; fresh complete N1 then N2-N7, independent review and original P2 remaining criteria before I01. B readonly/HOLD slice remains separately gated by interface mapping.",
-      "dispatch_status": "EXECUTION_INTENT_RECORDED",
+      "dispatch_status": "EXECUTION_ACKNOWLEDGED",
       "B_confirmation": "NOT_CONFIRMED",
       "workflow_commit": "77d3e123ab7247eae6f81f7acd669e3a69c934a0",
       "worktree_name": "a03-runtime-recovery",
@@ -1957,77 +1957,37 @@
       "execution": {
         "thread_id": "01a145aa-2fea-7942-97f9-ad260acf4e30",
         "host_id": "local",
-        "cursor": "506fd3cf-091f-418b-b002-636f503b5e4b:42",
-        "turn_status": "completed",
-        "observed_thread_status": "idle",
-        "phase": "P2_R8_R1_FROZEN_REVIEW_N1_BLOCKED",
-        "base_commit": "fa6edeb7e9dd0c9502781747e5fce012931d9441",
-        "task_document": "docs/tasks/A03-P2-R8-R1-producer-rework.md",
-        "task_sha256": "bc0063986d164bd0ca7caeddfb2ed358439fd14e3d9d80961f2f5c85f932ad7b",
-        "expected_report": "docs/tasks/A03-P2-R8-R1-producer-report.md",
+        "cursor": "506fd3cf-091f-418b-b002-636f503b5e4b:43",
+        "turn_status": "inProgress",
+        "observed_thread_status": "active",
+        "phase": "P2_R8_R2_PROJECTION_REWORK_RUNNING",
+        "base_commit": "a0c40886f3076f84c46377e03fc2206d2fdc5585",
+        "task_document": "docs/tasks/A03-P2-R8-R2-projection-rework.md",
+        "task_sha256": "c76ef2a47fa9bbfecb83b05e02cfe56a6599c68600786d2a86eb9547c35fb3e0",
+        "expected_report": "docs/tasks/A03-P2-R8-R2-projection-report.md",
         "reasoning_policy": "PRESERVE_USER_SETTING",
-        "dispatch_key": "A03:execution:P2-R8-R1-producer:fa6edeb7e9dd0c9502781747e5fce012931d9441",
-        "last_checked_at": "2026-10-18T00:47:19.431535+08:00",
-        "workflow_commit": "b9889efd29baa364bdd0ce9e356a8cde7054f8d9",
-        "turn_id": "01a14a8d-865f-7c43-bcce-655bf9cee3d8",
-        "last_progress": "Frozen: coverage minimal fix and actual PRE admitted; single effect and terminal readonly head reached; N1 still fails fact/progress attempt consistency. N2-N7 unrun.",
-        "latest_lightweight_observation": {
-          "at": "2026-10-18T00:47:19.431535+08:00",
-          "head": "a0c40886f3076f84c46377e03fc2206d2fdc5585",
-          "status": [],
-          "report_present": true,
-          "scope": "Frozen execution HEAD/clean worktree and report presence rechecked; prior raw-byte and release preflight retained without rerun."
-        },
-        "working_tree_clean": true,
-        "completed_turn_confirms_freeze": true,
-        "session_released": true,
-        "session_release_basis": "Completed turn plus 23 raw Git-bound preregistration/start/completion/log records; no process/profile scan.",
-        "previous_frozen_commit": "fa6edeb7e9dd0c9502781747e5fce012931d9441",
+        "dispatch_key": "A03:execution:P2-R8-R2-projection:a0c40886f3076f84c46377e03fc2206d2fdc5585",
+        "last_checked_at": "2026-10-18T01:03:52.000532+08:00",
+        "workflow_commit": "016e048669e5af1f193e71968d03bf3000cf16d1",
+        "turn_id": "01a14ad1-35f6-7710-9d3d-e3e390a28aa2",
+        "last_progress": "Acknowledged original-chat continuation for one confirmed material-fact attempt projection repair; no final delivery yet.",
         "previous_delivery": {
-          "target_commit": "fa6edeb7e9dd0c9502781747e5fce012931d9441",
-          "commit": "fa6edeb7e9dd0c9502781747e5fce012931d9441",
-          "implementation_commit": "334577d922d224789191a8b4d7127513692ada95",
-          "report": "docs/tasks/A03-P2-R8-native-bridge-delivery.md",
-          "report_sha256": "2d482c8c2b20985496cf0b07db65aaa68fccc3acfae6e363af0c3d34d6f0372d",
-          "evidence_manifest": "docs/evidence/A03/execution/P2-R8-native-bridge/manifest.json",
-          "evidence_manifest_sha256": "c9d195c5a97ef6293cece1627372ecf8f7404d4537bac9a9bda5e298841f0c7e",
+          "target_commit": "a0c40886f3076f84c46377e03fc2206d2fdc5585",
+          "commit": "a0c40886f3076f84c46377e03fc2206d2fdc5585",
+          "implementation_commit": "613952f170167551b6f935d93cc9f007e6aa7221",
+          "report": "docs/tasks/A03-P2-R8-R1-producer-report.md",
+          "report_sha256": "e9b99a31b5958f184ef9bea63f5b26a9765fac767af9ef21918929673c6df199",
+          "evidence_manifest": "docs/evidence/A03/execution/P2-R8-R1-producer/manifest.json",
+          "evidence_manifest_sha256": "5d5bf3de95c8e6bd335e8ec1e014a627f9346837df2ff243ae1c63c719bd60ad",
           "delivery_preflight": {
-            "path": "docs/evidence/coordinator/heartbeat-20261017-1510/A03-R8-delivery-preflight.json",
-            "sha256": "a416e8ac974ffbc9ca6f78ac22a44d54fe3c9d7d6c2d043bba68b8e59ec311b8",
-            "entries": 462,
+            "path": "docs/evidence/coordinator/heartbeat-20261018-0005/A03-R8-R1-delivery-preflight.json",
+            "sha256": "7e82e78dde8ed7be2d544d4f7296d42630ffddd61972da70811a0cd703301a10",
+            "entries": 507,
             "functional_tests_run": false
           }
         },
-        "latest_result_observation": {
-          "at": "2026-10-17T23:54:49.673123+08:00",
-          "status": "UNFROZEN_EXECUTION_EVIDENCE_OBSERVED",
-          "minimal_check": "1 test OK; complete PASS and incomplete HOLD reported",
-          "N1": "exit 1 after 24s at reconcile > commit_reconciliation > project_plan > RECOVERY_CHAIN_INVALID",
-          "reached_before_failure": "Test asserted one target effect, child exit87/barrier released, missing receipt and UNKNOWN before reconcile; coordinator did not run target or query active DB.",
-          "candidate_cause": "Native recovered fact records MAY_HAVE_BEEN_ATTEMPTED while projection infers ATTEMPTED from APPLIED row; exact frozen artifact confirmation pending.",
-          "hashes": {
-            "runs/minimal/stderr.txt": "268f3780acde1318203c43273afdaf3ff246ae3789c0a7d31133338df40c82af",
-            "runs/minimal/completed.json": "5510795a36c745cfb2d9b88126cde994f1f863e8c7521a53b97a5b5a3ec49a39",
-            "runs/N1/stderr.txt": "92706a74be9a9fdeafa02d0cb3df9c135d7b2a002e716f4a27f59d79cc6ff609",
-            "runs/N1/completed.json": "f3942b928ece9bade2a133e428fabf8494662cc4920e3dd6731534641fdd1c8f",
-            "validation/native-r1-01/processes/n1-child/completed.json": "e089e01e1e6ba8e02018a8d82c0914aa60697c4ba5d7027cbf54c844cfa2f58d"
-          },
-          "functional_acceptance": false,
-          "independent_review": false
-        },
-        "commit": "a0c40886f3076f84c46377e03fc2206d2fdc5585",
-        "target_commit": "a0c40886f3076f84c46377e03fc2206d2fdc5585",
-        "implementation_commit": "613952f170167551b6f935d93cc9f007e6aa7221",
-        "report": "docs/tasks/A03-P2-R8-R1-producer-report.md",
-        "report_sha256": "e9b99a31b5958f184ef9bea63f5b26a9765fac767af9ef21918929673c6df199",
-        "evidence_manifest": "docs/evidence/A03/execution/P2-R8-R1-producer/manifest.json",
-        "evidence_manifest_sha256": "5d5bf3de95c8e6bd335e8ec1e014a627f9346837df2ff243ae1c63c719bd60ad",
-        "delivery_preflight": {
-          "path": "docs/evidence/coordinator/heartbeat-20261018-0005/A03-R8-R1-delivery-preflight.json",
-          "sha256": "7e82e78dde8ed7be2d544d4f7296d42630ffddd61972da70811a0cd703301a10",
-          "entries": 507,
-          "functional_tests_run": false
-        }
+        "completed_turn_confirms_freeze": false,
+        "session_released": false
       },
       "review": {
         "thread_id": "01a145aa-8d59-7c70-8d81-731712103a9a",
@@ -4059,7 +4019,7 @@
         "task": "A03",
         "stage": "P2_R8_R2_PROJECTION_REWORK",
         "role": "execution",
-        "state": "INTENT_RECORDED",
+        "state": "ACKNOWLEDGED",
         "created_at": "2026-10-18T01:02:19.412941+08:00",
         "base_commit": "a0c40886f3076f84c46377e03fc2206d2fdc5585",
         "document": "docs/tasks/A03-P2-R8-R2-projection-rework.md",
@@ -4070,7 +4030,13 @@
         "send_message_thinking": "OMIT",
         "send_message_model": "OMIT",
         "scope": "Preserve material fact attempt classification in runtime projection; fresh full N1, then original N2-N7 when dependencies hold; one confirmed fix only.",
-        "result": "NOT_SENT"
+        "result": "Original A03 executor started R8-R2 turn; model/thinking omitted as requested.",
+        "sent_at": "2026-10-18T01:03:52.000532+08:00",
+        "acknowledged_at": "2026-10-18T01:03:52.000532+08:00",
+        "workflow_commit": "016e048669e5af1f193e71968d03bf3000cf16d1",
+        "turn_id": "01a14ad1-35f6-7710-9d3d-e3e390a28aa2",
+        "cursor": "506fd3cf-091f-418b-b002-636f503b5e4b:43",
+        "last_observed_at": "2026-10-18T01:03:52.000532+08:00"
       },
       "review_r7_frozen_record": {
         "thread_id": "01a145aa-8d59-7c70-8d81-731712103a9a",
@@ -4250,10 +4216,11 @@
         "I01_released": false,
         "next_task": "docs/tasks/A03-P2-R8-R2-projection-rework.md",
         "next_task_sha256": "c76ef2a47fa9bbfecb83b05e02cfe56a6599c68600786d2a86eb9547c35fb3e0",
-        "remote_push": false
+        "remote_push": false,
+        "workflow_commit": "016e048669e5af1f193e71968d03bf3000cf16d1"
       },
       "review_archive_r8_r1": {
-        "status": "PREPARED_FOR_LOCAL_ARCHIVE",
+        "status": "ARCHIVED_LOCALLY",
         "report": "docs/tasks/A03-P2-R8-R1-producer-review-report.md",
         "report_sha256": "37ad11cbecefcfc97c2c1487786f66418bd231c79e7b7654bd9d6c7a8fbf9cbf",
         "manifest": "docs/evidence/A03/review/P2-R8-R1-producer/sha256-manifest.json",
@@ -4262,7 +4229,9 @@
         "total_files": 392,
         "raw_git_inputs_verified": 339,
         "review_processes_exited": 5,
-        "remote_push": false
+        "remote_push": false,
+        "commit": "016e048669e5af1f193e71968d03bf3000cf16d1",
+        "raw_staged_files_verified": 392
       }
     },
     "D01": {
@@ -5535,7 +5504,7 @@
       "task": "A03",
       "stage": "P2_R8_R2_PROJECTION_REWORK",
       "role": "execution",
-      "state": "INTENT_RECORDED",
+      "state": "ACKNOWLEDGED",
       "created_at": "2026-10-18T01:02:19.412941+08:00",
       "base_commit": "a0c40886f3076f84c46377e03fc2206d2fdc5585",
       "document": "docs/tasks/A03-P2-R8-R2-projection-rework.md",
@@ -5546,17 +5515,24 @@
       "send_message_thinking": "OMIT",
       "send_message_model": "OMIT",
       "scope": "Preserve material fact attempt classification in runtime projection; fresh full N1, then original N2-N7 when dependencies hold; one confirmed fix only.",
-      "result": "NOT_SENT"
+      "result": "Original A03 executor started R8-R2 turn; model/thinking omitted as requested.",
+      "sent_at": "2026-10-18T01:03:52.000532+08:00",
+      "acknowledged_at": "2026-10-18T01:03:52.000532+08:00",
+      "workflow_commit": "016e048669e5af1f193e71968d03bf3000cf16d1",
+      "turn_id": "01a14ad1-35f6-7710-9d3d-e3e390a28aa2",
+      "cursor": "506fd3cf-091f-418b-b002-636f503b5e4b:43",
+      "last_observed_at": "2026-10-18T01:03:52.000532+08:00"
     }
   ],
   "last_action": {
-    "at": "2026-10-18T01:02:19.412941+08:00",
+    "at": "2026-10-18T01:03:52.000532+08:00",
     "task_id": "A03",
-    "action": "R8_R1_REWORK_CONFIRMED_R8_R2_INTENT_RECORDED",
-    "target_commit": "a0c40886f3076f84c46377e03fc2206d2fdc5585",
-    "review_cursor": "abdea222-4697-4046-86b1-a5dc48889fac:34",
-    "decision_document": "docs/tasks/A03-P2-R8-R1-producer-coordinator-decision.md",
-    "next_task": "docs/tasks/A03-P2-R8-R2-projection-rework.md",
+    "action": "R8_R2_PROJECTION_REPAIR_DISPATCH_ACKNOWLEDGED",
+    "base_commit": "a0c40886f3076f84c46377e03fc2206d2fdc5585",
+    "workflow_commit": "016e048669e5af1f193e71968d03bf3000cf16d1",
+    "thread_id": "01a145aa-2fea-7942-97f9-ad260acf4e30",
+    "turn_id": "01a14ad1-35f6-7710-9d3d-e3e390a28aa2",
+    "cursor": "506fd3cf-091f-418b-b002-636f503b5e4b:43",
     "dispatch_key": "A03:execution:P2-R8-R2-projection:a0c40886f3076f84c46377e03fc2206d2fdc5585",
     "next_dependency": "Bounded attempt_fact projection repair from a0c40886; fresh complete N1 then N2-N7, independent review and original P2 remaining criteria before I01. B readonly/HOLD slice remains separately gated by interface mapping."
   },
@@ -5566,46 +5542,31 @@
     "Platform test is single-book serial, no book submission, no unbudgeted paid models."
   ],
   "last_check": {
-    "at": "2026-10-18T00:47:19.431535+08:00",
-    "trigger": "2026-10-17T16:42:41.702Z",
+    "at": "2026-10-18T01:03:52.000532+08:00",
+    "trigger": "2026-10-17T16:57:41.930Z",
     "task_id": "A03",
-    "root_head": "d34ae65159b76f74da8cf0e71767b96d86b19163",
+    "root_head": "016e048669e5af1f193e71968d03bf3000cf16d1",
     "execution_thread_id": "01a145aa-2fea-7942-97f9-ad260acf4e30",
-    "execution_turn_id": "01a14a8d-865f-7c43-bcce-655bf9cee3d8",
-    "execution_cursor": "506fd3cf-091f-418b-b002-636f503b5e4b:42",
+    "execution_cursor": "506fd3cf-091f-418b-b002-636f503b5e4b:43",
     "execution_target_observed": "a0c40886f3076f84c46377e03fc2206d2fdc5585",
-    "execution_artifact_observation": {
-      "at": "2026-10-18T00:47:19.431535+08:00",
-      "head": "a0c40886f3076f84c46377e03fc2206d2fdc5585",
-      "status": [],
-      "report_present": true,
-      "scope": "Frozen execution HEAD/clean worktree and report presence rechecked; prior raw-byte and release preflight retained without rerun."
-    },
     "review_thread_id": "01a145aa-8d59-7c70-8d81-731712103a9a",
     "review_turn_id": "01a14aaa-9d42-7461-8a41-191da0a31a3a",
-    "review_cursor": "abdea222-4697-4046-86b1-a5dc48889fac:33",
-    "review_artifact_observation": {
-      "at": "2026-10-18T00:47:19.431535+08:00",
-      "report_present": false,
-      "manifest_present": false,
-      "release_present": false,
-      "scope": "Active review artifacts are not frozen; no acceptance recorded."
-    },
-    "phase": "P2_R8_R1_BOUNDED_INDEPENDENT_REVIEW_RUNNING",
+    "review_cursor": "abdea222-4697-4046-86b1-a5dc48889fac:34",
+    "phase": "P2_R8_R2_PROJECTION_REWORK_RUNNING",
     "acceptance_scope": "P1 and limited R2-R6 scopes accepted; R7 read-only product locally INTEGRATED. Native P2/UNKNOWN recovery remains unaccepted.",
-    "next_dependencies": "Independent verification of R8-R1 coverage closure and exact attempt_fact mismatch, then bounded runtime projection repair. N1 remainder/N2-N7 and original P2 criteria remain unaccepted; I01 closed.",
-    "dispatch_result": "NO_NEW_DISPATCH; independent R8-R1 review still active and execution remains frozen.",
+    "next_dependencies": "Bounded attempt_fact projection repair from a0c40886; fresh complete N1 then N2-N7, independent review and original P2 remaining criteria before I01. B readonly/HOLD slice remains separately gated by interface mapping.",
+    "dispatch_result": "R8-R1 frozen REWORK archived; original executor ACKNOWLEDGED bounded R8-R2 repair. No new chat, model or thinking change.",
     "platform_actions": 0,
     "paid_model_calls": 0,
     "full_suite_rerun": false,
-    "notification": "DONT_NOTIFY",
-    "reason": "Independent review is still preparing its frozen decision; no new user action or completed stage.",
-    "heartbeat_time": "2026-10-17T16:42:41.702Z",
+    "notification": "NOTIFY",
+    "reason": "Independent review closed coverage gap and confirmed attempt_fact projection defect; bounded repair started.",
+    "execution_turn_id": "01a14ad1-35f6-7710-9d3d-e3e390a28aa2",
+    "heartbeat_time": "2026-10-17T16:57:41.930Z",
     "checked_task_ids": [
       "A03"
     ],
     "root_status": [
-      "?? docs/evidence/A03/review/P2-R8-R1-producer/",
       "?? mermaid-diagram.png"
     ],
     "read_documents_sha256": {
@@ -5973,24 +5934,25 @@
     }
   ],
   "last_heartbeat": {
-    "at": "2026-10-18T01:02:19.412941+08:00",
+    "at": "2026-10-18T01:03:52.000532+08:00",
     "trigger": "2026-10-17T16:57:41.930Z",
     "task_id": "A03",
-    "root_head": "e9138fe4d2e58a5c70eb2806cdf5931715a781ea",
+    "root_head": "016e048669e5af1f193e71968d03bf3000cf16d1",
     "execution_thread_id": "01a145aa-2fea-7942-97f9-ad260acf4e30",
-    "execution_cursor": "506fd3cf-091f-418b-b002-636f503b5e4b:42",
+    "execution_cursor": "506fd3cf-091f-418b-b002-636f503b5e4b:43",
     "execution_target_observed": "a0c40886f3076f84c46377e03fc2206d2fdc5585",
     "review_thread_id": "01a145aa-8d59-7c70-8d81-731712103a9a",
     "review_turn_id": "01a14aaa-9d42-7461-8a41-191da0a31a3a",
     "review_cursor": "abdea222-4697-4046-86b1-a5dc48889fac:34",
-    "phase": "P2_R8_R2_PROJECTION_REWORK_READY",
+    "phase": "P2_R8_R2_PROJECTION_REWORK_RUNNING",
     "acceptance_scope": "P1 and limited R2-R6 scopes accepted; R7 read-only product locally INTEGRATED. Native P2/UNKNOWN recovery remains unaccepted.",
     "next_dependencies": "Bounded attempt_fact projection repair from a0c40886; fresh complete N1 then N2-N7, independent review and original P2 remaining criteria before I01. B readonly/HOLD slice remains separately gated by interface mapping.",
-    "dispatch_result": "REWORK verified; R8-R2 intent recorded before send.",
+    "dispatch_result": "R8-R1 frozen REWORK archived; original executor ACKNOWLEDGED bounded R8-R2 repair. No new chat, model or thinking change.",
     "platform_actions": 0,
     "paid_model_calls": 0,
     "full_suite_rerun": false,
     "notification": "NOTIFY",
-    "reason": "Completed independent review confirms remaining defect and enables one bounded repair."
+    "reason": "Independent review closed coverage gap and confirmed attempt_fact projection defect; bounded repair started.",
+    "execution_turn_id": "01a14ad1-35f6-7710-9d3d-e3e390a28aa2"
   }
 }
