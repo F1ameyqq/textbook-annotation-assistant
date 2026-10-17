@@ -2,7 +2,7 @@
   "schema_version": 1,
   "project": "D:\\1800",
   "coordinator_thread_id": "01a13f26-7567-75e1-99ee-c9d2194e78bb",
-  "updated_at": "2026-10-18T01:31:04.161421+08:00",
+  "updated_at": "2026-10-18T01:31:56.995304+08:00",
   "automation": {
     "id": "1800-a",
     "kind": "heartbeat",
@@ -1937,7 +1937,7 @@
     },
     "A03": {
       "status": "REVIEW",
-      "phase": "P2_R8_R2_INDEPENDENT_REVIEW_READY",
+      "phase": "P2_R8_R2_BOUNDED_INDEPENDENT_REVIEW_RUNNING",
       "depends_on": [
         "A02"
       ],
@@ -1946,7 +1946,7 @@
       "review_task": "docs/tasks/A03-P2-R7-readonly-codec-review-handoff.md",
       "acceptance_scope": "P1 and limited R2-R6 scopes accepted; R7 read-only product locally INTEGRATED. Native P2/UNKNOWN recovery remains unaccepted.",
       "next_dependency": "Independent R8-R2 verification including one fresh full N1 and read-only N2 blocker diagnosis; coordinator decision, then bounded remaining native recovery work before I01. B read-only/HOLD slice remains independent.",
-      "dispatch_status": "REVIEW_INTENT_RECORDED",
+      "dispatch_status": "REVIEW_ACKNOWLEDGED",
       "B_confirmation": "NOT_CONFIRMED",
       "workflow_commit": "77d3e123ab7247eae6f81f7acd669e3a69c934a0",
       "worktree_name": "a03-runtime-recovery",
@@ -2026,10 +2026,10 @@
       "review": {
         "thread_id": "01a145aa-8d59-7c70-8d81-731712103a9a",
         "host_id": "local",
-        "cursor": "abdea222-4697-4046-86b1-a5dc48889fac:34",
-        "turn_status": "completed",
-        "observed_thread_status": "idle",
-        "phase": "P2_R8_R2_REVIEW_INTENT_RECORDED",
+        "cursor": "abdea222-4697-4046-86b1-a5dc48889fac:35",
+        "turn_status": "inProgress",
+        "observed_thread_status": "active",
+        "phase": "P2_R8_R2_BOUNDED_INDEPENDENT_REVIEW_RUNNING",
         "target_commit": "58d8a64734271d15654bb00b03d760f0f3eccd10",
         "task_document": "docs/tasks/A03-P2-R8-R2-projection-review-handoff.md",
         "task_sha256": "e66037d79d96b263d5b50b4ab4d3cb101592bfeabe81551ab535f031bcc09507",
@@ -2037,8 +2037,10 @@
         "decision": "PENDING",
         "reasoning_policy": "PRESERVE_USER_SETTING",
         "dispatch_key": "A03:review:P2-R8-R2-projection:58d8a64734271d15654bb00b03d760f0f3eccd10",
-        "last_checked_at": "2026-10-18T01:31:04.161421+08:00",
-        "last_progress": "Awaiting dispatch of fixed R8-R2 review after verified frozen delivery and release."
+        "last_checked_at": "2026-10-18T01:31:56.995304+08:00",
+        "last_progress": "Acknowledged fixed R8-R2 review; independent N1 reproduction and read-only N2 failure analysis in progress.",
+        "turn_id": "01a14aeb-1f75-7f83-a98a-eeaddbcfd01e",
+        "workflow_commit": "1f2030b813cbbfc77cc12cab36db453972af26b9"
       },
       "review_handoff": {
         "key": "A03:review:P2-R7-readonly-codec:8ad45dd07214ae406a3fab28d76a4b5abd6eef03",
@@ -4124,7 +4126,7 @@
         "task": "A03",
         "stage": "P2_R8_R2_PROJECTION_BOUNDED_REVIEW",
         "role": "review",
-        "state": "INTENT_RECORDED",
+        "state": "ACKNOWLEDGED",
         "created_at": "2026-10-18T01:31:04.161421+08:00",
         "target_commit": "58d8a64734271d15654bb00b03d760f0f3eccd10",
         "document": "docs/tasks/A03-P2-R8-R2-projection-review-handoff.md",
@@ -4137,7 +4139,13 @@
         "send_message_thinking": "OMIT",
         "send_message_model": "OMIT",
         "scope": "Verify exact projection fix and frozen evidence; one independent fresh N1; read-only N2 hold guard failure; no failure reruns or expanded matrix.",
-        "result": "NOT_SENT"
+        "result": "Original independent reviewer started exact R8-R2 bounded verification including one fresh N1; settings preserved.",
+        "workflow_commit": "1f2030b813cbbfc77cc12cab36db453972af26b9",
+        "sent_at": "2026-10-18T01:31:56.995304+08:00",
+        "acknowledged_at": "2026-10-18T01:31:56.995304+08:00",
+        "turn_id": "01a14aeb-1f75-7f83-a98a-eeaddbcfd01e",
+        "cursor": "abdea222-4697-4046-86b1-a5dc48889fac:35",
+        "last_observed_at": "2026-10-18T01:31:56.995304+08:00"
       },
       "review_r8_frozen_record": {
         "thread_id": "01a145aa-8d59-7c70-8d81-731712103a9a",
@@ -5602,7 +5610,7 @@
       "task": "A03",
       "stage": "P2_R8_R2_PROJECTION_BOUNDED_REVIEW",
       "role": "review",
-      "state": "INTENT_RECORDED",
+      "state": "ACKNOWLEDGED",
       "created_at": "2026-10-18T01:31:04.161421+08:00",
       "target_commit": "58d8a64734271d15654bb00b03d760f0f3eccd10",
       "document": "docs/tasks/A03-P2-R8-R2-projection-review-handoff.md",
@@ -5615,15 +5623,24 @@
       "send_message_thinking": "OMIT",
       "send_message_model": "OMIT",
       "scope": "Verify exact projection fix and frozen evidence; one independent fresh N1; read-only N2 hold guard failure; no failure reruns or expanded matrix.",
-      "result": "NOT_SENT"
+      "result": "Original independent reviewer started exact R8-R2 bounded verification including one fresh N1; settings preserved.",
+      "workflow_commit": "1f2030b813cbbfc77cc12cab36db453972af26b9",
+      "sent_at": "2026-10-18T01:31:56.995304+08:00",
+      "acknowledged_at": "2026-10-18T01:31:56.995304+08:00",
+      "turn_id": "01a14aeb-1f75-7f83-a98a-eeaddbcfd01e",
+      "cursor": "abdea222-4697-4046-86b1-a5dc48889fac:35",
+      "last_observed_at": "2026-10-18T01:31:56.995304+08:00"
     }
   ],
   "last_action": {
-    "at": "2026-10-18T01:31:04.161421+08:00",
+    "at": "2026-10-18T01:31:56.995304+08:00",
     "task_id": "A03",
-    "action": "R8_R2_DELIVERY_VERIFIED_REVIEW_INTENT_RECORDED",
+    "action": "R8_R2_INDEPENDENT_REVIEW_DISPATCH_ACKNOWLEDGED",
     "target_commit": "58d8a64734271d15654bb00b03d760f0f3eccd10",
+    "workflow_commit": "1f2030b813cbbfc77cc12cab36db453972af26b9",
     "thread_id": "01a145aa-8d59-7c70-8d81-731712103a9a",
+    "turn_id": "01a14aeb-1f75-7f83-a98a-eeaddbcfd01e",
+    "cursor": "abdea222-4697-4046-86b1-a5dc48889fac:35",
     "dispatch_key": "A03:review:P2-R8-R2-projection:58d8a64734271d15654bb00b03d760f0f3eccd10",
     "next_dependency": "Independent R8-R2 verification including one fresh full N1 and read-only N2 blocker diagnosis; coordinator decision, then bounded remaining native recovery work before I01. B read-only/HOLD slice remains independent."
   },
@@ -5633,44 +5650,27 @@
     "Platform test is single-book serial, no book submission, no unbudgeted paid models."
   ],
   "last_check": {
-    "at": "2026-10-18T01:13:42.513800+08:00",
-    "trigger": "2026-10-17T17:12:42.199Z",
+    "at": "2026-10-18T01:31:56.995304+08:00",
+    "trigger": "2026-10-17T17:27:42.437Z",
     "task_id": "A03",
-    "root_head": "150caf80fe606e06b81d6bafb523c10a0567048a",
+    "root_head": "1f2030b813cbbfc77cc12cab36db453972af26b9",
     "execution_thread_id": "01a145aa-2fea-7942-97f9-ad260acf4e30",
     "execution_turn_id": "01a14ad1-35f6-7710-9d3d-e3e390a28aa2",
-    "execution_cursor": "506fd3cf-091f-418b-b002-636f503b5e4b:44",
-    "execution_base": "a0c40886f3076f84c46377e03fc2206d2fdc5585",
-    "execution_artifact_observation": {
-      "at": "2026-10-18T01:13:42.513800+08:00",
-      "head": "a0c40886f3076f84c46377e03fc2206d2fdc5585",
-      "status": [
-        "M src/annotation/contracts/a03_native/data/adoption.json",
-        " M src/annotation/contracts/a03_native/data/profile.json",
-        " M src/annotation/runtime/storage/__init__.py",
-        "?? docs/evidence/A03/execution/P2-R8-R2-projection/",
-        "?? examples/a03/P2-R8-R2-projection/",
-        "?? tests/fixtures/a03/P2-R8-R2-projection/",
-        "?? tests/test_a03_r8_r2_projection.py",
-        "?? tests/test_a03_r8_r2_projection_minimal.py"
-      ],
-      "report_present": false,
-      "manifest_present": false,
-      "release_present": false,
-      "scope": "Unfrozen R8-R2 author artifacts only; no candidate tests or database reads by coordinator."
-    },
+    "execution_cursor": "506fd3cf-091f-418b-b002-636f503b5e4b:45",
+    "execution_target_observed": "58d8a64734271d15654bb00b03d760f0f3eccd10",
     "review_thread_id": "01a145aa-8d59-7c70-8d81-731712103a9a",
-    "review_cursor": "abdea222-4697-4046-86b1-a5dc48889fac:34",
-    "phase": "P2_R8_R2_PROJECTION_REWORK_RUNNING",
+    "review_cursor": "abdea222-4697-4046-86b1-a5dc48889fac:35",
+    "phase": "P2_R8_R2_BOUNDED_INDEPENDENT_REVIEW_RUNNING",
     "acceptance_scope": "P1 and limited R2-R6 scopes accepted; R7 read-only product locally INTEGRATED. Native P2/UNKNOWN recovery remains unaccepted.",
-    "next_dependencies": "Frozen R8-R2 delivery/report/release and bounded independent review of attempt projection closure, actual N1 result, and new author-reported N2 POST_HOLD lease blocker. Native P2 and I01 remain unaccepted.",
-    "dispatch_result": "NO_NEW_DISPATCH; executor finishing bounded R8-R2 evidence; reviewer awaits frozen delivery.",
+    "next_dependencies": "Independent R8-R2 verification including one fresh full N1 and read-only N2 blocker diagnosis; coordinator decision, then bounded remaining native recovery work before I01. B read-only/HOLD slice remains independent.",
+    "dispatch_result": "R8-R2 frozen delivery verified; original reviewer ACKNOWLEDGED one fresh N1 plus read-only N2 failure review.",
     "platform_actions": 0,
     "paid_model_calls": 0,
     "full_suite_rerun": false,
-    "notification": "DONT_NOTIFY",
-    "reason": "Author is still active and delivery/release is not frozen; no new independent decision or user action.",
-    "heartbeat_time": "2026-10-17T17:12:42.199Z",
+    "notification": "NOTIFY",
+    "reason": "Execution N1 advanced and N2 retained blocker; independent review dispatched without new chat or setting change.",
+    "review_turn_id": "01a14aeb-1f75-7f83-a98a-eeaddbcfd01e",
+    "heartbeat_time": "2026-10-17T17:27:42.437Z",
     "checked_task_ids": [
       "A03"
     ],
@@ -6042,24 +6042,25 @@
     }
   ],
   "last_heartbeat": {
-    "at": "2026-10-18T01:31:04.161421+08:00",
+    "at": "2026-10-18T01:31:56.995304+08:00",
     "trigger": "2026-10-17T17:27:42.437Z",
     "task_id": "A03",
-    "root_head": "1ce460bf7ddbad2176a10a6c2bf52a9c7636bef3",
+    "root_head": "1f2030b813cbbfc77cc12cab36db453972af26b9",
     "execution_thread_id": "01a145aa-2fea-7942-97f9-ad260acf4e30",
     "execution_turn_id": "01a14ad1-35f6-7710-9d3d-e3e390a28aa2",
     "execution_cursor": "506fd3cf-091f-418b-b002-636f503b5e4b:45",
     "execution_target_observed": "58d8a64734271d15654bb00b03d760f0f3eccd10",
     "review_thread_id": "01a145aa-8d59-7c70-8d81-731712103a9a",
-    "review_cursor": "abdea222-4697-4046-86b1-a5dc48889fac:34",
-    "phase": "P2_R8_R2_INDEPENDENT_REVIEW_READY",
+    "review_cursor": "abdea222-4697-4046-86b1-a5dc48889fac:35",
+    "phase": "P2_R8_R2_BOUNDED_INDEPENDENT_REVIEW_RUNNING",
     "acceptance_scope": "P1 and limited R2-R6 scopes accepted; R7 read-only product locally INTEGRATED. Native P2/UNKNOWN recovery remains unaccepted.",
     "next_dependencies": "Independent R8-R2 verification including one fresh full N1 and read-only N2 blocker diagnosis; coordinator decision, then bounded remaining native recovery work before I01. B read-only/HOLD slice remains independent.",
-    "dispatch_result": "Exact R8-R2 delivery and release verified; review intent recorded before send.",
+    "dispatch_result": "R8-R2 frozen delivery verified; original reviewer ACKNOWLEDGED one fresh N1 plus read-only N2 failure review.",
     "platform_actions": 0,
     "paid_model_calls": 0,
     "full_suite_rerun": false,
     "notification": "NOTIFY",
-    "reason": "Frozen execution advances N1 and retains N2 blocker; independent review ready."
+    "reason": "Execution N1 advanced and N2 retained blocker; independent review dispatched without new chat or setting change.",
+    "review_turn_id": "01a14aeb-1f75-7f83-a98a-eeaddbcfd01e"
   }
 }
