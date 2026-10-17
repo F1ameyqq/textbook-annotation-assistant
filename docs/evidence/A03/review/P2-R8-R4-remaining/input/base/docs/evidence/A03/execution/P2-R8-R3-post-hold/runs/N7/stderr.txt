@@ -1,0 +1,41 @@
+test_N7 (__main__.R8R3NativeBridgeTests) ... FAIL
+
+======================================================================
+FAIL: test_N7 (__main__.R8R3NativeBridgeTests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\ASUS\.codex\worktrees\a03-runtime-recovery\1800\src\annotation\delivery\mock\persistent.py", line 335, in open
+    reject("TARGET_STORE_VERSION_UNSUPPORTED", "target application or user version differs")
+  File "C:\Users\ASUS\.codex\worktrees\a03-runtime-recovery\1800\src\annotation\quality\targetcheck\__init__.py", line 33, in reject
+    raise ContractError([{"path": path, "code": code, "message": message}])
+annotation.contracts.validation.ContractError: $.a02: [TARGET_STORE_VERSION_UNSUPPORTED] target application or user version differs
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\ASUS\.codex\worktrees\a03-runtime-recovery\1800\tests\test_a03_r8_r3_local.py", line 10, in refusal
+    operation()
+  File "C:\Users\ASUS\.codex\worktrees\a03-runtime-recovery\1800\tests\test_a03_r8_r3_post_hold.py", line 440, in <lambda>
+    refusal(self, 'TARGET_STORE_VERSION_UNSUPPORTED', lambda: PersistentMockSession.open(n1_reg['target_dir'],
+  File "C:\Users\ASUS\.codex\worktrees\a03-runtime-recovery\1800\src\annotation\delivery\mock\persistent.py", line 342, in open
+    reject("TARGET_STORE_CORRUPT", str(exc))
+  File "C:\Users\ASUS\.codex\worktrees\a03-runtime-recovery\1800\src\annotation\quality\targetcheck\__init__.py", line 33, in reject
+    raise ContractError([{"path": path, "code": code, "message": message}])
+annotation.contracts.validation.ContractError: $.a02: [TARGET_STORE_CORRUPT] $.a02: [TARGET_STORE_VERSION_UNSUPPORTED] target application or user version differs
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\ASUS\.codex\worktrees\a03-runtime-recovery\1800\tests\test_a03_r8_r3_post_hold.py", line 440, in test_N7
+    refusal(self, 'TARGET_STORE_VERSION_UNSUPPORTED', lambda: PersistentMockSession.open(n1_reg['target_dir'],
+  File "C:\Users\ASUS\.codex\worktrees\a03-runtime-recovery\1800\tests\test_a03_r8_r3_local.py", line 19, in refusal
+    test.assertEqual(code, expected)
+AssertionError: 'TARGET_STORE_CORRUPT' != 'TARGET_STORE_VERSION_UNSUPPORTED'
+- TARGET_STORE_CORRUPT
++ TARGET_STORE_VERSION_UNSUPPORTED
+
+
+----------------------------------------------------------------------
+Ran 1 test in 1.938s
+
+FAILED (failures=1)

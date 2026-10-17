@@ -1,0 +1,51 @@
+{
+  "status": "REVIEW",
+  "hook_calls": [
+    "before_completion"
+  ],
+  "same_process_controlled_exception": true,
+  "real_process_crash_claim": false,
+  "anchor_exists": false,
+  "formal_completion": "ABSENT",
+  "database_before_open": {
+    "path": "docs/evidence/A03/execution/P2-R8-R4-remaining/validation/r4-native-01/cases/N7-before-completion/runtime/runtime.sqlite3",
+    "sha256": "dd19ba8a492195879043099bb964c4a086aa6bc8077193c139fe2bfad5aecf0d",
+    "counts": {
+      "plans": 0,
+      "intents": 0,
+      "permits": 0,
+      "effects": "TABLE_NOT_CREATED"
+    },
+    "meta": {}
+  },
+  "database_after_open": {
+    "path": "docs/evidence/A03/execution/P2-R8-R4-remaining/validation/r4-native-01/cases/N7-before-completion/runtime/runtime.sqlite3",
+    "sha256": "dd19ba8a492195879043099bb964c4a086aa6bc8077193c139fe2bfad5aecf0d",
+    "counts": {
+      "plans": 0,
+      "intents": 0,
+      "permits": 0,
+      "effects": "TABLE_NOT_CREATED"
+    },
+    "meta": {}
+  },
+  "normal_open_refusal": {
+    "type": "RuntimeFailure",
+    "code": "STATE_DIRECTORY_IDENTITY_MISMATCH",
+    "issues": null,
+    "message": "[Errno 2] No such file or directory: 'C:\\\\Users\\\\ASUS\\\\.codex\\\\worktrees\\\\a03-runtime-recovery\\\\1800\\\\docs\\\\evidence\\\\A03\\\\execution\\\\P2-R8-R4-remaining\\\\validation\\\\r4-native-01\\\\cases\\\\N7-before-completion\\\\anchor.json'",
+    "traceback": "Traceback (most recent call last):\n  File \"C:\\Users\\ASUS\\.codex\\worktrees\\a03-runtime-recovery\\1800\\src\\annotation\\runtime\\storage\\__init__.py\", line 119, in __init__\n    self.anchor = json.loads(self.anchor_path.read_bytes())\n  File \"C:\\Users\\ASUS\\AppData\\Local\\Programs\\Python\\Python39\\lib\\pathlib.py\", line 1259, in read_bytes\n    with self.open(mode='rb') as f:\n  File \"C:\\Users\\ASUS\\AppData\\Local\\Programs\\Python\\Python39\\lib\\pathlib.py\", line 1252, in open\n    return io.open(self, mode, buffering, encoding, errors, newline,\n  File \"C:\\Users\\ASUS\\AppData\\Local\\Programs\\Python\\Python39\\lib\\pathlib.py\", line 1120, in _opener\n    return self._accessor.open(self, flags, mode)\nFileNotFoundError: [Errno 2] No such file or directory: 'C:\\\\Users\\\\ASUS\\\\.codex\\\\worktrees\\\\a03-runtime-recovery\\\\1800\\\\docs\\\\evidence\\\\A03\\\\execution\\\\P2-R8-R4-remaining\\\\validation\\\\r4-native-01\\\\cases\\\\N7-before-completion\\\\anchor.json'\n\nDuring handling of the above exception, another exception occurred:\n\nTraceback (most recent call last):\n  File \"C:\\Users\\ASUS\\.codex\\worktrees\\a03-runtime-recovery\\1800\\tests\\test_a03_r8_r4_remaining.py\", line 186, in test_N7_initialization\n    open_native_state(anchor, expected_ledger_id='ledger-r4-incomplete', expected_target_store_id='target-r4-incomplete')\n  File \"C:\\Users\\ASUS\\.codex\\worktrees\\a03-runtime-recovery\\1800\\src\\annotation\\runtime\\storage\\native.py\", line 456, in open_native_state\n    store = NativeRuntimeStore(anchor_path, expected_ledger_id=expected_ledger_id,\n  File \"C:\\Users\\ASUS\\.codex\\worktrees\\a03-runtime-recovery\\1800\\src\\annotation\\runtime\\storage\\native.py\", line 225, in __init__\n    super().__init__(*args, **kwargs)\n  File \"C:\\Users\\ASUS\\.codex\\worktrees\\a03-runtime-recovery\\1800\\src\\annotation\\runtime\\storage\\__init__.py\", line 121, in __init__\n    fail(\"STATE_DIRECTORY_IDENTITY_MISMATCH\", str(error), 5)\n  File \"C:\\Users\\ASUS\\.codex\\worktrees\\a03-runtime-recovery\\1800\\src\\annotation\\runtime\\storage\\common.py\", line 68, in fail\n    raise RuntimeFailure(code, message, exit_code)\nannotation.runtime.storage.common.RuntimeFailure: [Errno 2] No such file or directory: 'C:\\\\Users\\\\ASUS\\\\.codex\\\\worktrees\\\\a03-runtime-recovery\\\\1800\\\\docs\\\\evidence\\\\A03\\\\execution\\\\P2-R8-R4-remaining\\\\validation\\\\r4-native-01\\\\cases\\\\N7-before-completion\\\\anchor.json'\n"
+  },
+  "retained_files": [
+    {
+      "path": "docs/evidence/A03/execution/P2-R8-R4-remaining/validation/r4-native-01/cases/N7-before-completion/runtime/runtime.sqlite3",
+      "bytes": 167936,
+      "sha256": "dd19ba8a492195879043099bb964c4a086aa6bc8077193c139fe2bfad5aecf0d"
+    }
+  ],
+  "target_database": "NOT_CREATED",
+  "target_effects": "NOT_CREATED",
+  "all_target_interruption_points_claim": false,
+  "old_failed_target_entry_or_variant_calls": 0,
+  "migration": "NOT_IMPLEMENTED_BLOCKED"
+}
