@@ -2,7 +2,7 @@
   "schema_version": 1,
   "project": "D:\\1800",
   "coordinator_thread_id": "01a13f26-7567-75e1-99ee-c9d2194e78bb",
-  "updated_at": "2026-10-18T05:49:01.009947+08:00",
+  "updated_at": "2026-10-18T05:52:07.362772+08:00",
   "automation": {
     "id": "1800-a",
     "kind": "heartbeat",
@@ -1937,7 +1937,7 @@
     },
     "A03": {
       "status": "REVIEW",
-      "phase": "P2_R9_R1_REVIEW_PENDING",
+      "phase": "P2_R9_R1_OWNER_LIFECYCLE_REVIEW_RUNNING",
       "depends_on": [
         "A02"
       ],
@@ -1946,7 +1946,7 @@
       "review_task": "docs/tasks/A03-P2-R9-R1-owner-lifecycle-review-handoff.md",
       "acceptance_scope": "P1 and limited R2-R6 accepted; R7 readonly product locally INTEGRATED; R8-R2 projection/N1, R8-R3 POST_HOLD/local/N1-N5, R8-R4 N6/single runtime-init control limited ACCEPTED. Whole native A03 not accepted or integrated.",
       "next_dependency": "Independent frozen four-group R9-R1 review -> coordinator limited acceptance or bounded repair decision. Original broader P2 coverage and B contract mapping still required before native integration/I01.",
-      "dispatch_status": "REVIEW_INTENT_RECORDED",
+      "dispatch_status": "REVIEW_ACKNOWLEDGED",
       "B_confirmation": "NOT_CONFIRMED",
       "workflow_commit": "77d3e123ab7247eae6f81f7acd669e3a69c934a0",
       "worktree_name": "a03-runtime-recovery",
@@ -1985,10 +1985,10 @@
       "review": {
         "thread_id": "01a145aa-8d59-7c70-8d81-731712103a9a",
         "host_id": "local",
-        "cursor": "abdea222-4697-4046-86b1-a5dc48889fac:47",
-        "turn_status": "completed",
-        "observed_thread_status": "idle",
-        "phase": "P2_R9_R1_REVIEW_PENDING",
+        "cursor": "abdea222-4697-4046-86b1-a5dc48889fac:48",
+        "turn_status": "inProgress",
+        "observed_thread_status": "active",
+        "phase": "P2_R9_R1_OWNER_LIFECYCLE_REVIEW_RUNNING",
         "base_commit": "c83f956c5c29c64ab10735ba11c153201d3f3f4b",
         "target_commit": "bfd7fe896a7eee663ea8e0b6cf967548d8dd8f39",
         "task_document": "docs/tasks/A03-P2-R9-R1-owner-lifecycle-review-handoff.md",
@@ -1997,7 +1997,10 @@
         "decision": "PENDING",
         "reasoning_policy": "PRESERVE_USER_SETTING",
         "dispatch_key": "A03:review:P2-R9-R1-owner-lifecycle:bfd7fe896a7eee663ea8e0b6cf967548d8dd8f39",
-        "last_checked_at": "2026-10-18T05:49:01.009947+08:00"
+        "last_checked_at": "2026-10-18T05:52:07.362772+08:00",
+        "workflow_commit": "eff3282de913452c0c63dff6f0bde16696a9e715",
+        "turn_id": "01a14bd7-7b4b-7610-92f8-72b112a82f70",
+        "last_progress": "Independent reviewer active on frozen R9-R1 four-group handoff; no frozen review result yet."
       },
       "review_handoff": {
         "key": "A03:review:P2-R7-readonly-codec:8ad45dd07214ae406a3fab28d76a4b5abd6eef03",
@@ -3113,7 +3116,7 @@
           "completed_at": "2026-10-18T00:09:56.399342+08:00"
         }
       ],
-      "operational_status": "SINGLE_CONTROL_INDEPENDENT_REVIEW_PENDING",
+      "operational_status": "FOUR_GROUP_FROZEN_PRODUCT_INDEPENDENT_REVIEW_RUNNING",
       "last_resume_attempt_at": "2026-10-17T02:17:41.707122+00:00",
       "review_history": [
         {
@@ -4042,7 +4045,9 @@
         "document": "docs/tasks/A03-P2-R9-R1-owner-lifecycle-review-handoff.md",
         "document_sha256": "254395485491738a0f8921ade760baf5c6740b9ba0a6b615e8eab4b516c00b27",
         "target_commit": "bfd7fe896a7eee663ea8e0b6cf967548d8dd8f39",
-        "status": "INTENT_RECORDED"
+        "status": "ACKNOWLEDGED",
+        "cursor": "abdea222-4697-4046-86b1-a5dc48889fac:48",
+        "turn_id": "01a14bd7-7b4b-7610-92f8-72b112a82f70"
       },
       "review_archive_r2_proposal": {
         "status": "ARCHIVED_LOCALLY",
@@ -4610,7 +4615,7 @@
         "task": "A03",
         "stage": "P2_R9_R1_OWNER_LIFECYCLE_REVIEW",
         "role": "review",
-        "state": "INTENT_RECORDED",
+        "state": "ACKNOWLEDGED",
         "created_at": "2026-10-18T05:49:01.009947+08:00",
         "base_commit": "c83f956c5c29c64ab10735ba11c153201d3f3f4b",
         "target_commit": "bfd7fe896a7eee663ea8e0b6cf967548d8dd8f39",
@@ -4624,7 +4629,14 @@
         "send_message_thinking": "OMIT",
         "send_message_model": "OMIT",
         "scope": "Frozen product four-group independent D1/standalone/borrowed/D2 review; preregister correct exception expectations in own new driver; author failure and NOT_RUN remain unchanged; first functional failure stops.",
-        "result": "Intent recorded after frozen bytes/scope/pins and 15 process exits verified; original reviewer idle, cursor47 unchanged."
+        "result": "Original A03 independent reviewer active on four-group frozen-product review; model/thinking omitted and user settings preserved.",
+        "sent_at": "2026-10-18T05:49:36.010806+08:00",
+        "workflow_commit": "eff3282de913452c0c63dff6f0bde16696a9e715",
+        "returned_thread_id": "01a145aa-8d59-7c70-8d81-731712103a9a",
+        "acknowledged_at": "2026-10-18T05:52:07.362772+08:00",
+        "last_observed_at": "2026-10-18T05:52:07.362772+08:00",
+        "cursor": "abdea222-4697-4046-86b1-a5dc48889fac:48",
+        "turn_id": "01a14bd7-7b4b-7610-92f8-72b112a82f70"
       },
       "review_r8_frozen_record": {
         "thread_id": "01a145aa-8d59-7c70-8d81-731712103a9a",
@@ -4970,7 +4982,7 @@
         "task": "A03",
         "stage": "P2_R9_R1_OWNER_LIFECYCLE_REVIEW",
         "role": "review",
-        "state": "INTENT_RECORDED",
+        "state": "ACKNOWLEDGED",
         "created_at": "2026-10-18T05:49:01.009947+08:00",
         "base_commit": "c83f956c5c29c64ab10735ba11c153201d3f3f4b",
         "target_commit": "bfd7fe896a7eee663ea8e0b6cf967548d8dd8f39",
@@ -4984,7 +4996,14 @@
         "send_message_thinking": "OMIT",
         "send_message_model": "OMIT",
         "scope": "Frozen product four-group independent D1/standalone/borrowed/D2 review; preregister correct exception expectations in own new driver; author failure and NOT_RUN remain unchanged; first functional failure stops.",
-        "result": "Intent recorded after frozen bytes/scope/pins and 15 process exits verified; original reviewer idle, cursor47 unchanged."
+        "result": "Original A03 independent reviewer active on four-group frozen-product review; model/thinking omitted and user settings preserved.",
+        "sent_at": "2026-10-18T05:49:36.010806+08:00",
+        "workflow_commit": "eff3282de913452c0c63dff6f0bde16696a9e715",
+        "returned_thread_id": "01a145aa-8d59-7c70-8d81-731712103a9a",
+        "acknowledged_at": "2026-10-18T05:52:07.362772+08:00",
+        "last_observed_at": "2026-10-18T05:52:07.362772+08:00",
+        "cursor": "abdea222-4697-4046-86b1-a5dc48889fac:48",
+        "turn_id": "01a14bd7-7b4b-7610-92f8-72b112a82f70"
       },
       "review_r8_r3_frozen_record": {
         "thread_id": "01a145aa-8d59-7c70-8d81-731712103a9a",
@@ -6729,7 +6748,7 @@
       "task": "A03",
       "stage": "P2_R9_R1_OWNER_LIFECYCLE_REVIEW",
       "role": "review",
-      "state": "INTENT_RECORDED",
+      "state": "ACKNOWLEDGED",
       "created_at": "2026-10-18T05:49:01.009947+08:00",
       "base_commit": "c83f956c5c29c64ab10735ba11c153201d3f3f4b",
       "target_commit": "bfd7fe896a7eee663ea8e0b6cf967548d8dd8f39",
@@ -6743,16 +6762,26 @@
       "send_message_thinking": "OMIT",
       "send_message_model": "OMIT",
       "scope": "Frozen product four-group independent D1/standalone/borrowed/D2 review; preregister correct exception expectations in own new driver; author failure and NOT_RUN remain unchanged; first functional failure stops.",
-      "result": "Intent recorded after frozen bytes/scope/pins and 15 process exits verified; original reviewer idle, cursor47 unchanged."
+      "result": "Original A03 independent reviewer active on four-group frozen-product review; model/thinking omitted and user settings preserved.",
+      "sent_at": "2026-10-18T05:49:36.010806+08:00",
+      "workflow_commit": "eff3282de913452c0c63dff6f0bde16696a9e715",
+      "returned_thread_id": "01a145aa-8d59-7c70-8d81-731712103a9a",
+      "acknowledged_at": "2026-10-18T05:52:07.362772+08:00",
+      "last_observed_at": "2026-10-18T05:52:07.362772+08:00",
+      "cursor": "abdea222-4697-4046-86b1-a5dc48889fac:48",
+      "turn_id": "01a14bd7-7b4b-7610-92f8-72b112a82f70"
     }
   ],
   "last_action": {
-    "at": "2026-10-18T05:49:01.009947+08:00",
+    "at": "2026-10-18T05:52:07.362772+08:00",
     "task_id": "A03",
-    "type": "R9_R1_DELIVERY_FROZEN_REVIEW_INTENT",
+    "type": "R9_R1_REVIEW_ACKNOWLEDGED",
     "target_commit": "bfd7fe896a7eee663ea8e0b6cf967548d8dd8f39",
     "dispatch_key": "A03:review:P2-R9-R1-owner-lifecycle:bfd7fe896a7eee663ea8e0b6cf967548d8dd8f39",
-    "next_dependency": "Independent frozen four-group R9-R1 review -> coordinator limited acceptance or bounded repair decision. Original broader P2 coverage and B contract mapping still required before native integration/I01."
+    "next_dependency": "Independent frozen four-group R9-R1 review -> coordinator limited acceptance or bounded repair decision. Original broader P2 coverage and B contract mapping still required before native integration/I01.",
+    "review_thread_id": "01a145aa-8d59-7c70-8d81-731712103a9a",
+    "review_cursor": "abdea222-4697-4046-86b1-a5dc48889fac:48",
+    "review_turn_id": "01a14bd7-7b4b-7610-92f8-72b112a82f70"
   },
   "limitations": [
     "Current route uses mock B artifacts until independently agreed interface/artifact versions exist.",
@@ -6760,25 +6789,25 @@
     "Platform test is single-book serial, no book submission, no unbudgeted paid models."
   ],
   "last_check": {
-    "at": "2026-10-18T05:49:01.009947+08:00",
+    "at": "2026-10-18T05:52:07.362772+08:00",
     "trigger": "2026-10-17T21:44:46.290Z",
     "task_id": "A03",
     "checked_task_ids": [
       "A03"
     ],
-    "root_head": "811bd761fb31ae4e12232fe62e336ae07bddc936",
+    "root_head": "eff3282de913452c0c63dff6f0bde16696a9e715",
     "execution_target_observed": "bfd7fe896a7eee663ea8e0b6cf967548d8dd8f39",
     "execution_thread_id": "01a145aa-2fea-7942-97f9-ad260acf4e30",
     "execution_cursor": "506fd3cf-091f-418b-b002-636f503b5e4b:56",
     "execution_turn_id": "01a14bca-1450-7ac3-9608-dc82cc41101e",
     "execution_status": "completed",
     "review_thread_id": "01a145aa-8d59-7c70-8d81-731712103a9a",
-    "review_cursor": "abdea222-4697-4046-86b1-a5dc48889fac:47",
-    "review_status": "idle_pending_dispatch",
-    "phase": "P2_R9_R1_REVIEW_PENDING",
+    "review_cursor": "abdea222-4697-4046-86b1-a5dc48889fac:48",
+    "review_status": "active",
+    "phase": "P2_R9_R1_OWNER_LIFECYCLE_REVIEW_RUNNING",
     "acceptance_scope": "P1 and limited R2-R6 accepted; R7 readonly product locally INTEGRATED; R8-R2 projection/N1, R8-R3 POST_HOLD/local/N1-N5, R8-R4 N6/single runtime-init control limited ACCEPTED. Whole native A03 not accepted or integrated.",
     "next_dependencies": "Independent frozen four-group R9-R1 review -> coordinator limited acceptance or bounded repair decision. Original broader P2 coverage and B contract mapping still required before native integration/I01.",
-    "dispatch_result": "R9_R1_REVIEW_INTENT_RECORDED",
+    "dispatch_result": "R9_R1_REVIEW_ACKNOWLEDGED",
     "coordinator_audit": "docs/evidence/coordinator/heartbeat-20261018-0544/delivery-preflight.json",
     "coordinator_audit_sha256": "5a5313c093768df445c9d83dd28bdb7309a4270adffa0372341f6b26847b0a8b",
     "read_documents_sha256": {
@@ -6792,7 +6821,9 @@
     "full_suite_rerun": false,
     "settings_changed": false,
     "notification": "NOTIFY",
-    "reason": "Author D1 normal/reopen/replay and standalone exit0; borrowed group exited1 at incorrect exception catch after valid publish; D2 NOT_RUN. Frozen four-file product repair, no independent acceptance."
+    "reason": "Author D1 normal/reopen/replay and standalone exit0; borrowed group exited1 at incorrect exception catch after valid publish; D2 NOT_RUN. Frozen four-file product repair, no independent acceptance.",
+    "workflow_commit": "eff3282de913452c0c63dff6f0bde16696a9e715",
+    "review_turn_id": "01a14bd7-7b4b-7610-92f8-72b112a82f70"
   },
   "prepared_next_batch": {
     "status": "DISPATCHED",
@@ -7153,25 +7184,25 @@
     }
   ],
   "last_heartbeat": {
-    "at": "2026-10-18T05:49:01.009947+08:00",
+    "at": "2026-10-18T05:52:07.362772+08:00",
     "trigger": "2026-10-17T21:44:46.290Z",
     "task_id": "A03",
     "checked_task_ids": [
       "A03"
     ],
-    "root_head": "811bd761fb31ae4e12232fe62e336ae07bddc936",
+    "root_head": "eff3282de913452c0c63dff6f0bde16696a9e715",
     "execution_target_observed": "bfd7fe896a7eee663ea8e0b6cf967548d8dd8f39",
     "execution_thread_id": "01a145aa-2fea-7942-97f9-ad260acf4e30",
     "execution_cursor": "506fd3cf-091f-418b-b002-636f503b5e4b:56",
     "execution_turn_id": "01a14bca-1450-7ac3-9608-dc82cc41101e",
     "execution_status": "completed",
     "review_thread_id": "01a145aa-8d59-7c70-8d81-731712103a9a",
-    "review_cursor": "abdea222-4697-4046-86b1-a5dc48889fac:47",
-    "review_status": "idle_pending_dispatch",
-    "phase": "P2_R9_R1_REVIEW_PENDING",
+    "review_cursor": "abdea222-4697-4046-86b1-a5dc48889fac:48",
+    "review_status": "active",
+    "phase": "P2_R9_R1_OWNER_LIFECYCLE_REVIEW_RUNNING",
     "acceptance_scope": "P1 and limited R2-R6 accepted; R7 readonly product locally INTEGRATED; R8-R2 projection/N1, R8-R3 POST_HOLD/local/N1-N5, R8-R4 N6/single runtime-init control limited ACCEPTED. Whole native A03 not accepted or integrated.",
     "next_dependencies": "Independent frozen four-group R9-R1 review -> coordinator limited acceptance or bounded repair decision. Original broader P2 coverage and B contract mapping still required before native integration/I01.",
-    "dispatch_result": "R9_R1_REVIEW_INTENT_RECORDED",
+    "dispatch_result": "R9_R1_REVIEW_ACKNOWLEDGED",
     "coordinator_audit": "docs/evidence/coordinator/heartbeat-20261018-0544/delivery-preflight.json",
     "coordinator_audit_sha256": "5a5313c093768df445c9d83dd28bdb7309a4270adffa0372341f6b26847b0a8b",
     "read_documents_sha256": {
@@ -7185,6 +7216,8 @@
     "full_suite_rerun": false,
     "settings_changed": false,
     "notification": "NOTIFY",
-    "reason": "Author D1 normal/reopen/replay and standalone exit0; borrowed group exited1 at incorrect exception catch after valid publish; D2 NOT_RUN. Frozen four-file product repair, no independent acceptance."
+    "reason": "Author D1 normal/reopen/replay and standalone exit0; borrowed group exited1 at incorrect exception catch after valid publish; D2 NOT_RUN. Frozen four-file product repair, no independent acceptance.",
+    "workflow_commit": "eff3282de913452c0c63dff6f0bde16696a9e715",
+    "review_turn_id": "01a14bd7-7b4b-7610-92f8-72b112a82f70"
   }
 }
