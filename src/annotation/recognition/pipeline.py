@@ -292,9 +292,10 @@ def _validate_evidence(value, source, context):
 
 def _validate_result(stage, value, source, context, review, dependencies, recognition_dir, current_evidence=None):
     if stage in CONTENT_STAGES:
-        schema = "b-content-revision-application-trial/0.1" if stage == "content_apply" else "b-check-trial/0.6"
+        schemas = ({"b-content-revision-application-trial/0.1", "b-content-revision-application-trial/0.2"}
+                   if stage == "content_apply" else {"b-check-trial/0.6", "b-check-trial/0.7"})
         kind = "ContentRevisionApplicationTrial" if stage == "content_apply" else "CheckReportTrial"
-        offline.check_artifact(value, {schema})
+        offline.check_artifact(value, schemas)
         p = value["payload"]
         flags = dict(decision="HOLD",complete=False,transcription_verified=False,business_acceptance=False,platform_actions=[],new_model_calls=0)
         if (value.get("kind") != kind or type(value.get("revision")) is not int or value["revision"] < 1
@@ -306,7 +307,9 @@ def _validate_result(stage, value, source, context, review, dependencies, recogn
         if stage == "content_apply":
             if value.get("input_refs") != expected:
                 raise ValueError("content application is not bound to current E/G05/Check05/plan")
-            offline.check_artifact(p["graph"], {"b-graph-trial/0.6"})
+            graph_schema = ("b-graph-trial/0.7" if value["schema_version"] == "b-content-revision-application-trial/0.2"
+                            else "b-graph-trial/0.6")
+            offline.check_artifact(p["graph"], {graph_schema})
         else:
             expected[1] = dependencies["application_graph_ref"]
             expected += [dependencies["application"]["result_ref"], dependencies["review"]["reference"]]

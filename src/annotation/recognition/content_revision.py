@@ -20,9 +20,13 @@ from .policy import classify
 from .question_quality import audit_questions
 
 PLAN_SCHEMA = "b-content-revision-plan-trial/0.1"
+REGION_PLAN_SCHEMA = "b-content-revision-plan-trial/0.2"
 APPLICATION_SCHEMA = "b-content-revision-application-trial/0.1"
+REGION_APPLICATION_SCHEMA = "b-content-revision-application-trial/0.2"
 GRAPH_SCHEMA = "b-graph-trial/0.6"
+REGION_GRAPH_SCHEMA = "b-graph-trial/0.7"
 CHECK_SCHEMA = "b-check-trial/0.6"
+REGION_CHECK_SCHEMA = "b-check-trial/0.7"
 IDENTITY_POLICY = "CURRENT_REFS_WITH_EXECUTION_TIME_IN_JOURNAL/0.1"
 _HASH = re.compile(r"[0-9a-f]{64}\Z")
 
@@ -186,6 +190,115 @@ def _replacement(text):
         raise ValueError("replacement must be nonempty exact text without CR/NUL")
 
 
+def _integer_box(value):
+    return (isinstance(value, list) and len(value) == 4 and all(type(n) is int for n in value)
+            and 0 <= value[0] < value[2] and 0 <= value[1] < value[3])
+
+
+def _contains(outer, inner):
+    return outer[0] <= inner[0] < inner[2] <= outer[2] and outer[1] <= inner[1] < inner[3] <= outer[3]
+
+
+def _intersects(left, right):
+    return max(left[0], right[0]) < min(left[2], right[2]) and max(left[1], right[1]) < min(left[3], right[3])
+
+
+def _region_syntax(operation):
+    target, source, blocks = operation["target"], operation["source_region"], operation["blocks"]
+    if (not isinstance(target, dict) or set(target) != {"answer_id", "role", "source_fragment_ids"}
+            or not _text(target.get("answer_id")) or target.get("role") not in {"answer", "explanation"}
+            or not isinstance(target.get("source_fragment_ids"), list) or not target["source_fragment_ids"]
+            or not all(_text(fid) for fid in target["source_fragment_ids"])
+            or len(set(target["source_fragment_ids"])) != len(target["source_fragment_ids"])):
+        raise ValueError("region target requires unique original source fragments")
+    if (not isinstance(source, dict) or set(source) != {"asset_id", "source_sha256", "source_size", "bbox"}
+            or not _text(source.get("asset_id")) or not isinstance(source.get("source_sha256"), str)
+            or not _HASH.fullmatch(source["source_sha256"]) or not _integer_box(source.get("bbox"))
+            or not isinstance(source.get("source_size"), list) or len(source["source_size"]) != 2
+            or not all(type(v) is int and v > 0 for v in source["source_size"])
+            or not valid_bbox(source["bbox"], *source["source_size"])):
+        raise ValueError("region source requires an integer box and exact page identity")
+    if not isinstance(blocks, list) or not blocks:
+        raise ValueError("region rebuild requires ordered draft blocks")
+    seen, allocated = set(), []
+    for block in blocks:
+        if (not isinstance(block, dict) or set(block) != {"block_id", "bbox", "source_fragment_ids", "runs", "note"}
+                or not _text(block.get("block_id")) or block["block_id"] in seen or not _text(block.get("note"))
+                or not _integer_box(block.get("bbox")) or not _contains(source["bbox"], block["bbox"])
+                or not isinstance(block.get("source_fragment_ids"), list)
+                or not all(_text(fid) for fid in block["source_fragment_ids"])
+                or not isinstance(block.get("runs"), list) or not block["runs"]):
+            raise ValueError("region block has invalid identity, source box or runs")
+        seen.add(block["block_id"]); allocated.extend(block["source_fragment_ids"])
+        for run in block["runs"]:
+            if not isinstance(run, dict) or set(run) != {"format", "text"} or run.get("format") not in {"plain", "latex"}:
+                raise ValueError("region run must explicitly retain plain or LaTeX text")
+            _replacement(run["text"])
+    if len(allocated) != len(set(allocated)) or set(allocated) != set(target["source_fragment_ids"]):
+        raise ValueError("each region target fragment must belong to exactly one block")
+    for block in blocks:
+        if [fid for fid in target["source_fragment_ids"] if fid in block["source_fragment_ids"]] != block["source_fragment_ids"]:
+            raise ValueError("block source IDs must retain their original relative order")
+    if any(_intersects(left["bbox"], right["bbox"]) for i, left in enumerate(blocks) for right in blocks[i+1:]):
+        raise ValueError("draft region blocks overlap")
+
+
+def _region(evidence, graph, operation):
+    """Bind a draft to current source geometry without inventing OCR characters."""
+    target, source = operation["target"], operation["source_region"]
+    selected = [_source(evidence, graph, target["answer_id"], fid, target["role"]) for fid in target["source_fragment_ids"]]
+    answer, page = selected[0][0], selected[0][2]
+    if "render_regions" not in answer and any(v.get("content_type") == "image" or v.get("represented_by_image_region") is not None
+            for v in answer["fragments"]+answer.get("regions", [])):
+        raise ValueError("legacy image presentation needs a proven typed migration before region reconstruction")
+    if (any(v[2]["asset_id"] != source["asset_id"] for v in selected)
+            or source["source_sha256"] != page["source"]["sha256"]
+            or not _same(source["source_size"], [page["source"]["width"], page["source"]["height"]])
+            or any(not _contains(source["bbox"], v[1]["bbox"]) for v in selected)):
+        raise ValueError("draft region does not exactly bind its current source page and fragments")
+    locations = [v[3].get("location") for v in selected]
+    loc = locations[0]
+    if (not isinstance(loc, dict) or any(not _same(loc, other) for other in locations)
+            or any(type(loc.get(k)) is not int or loc[k] < 0 for k in ("column", "window_index"))
+            or not isinstance(loc.get("section_path"), list) or not loc["section_path"] or not all(_text(v) for v in loc["section_path"])):
+        raise ValueError("draft region crosses or lacks a proven source location")
+    ids = target["source_fragment_ids"]; wanted = set(ids)
+    visible, rendering = _visible(answer)
+    if [f["fragment_id"] for f in visible if f["fragment_id"] in wanted] != ids:
+        raise ValueError("draft region target must retain the original visible fragment order")
+    positions = [i for i, (_, members) in enumerate(rendering) if isinstance(members, tuple) and wanted.intersection(members)]
+    if not positions:
+        raise ValueError("draft region has no original visible rendering interval")
+    interval = rendering[positions[0]:positions[-1]+1]
+    if any(kind != "TEXT" or not members or not set(members).issubset(wanted) for kind, members in interval):
+        raise ValueError("draft region crosses a picture, structural, role or untargeted text barrier")
+    for collection_name in ("answers", "questions"):
+        collection = graph["payload"][collection_name]
+        for owner in collection:
+            for f in owner.get("fragments", []):
+                if f.get("asset_id", owner.get("asset_id")) != source["asset_id"] or not f.get("bbox"):
+                    continue
+                is_target = collection_name == "answers" and owner.get("answer_id") == answer["answer_id"] and f.get("fragment_id") in wanted
+                if _intersects(source["bbox"], f["bbox"]) and not is_target:
+                    raise ValueError("draft region overlaps other visible, structural or diagnostic source text")
+            for region in owner.get("render_regions", []):
+                if region.get("asset_id") == source["asset_id"] and region.get("content_type") != "text" and _intersects(source["bbox"], region["bbox"]):
+                    raise ValueError("draft region overlaps an original picture")
+    parents = {v[4] for v in selected}
+    for line in page["ocr_lines"]:
+        if not _intersects(source["bbox"], line["bbox"]): continue
+        rows = [r for r in graph["payload"]["answer_coverage"] if r.get("asset_id") == page["asset_id"] and r.get("line_id") == line["line_id"]]
+        if (line["line_id"] not in parents or len(rows) != 1 or rows[0].get("status") != "CONSUMED"
+                or not rows[0].get("allocations") or any(a.get("fragment_id") not in wanted or a.get("answer_id") != answer["answer_id"] for a in rows[0]["allocations"])):
+            raise ValueError("draft region swallows an untargeted, unassigned or excluded OCR line")
+    by_id = {v[1]["fragment_id"]: v[1] for v in selected}
+    for block in operation["blocks"]:
+        if any(not _contains(block["bbox"], by_id[fid]["bbox"]) for fid in block["source_fragment_ids"]):
+            raise ValueError("draft block clips an assigned original fragment")
+    spans = [_source_span(v[1], v[3], v[4], [0, len(v[1]["text"])]) for v in selected]
+    return answer, spans
+
+
 def _select(graph, target, f, parent, operation):
     inline = graph["payload"]["inline_content"]
     candidates = [c for c in inline["candidates"] if c["candidate_id"] == operation["candidate_id"]]
@@ -277,7 +390,7 @@ def _syntax(plan, depth=0):
     keys = {"schema_version", "kind", "artifact_id", "revision", "book_id", "scope_id", "payload", "content_hash"}
     if set(plan) != keys:
         raise ValueError("revision plan has unrecognized envelope fields")
-    _checked(plan, {PLAN_SCHEMA}, "ContentRevisionPlanTrial")
+    _checked(plan, {PLAN_SCHEMA, REGION_PLAN_SCHEMA}, "ContentRevisionPlanTrial")
     body = {k: v for k, v in plan.items() if k not in {"artifact_id", "content_hash"}}
     if plan["artifact_id"] != "content-revision-plan-"+digest(body)[:24]:
         raise ValueError("revision plan deterministic identity changed")
@@ -298,9 +411,15 @@ def _syntax(plan, depth=0):
             raise ValueError("revision operation needs a unique ID and reason")
         seen.add(operation["operation_id"])
         kind = operation.get("kind")
-        expected = {"EDIT_TEXT": {"target", "replacement", "format"}, "SELECT_INLINE": {"target", "candidate_id", "call_id", "unit_id"}, "JOIN_RAW_WRAP": {"proposal_id"}}
+        expected = {"EDIT_TEXT": {"target", "replacement", "format"}, "SELECT_INLINE": {"target", "candidate_id", "call_id", "unit_id"},
+                    "JOIN_RAW_WRAP": {"proposal_id"}, "REBUILD_TEXT_REGION": {"target", "source_region", "blocks"}}
         if kind not in expected or set(operation) != {"operation_id", "kind", "reason"}|expected[kind]:
             raise ValueError("unknown revision operation or fields")
+        if kind == "REBUILD_TEXT_REGION":
+            if plan["schema_version"] != REGION_PLAN_SCHEMA:
+                raise ValueError("region reconstruction requires revision plan 0.2")
+            _region_syntax(operation)
+            continue
         if kind != "JOIN_RAW_WRAP":
             target = operation["target"]
             if (not isinstance(target, dict) or set(target) != {"answer_id", "fragment_id", "role", "fragment_span", "expected_text"}
@@ -321,7 +440,8 @@ def _syntax(plan, depth=0):
         _syntax(previous, depth+1)
         if (previous["revision"]+1 != plan["revision"] or any(previous[k] != plan[k] for k in ("book_id", "scope_id"))
                 or not _same(previous["payload"]["evidence_ref"], p["evidence_ref"])
-                or not _same(previous["payload"]["graph_ref"], p["graph_ref"])):
+                or not _same(previous["payload"]["graph_ref"], p["graph_ref"])
+                or previous["schema_version"] == REGION_PLAN_SCHEMA and plan["schema_version"] != REGION_PLAN_SCHEMA):
             raise ValueError("revision lineage must retain its original current E/G05")
 
 
@@ -331,7 +451,12 @@ def _operations(plan, evidence, graph):
         b = {"operation_id": op["operation_id"], "kind": op["kind"], "answer_id": None, "role": None,
              "fragment_ids": [], "source_spans": [], "replacement": None, "format": None,
              "candidate_id": None, "call_id": None, "unit_id": None, "proposal_id": None}
-        if op["kind"] == "JOIN_RAW_WRAP":
+        if op["kind"] == "REBUILD_TEXT_REGION":
+            a, spans = _region(evidence, graph, op)
+            b.update(answer_id=a["answer_id"], role=op["target"]["role"], fragment_ids=copy.deepcopy(op["target"]["source_fragment_ids"]),
+                source_spans=spans, replacement="\n".join("".join(run["text"] for run in block["runs"]) for block in op["blocks"]),
+                format="mixed", region_operation=copy.deepcopy(op))
+        elif op["kind"] == "JOIN_RAW_WRAP":
             a, role, ids, spans = _join(evidence, graph, op)
             pair = tuple(ids)
             if pair in joins: raise ValueError("duplicate join separator")
@@ -353,6 +478,15 @@ def _operations(plan, evidence, graph):
                      format=op.get("format", "latex"))
             if op["kind"] == "SELECT_INLINE": b.update({k: op[k] for k in ("candidate_id", "call_id", "unit_id")})
         bindings.append(b)
+    regions = [b for b in bindings if b["kind"] == "REBUILD_TEXT_REGION"]
+    for region in regions:
+        if any(set(region["fragment_ids"]).intersection(other["fragment_ids"]) for other in bindings if other is not region):
+            raise ValueError("region target overlaps another edit, selection, join or region")
+    for i, left in enumerate(regions):
+        for right in regions[i+1:]:
+            ls, rs = left["region_operation"]["source_region"], right["region_operation"]["source_region"]
+            if ls["asset_id"] == rs["asset_id"] and _intersects(ls["bbox"], rs["bbox"]):
+                raise ValueError("source regions of separate draft operations overlap")
     return bindings
 
 
@@ -370,7 +504,9 @@ def make_revision_plan(evidence, graph, check, operations, author, *, previous_p
     if previous_plan is not None: _syntax(previous_plan)
     payload = {"evidence_ref": reference(evidence), "graph_ref": reference(graph), "base_check_ref": reference(check),
                "previous_plan_archive": copy.deepcopy(previous_plan), "author": copy.deepcopy(author), "operations": copy.deepcopy(operations), **_flags()}
-    body = {"schema_version": PLAN_SCHEMA, "kind": "ContentRevisionPlanTrial", "revision": previous_plan["revision"]+1 if previous_plan else 1,
+    region_requested = isinstance(operations, list) and any(isinstance(o, dict) and o.get("kind") == "REBUILD_TEXT_REGION" for o in operations)
+    version = REGION_PLAN_SCHEMA if region_requested or (previous_plan and previous_plan["schema_version"] == REGION_PLAN_SCHEMA) else PLAN_SCHEMA
+    body = {"schema_version": version, "kind": "ContentRevisionPlanTrial", "revision": previous_plan["revision"]+1 if previous_plan else 1,
             "book_id": evidence["book_id"], "scope_id": evidence["scope_id"], "payload": payload}
     result = {**body, "artifact_id": "content-revision-plan-"+digest(body)[:24], "content_hash": digest(payload)}
     validate_revision_plan(result, evidence, graph, check)
@@ -418,6 +554,53 @@ def _content_fragment(evidence, graph, plan, f, bindings):
     return {"content_fragment_id": "content-fragment-"+digest([reference(evidence), reference(graph), reference(plan), value])[:24], **value}
 
 
+def _region_fragment(evidence, graph, plan, binding, block):
+    source = binding["region_operation"]["source_region"]
+    value = {"kind": "REGION_DRAFT", "source_fragment_ids": copy.deepcopy(block["source_fragment_ids"]),
+        "role": binding["role"], "asset_id": source["asset_id"], "bbox": copy.deepcopy(block["bbox"]),
+        "source_region": copy.deepcopy(source), "block_id": block["block_id"], "text": "".join(run["text"] for run in block["runs"]),
+        "runs": copy.deepcopy(block["runs"]), "operation_id": binding["operation_id"], "verification_status": "UNVERIFIED",
+        "complete": False, "transcription_verified": False, "business_acceptance": False}
+    return {"content_fragment_id": "content-fragment-"+digest([reference(evidence), reference(graph), reference(plan), value])[:24], **value}
+
+
+def _text_region(evidence, graph, plan, content, original):
+    source_ids = content["source_fragment_ids"] if content.get("kind") == "REGION_DRAFT" else [content["source_fragment_id"]]
+    box = content["bbox"] if content.get("kind") == "REGION_DRAFT" else original[content["source_fragment_id"]]["bbox"]
+    return {"region_id": "content-region-"+digest([reference(evidence), reference(graph), reference(plan), content["content_fragment_id"]])[:24],
+        "content_type": "text", "role": content["role"], "asset_id": content["asset_id"], "bbox": copy.deepcopy(box), "text": content["text"],
+        "source_fragment_ids": copy.deepcopy(source_ids), "content_fragment_ids": [content["content_fragment_id"]],
+        "verification_status": "UNVERIFIED", "complete": False, "transcription_verified": False, "business_acceptance": False}
+
+
+def _render_content(evidence, graph, plan, answer, content, region_bindings):
+    old_regions = copy.deepcopy(answer.get("render_regions"))
+    original = {f["fragment_id"]: f for f in answer["fragments"]}
+    by_source = {c["source_fragment_id"]: c for c in content if "source_fragment_id" in c}
+    if old_regions is None:
+        if region_bindings:
+            answer["render_regions"] = [_text_region(evidence, graph, plan, c, original) for c in content]
+    else:
+        by_target = {fid: b for b in region_bindings for fid in b["fragment_ids"]}
+        rebuilt, emitted = [], set()
+        for region in old_regions:
+            operation = next((by_target[fid] for fid in region.get("source_fragment_ids", []) if fid in by_target), None)
+            if operation is not None:
+                if operation["operation_id"] not in emitted:
+                    rebuilt.extend(_text_region(evidence, graph, plan, c, original) for c in content
+                                   if c.get("operation_id") == operation["operation_id"] and c.get("kind") == "REGION_DRAFT")
+                    emitted.add(operation["operation_id"])
+                continue
+            current = copy.deepcopy(region)
+            if current.get("content_type") == "text":
+                selected = [by_source[fid] for fid in current["source_fragment_ids"] if fid in by_source]
+                if selected: current["text"] = "\n".join(c["text"] for c in selected)
+            rebuilt.append(current)
+        answer["render_regions"] = rebuilt
+    if region_bindings or old_regions is not None and _same(answer.get("regions"), old_regions):
+        answer["regions"] = copy.deepcopy(answer["render_regions"])
+
+
 def _graph(evidence, graph, check, plan):
     bindings = _operations(plan, evidence, graph)
     payload = copy.deepcopy(graph["payload"])
@@ -425,30 +608,34 @@ def _graph(evidence, graph, check, plan):
     for answer in payload["answers"]:
         if answer["answer_id"] not in affected: continue
         visible, _ = _visible(answer)
-        content = [_content_fragment(evidence, graph, plan, f, bindings) for f in visible]
-        by_source = {c["source_fragment_id"]: c for c in content}
+        region_bindings = [b for b in bindings if b["kind"] == "REBUILD_TEXT_REGION" and b["answer_id"] == answer["answer_id"]]
+        by_target = {fid: b for b in region_bindings for fid in b["fragment_ids"]}
+        content, emitted = [], set()
+        for f in visible:
+            region = by_target.get(f["fragment_id"])
+            if region is None:
+                content.append(_content_fragment(evidence, graph, plan, f, bindings))
+            elif region["operation_id"] not in emitted:
+                content.extend(_region_fragment(evidence, graph, plan, region, block) for block in region["region_operation"]["blocks"])
+                emitted.add(region["operation_id"])
         joins = {tuple(b["fragment_ids"]): b["operation_id"] for b in bindings if b["kind"] == "JOIN_RAW_WRAP" and b["answer_id"] == answer["answer_id"]}
         separators = []
         for role, field in (("answer", "text"), ("explanation", "explanation_text")):
             selected = [c for c in content if c["role"] == role]
             text = selected[0]["text"] if selected else ""
             for left, right in zip(selected, selected[1:]):
-                join = joins.get((left["source_fragment_id"], right["source_fragment_id"]))
+                join = joins.get((left.get("source_fragment_id"), right.get("source_fragment_id")))
                 separator = "" if join else "\n"
                 separators.append({"role": role, "left_content_fragment_id": left["content_fragment_id"], "right_content_fragment_id": right["content_fragment_id"],
                                    "separator": separator, "join_operation_id": join})
                 text += separator+right["text"]
             answer[field] = text
-        old_regions = copy.deepcopy(answer.get("render_regions"))
-        if old_regions is not None:
-            for region in answer["render_regions"]:
-                if region.get("content_type") == "text":
-                    selected = [by_source[fid] for fid in region["source_fragment_ids"] if fid in by_source]
-                    if selected: region["text"] = "\n".join(c["text"] for c in selected)
-            if _same(answer.get("regions"), old_regions): answer["regions"] = copy.deepcopy(answer["render_regions"])
-        answer.update(content_fragments=content, content_projection={"schema_version": "b-content-projection-trial/0.1",
+        _render_content(evidence, graph, plan, answer, content, region_bindings)
+        projection = {"schema_version": "b-content-projection-trial/0.2" if plan["schema_version"] == REGION_PLAN_SCHEMA else "b-content-projection-trial/0.1",
             "source_graph_ref": reference(graph), "plan_ref": reference(plan), "source_fragment_order": [f["fragment_id"] for f in visible],
-            "separators": separators, "verification_status": "UNVERIFIED"}, explanation_present=any(c["role"] == "explanation" for c in content),
+            "separators": separators, "verification_status": "UNVERIFIED"}
+        if plan["schema_version"] == REGION_PLAN_SCHEMA: projection["region_operations"] = [b["operation_id"] for b in region_bindings]
+        answer.update(content_fragments=content, content_projection=projection, explanation_present=any(c["role"] == "explanation" for c in content),
             complete=False, transcription_verified=False, verification_status="UNVERIFIED")
     affected_questions = []
     for q, old in zip(payload["questions"], graph["payload"]["questions"]):
@@ -465,7 +652,7 @@ def _graph(evidence, graph, check, plan):
     payload.update(_flags())
     proof = {"base_sha256": digest(_source_layer(graph)), "derived_sha256": digest(_source_layer({"payload": payload})), "equal": True}
     if proof["base_sha256"] != proof["derived_sha256"]: raise ValueError("content materialization changed a raw/image/source layer")
-    payload["content_revision"] = {"schema_version": "b-content-revision-state-trial/0.1", "evidence_ref": reference(evidence),
+    payload["content_revision"] = {"schema_version": "b-content-revision-state-trial/0.2" if plan["schema_version"] == REGION_PLAN_SCHEMA else "b-content-revision-state-trial/0.1", "evidence_ref": reference(evidence),
         "base_graph_ref": reference(graph), "base_check_ref": reference(check), "plan_ref": reference(plan),
         "base_graph_archive": copy.deepcopy(graph), "base_check_archive": copy.deepcopy(check), "plan_archive": copy.deepcopy(plan),
         "operation_bindings": bindings, "affected_answer_ids": [a["answer_id"] for a in graph["payload"]["answers"] if a["answer_id"] in affected],
@@ -473,21 +660,21 @@ def _graph(evidence, graph, check, plan):
         "matching_derivation": {"rule": "book+section_path+printed_number; unique candidate only",
             "questions": [{k: copy.deepcopy(q[k]) for k in ("question_id", "candidate_answer_ids", "selected_answer_id", "type_candidate")} for q in payload["questions"]],
             "unmatched_answer_ids": copy.deepcopy(payload["unmatched_answer_ids"]), "policy_code_sha256": code_digest(Path(__file__).with_name("policy.py"))}, **_flags()}
-    return _artifact(GRAPH_SCHEMA, "QuestionGraphTrial", "content-graph", evidence,
+    return _artifact(REGION_GRAPH_SCHEMA if plan["schema_version"] == REGION_PLAN_SCHEMA else GRAPH_SCHEMA, "QuestionGraphTrial", "content-graph", evidence,
         [reference(v) for v in (evidence, graph, check, plan)], payload, "graph", revision=graph["revision"]+1)
 
 
 def apply_content_revision(evidence, graph, check, plan):
     validate_revision_plan(plan, evidence, graph, check)
     derived = _graph(evidence, graph, check, plan)
-    return _artifact(APPLICATION_SCHEMA, "ContentRevisionApplicationTrial", "content-revision-application", evidence,
+    return _artifact(REGION_APPLICATION_SCHEMA if plan["schema_version"] == REGION_PLAN_SCHEMA else APPLICATION_SCHEMA, "ContentRevisionApplicationTrial", "content-revision-application", evidence,
         [reference(v) for v in (evidence, graph, check, plan)],
         {"evidence_ref": reference(evidence), "base_graph_ref": reference(graph), "base_check_ref": reference(check),
          "plan_ref": reference(plan), "graph": derived, **_flags()}, "apply")
 
 
 def rollback_content_revision(evidence, derived, *, expected_graph_ref):
-    _checked(derived, {GRAPH_SCHEMA}, "QuestionGraphTrial")
+    _checked(derived, {GRAPH_SCHEMA, REGION_GRAPH_SCHEMA}, "QuestionGraphTrial")
     if not _ref_valid(expected_graph_ref) or not _same(expected_graph_ref, reference(derived)):
         raise ValueError("rollback differs from the independently retained graph version")
     state = derived["payload"].get("content_revision", {})
@@ -566,6 +753,10 @@ def build_content_quality(evidence, graph, check, plan, application, review):
                 append("CONTENT_SELECTED_FORMULA_SYNTAX_UNSUPPORTED", refs, {"operation_id": op["operation_id"], "candidate_id": c["candidate_id"], "parse_result": c["parse_result"]}, binding["answer_id"])
             relevant = [d for d in diagnostics if d.get("candidate_id") == c["candidate_id"] and d.get("call_id") == c["call_id"]]
             if relevant: append("CONTENT_SELECTED_FORMULA_CLOSURE_CONFLICT", refs, {"operation_id": op["operation_id"], "diagnostics": relevant}, binding["answer_id"])
+        elif op["kind"] == "REBUILD_TEXT_REGION":
+            append("CONTENT_REGION_REBUILD_DRAFT_UNVERIFIED", refs, {"operation_id": op["operation_id"], "author": plan["payload"]["author"],
+                "source_region": op["source_region"], "block_ids": [b["block_id"] for b in op["blocks"]],
+                "source_fragment_ids": op["target"]["source_fragment_ids"], "unverified_runs": sum(len(b["runs"]) for b in op["blocks"])}, binding["answer_id"])
         else:
             append("CONTENT_RAW_WRAP_DRAFT_UNVERIFIED", refs, {"operation_id": op["operation_id"], "proposal_id": op["proposal_id"], "source_spans": binding["source_spans"]}, binding["answer_id"])
     payload = {"stage": "content_quality", "evidence_ref": reference(evidence), "graph_ref": reference(derived), "plan_ref": reference(plan),
@@ -576,5 +767,5 @@ def build_content_quality(evidence, graph, check, plan, application, review):
             "unique_candidate_links": sum(q["selected_answer_id"] is not None for q in derived["payload"]["questions"]), "issues": len(issues),
             "affected_answers": len(state["affected_answer_ids"]), "affected_questions": len(state["affected_question_ids"]),
             "operations": len(plan["payload"]["operations"]), "source_assets": len(evidence["payload"]["pages"])}, **_flags()}
-    return _artifact(CHECK_SCHEMA, "CheckReportTrial", "content-check", evidence,
+    return _artifact(REGION_CHECK_SCHEMA if plan["schema_version"] == REGION_PLAN_SCHEMA else CHECK_SCHEMA, "CheckReportTrial", "content-check", evidence,
         [reference(evidence), reference(derived), reference(check), reference(plan), reference(application), _docref(review)], payload, "quality")
