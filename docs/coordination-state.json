@@ -2,7 +2,7 @@
   "schema_version": 1,
   "project": "D:\\1800",
   "coordinator_thread_id": "01a13f26-7567-75e1-99ee-c9d2194e78bb",
-  "updated_at": "2026-10-16T18:15:59.835745+00:00",
+  "updated_at": "2026-10-17T02:18:05.582410+00:00",
   "automation": {
     "id": "1800-a",
     "kind": "heartbeat",
@@ -191,7 +191,7 @@
       "execution": {
         "thread_id": "01a144ca-ed53-7303-ace2-21a4ca42e13c",
         "host_id": "local",
-        "cursor": "a5b9aa07-1d6e-4e48-9581-b1789646eed2:21",
+        "cursor": "3be4e697-e1c7-4b16-a265-da16cb48675b:1",
         "observed_worktree": {
           "observed_at": "2026-10-16T18:12:37.657140+00:00",
           "head": "180bb1e86fb2a7eb1546be85af70f466f069daf5",
@@ -210,10 +210,10 @@
         "working_tree_clean": true,
         "session_released": true,
         "completed_turn_confirms_freeze": true,
-        "last_checked_at": "2026-10-16T18:12:37.657140+00:00",
+        "last_checked_at": "2026-10-17T02:17:08.019495+00:00",
         "last_progress": "R3 已冻结，状态 REVIEW，工作树干净。 最终提交：180bb1e86fb2a7eb1546be85af70f466f069daf5 实现提交：31d715a5f2e6435af3a7e98a6c19b41b72d883bd 正常 checkout、无 Git 原字节导出均退出0；各自 A01 48通过、1跳过，C01 70通过。 内容损坏对照均被拒绝；旧失败证据保留，geometry未改。 平台/模型调用0，无待释放会话；未推送或集成。 R3执行报告 SHA256： e8218a0083029ffe3e14bf0dfa29db33e0f049e77241c89fced5a84ccabe9472 等待独立复验，S01/D01/N15限制保留。",
         "turn_id": "01a145be-d2eb-71a1-811c-599dbefd6682",
-        "observed_thread_status": "idle",
+        "observed_thread_status": "notLoaded",
         "commit": "180bb1e86fb2a7eb1546be85af70f466f069daf5",
         "implementation_commit": "31d715a5f2e6435af3a7e98a6c19b41b72d883bd",
         "reference_export_commit": "aeb7ca306b3dba9d51740071f96592d8e677ec66",
@@ -236,16 +236,30 @@
       "review": {
         "thread_id": "01a144cb-69e8-7981-a8d5-8832eae61829",
         "host_id": "local",
-        "cursor": "45744dd7-003f-41b4-a2c5-99d28971d2cc:12",
+        "cursor": "252057d9-2f08-45bf-a7aa-6582373b8ec2:2",
         "turn_status": "inProgress",
-        "turn_id": "01a145ea-e6ac-7a93-a446-813ae3fe46cb",
-        "last_checked_at": "2026-10-16T18:14:27.468837+00:00",
+        "turn_id": "01a147a6-4ec1-7552-9ac0-668de683ae3d",
+        "last_checked_at": "2026-10-17T02:18:05.582410+00:00",
         "phase": "R3_FORMAL_REVIEW_IN_PROGRESS",
         "target_commit": "180bb1e86fb2a7eb1546be85af70f466f069daf5",
         "formal_decision": "PENDING",
         "report": "docs/tasks/A01-review-R3-report.md",
         "observed_thread_status": "active",
-        "last_progress": "我先核对 R3 交接和固定代码参照，再导出确切提交复验。重点检查 URL 实际路径绑定，以及新 verify 入口在两种文件表示和真实损坏下的结果；所有输出写新目录，保留旧证据。"
+        "last_progress": "我会先核对已保存的 R3 证据和完成项，保留原字节，不重复已完成的检查。本轮只补齐缺少的独立核查、正式报告和最终清单；结论仍以完整证据为准。",
+        "interruption": {
+          "reason": "USAGE_LIMIT",
+          "failed_turn_id": "01a145ea-e6ac-7a93-a446-813ae3fe46cb",
+          "completed_at_unix": 1792174776,
+          "observed_at": "2026-10-17T02:17:08.019495+00:00",
+          "current_quota_availability": "NOT_PROVEN"
+        },
+        "current_artifact_check": {
+          "at": "2026-10-17T02:17:08.019495+00:00",
+          "report_present": false,
+          "evidence_files": 527,
+          "formal_manifest_present": false,
+          "scope": "Partial checks only; no formal conclusion."
+        }
       },
       "dispatch_record_commit": "d6738cf239b203496c9e84cb87178eb82f2d4f89",
       "review_handoff": {
@@ -622,7 +636,9 @@
         "checks": "docs/evidence/A01/coordinator/R3-archive/checks.json",
         "forced_ignored_logs": 3,
         "commit": "792d47d298d4a737b47b7b1709370c45d75eb0e2"
-      }
+      },
+      "operational_status": "RESUMED_ACTIVE",
+      "last_resume_attempt_at": "2026-10-17T02:17:41.707122+00:00"
     },
     "A02": {
       "status": "INTEGRATED",
@@ -645,12 +661,12 @@
         "thread_id": "01a144cc-23e9-7c80-9a90-02162ef99b64",
         "host_id": "local",
         "turn_status": "completed",
-        "cursor": "c0ccce8a-632b-4977-bb6c-2e692fd2baaf:9",
+        "cursor": "e07ae0cc-65ca-4466-b955-87686c5beb82:1",
         "report": "C:/Users/ASUS/.codex/worktrees/a02-planner-mock/1800/docs/tasks/A02-rework-R1-report.md",
         "turn_id": "01a1454d-a802-78a3-a6a0-bd3678d93a37",
         "last_progress": "A02 R1 已完成，冻结为 REVIEW，工作树干净。 实现提交：13ddf83083224ffafc17a4f57cf2c1a1a1ae02b2 最终 HEAD：38aca9dcc8d027409b95193e9cc142c2336b76d3 R1 执行报告 报告 SHA256：3b903c24e09a186b778c04f30354dea6c41f3925f4b8cafcf3be4b04b0516167 52 项 A02、70 项 C01、16 个 R1 场景及 10 个演示通过。外书 UNKNOWN 不再误暂停当前书，同书保护和完整历史保留。 N1/N2 边界不变；平台、浏览器及模型调用为 0。未推送、集成或释放 A03，等待独立复验。",
         "phase": "R1_DELIVERED",
-        "last_checked_at": "2026-10-16T18:12:37.657140+00:00",
+        "last_checked_at": "2026-10-17T02:17:08.019495+00:00",
         "observed_worktree": {
           "observed_at": "2026-10-16T18:12:37.657140+00:00",
           "head": "38aca9dcc8d027409b95193e9cc142c2336b76d3",
@@ -686,18 +702,18 @@
           "final_manifest_sha256": "9df33152c66e3e0ea2cb72ff3bc4162063961412e6fd007d06a6ff343fa61ea0",
           "functional_tests_run": false
         },
-        "observed_thread_status": "idle"
+        "observed_thread_status": "notLoaded"
       },
       "review": {
         "thread_id": "01a144cc-2eae-7a23-b299-03f533e30951",
         "host_id": "local",
         "turn_status": "completed",
-        "cursor": "233820fb-60ea-4e5f-ae7d-83033a1b5360:10",
+        "cursor": "000f0c13-803e-4fe3-af29-34c1239188d3:1",
         "report": "docs/tasks/A02-review-R1-report.md",
         "turn_id": "01a14569-09c2-7480-8f30-ecae7a102b6f",
         "last_progress": "Completed R1 independent acceptance; frozen manifest and report verified.",
         "phase": "R1_ACCEPTED",
-        "last_checked_at": "2026-10-16T18:12:37.657140+00:00",
+        "last_checked_at": "2026-10-17T02:17:08.019495+00:00",
         "formal_decision": "ACCEPTED",
         "preparation_report_sha256": "c27997a3b9ff72a197363c82d23bf29ac52aea53fbdf6a49c400d501c1833ee5",
         "preparation_archive": {
@@ -715,7 +731,7 @@
         "report_sha256": "4e664703c54996411d2500ede78514952e53299ce928c9eac30e762d4c086d31",
         "evidence_manifest": "docs/evidence/A02/review-R1/sha256-manifest.json",
         "evidence_manifest_sha256": "1b13baef9629300554b87def58c0845603b443558c46aa1d8d9ec19e2d9e79ea",
-        "observed_thread_status": "idle"
+        "observed_thread_status": "notLoaded"
       },
       "dispatch_record_commit": "d6738cf239b203496c9e84cb87178eb82f2d4f89",
       "review_handoff": {
@@ -937,12 +953,12 @@
         "thread_id": "01a144cc-dde4-73a1-9e83-be485380ea25",
         "host_id": "local",
         "turn_status": "completed",
-        "cursor": "974d5ca7-8768-480c-81ed-d8fd0f02ab83:9",
+        "cursor": "b9579e65-1c72-4a28-92c5-38e9d1fe7a0f:1",
         "report": "C:/Users/ASUS/.codex/worktrees/a04-headless-readonly/1800/docs/tasks/A04-execution-report.md",
         "turn_id": "01a144cc-e1a4-7523-bf4b-11cce1462585",
         "last_progress": "A04 阶段交付已冻结，回 REVIEW。 代码提交：d28a58f1859d00c70fc86aeecbb11ec2e7f06f89 交付 HEAD：3e4dba5676c2dc4a71d7826827a76df11017a68b 131 项 A04、70 项合同、8 项登录测试通过。 真实只读取得 14/15/173 页；本次读回 22题68框，前后状态一致。浏览器/profile 已释放，worktree 干净。 执行报告 A01 接受提交仍未发布，正式坐标联调未执行；未标记 ACCEPTED，未推送或集成，模型调用及花费均为 0。",
         "phase": "PARTIAL_DELIVERED_WAITING_ACCEPTED_GEOMETRY",
-        "last_checked_at": "2026-10-16T18:12:37.657140+00:00",
+        "last_checked_at": "2026-10-17T02:17:08.019495+00:00",
         "observed_worktree": {
           "observed_at": "2026-10-16T18:12:37.657140+00:00",
           "head": "3e4dba5676c2dc4a71d7826827a76df11017a68b",
@@ -988,12 +1004,12 @@
         "thread_id": "01a144cc-e93d-7841-a259-d6aac22c94f4",
         "host_id": "local",
         "turn_status": "completed",
-        "cursor": "8059c48e-775f-4749-bf6d-6f3fb0107430:4",
+        "cursor": "4149814e-13b1-46d5-9c5f-e66daaa40af5:1",
         "report": "docs/tasks/A04-review-report.md",
         "turn_id": "01a144cc-ed10-72e3-8b34-1eb3c12b5841",
         "last_progress": "A04 已记为 WAITING_EXECUTION / BLOCKED（前置条件未齐）。 验收报告 场景与证据清单 已准备 28 个场景，全部 NOT_RUN；准备材料的链接及摘要核验通过。未启动浏览器、读取凭据或取得会话。 等待主调度确认固定交付、A01 geometry 接受提交及会话释放后唤醒。本轮结束，不持续轮询。",
         "phase": "WAITING_EXECUTION",
-        "last_checked_at": "2026-10-16T18:12:37.657140+00:00",
+        "last_checked_at": "2026-10-17T02:17:08.019495+00:00",
         "formal_decision": "NOT_STARTED",
         "preparation_report_sha256": "7fac7f25edb027b1f5b493b32b254ff1f447e5ad515b3808298d01226144cc4b",
         "preparation_archive": {
@@ -1033,17 +1049,17 @@
       "execution": {
         "thread_id": "01a145aa-2fea-7942-97f9-ad260acf4e30",
         "host_id": "local",
-        "cursor": "62b38dd9-743b-4363-8cfa-e354555521a8:9",
+        "cursor": "fac7d5c6-e7af-446f-8771-c0299bbbcd7f:2",
         "turn_status": "inProgress",
-        "turn_id": "01a145ea-e7fe-7ed0-916c-705dd6ee3fdb",
-        "last_checked_at": "2026-10-16T18:14:27.468837+00:00",
-        "phase": "P1_R1_EXECUTING",
+        "turn_id": "01a147a6-519a-72d3-8895-fb58c3219ae1",
+        "last_checked_at": "2026-10-17T02:18:05.582410+00:00",
+        "phase": "P1_R1_REWORK_IN_PROGRESS",
         "base_commit": "2d5ae2a53945a7fa20ef60a6b61e7b31c91dbea9",
         "previous_delivery_commit": "2d5ae2a53945a7fa20ef60a6b61e7b31c91dbea9",
         "report": "C:/Users/ASUS/.codex/worktrees/a03-runtime-recovery/1800/docs/tasks/A03-P1-R1-execution-report.md",
         "completed_turn_confirms_freeze": false,
         "observed_thread_status": "active",
-        "last_progress": "我会先核对 R1 任务单、独立审查报告和指定基线，只修复这两项设计缺口。旧 P1 交付将逐字节保留；本轮仍停在设计与静态检查，P2 不启动。",
+        "last_progress": "我会先检查上次留下的 P1-R1 文件和未提交差异，从断点继续完成两项设计修订。范围、基线和 P2 禁止边界保持不变；完成后只交付 P1 REVIEW。",
         "observed_worktree": {
           "observed_at": "2026-10-16T18:14:27.468837+00:00",
           "head": "2d5ae2a53945a7fa20ef60a6b61e7b31c91dbea9",
@@ -1053,6 +1069,23 @@
           "execution_report_present": false,
           "observed_report_sha256": null,
           "frozen_delivery_verified": false
+        },
+        "interruption": {
+          "reason": "USAGE_LIMIT",
+          "failed_turn_id": "01a145ea-e7fe-7ed0-916c-705dd6ee3fdb",
+          "completed_at_unix": 1792174815,
+          "observed_at": "2026-10-17T02:17:08.019495+00:00",
+          "current_quota_availability": "NOT_PROVEN"
+        },
+        "current_artifact_check": {
+          "at": "2026-10-17T02:17:08.019495+00:00",
+          "head": "2d5ae2a53945a7fa20ef60a6b61e7b31c91dbea9",
+          "report_present": false,
+          "untracked_paths": [
+            "docs/evidence/A03/execution/P1-R1/",
+            "examples/a03/P1-R1/"
+          ],
+          "frozen_delivery_present": false
         }
       },
       "review": {
@@ -1060,13 +1093,13 @@
         "host_id": "local",
         "phase": "P1_REWORK_CONFIRMED",
         "turn_status": "completed",
-        "cursor": "a912ddc6-bfef-418b-8c2b-e05defaffff1:7",
+        "cursor": "2e2cf3fe-ff9e-4640-84b3-79bd6fd41ad9:1",
         "preparation_report": "docs/tasks/A03-review-preparation.md",
         "report": "docs/tasks/A03-P1-review-report.md",
         "formal_decision": "REWORK",
         "turn_id": "01a145cf-ec08-7d71-a3a0-3095d19a3a91",
         "last_progress": "P1 独立设计验收结论：REWORK。 被验提交：2d5ae2a53945a7fa20ef60a6b61e7b31c91dbea9。两项必修： 未尝试动作取得充分 ABSENT 后，缺少合法的事实提交入口。 正例 receipt/progress 漏声明事实资源中的快照引用。 验收报告 · 统一清单 177 项归档验证通过，8 个 Git 忽略日志已纳入。复核命令： python -B docs/evidence/A03/review/P1/scripts/finalize_review.py --verify-only 报告 SHA256：df3faccf4be93335517a3f319fc356f3d568db44202e56a6a35e5153f54f2b8b 清单 SHA256：77c1eb16fbe362d41d21fe8f58ab57bc1d1caae3f9f376c36946cba10e1df92c 恢复功能全部未执行；未启动 P2、未释放 I01。零网络、平台、浏览器、凭据/profile、OCR、模型 API 操作；遗留自有进程为 0。",
-        "last_checked_at": "2026-10-16T18:12:37.657140+00:00",
+        "last_checked_at": "2026-10-17T02:17:08.019495+00:00",
         "task_sha256": "292b8820573cc8b577e8f852c1b6fbee577ca2c4a920720db53bc76b9ee2c3be",
         "observed_preparation": {
           "report_present": true,
@@ -1089,7 +1122,7 @@
           "forced_ignored_logs": 1,
           "commit": "792d47d298d4a737b47b7b1709370c45d75eb0e2"
         },
-        "observed_thread_status": "idle",
+        "observed_thread_status": "notLoaded",
         "target_commit": "2d5ae2a53945a7fa20ef60a6b61e7b31c91dbea9",
         "observed_output": {
           "observed_at": "2026-10-16T18:12:37.657140+00:00",
@@ -1216,7 +1249,9 @@
           "turn_id": "01a145ea-e7fe-7ed0-916c-705dd6ee3fdb",
           "record_commit": "c884d71c399fc832c76ed253132e9592bc6f6c51"
         }
-      ]
+      ],
+      "operational_status": "RESUMED_ACTIVE",
+      "last_resume_attempt_at": "2026-10-17T02:17:41.707122+00:00"
     }
   },
   "route": [
@@ -1383,12 +1418,44 @@
       "acknowledged_at": "2026-10-16T18:14:27.468837+00:00",
       "turn_id": "01a145ea-e6ac-7a93-a446-813ae3fe46cb",
       "record_commit": "c884d71c399fc832c76ed253132e9592bc6f6c51"
+    },
+    {
+      "key": "A01:R3-review-resume-after-interruption:2026-10-17T02:17:08.019495+00:00",
+      "task": "A01",
+      "stage": "R3-review-resume-after-interruption",
+      "state": "ACKNOWLEDGED",
+      "created_at": "2026-10-17T02:17:08.019495+00:00",
+      "target_commit": "180bb1e86fb2a7eb1546be85af70f466f069daf5",
+      "thread_id": "01a144cb-69e8-7981-a8d5-8832eae61829",
+      "document": "docs/tasks/A01-review-R3-handoff.md",
+      "attempt_limit": 1,
+      "reason": "User progress audit found failed usage-limit turn and missing final artifact. Resume original bounded work; no duplicated chat.",
+      "sent_at": "2026-10-17T02:17:41.707122+00:00",
+      "result": "Original thread active with fresh continuation acknowledgement; no final delivery yet.",
+      "acknowledged_at": "2026-10-17T02:18:05.582410+00:00",
+      "turn_id": "01a147a6-4ec1-7552-9ac0-668de683ae3d"
+    },
+    {
+      "key": "A03:P1-R1-repair-resume-after-interruption:2026-10-17T02:17:08.019495+00:00",
+      "task": "A03",
+      "stage": "P1-R1-repair-resume-after-interruption",
+      "state": "ACKNOWLEDGED",
+      "created_at": "2026-10-17T02:17:08.019495+00:00",
+      "target_commit": "2d5ae2a53945a7fa20ef60a6b61e7b31c91dbea9",
+      "thread_id": "01a145aa-2fea-7942-97f9-ad260acf4e30",
+      "document": "docs/tasks/A03-P1-rework-R1.md",
+      "attempt_limit": 1,
+      "reason": "User progress audit found failed usage-limit turn and missing final artifact. Resume original bounded work; no duplicated chat.",
+      "sent_at": "2026-10-17T02:17:41.707122+00:00",
+      "result": "Original thread active with fresh continuation acknowledgement; no final delivery yet.",
+      "acknowledged_at": "2026-10-17T02:18:05.582410+00:00",
+      "turn_id": "01a147a6-519a-72d3-8895-fb58c3219ae1"
     }
   ],
   "last_action": {
-    "at": "2026-10-16T18:15:59.835745+00:00",
+    "at": "2026-10-17T02:18:05.582410+00:00",
     "task_id": "A01/A03",
-    "action": "Frozen A03 P1 REWORK evidence archived locally; original A01 R3 review and A03 P1-R1 repair active",
+    "action": "Confirmed both bounded original-thread continuations active after usage-limit interruptions; final artifacts still pending",
     "remote_push": false
   },
   "limitations": [
@@ -1397,9 +1464,9 @@
     "Platform test is single-book serial, no book submission, no unbudgeted paid models."
   ],
   "last_check": {
-    "at": "2026-10-16T18:12:37.657140+00:00",
-    "heartbeat_time": "2026-10-16T18:06:13.705Z",
-    "root_head": "2ec2de6fb255e448fc2eaaf2185ef3557c304f63",
+    "at": "2026-10-17T02:17:08.019495+00:00",
+    "trigger": "user_progress_request",
+    "root_head": "e2dfa3c23b19769d03502c9ff6175531fa82e7eb",
     "checked_task_ids": [
       "A01",
       "A02",
@@ -1410,10 +1477,9 @@
     "platform_actions": 0,
     "paid_model_calls": 0,
     "full_suite_rerun": false,
-    "dispatch_result": "A01 R3 reviewer and A03 P1-R1 executor acknowledged their original-thread continuations; no duplicate chats.",
-    "completed_at": "2026-10-16T18:15:59.835745+00:00",
-    "coordination_archive_commit": "c884d71c399fc832c76ed253132e9592bc6f6c51",
-    "archive_scope": "188 scoped paths: completed A03 P1 REWORK report/evidence, bounded coordinator reproduction, A01 R3 handoff and A03 P1-R1 repair plus state; no code integration."
+    "finding": "A01 R3 review and A03 P1-R1 repair last turns failed on usage limit; no final report in either path. Bounded original-thread resumes intended.",
+    "completed_at": "2026-10-17T02:18:05.582410+00:00",
+    "dispatch_result": "Both original A01 R3 review and A03 P1-R1 repair resumed and acknowledged; no duplicate chats, no acceptance or integration."
   },
   "prepared_next_batch": {
     "status": "DISPATCHED",
