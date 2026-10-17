@@ -1,5 +1,7 @@
 # B 最小识别入口（试验版 0.1）
 
+本页保留 M0 的 0.1 基线说明。46007447 的离线组题/配答/质量检查增量见 [本轮说明](b-offline-46007447.md)，定稿需求对照见 [需求与实现边界](requirements-confirmed.md)。下文的“无组题配答”仅描述旧入口 `tools/recognize.py`，不代表新入口 `tools/offline_b.py`。
+
 这是 B 的离线识别适配器，不是正式 EvidenceBundle 公共合同实现。
 复用 `tools/route_a_layout.py` 的分片、行投影、连通域和可选 CPU OCR；不读取历史框、导出题答或浏览器。
 

@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light dark">
+  <title>教辅 · 离线内容复核</title>
+  <link rel="stylesheet" href="/review.css">
+  <script src="/review.js" defer></script>
+</head>
+<body>
+  <a class="skip-link" href="#answer-content">跳到当前答案</a>
+  <header class="topbar">
+    <div class="brand"><span class="brand-mark" aria-hidden="true">阅</span><div><h1>离线内容复核</h1><p id="book-label">正在读取工作区…</p></div></div>
+    <div class="workspace-state"><span class="status-pill hold">HOLD · 未核准</span><span id="revision-label" class="revision-label">—</span></div>
+    <div class="top-actions"><button id="refresh-button" type="button">刷新工作区</button><a class="button" href="/api/export/plan" download>导出当前计划</a><a id="export-region-catalog" class="button" href="/api/export/region-catalog" download title="下载未核准候选及其冻结来源资料" hidden>导出候选资料</a></div>
+  </header>
+  <div class="scope-bar"><p>来源与草稿并排核对。保存会生成新版本并重新检查；语法预览和来源检查不代表转写正确。</p><p id="workspace-counts" class="counts">—</p></div>
+  <div id="feedback" class="feedback" role="status" aria-live="polite" hidden></div>
+  <div id="navigation-guard" class="navigation-guard" role="region" aria-label="未保存更改" hidden>
+    <p id="guard-message"></p><div class="button-row"><button id="guard-save" class="primary" type="button">保存后继续</button><button id="guard-discard" type="button">放弃本次编辑并继续</button><button id="guard-cancel" type="button">留在此处</button></div>
+  </div>
+  <main class="workspace">
+    <aside class="answer-sidebar" aria-label="答案导航">
+      <div class="panel-heading"><h2>答案范围</h2><span id="answer-total" class="count-chip">0</span></div>
+      <label class="field search-field">查找答案<input id="answer-search" type="search" placeholder="题号、章节、正文或答案 ID" autocomplete="off"></label>
+      <label class="field">章节 / 小节<select id="section-filter"><option value="">全部范围</option></select></label>
+      <label class="check-label"><input id="only-issues" type="checkbox">仅看关联问题的答案</label>
+      <div id="answer-list" class="answer-list" role="navigation" aria-label="按来源范围排列的答案"></div>
+      <p id="answer-empty" class="empty-note" hidden>没有符合筛选的答案。</p>
+      <div class="sidebar-foot">同号答案按完整章节和来源分别显示。候选链接尚未代表配答核准。</div>
+    </aside>
+
+    <section id="answer-content" class="answer-content" aria-label="当前答案" tabindex="-1">
+      <div id="loading-state" class="loading-state"><span class="loading-dot" aria-hidden="true"></span><h2>读取离线工作区</h2><p>保留原始证据，载入当前正文与检查。</p></div>
+      <div id="review-content" hidden>
+        <div class="answer-heading"><div><p id="answer-section" class="eyebrow"></p><h2 id="answer-title"></h2><p id="answer-identity" class="mono muted"></p></div><div class="button-row"><button id="previous-answer" type="button" aria-label="上一答案">← 上一条</button><button id="next-answer" type="button" aria-label="下一答案">下一条 →</button></div></div>
+        <section id="region-draft-risks" class="region-draft-risks" aria-label="自动草稿来源风险" hidden></section>
+        <div id="question-candidates" class="question-candidates"></div>
+        <details class="source-overview" open><summary><span>原图与图形</span><span id="source-overview-count" class="muted"></span></summary><div id="source-overview" class="source-grid"></div></details>
+        <details class="active-overview"><summary>当前完整正文 / 解析 <span class="muted">保存后按新图谱重建</span></summary><div id="active-overview" class="active-columns"></div></details>
+        <div class="editor-heading"><h3>逐块核对与编辑</h3><span class="muted">来源只读 · 草稿未核准</span></div>
+        <p id="region-candidate-help" class="region-candidate-help" hidden>展开公式下的来源候选，可比较整式原始观察与分量派生组合。选择仅更新草稿；保存后记录来源并重新检查，仍需核对完整答案。顶栏可导出未核准的候选与来源资料，供离线交接。</p>
+        <div id="block-editors" class="block-editors"></div>
+        <div id="no-editable-blocks" class="empty-note" hidden>此答案没有可编辑的正文片段。图形、结构标记与诊断 OCR 不作为文字编辑块。</div>
+        <section class="author-panel" aria-labelledby="author-title"><h3 id="author-title">本次草稿作者</h3><div class="author-fields"><label class="field">类别<select id="author-kind"><option value="MODEL_DRAFT">模型草稿 · 未核准</option><option value="HUMAN_DRAFT">人工草稿 · 未核准</option><option value="SYNTHETIC_TEST">合成测试草稿</option></select></label><label class="field">作者标识<input id="author-id" type="text" maxlength="240" autocomplete="off" placeholder="填写作者或本次复核者"></label><label class="field author-note">说明<textarea id="author-note" rows="2" placeholder="说明本次改动的来源与仍待核对的部分"></textarea></label></div><p class="muted small">作者只记录本次快照的编辑者。任何类别都不会将文字升级为人工核准。</p></section>
+      </div>
+      <footer id="save-bar" class="save-bar" hidden><div><strong id="dirty-label">没有未保存更改</strong><p id="save-hint">只保存当前答案中改变的编辑块。</p></div><div class="button-row"><button id="discard-button" type="button" disabled>撤销本次编辑</button><button id="save-button" class="primary" type="button" disabled>保存并重检</button></div></footer>
+    </section>
+
+    <aside class="inspection-sidebar" aria-label="检查与历史">
+      <div class="inspection-tabs" role="tablist" aria-label="检查与版本"><button id="issues-tab" type="button" role="tab" aria-selected="true" aria-controls="issues-panel">当前问题 <span id="issue-total"></span></button><button id="history-tab" type="button" role="tab" aria-selected="false" aria-controls="history-panel" tabindex="-1">版本历史</button></div>
+      <section id="issues-panel" class="inspection-panel" role="tabpanel" aria-labelledby="issues-tab">
+        <div class="inspection-filters"><label class="field">查看范围<select id="issue-scope"><option value="answer">当前答案关联</option><option value="all">全部当前问题</option><option value="global">未定位 / 全局</option></select></label><label class="field">查找问题<input id="issue-search" type="search" placeholder="规则代码、来源或说明" autocomplete="off"></label></div>
+        <p id="issue-scope-note" class="muted small"></p><div id="issue-list" class="issue-list"></div>
+      </section>
+      <section id="history-panel" class="inspection-panel" role="tabpanel" aria-labelledby="history-tab" hidden><p class="muted small">恢复会将历史操作复制为新版本，保留当前计划与全部历史。</p><button id="undo-save" class="full-width" type="button" disabled>将上一次快照恢复为新版本</button><div id="history-confirm" class="history-confirm" hidden><p id="history-confirm-message"></p><div class="button-row"><button id="history-confirm-yes" type="button">恢复为新版本</button><button id="history-confirm-no" type="button">取消</button></div></div><div id="history-list" class="history-list"></div></section>
+    </aside>
+  </main>
+  <dialog id="source-dialog" class="source-dialog"><div class="dialog-heading"><div><h2 id="source-dialog-title">来源图像</h2><p id="source-dialog-meta" class="mono muted"></p></div><div class="button-row"><label class="check-label"><input id="source-fit" type="checkbox" checked>适应宽度</label><button id="source-full-page" type="button">查看整页</button><button id="source-close" type="button">关闭</button></div></div><div id="source-dialog-scroll" class="source-dialog-scroll"><img id="source-dialog-image" alt="原始来源图像"></div><p id="source-dialog-error" class="feedback error" hidden></p></dialog>
+  <noscript><p class="feedback error">此离线复核界面需要启用 JavaScript。原始文件不会因此改变。</p></noscript>
+</body>
+</html>
