@@ -1,0 +1,89 @@
+{
+  "all_actuals": "NOT_RUN",
+  "approved_by": "6b77c436742cf2826083b109d8ed86b85539cba6:docs/tasks/A03-P1-coordinator-acceptance.md",
+  "intent_reconcile": {
+    "maximum_reads_per_intent_per_call": 3,
+    "per_read_s": 2,
+    "per_intent_s": 8,
+    "whole_call_s": 60,
+    "sqlite_busy_s": 1,
+    "effect_gate_s": 5,
+    "barrier_s": 5,
+    "owner_lease_s": 10,
+    "renew_s": 2,
+    "rules": [
+      "persist call_id and attempt before actual read, including failed/crashed reads",
+      "restart same call_id does not reset budget; new explicit call needs actual new reads; no automatic loop",
+      "absolute monotonic earliest applicable deadline; record actual starts/ends/timeouts and queue NOT_VISITED",
+      "deterministic structure/version/hash/reference failure immediately rejects without read retries"
+    ]
+  },
+  "unattempted_absence": {
+    "per_actual_read_seconds": 2,
+    "actual_reads_per_entry": 2,
+    "automatic_read_retries": 0,
+    "whole_entry_seconds": 8,
+    "parent_recovery_invocation_seconds": 60,
+    "clock": "Monotonic absolute deadline; the whole-entry 8s includes gate acquisition, both reads, immutable-file IO and final transaction. Each step uses the lesser remaining entry/parent deadline and its existing step bound; never stack a new 8s budget after a timeout. Existing gate limit is at most 5s and SQLite busy limit at most 1s, both truncated by remaining deadline.",
+    "on_timeout": "No fact/event/index commit; preserve progress and all pending state. Existing independently committed observation metadata and unindexed immutable files may remain as diagnostic evidence.",
+    "intent_budget": "This action has no intent, so do not invent an obligation/intent or consume/reset another intent budget. Existing reconciliation stays at most 3 readonly attempts per intent per recovery invocation; this separate entrance performs only the fixed two reads with no automatic retry."
+  },
+  "unattempted_unknown_commit": "Query current full-book context by permanent (journal_id,canonical_target_key,action_id); verify event/resource hashes. Never resubmit for discovery.",
+  "exit_codes": {
+    "0": "query/reconcile completed or NO_ACTIONS; not quality success or automatic dispatch",
+    "2": "INVALID_INPUT",
+    "3": "HOLD_PENDING",
+    "4": "OWNER_BUSY_OR_STALE",
+    "5": "STORAGE_FAILURE",
+    "6": "DEADLINE_EXCEEDED",
+    "7": "ADMISSION_REJECTED",
+    "90": "INJECTED_PROCESS_EXIT; not success"
+  },
+  "frozen_fault_points": [
+    {
+      "id": "BEFORE_INTENT_COMMIT",
+      "owner": "runtime.storage",
+      "durable_fact": "No committed new intent if commit fails; target dispatch count must remain zero.",
+      "expected_recovery": "Query state and stop/reprepare; no automatic dispatch from an uncommitted intent."
+    },
+    {
+      "id": "AFTER_INTENT_COMMIT",
+      "owner": "runtime.storage",
+      "durable_fact": "Intent exists; the marker alone does not establish whether a target call was possible.",
+      "expected_recovery": "Treat as unresolved and perform a new independent read-only observation."
+    },
+    {
+      "id": "AFTER_DISPATCH_STARTED",
+      "owner": "runtime.storage/recovery",
+      "durable_fact": "Dispatch boundary event exists; it does not prove effect/absence.",
+      "expected_recovery": "Observe first; never resend the old action."
+    },
+    {
+      "id": "AFTER_TARGET_EFFECT_COMMIT",
+      "owner": "delivery.mock",
+      "durable_fact": "Independent target effect/log survive even without response/receipt.",
+      "expected_recovery": "New-process observation and MATCH resolution; effect count remains one."
+    },
+    {
+      "id": "AFTER_READBACK_CAPTURE",
+      "owner": "delivery.mock and runtime immutable evidence writer",
+      "durable_fact": "An observation may exist without a committed receipt; it is historical evidence, not the next recovery call's fresh observation.",
+      "expected_recovery": "New recovery observation with new sequence/time; preserve old bytes."
+    },
+    {
+      "id": "AFTER_RECEIPT_COMMIT",
+      "owner": "runtime.storage",
+      "durable_fact": "Exact receipt is committed; reopening retains receipt and complete history.",
+      "expected_recovery": "No replay; query/reconcile according to effective unresolved state."
+    }
+  ],
+  "additional_observation_windows": [
+    "atomic plan acceptance/reservation",
+    "permit issue/consume and target precommit gate",
+    "CLAIMING/fence activation/ACTIVE across independent stores",
+    "unattempted first/second read, prewritten resources, final CAS and fact/event/index commit",
+    "reconciliation observation and event-head CAS",
+    "attempt pre-registration then crash and same-call restart"
+  ],
+  "timing_evidence": "Use actual monotonic intervals and parent harness finite deadline. Record scheduling allowance as observation; do not silently raise approved implementation bounds or use fixed sleeps as concurrency proof."
+}
