@@ -8,11 +8,16 @@
 
 
 
+## 2026-10-17 第5页布局补丁独立拒绝记录
+
+- 第5页跨栏标题/共享材料的私有v1补丁测试和冷暖/损坏恢复通过，但独立对抗复核发现材料/任务身份协调篡改、旧版本布局绕过、图谱假审核和检查自批字段四类漏洞，未合入共享生产代码。失败报告及原攻击脚本/结果和v1补丁包固定归档在 `tests/fixtures/book46007447/viewer13-reviewed-layout-v1-failed-history.zip`；[失败报告](../reviews/viewer13-reviewed-layout-v1-failure-report.md)保持原字节。
+- 私有v1全套确切口径为1147项运行、1144通过、3跳过；不能将全套通过视为独立审核通过。v2修复原四类攻击，总控隔离代码18项相关测试及冷暖/损坏恢复通过；扩展独立复核仍发现题号/响应语义、Check嵌套问题字段和Graph无答路由字段未严核，v2同样未合入。后续版本必须先通过独立复核；原48行识别与UNRESOLVED_LAYOUT结果不覆盖。
+
 ## 2026-10-17 第7页题目内容投影与离线材料比对
 
 - 基线 `ee8df364d2c7d24375f22d9264033b18c02d6a98`，新增独立题目内容生产者、独立消费者及CLI；保留原E0.2/G0.2和原OCR，不改旧图谱、不执行配答。固定v4计划SHA `a7a5c43eb33d2e1378d0f82dc7375603a462dba64a60adbdb06f09a3a2f4ac99`；六题、23块、12选项、2图、7未填空格、6分式、4编辑标记、62行账本全部保留。详见[实现及限制](../b-question-content-viewer15.md)。
 - 总控11项测试通过，三次禁止网络/模型的实际确定性重放引用完全相同；独立终审11项通过，并确认完整E/G对象绑定及分式顺序漏洞已关闭。仅 `SOURCE_AND_PROJECTION_INTEGRITY_ONLY` 通过，模型文字、图形范围、人工内容验收及章节完整性仍HOLD。八次普通本地OCR补读全部保留为UNSELECTED，不按多数票替换原观察。
-- 用户明确先继续离线处理，浏览器停止重试。[阅读材料来源比对](../reviews/46007447-math-world-offline-crosswalk-20261017.md)提出印刷5/25同名材料的三任务候选：五条未归属行中一行跨任务(2)/(3)，另有分数字形、图形标签及漏读答案，不能视为五个独立答案；19条UNASSIGNED账本未改。[独立复核](../reviews/46007447-math-world-offline-crosswalk-independent-audit.md)已确认仅MODEL_VISUAL组级候选成立，并补充首物理行也跨任务(1)/(2)；全部UNASSIGNED/UNVERIFIED保持，待精确分段和完整图形候选。
+- 用户明确先继续离线处理，浏览器停止重试。[阅读材料来源比对](../reviews/46007447-math-world-offline-crosswalk-20261017.md)提出印刷5/25同名材料的三任务候选：五条未归属行中一行跨任务(2)/(3)，另有分数字形、图形标签及漏读答案，不能视为五个独立答案；19条UNASSIGNED账本未改。[独立复核](../reviews/46007447-math-world-offline-crosswalk-independent-audit.md)已确认仅MODEL_VISUAL组级候选成立，并补充首物理行也跨任务(1)/(2)；七个原像素分段与完整图形候选已另经[独立几何核对](../reviews/46007447-math-world-geometry-independent-audit.md)通过，整图无需扩框；固定170阈值的空白边界不是人工验收。候选包SHA `761ef0f98a4ea0b96a73ba0eb798d9192052eda6ce35f69d2d9ceeeb0dc47525`，包含原图、七裁片、manifest与复核报告，解包像素校验通过；全部UNASSIGNED/UNVERIFIED保持。
 - 本次源码与回执本地验证完成，随本提交交PR #3；固定7d5c3b7代码导出CLI三次重放通过（每次23裁片，应用和检查引用一致，沿用本机依赖、禁止模型/网络）；独立v4包已完成（SHA4094b5689733a9f4460ea8d7be5a25b91e7f14ebcf584416e515c54c43e71521，48成员+manifest）；总控重新验证及包内输入重放通过，未声称全套通过。八张来源仍不足以冻结章范围，A接收PENDING_A，目标ACTIVE。
 
 ## 2026-10-17 新增印刷第7页及第5页独立清点
