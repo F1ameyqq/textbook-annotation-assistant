@@ -2,7 +2,7 @@
   "schema_version": 1,
   "project": "D:\\1800",
   "coordinator_thread_id": "01a13f26-7567-75e1-99ee-c9d2194e78bb",
-  "updated_at": "2026-10-17T15:52:09.920744+08:00",
+  "updated_at": "2026-10-17T16:07:57.606986+08:00",
   "automation": {
     "id": "1800-a",
     "kind": "heartbeat",
@@ -1936,8 +1936,8 @@
       }
     },
     "A03": {
-      "status": "REVIEW",
-      "phase": "P2_R2_PROPOSAL_STATIC_REVIEW_RUNNING",
+      "status": "REWORK",
+      "phase": "P2_R3_EVIDENCE_CLOSURE_DISPATCH_PENDING",
       "depends_on": [
         "A02"
       ],
@@ -1945,8 +1945,8 @@
       "execution_task": "docs/tasks/A03-runtime-recovery.md",
       "review_task": "docs/tasks/A03-independent-review.md",
       "acceptance_scope": "P1 design accepted; P2 SQLite/offline recovery functionality remains unaccepted.",
-      "next_dependency": "Independent review of three static closures and separately bounded R17/version and registration-positive residuals; then coordinator scope decision. Product implementation, exact oracle adoption and I01 remain blocked.",
-      "dispatch_status": "INDEPENDENT_REVIEW_ACKNOWLEDGED",
+      "next_dependency": "One bounded EvidenceRecord consumer closure repair and exact independent re-review. R17 version bridge and registration scope positive remain blocked for separate scope decision; no product/native/oracle adoption or I01 release.",
+      "dispatch_status": "INTENT_RECORDED",
       "B_confirmation": "NOT_CONFIRMED",
       "workflow_commit": "a354f95f1d0b40a8f0847b57fa3978cac999e7a2",
       "worktree_name": "a03-runtime-recovery",
@@ -1959,73 +1959,52 @@
         "host_id": "local",
         "cursor": "506fd3cf-091f-418b-b002-636f503b5e4b:14",
         "turn_status": "completed",
-        "phase": "P2_R2_FROZEN_STATIC_REVIEW_DELIVERY",
-        "base_commit": "7fdbde8f16569fd3bc399013115e13269d5d33fa",
-        "previous_delivery_commit": "7fdbde8f16569fd3bc399013115e13269d5d33fa",
-        "task_document": "docs/tasks/A03-P2-R2-static-rework.md",
-        "task_sha256": "f1e48e85b7b9a07762cca3c0d50d259dfc302edb0b3f4f667aa3e53099c442a0",
-        "expected_report": "docs/tasks/A03-P2-R2-proposal-delivery.md",
+        "phase": "P2_R3_DISPATCH_PENDING",
+        "base_commit": "526d264284f36f856c306db88c1d7e71c04152e1",
+        "previous_delivery_commit": "526d264284f36f856c306db88c1d7e71c04152e1",
+        "task_document": "docs/tasks/A03-P2-R3-evidence-closure-rework.md",
+        "task_sha256": "15d75600d449b783eb546feaab95aeef187fdea401be73c3f54f0f12dce5d911",
+        "expected_report": "docs/tasks/A03-P2-R3-evidence-closure-delivery.md",
         "reasoning_effort": "xhigh",
-        "commit": "526d264284f36f856c306db88c1d7e71c04152e1",
-        "report": "docs/tasks/A03-P2-R2-proposal-delivery.md",
-        "completed_turn_confirms_freeze": true,
-        "session_released": true,
-        "last_checked_at": "2026-10-17T15:52:09.920744+08:00",
-        "turn_id": "01a148a4-3e96-7dd2-9d40-400bd319f809",
-        "observed_thread_status": "idle",
-        "workflow_commit": "d834bf531f95abac7ed30b89b3ca55105fa6f491",
-        "last_progress": "Static revision frozen at 526d2642; 205 entries plus manifest verified, new paths only. R17 version bridge and registration-derived scope positive remain explicit residuals. No product/DB/native acceptance.",
-        "latest_lightweight_observation": {
-          "at": "2026-10-17T15:52:09.920744+08:00",
-          "head": "526d264284f36f856c306db88c1d7e71c04152e1",
-          "status": [],
-          "report_present": true,
-          "frozen_delivery_verified": true,
-          "scope": "Previously verified frozen delivery unchanged and execution worktree clean; no repeat manifest or functional suite."
-        },
-        "report_sha256": "e6df1732e7a3623047a4ed02457a1d5b453cb2aae3253a3913426a00fcf5b218",
-        "evidence_manifest": "docs/evidence/A03/execution/P2-R2-proposal/sha256-manifest.json",
-        "evidence_manifest_sha256": "75f158577e48f029e542674ad5216df0b41ea02df69e76cf646cd35f4a83ed64",
-        "working_tree_clean": true,
-        "session_release_basis": "Frozen recorded static exits and completed turn; no current OS/profile scan",
-        "delivery_preflight": {
-          "path": "docs/evidence/coordinator/heartbeat-20261017-0734/A03-R2-delivery-preflight.json",
-          "sha256": "584889c1b38adb7f034c5da4b2446959da163e6ce405d902aeff8cabc1b03899",
-          "entries": 205,
-          "functional_tests_run": false
-        }
+        "last_checked_at": "2026-10-17T16:07:57.606986+08:00",
+        "dispatch_key": "A03:execution:P2-R3-evidence-closure:526d264284f36f856c306db88c1d7e71c04152e1"
       },
       "review": {
         "thread_id": "01a145aa-8d59-7c70-8d81-731712103a9a",
         "host_id": "local",
-        "cursor": "abdea222-4697-4046-86b1-a5dc48889fac:12",
+        "cursor": "abdea222-4697-4046-86b1-a5dc48889fac:13",
         "turn_id": "01a148cc-34a7-7d61-84b9-b4841ca17b14",
-        "turn_status": "inProgress",
-        "observed_thread_status": "active",
-        "phase": "P2_R2_PROPOSAL_STATIC_REVIEW_RUNNING",
+        "turn_status": "completed",
+        "observed_thread_status": "idle",
+        "phase": "P2_R2_PROPOSAL_STATIC_REWORK",
         "target_commit": "526d264284f36f856c306db88c1d7e71c04152e1",
         "task_document": "docs/tasks/A03-P2-R2-proposal-review-handoff.md",
         "task_sha256": "fe179d0cdd803bf8742732b3d6e3dd454424fe0d9ff3a21f3c9342321a2e8061",
         "expected_report": "docs/tasks/A03-P2-R2-proposal-review-report.md",
-        "decision": "PENDING",
+        "decision": "REWORK",
         "reasoning_effort": "xhigh",
         "workflow_commit": "0a668650f3dfdc00898032fb9c89e96694260d23",
-        "last_checked_at": "2026-10-17T15:52:09.920744+08:00",
-        "last_progress": "Reviewer reports a minimal SCOPE-01 counterexample through Artifact evidence_refs and nested JSON resources; session/H0 and conversion checks provisionally pass. Review remains in progress; report and final frozen evidence pending, no coordinator conclusion or new repair dispatch.",
+        "last_checked_at": "2026-10-17T16:07:57.606986+08:00",
+        "last_progress": "SCOPE-01 formal EvidenceRecord consumer closure fails one fixed counterexample; coordinator reproduced. SESSION-02 and CONVERSION-07 limited static acceptance retained; R17/version and registration-positive residuals blocked.",
         "latest_lightweight_observation": {
-          "at": "2026-10-17T15:52:09.920744+08:00",
-          "target_commit": "526d264284f36f856c306db88c1d7e71c04152e1",
+          "at": "2026-10-17T16:07:57.606986+08:00",
           "report_present": true,
-          "frozen_review_verified": false,
-          "scope": "Compact cursor snapshot and Git/artifact presence only. Preliminary commentary is not an independent final decision; no test rerun or dependency release."
-        }
+          "frozen_review_verified": true,
+          "scope": "177 manifest entries plus manifest, 122 raw Git inputs and recorded exits verified; single static counterexample reproduced, no full suite/native run."
+        },
+        "formal_decision": "REWORK",
+        "report": "docs/tasks/A03-P2-R2-proposal-review-report.md",
+        "report_sha256": "32d23d9e3f42ace9d6eadd88e7af2d45ffbaa58c765268056f78464f54898030",
+        "evidence_manifest": "docs/evidence/A03/review/P2-R2-proposal/sha256-manifest.json",
+        "evidence_manifest_sha256": "5b62f0ee7c893dfd419609445a118a974219269b1e87a4b9e65f2ce402092612",
+        "session_released": true
       },
       "review_handoff": {
         "key": "A03:review:P2-R2-proposal:526d264284f36f856c306db88c1d7e71c04152e1",
         "task": "A03",
         "stage": "P2_R2_PROPOSAL_STATIC_REVIEW",
         "role": "review",
-        "state": "ACKNOWLEDGED",
+        "state": "COMPLETED_REWORK",
         "created_at": "2026-10-17T15:37:31.495423+08:00",
         "target_commit": "526d264284f36f856c306db88c1d7e71c04152e1",
         "document": "docs/tasks/A03-P2-R2-proposal-review-handoff.md",
@@ -2038,8 +2017,9 @@
         "acknowledged_at": "2026-10-17T15:39:01.037522+08:00",
         "workflow_commit": "0a668650f3dfdc00898032fb9c89e96694260d23",
         "turn_id": "01a148cc-34a7-7d61-84b9-b4841ca17b14",
-        "cursor": "abdea222-4697-4046-86b1-a5dc48889fac:12",
-        "result": "Original independent A03 review active at xhigh; three bounded static closures and separate residual classification; no duplicate chat or product/native action."
+        "cursor": "abdea222-4697-4046-86b1-a5dc48889fac:13",
+        "result": "Independent static review completed; one residual SCOPE-01 counterexample confirmed; two limited static acceptances and two blocked residuals kept separate.",
+        "completed_at": "2026-10-17T16:07:57.606986+08:00"
       },
       "rework_round": 2,
       "review_archive": {
@@ -2355,6 +2335,47 @@
           "previous_delivery_commit": "c30526958e313141bf64152627591b0907b04aa8",
           "expected_report": "docs/tasks/A03-P2-R1-amendment-delivery.md",
           "session_release_basis": "Completed execution turn and ten frozen synchronous static subprocess exit records; no product/browser/profile sessions were started. No OS process scan."
+        },
+        {
+          "thread_id": "01a145aa-2fea-7942-97f9-ad260acf4e30",
+          "host_id": "local",
+          "cursor": "506fd3cf-091f-418b-b002-636f503b5e4b:14",
+          "turn_status": "completed",
+          "phase": "P2_R2_FROZEN_STATIC_REVIEW_DELIVERY",
+          "base_commit": "7fdbde8f16569fd3bc399013115e13269d5d33fa",
+          "previous_delivery_commit": "7fdbde8f16569fd3bc399013115e13269d5d33fa",
+          "task_document": "docs/tasks/A03-P2-R2-static-rework.md",
+          "task_sha256": "f1e48e85b7b9a07762cca3c0d50d259dfc302edb0b3f4f667aa3e53099c442a0",
+          "expected_report": "docs/tasks/A03-P2-R2-proposal-delivery.md",
+          "reasoning_effort": "xhigh",
+          "commit": "526d264284f36f856c306db88c1d7e71c04152e1",
+          "report": "docs/tasks/A03-P2-R2-proposal-delivery.md",
+          "completed_turn_confirms_freeze": true,
+          "session_released": true,
+          "last_checked_at": "2026-10-17T15:52:09.920744+08:00",
+          "turn_id": "01a148a4-3e96-7dd2-9d40-400bd319f809",
+          "observed_thread_status": "idle",
+          "workflow_commit": "d834bf531f95abac7ed30b89b3ca55105fa6f491",
+          "last_progress": "Static revision frozen at 526d2642; 205 entries plus manifest verified, new paths only. R17 version bridge and registration-derived scope positive remain explicit residuals. No product/DB/native acceptance.",
+          "latest_lightweight_observation": {
+            "at": "2026-10-17T15:52:09.920744+08:00",
+            "head": "526d264284f36f856c306db88c1d7e71c04152e1",
+            "status": [],
+            "report_present": true,
+            "frozen_delivery_verified": true,
+            "scope": "Previously verified frozen delivery unchanged and execution worktree clean; no repeat manifest or functional suite."
+          },
+          "report_sha256": "e6df1732e7a3623047a4ed02457a1d5b453cb2aae3253a3913426a00fcf5b218",
+          "evidence_manifest": "docs/evidence/A03/execution/P2-R2-proposal/sha256-manifest.json",
+          "evidence_manifest_sha256": "75f158577e48f029e542674ad5216df0b41ea02df69e76cf646cd35f4a83ed64",
+          "working_tree_clean": true,
+          "session_release_basis": "Frozen recorded static exits and completed turn; no current OS/profile scan",
+          "delivery_preflight": {
+            "path": "docs/evidence/coordinator/heartbeat-20261017-0734/A03-R2-delivery-preflight.json",
+            "sha256": "584889c1b38adb7f034c5da4b2446959da163e6ce405d902aeff8cabc1b03899",
+            "entries": 205,
+            "functional_tests_run": false
+          }
         }
       ],
       "repair_requests": [
@@ -2441,6 +2462,21 @@
           "result": "Existing A-side chat active at xhigh; no duplicate chat, platform action or B message.",
           "completed_at": "2026-10-17T15:39:01.037522+08:00",
           "delivery_commit": "526d264284f36f856c306db88c1d7e71c04152e1"
+        },
+        {
+          "key": "A03:execution:P2-R3-evidence-closure:526d264284f36f856c306db88c1d7e71c04152e1",
+          "task": "A03",
+          "stage": "P2_R3_EVIDENCE_CLOSURE",
+          "role": "execution",
+          "state": "INTENT_RECORDED",
+          "created_at": "2026-10-17T16:07:57.606986+08:00",
+          "base_commit": "526d264284f36f856c306db88c1d7e71c04152e1",
+          "document": "docs/tasks/A03-P2-R3-evidence-closure-rework.md",
+          "document_sha256": "15d75600d449b783eb546feaab95aeef187fdea401be73c3f54f0f12dce5d911",
+          "thread_id": "01a145aa-2fea-7942-97f9-ad260acf4e30",
+          "host_id": "local",
+          "reasoning_effort": "xhigh",
+          "scope": "One formal EvidenceRecord consumer closure static repair only. Preserve prior limited acceptances and all old bytes; R17/version and registration branch blocked; no product/native/DB/network."
         }
       ],
       "operational_status": "P2_RUNNING_AFTER_BOUNDED_RESUME",
@@ -2948,6 +2984,39 @@
         "turn_id": "01a148cc-34a7-7d61-84b9-b4841ca17b14",
         "cursor": "abdea222-4697-4046-86b1-a5dc48889fac:11",
         "result": "Original independent A03 review active at xhigh; three bounded static closures and separate residual classification; no duplicate chat or product/native action."
+      },
+      "review_archive_r2_proposal": {
+        "status": "VERIFIED_PENDING_ARCHIVE",
+        "manifest": "docs/evidence/A03/review/P2-R2-proposal/sha256-manifest.json",
+        "manifest_sha256": "5b62f0ee7c893dfd419609445a118a974219269b1e87a4b9e65f2ce402092612",
+        "manifest_entries": 177,
+        "raw_inputs_verified": 122,
+        "report": "docs/tasks/A03-P2-R2-proposal-review-report.md",
+        "report_sha256": "32d23d9e3f42ace9d6eadd88e7af2d45ffbaa58c765268056f78464f54898030",
+        "remote_push": false
+      },
+      "coordinator_reproduction_r2_proposal": {
+        "at": "2026-10-17T16:07:57.606986+08:00",
+        "decision": "REWORK_CONFIRMED",
+        "checks": "docs/evidence/coordinator/heartbeat-20261017-0804/A03-R2-review-check.json",
+        "counterexample_exit": 1,
+        "counterexample_actual": "STATIC_ACCEPTED",
+        "full_suite_rerun": false,
+        "product_native_DB_calls": 0
+      },
+      "limited_static_acceptance_r2": {
+        "at": "2026-10-17T16:07:57.606986+08:00",
+        "target_commit": "526d264284f36f856c306db88c1d7e71c04152e1",
+        "status": "ACCEPTED_STATIC_LIMITED",
+        "items": [
+          "SESSION-02",
+          "CONVERSION-07"
+        ],
+        "decision_document": "docs/tasks/A03-P2-R2-proposal-coordinator-decision.md",
+        "product_functionality_accepted": false,
+        "integration": false,
+        "oracle_adopted": false,
+        "I01_released": false
       }
     },
     "D01": {
@@ -3895,7 +3964,7 @@
       "task": "A03",
       "stage": "P2_R2_PROPOSAL_STATIC_REVIEW",
       "role": "review",
-      "state": "ACKNOWLEDGED",
+      "state": "COMPLETED_REWORK",
       "created_at": "2026-10-17T15:37:31.495423+08:00",
       "target_commit": "526d264284f36f856c306db88c1d7e71c04152e1",
       "document": "docs/tasks/A03-P2-R2-proposal-review-handoff.md",
@@ -3908,16 +3977,31 @@
       "acknowledged_at": "2026-10-17T15:39:01.037522+08:00",
       "workflow_commit": "0a668650f3dfdc00898032fb9c89e96694260d23",
       "turn_id": "01a148cc-34a7-7d61-84b9-b4841ca17b14",
-      "cursor": "abdea222-4697-4046-86b1-a5dc48889fac:12",
-      "result": "Original independent A03 review active at xhigh; three bounded static closures and separate residual classification; no duplicate chat or product/native action."
+      "cursor": "abdea222-4697-4046-86b1-a5dc48889fac:13",
+      "result": "Independent static review completed; one residual SCOPE-01 counterexample confirmed; two limited static acceptances and two blocked residuals kept separate.",
+      "completed_at": "2026-10-17T16:07:57.606986+08:00"
+    },
+    {
+      "key": "A03:execution:P2-R3-evidence-closure:526d264284f36f856c306db88c1d7e71c04152e1",
+      "task": "A03",
+      "stage": "P2_R3_EVIDENCE_CLOSURE",
+      "role": "execution",
+      "state": "INTENT_RECORDED",
+      "created_at": "2026-10-17T16:07:57.606986+08:00",
+      "base_commit": "526d264284f36f856c306db88c1d7e71c04152e1",
+      "document": "docs/tasks/A03-P2-R3-evidence-closure-rework.md",
+      "document_sha256": "15d75600d449b783eb546feaab95aeef187fdea401be73c3f54f0f12dce5d911",
+      "thread_id": "01a145aa-2fea-7942-97f9-ad260acf4e30",
+      "host_id": "local",
+      "reasoning_effort": "xhigh",
+      "scope": "One formal EvidenceRecord consumer closure static repair only. Preserve prior limited acceptances and all old bytes; R17/version and registration branch blocked; no product/native/DB/network."
     }
   ],
   "last_action": {
-    "at": "2026-10-17T15:52:09.920744+08:00",
+    "at": "2026-10-17T16:07:57.606986+08:00",
     "task_id": "A03",
-    "action": "Saved active independent-review progress and cursor; final report pending. No duplicate dispatch, acceptance, integration, platform action or remote push.",
-    "remote_push": false,
-    "workflow_commit": "0a668650f3dfdc00898032fb9c89e96694260d23"
+    "action": "Confirmed frozen R2 REWORK by exact-byte audit and one static reproduction; preserved two limited static acceptances; recorded intent for one original-chat evidence closure repair.",
+    "remote_push": false
   },
   "limitations": [
     "Current route uses mock B artifacts until independently agreed interface/artifact versions exist.",
@@ -3925,28 +4009,19 @@
     "Platform test is single-book serial, no book submission, no unbudgeted paid models."
   ],
   "last_check": {
-    "at": "2026-10-17T15:52:09.920744+08:00",
-    "heartbeat_time": "2026-10-17T07:49:03.345Z",
-    "root_head": "220a805f27408b1e416550d7bed0b69e476d96aa",
-    "root_status": [
-      "?? docs/evidence/A03/review/P2-R2-proposal/",
-      "?? docs/tasks/A03-P2-R2-proposal-review-report.md",
-      "?? mermaid-diagram.png"
-    ],
+    "at": "2026-10-17T16:07:57.606986+08:00",
+    "heartbeat_time": "2026-10-17T08:04:03.577Z",
+    "root_head": "8dcd387bd31d62337a2b4eb14e8a3db7729f96bc",
     "checked_task_ids": [
       "A03"
     ],
     "platform_actions": 0,
     "paid_model_calls": 0,
     "full_suite_rerun": false,
-    "notification": "DONT_NOTIFY",
-    "next_dependencies": "Independent review of three static closures and separately bounded R17/version and registration-positive residuals; then coordinator scope decision. Product implementation, exact oracle adoption and I01 remain blocked.",
-    "dispatch_result": "No new dispatch; existing independent review still in progress and final evidence not frozen. Await completed report before any bounded repair or scope decision.",
-    "no_duplicate_chat": true,
-    "task_thread_id": "01a145aa-8d59-7c70-8d81-731712103a9a",
-    "task_cursor": "abdea222-4697-4046-86b1-a5dc48889fac:12",
-    "target_commit": "526d264284f36f856c306db88c1d7e71c04152e1",
-    "completed_at": "2026-10-17T15:52:09.920744+08:00"
+    "notification": "NOTIFY",
+    "next_dependencies": "One bounded EvidenceRecord consumer closure repair and exact independent re-review. R17 version bridge and registration scope positive remain blocked for separate scope decision; no product/native/oracle adoption or I01 release.",
+    "dispatch_result": "Intent recorded; not yet sent.",
+    "no_duplicate_chat": true
   },
   "prepared_next_batch": {
     "status": "DISPATCHED",

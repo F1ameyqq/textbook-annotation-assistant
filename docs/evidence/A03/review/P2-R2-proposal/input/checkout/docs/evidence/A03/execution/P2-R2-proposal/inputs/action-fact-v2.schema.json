@@ -1,0 +1,1156 @@
+{
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "format_version": {
+      "const": "a03-action-fact-2"
+    },
+    "plan_ref": {
+      "additionalProperties": false,
+      "properties": {
+        "artifact_id": {
+          "pattern": "^[A-Za-z][A-Za-z0-9_.:-]{0,127}$",
+          "title": "Artifact Id",
+          "type": "string"
+        },
+        "revision": {
+          "exclusiveMinimum": 0,
+          "title": "Revision",
+          "type": "integer"
+        },
+        "kind": {
+          "const": "ApplyPlan",
+          "type": "string"
+        },
+        "content_hash": {
+          "pattern": "^[0-9a-f]{64}$",
+          "title": "Content Hash",
+          "type": "string"
+        }
+      },
+      "required": [
+        "artifact_id",
+        "revision",
+        "kind",
+        "content_hash"
+      ],
+      "title": "ArtifactRef",
+      "type": "object"
+    },
+    "origin_phase": {
+      "type": "string",
+      "enum": [
+        "EXECUTION",
+        "RECOVERY",
+        "UNATTEMPTED_ABSENCE"
+      ]
+    },
+    "resolution_ref": {
+      "anyOf": [
+        {
+          "additionalProperties": false,
+          "properties": {
+            "artifact_id": {
+              "pattern": "^[A-Za-z][A-Za-z0-9_.:-]{0,127}$",
+              "title": "Artifact Id",
+              "type": "string"
+            },
+            "revision": {
+              "exclusiveMinimum": 0,
+              "title": "Revision",
+              "type": "integer"
+            },
+            "kind": {
+              "const": "ReconciliationResult",
+              "type": "string"
+            },
+            "content_hash": {
+              "pattern": "^[0-9a-f]{64}$",
+              "title": "Content Hash",
+              "type": "string"
+            }
+          },
+          "required": [
+            "artifact_id",
+            "revision",
+            "kind",
+            "content_hash"
+          ],
+          "title": "ArtifactRef",
+          "type": "object"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "intent_ref": {
+      "anyOf": [
+        {
+          "additionalProperties": false,
+          "properties": {
+            "artifact_id": {
+              "pattern": "^[A-Za-z][A-Za-z0-9_.:-]{0,127}$",
+              "title": "Artifact Id",
+              "type": "string"
+            },
+            "revision": {
+              "exclusiveMinimum": 0,
+              "title": "Revision",
+              "type": "integer"
+            },
+            "kind": {
+              "const": "WriteIntent",
+              "type": "string"
+            },
+            "content_hash": {
+              "pattern": "^[0-9a-f]{64}$",
+              "title": "Content Hash",
+              "type": "string"
+            }
+          },
+          "required": [
+            "artifact_id",
+            "revision",
+            "kind",
+            "content_hash"
+          ],
+          "title": "ArtifactRef",
+          "type": "object"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "obligation_id": {
+      "anyOf": [
+        {
+          "type": "string",
+          "minLength": 1
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "action_id": {
+      "pattern": "^[A-Za-z][A-Za-z0-9_.:-]{0,127}$",
+      "title": "Action Id",
+      "type": "string"
+    },
+    "action_digest": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "prepared_before": {
+      "$ref": "#/$defs/Resource"
+    },
+    "observed_snapshot_ref": {
+      "anyOf": [
+        {
+          "additionalProperties": false,
+          "properties": {
+            "artifact_id": {
+              "pattern": "^[A-Za-z][A-Za-z0-9_.:-]{0,127}$",
+              "title": "Artifact Id",
+              "type": "string"
+            },
+            "revision": {
+              "exclusiveMinimum": 0,
+              "title": "Revision",
+              "type": "integer"
+            },
+            "kind": {
+              "const": "PlatformSnapshot",
+              "type": "string"
+            },
+            "content_hash": {
+              "pattern": "^[0-9a-f]{64}$",
+              "title": "Content Hash",
+              "type": "string"
+            }
+          },
+          "required": [
+            "artifact_id",
+            "revision",
+            "kind",
+            "content_hash"
+          ],
+          "title": "ArtifactRef",
+          "type": "object"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "readback": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/Resource"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "comparator_version": {
+      "const": "a02-facts-1"
+    },
+    "result": {
+      "$ref": "#/$defs/ActionResult"
+    },
+    "journal_sequence": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "predecessor_hash": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "design_only": {
+      "type": "boolean"
+    },
+    "unattempted_basis": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/Resource"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    }
+  },
+  "required": [
+    "format_version",
+    "plan_ref",
+    "origin_phase",
+    "resolution_ref",
+    "intent_ref",
+    "obligation_id",
+    "action_id",
+    "action_digest",
+    "prepared_before",
+    "observed_snapshot_ref",
+    "readback",
+    "comparator_version",
+    "result",
+    "journal_sequence",
+    "predecessor_hash",
+    "unattempted_basis"
+  ],
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:a03:p2-r1:proposal:action-fact-v2.schema.json",
+  "$defs": {
+    "Resource": {
+      "additionalProperties": false,
+      "properties": {
+        "path": {
+          "title": "Path",
+          "type": "string"
+        },
+        "sha256": {
+          "pattern": "^[0-9a-f]{64}$",
+          "title": "Sha256",
+          "type": "string"
+        },
+        "media_type": {
+          "enum": [
+            "image/png",
+            "image/jpeg",
+            "image/x-portable-graymap",
+            "text/plain",
+            "application/json"
+          ],
+          "title": "Media Type",
+          "type": "string"
+        },
+        "origin": {
+          "type": "string",
+          "enum": [
+            "SYNTHETIC",
+            "ORIGINAL",
+            "OBSERVED"
+          ]
+        }
+      },
+      "required": [
+        "path",
+        "sha256",
+        "media_type",
+        "origin"
+      ],
+      "title": "Resource",
+      "type": "object"
+    },
+    "ActionResult": {
+      "additionalProperties": false,
+      "properties": {
+        "action_id": {
+          "pattern": "^[A-Za-z][A-Za-z0-9_.:-]{0,127}$",
+          "title": "Action Id",
+          "type": "string"
+        },
+        "outcome": {
+          "enum": [
+            "APPLIED",
+            "NOT_APPLIED",
+            "UNKNOWN"
+          ],
+          "title": "Outcome",
+          "type": "string"
+        },
+        "platform_ids": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Platform Ids",
+          "type": "array"
+        },
+        "before_evidence_refs": {
+          "items": {
+            "pattern": "^[A-Za-z][A-Za-z0-9_.:-]{0,127}$",
+            "type": "string"
+          },
+          "minItems": 1,
+          "title": "Before Evidence Refs",
+          "type": "array"
+        },
+        "after_evidence_refs": {
+          "items": {
+            "pattern": "^[A-Za-z][A-Za-z0-9_.:-]{0,127}$",
+            "type": "string"
+          },
+          "title": "After Evidence Refs",
+          "type": "array"
+        },
+        "readback": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Resource"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "effect_match": {
+          "enum": [
+            "MATCH",
+            "ABSENT",
+            "INDETERMINATE"
+          ],
+          "title": "Effect Match",
+          "type": "string"
+        },
+        "next_step": {
+          "enum": [
+            "POSTCHECK",
+            "RECHECK_TARGET",
+            "RECONCILE"
+          ],
+          "title": "Next Step",
+          "type": "string"
+        },
+        "replay_allowed": {
+          "const": false,
+          "title": "Replay Allowed",
+          "type": "boolean"
+        },
+        "reason": {
+          "minLength": 1,
+          "title": "Reason",
+          "type": "string"
+        },
+        "attempt_fact": {
+          "type": "string",
+          "enum": [
+            "NOT_ATTEMPTED",
+            "MAY_HAVE_BEEN_ATTEMPTED",
+            "ATTEMPTED",
+            "LEGACY_UNRECORDED"
+          ]
+        },
+        "attempt_evidence_refs": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Resource"
+          },
+          "minItems": 0
+        },
+        "intent_ref": {
+          "anyOf": [
+            {
+              "additionalProperties": false,
+              "properties": {
+                "artifact_id": {
+                  "pattern": "^[A-Za-z][A-Za-z0-9_.:-]{0,127}$",
+                  "title": "Artifact Id",
+                  "type": "string"
+                },
+                "revision": {
+                  "exclusiveMinimum": 0,
+                  "title": "Revision",
+                  "type": "integer"
+                },
+                "kind": {
+                  "const": "WriteIntent",
+                  "type": "string"
+                },
+                "content_hash": {
+                  "pattern": "^[0-9a-f]{64}$",
+                  "title": "Content Hash",
+                  "type": "string"
+                }
+              },
+              "required": [
+                "artifact_id",
+                "revision",
+                "kind",
+                "content_hash"
+              ],
+              "title": "ArtifactRef",
+              "type": "object"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "required": [
+        "action_id",
+        "outcome",
+        "platform_ids",
+        "before_evidence_refs",
+        "after_evidence_refs",
+        "readback",
+        "effect_match",
+        "next_step",
+        "replay_allowed",
+        "reason",
+        "attempt_fact",
+        "attempt_evidence_refs",
+        "intent_ref"
+      ],
+      "title": "ActionResult",
+      "type": "object"
+    }
+  },
+  "title": "DESIGN_ONLY candidate a03-action-fact-1 event resource; NOT a fourth Artifact kind",
+  "$comment": "Only an actual runtime ACTION_RESULT_COMMITTED event after independent read/comparison can discharge a normal conclusive intent. EXECUTION requires null resolution_ref. RECOVERY requires an exact committed resolution_ref and RECONCILIATION_COMMITTED event, preserving original attempt_fact while reporting the new effective outcome; never send it to the original run normal result entry. Original UNKNOWN files remain unchanged. This static file is not commit evidence. Optional design_only metadata annotates hand-authored P1 resources. P1-R1 DESIGN_ONLY revision; NOT IMPLEMENTED. UNATTEMPTED_ABSENCE uses only commit_unattempted_absence / UNATTEMPTED_ABSENCE_COMMITTED: INTERRUPTED plan, no intent/obligation/resolution, independently fresh sufficient ABSENT and complete uncalled event prefix; never dispatch or clear other pending.",
+  "oneOf": [
+    {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "format_version": {
+          "const": "a03-action-fact-2"
+        },
+        "plan_ref": {
+          "additionalProperties": false,
+          "properties": {
+            "artifact_id": {
+              "pattern": "^[A-Za-z][A-Za-z0-9_.:-]{0,127}$",
+              "title": "Artifact Id",
+              "type": "string"
+            },
+            "revision": {
+              "exclusiveMinimum": 0,
+              "title": "Revision",
+              "type": "integer"
+            },
+            "kind": {
+              "const": "ApplyPlan",
+              "type": "string"
+            },
+            "content_hash": {
+              "pattern": "^[0-9a-f]{64}$",
+              "title": "Content Hash",
+              "type": "string"
+            }
+          },
+          "required": [
+            "artifact_id",
+            "revision",
+            "kind",
+            "content_hash"
+          ],
+          "title": "ArtifactRef",
+          "type": "object"
+        },
+        "origin_phase": {
+          "const": "EXECUTION"
+        },
+        "resolution_ref": {
+          "anyOf": [
+            {
+              "additionalProperties": false,
+              "properties": {
+                "artifact_id": {
+                  "pattern": "^[A-Za-z][A-Za-z0-9_.:-]{0,127}$",
+                  "title": "Artifact Id",
+                  "type": "string"
+                },
+                "revision": {
+                  "exclusiveMinimum": 0,
+                  "title": "Revision",
+                  "type": "integer"
+                },
+                "kind": {
+                  "const": "ReconciliationResult",
+                  "type": "string"
+                },
+                "content_hash": {
+                  "pattern": "^[0-9a-f]{64}$",
+                  "title": "Content Hash",
+                  "type": "string"
+                }
+              },
+              "required": [
+                "artifact_id",
+                "revision",
+                "kind",
+                "content_hash"
+              ],
+              "title": "ArtifactRef",
+              "type": "object"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "intent_ref": {
+          "anyOf": [
+            {
+              "additionalProperties": false,
+              "properties": {
+                "artifact_id": {
+                  "pattern": "^[A-Za-z][A-Za-z0-9_.:-]{0,127}$",
+                  "title": "Artifact Id",
+                  "type": "string"
+                },
+                "revision": {
+                  "exclusiveMinimum": 0,
+                  "title": "Revision",
+                  "type": "integer"
+                },
+                "kind": {
+                  "const": "WriteIntent",
+                  "type": "string"
+                },
+                "content_hash": {
+                  "pattern": "^[0-9a-f]{64}$",
+                  "title": "Content Hash",
+                  "type": "string"
+                }
+              },
+              "required": [
+                "artifact_id",
+                "revision",
+                "kind",
+                "content_hash"
+              ],
+              "title": "ArtifactRef",
+              "type": "object"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "obligation_id": {
+          "anyOf": [
+            {
+              "type": "string",
+              "minLength": 1
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "action_id": {
+          "pattern": "^[A-Za-z][A-Za-z0-9_.:-]{0,127}$",
+          "title": "Action Id",
+          "type": "string"
+        },
+        "action_digest": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "prepared_before": {
+          "$ref": "#/$defs/Resource"
+        },
+        "observed_snapshot_ref": {
+          "anyOf": [
+            {
+              "additionalProperties": false,
+              "properties": {
+                "artifact_id": {
+                  "pattern": "^[A-Za-z][A-Za-z0-9_.:-]{0,127}$",
+                  "title": "Artifact Id",
+                  "type": "string"
+                },
+                "revision": {
+                  "exclusiveMinimum": 0,
+                  "title": "Revision",
+                  "type": "integer"
+                },
+                "kind": {
+                  "const": "PlatformSnapshot",
+                  "type": "string"
+                },
+                "content_hash": {
+                  "pattern": "^[0-9a-f]{64}$",
+                  "title": "Content Hash",
+                  "type": "string"
+                }
+              },
+              "required": [
+                "artifact_id",
+                "revision",
+                "kind",
+                "content_hash"
+              ],
+              "title": "ArtifactRef",
+              "type": "object"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "readback": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Resource"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "comparator_version": {
+          "const": "a02-facts-1"
+        },
+        "result": {
+          "$ref": "#/$defs/ActionResult"
+        },
+        "journal_sequence": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "predecessor_hash": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "design_only": {
+          "type": "boolean"
+        },
+        "unattempted_basis": {
+          "type": "null"
+        }
+      },
+      "required": [
+        "format_version",
+        "plan_ref",
+        "origin_phase",
+        "resolution_ref",
+        "intent_ref",
+        "obligation_id",
+        "action_id",
+        "action_digest",
+        "prepared_before",
+        "observed_snapshot_ref",
+        "readback",
+        "comparator_version",
+        "result",
+        "journal_sequence",
+        "predecessor_hash",
+        "unattempted_basis"
+      ]
+    },
+    {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "format_version": {
+          "const": "a03-action-fact-2"
+        },
+        "plan_ref": {
+          "additionalProperties": false,
+          "properties": {
+            "artifact_id": {
+              "pattern": "^[A-Za-z][A-Za-z0-9_.:-]{0,127}$",
+              "title": "Artifact Id",
+              "type": "string"
+            },
+            "revision": {
+              "exclusiveMinimum": 0,
+              "title": "Revision",
+              "type": "integer"
+            },
+            "kind": {
+              "const": "ApplyPlan",
+              "type": "string"
+            },
+            "content_hash": {
+              "pattern": "^[0-9a-f]{64}$",
+              "title": "Content Hash",
+              "type": "string"
+            }
+          },
+          "required": [
+            "artifact_id",
+            "revision",
+            "kind",
+            "content_hash"
+          ],
+          "title": "ArtifactRef",
+          "type": "object"
+        },
+        "origin_phase": {
+          "const": "RECOVERY"
+        },
+        "resolution_ref": {
+          "anyOf": [
+            {
+              "additionalProperties": false,
+              "properties": {
+                "artifact_id": {
+                  "pattern": "^[A-Za-z][A-Za-z0-9_.:-]{0,127}$",
+                  "title": "Artifact Id",
+                  "type": "string"
+                },
+                "revision": {
+                  "exclusiveMinimum": 0,
+                  "title": "Revision",
+                  "type": "integer"
+                },
+                "kind": {
+                  "const": "ReconciliationResult",
+                  "type": "string"
+                },
+                "content_hash": {
+                  "pattern": "^[0-9a-f]{64}$",
+                  "title": "Content Hash",
+                  "type": "string"
+                }
+              },
+              "required": [
+                "artifact_id",
+                "revision",
+                "kind",
+                "content_hash"
+              ],
+              "title": "ArtifactRef",
+              "type": "object"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "intent_ref": {
+          "anyOf": [
+            {
+              "additionalProperties": false,
+              "properties": {
+                "artifact_id": {
+                  "pattern": "^[A-Za-z][A-Za-z0-9_.:-]{0,127}$",
+                  "title": "Artifact Id",
+                  "type": "string"
+                },
+                "revision": {
+                  "exclusiveMinimum": 0,
+                  "title": "Revision",
+                  "type": "integer"
+                },
+                "kind": {
+                  "const": "WriteIntent",
+                  "type": "string"
+                },
+                "content_hash": {
+                  "pattern": "^[0-9a-f]{64}$",
+                  "title": "Content Hash",
+                  "type": "string"
+                }
+              },
+              "required": [
+                "artifact_id",
+                "revision",
+                "kind",
+                "content_hash"
+              ],
+              "title": "ArtifactRef",
+              "type": "object"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "obligation_id": {
+          "anyOf": [
+            {
+              "type": "string",
+              "minLength": 1
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "action_id": {
+          "pattern": "^[A-Za-z][A-Za-z0-9_.:-]{0,127}$",
+          "title": "Action Id",
+          "type": "string"
+        },
+        "action_digest": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "prepared_before": {
+          "$ref": "#/$defs/Resource"
+        },
+        "observed_snapshot_ref": {
+          "anyOf": [
+            {
+              "additionalProperties": false,
+              "properties": {
+                "artifact_id": {
+                  "pattern": "^[A-Za-z][A-Za-z0-9_.:-]{0,127}$",
+                  "title": "Artifact Id",
+                  "type": "string"
+                },
+                "revision": {
+                  "exclusiveMinimum": 0,
+                  "title": "Revision",
+                  "type": "integer"
+                },
+                "kind": {
+                  "const": "PlatformSnapshot",
+                  "type": "string"
+                },
+                "content_hash": {
+                  "pattern": "^[0-9a-f]{64}$",
+                  "title": "Content Hash",
+                  "type": "string"
+                }
+              },
+              "required": [
+                "artifact_id",
+                "revision",
+                "kind",
+                "content_hash"
+              ],
+              "title": "ArtifactRef",
+              "type": "object"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "readback": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Resource"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "comparator_version": {
+          "const": "a02-facts-1"
+        },
+        "result": {
+          "$ref": "#/$defs/ActionResult"
+        },
+        "journal_sequence": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "predecessor_hash": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "design_only": {
+          "type": "boolean"
+        },
+        "unattempted_basis": {
+          "type": "null"
+        }
+      },
+      "required": [
+        "format_version",
+        "plan_ref",
+        "origin_phase",
+        "resolution_ref",
+        "intent_ref",
+        "obligation_id",
+        "action_id",
+        "action_digest",
+        "prepared_before",
+        "observed_snapshot_ref",
+        "readback",
+        "comparator_version",
+        "result",
+        "journal_sequence",
+        "predecessor_hash",
+        "unattempted_basis"
+      ]
+    },
+    {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "format_version": {
+          "const": "a03-action-fact-2"
+        },
+        "plan_ref": {
+          "additionalProperties": false,
+          "properties": {
+            "artifact_id": {
+              "pattern": "^[A-Za-z][A-Za-z0-9_.:-]{0,127}$",
+              "title": "Artifact Id",
+              "type": "string"
+            },
+            "revision": {
+              "exclusiveMinimum": 0,
+              "title": "Revision",
+              "type": "integer"
+            },
+            "kind": {
+              "const": "ApplyPlan",
+              "type": "string"
+            },
+            "content_hash": {
+              "pattern": "^[0-9a-f]{64}$",
+              "title": "Content Hash",
+              "type": "string"
+            }
+          },
+          "required": [
+            "artifact_id",
+            "revision",
+            "kind",
+            "content_hash"
+          ],
+          "title": "ArtifactRef",
+          "type": "object"
+        },
+        "origin_phase": {
+          "const": "UNATTEMPTED_ABSENCE"
+        },
+        "resolution_ref": {
+          "type": "null"
+        },
+        "intent_ref": {
+          "type": "null"
+        },
+        "obligation_id": {
+          "type": "null"
+        },
+        "action_id": {
+          "pattern": "^[A-Za-z][A-Za-z0-9_.:-]{0,127}$",
+          "title": "Action Id",
+          "type": "string"
+        },
+        "action_digest": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "prepared_before": {
+          "$ref": "#/$defs/Resource"
+        },
+        "observed_snapshot_ref": {
+          "anyOf": [
+            {
+              "additionalProperties": false,
+              "properties": {
+                "artifact_id": {
+                  "pattern": "^[A-Za-z][A-Za-z0-9_.:-]{0,127}$",
+                  "title": "Artifact Id",
+                  "type": "string"
+                },
+                "revision": {
+                  "exclusiveMinimum": 0,
+                  "title": "Revision",
+                  "type": "integer"
+                },
+                "kind": {
+                  "const": "PlatformSnapshot",
+                  "type": "string"
+                },
+                "content_hash": {
+                  "pattern": "^[0-9a-f]{64}$",
+                  "title": "Content Hash",
+                  "type": "string"
+                }
+              },
+              "required": [
+                "artifact_id",
+                "revision",
+                "kind",
+                "content_hash"
+              ],
+              "title": "ArtifactRef",
+              "type": "object"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "readback": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Resource"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "comparator_version": {
+          "const": "a02-facts-1"
+        },
+        "result": {
+          "additionalProperties": false,
+          "properties": {
+            "action_id": {
+              "pattern": "^[A-Za-z][A-Za-z0-9_.:-]{0,127}$",
+              "title": "Action Id",
+              "type": "string"
+            },
+            "outcome": {
+              "const": "NOT_APPLIED"
+            },
+            "platform_ids": {
+              "items": {
+                "type": "string"
+              },
+              "title": "Platform Ids",
+              "type": "array"
+            },
+            "before_evidence_refs": {
+              "items": {
+                "pattern": "^[A-Za-z][A-Za-z0-9_.:-]{0,127}$",
+                "type": "string"
+              },
+              "minItems": 1,
+              "title": "Before Evidence Refs",
+              "type": "array"
+            },
+            "after_evidence_refs": {
+              "items": {
+                "pattern": "^[A-Za-z][A-Za-z0-9_.:-]{0,127}$",
+                "type": "string"
+              },
+              "title": "After Evidence Refs",
+              "type": "array"
+            },
+            "readback": {
+              "anyOf": [
+                {
+                  "$ref": "#/$defs/Resource"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "effect_match": {
+              "const": "ABSENT"
+            },
+            "next_step": {
+              "enum": [
+                "POSTCHECK",
+                "RECHECK_TARGET",
+                "RECONCILE"
+              ],
+              "title": "Next Step",
+              "type": "string"
+            },
+            "replay_allowed": {
+              "const": false
+            },
+            "reason": {
+              "minLength": 1,
+              "title": "Reason",
+              "type": "string"
+            },
+            "attempt_fact": {
+              "const": "NOT_ATTEMPTED"
+            },
+            "attempt_evidence_refs": {
+              "type": "array",
+              "items": {
+                "$ref": "#/$defs/Resource"
+              },
+              "minItems": 0
+            },
+            "intent_ref": {
+              "type": "null"
+            }
+          },
+          "required": [
+            "action_id",
+            "outcome",
+            "platform_ids",
+            "before_evidence_refs",
+            "after_evidence_refs",
+            "readback",
+            "effect_match",
+            "next_step",
+            "replay_allowed",
+            "reason",
+            "attempt_fact",
+            "attempt_evidence_refs",
+            "intent_ref"
+          ],
+          "title": "ActionResult",
+          "type": "object"
+        },
+        "journal_sequence": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "predecessor_hash": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "design_only": {
+          "type": "boolean"
+        },
+        "unattempted_basis": {
+          "$ref": "#/$defs/Resource"
+        }
+      },
+      "required": [
+        "format_version",
+        "plan_ref",
+        "origin_phase",
+        "resolution_ref",
+        "intent_ref",
+        "obligation_id",
+        "action_id",
+        "action_digest",
+        "prepared_before",
+        "observed_snapshot_ref",
+        "readback",
+        "comparator_version",
+        "result",
+        "journal_sequence",
+        "predecessor_hash",
+        "unattempted_basis"
+      ]
+    }
+  ]
+}

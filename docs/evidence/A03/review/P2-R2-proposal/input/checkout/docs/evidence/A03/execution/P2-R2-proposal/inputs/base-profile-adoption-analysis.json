@@ -1,0 +1,23 @@
+{
+  "kind": "READ_ONLY_STATIC_BASE_CODE_ANALYSIS",
+  "commit": "c30526958e313141bf64152627591b0907b04aa8",
+  "source_path": "src/annotation/runtime/storage/__init__.py",
+  "sha256": "94767f6c31a04fad926d1c31daff44646a688112d93a4b1cee42eddd7e4443ce",
+  "excerpts": [
+    {
+      "function": "open_state",
+      "start": 94,
+      "end": 98,
+      "text": "def open_state(anchor_path, *, expected_ledger_id, expected_target_store_id):\n    store = RuntimeStore(anchor_path, expected_ledger_id=expected_ledger_id,\n                         expected_target_store_id=expected_target_store_id)\n    CURRENT.set(store)\n    return store"
+    },
+    {
+      "function": "verify_integrity",
+      "start": 155,
+      "end": 188,
+      "text": "    def verify_integrity(self):\n        try:\n            with self.connect() as connection:\n                meta = dict(connection.execute(\"SELECT key,value FROM meta\"))\n                if meta != {\"version\": DB_VERSION, \"ledger_id\": self.ledger_id, \"target_store_id\": self.target_store_id,\n                            \"state_dir\": str(self.directory)}:\n                    fail(\"LEDGER_VERSION_UNSUPPORTED\", \"metadata mismatch\", 5)\n                if connection.execute(\"PRAGMA integrity_check\").fetchone()[0] != \"ok\":\n                    fail(\"LEDGER_CORRUPT\", \"SQLite integrity check failed\", 5)\n                if connection.execute(\"PRAGMA application_id\").fetchone()[0] != 0x41303352 or connection.execute(\"PRAGMA user_version\").fetchone()[0] != 1:\n                    fail(\"LEDGER_VERSION_UNSUPPORTED\", \"SQLite application/user version mismatch\", 5)\n                if not connection.execute(\"SELECT 1 FROM sqlite_master WHERE type='table' AND name='attempt_windows'\").fetchone():\n                    fail(\"LEDGER_VERSION_UNSUPPORTED\", \"runtime schema is incomplete\", 5)\n                for row in connection.execute(\"SELECT * FROM files\"):\n                    path = self.directory / row[\"path\"]\n                    if not path.is_file() or path.is_symlink():\n                        fail(\"RESOURCE_MISSING\", row[\"path\"], 5)\n                    raw = path.read_bytes()\n                    if len(raw) != row[\"size\"] or hashlib.sha256(raw).hexdigest() != row[\"sha\"]:\n                        fail(\"RESOURCE_HASH_MISMATCH\", row[\"path\"], 5)\n                for book in connection.execute(\"SELECT * FROM books\"):\n                    previous, sequence = ZERO, 0\n                    for row in connection.execute(\"SELECT body FROM events WHERE book=? ORDER BY sequence\", (book[\"key\"],)):\n                        event = json.loads(row[\"body\"])\n                        sequence += 1\n                        if (event[\"sequence\"] != sequence or event[\"previous_hash\"] != previous or\n                            event[\"event_hash\"] != digest({k: v for k, v in event.items() if k != \"event_hash\"})):\n                            fail(\"LEDGER_CORRUPT\", \"event chain mismatch\", 5)\n                        previous = event[\"event_hash\"]\n                    if (sequence, previous) != (book[\"head_sequence\"], book[\"head_hash\"]):\n                        fail(\"LEDGER_INCOMPLETE\", \"event head differs\", 5)\n        except sqlite3.Error as error:\n            fail(\"LEDGER_CORRUPT\", str(error), 5)\n        return True"
+    }
+  ],
+  "observation": "old verify_integrity requires an exact four-key meta dict and user_version1; it validates event hashes/head without interpreting an adoption profile",
+  "minimal_recommendation": "explicit known-format adoption transaction could add a new persisted profile discriminator meta key together with adoption event; old exact-dict verifier then rejects before writes. Coordinator must approve the actual discriminator and interrupted-adoption rules. No DB was opened or modified.",
+  "limits": "static inference only; no old-writer runtime experiment and no rejected authorization field-reset action"
+}

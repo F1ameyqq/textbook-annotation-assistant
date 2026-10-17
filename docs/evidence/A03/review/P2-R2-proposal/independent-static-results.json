@@ -1,0 +1,113 @@
+{
+  "candidate_profile_sha256": "f7385ba20090b5df8aa062c417e3d5c66a889a30f464facff994d9929b94f9ea",
+  "author_reproduction_input_copies": [
+    {
+      "name": "readonly-session-does-not-match-gate-binding.json",
+      "sha256": "0c4230385214c188ddd0f43e90a68599d3a80b9222cc8f4a451d8fe6b56f27d1",
+      "bytes": 3649
+    },
+    {
+      "name": "initial-head-not-in-canonical-prefix.json",
+      "sha256": "ac228dc64ca418a2820c5f55db07b800b2683d6a15e43c546468679f70abbfc9",
+      "bytes": 3677
+    },
+    {
+      "name": "amended-source-kind-coverage.json",
+      "sha256": "9b34cb3ca42e93022031730c2eb2d8b6a49e347216e2cb9d213f67aecba26349",
+      "bytes": 12586
+    }
+  ],
+  "whole_scope_package": {
+    "artifacts": 15,
+    "book_ids": [
+      "synthetic-r2-book"
+    ],
+    "scopes": [
+      "original-a",
+      "original-b"
+    ],
+    "consumer_count": 29,
+    "mixed_DAG_nodes": 46,
+    "whole_entry_static": "ACCEPTED",
+    "scope_plan_branch_only": true
+  },
+  "session": {
+    "checker": {
+      "H0": {
+        "sequence": 7,
+        "hash": "87f8f86767e923c8fe7eb351c45eb57df3d6d4ebfdf855249fc7f5be025bbf84"
+      },
+      "Hfinal": {
+        "sequence": 14,
+        "hash": "5483a60c94ae219978b51533e6bada445d0a5e9b61a5d0b18b36f2bfad9137d3"
+      },
+      "total_reads": 3,
+      "subject_scope": "original-a"
+    },
+    "independent_chain_events": 14,
+    "initial_head_matches_before_STARTED": true,
+    "final_head_matches_prefix": true,
+    "same_binding": true,
+    "actual_target_reads": "NOT_EXECUTED",
+    "native_fence_or_CAS": "NOT_EXECUTED"
+  },
+  "conversion": {
+    "old_nodes": 7,
+    "new_nodes": 5,
+    "new_kinds": [
+      "CheckReport",
+      "EvidenceBundle",
+      "PlatformSnapshot",
+      "QuestionGraph",
+      "SourceBundle"
+    ],
+    "old_mapped": 4,
+    "old_archive_only": 3,
+    "new_derived": 1,
+    "INITIAL": "INITIAL",
+    "POST_HOLD": "POST_HOLD",
+    "real_conversion": "NOT_EXECUTED"
+  },
+  "nonframe_evidence_probe": {
+    "id": "R2-SCOPE-EVIDENCE-ID-01",
+    "base_bundle_sha256": "7a6bea1ee04f272913edbcf7f3af79b690843700317188f386ae168667e2003d",
+    "expected": "REJECT_UNDECLARED_NONFRAME_REFERENCE (and cross-scope if declared)",
+    "actual": "STATIC_ACCEPTED",
+    "error": null,
+    "resource_overrides": [
+      {
+        "logical": "review-static/inner.json",
+        "file": "counterexample/evidence-id-consumer/inner.json",
+        "sha256": "ebd3f42cc53726b05919f27e6ee7b3866cbff7c36454473fe8dfda85e10b33af"
+      },
+      {
+        "logical": "review-static/outer.json",
+        "file": "counterexample/evidence-id-consumer/outer.json",
+        "sha256": "e14cf14a7a585ad528f7f01807d26a205cfa227c94a23dd51ff537f079dc32f6"
+      }
+    ],
+    "bundle_file": "counterexample/evidence-id-consumer/bundle.json",
+    "consumer": "origin-a-SourceBundle",
+    "consumer_scope": "original-a",
+    "formal_evidence_path": "payload.external_page_mappings/0/evidence_refs[proof]",
+    "referenced_artifact": {
+      "artifact_id": "review-isolated-source-b",
+      "revision": 1,
+      "kind": "SourceBundle",
+      "content_hash": "ce154c73e6f2d5ef5a387073bd1315be2e941eb3cfd3b3e3d56f7306f6acfec5"
+    },
+    "reference_scope": "original-b",
+    "ordinary_ref_declared_by_consumer": false,
+    "all_artifact_hashes_recomputed_equal": true,
+    "native_qualification": false,
+    "limits": "new static JSON only; no product/native/DB. One extra isolated Source and two Resource values; no candidate source edit."
+  },
+  "local_conclusion": {
+    "SCOPE-01": "REWORK",
+    "SESSION-02": "STATIC_ACCEPTED_LIMITED",
+    "CONVERSION-07": "STATIC_ACCEPTED_LIMITED",
+    "R17_VERSION_BRIDGE": "BLOCKED",
+    "REGISTRATION_SCOPE_BRANCH": "BLOCKED_NOT_POSITIVELY_VERIFIED",
+    "all_native_functions": "NOT_EXECUTED"
+  }
+}
