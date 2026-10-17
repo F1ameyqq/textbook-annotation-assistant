@@ -2,7 +2,7 @@
   "schema_version": 1,
   "project": "D:\\1800",
   "coordinator_thread_id": "01a13f26-7567-75e1-99ee-c9d2194e78bb",
-  "updated_at": "2026-10-17T04:50:38.214171+00:00",
+  "updated_at": "2026-10-17T04:55:11.306191+00:00",
   "automation": {
     "id": "1800-a",
     "kind": "heartbeat",
@@ -1408,59 +1408,37 @@
         "thread_id": "01a144cc-dde4-73a1-9e83-be485380ea25",
         "host_id": "local",
         "turn_status": "inProgress",
-        "cursor": "34833b27-6230-45ea-8e92-ee1cc9e0ac8f:1",
+        "cursor": "34833b27-6230-45ea-8e92-ee1cc9e0ac8f:2",
         "report": null,
         "turn_id": "01a14831-6747-7063-b05a-9cbfefd2f6ee",
-        "last_progress": "我先从指定 workflow Git 对象读取本轮任务和验收要求，再核对冻结工作树与确切依赖。坐标验证会消费已接受的 A01 API，真实会话前重新检查 profile 占用。",
+        "last_progress": "确切依赖已无冲突合入，A04 工作树的新依赖合并提交为 3d4d10a0e12faa1af8d47e9f180d086ce401509c。本轮会保留旧证据，新增实际绘制参数采集和独立图像参考点检查；CSS 小数偏移、DPR、缩放和平移都留在平台适配层。",
         "phase": "COORDINATE_R1_RUNNING",
-        "last_checked_at": "2026-10-17T04:50:38.214171+00:00",
-        "observed_worktree": {
-          "observed_at": "2026-10-16T18:12:37.657140+00:00",
-          "head": "3e4dba5676c2dc4a71d7826827a76df11017a68b",
-          "working_tree_dirty": false,
-          "status": [],
-          "status_count": 0,
-          "execution_report_present": true,
-          "observed_report_sha256": "9501e987dec4327ed18f1f244aa29ffba93adb9dab407a1106be93cf68b493ff",
-          "frozen_delivery_verified": true
-        },
-        "session_release_observation": {
-          "report": "C:/Users/ASUS/.codex/worktrees/a04-headless-readonly/1800/docs/evidence/A04/execution/live-run-09/evidence/session-release.json",
-          "sha256": "70cc4e93bde648e97bfbc43beedfee36f6bf42dd8a39dd1676f39ea3f14fca3e",
-          "observed_at": "2026-10-16T22:32:57.079621+08:00",
-          "evidence_at": "2026-10-16T13:52:17.470220+00:00",
-          "context_closed": true,
-          "lease_released": true,
-          "post": {
-            "process_count": 0,
-            "chromium_lock_count": 0,
-            "lease_present": false
-          },
-          "frozen_delivery_verified": true,
-          "scope": "Frozen execution-authored release record verified; no current process/profile inspection or independent module review."
-        },
+        "last_checked_at": "2026-10-17T04:55:11.306191+00:00",
         "commit": null,
-        "implementation_commit": "d28a58f1859d00c70fc86aeecbb11ec2e7f06f89",
-        "report_sha256": "9501e987dec4327ed18f1f244aa29ffba93adb9dab407a1106be93cf68b493ff",
-        "working_tree_clean": true,
-        "completed_turn_confirms_freeze": true,
-        "delivery_preflight": {
-          "changed_paths": 105,
-          "out_of_scope_paths": [],
-          "manifest_entries_verified_disk_and_git": 81,
-          "manifest_bytes": 9298367,
-          "manifest_sha256": "f0971a0ecaa5a879010dec0fdf0fb45f78248cf0fb2853ba42eeb65e8f69ecf4",
-          "functional_tests_run": false
-        },
-        "session_released": true,
+        "working_tree_clean": false,
+        "completed_turn_confirms_freeze": false,
+        "session_released": null,
         "observed_thread_status": "active",
         "latest_lightweight_observation": {
-          "at": "2026-10-17T04:50:38.214171+00:00",
+          "at": "2026-10-17T04:55:11.306191+00:00",
           "head": "3d4d10a0e12faa1af8d47e9f180d086ce401509c",
-          "status": [],
+          "status": [
+            " M src/annotation/runtime/browser/guard.py",
+            " M src/annotation/runtime/browser/session.py",
+            " M src/annotation/source/usense/collector.py",
+            "?? docs/evidence/A04/execution/coordinate-R1/",
+            "?? src/annotation/delivery/usense_readonly/coordinates.py",
+            "?? src/annotation/delivery/usense_readonly/pixel_reference.py",
+            "?? src/annotation/source/usense/coordinate_probe.py",
+            "?? src/annotation/source/usense/coordinate_run.py",
+            "?? src/annotation/source/usense/viewer_observation.py",
+            "?? tests/fixtures/a04/coordinate-r1/",
+            "?? tests/test_a04_coordinates_r1.py"
+          ],
+          "report_candidate": "docs/tasks/A04-coordinate-R1-execution-report.md",
           "report_present": false,
           "frozen_delivery_verified": false,
-          "scope": "Actual version and report existence only; active work is not frozen or accepted."
+          "scope": "Version and report existence only; in-progress implementation is not frozen or accepted."
         },
         "target_commit": null,
         "base_commit": "3e4dba5676c2dc4a71d7826827a76df11017a68b",
@@ -1475,12 +1453,12 @@
         "thread_id": "01a144cc-e93d-7841-a259-d6aac22c94f4",
         "host_id": "local",
         "turn_status": "completed",
-        "cursor": "4149814e-13b1-46d5-9c5f-e66daaa40af5:1",
+        "cursor": "33f1ce70-74e3-46de-b04f-ceafd8e7f74b:1",
         "report": "docs/tasks/A04-review-report.md",
         "turn_id": "01a144cc-ed10-72e3-8b34-1eb3c12b5841",
         "last_progress": "A04 已记为 WAITING_EXECUTION / BLOCKED（前置条件未齐）。 验收报告 场景与证据清单 已准备 28 个场景，全部 NOT_RUN；准备材料的链接及摘要核验通过。未启动浏览器、读取凭据或取得会话。 等待主调度确认固定交付、A01 geometry 接受提交及会话释放后唤醒。本轮结束，不持续轮询。",
         "phase": "WAITING_EXECUTION",
-        "last_checked_at": "2026-10-17T04:35:36.962860+00:00",
+        "last_checked_at": "2026-10-17T04:55:11.306191+00:00",
         "formal_decision": "NOT_STARTED",
         "preparation_report_sha256": "7fac7f25edb027b1f5b493b32b254ff1f447e5ad515b3808298d01226144cc4b",
         "preparation_archive": {
@@ -1596,32 +1574,33 @@
       "execution": {
         "thread_id": "01a145aa-2fea-7942-97f9-ad260acf4e30",
         "host_id": "local",
-        "cursor": "506fd3cf-091f-418b-b002-636f503b5e4b:2",
+        "cursor": "506fd3cf-091f-418b-b002-636f503b5e4b:4",
         "turn_status": "inProgress",
         "turn_id": "01a14824-df3e-7e81-8f2b-9d6751b1c8aa",
-        "last_checked_at": "2026-10-17T04:50:38.214171+00:00",
+        "last_checked_at": "2026-10-17T04:55:11.306191+00:00",
         "observed_thread_status": "active",
         "phase": "P2_RUNNING",
         "base_commit": "940a5de33a24b1a3a9ded6e69ade1dd0609ed83a",
         "task_document": "docs/tasks/A03-P2-dispatch.md",
         "task_sha256": "af2c4afe620ffe6ce3d3c24c25051a49e443ea9ea9094c802c38cb4cb47e891d",
-        "last_progress": "最终检查发现 ABSENT 后新计划的一次执行因 SQLite busy 退出，现场保留了 2 次已完成效果，没有重发。代码复核发现 project_plan 写事务未持书级闸门，可能与 2 秒续租线程竞争。当前检查结束后，我会把该写入纳入同一闸门，再针对新计划流程复跑；SQLite 的 1 秒 busy 限制保持不变。",
+        "last_progress": "最后两项修复已提交为 fa645ac8fd70688f3293edc5cfb1077fc7bd9daa。该版本的正常多动作、效果后崩溃恢复、ABSENT 后新快照重新规划三条回归均通过。完整上一轮保持原记录：30 场景中 27 通过、3 失败，其中写锁竞争已在新版本针对性复跑通过，两个 V04 合同阻断仍未闭合。现在只做最终审计、清单和交付归档。",
         "decision": "PENDING",
         "report": null,
         "target_commit": null,
         "commit": null,
         "workflow_commit": "6b77c436742cf2826083b109d8ed86b85539cba6",
         "latest_lightweight_observation": {
-          "at": "2026-10-17T04:50:38.214171+00:00",
-          "head": "12ecced6f0a81f8c48a7d0f5635c7a5d42955104",
+          "at": "2026-10-17T04:55:11.306191+00:00",
+          "head": "fa645ac8fd70688f3293edc5cfb1077fc7bd9daa",
           "status": [
             "?? docs/a03-runtime-recovery.md",
             "?? docs/evidence/A03/execution/P2/",
             "?? docs/tasks/A03-execution-report.md"
           ],
-          "report_present": false,
+          "report_candidate": "docs/tasks/A03-execution-report.md",
+          "report_present": true,
           "frozen_delivery_verified": false,
-          "scope": "Actual version and report existence only; active work is not frozen or accepted."
+          "scope": "Version and report existence only; in-progress implementation is not frozen or accepted."
         },
         "interruption": {
           "reason": "USAGE_LIMIT",
@@ -1633,10 +1612,10 @@
       "review": {
         "thread_id": "01a145aa-8d59-7c70-8d81-731712103a9a",
         "host_id": "local",
-        "cursor": "2e2cf3fe-ff9e-4640-84b3-79bd6fd41ad9:9",
+        "cursor": "abdea222-4697-4046-86b1-a5dc48889fac:1",
         "turn_status": "completed",
         "turn_id": "01a147e9-b1e3-7d62-acf9-36012d3f21c5",
-        "last_checked_at": "2026-10-17T04:35:36.962860+00:00",
+        "last_checked_at": "2026-10-17T04:55:11.306191+00:00",
         "observed_thread_status": "idle",
         "phase": "P2_WAITING_FROZEN_IMPLEMENTATION",
         "base_commit": "940a5de33a24b1a3a9ded6e69ade1dd0609ed83a",
@@ -2311,19 +2290,23 @@
         "workflow_commit": "f15f7bc03fac8994ade1642fa7547cbd823c6d43",
         "task_document": "docs/tasks/D01-dependency-implementation.md",
         "expected_report": "docs/tasks/D01-execution-report.md",
-        "cursor": "bfa32354-d1cc-4f54-b8cb-d9b6225647c3:1",
+        "cursor": "bfa32354-d1cc-4f54-b8cb-d9b6225647c3:2",
         "turn_status": "inProgress",
         "turn_id": "01a14831-6fcd-7a43-9a7c-148eac070273",
         "observed_thread_status": "active",
-        "last_checked_at": "2026-10-17T04:50:38.214171+00:00",
-        "last_progress": "我先核对独立工作树、基线和 workflow 中的任务约定，再按 D01 范围完成安装验证与证据归档，交付后停在 REVIEW。",
+        "last_checked_at": "2026-10-17T04:55:11.306191+00:00",
+        "last_progress": "依赖改动已单独提交为 9a7b9d7e。验证脚本已准备好：从固定 Git 字节构建 wheel，在独占环境安装，并把安装文件逐项关联到 wheel；随后会搬运两书 R3 包，验证正常消费和缺失、损坏资源拒绝。",
         "latest_lightweight_observation": {
-          "at": "2026-10-17T04:50:38.214171+00:00",
-          "head": "c6bebdf43eb93f7a6ae21e96ec07ed155686777d",
-          "status": [],
+          "at": "2026-10-17T04:55:11.306191+00:00",
+          "head": "9a7b9d7e374ee7a3ee124c9ff20e0b4003e57464",
+          "status": [
+            "?? docs/evidence/D01/",
+            "?? examples/d01/"
+          ],
+          "report_candidate": "docs/tasks/D01-execution-report.md",
           "report_present": false,
           "frozen_delivery_verified": false,
-          "scope": "Actual version and report existence only; active work is not frozen or accepted."
+          "scope": "Version and report existence only; in-progress implementation is not frozen or accepted."
         }
       },
       "review": {
@@ -2337,12 +2320,12 @@
         "task_document": "docs/tasks/D01-independent-review.md",
         "preparation_report": "docs/tasks/D01-review-preparation.md",
         "formal_decision": "NOT_STARTED",
-        "cursor": "886cbb22-0646-469a-8fe0-9a39a31254a4:1",
+        "cursor": "886cbb22-0646-469a-8fe0-9a39a31254a4:2",
         "turn_status": "inProgress",
         "turn_id": "01a14831-bdff-7963-aef8-baffdd280402",
         "observed_thread_status": "active",
-        "last_checked_at": "2026-10-17T04:50:38.214171+00:00",
-        "last_progress": "当前 checkout 有其他工作的未提交改动。我会使用独立工作目录保存准备材料，并应用已有的 frozen-offline-independent-review 验收流程，保持检查范围绑定到固定 Git 对象。"
+        "last_checked_at": "2026-10-17T04:55:11.306191+00:00",
+        "last_progress": "静态检查发现，部分既有合同测试的子进程会设置 PYTHONPATH，因此正式复验不能仅凭这些测试通过就认定安装可用。我会在清单中单列仓库外 -I 导入、实际 wheel 摘要、安装报告关联，以及坏资源副本的拒绝证据。"
       },
       "remote_push": false,
       "worktree_operation_id": "445c032e-3f41-4aeb-bfb2-5ad0a319bb30",
@@ -2856,9 +2839,9 @@
     }
   ],
   "last_action": {
-    "at": "2026-10-17T04:50:38.214171+00:00",
-    "task_id": "A01/A04/D01/A03",
-    "action": "Recorded actual A01 integration and acknowledged bounded A04/D01 dispatch; explicit xhigh preference saved. Current A03 SQLite busy repair remains active, not accepted.",
+    "at": "2026-10-17T04:55:11.306191+00:00",
+    "task_id": "A03/A04/D01",
+    "action": "Saved six thread cursors and actual worktree versions; kept unfinished deliveries pending. Historical A04 release retained in history and removed from current continuation proof.",
     "remote_push": false
   },
   "limitations": [
@@ -2867,9 +2850,9 @@
     "Platform test is single-book serial, no book submission, no unbudgeted paid models."
   ],
   "last_check": {
-    "at": "2026-10-17T04:50:38.214171+00:00",
-    "heartbeat_time": "2026-10-17T04:21:38.422Z",
-    "root_head": "f15f7bc03fac8994ade1642fa7547cbd823c6d43",
+    "at": "2026-10-17T04:55:11.306191+00:00",
+    "heartbeat_time": "2026-10-17T04:51:30.677Z",
+    "root_head": "8208bf2bea77e2ce4a30ba095f3efcd2589567bc",
     "checked_task_ids": [
       "A01",
       "A02",
@@ -2877,13 +2860,13 @@
       "A04",
       "D01"
     ],
-    "thread_snapshots": 13,
+    "thread_snapshots": 7,
     "platform_actions": 0,
     "paid_model_calls": 0,
-    "full_suite_rerun": "One A01 conventional integrated entry, 11 commands, after actual merge; unchanged geometry630 not rerun.",
-    "dispatch_result": "A01 accepted and actually integrated. A04 original coordinate continuation and D01 new execution/review chats acknowledged at xhigh. A03 resumed and remains active.",
-    "next_dependencies": "A04 frozen full read-only delivery plus fresh session release before independent review; D01 frozen installation delivery before formal review; A03 frozen P2 implementation before formal review; I01 held.",
-    "notification": "NOTIFY"
+    "full_suite_rerun": false,
+    "dispatch_result": "NO_NEW_DISPATCH: all three execution turns remain in progress. A03 latest repair commit still reports two unclosed V04 blockers; frozen final report is awaited before review or bounded rework. D01 preparation remains in progress.",
+    "next_dependencies": "A03 P2 and D01 exact frozen delivery before formal independent review; A04 full coordinate delivery plus fresh profile release before review; I01 waits accepted and integrated A03.",
+    "notification": "DONT_NOTIFY"
   },
   "prepared_next_batch": {
     "status": "DISPATCHED",
@@ -2928,22 +2911,8 @@
     "review_must_wait_release": true,
     "operations": "Read only; no frame edits, OCR, save, review or delivery.",
     "reservation_thread_id": "01a144cc-dde4-73a1-9e83-be485380ea25",
-    "last_observed_at": "2026-10-16T22:32:57.079621+08:00",
-    "release_evidence": {
-      "report": "C:/Users/ASUS/.codex/worktrees/a04-headless-readonly/1800/docs/evidence/A04/execution/live-run-09/evidence/session-release.json",
-      "sha256": "70cc4e93bde648e97bfbc43beedfee36f6bf42dd8a39dd1676f39ea3f14fca3e",
-      "observed_at": "2026-10-16T22:32:57.079621+08:00",
-      "evidence_at": "2026-10-16T13:52:17.470220+00:00",
-      "context_closed": true,
-      "lease_released": true,
-      "post": {
-        "process_count": 0,
-        "chromium_lock_count": 0,
-        "lease_present": false
-      },
-      "frozen_delivery_verified": true,
-      "scope": "Frozen execution-authored release record verified; no current process/profile inspection or independent module review."
-    },
+    "last_observed_at": null,
+    "release_evidence": null,
     "release_history": [
       {
         "report": "C:/Users/ASUS/.codex/worktrees/a04-headless-readonly/1800/docs/evidence/A04/execution/live-run-09/evidence/session-release.json",
@@ -2961,7 +2930,8 @@
         "scope": "Frozen execution-authored release record verified; no current process/profile inspection or independent module review."
       }
     ],
-    "reserved_at": "2026-10-17T04:46:57.383802+00:00"
+    "reserved_at": "2026-10-17T04:46:57.383802+00:00",
+    "current_release_verification": "NOT_AVAILABLE_UNTIL_COORDINATE_R1_COMPLETES"
   },
   "next_stage_preparation": {
     "task": "A03",
