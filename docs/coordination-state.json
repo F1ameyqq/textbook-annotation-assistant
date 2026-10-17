@@ -2,7 +2,7 @@
   "schema_version": 1,
   "project": "D:\\1800",
   "coordinator_thread_id": "01a13f26-7567-75e1-99ee-c9d2194e78bb",
-  "updated_at": "2026-10-18T02:29:07.207908+08:00",
+  "updated_at": "2026-10-18T02:48:05.054248+08:00",
   "automation": {
     "id": "1800-a",
     "kind": "heartbeat",
@@ -1936,17 +1936,17 @@
       }
     },
     "A03": {
-      "status": "REWORK",
-      "phase": "P2_R8_R3_FREEZING_AFTER_N7_DIAGNOSTIC_FAILURE",
+      "status": "REVIEW",
+      "phase": "P2_R8_R3_FROZEN_BOUNDED_REVIEW_INTENT",
       "depends_on": [
         "A02"
       ],
       "base_commit": "ec1b4defbfa3ec0f181d291106fb53313983e493",
       "execution_task": "docs/tasks/A03-P2-R8-R3-post-hold-rework.md",
-      "review_task": "docs/tasks/A03-P2-R8-R2-projection-review-handoff.md",
+      "review_task": "docs/tasks/A03-P2-R8-R3-post-hold-review-handoff.md",
       "acceptance_scope": "P1 and limited R2-R6 accepted; R7 readonly product locally INTEGRATED; exact R8-R2 projection and fixed synthetic N1 ACCEPTED. Native A03 overall not accepted or integrated.",
-      "next_dependency": "R8-R3 bounded POST_HOLD lifecycle and remaining N3-N7 evidence; independent review and coordinator integration before native I01. B readonly/HOLD slice still awaits cross-side mapping confirmation.",
-      "dispatch_status": "EXECUTION_ACKNOWLEDGED",
+      "next_dependency": "Independent R3 POST_HOLD/N1-N5 review and N7 contract-versus-driver classification; retain unrun N6/incomplete-init and original P2 coverage gaps. No native I01 until acceptance and scoped integration; B readonly/HOLD mapping still unconfirmed.",
+      "dispatch_status": "REVIEW_DISPATCH_INTENT",
       "B_confirmation": "NOT_CONFIRMED",
       "workflow_commit": "77d3e123ab7247eae6f81f7acd669e3a69c934a0",
       "worktree_name": "a03-runtime-recovery",
@@ -1957,18 +1957,18 @@
       "execution": {
         "thread_id": "01a145aa-2fea-7942-97f9-ad260acf4e30",
         "host_id": "local",
-        "cursor": "506fd3cf-091f-418b-b002-636f503b5e4b:48",
-        "turn_status": "inProgress",
-        "observed_thread_status": "active",
+        "cursor": "506fd3cf-091f-418b-b002-636f503b5e4b:49",
+        "turn_status": "completed",
+        "observed_thread_status": "idle",
         "turn_id": "01a14b0d-325f-74f3-81ae-f72748ff3a84",
-        "phase": "P2_R8_R3_FREEZING_AFTER_N7_DIAGNOSTIC_FAILURE",
+        "phase": "P2_R8_R3_FROZEN_N1_N5_REPORTED_PASS_N7_DIAGNOSTIC_FAILURE",
         "base_commit": "58d8a64734271d15654bb00b03d760f0f3eccd10",
         "task_document": "docs/tasks/A03-P2-R8-R3-post-hold-rework.md",
         "task_sha256": "8bb76c2cd713ec9af5386f3dcd547f443bbef42d6d4d19fc603ef0fcf5bd6a29",
         "expected_report": "docs/tasks/A03-P2-R8-R3-post-hold-report.md",
         "reasoning_policy": "PRESERVE_USER_SETTING",
         "dispatch_key": "A03:execution:P2-R8-R3-post-hold:58d8a64734271d15654bb00b03d760f0f3eccd10",
-        "last_checked_at": "2026-10-18T02:29:07.207908+08:00",
+        "last_checked_at": "2026-10-18T02:48:05.054248+08:00",
         "previous_delivery": {
           "thread_id": "01a145aa-2fea-7942-97f9-ad260acf4e30",
           "host_id": "local",
@@ -2036,50 +2036,21 @@
             "functional_tests_run": false
           }
         },
-        "last_progress": "Author reports N1-N5 passed. N7 old entry rejects version but wraps exact code as CORRUPT; first failure preserved, no out-of-scope fix. N6 and incomplete initialization unrun. Await frozen report/release.",
+        "last_progress": "Frozen R3 delivery verified. Author reports local/N1-N5 pass; N7 exact-code assertion fails after real version rejection, N6/incomplete-init unrun. Independent classification pending.",
         "workflow_commit": "b79b12fe6a82f9d88b6533b54aea016c4f67f60b",
         "latest_lightweight_observation": {
-          "at": "2026-10-18T02:29:07.207908+08:00",
-          "head": "13c8a766124ac45a91fa3edfa22de7df1e033c3e",
-          "status": [
-            "?? docs/evidence/A03/execution/P2-R8-R3-post-hold/"
-          ],
-          "artifacts": {
-            "docs/tasks/A03-P2-R8-R3-post-hold-report.md": {
-              "present": false,
-              "sha256": null
-            },
-            "docs/evidence/A03/execution/P2-R8-R3-post-hold/manifest.json": {
-              "present": false,
-              "sha256": null
-            },
-            "docs/evidence/A03/execution/P2-R8-R3-post-hold/process-release.json": {
-              "present": false,
-              "sha256": null
-            },
-            "docs/evidence/A03/execution/P2-R8-R3-post-hold/bounded-outcome.json": {
-              "present": true,
-              "sha256": "ddc1ac2a6e66e74d844b36c54104b7a7477ee0fe19dd1bb6ebb4044c4e5d08bd"
-            },
-            "docs/evidence/A03/execution/P2-R8-R3-post-hold/runs/N7/stderr.txt": {
-              "present": true,
-              "sha256": "0c5670e4e345ad9c55020d83851ea971c0dbc4a865899b425c15241847706fc5"
-            },
-            "docs/evidence/A03/execution/P2-R8-R3-post-hold/runs/N7/completed.json": {
-              "present": true,
-              "sha256": "04cc161141c4d34e8338954bb32370aa4e865899dc610779145285ae9d083a32"
-            },
-            "docs/evidence/A03/execution/P2-R8-R3-post-hold/validation/native-r3-01/N2-result.json": {
-              "present": true,
-              "sha256": "337a9f5b9d083e1d568877844ccee6ffe6b0fe4334b6b2513c19fa0d9801f9a0"
-            }
-          },
-          "scope": "In-progress candidate and raw diagnostic output only; no final delivery validation or test rerun."
+          "at": "2026-10-18T02:48:05.054248+08:00",
+          "head": "d9ed692db9ab8e9277f8ffd09e040451e8b8f65f",
+          "status": [],
+          "report_present": true,
+          "manifest_present": true,
+          "release_present": true,
+          "scope": "Raw Git/disk manifest, bounded diff and recorded release preflight only."
         },
         "latest_result_observation": {
-          "at": "2026-10-18T02:29:07.207908+08:00",
-          "status": "UNFROZEN_AUTHOR_REPORT_WITH_RAW_FAILURE_LOG",
-          "source": "Executor commentary cursor 48 plus current bounded-outcome/N2-result and N7 raw stderr/completed record. No SQL connection or product run.",
+          "at": "2026-10-18T02:48:05.054248+08:00",
+          "status": "FROZEN_AUTHOR_REPORT_WITH_RAW_FAILURE_LOG",
+          "source": "Frozen report, 884-entry manifest, first N7 raw stderr, 34 process release records and completed turn cursor 49.",
           "author_outcomes": {
             "I01": "NOT_RELEASED",
             "N1": "PASS_COMPLETE_ACTUAL_CHAIN",
@@ -2138,7 +2109,28 @@
           },
           "independent_review": false,
           "functional_acceptance": false,
-          "next_action": "Await exact frozen commit, report, manifest and owned-process release before original independent review. No second repair dispatch while executor is freezing."
+          "next_action": "Independent bounded review; do not automatically dispatch a product repair for N7 error-code assertion."
+        },
+        "commit": "d9ed692db9ab8e9277f8ffd09e040451e8b8f65f",
+        "target_commit": "d9ed692db9ab8e9277f8ffd09e040451e8b8f65f",
+        "implementation_commit": "13c8a766124ac45a91fa3edfa22de7df1e033c3e",
+        "report": "docs/tasks/A03-P2-R8-R3-post-hold-report.md",
+        "report_sha256": "472ad5c6bdd2068ee178a36566d4d321aa4af0d9fe9fb7216ca26019c8182099",
+        "evidence_manifest": "docs/evidence/A03/execution/P2-R8-R3-post-hold/manifest.json",
+        "evidence_manifest_sha256": "a094d8a73d68273afd58afe0f6d4f4b7ffb4e1a0be3e5721dfef803cf181f91c",
+        "working_tree_clean": true,
+        "completed_turn_confirms_freeze": true,
+        "session_released": true,
+        "session_release_basis": "Completed execution turn, clean exact HEAD, and 34 manifest-bound preregistered/started/completed process records; recorded exited/no timeout.",
+        "process_release": "docs/evidence/A03/execution/P2-R8-R3-post-hold/process-release.json",
+        "process_release_sha256": "4d9b305aef3a5429005d496af68f36bf268d9ac4b68495c40e89b3e55c941dcf",
+        "delivery_preflight": {
+          "path": "docs/evidence/coordinator/heartbeat-20261018-0242/A03-R8-R3-delivery-preflight.json",
+          "sha256": "86b34c1c0cf0cee47744710b9ebab89cc6b65e9ee6136af5a2122de0ee77df7c",
+          "entries": 884,
+          "old_entries_preserved": 30282,
+          "recorded_processes": 34,
+          "functional_tests_run": false
         }
       },
       "review": {
@@ -2147,31 +2139,17 @@
         "cursor": "abdea222-4697-4046-86b1-a5dc48889fac:37",
         "turn_status": "completed",
         "observed_thread_status": "idle",
-        "phase": "P2_R8_R2_N1_LIMITED_ACCEPTED_N2_BLOCKED",
-        "target_commit": "58d8a64734271d15654bb00b03d760f0f3eccd10",
-        "task_document": "docs/tasks/A03-P2-R8-R2-projection-review-handoff.md",
-        "task_sha256": "e66037d79d96b263d5b50b4ab4d3cb101592bfeabe81551ab535f031bcc09507",
-        "expected_report": "docs/tasks/A03-P2-R8-R2-projection-review-report.md",
-        "decision": "ACCEPTED_FIXED_SYNTHETIC_N1_OVERALL_REWORK",
+        "phase": "P2_R8_R3_REVIEW_DISPATCH_INTENT",
+        "base_commit": "58d8a64734271d15654bb00b03d760f0f3eccd10",
+        "target_commit": "d9ed692db9ab8e9277f8ffd09e040451e8b8f65f",
+        "task_document": "docs/tasks/A03-P2-R8-R3-post-hold-review-handoff.md",
+        "task_sha256": "11beab27fb6782a108509a53ce0f68b606bda22b70e51f1b13d16b829a04cdd2",
+        "expected_report": "docs/tasks/A03-P2-R8-R3-post-hold-review-report.md",
+        "decision": "PENDING",
         "reasoning_policy": "PRESERVE_USER_SETTING",
-        "dispatch_key": "A03:review:P2-R8-R2-projection:58d8a64734271d15654bb00b03d760f0f3eccd10",
-        "last_checked_at": "2026-10-18T02:29:07.207908+08:00",
-        "last_progress": "Frozen independent N1 full-chain pass, one effect, formal receipt/progress/POST/Batch. N2 POST_HOLD lease interface blocked; no I01 release.",
-        "turn_id": "01a14aeb-1f75-7f83-a98a-eeaddbcfd01e",
-        "workflow_commit": "1f2030b813cbbfc77cc12cab36db453972af26b9",
-        "latest_lightweight_observation": {
-          "at": "2026-10-18T02:07:33.250671+08:00",
-          "report_present": true,
-          "manifest_present": true,
-          "release_present": true,
-          "scope": "Frozen review archive and independent N1 SQL/resource bindings verified by coordinator."
-        },
-        "report": "docs/tasks/A03-P2-R8-R2-projection-review-report.md",
-        "report_sha256": "0cd36afd8409ec75ef04be9baf1602dc089d85a0bc5e187b393aece17a519565",
-        "evidence_manifest": "docs/evidence/A03/review/P2-R8-R2-projection/sha256-manifest.json",
-        "evidence_manifest_sha256": "e791be4af36efb84738e860870ad9fba5922dde08758c401a4da66ce782d2330",
-        "session_released": true,
-        "session_release_basis": "7 owned parent checks and 4 nested children raw wait/exit records; independent review completed."
+        "dispatch_key": "A03:review:P2-R8-R3-post-hold:d9ed692db9ab8e9277f8ffd09e040451e8b8f65f",
+        "last_checked_at": "2026-10-18T02:48:05.054248+08:00",
+        "last_progress": "R3 review intent recorded; original reviewer idle after R2 completion."
       },
       "review_handoff": {
         "key": "A03:review:P2-R7-readonly-codec:8ad45dd07214ae406a3fab28d76a4b5abd6eef03",
@@ -3534,6 +3512,38 @@
           "evidence_manifest_sha256": "13406d827e98d1e158ddd78592b00f1efbf328e53a340afa43a9d4c046edba4e",
           "session_released": true,
           "session_release_basis": "Completed review turn and five raw manifest-bound process registration/start/completion/output records; no OS/profile scan."
+        },
+        {
+          "thread_id": "01a145aa-8d59-7c70-8d81-731712103a9a",
+          "host_id": "local",
+          "cursor": "abdea222-4697-4046-86b1-a5dc48889fac:37",
+          "turn_status": "completed",
+          "observed_thread_status": "idle",
+          "phase": "P2_R8_R2_N1_LIMITED_ACCEPTED_N2_BLOCKED",
+          "target_commit": "58d8a64734271d15654bb00b03d760f0f3eccd10",
+          "task_document": "docs/tasks/A03-P2-R8-R2-projection-review-handoff.md",
+          "task_sha256": "e66037d79d96b263d5b50b4ab4d3cb101592bfeabe81551ab535f031bcc09507",
+          "expected_report": "docs/tasks/A03-P2-R8-R2-projection-review-report.md",
+          "decision": "ACCEPTED_FIXED_SYNTHETIC_N1_OVERALL_REWORK",
+          "reasoning_policy": "PRESERVE_USER_SETTING",
+          "dispatch_key": "A03:review:P2-R8-R2-projection:58d8a64734271d15654bb00b03d760f0f3eccd10",
+          "last_checked_at": "2026-10-18T02:29:07.207908+08:00",
+          "last_progress": "Frozen independent N1 full-chain pass, one effect, formal receipt/progress/POST/Batch. N2 POST_HOLD lease interface blocked; no I01 release.",
+          "turn_id": "01a14aeb-1f75-7f83-a98a-eeaddbcfd01e",
+          "workflow_commit": "1f2030b813cbbfc77cc12cab36db453972af26b9",
+          "latest_lightweight_observation": {
+            "at": "2026-10-18T02:07:33.250671+08:00",
+            "report_present": true,
+            "manifest_present": true,
+            "release_present": true,
+            "scope": "Frozen review archive and independent N1 SQL/resource bindings verified by coordinator."
+          },
+          "report": "docs/tasks/A03-P2-R8-R2-projection-review-report.md",
+          "report_sha256": "0cd36afd8409ec75ef04be9baf1602dc089d85a0bc5e187b393aece17a519565",
+          "evidence_manifest": "docs/evidence/A03/review/P2-R8-R2-projection/sha256-manifest.json",
+          "evidence_manifest_sha256": "e791be4af36efb84738e860870ad9fba5922dde08758c401a4da66ce782d2330",
+          "session_released": true,
+          "session_release_basis": "7 owned parent checks and 4 nested children raw wait/exit records; independent review completed."
         }
       ],
       "coordinator_reproduction_history": [
@@ -3942,31 +3952,7 @@
         "commit": "ef1d2f4a20971b416afae500889aa5c090dfe89b",
         "raw_committed_files": 250
       },
-      "pending_execution_dispatch": {
-        "key": "A03:execution:P2-R8-R3-post-hold:58d8a64734271d15654bb00b03d760f0f3eccd10",
-        "task": "A03",
-        "stage": "P2_R8_R3_POST_HOLD_REWORK",
-        "role": "execution",
-        "state": "ACKNOWLEDGED",
-        "created_at": "2026-10-18T02:07:33.250671+08:00",
-        "base_commit": "58d8a64734271d15654bb00b03d760f0f3eccd10",
-        "document": "docs/tasks/A03-P2-R8-R3-post-hold-rework.md",
-        "document_sha256": "8bb76c2cd713ec9af5386f3dcd547f443bbef42d6d4d19fc603ef0fcf5bd6a29",
-        "thread_id": "01a145aa-2fea-7942-97f9-ad260acf4e30",
-        "host_id": "local",
-        "reasoning_policy": "PRESERVE_USER_SETTING",
-        "send_message_thinking": "OMIT",
-        "send_message_model": "OMIT",
-        "scope": "Bounded POST_HOLD readonly start/currentness/admission lease interface; three statically located guards; preserve ordinary write/pending/owner gates. Fresh N1 prerequisite then N2-N7 subject to dependencies.",
-        "result": "Original executor active on R8-R3 bounded POST_HOLD repair; model/thinking omitted and user setting preserved.",
-        "workflow_commit": "b79b12fe6a82f9d88b6533b54aea016c4f67f60b",
-        "sent_at": "2026-10-18T02:09:17.200750+08:00",
-        "acknowledged_at": "2026-10-18T02:09:17.200750+08:00",
-        "turn_id": "01a14b0d-325f-74f3-81ae-f72748ff3a84",
-        "cursor": "506fd3cf-091f-418b-b002-636f503b5e4b:48",
-        "last_observed_at": "2026-10-18T02:29:07.207908+08:00",
-        "returned_thread_id": "01a145aa-2fea-7942-97f9-ad260acf4e30"
-      },
+      "pending_execution_dispatch": null,
       "review_archive_r4_bridge_registration": {
         "status": "ARCHIVED_LOCALLY",
         "report": "docs/tasks/A03-P2-R4-bridge-registration-review-report.md",
@@ -4294,7 +4280,7 @@
         "task": "A03",
         "stage": "P2_R8_R3_POST_HOLD_REWORK",
         "role": "execution",
-        "state": "ACKNOWLEDGED",
+        "state": "COMPLETED",
         "created_at": "2026-10-18T02:07:33.250671+08:00",
         "base_commit": "58d8a64734271d15654bb00b03d760f0f3eccd10",
         "document": "docs/tasks/A03-P2-R8-R3-post-hold-rework.md",
@@ -4305,14 +4291,16 @@
         "send_message_thinking": "OMIT",
         "send_message_model": "OMIT",
         "scope": "Bounded POST_HOLD readonly start/currentness/admission lease interface; three statically located guards; preserve ordinary write/pending/owner gates. Fresh N1 prerequisite then N2-N7 subject to dependencies.",
-        "result": "Original executor active on R8-R3 bounded POST_HOLD repair; model/thinking omitted and user setting preserved.",
+        "result": "Frozen execution delivery verified; submitted for independent review, not accepted or integrated.",
         "workflow_commit": "b79b12fe6a82f9d88b6533b54aea016c4f67f60b",
         "sent_at": "2026-10-18T02:09:17.200750+08:00",
         "acknowledged_at": "2026-10-18T02:09:17.200750+08:00",
         "turn_id": "01a14b0d-325f-74f3-81ae-f72748ff3a84",
-        "cursor": "506fd3cf-091f-418b-b002-636f503b5e4b:48",
-        "last_observed_at": "2026-10-18T02:29:07.207908+08:00",
-        "returned_thread_id": "01a145aa-2fea-7942-97f9-ad260acf4e30"
+        "cursor": "506fd3cf-091f-418b-b002-636f503b5e4b:49",
+        "last_observed_at": "2026-10-18T02:48:05.054248+08:00",
+        "returned_thread_id": "01a145aa-2fea-7942-97f9-ad260acf4e30",
+        "completed_at": "2026-10-18T02:48:05.054248+08:00",
+        "target_commit": "d9ed692db9ab8e9277f8ffd09e040451e8b8f65f"
       },
       "review_r7_frozen_record": {
         "thread_id": "01a145aa-8d59-7c70-8d81-731712103a9a",
@@ -4344,31 +4332,25 @@
         "session_released": true
       },
       "review_dispatch": {
-        "key": "A03:review:P2-R8-R2-projection:58d8a64734271d15654bb00b03d760f0f3eccd10",
+        "key": "A03:review:P2-R8-R3-post-hold:d9ed692db9ab8e9277f8ffd09e040451e8b8f65f",
         "task": "A03",
-        "stage": "P2_R8_R2_PROJECTION_BOUNDED_REVIEW",
+        "stage": "P2_R8_R3_POST_HOLD_BOUNDED_REVIEW",
         "role": "review",
-        "state": "COMPLETED",
-        "created_at": "2026-10-18T01:31:04.161421+08:00",
-        "target_commit": "58d8a64734271d15654bb00b03d760f0f3eccd10",
-        "document": "docs/tasks/A03-P2-R8-R2-projection-review-handoff.md",
-        "document_sha256": "e66037d79d96b263d5b50b4ab4d3cb101592bfeabe81551ab535f031bcc09507",
-        "delivery_preflight": "docs/evidence/coordinator/heartbeat-20261018-0127/A03-R8-R2-delivery-preflight.json",
-        "delivery_preflight_sha256": "0abd9fd491ca3d538da16bb9b881c999df5fb21a6dcc3b6378c90ca207de572d",
+        "state": "INTENT_RECORDED",
+        "created_at": "2026-10-18T02:48:05.054248+08:00",
+        "base_commit": "58d8a64734271d15654bb00b03d760f0f3eccd10",
+        "target_commit": "d9ed692db9ab8e9277f8ffd09e040451e8b8f65f",
+        "document": "docs/tasks/A03-P2-R8-R3-post-hold-review-handoff.md",
+        "document_sha256": "11beab27fb6782a108509a53ce0f68b606bda22b70e51f1b13d16b829a04cdd2",
+        "delivery_preflight": "docs/evidence/coordinator/heartbeat-20261018-0242/A03-R8-R3-delivery-preflight.json",
+        "delivery_preflight_sha256": "86b34c1c0cf0cee47744710b9ebab89cc6b65e9ee6136af5a2122de0ee77df7c",
         "thread_id": "01a145aa-8d59-7c70-8d81-731712103a9a",
         "host_id": "local",
         "reasoning_policy": "PRESERVE_USER_SETTING",
         "send_message_thinking": "OMIT",
         "send_message_model": "OMIT",
-        "scope": "Verify exact projection fix and frozen evidence; one independent fresh N1; read-only N2 hold guard failure; no failure reruns or expanded matrix.",
-        "result": "ACCEPTED_FIXED_SYNTHETIC_N1_OVERALL_REWORK",
-        "workflow_commit": "1f2030b813cbbfc77cc12cab36db453972af26b9",
-        "sent_at": "2026-10-18T01:31:56.995304+08:00",
-        "acknowledged_at": "2026-10-18T01:31:56.995304+08:00",
-        "turn_id": "01a14aeb-1f75-7f83-a98a-eeaddbcfd01e",
-        "cursor": "abdea222-4697-4046-86b1-a5dc48889fac:37",
-        "last_observed_at": "2026-10-18T02:07:33.250671+08:00",
-        "completed_at": "2026-10-18T02:07:33.250671+08:00"
+        "scope": "Exact POST_HOLD fix; fresh local/N1/N2 then finite N3-N5 once. Read-only N7 contract classification; no N7/failure rerun or N6 completion, no product edits.",
+        "result": "NOT_SENT"
       },
       "review_r8_frozen_record": {
         "thread_id": "01a145aa-8d59-7c70-8d81-731712103a9a",
@@ -4536,6 +4518,33 @@
           "cursor": "abdea222-4697-4046-86b1-a5dc48889fac:34",
           "last_observed_at": "2026-10-18T01:02:19.412941+08:00",
           "completed_at": "2026-10-18T01:02:19.412941+08:00"
+        },
+        {
+          "key": "A03:review:P2-R8-R2-projection:58d8a64734271d15654bb00b03d760f0f3eccd10",
+          "task": "A03",
+          "stage": "P2_R8_R2_PROJECTION_BOUNDED_REVIEW",
+          "role": "review",
+          "state": "COMPLETED",
+          "created_at": "2026-10-18T01:31:04.161421+08:00",
+          "target_commit": "58d8a64734271d15654bb00b03d760f0f3eccd10",
+          "document": "docs/tasks/A03-P2-R8-R2-projection-review-handoff.md",
+          "document_sha256": "e66037d79d96b263d5b50b4ab4d3cb101592bfeabe81551ab535f031bcc09507",
+          "delivery_preflight": "docs/evidence/coordinator/heartbeat-20261018-0127/A03-R8-R2-delivery-preflight.json",
+          "delivery_preflight_sha256": "0abd9fd491ca3d538da16bb9b881c999df5fb21a6dcc3b6378c90ca207de572d",
+          "thread_id": "01a145aa-8d59-7c70-8d81-731712103a9a",
+          "host_id": "local",
+          "reasoning_policy": "PRESERVE_USER_SETTING",
+          "send_message_thinking": "OMIT",
+          "send_message_model": "OMIT",
+          "scope": "Verify exact projection fix and frozen evidence; one independent fresh N1; read-only N2 hold guard failure; no failure reruns or expanded matrix.",
+          "result": "ACCEPTED_FIXED_SYNTHETIC_N1_OVERALL_REWORK",
+          "workflow_commit": "1f2030b813cbbfc77cc12cab36db453972af26b9",
+          "sent_at": "2026-10-18T01:31:56.995304+08:00",
+          "acknowledged_at": "2026-10-18T01:31:56.995304+08:00",
+          "turn_id": "01a14aeb-1f75-7f83-a98a-eeaddbcfd01e",
+          "cursor": "abdea222-4697-4046-86b1-a5dc48889fac:37",
+          "last_observed_at": "2026-10-18T02:07:33.250671+08:00",
+          "completed_at": "2026-10-18T02:07:33.250671+08:00"
         }
       ],
       "review_r8_r2_frozen_record": {
@@ -4596,6 +4605,27 @@
         "scope": "Evidence archive only; native product integration deferred until remaining functional gates pass.",
         "commit": "b79b12fe6a82f9d88b6533b54aea016c4f67f60b",
         "raw_commit_paths_verified": 583
+      },
+      "pending_review_dispatch": {
+        "key": "A03:review:P2-R8-R3-post-hold:d9ed692db9ab8e9277f8ffd09e040451e8b8f65f",
+        "task": "A03",
+        "stage": "P2_R8_R3_POST_HOLD_BOUNDED_REVIEW",
+        "role": "review",
+        "state": "INTENT_RECORDED",
+        "created_at": "2026-10-18T02:48:05.054248+08:00",
+        "base_commit": "58d8a64734271d15654bb00b03d760f0f3eccd10",
+        "target_commit": "d9ed692db9ab8e9277f8ffd09e040451e8b8f65f",
+        "document": "docs/tasks/A03-P2-R8-R3-post-hold-review-handoff.md",
+        "document_sha256": "11beab27fb6782a108509a53ce0f68b606bda22b70e51f1b13d16b829a04cdd2",
+        "delivery_preflight": "docs/evidence/coordinator/heartbeat-20261018-0242/A03-R8-R3-delivery-preflight.json",
+        "delivery_preflight_sha256": "86b34c1c0cf0cee47744710b9ebab89cc6b65e9ee6136af5a2122de0ee77df7c",
+        "thread_id": "01a145aa-8d59-7c70-8d81-731712103a9a",
+        "host_id": "local",
+        "reasoning_policy": "PRESERVE_USER_SETTING",
+        "send_message_thinking": "OMIT",
+        "send_message_model": "OMIT",
+        "scope": "Exact POST_HOLD fix; fresh local/N1/N2 then finite N3-N5 once. Read-only N7 contract classification; no N7/failure rerun or N6 completion, no product edits.",
+        "result": "NOT_SENT"
       }
     },
     "D01": {
@@ -5919,7 +5949,7 @@
       "task": "A03",
       "stage": "P2_R8_R3_POST_HOLD_REWORK",
       "role": "execution",
-      "state": "ACKNOWLEDGED",
+      "state": "COMPLETED",
       "created_at": "2026-10-18T02:07:33.250671+08:00",
       "base_commit": "58d8a64734271d15654bb00b03d760f0f3eccd10",
       "document": "docs/tasks/A03-P2-R8-R3-post-hold-rework.md",
@@ -5930,76 +5960,62 @@
       "send_message_thinking": "OMIT",
       "send_message_model": "OMIT",
       "scope": "Bounded POST_HOLD readonly start/currentness/admission lease interface; three statically located guards; preserve ordinary write/pending/owner gates. Fresh N1 prerequisite then N2-N7 subject to dependencies.",
-      "result": "Original executor active on R8-R3 bounded POST_HOLD repair; model/thinking omitted and user setting preserved.",
+      "result": "Frozen execution delivery verified; submitted for independent review, not accepted or integrated.",
       "workflow_commit": "b79b12fe6a82f9d88b6533b54aea016c4f67f60b",
       "sent_at": "2026-10-18T02:09:17.200750+08:00",
       "acknowledged_at": "2026-10-18T02:09:17.200750+08:00",
       "turn_id": "01a14b0d-325f-74f3-81ae-f72748ff3a84",
-      "cursor": "506fd3cf-091f-418b-b002-636f503b5e4b:48",
-      "last_observed_at": "2026-10-18T02:29:07.207908+08:00",
-      "returned_thread_id": "01a145aa-2fea-7942-97f9-ad260acf4e30"
+      "cursor": "506fd3cf-091f-418b-b002-636f503b5e4b:49",
+      "last_observed_at": "2026-10-18T02:48:05.054248+08:00",
+      "returned_thread_id": "01a145aa-2fea-7942-97f9-ad260acf4e30",
+      "completed_at": "2026-10-18T02:48:05.054248+08:00",
+      "target_commit": "d9ed692db9ab8e9277f8ffd09e040451e8b8f65f"
+    },
+    {
+      "key": "A03:review:P2-R8-R3-post-hold:d9ed692db9ab8e9277f8ffd09e040451e8b8f65f",
+      "task": "A03",
+      "stage": "P2_R8_R3_POST_HOLD_BOUNDED_REVIEW",
+      "role": "review",
+      "state": "INTENT_RECORDED",
+      "created_at": "2026-10-18T02:48:05.054248+08:00",
+      "base_commit": "58d8a64734271d15654bb00b03d760f0f3eccd10",
+      "target_commit": "d9ed692db9ab8e9277f8ffd09e040451e8b8f65f",
+      "document": "docs/tasks/A03-P2-R8-R3-post-hold-review-handoff.md",
+      "document_sha256": "11beab27fb6782a108509a53ce0f68b606bda22b70e51f1b13d16b829a04cdd2",
+      "delivery_preflight": "docs/evidence/coordinator/heartbeat-20261018-0242/A03-R8-R3-delivery-preflight.json",
+      "delivery_preflight_sha256": "86b34c1c0cf0cee47744710b9ebab89cc6b65e9ee6136af5a2122de0ee77df7c",
+      "thread_id": "01a145aa-8d59-7c70-8d81-731712103a9a",
+      "host_id": "local",
+      "reasoning_policy": "PRESERVE_USER_SETTING",
+      "send_message_thinking": "OMIT",
+      "send_message_model": "OMIT",
+      "scope": "Exact POST_HOLD fix; fresh local/N1/N2 then finite N3-N5 once. Read-only N7 contract classification; no N7/failure rerun or N6 completion, no product edits.",
+      "result": "NOT_SENT"
     }
   ],
   "last_action": {
-    "at": "2026-10-18T02:29:07.207908+08:00",
-    "trigger": "2026-10-17T18:27:43.312Z",
+    "at": "2026-10-18T02:48:05.054248+08:00",
+    "trigger": "2026-10-17T18:42:43.551Z",
     "task_id": "A03",
     "checked_task_ids": [
       "A03"
     ],
-    "root_head": "639241d3ae6c489b75c84254fa3bcb0bca764a98",
-    "root_status": [
+    "root_head": "cdb530c5a5f746ca809999f40970df72932802ef",
+    "root_status_before_actions": [
       "?? mermaid-diagram.png"
     ],
     "execution_thread_id": "01a145aa-2fea-7942-97f9-ad260acf4e30",
     "execution_turn_id": "01a14b0d-325f-74f3-81ae-f72748ff3a84",
-    "execution_cursor": "506fd3cf-091f-418b-b002-636f503b5e4b:48",
-    "execution_target_observed": "13c8a766124ac45a91fa3edfa22de7df1e033c3e",
-    "execution_artifact_observation": {
-      "at": "2026-10-18T02:29:07.207908+08:00",
-      "head": "13c8a766124ac45a91fa3edfa22de7df1e033c3e",
-      "status": [
-        "?? docs/evidence/A03/execution/P2-R8-R3-post-hold/"
-      ],
-      "artifacts": {
-        "docs/tasks/A03-P2-R8-R3-post-hold-report.md": {
-          "present": false,
-          "sha256": null
-        },
-        "docs/evidence/A03/execution/P2-R8-R3-post-hold/manifest.json": {
-          "present": false,
-          "sha256": null
-        },
-        "docs/evidence/A03/execution/P2-R8-R3-post-hold/process-release.json": {
-          "present": false,
-          "sha256": null
-        },
-        "docs/evidence/A03/execution/P2-R8-R3-post-hold/bounded-outcome.json": {
-          "present": true,
-          "sha256": "ddc1ac2a6e66e74d844b36c54104b7a7477ee0fe19dd1bb6ebb4044c4e5d08bd"
-        },
-        "docs/evidence/A03/execution/P2-R8-R3-post-hold/runs/N7/stderr.txt": {
-          "present": true,
-          "sha256": "0c5670e4e345ad9c55020d83851ea971c0dbc4a865899b425c15241847706fc5"
-        },
-        "docs/evidence/A03/execution/P2-R8-R3-post-hold/runs/N7/completed.json": {
-          "present": true,
-          "sha256": "04cc161141c4d34e8338954bb32370aa4e865899dc610779145285ae9d083a32"
-        },
-        "docs/evidence/A03/execution/P2-R8-R3-post-hold/validation/native-r3-01/N2-result.json": {
-          "present": true,
-          "sha256": "337a9f5b9d083e1d568877844ccee6ffe6b0fe4334b6b2513c19fa0d9801f9a0"
-        }
-      },
-      "scope": "In-progress candidate and raw diagnostic output only; no final delivery validation or test rerun."
-    },
+    "execution_cursor": "506fd3cf-091f-418b-b002-636f503b5e4b:49",
+    "execution_target_observed": "d9ed692db9ab8e9277f8ffd09e040451e8b8f65f",
     "review_thread_id": "01a145aa-8d59-7c70-8d81-731712103a9a",
-    "review_turn_id": "01a14aeb-1f75-7f83-a98a-eeaddbcfd01e",
     "review_cursor": "abdea222-4697-4046-86b1-a5dc48889fac:37",
-    "phase": "P2_R8_R3_FREEZING_AFTER_N7_DIAGNOSTIC_FAILURE",
+    "phase": "P2_R8_R3_FROZEN_BOUNDED_REVIEW_INTENT",
     "acceptance_scope": "P1 and limited R2-R6 accepted; R7 readonly product locally INTEGRATED; exact R8-R2 projection and fixed synthetic N1 ACCEPTED. Native A03 overall not accepted or integrated.",
-    "next_dependencies": "R8-R3 bounded POST_HOLD lifecycle and remaining N3-N7 evidence; independent review and coordinator integration before native I01. B readonly/HOLD slice still awaits cross-side mapping confirmation.",
-    "dispatch_result": "NO_NEW_DISPATCH; executor preserving first N7 diagnostic failure and freezing; review awaits exact delivery/release.",
+    "next_dependencies": "Independent R3 POST_HOLD/N1-N5 review and N7 contract-versus-driver classification; retain unrun N6/incomplete-init and original P2 coverage gaps. No native I01 until acceptance and scoped integration; B readonly/HOLD mapping still unconfirmed.",
+    "dispatch_result": "REVIEW_INTENT_RECORDED_NOT_SENT",
+    "delivery_preflight": "docs/evidence/coordinator/heartbeat-20261018-0242/A03-R8-R3-delivery-preflight.json",
+    "delivery_preflight_sha256": "86b34c1c0cf0cee47744710b9ebab89cc6b65e9ee6136af5a2122de0ee77df7c",
     "read_documents_sha256": {
       "AGENTS.md": "9d033ea252808d7361ad22787871ad6dad0150604f2fb54b9199aabb0f542767",
       "docs/coordination.md": "0f3a7b5f706f7a7ff1881b1bd7b800833bd6afccbedac64fabcf8b6e222b090a",
@@ -6011,8 +6027,8 @@
     "full_suite_rerun": false,
     "settings_changed": false,
     "notification": "NOTIFY",
-    "reason": "New N7 diagnostic assertion failure after reported N1-N5 passes; stopping condition obeyed. Final and independent acceptance pending.",
-    "action": "OBSERVED_R8_R3_UNFROZEN_N7_DIAGNOSTIC_FAILURE"
+    "reason": "Frozen R3 execution permits bounded independent review; N7 diagnostic assertion requires classification before any repair.",
+    "action": "PREPARED_R8_R3_BOUNDED_REVIEW"
   },
   "limitations": [
     "Current route uses mock B artifacts until independently agreed interface/artifact versions exist.",
@@ -6020,65 +6036,28 @@
     "Platform test is single-book serial, no book submission, no unbudgeted paid models."
   ],
   "last_check": {
-    "at": "2026-10-18T02:29:07.207908+08:00",
-    "trigger": "2026-10-17T18:27:43.312Z",
+    "at": "2026-10-18T02:48:05.054248+08:00",
+    "trigger": "2026-10-17T18:42:43.551Z",
     "task_id": "A03",
     "checked_task_ids": [
       "A03"
     ],
-    "root_head": "639241d3ae6c489b75c84254fa3bcb0bca764a98",
-    "root_status": [
+    "root_head": "cdb530c5a5f746ca809999f40970df72932802ef",
+    "root_status_before_actions": [
       "?? mermaid-diagram.png"
     ],
     "execution_thread_id": "01a145aa-2fea-7942-97f9-ad260acf4e30",
     "execution_turn_id": "01a14b0d-325f-74f3-81ae-f72748ff3a84",
-    "execution_cursor": "506fd3cf-091f-418b-b002-636f503b5e4b:48",
-    "execution_target_observed": "13c8a766124ac45a91fa3edfa22de7df1e033c3e",
-    "execution_artifact_observation": {
-      "at": "2026-10-18T02:29:07.207908+08:00",
-      "head": "13c8a766124ac45a91fa3edfa22de7df1e033c3e",
-      "status": [
-        "?? docs/evidence/A03/execution/P2-R8-R3-post-hold/"
-      ],
-      "artifacts": {
-        "docs/tasks/A03-P2-R8-R3-post-hold-report.md": {
-          "present": false,
-          "sha256": null
-        },
-        "docs/evidence/A03/execution/P2-R8-R3-post-hold/manifest.json": {
-          "present": false,
-          "sha256": null
-        },
-        "docs/evidence/A03/execution/P2-R8-R3-post-hold/process-release.json": {
-          "present": false,
-          "sha256": null
-        },
-        "docs/evidence/A03/execution/P2-R8-R3-post-hold/bounded-outcome.json": {
-          "present": true,
-          "sha256": "ddc1ac2a6e66e74d844b36c54104b7a7477ee0fe19dd1bb6ebb4044c4e5d08bd"
-        },
-        "docs/evidence/A03/execution/P2-R8-R3-post-hold/runs/N7/stderr.txt": {
-          "present": true,
-          "sha256": "0c5670e4e345ad9c55020d83851ea971c0dbc4a865899b425c15241847706fc5"
-        },
-        "docs/evidence/A03/execution/P2-R8-R3-post-hold/runs/N7/completed.json": {
-          "present": true,
-          "sha256": "04cc161141c4d34e8338954bb32370aa4e865899dc610779145285ae9d083a32"
-        },
-        "docs/evidence/A03/execution/P2-R8-R3-post-hold/validation/native-r3-01/N2-result.json": {
-          "present": true,
-          "sha256": "337a9f5b9d083e1d568877844ccee6ffe6b0fe4334b6b2513c19fa0d9801f9a0"
-        }
-      },
-      "scope": "In-progress candidate and raw diagnostic output only; no final delivery validation or test rerun."
-    },
+    "execution_cursor": "506fd3cf-091f-418b-b002-636f503b5e4b:49",
+    "execution_target_observed": "d9ed692db9ab8e9277f8ffd09e040451e8b8f65f",
     "review_thread_id": "01a145aa-8d59-7c70-8d81-731712103a9a",
-    "review_turn_id": "01a14aeb-1f75-7f83-a98a-eeaddbcfd01e",
     "review_cursor": "abdea222-4697-4046-86b1-a5dc48889fac:37",
-    "phase": "P2_R8_R3_FREEZING_AFTER_N7_DIAGNOSTIC_FAILURE",
+    "phase": "P2_R8_R3_FROZEN_BOUNDED_REVIEW_INTENT",
     "acceptance_scope": "P1 and limited R2-R6 accepted; R7 readonly product locally INTEGRATED; exact R8-R2 projection and fixed synthetic N1 ACCEPTED. Native A03 overall not accepted or integrated.",
-    "next_dependencies": "R8-R3 bounded POST_HOLD lifecycle and remaining N3-N7 evidence; independent review and coordinator integration before native I01. B readonly/HOLD slice still awaits cross-side mapping confirmation.",
-    "dispatch_result": "NO_NEW_DISPATCH; executor preserving first N7 diagnostic failure and freezing; review awaits exact delivery/release.",
+    "next_dependencies": "Independent R3 POST_HOLD/N1-N5 review and N7 contract-versus-driver classification; retain unrun N6/incomplete-init and original P2 coverage gaps. No native I01 until acceptance and scoped integration; B readonly/HOLD mapping still unconfirmed.",
+    "dispatch_result": "REVIEW_INTENT_RECORDED_NOT_SENT",
+    "delivery_preflight": "docs/evidence/coordinator/heartbeat-20261018-0242/A03-R8-R3-delivery-preflight.json",
+    "delivery_preflight_sha256": "86b34c1c0cf0cee47744710b9ebab89cc6b65e9ee6136af5a2122de0ee77df7c",
     "read_documents_sha256": {
       "AGENTS.md": "9d033ea252808d7361ad22787871ad6dad0150604f2fb54b9199aabb0f542767",
       "docs/coordination.md": "0f3a7b5f706f7a7ff1881b1bd7b800833bd6afccbedac64fabcf8b6e222b090a",
@@ -6090,7 +6069,7 @@
     "full_suite_rerun": false,
     "settings_changed": false,
     "notification": "NOTIFY",
-    "reason": "New N7 diagnostic assertion failure after reported N1-N5 passes; stopping condition obeyed. Final and independent acceptance pending."
+    "reason": "Frozen R3 execution permits bounded independent review; N7 diagnostic assertion requires classification before any repair."
   },
   "prepared_next_batch": {
     "status": "DISPATCHED",
@@ -6451,65 +6430,28 @@
     }
   ],
   "last_heartbeat": {
-    "at": "2026-10-18T02:29:07.207908+08:00",
-    "trigger": "2026-10-17T18:27:43.312Z",
+    "at": "2026-10-18T02:48:05.054248+08:00",
+    "trigger": "2026-10-17T18:42:43.551Z",
     "task_id": "A03",
     "checked_task_ids": [
       "A03"
     ],
-    "root_head": "639241d3ae6c489b75c84254fa3bcb0bca764a98",
-    "root_status": [
+    "root_head": "cdb530c5a5f746ca809999f40970df72932802ef",
+    "root_status_before_actions": [
       "?? mermaid-diagram.png"
     ],
     "execution_thread_id": "01a145aa-2fea-7942-97f9-ad260acf4e30",
     "execution_turn_id": "01a14b0d-325f-74f3-81ae-f72748ff3a84",
-    "execution_cursor": "506fd3cf-091f-418b-b002-636f503b5e4b:48",
-    "execution_target_observed": "13c8a766124ac45a91fa3edfa22de7df1e033c3e",
-    "execution_artifact_observation": {
-      "at": "2026-10-18T02:29:07.207908+08:00",
-      "head": "13c8a766124ac45a91fa3edfa22de7df1e033c3e",
-      "status": [
-        "?? docs/evidence/A03/execution/P2-R8-R3-post-hold/"
-      ],
-      "artifacts": {
-        "docs/tasks/A03-P2-R8-R3-post-hold-report.md": {
-          "present": false,
-          "sha256": null
-        },
-        "docs/evidence/A03/execution/P2-R8-R3-post-hold/manifest.json": {
-          "present": false,
-          "sha256": null
-        },
-        "docs/evidence/A03/execution/P2-R8-R3-post-hold/process-release.json": {
-          "present": false,
-          "sha256": null
-        },
-        "docs/evidence/A03/execution/P2-R8-R3-post-hold/bounded-outcome.json": {
-          "present": true,
-          "sha256": "ddc1ac2a6e66e74d844b36c54104b7a7477ee0fe19dd1bb6ebb4044c4e5d08bd"
-        },
-        "docs/evidence/A03/execution/P2-R8-R3-post-hold/runs/N7/stderr.txt": {
-          "present": true,
-          "sha256": "0c5670e4e345ad9c55020d83851ea971c0dbc4a865899b425c15241847706fc5"
-        },
-        "docs/evidence/A03/execution/P2-R8-R3-post-hold/runs/N7/completed.json": {
-          "present": true,
-          "sha256": "04cc161141c4d34e8338954bb32370aa4e865899dc610779145285ae9d083a32"
-        },
-        "docs/evidence/A03/execution/P2-R8-R3-post-hold/validation/native-r3-01/N2-result.json": {
-          "present": true,
-          "sha256": "337a9f5b9d083e1d568877844ccee6ffe6b0fe4334b6b2513c19fa0d9801f9a0"
-        }
-      },
-      "scope": "In-progress candidate and raw diagnostic output only; no final delivery validation or test rerun."
-    },
+    "execution_cursor": "506fd3cf-091f-418b-b002-636f503b5e4b:49",
+    "execution_target_observed": "d9ed692db9ab8e9277f8ffd09e040451e8b8f65f",
     "review_thread_id": "01a145aa-8d59-7c70-8d81-731712103a9a",
-    "review_turn_id": "01a14aeb-1f75-7f83-a98a-eeaddbcfd01e",
     "review_cursor": "abdea222-4697-4046-86b1-a5dc48889fac:37",
-    "phase": "P2_R8_R3_FREEZING_AFTER_N7_DIAGNOSTIC_FAILURE",
+    "phase": "P2_R8_R3_FROZEN_BOUNDED_REVIEW_INTENT",
     "acceptance_scope": "P1 and limited R2-R6 accepted; R7 readonly product locally INTEGRATED; exact R8-R2 projection and fixed synthetic N1 ACCEPTED. Native A03 overall not accepted or integrated.",
-    "next_dependencies": "R8-R3 bounded POST_HOLD lifecycle and remaining N3-N7 evidence; independent review and coordinator integration before native I01. B readonly/HOLD slice still awaits cross-side mapping confirmation.",
-    "dispatch_result": "NO_NEW_DISPATCH; executor preserving first N7 diagnostic failure and freezing; review awaits exact delivery/release.",
+    "next_dependencies": "Independent R3 POST_HOLD/N1-N5 review and N7 contract-versus-driver classification; retain unrun N6/incomplete-init and original P2 coverage gaps. No native I01 until acceptance and scoped integration; B readonly/HOLD mapping still unconfirmed.",
+    "dispatch_result": "REVIEW_INTENT_RECORDED_NOT_SENT",
+    "delivery_preflight": "docs/evidence/coordinator/heartbeat-20261018-0242/A03-R8-R3-delivery-preflight.json",
+    "delivery_preflight_sha256": "86b34c1c0cf0cee47744710b9ebab89cc6b65e9ee6136af5a2122de0ee77df7c",
     "read_documents_sha256": {
       "AGENTS.md": "9d033ea252808d7361ad22787871ad6dad0150604f2fb54b9199aabb0f542767",
       "docs/coordination.md": "0f3a7b5f706f7a7ff1881b1bd7b800833bd6afccbedac64fabcf8b6e222b090a",
@@ -6521,6 +6463,6 @@
     "full_suite_rerun": false,
     "settings_changed": false,
     "notification": "NOTIFY",
-    "reason": "New N7 diagnostic assertion failure after reported N1-N5 passes; stopping condition obeyed. Final and independent acceptance pending."
+    "reason": "Frozen R3 execution permits bounded independent review; N7 diagnostic assertion requires classification before any repair."
   }
 }
