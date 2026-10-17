@@ -235,7 +235,7 @@ def check_delivery(manifest_path: Path, candidate_path: Path) -> dict[str, Any]:
             gaps.append(f"materials.{item_id}: references page IDs outside the declared page inventory")
             fatal = True
 
-    for label, role in (("questions", "question"), ("answers", "answer")):
+    for label, role in (("questions", "question"), ("answers", "answer"), ("materials", "material")):
         for item_id, row in declared_rows[label].items():
             refs = _valid_refs(row, "page_ids", f"{label}.{item_id}", gaps)
             if refs is not None and any(declared_rows["pages"].get(pid, {}).get("role") != role for pid in refs):
@@ -324,10 +324,12 @@ def check_delivery(manifest_path: Path, candidate_path: Path) -> dict[str, Any]:
                 or len(reviewers) != len(set(reviewers))):
             gaps.append("human review claim: reviewer_ids must be an array of strings")
             review_claim = "INCOMPLETE_OR_MALFORMED"
-        if not isinstance(rq, list) or any(not isinstance(x, str) for x in rq) or set(rq) != set(declared["questions"] or []):
+        if (not isinstance(rq, list) or any(not isinstance(x, str) or not x.strip() for x in rq)
+                or len(rq) != len(set(rq)) or set(rq) != set(declared["questions"] or [])):
             gaps.append("human review claim: reviewed question IDs do not match declared denominator")
             review_claim = "INCOMPLETE_OR_MALFORMED"
-        if not isinstance(ra, list) or any(not isinstance(x, str) for x in ra) or set(ra) != set(declared["answers"] or []):
+        if (not isinstance(ra, list) or any(not isinstance(x, str) or not x.strip() for x in ra)
+                or len(ra) != len(set(ra)) or set(ra) != set(declared["answers"] or [])):
             gaps.append("human review claim: reviewed answer IDs do not match declared denominator")
             review_claim = "INCOMPLETE_OR_MALFORMED"
     else:

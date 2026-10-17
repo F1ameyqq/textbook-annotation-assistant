@@ -141,9 +141,12 @@ def prepare(scope_path: Path, out_dir: Path) -> dict[str, Any]:
         pid: page["page_order"] if type(page.get("page_order")) is int and page["page_order"] >= 0 else 10**9
         for pid, page in expected_pages.items()
     }
-    def asset_sort_key(pair: tuple[str, dict[str, Any]]) -> tuple[int, str]:
+    def asset_sort_key(pair: tuple[str, dict[str, Any]]) -> tuple[int, int, str]:
         page_id = pair[1].get("page_id")
-        return (page_order.get(page_id, 10**9) if _safe_id(page_id) else 10**9, pair[0])
+        page = expected_pages.get(page_id, {}) if _safe_id(page_id) else {}
+        required = page.get("required_asset_ids", [])
+        position = required.index(pair[0]) if isinstance(required, list) and pair[0] in required else 10**9
+        return (page_order.get(page_id, 10**9) if _safe_id(page_id) else 10**9, position, pair[0])
 
     for ordinal, (aid, asset) in enumerate(sorted(received.items(), key=asset_sort_key)):
         source = resolved_files.get(aid)

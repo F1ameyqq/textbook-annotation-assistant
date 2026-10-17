@@ -68,6 +68,16 @@ class ChapterScopeTests(unittest.TestCase):
                 self.assertEqual(report["scope_state"], "PARTIAL")
                 self.assertIn("ALIASED_SOURCE_ASSET", {g["code"] for g in report["gaps"]})
 
+    def test_page_fragments_follow_declared_order_not_asset_name(self):
+        self.scope["pages"] = [{"page_id": "p1", "page_order": 0, "required_asset_ids": ["z-top", "a-bottom"]}]
+        self.assets[0]["asset_id"] = "z-top"
+        self.assets[1].update(asset_id="a-bottom", page_id="p1")
+        self.write()
+        report = prepare(self.scope_path, self.out)
+        source = json.loads((self.out / "source-descriptor.json").read_text(encoding="utf-8"))
+        self.assertEqual(report["scope_state"], "DECLARED_COMPLETE_SOURCE_INVENTORY")
+        self.assertEqual([a["asset_id"] for a in source["assets"]], ["z-top", "a-bottom"])
+
     def test_missing_page_asset_keeps_partial_and_reports_missing_identity(self):
         self.scope["assets"].pop()
         self.write()

@@ -71,19 +71,32 @@ class ChapterDeliveryGateTests(unittest.TestCase):
                 self.assertEqual(result["machine_evidence_decision"], "HOLD")
 
     def test_incomplete_or_empty_reviewer_claim_is_explicit_partial(self):
-        for change in ("status", "reviewers", "absent"):
+        for change in ("status", "reviewers", "duplicate_questions", "duplicate_answers", "absent"):
             with self.subTest(change=change), tempfile.TemporaryDirectory() as temp:
                 manifest, candidate = self.bound_pair()
                 if change == "status":
                     candidate["human_review"]["status"] = "INCOMPLETE"
                 elif change == "reviewers":
                     candidate["human_review"]["reviewer_ids"] = []
+                elif change.startswith("duplicate_"):
+                    field = "reviewed_question_ids" if change == "duplicate_questions" else "reviewed_answer_ids"
+                    candidate["human_review"][field] *= 2
                 else:
                     del candidate["human_review"]
                 result = check_delivery(*self._write_pair(Path(temp), manifest, candidate))
                 self.assertEqual(result["machine_evidence_decision"], "PARTIAL")
                 self.assertTrue(any("human review claim:" in g for g in result["gaps"]))
                 self.assertEqual(result["decision"], "HOLD")
+
+    def test_material_role_cannot_be_hidden_by_fresh_binding(self):
+        manifest, candidate = self.bound_pair()
+        manifest["materials"] = [{"material_id": "m", "page_ids": ["p"], "identity_status": "CONFIRMED"}]
+        candidate["materials"] = list(manifest["materials"])
+        candidate["checks"]["binding"] = evidence_binding(manifest, candidate)
+        with tempfile.TemporaryDirectory() as temp:
+            result = check_delivery(*self._write_pair(Path(temp), manifest, candidate))
+        self.assertEqual(result["machine_evidence_decision"], "HOLD")
+        self.assertTrue(any("source page role conflicts with material" in g for g in result["gaps"]))
 
     def test_contract_declares_denominator_identity_and_independent_review(self):
         contract = input_contract()
