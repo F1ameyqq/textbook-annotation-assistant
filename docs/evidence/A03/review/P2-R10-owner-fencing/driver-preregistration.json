@@ -1,0 +1,39 @@
+{
+  "driver": "tests/test_a03_p2_r10_owner_fencing.py",
+  "driver_sha256": "da15d84be77fb9be7b718ff28721647a6b3c4052b32531cae45768394c798a82",
+  "helper_sha256": "02acb22f395f380528130166ca8ae4637e3303c73f6496d9da4166b5050a1467",
+  "product_imports_from": "D:\\1800\\docs\\evidence\\A03\\review\\P2-R10-owner-fencing\\isolation\\workspace\\src",
+  "source_files": 76,
+  "expected": {
+    "C1": {
+      "outcomes": "one ACTIVE owner, one REFUSED while both live",
+      "refusal_type": "RuntimeFailure",
+      "refusal_code": "OWNER_BUSY",
+      "refusal_message": "lease expired AND previous process exited required",
+      "actual_BEFORE_CLAIM_markers": true,
+      "effects": 0,
+      "business_plans_required": false
+    },
+    "C2": {
+      "real_qualification": "ADMITTED PRE and recorded real plan before accept",
+      "handover": "A release -> B ACTIVE with higher generation and matching target fence; both live",
+      "refusal_type": "RuntimeFailure",
+      "refusal_code": "OWNER_GENERATION_STALE",
+      "refusal_message": "current ACTIVE lease required",
+      "root_lease_guard_required": true,
+      "no_new_plans_actions_intents_permits_or_effects": true,
+      "old_A_no_renew_or_release_B": true
+    }
+  },
+  "parent_watchdog_seconds": 90,
+  "worker_watchdog_seconds": 45,
+  "product_barrier_seconds": 5,
+  "lease_seconds": 10,
+  "observation_seconds": 2,
+  "frozen_before_functional_execution": true,
+  "driver_changes": 0,
+  "product_changes": 0,
+  "product_calls_in_preparation": 0,
+  "scope": "C1/C2 each once; no old R3/R4/R9/R9-R1 groups",
+  "field_reset": "NOT_EXECUTED_NO_RERUN_VARIANT_OR_DELEGATION"
+}

@@ -1,0 +1,29 @@
+{
+  "syntax_checked": true,
+  "drivers": [
+    {
+      "path": "tests/test_a03_p2_r10_owner_fencing.py",
+      "bytes": 21592,
+      "sha256": "da15d84be77fb9be7b718ff28721647a6b3c4052b32531cae45768394c798a82"
+    },
+    {
+      "path": "examples/a03/P2-R10-owner-fencing/audit_a03_p2_r10.py",
+      "bytes": 4062,
+      "sha256": "e1ef857ce0ab86e20a9196d6aacb329b9293db65c110d1e359ff257d5a8e885b"
+    },
+    {
+      "path": "examples/a03/P2-R10-owner-fencing/prepare_a03_p2_r10.py",
+      "bytes": 2880,
+      "sha256": "277689dd01e6fc7bdefe692cf597f5a3562b300c5e0710cdaaf7f64ee02dc7b6"
+    }
+  ],
+  "product_calls": 0,
+  "expectations": "C1 two BEFORE_CLAIM markers before common release, both live until claim results saved, one ACTIVE/busy-root refusal then release; C2 real PRE/plan A release B claim, live old A run_plan refused at existing lease guard, B unchanged, zero intent/permit/effect.",
+  "product_limits_unchanged": {
+    "claim_barrier_seconds": 5,
+    "observation_seconds": 2,
+    "lease_seconds": 10
+  },
+  "parent_watchdog": 90,
+  "child_watchdog": 45
+}
