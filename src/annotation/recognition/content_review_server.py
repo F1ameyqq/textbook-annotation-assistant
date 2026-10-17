@@ -135,6 +135,10 @@ def make_server(workspace, *, host="127.0.0.1", port=0):
                     plan = workspace.documents()["plan"]
                     encoded = (json.dumps(plan, ensure_ascii=False, indent=2, allow_nan=False) + "\n").encode("utf-8")
                     self._send(200, encoded, attachment="content-review-plan.json")
+                elif parsed.path == "/api/export/region-catalog" and not parsed.query:
+                    catalog = workspace.region_catalog()
+                    encoded = (json.dumps(catalog, ensure_ascii=False, indent=2, allow_nan=False) + "\n").encode("utf-8")
+                    self._send(200, encoded, attachment="content-review-region-catalog.json")
                 elif parsed.path == "/api/source":
                     values = parse_qs(parsed.query, keep_blank_values=True)
                     if set(values) - {"asset_id", "bbox"} or len(values.get("asset_id", [])) != 1 or any(len(v) != 1 for v in values.values()):

@@ -71,11 +71,16 @@ def _author(value):
     return copy.deepcopy(value)
 
 
-def _implementation():
+def _implementation(region_catalog=False):
     names = ("content_review", "content_revision", "content_revision_quality", "baseline", "offline", "policy", "question_quality")
+    dependencies = {"Pillow": importlib.metadata.version("Pillow")}
+    if region_catalog:
+        names += ("region_review", "region_draft", "region_runs", "region_ocr", "formula_candidates", "formula_backend", "formula_canvas", "formula_canvas_quality",
+                  "formula_quality", "formula_syntax", "math_reading", "recovery_apply")
+        dependencies.update({name: importlib.metadata.version(name) for name in ("numpy", "opencv-python")})
     return {"schema_version": "b-content-review-implementation-trial/0.1",
             "modules": {name: code_digest(Path(__file__).with_name(name+".py")) for name in names},
-            "python": platform.python_version(), "dependencies": {"Pillow": importlib.metadata.version("Pillow")}}
+            "python": platform.python_version(), "dependencies": dependencies}
 
 
 def _block_key(answer_id, fragment_id=None, operation_id=None, block_id=None):
@@ -94,7 +99,7 @@ class ReviewWorkspace:
     """
 
     def __init__(self, evidence, graph05, base_check05, review, initial_plan,
-                 workdir, source_paths, *, before_commit=None):
+                 workdir, source_paths, *, before_commit=None, region_catalog=None):
         self.workdir = Path(workdir).resolve()
         self.workdir.mkdir(parents=True, exist_ok=True)
         self._guard = _LOCKS.setdefault(str(self.workdir), threading.RLock())
@@ -106,8 +111,13 @@ class ReviewWorkspace:
         self.before_commit = before_commit
         self._inputs = copy.deepcopy(dict(evidence=evidence, graph=graph05, base_check=base_check05,
                                          review=review, initial_plan=initial_plan))
-        self._implementation = _implementation()
         self._source_identity, self._paths = self._read_sources()
+        if region_catalog is not None:
+            from .region_review import validate_region_catalog
+            attachments = validate_region_catalog(region_catalog, evidence, graph05, self._paths)
+            if attachments:
+                self._inputs["region_catalog"] = attachments
+        self._implementation = _implementation(bool(self._inputs.get("region_catalog")))
         self.db_path = self.workdir/"review.sqlite3"
         self._schema()
         with self._locked():
@@ -232,7 +242,7 @@ class ReviewWorkspace:
         return [assets[aid] for aid in sorted(assets)], paths
 
     def _verify_sources(self):
-        if not _same(_implementation(), self._implementation):
+        if not _same(_implementation(bool(self._inputs.get("region_catalog"))), self._implementation):
             raise ValueError("workspace implementation changed; open a fresh compatible workspace")
         identity, paths = self._read_sources()
         if not _same(identity, self._source_identity):
@@ -393,6 +403,19 @@ class ReviewWorkspace:
             self._verify_sources()
             return copy.deepcopy(documents)
 
+    def region_catalog(self):
+        """Export the frozen source candidates, separately from a draft plan.
+
+        A plain plan continues to be an explicit, unverified transcription;
+        consumers need this catalog and the originals to audit choice refs.
+        """
+        with self._locked():
+            self._verify_sources()
+            result = dict(schema_version="b-region-review-catalog-trial/0.1",
+                          entries=copy.deepcopy(self._inputs.get("region_catalog", [])))
+            self._verify_sources()
+            return result
+
     def _candidate_options(self, answer, fragment):
         inline = self._inputs["graph"]["payload"]["inline_content"]
         parent = fragment.get("parent_line_id"); result = []
@@ -429,6 +452,9 @@ class ReviewWorkspace:
                 blocks.append(dict(key=_block_key(answer["answer_id"], operation_id=fragment["operation_id"], block_id=fragment["block_id"]),
                     kind="REGION", role=fragment["role"], asset_id=fragment["asset_id"], bbox=copy.deepcopy(fragment["bbox"]), source_fragment_ids=copy.deepcopy(ids),
                     source_text="\n".join(by_id[fid]["text"] for fid in ids), text=fragment["text"], runs=copy.deepcopy(fragment["runs"]), candidates=[]))
+                if self._inputs.get("region_catalog"):
+                    from .region_review import region_options
+                    blocks[-1]["region_candidates"] = region_options(self._inputs["region_catalog"], answer["answer_id"], blocks[-1])
             else:
                 f = by_id[fragment["source_fragment_id"]]
                 blocks.append(dict(key=_block_key(answer["answer_id"], fragment_id=f["fragment_id"]), kind="FRAGMENT", role=f["role"], asset_id=f["asset_id"],
@@ -451,18 +477,26 @@ class ReviewWorkspace:
             answers.append({k: copy.deepcopy(answer[k]) for k in ("answer_id", "printed_number", "section_path", "text", "explanation_text")})
             answers[-1].update(blocks=self._answer_blocks(answer), figures=figures, issue_ids=list(dict.fromkeys(linked)),
                                question_candidates=[{k: copy.deepcopy(q[k]) for k in ("question_id", "printed_number", "section_path", "text")} for q in questions])
+            catalogs = [a for a in self._inputs.get("region_catalog", []) if a["answer_id"] == answer["answer_id"]]
+            if catalogs:
+                answers[-1]["region_draft_risks"] = [dict(bundle_ref=reference(a["draft"]),
+                    source=copy.deepcopy(a["draft"]["payload"]["source"]), risks=copy.deepcopy(a["draft"]["payload"]["risks"]),
+                    decision="HOLD", transcription_verified=False) for a in catalogs]
         history = []
         for row in db.execute("SELECT * FROM revisions ORDER BY rowid"):
             refs = json.loads(row["documents_json"])
             history.append(dict(head=row["head"], parent_head=row["parent_head"], plan_ref=refs["plan"]["artifact_ref"], graph_ref=refs["graph"]["artifact_ref"],
                 quality_ref=refs["check"]["artifact_ref"], author=json.loads(row["author_json"]), created_at=row["created_at"], summary=row["summary"]))
-        return dict(schema_version="b-content-review-state-trial/0.1", head=head, book_id=graph["book_id"], scope_id=graph["scope_id"],
+        result = dict(schema_version="b-content-review-state-trial/0.1", head=head, book_id=graph["book_id"], scope_id=graph["scope_id"],
             plan_revision=plan["revision"], plan_ref=reference(plan), graph_ref=reference(graph), quality_ref=reference(check),
             base_refs={k: _ref(self._inputs[v]) for k, v in dict(evidence="evidence", graph="graph", base_check="base_check", review="review").items()},
             author=copy.deepcopy(plan["payload"]["author"]), counts=dict(questions=len(graph["payload"]["questions"]), answers=len(answers), issues=len(issues),
                 unassigned=sum(r["status"] == "UNASSIGNED" for r in graph["payload"]["answer_coverage"])),
             assets=[{k: p["source"][k] for k in ("asset_id", "width", "height", "sha256")} for p in self._inputs["evidence"]["payload"]["pages"]],
             answers=answers, issues=copy.deepcopy(issues), history=history, **_flags())
+        if self._inputs.get("region_catalog"):
+            result["region_catalog_available"] = True
+        return result
 
     def state(self):
         with self._locked():
@@ -486,14 +520,19 @@ class ReviewWorkspace:
                 raise ValueError("changes require unique known block keys in the selected answer")
             seen.add(change["key"]); block = blocks[change["key"]]
             if block["kind"] == "REGION":
-                if set(change) != {"key", "runs"} or not isinstance(change["runs"], list) or not change["runs"]:
+                if set(change) not in ({"key", "runs"}, {"key", "runs", "region_selections"}) or not isinstance(change["runs"], list) or not change["runs"]:
                     raise ValueError("region changes may update only nonempty typed runs")
                 for run in change["runs"]:
                     if (not isinstance(run, dict) or set(run) != {"format", "text"}
                             or not isinstance(run.get("format"), str) or run["format"] not in {"plain", "latex"}):
                         raise ValueError("invalid region run fields")
                     content_revision._replacement(run["text"])
-                if _same(change["runs"], block["runs"]): continue
+                provenance = []
+                if "region_selections" in change:
+                    from .region_review import validate_region_selections
+                    provenance = validate_region_selections(self._inputs.get("region_catalog", []), answer_id,
+                        block, change["runs"], change["region_selections"], author)
+                if _same(change["runs"], block["runs"]) and not provenance: continue
                 found = False
                 for op in operations:
                     if op["kind"] != "REBUILD_TEXT_REGION" or op["target"]["answer_id"] != answer_id: continue
@@ -501,6 +540,8 @@ class ReviewWorkspace:
                         if _block_key(answer_id, operation_id=op["operation_id"], block_id=target["block_id"]) == block["key"]:
                             target["runs"] = copy.deepcopy(change["runs"])
                             target["note"] += " Offline draft runs edited by "+author["id"]+"; unverified."
+                            if provenance:
+                                target["note"] += " Region candidate choices (unverified): "+_json(provenance)
                             found = True
                 if not found: raise ValueError("current region has no existing source-bound operation")
             else:
@@ -560,6 +601,11 @@ class ReviewWorkspace:
                     changed = []; summary = "恢复历史草稿 "+revision_head
                 attempt = "review-attempt-"+uuid4().hex
                 details = dict(action=action, answer_id=answer_id, changed_keys=changed, revision_head=revision_head)
+                if action == "SAVE":
+                    selections = [{"key": v["key"], "region_selections": copy.deepcopy(v["region_selections"])}
+                                  for v in changes if "region_selections" in v]
+                    if selections:
+                        details["region_selections"] = selections
                 db.execute("INSERT INTO attempts VALUES(?,?,?,?,?,?,?)", (attempt, head, None, "RUNNING", _json(details), _now(), None))
                 self._event(db, "ATTEMPT_STARTED", head, attempt, details)
                 try:

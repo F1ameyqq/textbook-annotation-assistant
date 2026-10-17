@@ -30,12 +30,17 @@ def main(argv=None):
     parser.add_argument("--source", required=True, action="append", type=local_path, help="original source manifests; repeat to cover current E scope")
     parser.add_argument("--port", type=port_number, default=0, help="local port, 0 chooses an available port")
     parser.add_argument("--check-only", action="store_true", help="prepare/check persistent workspace without starting HTTP")
+    parser.add_argument("--region-catalog", type=local_path, help="optional source-bound region draft/crop manifest for formula choices")
     args = parser.parse_args(argv)
     try:
         from annotation.recognition.content_review import ReviewWorkspace
         from annotation.recognition.content_review_server import make_server
         values = [_read(getattr(args, key))[0] for key in ("evidence", "graph", "base_check", "review", "plan")]
-        workspace = ReviewWorkspace(*values, args.workdir, args.source)
+        catalog = None
+        if args.region_catalog is not None:
+            from annotation.recognition.region_review import load_region_catalog
+            catalog = load_region_catalog(args.region_catalog)
+        workspace = ReviewWorkspace(*values, args.workdir, args.source, region_catalog=catalog)
         state = workspace.state()
         result = {"schema_version": "b-content-review-cli-trial/0.1", "ready": True,
             "head": state["head"], "plan_revision": state["plan_revision"], "counts": state["counts"],

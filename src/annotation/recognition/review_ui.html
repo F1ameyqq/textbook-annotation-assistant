@@ -13,7 +13,7 @@
   <header class="topbar">
     <div class="brand"><span class="brand-mark" aria-hidden="true">阅</span><div><h1>离线内容复核</h1><p id="book-label">正在读取工作区…</p></div></div>
     <div class="workspace-state"><span class="status-pill hold">HOLD · 未核准</span><span id="revision-label" class="revision-label">—</span></div>
-    <div class="top-actions"><button id="refresh-button" type="button">刷新工作区</button><a class="button" href="/api/export/plan" download>导出当前计划</a></div>
+    <div class="top-actions"><button id="refresh-button" type="button">刷新工作区</button><a class="button" href="/api/export/plan" download>导出当前计划</a><a id="export-region-catalog" class="button" href="/api/export/region-catalog" download title="下载未核准候选及其冻结来源资料" hidden>导出候选资料</a></div>
   </header>
   <div class="scope-bar"><p>来源与草稿并排核对。保存会生成新版本并重新检查；语法预览和来源检查不代表转写正确。</p><p id="workspace-counts" class="counts">—</p></div>
   <div id="feedback" class="feedback" role="status" aria-live="polite" hidden></div>
@@ -35,10 +35,12 @@
       <div id="loading-state" class="loading-state"><span class="loading-dot" aria-hidden="true"></span><h2>读取离线工作区</h2><p>保留原始证据，载入当前正文与检查。</p></div>
       <div id="review-content" hidden>
         <div class="answer-heading"><div><p id="answer-section" class="eyebrow"></p><h2 id="answer-title"></h2><p id="answer-identity" class="mono muted"></p></div><div class="button-row"><button id="previous-answer" type="button" aria-label="上一答案">← 上一条</button><button id="next-answer" type="button" aria-label="下一答案">下一条 →</button></div></div>
+        <section id="region-draft-risks" class="region-draft-risks" aria-label="自动草稿来源风险" hidden></section>
         <div id="question-candidates" class="question-candidates"></div>
         <details class="source-overview" open><summary><span>原图与图形</span><span id="source-overview-count" class="muted"></span></summary><div id="source-overview" class="source-grid"></div></details>
         <details class="active-overview"><summary>当前完整正文 / 解析 <span class="muted">保存后按新图谱重建</span></summary><div id="active-overview" class="active-columns"></div></details>
         <div class="editor-heading"><h3>逐块核对与编辑</h3><span class="muted">来源只读 · 草稿未核准</span></div>
+        <p id="region-candidate-help" class="region-candidate-help" hidden>展开公式下的来源候选，可比较整式原始观察与分量派生组合。选择仅更新草稿；保存后记录来源并重新检查，仍需核对完整答案。顶栏可导出未核准的候选与来源资料，供离线交接。</p>
         <div id="block-editors" class="block-editors"></div>
         <div id="no-editable-blocks" class="empty-note" hidden>此答案没有可编辑的正文片段。图形、结构标记与诊断 OCR 不作为文字编辑块。</div>
         <section class="author-panel" aria-labelledby="author-title"><h3 id="author-title">本次草稿作者</h3><div class="author-fields"><label class="field">类别<select id="author-kind"><option value="MODEL_DRAFT">模型草稿 · 未核准</option><option value="HUMAN_DRAFT">人工草稿 · 未核准</option><option value="SYNTHETIC_TEST">合成测试草稿</option></select></label><label class="field">作者标识<input id="author-id" type="text" maxlength="240" autocomplete="off" placeholder="填写作者或本次复核者"></label><label class="field author-note">说明<textarea id="author-note" rows="2" placeholder="说明本次改动的来源与仍待核对的部分"></textarea></label></div><p class="muted small">作者只记录本次快照的编辑者。任何类别都不会将文字升级为人工核准。</p></section>

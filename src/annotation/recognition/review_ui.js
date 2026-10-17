@@ -101,7 +101,13 @@
   }
   function changeFor(draft) {
     const block = draft.block;
-    if (block.kind === "REGION") return runsEqual(block.runs, draft.runs) ? null : { key: block.key, runs: rawRuns(draft.runs) };
+    if (block.kind === "REGION") {
+      const selections = [...draft.regionSelections.values()].sort((left, right) => left.run_index - right.run_index);
+      if (runsEqual(block.runs, draft.runs) && !selections.length) return null;
+      const change = { key: block.key, runs: rawRuns(draft.runs) };
+      if (selections.length) change.region_selections = selections.map((selection) => ({ ...selection, bundle_ref: { ...selection.bundle_ref } }));
+      return change;
+    }
     if (draft.candidate) return { key: block.key, ...draft.candidate };
     if (draft.text === block.text && draft.format === draft.initialFormat) return null;
     return { key: block.key, text: draft.text, format: draft.format };
@@ -117,7 +123,7 @@
       const changed = changeFor(draft) !== null;
       draft.card?.classList.toggle("dirty", changed);
       if (draft.dirtyBadge) draft.dirtyBadge.hidden = !changed;
-      if (draft.resetButton) draft.resetButton.hidden = !changed;
+      if (draft.resetButton) draft.resetButton.hidden = !changed && !(draft.block.kind === "REGION" && !draft.regionMappingEnabled);
     }
     document.title = (dirty.length ? "● " : "") + "教辅 · 离线内容复核";
   }
@@ -151,6 +157,7 @@
     $("revision-label").title = "当前冻结版本：" + next.head + "\n图谱：" + (next.graph_ref?.artifact_id || "—") + "\n质检：" + (next.quality_ref?.artifact_id || "—");
     $("workspace-counts").textContent = (next.counts?.questions ?? "—") + " 题 · " + (next.counts?.answers ?? next.answers.length) + " 答案候选 · " + next.issues.length + " 问题 · " + (next.counts?.unassigned ?? "—") + " 未归属来源";
     $("issue-total").textContent = String(next.issues.length);
+    $("export-region-catalog").hidden = next.region_catalog_available !== true;
     $("author-kind").value = next.author?.kind || "MODEL_DRAFT";
     $("author-id").value = next.author?.id || "";
     $("author-note").value = next.author?.note || "";
@@ -244,9 +251,10 @@
     $("answer-title").textContent = "第 " + answer.printed_number + " 题 · 答案候选";
     $("answer-section").textContent = pathText(answer.section_path);
     $("answer-identity").textContent = answer.answer_id;
-    renderQuestions(answer); renderSources(answer); renderActive(answer);
+    renderRegionDraftRisks(answer); renderQuestions(answer); renderSources(answer); renderActive(answer);
     $("block-editors").replaceChildren();
     $("no-editable-blocks").hidden = (answer.blocks || []).length !== 0;
+    $("region-candidate-help").hidden = !(answer.blocks || []).some((block) => block.kind === "REGION" && block.region_candidates?.length);
     for (const [index, block] of (answer.blocks || []).entries()) $("block-editors").append(renderBlock(block, index));
     renderIssues(); updateAnswerArrows(); updateDirtyState();
   }
@@ -261,6 +269,39 @@
       details.append(item);
     }
     parent.append(details);
+  }
+  function renderRegionDraftRisks(answer) {
+    const parent = $("region-draft-risks"); parent.replaceChildren();
+    const bundles = Array.isArray(answer.region_draft_risks) ? answer.region_draft_risks : [];
+    parent.hidden = !bundles.length;
+    if (!bundles.length) return;
+    const total = bundles.reduce((count, bundle) => count + (Array.isArray(bundle.risks) ? bundle.risks.length : 0), 0);
+    const details = node("details");
+    details.append(node("summary", "", "自动草稿来源风险 · " + total + " 项"));
+    const content = node("div", "region-draft-risk-content");
+    content.append(node("p", "region-draft-risk-note", "保留补读时的来源风险，不计入当前检查问题数；编辑或选择不会自动消除。像素记账闭合也不表示文字已完整识别。"));
+    for (const [index, bundle] of bundles.entries()) {
+      const risks = Array.isArray(bundle.risks) ? bundle.risks : [];
+      const section = node("div", "region-risk-bundle");
+      section.append(node("h4", "", "来源资料 " + (index + 1) + (bundle.source?.asset_id ? " · " + bundle.source.asset_id : "") + " · " + risks.length + " 项（未核准）"));
+      const source = node("details", "region-risk-source");
+      source.append(node("summary", "", "查看冻结来源记录"), node("pre", "", JSON.stringify({ bundle_ref: bundle.bundle_ref, source: bundle.source,
+        decision: bundle.decision, transcription_verified: bundle.transcription_verified }, null, 2))); section.append(source);
+      for (const risk of risks) {
+        const item = node("details", "region-source-risk");
+        item.append(node("summary", "mono", risk.code || "来源风险"));
+        const labels = [];
+        if (risk.row_id !== undefined && risk.row_id !== null) labels.push("行：" + risk.row_id);
+        if (risk.slot_id !== undefined && risk.slot_id !== null) labels.push("位置：" + risk.slot_id);
+        if (Array.isArray(risk.slot_ids)) labels.push("位置：" + risk.slot_ids.join("、"));
+        if (risk.threshold !== undefined && risk.threshold !== null) labels.push("阈值：" + risk.threshold);
+        if (labels.length) item.append(node("p", "region-risk-meta mono", labels.join("\n")));
+        item.append(node("pre", "", JSON.stringify(risk, null, 2))); section.append(item);
+      }
+      if (!risks.length) section.append(node("p", "muted small", "此来源资料没有声明额外来源风险；这不表示内容已核准。"));
+      content.append(section);
+    }
+    details.append(content); parent.append(details);
   }
   function renderActive(answer) {
     const parent = $("active-overview"); parent.replaceChildren();
@@ -334,11 +375,12 @@
     const formats = new Set(initialRuns.map((run) => run.format));
     const initialFormat = formats.size === 1 ? initialRuns[0].format : "";
     const draft = { block, runs: initialRuns, text: block.text || "", format: initialFormat, initialFormat, candidate: null,
-      sourceSpan: [0, Array.from(block.source_text || "").length], sourceExplicitSelection: false };
+      sourceSpan: [0, Array.from(block.source_text || "").length], sourceExplicitSelection: false,
+      regionSelections: new Map(), regionMappingEnabled: true, regionBrowsing: new Map(), regionOpenGroups: new Set(), regionWidgets: [] };
     drafts.set(block.key, draft);
     const card = node("article", "block-card"); draft.card = card;
     const heading = node("div", "block-heading");
-    const title = node("div", "block-title"); title.append(node("span", "", (index + 1) + ". " + roleLabel(block.role)), node("span", "kind-badge", block.kind === "REGION" ? "区域重建 · REGION" : "原文片段 · FRAGMENT"));
+    const title = node("div", "block-title"); title.append(node("span", "", (index + 1) + ". " + roleLabel(block.role)), node("span", "kind-badge", block.kind === "REGION" ? "来源区域重建" : "原文片段"));
     draft.dirtyBadge = node("span", "dirty-badge", "未保存"); draft.dirtyBadge.hidden = true; title.append(draft.dirtyBadge);
     draft.resetButton = button("撤销此处编辑", () => resetBlock(draft), "small-button"); draft.resetButton.hidden = true;
     heading.append(title, draft.resetButton); card.append(heading);
@@ -377,7 +419,16 @@
   }
   function resetBlock(draft) {
     draft.runs = rawRuns(draft.block.runs); draft.text = draft.block.text || ""; draft.format = draft.initialFormat; draft.candidate = null;
+    draft.regionSelections.clear(); draft.regionMappingEnabled = true; draft.regionBrowsing.clear(); draft.regionOpenGroups.clear();
     renderDraftEditor(draft); updateDirtyState();
+  }
+  function invalidateRegionMapping(draft) {
+    draft.regionSelections.clear(); draft.regionMappingEnabled = false;
+    draft.regionBrowsing.clear(); draft.regionOpenGroups.clear();
+  }
+  function clearRegionChoice(draft, index) {
+    draft.regionSelections.delete(index);
+    for (const update of draft.regionWidgets) update();
   }
   function formatSelect(value, mixed = false) {
     const select = node("select", "editor-format");
@@ -387,23 +438,34 @@
   }
   function renderDraftEditor(draft) {
     const parent = draft.editor; parent.replaceChildren();
-    const heading = node("div", "column-heading"); heading.append(node("h4", "", draft.block.kind === "REGION" ? "当前区域草稿 · typed runs" : "当前完整片段 · 显式编辑")); parent.append(heading);
+    draft.regionWidgets = [];
+    const heading = node("div", "column-heading"); heading.append(node("h4", "", draft.block.kind === "REGION" ? "当前区域草稿 · 可编辑文字段" : "当前完整片段 · 显式编辑")); parent.append(heading);
     if (draft.block.kind === "REGION") {
+      const groups = Array.isArray(draft.block.region_candidates) ? draft.block.region_candidates : [];
+      if (groups.length && !draft.regionMappingEnabled) parent.append(node("p", "region-mapping-warning", "文字段的数量、顺序或格式已调整，公式候选的定位已暂停。可撤销此处编辑恢复原映射；保存后只有服务端能重新对应来源时才会提供候选。"));
       const editors = node("div", "run-editors"); parent.append(editors);
       for (const [index, run] of draft.runs.entries()) {
         const row = node("div", "run-editor"); const controls = node("div", "run-controls");
         const format = formatSelect(run.format); controls.append(node("span", "run-label", "文字段 " + (index + 1)), format);
         const actions = node("div", "button-row");
-        const up = button("↑", () => { [draft.runs[index - 1], draft.runs[index]] = [draft.runs[index], draft.runs[index - 1]]; renderDraftEditor(draft); updateDirtyState(); }, "small-button"); up.disabled = index === 0; up.setAttribute("aria-label", "上移文字段 " + (index + 1));
-        const down = button("↓", () => { [draft.runs[index + 1], draft.runs[index]] = [draft.runs[index], draft.runs[index + 1]]; renderDraftEditor(draft); updateDirtyState(); }, "small-button"); down.disabled = index === draft.runs.length - 1; down.setAttribute("aria-label", "下移文字段 " + (index + 1));
-        const remove = button("删除", () => { draft.runs.splice(index, 1); renderDraftEditor(draft); updateDirtyState(); }, "small-button"); remove.setAttribute("aria-label", "删除文字段 " + (index + 1)); actions.append(up, down, remove); controls.append(actions);
+        const up = button("↑", () => { invalidateRegionMapping(draft); [draft.runs[index - 1], draft.runs[index]] = [draft.runs[index], draft.runs[index - 1]]; renderDraftEditor(draft); updateDirtyState(); }, "small-button"); up.disabled = index === 0; up.setAttribute("aria-label", "上移文字段 " + (index + 1));
+        const down = button("↓", () => { invalidateRegionMapping(draft); [draft.runs[index + 1], draft.runs[index]] = [draft.runs[index], draft.runs[index + 1]]; renderDraftEditor(draft); updateDirtyState(); }, "small-button"); down.disabled = index === draft.runs.length - 1; down.setAttribute("aria-label", "下移文字段 " + (index + 1));
+        const remove = button("删除", () => { invalidateRegionMapping(draft); draft.runs.splice(index, 1); renderDraftEditor(draft); updateDirtyState(); }, "small-button"); remove.setAttribute("aria-label", "删除文字段 " + (index + 1)); actions.append(up, down, remove); controls.append(actions);
         const text = node("textarea"); text.value = run.text; text.spellcheck = false; text.rows = Math.min(7, Math.max(2, run.text.split("\n").length + Math.floor(run.text.length / 85)));
         text.setAttribute("aria-label", "文字段 " + (index + 1) + " 的原样草稿内容");
         row.append(controls, text); editors.append(row);
-        format.addEventListener("change", () => { run.format = format.value; updateDirtyState(); renderDraftPreview(draft); });
-        text.addEventListener("input", () => { run.text = text.value; updateDirtyState(); renderDraftPreview(draft); });
+        format.addEventListener("change", () => { run.format = format.value; invalidateRegionMapping(draft); renderDraftEditor(draft); updateDirtyState(); });
+        text.addEventListener("input", () => { run.text = text.value; clearRegionChoice(draft, index); updateDirtyState(); renderDraftPreview(draft); });
+        if (draft.regionMappingEnabled && run.format === "latex") {
+          for (const group of groups.filter((item) => item.run_index === index)) row.append(renderRegionChoiceGroup(draft, group, true));
+        }
       }
-      parent.append(button("＋ 添加文字段", () => { draft.runs.push({ format: "plain", text: "" }); renderDraftEditor(draft); updateDirtyState(); }, "small-button"));
+      parent.append(button("＋ 添加文字段", () => { invalidateRegionMapping(draft); draft.runs.push({ format: "plain", text: "" }); renderDraftEditor(draft); updateDirtyState(); }, "small-button"));
+      if (groups.length && !draft.regionMappingEnabled) {
+        const catalog = node("details", "region-readonly-catalog"); catalog.append(node("summary", "", "原始公式候选目录 · 仅供查看"));
+        for (const group of groups) catalog.append(renderRegionChoiceGroup(draft, group, false));
+        parent.append(catalog);
+      }
     } else {
       const format = formatSelect(draft.format, draft.initialFormat === ""); parent.append(format);
       if (draft.initialFormat === "") parent.append(node("p", "source-proof-note", "当前片段含混排文字段。未编辑时保持原样；整段修改时需明确选择一种格式。"));
@@ -420,6 +482,119 @@
     const previewTitle = node("div", "preview-title"); previewTitle.append(node("span", "", "显示预览"), node("span", "", "语法支持 ≠ 转写正确")); parent.append(previewTitle);
     draft.preview = node("div", "run-preview"); draft.preview.setAttribute("aria-label", "当前草稿显示预览"); parent.append(draft.preview);
     renderDraftPreview(draft);
+  }
+  function regionGroupKey(group) {
+    return JSON.stringify([group.bundle_ref, group.row_id, group.run_index, group.fraction_id]);
+  }
+  function regionKindLabel(choice) {
+    if (choice.kind === "WHOLE_MODEL_OBSERVATION") return "整式原始观察";
+    if (choice.kind === "DERIVED_ROLE_COMPOSITION") return "分量派生组合";
+    return "来源候选";
+  }
+  function regionTopologyMatches(draft) {
+    return draft.regionMappingEnabled && draft.runs.length === draft.block.runs.length
+      && draft.runs.every((run, index) => run.format === draft.block.runs[index].format);
+  }
+  function applyRegionChoice(draft, group, choice) {
+    if (busy) return;
+    if (!regionTopologyMatches(draft) || !Number.isInteger(group.run_index) || !draft.runs[group.run_index]
+        || draft.runs[group.run_index].format !== "latex" || !(group.choices || []).includes(choice)) {
+      feedback("此公式的来源位置已不能对应。请撤销此处编辑，或保存后重新核对服务端提供的候选。", true);
+      return;
+    }
+    const selection = { bundle_ref: { ...group.bundle_ref }, row_id: group.row_id, run_index: group.run_index,
+      fraction_id: group.fraction_id, candidate_id: choice.candidate_id };
+    draft.runs[group.run_index].text = choice.latex;
+    draft.runs[group.run_index].format = "latex";
+    draft.regionSelections.set(group.run_index, selection);
+    draft.regionBrowsing.set(regionGroupKey(group), choice.candidate_id);
+    draft.regionOpenGroups.add(regionGroupKey(group));
+    renderDraftEditor(draft); updateDirtyState();
+  }
+  function renderRegionChoiceGroup(draft, group, mapped) {
+    const key = regionGroupKey(group);
+    const choices = Array.isArray(group.choices) ? group.choices : [];
+    const wholeCount = choices.filter((choice) => choice.kind === "WHOLE_MODEL_OBSERVATION").length;
+    const composedCount = choices.filter((choice) => choice.kind === "DERIVED_ROLE_COMPOSITION").length;
+    const details = node("details", "region-formula-candidates");
+    details.open = draft.regionOpenGroups.has(key);
+    details.addEventListener("toggle", () => {
+      if (details.open) draft.regionOpenGroups.add(key); else draft.regionOpenGroups.delete(key);
+    });
+    details.append(node("summary", "", (mapped ? "此公式的来源候选" : "原文字段 " + (group.run_index + 1) + " 的候选") + " · " + choices.length + " 条"));
+    const body = node("div", "region-choice-body");
+    const status = node("p", "region-choice-status"); body.append(status);
+    body.append(node("p", "muted small", "整式原始观察 " + wholeCount + " 条 · 分量派生组合 " + composedCount + " 条。相同文字的不同来源也分别保留，全部未核准。"));
+    const source = node("div", "region-choice-source");
+    source.append(button("核对公式原图", () => showSource(draft.block.asset_id, group.source_bbox, "公式来源区域"), "small-button"), node("span", "mono muted", "[" + formatBox(group.source_bbox) + "]")); body.append(source);
+    const filters = node("div", "region-choice-filters");
+    const kindLabel = node("label", "field", "候选类型"); const kind = node("select");
+    for (const [value, label] of [["", "全部来源"], ["WHOLE_MODEL_OBSERVATION", "整式原始观察"], ["DERIVED_ROLE_COMPOSITION", "分量派生组合"]]) {
+      const option = node("option", "", label); option.value = value; kind.append(option);
+    }
+    kindLabel.append(kind); filters.append(kindLabel);
+    const choiceLabel = node("label", "field", "查看候选（不会自动应用）"); const chooser = node("select", "region-choice-select"); choiceLabel.append(chooser); filters.append(choiceLabel); body.append(filters);
+    const choiceCount = node("p", "muted small"); body.append(choiceCount);
+    const preview = node("div", "region-choice-preview"); body.append(preview);
+    const actions = node("div", "button-row");
+    const apply = button("用于此公式", () => {
+      const choice = choices.find((item) => item.candidate_id === chooser.value);
+      if (choice) applyRegionChoice(draft, group, choice);
+    }, "small-button");
+    const clear = button("保留文字，改为显式编辑", () => {
+      draft.regionSelections.delete(group.run_index); renderDraftEditor(draft); updateDirtyState();
+    }, "link-button small-button"); actions.append(apply, clear); body.append(actions);
+    function updateStatus() {
+      const pending = draft.regionSelections.get(group.run_index);
+      const ours = pending && pending.fraction_id === group.fraction_id && pending.row_id === group.row_id
+        && JSON.stringify(pending.bundle_ref) === JSON.stringify(group.bundle_ref);
+      const current = draft.runs[group.run_index];
+      const matches = mapped && current?.format === "latex" ? choices.filter((choice) => choice.latex === current.text).length : 0;
+      if (!mapped || !regionTopologyMatches(draft)) status.textContent = "位置映射已暂停。可查看原始候选与来源图，不能应用到当前文字段。";
+      else if (ours) status.textContent = "已选择，待保存 · " + regionKindLabel(choices.find((choice) => choice.candidate_id === pending.candidate_id) || {}) + "。保存将记录原始来源引用，仍未核准。";
+      else status.textContent = matches ? "当前文字与 " + matches + " 条候选相同；尚未为本次编辑选择来源，也不代表内容正确。" : "当前文字未与这些候选完全相同；选择前请先核对来源。";
+      status.classList.toggle("pending", Boolean(ours));
+      clear.hidden = !ours;
+      apply.disabled = busy || !mapped || !regionTopologyMatches(draft) || !chooser.value;
+    }
+    function renderChosen() {
+      preview.replaceChildren();
+      const choice = choices.find((item) => item.candidate_id === chooser.value);
+      if (!choice) {
+        preview.append(node("p", "muted small", "从列表选择一条，查看完整原始 LaTeX 和来源；点击“用于此公式”后才改变草稿。"));
+        updateStatus(); return;
+      }
+      draft.regionBrowsing.set(key, choice.candidate_id);
+      preview.append(node("span", "region-choice-kind", regionKindLabel(choice)), node("p", "source-proof-note", choice.complete_model_call === true ? "来自一次完整公式模型观察，文字仍可能有误。" : "由分子、分母等观察派生组合，不是一次整式模型输出；所有原分量来源保留。"));
+      preview.append(node("pre", "region-choice-raw", choice.latex));
+      const math = node("div", "run-preview region-choice-math"); preview.append(math);
+      if (choice.parse_supported === true) mathPreview(math, choice.latex, null);
+      else rawMath(math, choice.latex, "含暂不支持的语法；完整原文仍可查看和显式选择，不自动清理。");
+      const provenance = node("details", "region-choice-provenance");
+      provenance.append(node("summary", "", "查看原始来源记录"), node("pre", "", JSON.stringify({ bundle_ref: group.bundle_ref, row_id: group.row_id,
+        fraction_id: group.fraction_id, candidate_id: choice.candidate_id, kind: choice.kind, source_bbox: group.source_bbox,
+        complete_model_call: choice.complete_model_call, origin: choice.origin }, null, 2)));
+      preview.append(provenance); updateStatus();
+    }
+    function renderOptions() {
+      const previous = chooser.value || draft.regionBrowsing.get(key);
+      chooser.replaceChildren();
+      const empty = node("option", "", "请选择一条候选查看"); empty.value = ""; chooser.append(empty);
+      const visible = choices.filter((choice) => !kind.value || choice.kind === kind.value);
+      for (const choice of visible) {
+        const index = choices.indexOf(choice) + 1;
+        const codepoints = Array.from(choice.latex);
+        const snippet = codepoints.slice(0, 75).join("") + (codepoints.length > 75 ? "…" : "");
+        const option = node("option", "", index + ". " + regionKindLabel(choice) + " · " + snippet + (choice.candidate_id === group.default_candidate_id ? " · 初始草稿来源" : ""));
+        option.value = choice.candidate_id; chooser.append(option);
+      }
+      if (visible.some((choice) => choice.candidate_id === previous)) chooser.value = previous;
+      choiceCount.textContent = "显示 " + visible.length + " / " + choices.length + " 条；同文不同来源不合并。";
+      renderChosen();
+    }
+    kind.addEventListener("change", renderOptions); chooser.addEventListener("change", renderChosen);
+    draft.regionWidgets.push(updateStatus);
+    details.append(body); renderOptions(); return details;
   }
   function renderCandidates(draft) {
     const details = node("details", "candidates"); details.append(node("summary", "", "模型原始候选 · " + draft.block.candidates.length + " 条（未核准）"));
@@ -570,6 +745,13 @@
   }
   async function restore() {
     if (busy || !restoreHead) return;
+    if (dirtyDrafts().length) {
+      const targetHead = restoreHead;
+      restoreHead = null;
+      $("history-confirm").hidden = true;
+      guarded(() => askRestore(targetHead), "恢复历史前，请保存或放弃这些编辑；随后需再次确认恢复。");
+      return;
+    }
     let author;
     try { author = getAuthor(); } catch (error) { showError(error, "尚不能恢复"); return; }
     const body = { expected_head: state.head, revision_head: restoreHead, author };
