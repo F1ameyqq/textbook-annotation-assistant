@@ -61,6 +61,13 @@ def verify(path: str, self_test: bool = False) -> dict:
             raise ValueError("wrong fixed run or stage count")
         if report["payload"]["pipeline_state"] != "READY" or report["payload"]["decision"] != "HOLD":
             raise ValueError("unexpected run decision")
+        if manifest.get("content_status") == "MODEL_DRAFT":
+            payload = report["payload"]
+            if (payload["business_acceptance"] is not False
+                    or payload["transcription_verified"] is not False
+                    or payload["content_revision_scope"]["draft_only"] is not True
+                    or payload["platform_actions"]):
+                raise ValueError("draft content was promoted")
         output_names = {"evidence_ref": "evidence.json", "graph_ref": "graph.json",
                         "quality_ref": "check.json"}
         final = report["payload"]["final_outputs"]
