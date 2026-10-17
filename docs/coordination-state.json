@@ -2,7 +2,7 @@
   "schema_version": 1,
   "project": "D:\\1800",
   "coordinator_thread_id": "01a13f26-7567-75e1-99ee-c9d2194e78bb",
-  "updated_at": "2026-10-17T14:53:55.977466+08:00",
+  "updated_at": "2026-10-17T14:56:48.588330+08:00",
   "automation": {
     "id": "1800-a",
     "kind": "heartbeat",
@@ -1411,7 +1411,7 @@
       "execution_task": "docs/tasks/A04-headless-readonly.md",
       "review_task": "docs/tasks/A04-independent-review.md",
       "acceptance_scope": "Headless read-only book46007447 pages14/173 and one adjacent body page; coordinates after accepted A01.",
-      "dispatch_status": "REPAIR_ACKNOWLEDGED",
+      "dispatch_status": "REVIEW_ACKNOWLEDGED",
       "next_dependency": "Independent offline R3 review, then coordinator checks and explicitly scoped acceptance/integration if passed. Whole A04 remains blocked on live R01-R06.",
       "geometry_dependency": {
         "task": "A01",
@@ -1474,16 +1474,20 @@
       "review": {
         "thread_id": "01a144cc-e93d-7841-a259-d6aac22c94f4",
         "host_id": "local",
-        "cursor": "33f1ce70-74e3-46de-b04f-ceafd8e7f74b:10",
-        "turn_status": "notDispatched",
-        "phase": "COORDINATE_R3_OFFLINE_REVIEW_INTENT",
+        "cursor": "33f1ce70-74e3-46de-b04f-ceafd8e7f74b:11",
+        "turn_status": "inProgress",
+        "phase": "COORDINATE_R3_OFFLINE_REVIEW_RUNNING",
         "target_commit": "6c8137a4fadddc01a47906d564ab3460277c8958",
         "task_document": "docs/tasks/A04-coordinate-R3-review-handoff.md",
         "task_sha256": "bd7bd756221a8d2642f611a45c37a690afb6496b1efb469c97994b8f19714de1",
         "expected_report": "docs/tasks/A04-coordinate-R3-review-report.md",
         "decision": "PENDING",
         "reasoning_effort": "xhigh",
-        "last_checked_at": "2026-10-17T14:53:55.977466+08:00"
+        "last_checked_at": "2026-10-17T14:56:48.588330+08:00",
+        "turn_id": "01a148a4-3d07-7821-9596-a534a01dece0",
+        "observed_thread_status": "active",
+        "workflow_commit": "d834bf531f95abac7ed30b89b3ca55105fa6f491",
+        "last_progress": "Original registered chat active at xhigh for the bounded task; no new acceptance or platform action."
       },
       "dispatch_record_commit": "d6738cf239b203496c9e84cb87178eb82f2d4f89",
       "blocked_reason": "R2 missing pixel-row PNG accepted; independent review and exact-byte coordinator reproduction confirm REWORK. Live R01-R06 unverified.",
@@ -1635,7 +1639,7 @@
           "session_release_basis": "Frozen execution-authored process release and completed turn; no current profile/OS ownership probe."
         }
       ],
-      "phase": "COORDINATE_R3_OFFLINE_REVIEW_INTENT",
+      "phase": "COORDINATE_R3_OFFLINE_REVIEW_RUNNING",
       "coordinate_resume": {
         "stage": "coordinate-R1",
         "state": "ACKNOWLEDGED",
@@ -1735,7 +1739,7 @@
         "task": "A04",
         "stage": "coordinate-R3",
         "role": "review",
-        "state": "INTENT_RECORDED",
+        "state": "ACKNOWLEDGED",
         "created_at": "2026-10-17T14:53:55.977466+08:00",
         "document": "docs/tasks/A04-coordinate-R3-review-handoff.md",
         "document_sha256": "bd7bd756221a8d2642f611a45c37a690afb6496b1efb469c97994b8f19714de1",
@@ -1743,7 +1747,13 @@
         "host_id": "local",
         "reasoning_effort": "xhigh",
         "scope": "Independent R3 offline review only; no browser/network/platform/models; live R01-R06 blocked.",
-        "target_commit": "6c8137a4fadddc01a47906d564ab3460277c8958"
+        "target_commit": "6c8137a4fadddc01a47906d564ab3460277c8958",
+        "sent_at": "2026-10-17T06:54:45Z",
+        "acknowledged_at": "2026-10-17T14:56:48.588330+08:00",
+        "workflow_commit": "d834bf531f95abac7ed30b89b3ca55105fa6f491",
+        "turn_id": "01a148a4-3d07-7821-9596-a534a01dece0",
+        "cursor": "33f1ce70-74e3-46de-b04f-ceafd8e7f74b:11",
+        "result": "Existing A-side chat active at xhigh; no duplicate chat, platform action or B message."
       },
       "coordinator_reproduction": {
         "at": "2026-10-17T14:24:49.992243+08:00",
@@ -1818,7 +1828,7 @@
     },
     "A03": {
       "status": "REWORK",
-      "phase": "P2_R2_STATIC_REWORK_INTENT",
+      "phase": "P2_R2_STATIC_REWORK_RUNNING",
       "depends_on": [
         "A02"
       ],
@@ -1827,7 +1837,7 @@
       "review_task": "docs/tasks/A03-independent-review.md",
       "acceptance_scope": "P1 design accepted; P2 SQLite/offline recovery functionality remains unaccepted.",
       "next_dependency": "One bounded static revision and independent review of exact pins/oracle; only then consider implementation. A03 functionality and I01 remain blocked.",
-      "dispatch_status": "REVIEW_ACKNOWLEDGED",
+      "dispatch_status": "EXECUTION_ACKNOWLEDGED",
       "B_confirmation": "NOT_CONFIRMED",
       "workflow_commit": "a354f95f1d0b40a8f0847b57fa3978cac999e7a2",
       "worktree_name": "a03-runtime-recovery",
@@ -1838,9 +1848,9 @@
       "execution": {
         "thread_id": "01a145aa-2fea-7942-97f9-ad260acf4e30",
         "host_id": "local",
-        "cursor": "506fd3cf-091f-418b-b002-636f503b5e4b:9",
-        "turn_status": "notDispatched",
-        "phase": "P2_R2_STATIC_REWORK_INTENT",
+        "cursor": "506fd3cf-091f-418b-b002-636f503b5e4b:10",
+        "turn_status": "inProgress",
+        "phase": "P2_R2_STATIC_REWORK_RUNNING",
         "base_commit": "7fdbde8f16569fd3bc399013115e13269d5d33fa",
         "previous_delivery_commit": "7fdbde8f16569fd3bc399013115e13269d5d33fa",
         "task_document": "docs/tasks/A03-P2-R2-static-rework.md",
@@ -1851,7 +1861,11 @@
         "report": null,
         "completed_turn_confirms_freeze": false,
         "session_released": false,
-        "last_checked_at": "2026-10-17T14:53:55.977466+08:00"
+        "last_checked_at": "2026-10-17T14:56:48.588330+08:00",
+        "turn_id": "01a148a4-3e96-7dd2-9d40-400bd319f809",
+        "observed_thread_status": "active",
+        "workflow_commit": "d834bf531f95abac7ed30b89b3ca55105fa6f491",
+        "last_progress": "Original registered chat active at xhigh for the bounded task; no new acceptance or platform action."
       },
       "review": {
         "thread_id": "01a145aa-8d59-7c70-8d81-731712103a9a",
@@ -2292,7 +2306,7 @@
           "task": "A03",
           "stage": "P2-R2-proposal",
           "role": "execution",
-          "state": "INTENT_RECORDED",
+          "state": "ACKNOWLEDGED",
           "created_at": "2026-10-17T14:53:55.977466+08:00",
           "document": "docs/tasks/A03-P2-R2-static-rework.md",
           "document_sha256": "f1e48e85b7b9a07762cca3c0d50d259dfc302edb0b3f4f667aa3e53099c442a0",
@@ -2300,7 +2314,13 @@
           "host_id": "local",
           "reasoning_effort": "xhigh",
           "scope": "Bounded static A03 revision only; no product/DB or B approval.",
-          "base_commit": "7fdbde8f16569fd3bc399013115e13269d5d33fa"
+          "base_commit": "7fdbde8f16569fd3bc399013115e13269d5d33fa",
+          "sent_at": "2026-10-17T06:54:45Z",
+          "acknowledged_at": "2026-10-17T14:56:48.588330+08:00",
+          "workflow_commit": "d834bf531f95abac7ed30b89b3ca55105fa6f491",
+          "turn_id": "01a148a4-3e96-7dd2-9d40-400bd319f809",
+          "cursor": "506fd3cf-091f-418b-b002-636f503b5e4b:10",
+          "result": "Existing A-side chat active at xhigh; no duplicate chat, platform action or B message."
         }
       ],
       "operational_status": "P2_RUNNING_AFTER_BOUNDED_RESUME",
@@ -2736,13 +2756,16 @@
         "Specific field-reset probe auto-review rejected; no retry"
       ],
       "review_archive_proposal_r1": {
-        "status": "VERIFIED_PENDING_LOCAL_ARCHIVE",
+        "status": "ARCHIVED_LOCALLY",
         "manifest": "docs/evidence/A03/review/P2-R1-proposal/sha256-manifest.json",
         "manifest_sha256": "68b7c8f16f0a5973fa20e962525b8dab12b095b85b2343e95e6373ae38d152ac",
         "manifest_entries": 309,
         "report": "docs/tasks/A03-P2-R1-proposal-review-report.md",
         "remote_push": false,
-        "scope": "Static REWORK only; no product/contract acceptance."
+        "scope": "Static REWORK only; no product/contract acceptance.",
+        "commit": "d834bf531f95abac7ed30b89b3ca55105fa6f491",
+        "raw_committed_manifest_entries": 309,
+        "manifest_self_verified": true
       },
       "coordinator_decision": {
         "at": "2026-10-17T14:53:55.977466+08:00",
@@ -3632,7 +3655,7 @@
       "task": "A03",
       "stage": "P2-R2-proposal",
       "role": "execution",
-      "state": "INTENT_RECORDED",
+      "state": "ACKNOWLEDGED",
       "created_at": "2026-10-17T14:53:55.977466+08:00",
       "document": "docs/tasks/A03-P2-R2-static-rework.md",
       "document_sha256": "f1e48e85b7b9a07762cca3c0d50d259dfc302edb0b3f4f667aa3e53099c442a0",
@@ -3640,14 +3663,20 @@
       "host_id": "local",
       "reasoning_effort": "xhigh",
       "scope": "Bounded static A03 revision only; no product/DB or B approval.",
-      "base_commit": "7fdbde8f16569fd3bc399013115e13269d5d33fa"
+      "base_commit": "7fdbde8f16569fd3bc399013115e13269d5d33fa",
+      "sent_at": "2026-10-17T06:54:45Z",
+      "acknowledged_at": "2026-10-17T14:56:48.588330+08:00",
+      "workflow_commit": "d834bf531f95abac7ed30b89b3ca55105fa6f491",
+      "turn_id": "01a148a4-3e96-7dd2-9d40-400bd319f809",
+      "cursor": "506fd3cf-091f-418b-b002-636f503b5e4b:10",
+      "result": "Existing A-side chat active at xhigh; no duplicate chat, platform action or B message."
     },
     {
       "key": "A04:review:coordinate-R3:6c8137a4fadddc01a47906d564ab3460277c8958",
       "task": "A04",
       "stage": "coordinate-R3",
       "role": "review",
-      "state": "INTENT_RECORDED",
+      "state": "ACKNOWLEDGED",
       "created_at": "2026-10-17T14:53:55.977466+08:00",
       "document": "docs/tasks/A04-coordinate-R3-review-handoff.md",
       "document_sha256": "bd7bd756221a8d2642f611a45c37a690afb6496b1efb469c97994b8f19714de1",
@@ -3655,13 +3684,20 @@
       "host_id": "local",
       "reasoning_effort": "xhigh",
       "scope": "Independent R3 offline review only; no browser/network/platform/models; live R01-R06 blocked.",
-      "target_commit": "6c8137a4fadddc01a47906d564ab3460277c8958"
+      "target_commit": "6c8137a4fadddc01a47906d564ab3460277c8958",
+      "sent_at": "2026-10-17T06:54:45Z",
+      "acknowledged_at": "2026-10-17T14:56:48.588330+08:00",
+      "workflow_commit": "d834bf531f95abac7ed30b89b3ca55105fa6f491",
+      "turn_id": "01a148a4-3d07-7821-9596-a534a01dece0",
+      "cursor": "33f1ce70-74e3-46de-b04f-ceafd8e7f74b:11",
+      "result": "Existing A-side chat active at xhigh; no duplicate chat, platform action or B message."
     }
   ],
   "last_action": {
-    "at": "2026-10-17T14:53:55.977466+08:00",
+    "at": "2026-10-17T14:56:48.588330+08:00",
     "task_id": "A03/A04",
-    "action": "A03 independent static REWORK archived with explicit candidate design choices; A04 R3 frozen preflight passed. Bounded continuation intents recorded; no implementation approval, integration or push.",
+    "action": "A03 static REWORK archived and candidate design choices recorded; bounded static revision and A04 R3 independent review acknowledged at xhigh. No implementation approval, integration, push or I01 release.",
+    "workflow_commit": "d834bf531f95abac7ed30b89b3ca55105fa6f491",
     "remote_push": false
   },
   "limitations": [
@@ -3682,8 +3718,9 @@
     "full_suite_rerun": false,
     "notification": "NOTIFY",
     "next_dependencies": "A03 bounded static revision; A04 independent R3 review; I01 blocked.",
-    "dispatch_result": "Intents saved before original-chat continuation.",
-    "no_duplicate_chat": true
+    "dispatch_result": "A03 bounded static R2 revision and A04 independent R3 offline review acknowledged in original chats at xhigh.",
+    "no_duplicate_chat": true,
+    "completed_at": "2026-10-17T14:56:48.588330+08:00"
   },
   "prepared_next_batch": {
     "status": "DISPATCHED",
