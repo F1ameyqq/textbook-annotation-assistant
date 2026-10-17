@@ -18,4 +18,4 @@
 python tools/rebuild_question_content_b.py --source work/input/source.json --evidence work/input/evidence.json --graph work/input/graph.json --plan work/input/plan.json --plan-sha256 a7a5c43eb33d2e1378d0f82dc7375603a462dba64a60adbdb06f09a3a2f4ac99 --out work/question-content
 ```
 
-已运行新入口及 `python -X utf8 -m unittest tests.test_question_content -v`，11项通过，含12种E/G完整对象字段篡改、两种分式逆序及原有源像素、选项、空格、丢图、跨题、假审核和错版本拒绝。实际从fixture解压后的输入新目录运行、同目录重复、第二新目录运行，三次应用完全相同，禁止模型导入和网络；这是确定性重放，不称流水线缓存。确切引用与源码摘要见 `evaluation/book-46007447-question-content-viewer15.json`。未跑全套，后续还需固定代码导出重放和交付封装。完整章节来源及人工内容验收未齐。
+已运行新入口及 `python -X utf8 -m unittest tests.test_question_content -v`，11项通过，含12种E/G完整对象字段篡改、两种分式逆序及原有源像素、选项、空格、丢图、跨题、假审核和错版本拒绝。实际从fixture解压后的输入新目录运行、同目录重复、第二新目录运行，三次应用完全相同，禁止模型导入和网络；这是确定性重放，不称流水线缓存。确切引用与源码摘要见 `evaluation/book-46007447-question-content-viewer15.json`。未跑全套，固定 `7d5c3b738a3e28b528e510d16d7cfe2640936964` Git代码导出中实际CLI新目录、重复、第二新目录重放均通过（0.703/0.688/0.687秒，23裁片，应用和检查完全相同）；沿用本机依赖、禁止模型与网络。独立v4可搬运包已完成，48成员加清单、23裁片；包校验与总控再次解包重放通过，详见 `evaluation/book-46007447-question-package-integration.json`。完整章节来源及人工内容验收未齐。
