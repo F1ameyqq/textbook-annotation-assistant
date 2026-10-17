@@ -1,0 +1,20 @@
+test_N2 (__main__.R8R2NativeBridgeTests) ... ERROR
+
+======================================================================
+ERROR: test_N2 (__main__.R8R2NativeBridgeTests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\ASUS\.codex\worktrees\a03-runtime-recovery\1800\tests\test_a03_r8_r2_projection.py", line 221, in test_N2
+    actual = store.begin_native_pre(reg['id'], owner_id=claim.owner_id, generation=claim.generation, observer=observer, kind='POST_HOLD')
+  File "C:\Users\ASUS\.codex\worktrees\a03-runtime-recovery\1800\src\annotation\runtime\storage\native.py", line 318, in begin_native_pre
+    book = self._lease(connection, reg['book'], owner_id, generation)
+  File "C:\Users\ASUS\.codex\worktrees\a03-runtime-recovery\1800\src\annotation\runtime\storage\__init__.py", line 347, in _lease
+    fail("TARGET_DRIFT_HOLD", row["hold"], 3)
+  File "C:\Users\ASUS\.codex\worktrees\a03-runtime-recovery\1800\src\annotation\runtime\storage\common.py", line 68, in fail
+    raise RuntimeFailure(code, message, exit_code)
+annotation.runtime.storage.common.RuntimeFailure: target-drift-hold-347994b72519469fa107efe6d613fa22
+
+----------------------------------------------------------------------
+Ran 1 test in 3.076s
+
+FAILED (errors=1)
