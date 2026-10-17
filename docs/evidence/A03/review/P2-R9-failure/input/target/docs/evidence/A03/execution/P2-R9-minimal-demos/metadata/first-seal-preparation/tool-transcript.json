@@ -1,0 +1,14 @@
+{
+  "kind": "METADATA_ONLY_PREPARATION_FAILURE",
+  "invocation": "PowerShell here-string containing stdin-script.py.txt piped to python -X utf8 -B -",
+  "cwd": "C:/Users/ASUS/.codex/worktrees/a03-runtime-recovery/1800",
+  "tool_chunk_id": "f6f727",
+  "exit_code": 1,
+  "wall_time_seconds": 0.4667373,
+  "combined_tool_output": "Traceback (most recent call last):\n  File \"<stdin>\", line 26, in <module>\nTypeError: write_text() got an unexpected keyword argument 'newline'\n",
+  "limitation": "Tool-level metadata action did not expose a PID or separate raw stdout/stderr streams; this is the retained combined tool transcript, not a fabricated process audit.",
+  "product_calls": 0,
+  "files_created_before_failure": ["bounded-outcome.json", "coverage-map.json", "scope-state.json"],
+  "correction": "Applied one textual patch to remove the duplicate DIRS entry from the new unexecuted sealer. Did not rerun this stdin script or any product path.",
+  "cause": "Python 3.9 Path.write_text does not accept newline keyword"
+}

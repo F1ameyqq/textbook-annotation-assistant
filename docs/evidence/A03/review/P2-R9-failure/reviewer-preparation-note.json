@@ -1,0 +1,13 @@
+{
+  "status": "REVIEWER_READONLY_ASSERTION_FAILURE_RETAINED",
+  "run": "independent-review-01",
+  "pid": 49088,
+  "exit_code": 1,
+  "cause": "Reviewer assumed OWNER_RELEASED event retained the old owner_id. Source updates owner=NULL before appending the event, so its owner_id is null.",
+  "correction": "Check null owner_id with unchanged generation, source release ordering, the final RELEASED row, and the original active owner/intent binding.",
+  "follow_up_run": "independent-review-02",
+  "follow_up_exit_code": 0,
+  "preservation": "Both entry snapshots, preregistration, PID, raw stdout/stderr and completions are retained.",
+  "extra_product_calls": 0,
+  "DB_work_only": "Repeated immutable own-copy reads of the same four frozen DB files; no connections to executor databases."
+}

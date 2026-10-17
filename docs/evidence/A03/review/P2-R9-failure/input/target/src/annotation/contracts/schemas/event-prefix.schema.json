@@ -1,0 +1,961 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:a03:P1-R2:event-prefix:1",
+  "title": "A03 P1-R2 synthetic complete event-prefix Resource",
+  "description": "Candidate serialized Resource only; not an Artifact or a runtime/database implementation. All ordinary references remain subject to per-consumer input_refs closure. prefix_rules.validate_prefix checks exact plan/action identities, owner/generation/book/scope, ordering, intent/permit lifecycle, interrupt monotonicity, subject non-attempt, complete chain and basis CAS. Hashing uses UTF-8 compact sort_keys=true ensure_ascii=false allow_nan=false JSON; event_hash omits only its own top-level member. PLAN_ACCEPTED actions bind the atomic permanent reservation; PLAN_ACTIONS_RESERVED is its index projection, not a later unlocked reservation window.",
+  "type": "object",
+  "properties": {
+    "format_version": {
+      "const": "a03-event-prefix-1"
+    },
+    "journal_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "target_key": {
+      "$ref": "#/$defs/target_key"
+    },
+    "plan_ref": {
+      "$ref": "#/$defs/plan_ref"
+    },
+    "scope_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "owner_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "generation": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "from_sequence": {
+      "const": 1
+    },
+    "through_sequence": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "head_hash": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "genesis_hash": {
+      "const": "0000000000000000000000000000000000000000000000000000000000000000"
+    },
+    "events": {
+      "type": "array",
+      "minItems": 3,
+      "items": {
+        "$ref": "#/$defs/event"
+      }
+    },
+    "design_only": {
+      "const": true
+    },
+    "complete": {
+      "type": "boolean",
+      "description": "Descriptive only. It is never authority or a bypass for event/hash validation."
+    },
+    "description": {
+      "type": "string",
+      "minLength": 1
+    },
+    "subject_action_id": {
+      "type": "string",
+      "minLength": 1
+    }
+  },
+  "required": [
+    "format_version",
+    "journal_id",
+    "target_key",
+    "plan_ref",
+    "scope_id",
+    "owner_id",
+    "generation",
+    "from_sequence",
+    "through_sequence",
+    "head_hash",
+    "genesis_hash",
+    "events",
+    "design_only"
+  ],
+  "additionalProperties": false,
+  "$defs": {
+    "plan_ref": {
+      "type": "object",
+      "properties": {
+        "artifact_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "revision": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "kind": {
+          "const": "ApplyPlan"
+        },
+        "content_hash": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        }
+      },
+      "required": [
+        "artifact_id",
+        "revision",
+        "kind",
+        "content_hash"
+      ],
+      "additionalProperties": false
+    },
+    "intent_ref": {
+      "type": "object",
+      "properties": {
+        "artifact_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "revision": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "kind": {
+          "const": "WriteIntent"
+        },
+        "content_hash": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        }
+      },
+      "required": [
+        "artifact_id",
+        "revision",
+        "kind",
+        "content_hash"
+      ],
+      "additionalProperties": false
+    },
+    "target_key": {
+      "type": "object",
+      "properties": {
+        "platform_namespace": {
+          "type": "string",
+          "minLength": 1
+        },
+        "target_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "book_id": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "required": [
+        "platform_namespace",
+        "target_id",
+        "book_id"
+      ],
+      "additionalProperties": false
+    },
+    "fact_resource": {
+      "type": "object",
+      "properties": {
+        "path": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "^(?!/)(?!.*\\\\)(?!.*:)(?!.*(?:^|/)\\.{1,2}(?:/|$))(?!.*//)(?!.*\\/$).+$"
+        },
+        "sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "media_type": {
+          "const": "application/json"
+        },
+        "origin": {
+          "const": "SYNTHETIC"
+        }
+      },
+      "required": [
+        "path",
+        "sha256",
+        "media_type",
+        "origin"
+      ],
+      "additionalProperties": false
+    },
+    "action_binding": {
+      "type": "object",
+      "properties": {
+        "action_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "action_digest": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        }
+      },
+      "required": [
+        "action_id",
+        "action_digest"
+      ],
+      "additionalProperties": false
+    },
+    "event": {
+      "oneOf": [
+        {
+          "type": "object",
+          "properties": {
+            "sequence": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "event": {
+              "const": "PLAN_ACCEPTED"
+            },
+            "journal_id": {
+              "type": "string",
+              "minLength": 1
+            },
+            "target_key": {
+              "$ref": "#/$defs/target_key"
+            },
+            "plan_ref": {
+              "$ref": "#/$defs/plan_ref"
+            },
+            "owner_id": {
+              "type": "string",
+              "minLength": 1
+            },
+            "generation": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "recorded_at": {
+              "type": "string",
+              "format": "date-time",
+              "pattern": "Z$"
+            },
+            "payload": {
+              "type": "object",
+              "properties": {
+                "plan_ref": {
+                  "$ref": "#/$defs/plan_ref"
+                },
+                "actions": {
+                  "type": "array",
+                  "minItems": 1,
+                  "items": {
+                    "$ref": "#/$defs/action_binding"
+                  },
+                  "uniqueItems": true
+                }
+              },
+              "required": [
+                "plan_ref",
+                "actions"
+              ],
+              "additionalProperties": false
+            },
+            "previous_hash": {
+              "type": "string",
+              "pattern": "^[0-9a-f]{64}$"
+            },
+            "event_hash": {
+              "type": "string",
+              "pattern": "^[0-9a-f]{64}$"
+            }
+          },
+          "required": [
+            "sequence",
+            "event",
+            "journal_id",
+            "target_key",
+            "plan_ref",
+            "owner_id",
+            "generation",
+            "recorded_at",
+            "payload",
+            "previous_hash",
+            "event_hash"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "sequence": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "event": {
+              "const": "PLAN_ACTIONS_RESERVED"
+            },
+            "journal_id": {
+              "type": "string",
+              "minLength": 1
+            },
+            "target_key": {
+              "$ref": "#/$defs/target_key"
+            },
+            "plan_ref": {
+              "$ref": "#/$defs/plan_ref"
+            },
+            "owner_id": {
+              "type": "string",
+              "minLength": 1
+            },
+            "generation": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "recorded_at": {
+              "type": "string",
+              "format": "date-time",
+              "pattern": "Z$"
+            },
+            "payload": {
+              "type": "object",
+              "properties": {
+                "reservations": {
+                  "type": "array",
+                  "minItems": 1,
+                  "items": {
+                    "$ref": "#/$defs/action_binding"
+                  },
+                  "uniqueItems": true
+                }
+              },
+              "required": [
+                "reservations"
+              ],
+              "additionalProperties": false
+            },
+            "previous_hash": {
+              "type": "string",
+              "pattern": "^[0-9a-f]{64}$"
+            },
+            "event_hash": {
+              "type": "string",
+              "pattern": "^[0-9a-f]{64}$"
+            }
+          },
+          "required": [
+            "sequence",
+            "event",
+            "journal_id",
+            "target_key",
+            "plan_ref",
+            "owner_id",
+            "generation",
+            "recorded_at",
+            "payload",
+            "previous_hash",
+            "event_hash"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "sequence": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "event": {
+              "const": "PLAN_STARTED"
+            },
+            "journal_id": {
+              "type": "string",
+              "minLength": 1
+            },
+            "target_key": {
+              "$ref": "#/$defs/target_key"
+            },
+            "plan_ref": {
+              "$ref": "#/$defs/plan_ref"
+            },
+            "owner_id": {
+              "type": "string",
+              "minLength": 1
+            },
+            "generation": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "recorded_at": {
+              "type": "string",
+              "format": "date-time",
+              "pattern": "Z$"
+            },
+            "payload": {
+              "type": "object",
+              "properties": {
+                "plan_state": {
+                  "const": "RUNNING"
+                }
+              },
+              "required": [
+                "plan_state"
+              ],
+              "additionalProperties": false
+            },
+            "previous_hash": {
+              "type": "string",
+              "pattern": "^[0-9a-f]{64}$"
+            },
+            "event_hash": {
+              "type": "string",
+              "pattern": "^[0-9a-f]{64}$"
+            }
+          },
+          "required": [
+            "sequence",
+            "event",
+            "journal_id",
+            "target_key",
+            "plan_ref",
+            "owner_id",
+            "generation",
+            "recorded_at",
+            "payload",
+            "previous_hash",
+            "event_hash"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "sequence": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "event": {
+              "const": "WRITE_INTENT_COMMITTED"
+            },
+            "journal_id": {
+              "type": "string",
+              "minLength": 1
+            },
+            "target_key": {
+              "$ref": "#/$defs/target_key"
+            },
+            "plan_ref": {
+              "$ref": "#/$defs/plan_ref"
+            },
+            "owner_id": {
+              "type": "string",
+              "minLength": 1
+            },
+            "generation": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "recorded_at": {
+              "type": "string",
+              "format": "date-time",
+              "pattern": "Z$"
+            },
+            "payload": {
+              "type": "object",
+              "properties": {
+                "action_id": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "action_digest": {
+                  "type": "string",
+                  "pattern": "^[0-9a-f]{64}$"
+                },
+                "intent_ref": {
+                  "$ref": "#/$defs/intent_ref"
+                },
+                "obligation_id": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              },
+              "required": [
+                "action_id",
+                "action_digest",
+                "intent_ref",
+                "obligation_id"
+              ],
+              "additionalProperties": false
+            },
+            "previous_hash": {
+              "type": "string",
+              "pattern": "^[0-9a-f]{64}$"
+            },
+            "event_hash": {
+              "type": "string",
+              "pattern": "^[0-9a-f]{64}$"
+            }
+          },
+          "required": [
+            "sequence",
+            "event",
+            "journal_id",
+            "target_key",
+            "plan_ref",
+            "owner_id",
+            "generation",
+            "recorded_at",
+            "payload",
+            "previous_hash",
+            "event_hash"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "sequence": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "event": {
+              "const": "DISPATCH_PERMIT_ISSUED"
+            },
+            "journal_id": {
+              "type": "string",
+              "minLength": 1
+            },
+            "target_key": {
+              "$ref": "#/$defs/target_key"
+            },
+            "plan_ref": {
+              "$ref": "#/$defs/plan_ref"
+            },
+            "owner_id": {
+              "type": "string",
+              "minLength": 1
+            },
+            "generation": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "recorded_at": {
+              "type": "string",
+              "format": "date-time",
+              "pattern": "Z$"
+            },
+            "payload": {
+              "type": "object",
+              "properties": {
+                "action_id": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "action_digest": {
+                  "type": "string",
+                  "pattern": "^[0-9a-f]{64}$"
+                },
+                "intent_ref": {
+                  "$ref": "#/$defs/intent_ref"
+                },
+                "permit_id": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              },
+              "required": [
+                "action_id",
+                "action_digest",
+                "intent_ref",
+                "permit_id"
+              ],
+              "additionalProperties": false
+            },
+            "previous_hash": {
+              "type": "string",
+              "pattern": "^[0-9a-f]{64}$"
+            },
+            "event_hash": {
+              "type": "string",
+              "pattern": "^[0-9a-f]{64}$"
+            }
+          },
+          "required": [
+            "sequence",
+            "event",
+            "journal_id",
+            "target_key",
+            "plan_ref",
+            "owner_id",
+            "generation",
+            "recorded_at",
+            "payload",
+            "previous_hash",
+            "event_hash"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "sequence": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "event": {
+              "const": "DISPATCH_PERMIT_CONSUMED"
+            },
+            "journal_id": {
+              "type": "string",
+              "minLength": 1
+            },
+            "target_key": {
+              "$ref": "#/$defs/target_key"
+            },
+            "plan_ref": {
+              "$ref": "#/$defs/plan_ref"
+            },
+            "owner_id": {
+              "type": "string",
+              "minLength": 1
+            },
+            "generation": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "recorded_at": {
+              "type": "string",
+              "format": "date-time",
+              "pattern": "Z$"
+            },
+            "payload": {
+              "type": "object",
+              "properties": {
+                "action_id": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "action_digest": {
+                  "type": "string",
+                  "pattern": "^[0-9a-f]{64}$"
+                },
+                "intent_ref": {
+                  "$ref": "#/$defs/intent_ref"
+                },
+                "permit_id": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              },
+              "required": [
+                "action_id",
+                "action_digest",
+                "intent_ref",
+                "permit_id"
+              ],
+              "additionalProperties": false
+            },
+            "previous_hash": {
+              "type": "string",
+              "pattern": "^[0-9a-f]{64}$"
+            },
+            "event_hash": {
+              "type": "string",
+              "pattern": "^[0-9a-f]{64}$"
+            }
+          },
+          "required": [
+            "sequence",
+            "event",
+            "journal_id",
+            "target_key",
+            "plan_ref",
+            "owner_id",
+            "generation",
+            "recorded_at",
+            "payload",
+            "previous_hash",
+            "event_hash"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "sequence": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "event": {
+              "const": "DISPATCH_STARTED"
+            },
+            "journal_id": {
+              "type": "string",
+              "minLength": 1
+            },
+            "target_key": {
+              "$ref": "#/$defs/target_key"
+            },
+            "plan_ref": {
+              "$ref": "#/$defs/plan_ref"
+            },
+            "owner_id": {
+              "type": "string",
+              "minLength": 1
+            },
+            "generation": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "recorded_at": {
+              "type": "string",
+              "format": "date-time",
+              "pattern": "Z$"
+            },
+            "payload": {
+              "type": "object",
+              "properties": {
+                "action_id": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "action_digest": {
+                  "type": "string",
+                  "pattern": "^[0-9a-f]{64}$"
+                },
+                "intent_ref": {
+                  "$ref": "#/$defs/intent_ref"
+                },
+                "permit_id": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              },
+              "required": [
+                "action_id",
+                "action_digest",
+                "intent_ref",
+                "permit_id"
+              ],
+              "additionalProperties": false
+            },
+            "previous_hash": {
+              "type": "string",
+              "pattern": "^[0-9a-f]{64}$"
+            },
+            "event_hash": {
+              "type": "string",
+              "pattern": "^[0-9a-f]{64}$"
+            }
+          },
+          "required": [
+            "sequence",
+            "event",
+            "journal_id",
+            "target_key",
+            "plan_ref",
+            "owner_id",
+            "generation",
+            "recorded_at",
+            "payload",
+            "previous_hash",
+            "event_hash"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "sequence": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "event": {
+              "const": "ACTION_RESULT_COMMITTED"
+            },
+            "journal_id": {
+              "type": "string",
+              "minLength": 1
+            },
+            "target_key": {
+              "$ref": "#/$defs/target_key"
+            },
+            "plan_ref": {
+              "$ref": "#/$defs/plan_ref"
+            },
+            "owner_id": {
+              "type": "string",
+              "minLength": 1
+            },
+            "generation": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "recorded_at": {
+              "type": "string",
+              "format": "date-time",
+              "pattern": "Z$"
+            },
+            "payload": {
+              "type": "object",
+              "properties": {
+                "action_id": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "action_digest": {
+                  "type": "string",
+                  "pattern": "^[0-9a-f]{64}$"
+                },
+                "intent_ref": {
+                  "$ref": "#/$defs/intent_ref"
+                },
+                "obligation_id": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "fact": {
+                  "$ref": "#/$defs/fact_resource"
+                },
+                "outcome": {
+                  "enum": [
+                    "APPLIED",
+                    "UNKNOWN",
+                    "NOT_APPLIED"
+                  ]
+                },
+                "plan_state": {
+                  "enum": [
+                    "RUNNING",
+                    "INTERRUPTED"
+                  ]
+                }
+              },
+              "required": [
+                "action_id",
+                "action_digest",
+                "intent_ref",
+                "obligation_id",
+                "fact",
+                "outcome",
+                "plan_state"
+              ],
+              "additionalProperties": false
+            },
+            "previous_hash": {
+              "type": "string",
+              "pattern": "^[0-9a-f]{64}$"
+            },
+            "event_hash": {
+              "type": "string",
+              "pattern": "^[0-9a-f]{64}$"
+            }
+          },
+          "required": [
+            "sequence",
+            "event",
+            "journal_id",
+            "target_key",
+            "plan_ref",
+            "owner_id",
+            "generation",
+            "recorded_at",
+            "payload",
+            "previous_hash",
+            "event_hash"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "sequence": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "event": {
+              "const": "UNATTEMPTED_ABSENCE_COMMITTED"
+            },
+            "journal_id": {
+              "type": "string",
+              "minLength": 1
+            },
+            "target_key": {
+              "$ref": "#/$defs/target_key"
+            },
+            "plan_ref": {
+              "$ref": "#/$defs/plan_ref"
+            },
+            "owner_id": {
+              "type": "string",
+              "minLength": 1
+            },
+            "generation": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "recorded_at": {
+              "type": "string",
+              "format": "date-time",
+              "pattern": "Z$"
+            },
+            "payload": {
+              "type": "object",
+              "properties": {
+                "action_id": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "action_digest": {
+                  "type": "string",
+                  "pattern": "^[0-9a-f]{64}$"
+                },
+                "fact": {
+                  "$ref": "#/$defs/fact_resource"
+                },
+                "outcome": {
+                  "const": "NOT_APPLIED"
+                },
+                "plan_state": {
+                  "const": "INTERRUPTED"
+                }
+              },
+              "required": [
+                "action_id",
+                "action_digest",
+                "fact",
+                "outcome",
+                "plan_state"
+              ],
+              "additionalProperties": false
+            },
+            "previous_hash": {
+              "type": "string",
+              "pattern": "^[0-9a-f]{64}$"
+            },
+            "event_hash": {
+              "type": "string",
+              "pattern": "^[0-9a-f]{64}$"
+            }
+          },
+          "required": [
+            "sequence",
+            "event",
+            "journal_id",
+            "target_key",
+            "plan_ref",
+            "owner_id",
+            "generation",
+            "recorded_at",
+            "payload",
+            "previous_hash",
+            "event_hash"
+          ],
+          "additionalProperties": false
+        }
+      ]
+    }
+  }
+}

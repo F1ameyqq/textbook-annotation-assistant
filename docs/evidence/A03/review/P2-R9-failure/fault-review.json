@@ -1,0 +1,634 @@
+{
+  "status": "PRODUCT_OWNERSHIP_LIFECYCLE_DEFECT_CONFIRMED_NO_REEXECUTION",
+  "classification": "Native run_plan reports while holding its own ACTIVE lease; publisher reacquires same book. OWNER_BUSY gate is correct; driver uses supported valid ownership. No contract ambiguity needed to explain failure.",
+  "driver_extra_keeper": "The setup helper also renews this same lease. It is redundant, but run_plan starts and retains its own keeper, so removing the extra keeper does not remove the self-claim control-flow conflict.",
+  "source_excerpts": [
+    {
+      "path": "src/annotation/runtime/recovery/__init__.py",
+      "start": 26,
+      "end": 30,
+      "raw_source_sha256": "cb758732d390d15609bd7b63cd899da0739ef6edc9e9613f9fc0b1317c0816b1",
+      "lines": [
+        {
+          "line": 26,
+          "text": "def publish_quality(store, registration_id, projection=None):"
+        },
+        {
+          "line": 27,
+          "text": "    \"\"\"Append complete report consumers or return a full diagnostic scope.\"\"\""
+        },
+        {
+          "line": 28,
+          "text": "    if getattr(store, '_user_version', 1) == 4:"
+        },
+        {
+          "line": 29,
+          "text": "        from .native_quality import publish_native_quality"
+        },
+        {
+          "line": 30,
+          "text": "        return publish_native_quality(store, registration_id, projection)"
+        }
+      ]
+    },
+    {
+      "path": "src/annotation/runtime/recovery/__init__.py",
+      "start": 75,
+      "end": 96,
+      "raw_source_sha256": "cb758732d390d15609bd7b63cd899da0739ef6edc9e9613f9fc0b1317c0816b1",
+      "lines": [
+        {
+          "line": 75,
+          "text": "def run_plan(store, registration_id=None, *, fault=None, fault_action_index=0, effect_fault=None, read_fault=None,"
+        },
+        {
+          "line": 76,
+          "text": "             owner_id=None, generation=None, config=None):"
+        },
+        {
+          "line": 77,
+          "text": "    from annotation.contracts import validate_recovery_bundle"
+        },
+        {
+          "line": 78,
+          "text": "    from annotation.delivery.mock import compare_action"
+        },
+        {
+          "line": 79,
+          "text": "    from annotation.runtime.storage.common import FaultController"
+        },
+        {
+          "line": 80,
+          "text": "    reg = store.registration(registration_id)"
+        },
+        {
+          "line": 81,
+          "text": "    key = store.target_key(reg[\"id\"])"
+        },
+        {
+          "line": 82,
+          "text": "    observer = open_observer(store, reg[\"id\"])"
+        },
+        {
+          "line": 83,
+          "text": "    if generation is not None:"
+        },
+        {
+          "line": 84,
+          "text": "        with store.connect() as connection:"
+        },
+        {
+          "line": 85,
+          "text": "            store._lease(connection, reg[\"book\"], owner_id, generation)"
+        },
+        {
+          "line": 86,
+          "text": "        claim = Handle(owner_id=owner_id, generation=generation)"
+        },
+        {
+          "line": 87,
+          "text": "        store._observers[reg[\"book\"]] = observer"
+        },
+        {
+          "line": 88,
+          "text": "    else:"
+        },
+        {
+          "line": 89,
+          "text": "        claim = claim_current(store, observer, key, owner_id)"
+        },
+        {
+          "line": 90,
+          "text": "    owner_id, generation = claim[\"owner_id\"], claim[\"generation\"]"
+        },
+        {
+          "line": 91,
+          "text": "    config = configuration(config or json.loads(reg[\"config\"]))"
+        },
+        {
+          "line": 92,
+          "text": "    plan = store._plan(reg[\"id\"])"
+        },
+        {
+          "line": 93,
+          "text": "    completed = []"
+        },
+        {
+          "line": 94,
+          "text": "    from .lease import LeaseKeeper"
+        },
+        {
+          "line": 95,
+          "text": "    keeper = LeaseKeeper(store, key, owner_id, generation).start()"
+        },
+        {
+          "line": 96,
+          "text": "    try:"
+        }
+      ]
+    },
+    {
+      "path": "src/annotation/runtime/recovery/__init__.py",
+      "start": 117,
+      "end": 131,
+      "raw_source_sha256": "cb758732d390d15609bd7b63cd899da0739ef6edc9e9613f9fc0b1317c0816b1",
+      "lines": [
+        {
+          "line": 117,
+          "text": "            record = store.commit_action_result(intent, prepared, observed, comparison, owner_id=owner_id, generation=generation)"
+        },
+        {
+          "line": 118,
+          "text": "            completed.append(plain(record))"
+        },
+        {
+          "line": 119,
+          "text": "            if record[\"result\"][\"outcome\"] != \"APPLIED\":"
+        },
+        {
+          "line": 120,
+          "text": "                break"
+        },
+        {
+          "line": 121,
+          "text": "        status = store.status(reg[\"id\"])"
+        },
+        {
+          "line": 122,
+          "text": "        projection = store.project_plan(reg[\"id\"], plan)"
+        },
+        {
+          "line": 123,
+          "text": "        quality = publish_quality(store, reg[\"id\"], projection)"
+        },
+        {
+          "line": 124,
+          "text": "        return {\"records\": completed, \"pending_count\": status[\"pending_count\"], \"paused\": status[\"paused\"],"
+        },
+        {
+          "line": 125,
+          "text": "            \"progress\": projection, \"quality\": quality, \"status\": \"HOLD_PENDING\" if status[\"paused\"] else \"FINISHED\","
+        },
+        {
+          "line": 126,
+          "text": "            \"target\": plain(observer.export_book_context(key))}"
+        },
+        {
+          "line": 127,
+          "text": "    finally:"
+        },
+        {
+          "line": 128,
+          "text": "        # os._exit bypasses this deliberately; lease/OS gate recovery is tested."
+        },
+        {
+          "line": 129,
+          "text": "        store.fault = FaultController()"
+        },
+        {
+          "line": 130,
+          "text": "        keeper.stop()"
+        },
+        {
+          "line": 131,
+          "text": "        store.release(key, owner_id=owner_id, generation=generation)"
+        }
+      ]
+    },
+    {
+      "path": "src/annotation/runtime/recovery/native_quality.py",
+      "start": 12,
+      "end": 28,
+      "raw_source_sha256": "6b35c92048402d9b3fea5f7910b0446489bb0393935df6a6bc985a67265bdeb2",
+      "lines": [
+        {
+          "line": 12,
+          "text": "def publish_native_quality(store, registration_id, projection=None):"
+        },
+        {
+          "line": 13,
+          "text": "    from . import open_observer, claim_current"
+        },
+        {
+          "line": 14,
+          "text": "    reg = store.registration(registration_id)"
+        },
+        {
+          "line": 15,
+          "text": "    plan = store._plan(registration_id)"
+        },
+        {
+          "line": 16,
+          "text": "    projection = projection or store.project_plan(registration_id, plan)"
+        },
+        {
+          "line": 17,
+          "text": "    if projection.get('receipt_ref') is None:"
+        },
+        {
+          "line": 18,
+          "text": "        return Handle(status='NO_COMPLETE_RECEIPT', content_check_status='PENDING', submission_status='NOT_SUBMITTED')"
+        },
+        {
+          "line": 19,
+          "text": "    observer = open_observer(store, registration_id)"
+        },
+        {
+          "line": 20,
+          "text": "    key = store.target_key(registration_id)"
+        },
+        {
+          "line": 21,
+          "text": "    claim = claim_current(store, observer, key)"
+        },
+        {
+          "line": 22,
+          "text": "    try:"
+        },
+        {
+          "line": 23,
+          "text": "        with store.transaction() as connection:"
+        },
+        {
+          "line": 24,
+          "text": "            store._lease(connection, reg['book'], claim['owner_id'], claim['generation'], pending_ok=True)"
+        },
+        {
+          "line": 25,
+          "text": "            connection.execute('INSERT INTO native_report_reads VALUES(?,?,1)', (digest(reference(plan)), time.time()))"
+        },
+        {
+          "line": 26,
+          "text": "        actual = observe_bounded(observer, timeout=2)"
+        },
+        {
+          "line": 27,
+          "text": "        if not actual.get('ok') or actual['read_elapsed_seconds'] > 2:"
+        },
+        {
+          "line": 28,
+          "text": "            fail('NATIVE_REPORT_READ_FAILED', 'durable report read consumed; no implicit retry')"
+        }
+      ]
+    },
+    {
+      "path": "src/annotation/runtime/recovery/native_quality.py",
+      "start": 69,
+      "end": 75,
+      "raw_source_sha256": "6b35c92048402d9b3fea5f7910b0446489bb0393935df6a6bc985a67265bdeb2",
+      "lines": [
+        {
+          "line": 69,
+          "text": "        with store.effect_gate(key).acquire(), store.transaction() as connection:"
+        },
+        {
+          "line": 70,
+          "text": "            store._lease(connection, reg['book'], claim['owner_id'], claim['generation'], pending_ok=True)"
+        },
+        {
+          "line": 71,
+          "text": "            store._append(connection, registration_id, post, batch)"
+        },
+        {
+          "line": 72,
+          "text": "        return Handle(postcheck_ref=artifact_ref(post), batch_ref=artifact_ref(batch), frame_structure=payload['frame_structure'],"
+        },
+        {
+          "line": 73,
+          "text": "            content_check_status='PENDING', submission_status='NOT_SUBMITTED')"
+        },
+        {
+          "line": 74,
+          "text": "    finally:"
+        },
+        {
+          "line": 75,
+          "text": "        store.release(key, owner_id=claim['owner_id'], generation=claim['generation'])"
+        }
+      ]
+    },
+    {
+      "path": "src/annotation/runtime/storage/__init__.py",
+      "start": 340,
+      "end": 347,
+      "raw_source_sha256": "93cb82da040346cfba95a312f3615b8bfc5c47edee01ba69584ac338882cfa3a",
+      "lines": [
+        {
+          "line": 340,
+          "text": "    def _lease(self, connection, key, owner_id, generation, *, pending_ok=False):"
+        },
+        {
+          "line": 341,
+          "text": "        row = connection.execute(\"SELECT * FROM books WHERE key=?\", (key,)).fetchone()"
+        },
+        {
+          "line": 342,
+          "text": "        if row is None or row[\"owner\"] != owner_id or row[\"generation\"] != generation or row[\"phase\"] != \"ACTIVE\" or row[\"lease\"] < time.time() or row[\"process_id\"] != self.instance or row[\"pid\"] != os.getpid():"
+        },
+        {
+          "line": 343,
+          "text": "            fail(\"OWNER_GENERATION_STALE\", \"current ACTIVE lease required\", 4)"
+        },
+        {
+          "line": 344,
+          "text": "        if not pending_ok and self._pending(connection, key):"
+        },
+        {
+          "line": 345,
+          "text": "            fail(\"BOOK_WRITE_PAUSED\", \"current complete ledger has pending obligations\", 3)"
+        },
+        {
+          "line": 346,
+          "text": "        if not pending_ok and row[\"hold\"]:"
+        },
+        {
+          "line": 347,
+          "text": "            fail(\"TARGET_DRIFT_HOLD\", row[\"hold\"], 3)"
+        }
+      ]
+    },
+    {
+      "path": "src/annotation/runtime/storage/__init__.py",
+      "start": 378,
+      "end": 380,
+      "raw_source_sha256": "93cb82da040346cfba95a312f3615b8bfc5c47edee01ba69584ac338882cfa3a",
+      "lines": [
+        {
+          "line": 378,
+          "text": "    def _pid_alive(pid):"
+        },
+        {
+          "line": 379,
+          "text": "        if pid == os.getpid():"
+        },
+        {
+          "line": 380,
+          "text": "            return True"
+        }
+      ]
+    },
+    {
+      "path": "src/annotation/runtime/storage/__init__.py",
+      "start": 405,
+      "end": 416,
+      "raw_source_sha256": "93cb82da040346cfba95a312f3615b8bfc5c47edee01ba69584ac338882cfa3a",
+      "lines": [
+        {
+          "line": 405,
+          "text": "    def claim(self, target_key, *, observer, owner_id=None):"
+        },
+        {
+          "line": 406,
+          "text": "        key, owner = self.book_id(target_key), owner_id or self.owner_id"
+        },
+        {
+          "line": 407,
+          "text": "        self.fault(\"BEFORE_CLAIM\")"
+        },
+        {
+          "line": 408,
+          "text": "        with self.effect_gate(target_key).acquire() as gate:"
+        },
+        {
+          "line": 409,
+          "text": "            with self.transaction() as connection:"
+        },
+        {
+          "line": 410,
+          "text": "                row = connection.execute(\"SELECT * FROM books WHERE key=?\", (key,)).fetchone()"
+        },
+        {
+          "line": 411,
+          "text": "                if row is None:"
+        },
+        {
+          "line": 412,
+          "text": "                    fail(\"REGISTRATION_BINDING_MISMATCH\")"
+        },
+        {
+          "line": 413,
+          "text": "                if row[\"owner\"]:"
+        },
+        {
+          "line": 414,
+          "text": "                    # Explicit release is allowed only by the original instance."
+        },
+        {
+          "line": 415,
+          "text": "                    if row[\"lease\"] > time.time() or self._pid_alive(row[\"pid\"]):"
+        },
+        {
+          "line": 416,
+          "text": "                        fail(\"OWNER_BUSY\", \"lease expired AND previous process exited required\", 4)"
+        }
+      ]
+    },
+    {
+      "path": "src/annotation/runtime/storage/__init__.py",
+      "start": 454,
+      "end": 459,
+      "raw_source_sha256": "93cb82da040346cfba95a312f3615b8bfc5c47edee01ba69584ac338882cfa3a",
+      "lines": [
+        {
+          "line": 454,
+          "text": "    def release(self, target_key, *, owner_id, generation):"
+        },
+        {
+          "line": 455,
+          "text": "        key = self.book_id(target_key)"
+        },
+        {
+          "line": 456,
+          "text": "        with self.effect_gate(target_key).acquire(), self.transaction() as connection:"
+        },
+        {
+          "line": 457,
+          "text": "            self._lease(connection, key, owner_id, generation, pending_ok=True)"
+        },
+        {
+          "line": 458,
+          "text": "            connection.execute(\"UPDATE books SET phase='RELEASED',lease=0,owner=NULL,pid=NULL WHERE key=?\", (key,))"
+        },
+        {
+          "line": 459,
+          "text": "            self._event(connection, key, \"OWNER_RELEASED\", {})"
+        }
+      ]
+    },
+    {
+      "path": "tests/test_a03_p2_r9_minimal_demos.py",
+      "start": 63,
+      "end": 97,
+      "raw_source_sha256": "a453d34a434a1cefd9912e95ee0619ad9c3184356c88b38831a0e7634772df76",
+      "lines": [
+        {
+          "line": 63,
+          "text": "def execute(case, label):"
+        },
+        {
+          "line": 64,
+          "text": "    from annotation.contracts import artifact_ref, policy_ref"
+        },
+        {
+          "line": 65,
+          "text": "    from annotation.quality.targetcheck import check_target"
+        },
+        {
+          "line": 66,
+          "text": "    from annotation.delivery.planner import create_plan"
+        },
+        {
+          "line": 67,
+          "text": "    from annotation.runtime.storage.common import now, plain"
+        },
+        {
+          "line": 68,
+          "text": "    from annotation.runtime.recovery import run_plan"
+        },
+        {
+          "line": 69,
+          "text": "    store, observer, claim, keeper, bundle, pre_ref, actual, admitted, config = helper.setup_pre(case)"
+        },
+        {
+          "line": 70,
+          "text": "    try:"
+        },
+        {
+          "line": 71,
+          "text": "        reg = store.registration()"
+        },
+        {
+          "line": 72,
+          "text": "        graph = next(a for a in bundle.artifacts if a.kind == 'QuestionGraph')"
+        },
+        {
+          "line": 73,
+          "text": "        bundle = check_target(bundle, artifact_ref(graph), actual.snapshot_ref, actual.snapshot_ref,"
+        },
+        {
+          "line": 74,
+          "text": "            policy_ref(bundle.policies[0]), config, artifact_id='target-r9-' + label, created_at=now(), bridge_context=bundle.bridge_context)"
+        },
+        {
+          "line": 75,
+          "text": "        target_ref = artifact_ref(bundle.artifacts[-1])"
+        },
+        {
+          "line": 76,
+          "text": "        bundle = create_plan(bundle, artifact_ref(graph), pre_ref, target_ref, actual.snapshot_ref, actual.snapshot_ref,"
+        },
+        {
+          "line": 77,
+          "text": "            policy_ref(bundle.policies[0]), config, artifact_id='plan-r9-' + label, created_at=now(), bridge_context=bundle.bridge_context)"
+        },
+        {
+          "line": 78,
+          "text": "        plan = bundle.artifacts[-1]"
+        },
+        {
+          "line": 79,
+          "text": "        assert len(plan.payload.actions) == 1 and plan.payload.actions[0].operation == 'CREATE_FRAMES'"
+        },
+        {
+          "line": 80,
+          "text": "        store.record_native_plan(reg['id'], bundle, artifact_ref(plan), config, owner_id=claim.owner_id, generation=claim.generation)"
+        },
+        {
+          "line": 81,
+          "text": "        write(case / 'before-run.json', {'registration_id': reg['id'], 'plan_ref': artifact_ref(plan),"
+        },
+        {
+          "line": 82,
+          "text": "            'plan': plain(plan), 'pre_ref': pre_ref, 'snapshot_ref': actual.snapshot_ref,"
+        },
+        {
+          "line": 83,
+          "text": "            'native_run_id': admitted.run_id, 'owner': plain(claim), 'effect_count': effect_count(case),"
+        },
+        {
+          "line": 84,
+          "text": "            'configuration': vars(config), 'imports': imports()})"
+        },
+        {
+          "line": 85,
+          "text": "        write(case / 'before-run-runtime.sqlite3', store.database.read_bytes())"
+        },
+        {
+          "line": 86,
+          "text": "        write(case / 'before-run-target.sqlite3', (case / 'target/target.sqlite3').read_bytes())"
+        },
+        {
+          "line": 87,
+          "text": "        fault = None if label == 'D1' else {'point': 'AFTER_INTENT_COMMIT', 'exit_code': 90, 'marker': str(case / 'after-intent-commit.marker.json')}"
+        },
+        {
+          "line": 88,
+          "text": "        result = run_plan(store, reg['id'], owner_id=claim.owner_id, generation=claim.generation, config=vars(config), fault=fault)"
+        },
+        {
+          "line": 89,
+          "text": "        if label == 'D2':"
+        },
+        {
+          "line": 90,
+          "text": "            raise AssertionError('D2 must actually exit90 at the existing fault point')"
+        },
+        {
+          "line": 91,
+          "text": "        write(case / 'normal-run-result.json', plain(result))"
+        },
+        {
+          "line": 92,
+          "text": "        assert result['status'] == 'FINISHED'"
+        },
+        {
+          "line": 93,
+          "text": "        assert result['quality']['content_check_status'] == 'PENDING'"
+        },
+        {
+          "line": 94,
+          "text": "        assert result['quality']['submission_status'] == 'NOT_SUBMITTED'"
+        },
+        {
+          "line": 95,
+          "text": "        assert effect_count(case) == 1"
+        },
+        {
+          "line": 96,
+          "text": "    finally:"
+        },
+        {
+          "line": 97,
+          "text": "        keeper.stop()"
+        }
+      ]
+    }
+  ],
+  "affected_existing_implementation_pins": [
+    [
+      "@annotation/runtime/recovery/__init__.py",
+      "cb758732d390d15609bd7b63cd899da0739ef6edc9e9613f9fc0b1317c0816b1"
+    ],
+    [
+      "@annotation/runtime/recovery/native_quality.py",
+      "6b35c92048402d9b3fea5f7910b0446489bb0393935df6a6bc985a67265bdeb2"
+    ]
+  ],
+  "minimal_fix_boundary": [
+    "Pass current owner_id/generation through run_plan -> publish_quality -> publish_native_quality.",
+    "Publisher validates and borrows the current lease without claim/release/keeper-stop; outer existing run_plan finally retains lifecycle responsibility.",
+    "Standalone publish with no borrowed pair keeps its own claim/release; partial/stale/foreign ownership is refused without releasing caller ownership.",
+    "Retain instance/PID/generation/ACTIVE/lease fencing and existing report-context pending/hold semantics; no ordinary-write authority from report-read reuse; retain durable single report read and two-second observation.",
+    "Product changes touch the two existing pinned recovery modules, with corresponding two implementation digests/profile/adoption chain updated in a future authorized delivery; no schema/producer/oracle or shared claim relaxation."
+  ],
+  "necessary_future_revalidation_only": [
+    "Original D1 normal return and formal POST/Batch PENDING/NOT_SUBMITTED, fresh process reopen and supported duplicate protection with effect remaining one.",
+    "Standalone publish on a complete formal receipt with unconsumed report-read slot acquires/releases its own lease.",
+    "Borrowed valid ownership succeeds without an extra claim/generation or premature release; partial/stale/foreign ownership refuses and does not release caller lease; existing read-budget/fencing unchanged.",
+    "Original R9 D2 once: real after-intent exit and bounded ABSENT recovery/old-plan no replay, preserve actual attempt facts."
+  ],
+  "D1_D2": "NOT_ACCEPTED",
+  "overall_A03": "REWORK",
+  "I01_released": false,
+  "field_reset": "NOT_EXECUTED_NO_RERUN_VARIANT_OR_DELEGATION"
+}

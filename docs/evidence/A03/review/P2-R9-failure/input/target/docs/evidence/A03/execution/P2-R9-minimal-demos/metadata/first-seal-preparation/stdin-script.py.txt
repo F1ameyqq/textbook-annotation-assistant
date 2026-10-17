@@ -1,0 +1,26 @@
+import hashlib,json,subprocess
+from pathlib import Path
+root=Path('.'); p=Path('docs/evidence/A03/execution/P2-R9-minimal-demos')
+value={'status':'REVIEW_FIRST_D1_OWNER_BUSY_FAILURE','D1_execute':'FAILED_AFTER_APPLIED_RECEIPT_BEFORE_NATIVE_POST_BATCH',
+ 'D1_restart_query':'NOT_RUN_AFTER_FIRST_EXECUTE_FAILURE','D1_duplicate_protection':'NOT_RUN_AFTER_FIRST_EXECUTE_FAILURE',
+ 'D2':'NOT_RUN_AFTER_D1_FAILURE','effect_count_D1':1,'D1_attempt_fact':'ATTEMPTED','POST_count':0,'Batch_count':0,
+ 'product_fix_or_functional_rerun':False,'field_reset_probe':'NOT_EXECUTED_NO_RERUN_VARIANT_OR_DELEGATION','I01':'NOT_RELEASED'}
+with (p/'bounded-outcome.json').open('xb') as f:f.write((json.dumps(value,indent=2)+'\n').encode())
+prior=Path('docs/evidence/A03/execution/P2-R8-R4-remaining/coverage-map.json')
+coverage={'basis':'R9 bounded singleton demos; frozen R4 map remains applicable, no automatic waiver.',
+ 'prior_map':{'base':'435aaee2d140e82d3237ce8902d594a1aee70aad','path':prior.as_posix(),'sha256':hashlib.sha256(prior.read_bytes()).hexdigest()},
+ 'D1':value['D1_execute'],'D1_restart_duplicate':'NOT_RUN','D2':'NOT_RUN',
+ 'new_boundary':'One normal direct action/intent/receipt/effect reached; run_plan failed claiming report ownership before POST/Batch. No completed D1 demo.',
+ 'prior_accepted_lost_receipt_N1':'Static R4 independent review/decision reference only, NOT_REPEATED',
+ 'remaining':'Original multi-action, ABSENT/mixed tail, native cross-scope/book, owner contenders, other crash cuts, qualified hold clearing, archive/conversion, source negatives and report/budget limits remain unproven by R9.',
+ 'field_reset_probe':value['field_reset_probe'],'I01':'NOT_RELEASED'}
+with (p/'coverage-map.json').open('xb') as f:f.write((json.dumps(coverage,indent=2)+'\n').encode())
+tracked=subprocess.check_output(['git','-c','core.longpaths=true','status','--porcelain','--untracked-files=no'])
+assert not tracked
+state={'base':'435aaee2d140e82d3237ce8902d594a1aee70aad','all_preexisting_tracked_files_clean':True,
+ 'tracked_status_before_staging':tracked.decode(),'only_new_scope':['tests/test_a03_p2_r9_minimal_demos.py','examples/a03/P2-R9-minimal-demos/','docs/evidence/A03/execution/P2-R9-minimal-demos/','docs/tasks/A03-P2-R9-minimal-demos-report.md'],
+ 'final_commit_clean_gate':'After commit require git -c core.longpaths=true status --short to be empty; completion recorded in delivery output.'}
+with (p/'scope-state.json').open('xb') as f:f.write((json.dumps(state,indent=2)+'\n').encode())
+s=Path('examples/a03/P2-R9-minimal-demos/seal_a03_p2_r9.py')
+text=s.read_text(encoding='utf-8').replace("'docs/evidence/A03/execution/P2-R9-minimal-demos', 'examples/a03/P2-R9-minimal-demos')", "'docs/evidence/A03/execution/P2-R9-minimal-demos')")
+s.write_text(text,encoding='utf-8',newline='')

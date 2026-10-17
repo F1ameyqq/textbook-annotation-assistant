@@ -1,0 +1,18 @@
+Traceback (most recent call last):
+  File "C:\Users\ASUS\.codex\worktrees\a03-runtime-recovery\1800\tests\test_a03_p2_r9_minimal_demos.py", line 191, in <module>
+    (execute if args.child_mode == 'execute' else restart)(case, args.case)
+  File "C:\Users\ASUS\.codex\worktrees\a03-runtime-recovery\1800\tests\test_a03_p2_r9_minimal_demos.py", line 88, in execute
+    result = run_plan(store, reg['id'], owner_id=claim.owner_id, generation=claim.generation, config=vars(config), fault=fault)
+  File "C:\Users\ASUS\.codex\worktrees\a03-runtime-recovery\1800\src\annotation\runtime\recovery\__init__.py", line 123, in run_plan
+    quality = publish_quality(store, reg["id"], projection)
+  File "C:\Users\ASUS\.codex\worktrees\a03-runtime-recovery\1800\src\annotation\runtime\recovery\__init__.py", line 30, in publish_quality
+    return publish_native_quality(store, registration_id, projection)
+  File "C:\Users\ASUS\.codex\worktrees\a03-runtime-recovery\1800\src\annotation\runtime\recovery\native_quality.py", line 21, in publish_native_quality
+    claim = claim_current(store, observer, key)
+  File "C:\Users\ASUS\.codex\worktrees\a03-runtime-recovery\1800\src\annotation\runtime\recovery\__init__.py", line 64, in claim_current
+    return store.claim(target_key, observer=observer, owner_id=owner_id)
+  File "C:\Users\ASUS\.codex\worktrees\a03-runtime-recovery\1800\src\annotation\runtime\storage\__init__.py", line 416, in claim
+    fail("OWNER_BUSY", "lease expired AND previous process exited required", 4)
+  File "C:\Users\ASUS\.codex\worktrees\a03-runtime-recovery\1800\src\annotation\runtime\storage\common.py", line 68, in fail
+    raise RuntimeFailure(code, message, exit_code)
+annotation.runtime.storage.common.RuntimeFailure: lease expired AND previous process exited required
