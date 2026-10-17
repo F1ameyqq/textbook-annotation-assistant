@@ -2,7 +2,7 @@
   "schema_version": 1,
   "project": "D:\\1800",
   "coordinator_thread_id": "01a13f26-7567-75e1-99ee-c9d2194e78bb",
-  "updated_at": "2026-10-17T16:57:40.564544+08:00",
+  "updated_at": "2026-10-17T17:07:36.892506+08:00",
   "automation": {
     "id": "1800-a",
     "kind": "heartbeat",
@@ -1936,8 +1936,8 @@
       }
     },
     "A03": {
-      "status": "REVIEW",
-      "phase": "P2_R3_EVIDENCE_CLOSURE_STATIC_REVIEW",
+      "status": "READY",
+      "phase": "P2_R4_BRIDGE_REGISTRATION_DISPATCH_PREPARED",
       "depends_on": [
         "A02"
       ],
@@ -1945,8 +1945,8 @@
       "execution_task": "docs/tasks/A03-runtime-recovery.md",
       "review_task": "docs/tasks/A03-independent-review.md",
       "acceptance_scope": "P1 design accepted; P2 SQLite/offline recovery functionality remains unaccepted.",
-      "next_dependency": "Independent R3 EvidenceRecord closure static result; R17 version bridge and registration scope positive remain blocked for separate bounded decision. No product/native/oracle adoption or I01 release.",
-      "dispatch_status": "ACKNOWLEDGED",
+      "next_dependency": "Frozen R4 interface proposal and registration-scope static controls, then original independent review; exact implementation authorization later. A03 functionality and I01 remain unaccepted.",
+      "dispatch_status": "PREPARED",
       "B_confirmation": "NOT_CONFIRMED",
       "workflow_commit": "a354f95f1d0b40a8f0847b57fa3978cac999e7a2",
       "worktree_name": "a03-runtime-recovery",
@@ -1959,70 +1959,47 @@
         "host_id": "local",
         "cursor": "506fd3cf-091f-418b-b002-636f503b5e4b:17",
         "turn_status": "completed",
-        "phase": "P2_R3_EVIDENCE_CLOSURE_DELIVERED",
-        "base_commit": "526d264284f36f856c306db88c1d7e71c04152e1",
-        "previous_delivery_commit": "526d264284f36f856c306db88c1d7e71c04152e1",
-        "task_document": "docs/tasks/A03-P2-R3-evidence-closure-rework.md",
-        "task_sha256": "15d75600d449b783eb546feaab95aeef187fdea401be73c3f54f0f12dce5d911",
-        "expected_report": "docs/tasks/A03-P2-R3-evidence-closure-delivery.md",
-        "reasoning_effort": "xhigh",
-        "last_checked_at": "2026-10-17T16:39:32.081416+08:00",
-        "dispatch_key": "A03:execution:P2-R3-evidence-closure:526d264284f36f856c306db88c1d7e71c04152e1",
-        "workflow_commit": "c3b5f38c7e9a3a4a51ae8cbe16a3821ff2f36970",
         "turn_id": "01a148e8-b191-74a3-9b40-a76f97022ec6",
         "observed_thread_status": "idle",
-        "last_progress": "Frozen R3 static-only delivery verified for independent review; no product/native functionality accepted.",
-        "latest_lightweight_observation": {
-          "at": "2026-10-17T16:39:32.081416+08:00",
-          "head": "87606b73e0754fa670491d9fb958a416c26bfe88",
-          "status": [],
-          "report_present": true,
-          "frozen_delivery_verified": true,
-          "scope": "Exact raw Git/disk manifest and input audit; own run exit records, no functional execution."
-        },
-        "commit": "87606b73e0754fa670491d9fb958a416c26bfe88",
-        "report": "docs/tasks/A03-P2-R3-evidence-closure-delivery.md",
-        "report_sha256": "c4831f0ceec0036b0bccfcc596a4a704b802f6a0ed31b9a500d341b52a0bc328",
-        "evidence_manifest": "docs/evidence/A03/execution/P2-R3-evidence-closure/sha256-manifest.json",
-        "evidence_manifest_sha256": "16909b0445495e8a1dbbc0af8831947a06907c29714cbe8a8e6d218aeee64d72",
-        "working_tree_clean": true,
-        "completed_turn_confirms_freeze": true,
-        "session_released": true,
-        "session_release_basis": "Completed execution turn plus frozen owned synchronous child exit/log records; no current OS or profile scan.",
-        "delivery_preflight": {
-          "document": "docs/evidence/coordinator/heartbeat-20261017-0834/A03-R3-delivery-preflight.json",
-          "sha256": "b9294716803fc71ae8b8194de6a5eea2b1a4989141f8ce5abdd94e41e545f929",
-          "new_files": 126,
-          "raw_workflow_inputs": 11,
-          "raw_r2_inputs": 53,
-          "old_git_paths_preserved": 27876,
-          "functional_tests_run": false
-        }
+        "phase": "P2_R4_BRIDGE_REGISTRATION_DISPATCH_PREPARED",
+        "base_commit": "87606b73e0754fa670491d9fb958a416c26bfe88",
+        "task_document": "docs/tasks/A03-P2-R4-bridge-registration-preparation.md",
+        "task_sha256": "fdef54715b78fcf48bcdb65a4cea3aea0e479ebf3cf1251d2455be91b8399dc5",
+        "expected_report": "docs/tasks/A03-P2-R4-bridge-registration-delivery.md",
+        "reasoning_policy": "PRESERVE_USER_SETTING",
+        "dispatch_key": "A03:execution:P2-R4-bridge-registration:87606b73e0754fa670491d9fb958a416c26bfe88",
+        "last_checked_at": "2026-10-17T17:07:36.892506+08:00"
       },
       "review": {
         "thread_id": "01a145aa-8d59-7c70-8d81-731712103a9a",
         "host_id": "local",
-        "cursor": "abdea222-4697-4046-86b1-a5dc48889fac:14",
-        "turn_status": "inProgress",
-        "observed_thread_status": "active",
-        "phase": "P2_R3_EVIDENCE_CLOSURE_STATIC_REVIEW",
+        "cursor": "abdea222-4697-4046-86b1-a5dc48889fac:15",
+        "turn_status": "completed",
+        "observed_thread_status": "idle",
+        "phase": "P2_R3_EVIDENCE_CLOSURE_STATIC_ACCEPTED",
         "target_commit": "87606b73e0754fa670491d9fb958a416c26bfe88",
         "task_document": "docs/tasks/A03-P2-R3-evidence-closure-review-handoff.md",
         "task_sha256": "32f94a69537080e62624a5870820e144267e6a4584f275a8829cd1a2cec5f197",
         "expected_report": "docs/tasks/A03-P2-R3-evidence-closure-review-report.md",
-        "decision": "PENDING",
+        "decision": "ACCEPTED_STATIC_LIMITED",
         "reasoning_policy": "PRESERVE_USER_SETTING",
-        "last_checked_at": "2026-10-17T16:40:55.298029+08:00",
-        "last_progress": "Reviewer acknowledged fixed raw Git workflow and isolated necessary inputs; original EvidenceRecord counterexample and affected static regressions only; no product/native or expanded search.",
+        "last_checked_at": "2026-10-17T17:07:36.892506+08:00",
+        "last_progress": "Frozen independent limited static acceptance; coordinator reproduced original rejection. R17/registration/native/oracle/I01 remain unaccepted.",
         "workflow_commit": "3ad5269fdb87802cc56c2c171e4ba69d8efafab0",
-        "turn_id": "01a14904-e53b-7132-a8a2-3c942c4b625e"
+        "turn_id": "01a14904-e53b-7132-a8a2-3c942c4b625e",
+        "report": "docs/tasks/A03-P2-R3-evidence-closure-review-report.md",
+        "report_sha256": "4da6e53d451875b285c0ee24e9fafa83d35e6dbcfc0f9af9c592958fe3fd992b",
+        "evidence_manifest": "docs/evidence/A03/review/P2-R3-evidence-closure/sha256-manifest.json",
+        "evidence_manifest_sha256": "676db217f198842bb8f2f5e0222b295d876815bf6b633da9dab44083372eedaf",
+        "session_released": true,
+        "session_release_basis": "Completed turn and owned run parent wait records; no OS/profile scan."
       },
       "review_handoff": {
         "key": "A03:review:P2-R3-evidence-closure:87606b73e0754fa670491d9fb958a416c26bfe88",
         "task": "A03",
         "stage": "P2_R3_EVIDENCE_CLOSURE_STATIC_REVIEW",
         "role": "review",
-        "state": "ACKNOWLEDGED",
+        "state": "COMPLETED_ACCEPTED_STATIC_LIMITED",
         "created_at": "2026-10-17T16:39:32.081416+08:00",
         "target_commit": "87606b73e0754fa670491d9fb958a416c26bfe88",
         "document": "docs/tasks/A03-P2-R3-evidence-closure-review-handoff.md",
@@ -2034,10 +2011,11 @@
         "scope": "One EvidenceRecord consumer closure independent static review and affected bounded regression; retain prior limited acceptances and blocked residuals; no product/native/DB or I01 release.",
         "sent_at": "2026-10-17T16:40:35.359347+08:00",
         "workflow_commit": "3ad5269fdb87802cc56c2c171e4ba69d8efafab0",
-        "result": "Original independent reviewer active on fixed R3 closure scope; thinking/model omitted and user setting preserved.",
+        "result": "Independent and coordinator EvidenceRecord closure static acceptance only; no native/product/integration.",
         "acknowledged_at": "2026-10-17T16:40:55.298029+08:00",
         "turn_id": "01a14904-e53b-7132-a8a2-3c942c4b625e",
-        "cursor": "abdea222-4697-4046-86b1-a5dc48889fac:14"
+        "cursor": "abdea222-4697-4046-86b1-a5dc48889fac:15",
+        "completed_at": "2026-10-17T17:07:36.892506+08:00"
       },
       "rework_round": 2,
       "review_archive": {
@@ -2394,6 +2372,51 @@
             "entries": 205,
             "functional_tests_run": false
           }
+        },
+        {
+          "thread_id": "01a145aa-2fea-7942-97f9-ad260acf4e30",
+          "host_id": "local",
+          "cursor": "506fd3cf-091f-418b-b002-636f503b5e4b:17",
+          "turn_status": "completed",
+          "phase": "P2_R3_EVIDENCE_CLOSURE_DELIVERED",
+          "base_commit": "526d264284f36f856c306db88c1d7e71c04152e1",
+          "previous_delivery_commit": "526d264284f36f856c306db88c1d7e71c04152e1",
+          "task_document": "docs/tasks/A03-P2-R3-evidence-closure-rework.md",
+          "task_sha256": "15d75600d449b783eb546feaab95aeef187fdea401be73c3f54f0f12dce5d911",
+          "expected_report": "docs/tasks/A03-P2-R3-evidence-closure-delivery.md",
+          "reasoning_effort": "xhigh",
+          "last_checked_at": "2026-10-17T16:39:32.081416+08:00",
+          "dispatch_key": "A03:execution:P2-R3-evidence-closure:526d264284f36f856c306db88c1d7e71c04152e1",
+          "workflow_commit": "c3b5f38c7e9a3a4a51ae8cbe16a3821ff2f36970",
+          "turn_id": "01a148e8-b191-74a3-9b40-a76f97022ec6",
+          "observed_thread_status": "idle",
+          "last_progress": "Frozen R3 static-only delivery verified for independent review; no product/native functionality accepted.",
+          "latest_lightweight_observation": {
+            "at": "2026-10-17T16:39:32.081416+08:00",
+            "head": "87606b73e0754fa670491d9fb958a416c26bfe88",
+            "status": [],
+            "report_present": true,
+            "frozen_delivery_verified": true,
+            "scope": "Exact raw Git/disk manifest and input audit; own run exit records, no functional execution."
+          },
+          "commit": "87606b73e0754fa670491d9fb958a416c26bfe88",
+          "report": "docs/tasks/A03-P2-R3-evidence-closure-delivery.md",
+          "report_sha256": "c4831f0ceec0036b0bccfcc596a4a704b802f6a0ed31b9a500d341b52a0bc328",
+          "evidence_manifest": "docs/evidence/A03/execution/P2-R3-evidence-closure/sha256-manifest.json",
+          "evidence_manifest_sha256": "16909b0445495e8a1dbbc0af8831947a06907c29714cbe8a8e6d218aeee64d72",
+          "working_tree_clean": true,
+          "completed_turn_confirms_freeze": true,
+          "session_released": true,
+          "session_release_basis": "Completed execution turn plus frozen owned synchronous child exit/log records; no current OS or profile scan.",
+          "delivery_preflight": {
+            "document": "docs/evidence/coordinator/heartbeat-20261017-0834/A03-R3-delivery-preflight.json",
+            "sha256": "b9294716803fc71ae8b8194de6a5eea2b1a4989141f8ce5abdd94e41e545f929",
+            "new_files": 126,
+            "raw_workflow_inputs": 11,
+            "raw_r2_inputs": 53,
+            "old_git_paths_preserved": 27876,
+            "functional_tests_run": false
+          }
         }
       ],
       "repair_requests": [
@@ -2503,7 +2526,7 @@
           "cursor": "506fd3cf-091f-418b-b002-636f503b5e4b:16"
         }
       ],
-      "operational_status": "P2_RUNNING_AFTER_BOUNDED_RESUME",
+      "operational_status": "STATIC_RESIDUAL_PREPARATION",
       "last_resume_attempt_at": "2026-10-17T02:17:41.707122+00:00",
       "review_history": [
         {
@@ -3023,7 +3046,7 @@
         "task": "A03",
         "stage": "P2_R3_EVIDENCE_CLOSURE_STATIC_REVIEW",
         "role": "review",
-        "state": "ACKNOWLEDGED",
+        "state": "COMPLETED_ACCEPTED_STATIC_LIMITED",
         "created_at": "2026-10-17T16:39:32.081416+08:00",
         "target_commit": "87606b73e0754fa670491d9fb958a416c26bfe88",
         "document": "docs/tasks/A03-P2-R3-evidence-closure-review-handoff.md",
@@ -3035,10 +3058,11 @@
         "scope": "One EvidenceRecord consumer closure independent static review and affected bounded regression; retain prior limited acceptances and blocked residuals; no product/native/DB or I01 release.",
         "sent_at": "2026-10-17T16:40:35.359347+08:00",
         "workflow_commit": "3ad5269fdb87802cc56c2c171e4ba69d8efafab0",
-        "result": "Original independent reviewer active on fixed R3 closure scope; thinking/model omitted and user setting preserved.",
+        "result": "Independent and coordinator EvidenceRecord closure static acceptance only; no native/product/integration.",
         "acknowledged_at": "2026-10-17T16:40:55.298029+08:00",
         "turn_id": "01a14904-e53b-7132-a8a2-3c942c4b625e",
-        "cursor": "abdea222-4697-4046-86b1-a5dc48889fac:14"
+        "cursor": "abdea222-4697-4046-86b1-a5dc48889fac:15",
+        "completed_at": "2026-10-17T17:07:36.892506+08:00"
       },
       "review_archive_r2_proposal": {
         "status": "ARCHIVED_LOCALLY",
@@ -3089,6 +3113,47 @@
         "recorded_at": "2026-10-17T16:27:06.073469+08:00",
         "interrupt_or_restart": false,
         "historical_dispatch_effort_fields": "Historical only; do not use them to override current A03 settings."
+      },
+      "limited_static_acceptance_r3": {
+        "at": "2026-10-17T17:07:36.892506+08:00",
+        "status": "ACCEPTED_STATIC_LIMITED",
+        "items": [
+          "EVIDENCE_RECORD_CONSUMER_CLOSURE"
+        ],
+        "target_commit": "87606b73e0754fa670491d9fb958a416c26bfe88",
+        "decision_document": "docs/tasks/A03-P2-R3-evidence-closure-coordinator-decision.md",
+        "document_sha256": "6ab1bdc35bbba5d773128fec97d5a89192719feb18ce0c96a9b50d128432f851",
+        "checks": "docs/evidence/coordinator/heartbeat-20261017-0859/A03-R3-review-check.json",
+        "product_functionality_accepted": false,
+        "integration": false,
+        "oracle_adopted": false,
+        "I01_released": false
+      },
+      "review_archive_r3_evidence_closure": {
+        "status": "VERIFIED_PENDING_LOCAL_ARCHIVE_COMMIT",
+        "manifest": "docs/evidence/A03/review/P2-R3-evidence-closure/sha256-manifest.json",
+        "manifest_sha256": "676db217f198842bb8f2f5e0222b295d876815bf6b633da9dab44083372eedaf",
+        "manifest_entries": 249,
+        "raw_inputs_verified": 161,
+        "report": "docs/tasks/A03-P2-R3-evidence-closure-review-report.md",
+        "report_sha256": "4da6e53d451875b285c0ee24e9fafa83d35e6dbcfc0f9af9c592958fe3fd992b",
+        "remote_push": false
+      },
+      "pending_execution_dispatch": {
+        "key": "A03:execution:P2-R4-bridge-registration:87606b73e0754fa670491d9fb958a416c26bfe88",
+        "task": "A03",
+        "stage": "P2_R4_BRIDGE_REGISTRATION_PREPARATION",
+        "role": "execution",
+        "state": "PREPARED",
+        "created_at": "2026-10-17T17:07:36.892506+08:00",
+        "base_commit": "87606b73e0754fa670491d9fb958a416c26bfe88",
+        "document": "docs/tasks/A03-P2-R4-bridge-registration-preparation.md",
+        "document_sha256": "fdef54715b78fcf48bcdb65a4cea3aea0e479ebf3cf1251d2455be91b8399dc5",
+        "thread_id": "01a145aa-2fea-7942-97f9-ad260acf4e30",
+        "host_id": "local",
+        "reasoning_policy": "PRESERVE_USER_SETTING",
+        "send_message_thinking": "OMIT",
+        "scope": "Exact new-profile/A02 bridge qualification interface proposal and one planless registration static positive plus three direct controls; no product/native implementation."
       }
     },
     "D01": {
@@ -4081,7 +4146,7 @@
       "task": "A03",
       "stage": "P2_R3_EVIDENCE_CLOSURE_STATIC_REVIEW",
       "role": "review",
-      "state": "ACKNOWLEDGED",
+      "state": "COMPLETED_ACCEPTED_STATIC_LIMITED",
       "created_at": "2026-10-17T16:39:32.081416+08:00",
       "target_commit": "87606b73e0754fa670491d9fb958a416c26bfe88",
       "document": "docs/tasks/A03-P2-R3-evidence-closure-review-handoff.md",
@@ -4093,16 +4158,33 @@
       "scope": "One EvidenceRecord consumer closure independent static review and affected bounded regression; retain prior limited acceptances and blocked residuals; no product/native/DB or I01 release.",
       "sent_at": "2026-10-17T16:40:35.359347+08:00",
       "workflow_commit": "3ad5269fdb87802cc56c2c171e4ba69d8efafab0",
-      "result": "Original independent reviewer active on fixed R3 closure scope; thinking/model omitted and user setting preserved.",
+      "result": "Independent and coordinator EvidenceRecord closure static acceptance only; no native/product/integration.",
       "acknowledged_at": "2026-10-17T16:40:55.298029+08:00",
       "turn_id": "01a14904-e53b-7132-a8a2-3c942c4b625e",
-      "cursor": "abdea222-4697-4046-86b1-a5dc48889fac:14"
+      "cursor": "abdea222-4697-4046-86b1-a5dc48889fac:15",
+      "completed_at": "2026-10-17T17:07:36.892506+08:00"
+    },
+    {
+      "key": "A03:execution:P2-R4-bridge-registration:87606b73e0754fa670491d9fb958a416c26bfe88",
+      "task": "A03",
+      "stage": "P2_R4_BRIDGE_REGISTRATION_PREPARATION",
+      "role": "execution",
+      "state": "PREPARED",
+      "created_at": "2026-10-17T17:07:36.892506+08:00",
+      "base_commit": "87606b73e0754fa670491d9fb958a416c26bfe88",
+      "document": "docs/tasks/A03-P2-R4-bridge-registration-preparation.md",
+      "document_sha256": "fdef54715b78fcf48bcdb65a4cea3aea0e479ebf3cf1251d2455be91b8399dc5",
+      "thread_id": "01a145aa-2fea-7942-97f9-ad260acf4e30",
+      "host_id": "local",
+      "reasoning_policy": "PRESERVE_USER_SETTING",
+      "send_message_thinking": "OMIT",
+      "scope": "Exact new-profile/A02 bridge qualification interface proposal and one planless registration static positive plus three direct controls; no product/native implementation."
     }
   ],
   "last_action": {
-    "at": "2026-10-17T16:57:40.564544+08:00",
-    "task_id": "B_HANDOFF_RECEIPT_0e5434f",
-    "action": "Fetched and pinned B handoff commit; independently verified bytes/images and classified reference forms; recorded A-side receipt and concrete pending mapping/lineage questions.",
+    "at": "2026-10-17T17:07:36.892506+08:00",
+    "task_id": "A03",
+    "action": "Accepted bounded R3 evidence closure after independent raw-input/archive audit and original-counterexample reproduction; prepared R4 residual interface/registration task.",
     "remote_push": false,
     "B_message_sent": false
   },
@@ -4112,30 +4194,23 @@
     "Platform test is single-book serial, no book submission, no unbudgeted paid models."
   ],
   "last_check": {
-    "at": "2026-10-17T16:39:32.081416+08:00",
-    "heartbeat_time": "2026-10-17T08:34:04.005Z",
-    "root_head": "a5b1635d21671242dfab248876bc21282e0ed7e2",
-    "root_status": [
-      "?? mermaid-diagram.png"
-    ],
+    "at": "2026-10-17T17:07:36.892506+08:00",
+    "heartbeat_time": "2026-10-17T08:59:04.357Z",
+    "root_head": "8083ad229eb03a1b2530e957d2ffa2dc744f9087",
     "checked_task_ids": [
       "A03"
     ],
-    "task_thread_id": "01a145aa-2fea-7942-97f9-ad260acf4e30",
-    "task_cursor": "506fd3cf-091f-418b-b002-636f503b5e4b:17",
+    "review_thread_id": "01a145aa-8d59-7c70-8d81-731712103a9a",
+    "review_cursor": "abdea222-4697-4046-86b1-a5dc48889fac:15",
+    "review_turn_id": "01a14904-e53b-7132-a8a2-3c942c4b625e",
     "target_commit": "87606b73e0754fa670491d9fb958a416c26bfe88",
     "platform_actions": 0,
     "paid_model_calls": 0,
     "full_suite_rerun": false,
     "notification": "NOTIFY",
-    "next_dependencies": "Independent R3 EvidenceRecord closure static result; R17 version bridge and registration scope positive remain blocked for separate bounded decision. No product/native/oracle adoption or I01 release.",
-    "dispatch_result": "ACKNOWLEDGED by original reviewer; no duplicate chat, no thinking/model override.",
-    "no_duplicate_chat": true,
-    "completed_at": "2026-10-17T16:40:55.298029+08:00",
-    "review_thread_id": "01a145aa-8d59-7c70-8d81-731712103a9a",
-    "review_cursor": "abdea222-4697-4046-86b1-a5dc48889fac:14",
-    "review_turn_id": "01a14904-e53b-7132-a8a2-3c942c4b625e",
-    "workflow_commit": "3ad5269fdb87802cc56c2c171e4ba69d8efafab0"
+    "next_dependencies": "Frozen R4 interface proposal and registration-scope static controls, then original independent review; exact implementation authorization later. A03 functionality and I01 remain unaccepted.",
+    "dispatch_result": "PREPARED; not sent yet",
+    "no_duplicate_chat": true
   },
   "prepared_next_batch": {
     "status": "DISPATCHED",

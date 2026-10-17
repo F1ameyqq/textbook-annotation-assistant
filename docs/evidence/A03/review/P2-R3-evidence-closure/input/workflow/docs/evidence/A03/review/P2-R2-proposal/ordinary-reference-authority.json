@@ -1,0 +1,35 @@
+{
+  "source_commit": "7fdbde8f16569fd3bc399013115e13269d5d33fa",
+  "source_path": "examples/a03/P1-R2/api-proposal.json",
+  "sha256": "e2b0865fc1a25206181f3094155b059a6d34eb851afc750e813f0c2e89960f85",
+  "protocol": {
+    "status": "PROPOSAL_UNIMPLEMENTED; P1-R1 checker performs only static shape/reference expectations, not admission or actual reads.",
+    "ordinary_ref": "The existing exact ArtifactRef four-tuple {artifact_id,revision,kind,content_hash}; an enclosing Artifact is an envelope, not a reference to itself.",
+    "consumer": "For each consuming Artifact separately, inspect its own fields except top-level content_hash, its directly embedded Resources, and only its formal evidence_refs resolved through the owning EvidenceRecord table to Resources. Recursively traverse the JSON bodies of those Resources and their nested Resources. Validate each encountered ordinary ArtifactRef and add its graph edge, but do not walk that referenced Artifact payload as part of the current consumer declaration closure: that other Artifact is checked separately as its own consumer. Binary/text Resources require exact bytes/hash/origin without JSON traversal. observation, prepared_before, action-fact, basis, scope-proof and evidence JSON Resources receive the same treatment.",
+    "declaration": "Every ordinary ref found directly or at any Resource nesting depth consumed by an Artifact must appear as that exact four-tuple in that consumer input_refs. Resolve it to an exact same-book/same-scope artifact and verify content hash and matching namespace. Existence or declaration by another Artifact never substitutes. Resource declarations themselves are Resources, not ArtifactRefs, so validate their path/SHA/media/origin and traverse JSON content.",
+    "graph_walk": "For each consumer maintain a visited Resource set keyed by normalized safe path/SHA256/media_type and an exact ordinary-ref set; deduplicate identical four-tuples only after validation. Resolve ordinary refs into the separate complete artifact/Resource dependency graph for identity and DAG checks without inheriting the referenced Artifact's own input_refs/payload as this consumer's dependencies. Decoded bytes may be cached, but every consumer repeats its own declaration/book/scope tests; global caching cannot skip them.",
+    "cycle": "Build the complete dependency graph from every individually inspected Artifact, Resource nesting edge and encountered ordinary-ref edge. Track active recursion stacks to reject direct/indirect Artifact cycles, Resource cycles and mixed Artifact/Resource cycles. Cycle analysis may follow the complete graph, but it never extends a consumer declaration requirement into another Artifact's separately checked payload. Repeated fully checked DAG nodes are allowed; a self-reference is not excused by resealing/hash lookup.",
+    "hash_closure": "When a new repaired declaration or nested resource changes, write a new resource path/byte SHA as needed, reseal the affected Artifact canonical content hash, propagate every exact downstream ref and repeat until the dependency DAG is closed. Update mapping and final SHA256 manifest. Never alter the original P1 graph/resources/evidence or delete facts to remove dependencies.",
+    "failure_codes": {
+      "missing_declaration": "UNDECLARED_RESOURCE_REFERENCE",
+      "wrong_resource_bytes": "RESOURCE_HASH_MISMATCH",
+      "wrong_artifact_hash": "REFERENCE_HASH_MISMATCH",
+      "foreign_book_or_scope": "REFERENCE_SCOPE_MISMATCH",
+      "mixed_version": "CROSS_VERSION_REFERENCE",
+      "resource_or_mixed_cycle": "RESOURCE_REFERENCE_CYCLE",
+      "artifact_cycle": "REFERENCE_CYCLE"
+    },
+    "static_negative_cases": [
+      "Missing consumer input_refs declaration for fact embedded snapshot ref",
+      "Missing declaration through observation/prepared nested JSON Resource",
+      "Wrong ordinary ref content_hash",
+      "Wrong Resource byte SHA256",
+      "Cross-book ordinary ref inside consumed Resource",
+      "Cross-scope ordinary ref inside consumed Resource",
+      "Direct/indirect Resource cycle and mixed artifact/Resource cycle"
+    ],
+    "no_scope_exception": "A ledger diagnostic export is not an ordinary cross-scope bridge. Runtime scans all historical book scopes internally. Any ordinary ArtifactRef actually embedded in a consumed JSON Resource remains subject to exact same-book/scope declaration checks.",
+    "evidence_ref_resolution": "Resolve only formally named evidence_refs IDs through the unique EvidenceRecord table of the owning bundle, with exact evidence_id lookup and existing mode/resource checks. EvidenceRecord retains its existing evidence_id/resource/description/mode shape; no new book/scope/schema fields are required. Recursively inspect each resolved JSON Resource and validate embedded ordinary ArtifactRefs against the consuming Artifact's existing book/scope/namespace and its own input_refs. Missing/duplicate IDs reject under existing evidence rules. Arbitrary matching strings never become implicit evidence refs."
+  },
+  "scope": "frozen inherited ordinary consumer/evidence reference semantics; static read only, no checker/product run"
+}
