@@ -1,0 +1,7 @@
+The initial snapshot checker queried src/annotation/source/__init__.py with
+git rev-parse and failed because the source parent is a namespace package and
+that file is absent in both fixed commits. No product tests had run.
+
+The checker now compares git ls-tree entries, explicitly recording absence on
+both sides. Existing exported bytes are compared against the same exact archive
+before resuming; no product or test input was repaired or replaced.

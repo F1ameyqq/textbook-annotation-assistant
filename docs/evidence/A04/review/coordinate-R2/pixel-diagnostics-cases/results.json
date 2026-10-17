@@ -1,0 +1,93 @@
+{
+  "results": [
+    {
+      "case": "D01-short-row-CRC-valid-PNG-public-gate",
+      "status": "FAIL",
+      "error": "{'sha256': '205543876fb32bb14f003bfeec32279e9fd4886bd1949eee9810999e468969bd', 'independent_row_check': {'ihdr_size': [37, 29], 'color': '8bit RGB noninterlaced', 'chunk_CRCs_valid': True, 'chunks': ['IHDR', 'IDAT', 'IEND'], 'zlib_decompression_completed': True, 'actual_scanline_bytes': 112, 'expected_scanline_bytes': 3248, 'complete_rows': 1, 'expected_rows': 29, 'pixel_rows_complete': False}, 'decoders': {'pillow_structure': 'PASS', 'pillow_full_load': 'PASS', 'opencv_full_decode': 'REJECTED'}, 'public_cli_returncode': 0, 'public_loader_accepted': True, 'stdout': 'A04_PACKAGE_CREATED; GEOMETRY_DEPENDENCY_ACCEPTED; GEOMETRY_NOT_PERFORMED; ACCEPTANCE_NOT_ASSERTED\\r\\n', 'final_bundle_created': True, 'expected': 'Reject incomplete original before publication'}",
+      "traceback": "Traceback (most recent call last):\n  File \"D:\\1800\\docs\\evidence\\A04\\review\\coordinate-R2\\scripts\\strict_pixel_diagnostics.py\", line 53, in case\n    try:r={'case':name,'status':'PASS','observation':fn()}\n  File \"D:\\1800\\docs\\evidence\\A04\\review\\coordinate-R2\\scripts\\strict_pixel_diagnostics.py\", line 69, in short_png\n    assert rc==2 and not accepted,r\nAssertionError: {'sha256': '205543876fb32bb14f003bfeec32279e9fd4886bd1949eee9810999e468969bd', 'independent_row_check': {'ihdr_size': [37, 29], 'color': '8bit RGB noninterlaced', 'chunk_CRCs_valid': True, 'chunks': ['IHDR', 'IDAT', 'IEND'], 'zlib_decompression_completed': True, 'actual_scanline_bytes': 112, 'expected_scanline_bytes': 3248, 'complete_rows': 1, 'expected_rows': 29, 'pixel_rows_complete': False}, 'decoders': {'pillow_structure': 'PASS', 'pillow_full_load': 'PASS', 'opencv_full_decode': 'REJECTED'}, 'public_cli_returncode': 0, 'public_loader_accepted': True, 'stdout': 'A04_PACKAGE_CREATED; GEOMETRY_DEPENDENCY_ACCEPTED; GEOMETRY_NOT_PERFORMED; ACCEPTANCE_NOT_ASSERTED\\r\\n', 'final_bundle_created': True, 'expected': 'Reject incomplete original before publication'}\n"
+    },
+    {
+      "case": "D02-full-length-invalid-filter-PNG-rejected",
+      "status": "PASS",
+      "observation": {
+        "decoder": {
+          "pillow_structure": "PASS",
+          "pillow_full_load": "REJECTED",
+          "pillow_full_load_error": "OSError",
+          "opencv_full_decode": "REJECTED"
+        },
+        "public_cli_returncode": 2,
+        "stdout": "A04_FAILED:RESOURCE_INVALID; LOCATION=$.pages[0].asset_path\r\n",
+        "output_exists": false
+      }
+    },
+    {
+      "case": "D03-invalid-filter-before-publication-recheck",
+      "status": "PASS",
+      "observation": {
+        "error": {
+          "code": "RESOURCE_INVALID",
+          "path": "$.pages[0].path"
+        },
+        "history_exists": false,
+        "bundle_exists": false
+      }
+    },
+    {
+      "case": "D04-invalid-filter-public-copy-recheck",
+      "status": "PASS",
+      "observation": {
+        "returncode": 2,
+        "stdout": "A04_FAILED:RESOURCE_INVALID; LOCATION=$.pages[0].asset_path\n",
+        "history_exists": false,
+        "bundle_exists": false
+      }
+    }
+  ],
+  "passed": 3,
+  "failed": 1,
+  "children": [
+    {
+      "args": [
+        "C:\\Users\\ASUS\\AppData\\Local\\Programs\\Python\\Python39\\python.exe",
+        "-B",
+        "-m",
+        "annotation.source.usense",
+        "offline",
+        "--input",
+        "D:\\1800\\docs\\evidence\\A04\\review\\coordinate-R2\\independent-cases\\N02-valid-CRC-zlib-short-pixels\\input",
+        "--output",
+        "D:\\1800\\docs\\evidence\\A04\\review\\coordinate-R2\\pixel-diagnostics-cases\\short-row-public-output",
+        "--as-of",
+        "2026-10-16T13:00:00+00:00"
+      ],
+      "cwd": "D:\\1800\\docs\\evidence\\A04\\review\\coordinate-R2\\pixel-diagnostics-cases",
+      "pid": 65984,
+      "returncode": 0,
+      "reaped": true
+    },
+    {
+      "args": [
+        "C:\\Users\\ASUS\\AppData\\Local\\Programs\\Python\\Python39\\python.exe",
+        "-B",
+        "-m",
+        "annotation.source.usense",
+        "offline",
+        "--input",
+        "D:\\1800\\docs\\evidence\\A04\\review\\coordinate-R2\\pixel-diagnostics-cases\\invalid-filter\\input",
+        "--output",
+        "D:\\1800\\docs\\evidence\\A04\\review\\coordinate-R2\\pixel-diagnostics-cases\\invalid-filter\\output",
+        "--as-of",
+        "2026-10-16T13:00:00+00:00"
+      ],
+      "cwd": "D:\\1800\\docs\\evidence\\A04\\review\\coordinate-R2\\pixel-diagnostics-cases",
+      "pid": 43732,
+      "returncode": 2,
+      "reaped": true
+    }
+  ],
+  "opencv_version": "5.0.0",
+  "numpy_version": "2.0.2",
+  "all_recorded_children_reaped": true,
+  "network_browser_profile_or_model_used": false
+}

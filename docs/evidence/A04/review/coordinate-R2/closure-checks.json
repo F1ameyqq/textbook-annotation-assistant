@@ -1,0 +1,648 @@
+{
+  "at": "2026-10-17T06:20:56.259322+00:00",
+  "checks": [
+    {
+      "name": "fixed_workflow_and_handoff",
+      "status": "PASS",
+      "detail": "e7ff892776f53636fcddfe136d1659204c4ff738"
+    },
+    {
+      "name": "raw_manifest_verified",
+      "status": "PASS",
+      "detail": 158
+    },
+    {
+      "name": "prior_execution_preserved",
+      "status": "PASS",
+      "detail": [
+        {
+          "manifest": "docs/evidence/A04/execution/sha256-manifest.json",
+          "entries_unchanged": 81
+        },
+        {
+          "manifest": "docs/evidence/A04/execution/coordinate-R1/sha256-manifest.json",
+          "entries_unchanged": 67
+        }
+      ]
+    },
+    {
+      "name": "input_bytes_unchanged:frozen",
+      "status": "PASS",
+      "detail": 362
+    },
+    {
+      "name": "input_bytes_unchanged:history",
+      "status": "PASS",
+      "detail": 6
+    },
+    {
+      "name": "harness_bootstrap_separate",
+      "status": "PASS",
+      "detail": "6bf2215a5afef6a2c8289f526df26c7c82cde99ec34d76cebc28582dc7ee68fc"
+    },
+    {
+      "name": "private_media_exclusions:frozen-inputs.tar.gz",
+      "status": "PASS",
+      "detail": {
+        "files": 362,
+        "forbidden": []
+      }
+    },
+    {
+      "name": "private_media_exclusions:historical-test-supplement.tar.gz",
+      "status": "PASS",
+      "detail": {
+        "files": 6,
+        "forbidden": []
+      }
+    },
+    {
+      "name": "old_review_preserved:docs/evidence/A04/review",
+      "status": "PASS",
+      "detail": 5
+    },
+    {
+      "name": "old_review_preserved:docs/evidence/A04/review/coordinate-R1",
+      "status": "PASS",
+      "detail": 227
+    },
+    {
+      "name": "prior_reports_and_manifests_unchanged",
+      "status": "PASS",
+      "detail": 4
+    },
+    {
+      "name": "executor_still_frozen_and_clean",
+      "status": "PASS",
+      "detail": {
+        "head": "76898657e76ac2db071327e90c6ca5031d17571f",
+        "status": ""
+      }
+    },
+    {
+      "name": "defect_at_public_boundary",
+      "status": "PASS",
+      "detail": {
+        "sha256": "205543876fb32bb14f003bfeec32279e9fd4886bd1949eee9810999e468969bd",
+        "input_bytes": 180,
+        "CRC_valid": true,
+        "zlib_stream_complete": true,
+        "declared_size": [
+          37,
+          29
+        ],
+        "actual_scanline_bytes": 112,
+        "expected_scanline_bytes": 3248,
+        "actual_rows": 1,
+        "declared_rows": 29,
+        "Pillow_verify_and_load": "ACCEPTED",
+        "public_cli_returncode": 0,
+        "public_cli_stdout": "A04_PACKAGE_CREATED; GEOMETRY_DEPENDENCY_ACCEPTED; GEOMETRY_NOT_PERFORMED; ACCEPTANCE_NOT_ASSERTED\n",
+        "final_bundle_created": true,
+        "public_loader_accepted": true,
+        "expected": "Reject incomplete original pixels before publishing a final bundle",
+        "defect_reproduced": true
+      }
+    },
+    {
+      "name": "row_integrity_independently_incomplete",
+      "status": "PASS",
+      "detail": {
+        "ihdr_size": [
+          37,
+          29
+        ],
+        "color": "8bit RGB noninterlaced",
+        "chunk_CRCs_valid": true,
+        "chunks": [
+          "IHDR",
+          "IDAT",
+          "IEND"
+        ],
+        "zlib_decompression_completed": true,
+        "actual_scanline_bytes": 112,
+        "expected_scanline_bytes": 3248,
+        "complete_rows": 1,
+        "expected_rows": 29,
+        "pixel_rows_complete": false
+      }
+    },
+    {
+      "name": "second_decoder_rejects",
+      "status": "PASS",
+      "detail": {
+        "pillow_structure": "PASS",
+        "pillow_full_load": "PASS",
+        "opencv_full_decode": "REJECTED"
+      }
+    },
+    {
+      "name": "reported_decisions_do_not_accept_A04",
+      "status": "PASS",
+      "detail": {
+        "R2": "REWORK",
+        "A04": "BLOCKED"
+      }
+    },
+    {
+      "name": "real_six_not_run",
+      "status": "PASS",
+      "detail": {
+        "R01": "BLOCKED_NOT_RUN",
+        "R02": "BLOCKED_NOT_RUN",
+        "R03": "BLOCKED_NOT_RUN",
+        "R04": "BLOCKED_NOT_RUN",
+        "R05": "BLOCKED_NOT_RUN",
+        "R06": "BLOCKED_NOT_RUN"
+      }
+    },
+    {
+      "name": "six_handoff_clauses_accounted",
+      "status": "PASS",
+      "detail": [
+        {
+          "clause": 1,
+          "status": "REWORK",
+          "detail": "Original 24-byte PNG and bad JPEG/PGM/CRC/filter are rejected; CRC/zlib-valid missing-row PNG is still published and loader-accepted."
+        },
+        {
+          "clause": 2,
+          "status": "PASS",
+          "detail": "Reviewer PNG, progressive JPEG, ASCII P2 and binary P5: public CLI, relocated public loader, full decode, actual dimensions/hash/path bindings."
+        },
+        {
+          "clause": 3,
+          "status": "REWORK",
+          "detail": "Invalid-filter decode and valid-byte digest rechecks reject before history; incomplete-row input bypasses pixel gate and public-copy recheck."
+        },
+        {
+          "clause": 4,
+          "status": "PASS",
+          "detail": "ACCEPTED dependency c6bebdf...; source coordinates NOT_PERFORMED, acceptance NOT_ASSERTED, no network. R1 stale status fixed."
+        },
+        {
+          "clause": 5,
+          "status": "PASS_WITH_SCOPE_EXCLUSIONS",
+          "detail": "Unique A04 151 passed + 1 Node probe excluded; contracts 69 passed + 1 cmd-junction test excluded. Old R1 unchanged full matrix not rerun."
+        },
+        {
+          "clause": 6,
+          "status": "PASS",
+          "detail": "158-entry frozen manifest and 148 old execution entries verified, old 5/227 review manifests preserved, raw failures and own-process release retained."
+        }
+      ]
+    },
+    {
+      "name": "raw_failure_counts_preserved",
+      "status": "PASS",
+      "detail": {
+        "initial": {
+          "PASS": 11,
+          "FAIL": 4
+        },
+        "targeted": {
+          "PASS": 3,
+          "FAIL": 1
+        }
+      }
+    },
+    {
+      "name": "corrected_unique_regression_counts",
+      "status": "PASS",
+      "detail": {
+        "A04": {
+          "PASS": 151,
+          "SKIPPED": 1
+        },
+        "contracts": {
+          "PASS": 69,
+          "SKIPPED": 1
+        }
+      }
+    },
+    {
+      "name": "only_own_pids_observed_and_exited",
+      "status": "PASS",
+      "detail": 35
+    },
+    {
+      "name": "guard_records_exited",
+      "status": "PASS",
+      "detail": 30
+    },
+    {
+      "name": "no_browser_profile_network_model",
+      "status": "PASS",
+      "detail": "Only PIDs recorded by this review runtime/guard/children; no OS-wide scan"
+    },
+    {
+      "name": "no_own_test_lease_left",
+      "status": "PASS",
+      "detail": "Own stage only; authorized profile not inspected"
+    },
+    {
+      "name": "whitespace:A04-coordinate-R2-review-report.md",
+      "status": "PASS",
+      "detail": 81
+    },
+    {
+      "name": "link:A04-coordinate-R2-review-report.md:../evidence/A04/review/coordinate-R2/inputs/workflow/docs/tasks/A04-coordinate-R2-review-handoff.md",
+      "status": "PASS",
+      "detail": "docs\\evidence\\A04\\review\\coordinate-R2\\inputs\\workflow\\docs\\tasks\\A04-coordinate-R2-review-handoff.md"
+    },
+    {
+      "name": "link:A04-coordinate-R2-review-report.md:../evidence/A04/review/coordinate-R2/inputs/workflow/docs/evidence/coordinator/heartbeat-20261017-0604/A04-delivery-preflight.json",
+      "status": "PASS",
+      "detail": "docs\\evidence\\A04\\review\\coordinate-R2\\inputs\\workflow\\docs\\evidence\\coordinator\\heartbeat-20261017-0604\\A04-delivery-preflight.json"
+    },
+    {
+      "name": "link:A04-coordinate-R2-review-report.md:../evidence/A04/review/coordinate-R2/README.md",
+      "status": "PASS",
+      "detail": "docs\\evidence\\A04\\review\\coordinate-R2\\README.md"
+    },
+    {
+      "name": "link:A04-coordinate-R2-review-report.md:../evidence/A04/review/coordinate-R2/pixel-diagnostics-cases/short-row-observation.json",
+      "status": "PASS",
+      "detail": "docs\\evidence\\A04\\review\\coordinate-R2\\pixel-diagnostics-cases\\short-row-observation.json"
+    },
+    {
+      "name": "link:A04-coordinate-R2-review-report.md:../evidence/A04/review/coordinate-R2/pixel-diagnostics/pixel-diagnostics-stderr.txt",
+      "status": "PASS",
+      "detail": "docs\\evidence\\A04\\review\\coordinate-R2\\pixel-diagnostics\\pixel-diagnostics-stderr.txt"
+    },
+    {
+      "name": "link:A04-coordinate-R2-review-report.md:../evidence/A04/review/coordinate-R2/minimal-repro/input/capture.json",
+      "status": "PASS",
+      "detail": "docs\\evidence\\A04\\review\\coordinate-R2\\minimal-repro\\input\\capture.json"
+    },
+    {
+      "name": "link:A04-coordinate-R2-review-report.md:../evidence/A04/review/coordinate-R2/minimal-repro/output/bundle.json",
+      "status": "PASS",
+      "detail": "docs\\evidence\\A04\\review\\coordinate-R2\\minimal-repro\\output\\bundle.json"
+    },
+    {
+      "name": "link:A04-coordinate-R2-review-report.md:../evidence/A04/review/coordinate-R2/minimal-repro/result.json",
+      "status": "PASS",
+      "detail": "docs\\evidence\\A04\\review\\coordinate-R2\\minimal-repro\\result.json"
+    },
+    {
+      "name": "link:A04-coordinate-R2-review-report.md:../evidence/A04/review/coordinate-R2/independent-cases/results.json",
+      "status": "PASS",
+      "detail": "docs\\evidence\\A04\\review\\coordinate-R2\\independent-cases\\results.json"
+    },
+    {
+      "name": "link:A04-coordinate-R2-review-report.md:../evidence/A04/review/coordinate-R2/pixel-diagnostics-cases/results.json",
+      "status": "PASS",
+      "detail": "docs\\evidence\\A04\\review\\coordinate-R2\\pixel-diagnostics-cases\\results.json"
+    },
+    {
+      "name": "link:A04-coordinate-R2-review-report.md:../evidence/A04/review/coordinate-R2/scripts/consume_package.py",
+      "status": "PASS",
+      "detail": "docs\\evidence\\A04\\review\\coordinate-R2\\scripts\\consume_package.py"
+    },
+    {
+      "name": "link:A04-coordinate-R2-review-report.md:../evidence/A04/review/coordinate-R2/review-verdict.json",
+      "status": "PASS",
+      "detail": "docs\\evidence\\A04\\review\\coordinate-R2\\review-verdict.json"
+    },
+    {
+      "name": "link:A04-coordinate-R2-review-report.md:../evidence/A04/review/coordinate-R2/regression/process-results.json",
+      "status": "PASS",
+      "detail": "docs\\evidence\\A04\\review\\coordinate-R2\\regression\\process-results.json"
+    },
+    {
+      "name": "link:A04-coordinate-R2-review-report.md:../evidence/A04/review/coordinate-R2/guard-correction/process-results.json",
+      "status": "PASS",
+      "detail": "docs\\evidence\\A04\\review\\coordinate-R2\\guard-correction\\process-results.json"
+    },
+    {
+      "name": "link:A04-coordinate-R2-review-report.md:../evidence/A04/review/coordinate-R2/guard-correction-remaining/process-results.json",
+      "status": "PASS",
+      "detail": "docs\\evidence\\A04\\review\\coordinate-R2\\guard-correction-remaining\\process-results.json"
+    },
+    {
+      "name": "link:A04-coordinate-R2-review-report.md:../evidence/A04/review/coordinate-R2/harness-notes/offline-guard-before-windows-fix.py",
+      "status": "PASS",
+      "detail": "docs\\evidence\\A04\\review\\coordinate-R2\\harness-notes\\offline-guard-before-windows-fix.py"
+    },
+    {
+      "name": "link:A04-coordinate-R2-review-report.md:../evidence/A04/review/coordinate-R2/snapshot-check.json",
+      "status": "PASS",
+      "detail": "docs\\evidence\\A04\\review\\coordinate-R2\\snapshot-check.json"
+    },
+    {
+      "name": "link:A04-coordinate-R2-review-report.md:../evidence/A04/review/coordinate-R2/environment.json",
+      "status": "PASS",
+      "detail": "docs\\evidence\\A04\\review\\coordinate-R2\\environment.json"
+    },
+    {
+      "name": "link:A04-coordinate-R2-review-report.md:../evidence/A04/review/coordinate-R2/self-release.json",
+      "status": "PASS",
+      "detail": "docs\\evidence\\A04\\review\\coordinate-R2\\self-release.json"
+    },
+    {
+      "name": "link:A04-coordinate-R2-review-report.md:../evidence/A04/review/coordinate-R2/closure-checks.json",
+      "status": "PASS",
+      "detail": "docs\\evidence\\A04\\review\\coordinate-R2\\closure-checks.json"
+    },
+    {
+      "name": "link:A04-coordinate-R2-review-report.md:../evidence/A04/review/coordinate-R2/sha256-manifest.json",
+      "status": "PASS",
+      "detail": "docs\\evidence\\A04\\review\\coordinate-R2\\sha256-manifest.json"
+    },
+    {
+      "name": "whitespace:README.md",
+      "status": "PASS",
+      "detail": 52
+    },
+    {
+      "name": "link:README.md:../../../../tasks/A04-coordinate-R2-review-report.md",
+      "status": "PASS",
+      "detail": "docs\\tasks\\A04-coordinate-R2-review-report.md"
+    },
+    {
+      "name": "link:README.md:review-verdict.json",
+      "status": "PASS",
+      "detail": "docs\\evidence\\A04\\review\\coordinate-R2\\review-verdict.json"
+    },
+    {
+      "name": "link:README.md:closure-checks.json",
+      "status": "PASS",
+      "detail": "docs\\evidence\\A04\\review\\coordinate-R2\\closure-checks.json"
+    },
+    {
+      "name": "link:README.md:sha256-manifest.json",
+      "status": "PASS",
+      "detail": "docs\\evidence\\A04\\review\\coordinate-R2\\sha256-manifest.json"
+    },
+    {
+      "name": "link:README.md:self-release.json",
+      "status": "PASS",
+      "detail": "docs\\evidence\\A04\\review\\coordinate-R2\\self-release.json"
+    },
+    {
+      "name": "link:README.md:minimal-repro/result.json",
+      "status": "PASS",
+      "detail": "docs\\evidence\\A04\\review\\coordinate-R2\\minimal-repro\\result.json"
+    },
+    {
+      "name": "link:README.md:minimal-repro-console.txt",
+      "status": "PASS",
+      "detail": "docs\\evidence\\A04\\review\\coordinate-R2\\minimal-repro-console.txt"
+    },
+    {
+      "name": "link:README.md:minimal-repro/input/capture.json",
+      "status": "PASS",
+      "detail": "docs\\evidence\\A04\\review\\coordinate-R2\\minimal-repro\\input\\capture.json"
+    },
+    {
+      "name": "link:README.md:minimal-repro/output/bundle.json",
+      "status": "PASS",
+      "detail": "docs\\evidence\\A04\\review\\coordinate-R2\\minimal-repro\\output\\bundle.json"
+    },
+    {
+      "name": "link:README.md:pixel-diagnostics-cases/short-row-observation.json",
+      "status": "PASS",
+      "detail": "docs\\evidence\\A04\\review\\coordinate-R2\\pixel-diagnostics-cases\\short-row-observation.json"
+    },
+    {
+      "name": "link:README.md:pixel-diagnostics-cases/short-row-public-command.json",
+      "status": "PASS",
+      "detail": "docs\\evidence\\A04\\review\\coordinate-R2\\pixel-diagnostics-cases\\short-row-public-command.json"
+    },
+    {
+      "name": "link:README.md:pixel-diagnostics/pixel-diagnostics-stderr.txt",
+      "status": "PASS",
+      "detail": "docs\\evidence\\A04\\review\\coordinate-R2\\pixel-diagnostics\\pixel-diagnostics-stderr.txt"
+    },
+    {
+      "name": "link:README.md:scripts/repro_incomplete_rows.py",
+      "status": "PASS",
+      "detail": "docs\\evidence\\A04\\review\\coordinate-R2\\scripts\\repro_incomplete_rows.py"
+    },
+    {
+      "name": "link:README.md:snapshot-check.json",
+      "status": "PASS",
+      "detail": "docs\\evidence\\A04\\review\\coordinate-R2\\snapshot-check.json"
+    },
+    {
+      "name": "link:README.md:inputs/frozen-tree-manifest.json",
+      "status": "PASS",
+      "detail": "docs\\evidence\\A04\\review\\coordinate-R2\\inputs\\frozen-tree-manifest.json"
+    },
+    {
+      "name": "link:README.md:inputs/history-supplement-manifest.json",
+      "status": "PASS",
+      "detail": "docs\\evidence\\A04\\review\\coordinate-R2\\inputs\\history-supplement-manifest.json"
+    },
+    {
+      "name": "link:README.md:independent-cases/results.json",
+      "status": "PASS",
+      "detail": "docs\\evidence\\A04\\review\\coordinate-R2\\independent-cases\\results.json"
+    },
+    {
+      "name": "link:README.md:pixel-diagnostics-cases/results.json",
+      "status": "PASS",
+      "detail": "docs\\evidence\\A04\\review\\coordinate-R2\\pixel-diagnostics-cases\\results.json"
+    },
+    {
+      "name": "link:README.md:environment.json",
+      "status": "PASS",
+      "detail": "docs\\evidence\\A04\\review\\coordinate-R2\\environment.json"
+    },
+    {
+      "name": "link:README.md:review-verdict.json",
+      "status": "PASS",
+      "detail": "docs\\evidence\\A04\\review\\coordinate-R2\\review-verdict.json"
+    },
+    {
+      "name": "evidence_json_parse",
+      "status": "PASS",
+      "detail": 172
+    },
+    {
+      "name": "review_scripts_parse",
+      "status": "PASS",
+      "detail": 12
+    }
+  ],
+  "links": [
+    {
+      "source": "docs/tasks/A04-coordinate-R2-review-report.md",
+      "target": "../evidence/A04/review/coordinate-R2/inputs/workflow/docs/tasks/A04-coordinate-R2-review-handoff.md"
+    },
+    {
+      "source": "docs/tasks/A04-coordinate-R2-review-report.md",
+      "target": "../evidence/A04/review/coordinate-R2/inputs/workflow/docs/evidence/coordinator/heartbeat-20261017-0604/A04-delivery-preflight.json"
+    },
+    {
+      "source": "docs/tasks/A04-coordinate-R2-review-report.md",
+      "target": "../evidence/A04/review/coordinate-R2/README.md"
+    },
+    {
+      "source": "docs/tasks/A04-coordinate-R2-review-report.md",
+      "target": "../evidence/A04/review/coordinate-R2/pixel-diagnostics-cases/short-row-observation.json"
+    },
+    {
+      "source": "docs/tasks/A04-coordinate-R2-review-report.md",
+      "target": "../evidence/A04/review/coordinate-R2/pixel-diagnostics/pixel-diagnostics-stderr.txt"
+    },
+    {
+      "source": "docs/tasks/A04-coordinate-R2-review-report.md",
+      "target": "../evidence/A04/review/coordinate-R2/minimal-repro/input/capture.json"
+    },
+    {
+      "source": "docs/tasks/A04-coordinate-R2-review-report.md",
+      "target": "../evidence/A04/review/coordinate-R2/minimal-repro/output/bundle.json"
+    },
+    {
+      "source": "docs/tasks/A04-coordinate-R2-review-report.md",
+      "target": "../evidence/A04/review/coordinate-R2/minimal-repro/result.json"
+    },
+    {
+      "source": "docs/tasks/A04-coordinate-R2-review-report.md",
+      "target": "../evidence/A04/review/coordinate-R2/independent-cases/results.json"
+    },
+    {
+      "source": "docs/tasks/A04-coordinate-R2-review-report.md",
+      "target": "../evidence/A04/review/coordinate-R2/pixel-diagnostics-cases/results.json"
+    },
+    {
+      "source": "docs/tasks/A04-coordinate-R2-review-report.md",
+      "target": "../evidence/A04/review/coordinate-R2/scripts/consume_package.py"
+    },
+    {
+      "source": "docs/tasks/A04-coordinate-R2-review-report.md",
+      "target": "../evidence/A04/review/coordinate-R2/review-verdict.json"
+    },
+    {
+      "source": "docs/tasks/A04-coordinate-R2-review-report.md",
+      "target": "../evidence/A04/review/coordinate-R2/regression/process-results.json"
+    },
+    {
+      "source": "docs/tasks/A04-coordinate-R2-review-report.md",
+      "target": "../evidence/A04/review/coordinate-R2/guard-correction/process-results.json"
+    },
+    {
+      "source": "docs/tasks/A04-coordinate-R2-review-report.md",
+      "target": "../evidence/A04/review/coordinate-R2/guard-correction-remaining/process-results.json"
+    },
+    {
+      "source": "docs/tasks/A04-coordinate-R2-review-report.md",
+      "target": "../evidence/A04/review/coordinate-R2/harness-notes/offline-guard-before-windows-fix.py"
+    },
+    {
+      "source": "docs/tasks/A04-coordinate-R2-review-report.md",
+      "target": "../evidence/A04/review/coordinate-R2/snapshot-check.json"
+    },
+    {
+      "source": "docs/tasks/A04-coordinate-R2-review-report.md",
+      "target": "../evidence/A04/review/coordinate-R2/environment.json"
+    },
+    {
+      "source": "docs/tasks/A04-coordinate-R2-review-report.md",
+      "target": "../evidence/A04/review/coordinate-R2/self-release.json"
+    },
+    {
+      "source": "docs/tasks/A04-coordinate-R2-review-report.md",
+      "target": "../evidence/A04/review/coordinate-R2/closure-checks.json"
+    },
+    {
+      "source": "docs/tasks/A04-coordinate-R2-review-report.md",
+      "target": "../evidence/A04/review/coordinate-R2/sha256-manifest.json"
+    },
+    {
+      "source": "docs/evidence/A04/review/coordinate-R2/README.md",
+      "target": "../../../../tasks/A04-coordinate-R2-review-report.md"
+    },
+    {
+      "source": "docs/evidence/A04/review/coordinate-R2/README.md",
+      "target": "review-verdict.json"
+    },
+    {
+      "source": "docs/evidence/A04/review/coordinate-R2/README.md",
+      "target": "closure-checks.json"
+    },
+    {
+      "source": "docs/evidence/A04/review/coordinate-R2/README.md",
+      "target": "sha256-manifest.json"
+    },
+    {
+      "source": "docs/evidence/A04/review/coordinate-R2/README.md",
+      "target": "self-release.json"
+    },
+    {
+      "source": "docs/evidence/A04/review/coordinate-R2/README.md",
+      "target": "minimal-repro/result.json"
+    },
+    {
+      "source": "docs/evidence/A04/review/coordinate-R2/README.md",
+      "target": "minimal-repro-console.txt"
+    },
+    {
+      "source": "docs/evidence/A04/review/coordinate-R2/README.md",
+      "target": "minimal-repro/input/capture.json"
+    },
+    {
+      "source": "docs/evidence/A04/review/coordinate-R2/README.md",
+      "target": "minimal-repro/output/bundle.json"
+    },
+    {
+      "source": "docs/evidence/A04/review/coordinate-R2/README.md",
+      "target": "pixel-diagnostics-cases/short-row-observation.json"
+    },
+    {
+      "source": "docs/evidence/A04/review/coordinate-R2/README.md",
+      "target": "pixel-diagnostics-cases/short-row-public-command.json"
+    },
+    {
+      "source": "docs/evidence/A04/review/coordinate-R2/README.md",
+      "target": "pixel-diagnostics/pixel-diagnostics-stderr.txt"
+    },
+    {
+      "source": "docs/evidence/A04/review/coordinate-R2/README.md",
+      "target": "scripts/repro_incomplete_rows.py"
+    },
+    {
+      "source": "docs/evidence/A04/review/coordinate-R2/README.md",
+      "target": "snapshot-check.json"
+    },
+    {
+      "source": "docs/evidence/A04/review/coordinate-R2/README.md",
+      "target": "inputs/frozen-tree-manifest.json"
+    },
+    {
+      "source": "docs/evidence/A04/review/coordinate-R2/README.md",
+      "target": "inputs/history-supplement-manifest.json"
+    },
+    {
+      "source": "docs/evidence/A04/review/coordinate-R2/README.md",
+      "target": "independent-cases/results.json"
+    },
+    {
+      "source": "docs/evidence/A04/review/coordinate-R2/README.md",
+      "target": "pixel-diagnostics-cases/results.json"
+    },
+    {
+      "source": "docs/evidence/A04/review/coordinate-R2/README.md",
+      "target": "environment.json"
+    },
+    {
+      "source": "docs/evidence/A04/review/coordinate-R2/README.md",
+      "target": "review-verdict.json"
+    }
+  ],
+  "R2_offline": "REWORK",
+  "whole_A04": "BLOCKED",
+  "open_finding": "A04-CR2-01",
+  "ignored_files_included_in_manifest": [],
+  "no_files_staged_or_committed": true,
+  "executor_frozen": true,
+  "product_contract_dependencies_or_state_modified": false,
+  "notes": [
+    "Copied workflow/source documents are exact inputs; only new report and evidence README link checks apply.",
+    "Initial audit/harness errors and original independent failures preserved; corrected interpretation in review-verdict.json.",
+    "D01 installation acceptance is coordinator-owned and separately integrated; not rerun or downgraded by this task.",
+    "No periodic polling, messages to others, browser/profile/network/model actions, integration or dependency release."
+  ]
+}

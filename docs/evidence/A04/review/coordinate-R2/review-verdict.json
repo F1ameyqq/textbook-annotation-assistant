@@ -1,0 +1,79 @@
+{
+  "target_commit": "76898657e76ac2db071327e90c6ca5031d17571f",
+  "review_workflow_commit": "e7ff892776f53636fcddfe136d1659204c4ff738",
+  "R2_offline": "REWORK",
+  "whole_A04": "BLOCKED",
+  "open_finding": "A04-CR2-01",
+  "resolved_specific_R1_counterexample": "24-byte PNG rejected; general full-original integrity requirement still incomplete",
+  "state_semantics": "R1 stale dependency-waiting text fixed in local CLI",
+  "raw_independent_results": {
+    "initial": {
+      "PASS": 11,
+      "FAIL": 4
+    },
+    "targeted": {
+      "PASS": 3,
+      "FAIL": 1
+    }
+  },
+  "initial_failure_reconciliation": {
+    "N02-valid-CRC-zlib-short-pixels": "Original Pillow-reject precondition was wrong. Preserved FAIL; byte-count/OpenCV discrepancy later confirmed real public-gate defect D01.",
+    "U01-damaged-after-parse-before-source": "Original strict RESOURCE_INVALID assertion failed; actual RESOURCE_MISMATCH rejected changed bytes. True decode-reject recheck passes with invalid filter in D03.",
+    "U03-public-parse-copy-race": "Actual final bundle published from incomplete-row PNG. Same residual decoder gap; retained.",
+    "L01-artificial-hash-only-forgery": "Manually resealed counterexample explicitly marked non-A04 output. Source also misses same row gap; not counted as legal product publication."
+  },
+  "handoff_clause_matrix": [
+    {
+      "clause": 1,
+      "status": "REWORK",
+      "detail": "Original 24-byte PNG and bad JPEG/PGM/CRC/filter are rejected; CRC/zlib-valid missing-row PNG is still published and loader-accepted."
+    },
+    {
+      "clause": 2,
+      "status": "PASS",
+      "detail": "Reviewer PNG, progressive JPEG, ASCII P2 and binary P5: public CLI, relocated public loader, full decode, actual dimensions/hash/path bindings."
+    },
+    {
+      "clause": 3,
+      "status": "REWORK",
+      "detail": "Invalid-filter decode and valid-byte digest rechecks reject before history; incomplete-row input bypasses pixel gate and public-copy recheck."
+    },
+    {
+      "clause": 4,
+      "status": "PASS",
+      "detail": "ACCEPTED dependency c6bebdf...; source coordinates NOT_PERFORMED, acceptance NOT_ASSERTED, no network. R1 stale status fixed."
+    },
+    {
+      "clause": 5,
+      "status": "PASS_WITH_SCOPE_EXCLUSIONS",
+      "detail": "Unique A04 151 passed + 1 Node probe excluded; contracts 69 passed + 1 cmd-junction test excluded. Old R1 unchanged full matrix not rerun."
+    },
+    {
+      "clause": 6,
+      "status": "PASS",
+      "detail": "158-entry frozen manifest and 148 old execution entries verified, old 5/227 review manifests preserved, raw failures and own-process release retained."
+    }
+  ],
+  "regression_unique_results": {
+    "A04": {
+      "PASS": 151,
+      "SKIPPED": 1
+    },
+    "contracts": {
+      "PASS": 69,
+      "SKIPPED": 1
+    }
+  },
+  "test_guard_correction": "Windows subprocess audit executable=None fixed; only affected Python CLI tests rerun; original 2/8 errors not erased",
+  "real_scenarios": {
+    "R01": "BLOCKED_NOT_RUN",
+    "R02": "BLOCKED_NOT_RUN",
+    "R03": "BLOCKED_NOT_RUN",
+    "R04": "BLOCKED_NOT_RUN",
+    "R05": "BLOCKED_NOT_RUN",
+    "R06": "BLOCKED_NOT_RUN"
+  },
+  "D01_project": "Coordinator separately accepted/integrated c78c8a123437e6c53096e0c48f1dd14aad10c2c3; not reverified here",
+  "integration_or_dependency_release": false,
+  "network_browser_profile_or_model_actions": 0
+}
