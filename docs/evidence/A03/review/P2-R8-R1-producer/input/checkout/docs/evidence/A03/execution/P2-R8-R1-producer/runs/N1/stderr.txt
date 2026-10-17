@@ -1,0 +1,38 @@
+test_N1 (__main__.R8R1NativeBridgeTests) ... ERROR
+
+======================================================================
+ERROR: test_N1 (__main__.R8R1NativeBridgeTests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\ASUS\.codex\worktrees\a03-runtime-recovery\1800\tests\test_a03_r8_r1_producer.py", line 152, in test_N1
+    restored = reconcile(store, reg['id'], call_id='call-r8-r1-n1', max_attempts=1)
+  File "C:\Users\ASUS\.codex\worktrees\a03-runtime-recovery\1800\src\annotation\runtime\recovery\__init__.py", line 202, in reconcile
+    committed = store.commit_reconciliation(result, owner_id=owner, generation=generation)
+  File "C:\Users\ASUS\.codex\worktrees\a03-runtime-recovery\1800\src\annotation\runtime\storage\native.py", line 285, in commit_reconciliation
+    self.project_plan(reg['id'], plan)
+  File "C:\Users\ASUS\.codex\worktrees\a03-runtime-recovery\1800\src\annotation\runtime\storage\__init__.py", line 744, in project_plan
+    return self._project_plan_locked(registration_id, plan)
+  File "C:\Users\ASUS\.codex\worktrees\a03-runtime-recovery\1800\src\annotation\runtime\storage\__init__.py", line 806, in _project_plan_locked
+    self._append(connection, registration_id, progress)
+  File "C:\Users\ASUS\.codex\worktrees\a03-runtime-recovery\1800\src\annotation\runtime\storage\native.py", line 247, in _append
+    self._validate(bundle, asset_root=row['package_root'])
+  File "C:\Users\ASUS\.codex\worktrees\a03-runtime-recovery\1800\src\annotation\runtime\storage\__init__.py", line 111, in _validate
+    return validate_recovery_bundle(bundle, asset_root=asset_root, bridge_context=self.bridge_for(bundle, asset_root))
+  File "C:\Users\ASUS\.codex\worktrees\a03-runtime-recovery\1800\src\annotation\runtime\storage\native.py", line 231, in bridge_for
+    return self.native_registry.context(bundle, root or getattr(bundle, 'asset_root', None))
+  File "C:\Users\ASUS\.codex\worktrees\a03-runtime-recovery\1800\src\annotation\runtime\storage\native.py", line 59, in context
+    return _issue_context(self, bundle, root, binding=binding, historical=historical)
+  File "C:\Users\ASUS\.codex\worktrees\a03-runtime-recovery\1800\src\annotation\contracts\a03_native\__init__.py", line 115, in _issue_context
+    data, manifest = _validate_value(bundle, root)
+  File "C:\Users\ASUS\.codex\worktrees\a03-runtime-recovery\1800\src\annotation\contracts\a03_native\__init__.py", line 153, in _validate_value
+    recovery._receipts_progress(ctx, heads)
+  File "C:\Users\ASUS\.codex\worktrees\a03-runtime-recovery\1800\src\annotation\contracts\recovery.py", line 663, in _receipts_progress
+    fail('$.progress', 'RECOVERY_CHAIN_INVALID', 'progress fact/action/attempt differs')
+  File "C:\Users\ASUS\.codex\worktrees\a03-runtime-recovery\1800\src\annotation\contracts\validation.py", line 19, in fail
+    raise ContractError([{"path": path, "code": code, "message": message}])
+annotation.contracts.validation.ContractError: $.progress: [RECOVERY_CHAIN_INVALID] progress fact/action/attempt differs
+
+----------------------------------------------------------------------
+Ran 1 test in 24.000s
+
+FAILED (errors=1)

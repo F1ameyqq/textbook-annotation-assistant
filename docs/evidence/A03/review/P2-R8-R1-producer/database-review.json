@@ -1,0 +1,390 @@
+{
+  "status": "TWO_IMMUTABLE_DATABASE_COPIES_VERIFIED",
+  "copies": [
+    {
+      "source": "docs/evidence/A03/execution/P2-R8-R1-producer/validation/native-r1-01/cases/N1/runtime/runtime.sqlite3",
+      "source_sha256": "8460da84ace3b2d0376ea644b2938f8d0ce7c2f83021cf5d8658fcefa1e75765",
+      "copy_path": "C:\\Users\\ASUS\\AppData\\Local\\Temp\\a03-r8-r1-review-immutable-o1iwnfe6\\00.sqlite3",
+      "copy_sha256_before": "8460da84ace3b2d0376ea644b2938f8d0ce7c2f83021cf5d8658fcefa1e75765",
+      "copy_sha256_after": "8460da84ace3b2d0376ea644b2938f8d0ce7c2f83021cf5d8658fcefa1e75765",
+      "source_sha256_after": "8460da84ace3b2d0376ea644b2938f8d0ce7c2f83021cf5d8658fcefa1e75765",
+      "mode": "mode=ro&immutable=1; query_only=ON",
+      "quick_check": "ok",
+      "application_id": 1093678162,
+      "user_version": 4,
+      "counts": {
+        "actions": 1,
+        "artifacts": 14,
+        "attempt_windows": 1,
+        "attempts": 1,
+        "books": 1,
+        "calls": 1,
+        "events": 13,
+        "files": 39,
+        "intents": 1,
+        "legacy": 0,
+        "meta": 9,
+        "native_creation_anchors": 1,
+        "native_pre_runs": 1,
+        "native_report_reads": 0,
+        "permits": 1,
+        "plans": 1,
+        "registrations": 1,
+        "resolutions": 1
+      },
+      "sql": [
+        "PRAGMA query_only=ON",
+        "PRAGMA quick_check",
+        "PRAGMA application_id",
+        "PRAGMA user_version",
+        "SELECT name FROM sqlite_master WHERE type='table' ORDER BY name",
+        "SELECT count(*) FROM \"actions\"",
+        "SELECT count(*) FROM \"artifacts\"",
+        "SELECT count(*) FROM \"attempt_windows\"",
+        "SELECT count(*) FROM \"attempts\"",
+        "SELECT count(*) FROM \"books\"",
+        "SELECT count(*) FROM \"calls\"",
+        "SELECT count(*) FROM \"events\"",
+        "SELECT count(*) FROM \"files\"",
+        "SELECT count(*) FROM \"intents\"",
+        "SELECT count(*) FROM \"legacy\"",
+        "SELECT count(*) FROM \"meta\"",
+        "SELECT count(*) FROM \"native_creation_anchors\"",
+        "SELECT count(*) FROM \"native_pre_runs\"",
+        "SELECT count(*) FROM \"native_report_reads\"",
+        "SELECT count(*) FROM \"permits\"",
+        "SELECT count(*) FROM \"plans\"",
+        "SELECT count(*) FROM \"registrations\"",
+        "SELECT count(*) FROM \"resolutions\"",
+        "SELECT * FROM registrations",
+        "SELECT * FROM plans",
+        "SELECT * FROM actions",
+        "SELECT * FROM intents",
+        "SELECT * FROM permits",
+        "SELECT * FROM resolutions",
+        "SELECT * FROM artifacts",
+        "SELECT * FROM native_creation_anchors",
+        "SELECT * FROM events",
+        "SELECT * FROM meta",
+        "SELECT id,registration,status,reads,pre_ref,run_sha,accepted_plan,input_sha,input_manifest FROM native_pre_runs"
+      ],
+      "selected_rows": {
+        "registrations": [
+          {
+            "id": "registration-r8-r1-N1",
+            "book": "02cf8722b8849ad5a276d582b9d8aa9f91b362d9e720a0d4bed119c4b8111cef",
+            "scope": "scope-r8-r1",
+            "source": "{\"artifact_id\":\"input-r8-r1-SourceBundle\",\"content_hash\":\"9a0c4b39733870c22b1fba49189aaab38f32c6a48af3d00b9ea016193d2e5d76\",\"kind\":\"SourceBundle\",\"revision\":1}",
+            "session": "target-session-r8-r1-N1",
+            "target_dir": "C:\\Users\\ASUS\\.codex\\worktrees\\a03-runtime-recovery\\1800\\docs\\evidence\\A03\\execution\\P2-R8-R1-producer\\validation\\native-r1-01\\cases\\N1\\target",
+            "package_root": "C:\\Users\\ASUS\\.codex\\worktrees\\a03-runtime-recovery\\1800\\docs\\evidence\\A03\\execution\\P2-R8-R1-producer\\validation\\native-r1-01\\cases\\N1\\runtime\\packages\\3267fee043e5d5404818e0aff7b2b6e0873c352b019b92f468573d8542c79974",
+            "bundle_path": "C:\\Users\\ASUS\\.codex\\worktrees\\a03-runtime-recovery\\1800\\docs\\evidence\\A03\\execution\\P2-R8-R1-producer\\validation\\native-r1-01\\cases\\N1\\runtime\\packages\\3267fee043e5d5404818e0aff7b2b6e0873c352b019b92f468573d8542c79974\\bundle-a348bc127865c2af65d091ec563135df09b198cd2b987ecbf62cadcc801dbbf0.json",
+            "config": "{\"allowed_operations\":[\"CREATE_FRAMES\"],\"book_id\":\"book-r8-r1-synthetic\",\"directory_map\":{\"directory-r8-r1\":\"platform-r8-r1\"},\"scope_id\":\"scope-r8-r1\",\"session_mode\":\"SAME_SESSION_HANDOFF\",\"target_id\":\"target-r8-r1\"}"
+          }
+        ],
+        "plans": [
+          {
+            "id": "fdb845e8ed02016c16302fcce064cd19d5a63ba29cc1a052a3d49e8372055d58",
+            "book": "02cf8722b8849ad5a276d582b9d8aa9f91b362d9e720a0d4bed119c4b8111cef",
+            "registration": "registration-r8-r1-N1",
+            "ref": "{\"artifact_id\":\"plan-r8-r1-n1\",\"content_hash\":\"4d72f3e37cb94a1fe3a69f1f3ed2dce1321cf8f7cb8c0733e3e854184b630c65\",\"kind\":\"ApplyPlan\",\"revision\":1}",
+            "status": "INTERRUPTED",
+            "cursor": 0
+          }
+        ],
+        "actions": [
+          {
+            "book": "02cf8722b8849ad5a276d582b9d8aa9f91b362d9e720a0d4bed119c4b8111cef",
+            "id": "action-a02-ed35e8b58ec2c814f28402e742c19299",
+            "digest": "232d7bd293a7b9d76749182420c8c6d7783af008a81362b96f7b675e8af9c3a0",
+            "plan": "fdb845e8ed02016c16302fcce064cd19d5a63ba29cc1a052a3d49e8372055d58",
+            "position": 0,
+            "state": "APPLIED",
+            "intent": "intent-64fed260b0494869a09ed95b2fce3db1",
+            "fact": "{\"media_type\":\"application/json\",\"origin\":\"SYNTHETIC\",\"path\":\"assets/runtime/4e5473dd5ab4a21cd05ce7d62b45f92165015efd3749a9bb936539a63f3db375.json\",\"sha256\":\"4e5473dd5ab4a21cd05ce7d62b45f92165015efd3749a9bb936539a63f3db375\"}"
+          }
+        ],
+        "intents": [
+          {
+            "id": "intent-64fed260b0494869a09ed95b2fce3db1",
+            "book": "02cf8722b8849ad5a276d582b9d8aa9f91b362d9e720a0d4bed119c4b8111cef",
+            "plan": "fdb845e8ed02016c16302fcce064cd19d5a63ba29cc1a052a3d49e8372055d58",
+            "action": "action-a02-ed35e8b58ec2c814f28402e742c19299",
+            "ref": "{\"artifact_id\":\"writeintent-ad781d79747d4fb09f14c351206b8bf0\",\"content_hash\":\"ed09d9e5f450571c70d27a00980e2b68d162251b6359a77c2594ad392a6d7697\",\"kind\":\"WriteIntent\",\"revision\":1}",
+            "obligation": "obl-4eb5989d7d5e6c3c2384d444edbc7498975ec87e3c2b97ef72841c8d3ddec317",
+            "prepared": "C:\\Users\\ASUS\\.codex\\worktrees\\a03-runtime-recovery\\1800\\docs\\evidence\\A03\\execution\\P2-R8-R1-producer\\validation\\native-r1-01\\cases\\N1\\runtime\\objects\\2b463dce20f741dbf2b18dafa4bf47aaf15bb3971f114c0b65716b654b2742c7.json",
+            "state": "RESOLVED_APPLIED",
+            "owner": "process-d4a2b9351ee349c3882f7a7aba087e7f",
+            "generation": 1,
+            "receipt": null
+          }
+        ],
+        "permits": [
+          {
+            "token": "permit-fe68d54c833f4eabb6868baa93d69ae2",
+            "intent": "intent-64fed260b0494869a09ed95b2fce3db1",
+            "state": "CONSUMED",
+            "head": "6e038f687856cf913b30d280e60e436ad74cb3a206ba25477d30c84b7d546a51"
+          }
+        ],
+        "resolutions": [
+          {
+            "id": "resolution-f28027ba9bac41b68c203064915fb437",
+            "intent": "intent-64fed260b0494869a09ed95b2fce3db1",
+            "ref": "{\"artifact_id\":\"resolution-f28027ba9bac41b68c203064915fb437\",\"content_hash\":\"bde0d3109f0685532f1c97ae2aa618a9d9b386ed662e73cb33091b13004d3322\",\"kind\":\"ReconciliationResult\",\"revision\":1}",
+            "outcome": "RESOLVED_APPLIED"
+          }
+        ],
+        "artifacts": [
+          {
+            "identity": "{\"artifact_id\":\"input-r8-r1-SourceBundle\",\"book_id\":\"book-r8-r1-synthetic\",\"revision\":1,\"schema_version\":\"1.4.0-a03-native-proposal\",\"scope_id\":\"scope-r8-r1\"}",
+            "book": "book-r8-r1-synthetic",
+            "scope": "scope-r8-r1",
+            "ref": "{\"artifact_id\":\"input-r8-r1-SourceBundle\",\"content_hash\":\"9a0c4b39733870c22b1fba49189aaab38f32c6a48af3d00b9ea016193d2e5d76\",\"kind\":\"SourceBundle\",\"revision\":1}",
+            "path": "C:\\Users\\ASUS\\.codex\\worktrees\\a03-runtime-recovery\\1800\\docs\\evidence\\A03\\execution\\P2-R8-R1-producer\\validation\\native-r1-01\\cases\\N1\\runtime\\objects\\3e53c6fa651457aac5e137b168b9e6f0f1950e71ae150bdc109e37b48f611c9f.json"
+          },
+          {
+            "identity": "{\"artifact_id\":\"input-r8-r1-EvidenceBundle\",\"book_id\":\"book-r8-r1-synthetic\",\"revision\":1,\"schema_version\":\"1.4.0-a03-native-proposal\",\"scope_id\":\"scope-r8-r1\"}",
+            "book": "book-r8-r1-synthetic",
+            "scope": "scope-r8-r1",
+            "ref": "{\"artifact_id\":\"input-r8-r1-EvidenceBundle\",\"content_hash\":\"5b95c792c10792e9fd44b14e5ad6c554cfdd819b716cc10828e4c6a9751971ae\",\"kind\":\"EvidenceBundle\",\"revision\":1}",
+            "path": "C:\\Users\\ASUS\\.codex\\worktrees\\a03-runtime-recovery\\1800\\docs\\evidence\\A03\\execution\\P2-R8-R1-producer\\validation\\native-r1-01\\cases\\N1\\runtime\\objects\\56ea9e482d13e716ea365214d263e80620144d1f3cface132d29598182ef11b5.json"
+          },
+          {
+            "identity": "{\"artifact_id\":\"input-r8-r1-QuestionGraph\",\"book_id\":\"book-r8-r1-synthetic\",\"revision\":1,\"schema_version\":\"1.4.0-a03-native-proposal\",\"scope_id\":\"scope-r8-r1\"}",
+            "book": "book-r8-r1-synthetic",
+            "scope": "scope-r8-r1",
+            "ref": "{\"artifact_id\":\"input-r8-r1-QuestionGraph\",\"content_hash\":\"fe1e7ce272b2d4f0986e1c97cf7a2f6b060e763eb6d48105ea78f477509837f6\",\"kind\":\"QuestionGraph\",\"revision\":1}",
+            "path": "C:\\Users\\ASUS\\.codex\\worktrees\\a03-runtime-recovery\\1800\\docs\\evidence\\A03\\execution\\P2-R8-R1-producer\\validation\\native-r1-01\\cases\\N1\\runtime\\objects\\24312ff6cfa7fefd212c023cfad5018c1d6a6ea7c4c099cd93d9975cb925a14d.json"
+          },
+          {
+            "identity": "{\"artifact_id\":\"input-r8-r1-PlatformSnapshot\",\"book_id\":\"book-r8-r1-synthetic\",\"revision\":1,\"schema_version\":\"1.4.0-a03-native-proposal\",\"scope_id\":\"scope-r8-r1\"}",
+            "book": "book-r8-r1-synthetic",
+            "scope": "scope-r8-r1",
+            "ref": "{\"artifact_id\":\"input-r8-r1-PlatformSnapshot\",\"content_hash\":\"d1cf7668f90a005470b693e68268637b17ea334e15c9e33bb64976973a202838\",\"kind\":\"PlatformSnapshot\",\"revision\":1}",
+            "path": "C:\\Users\\ASUS\\.codex\\worktrees\\a03-runtime-recovery\\1800\\docs\\evidence\\A03\\execution\\P2-R8-R1-producer\\validation\\native-r1-01\\cases\\N1\\runtime\\objects\\5404b999e9342769956f7f96abcec37e7078574da1bca8b49171071cb9904543.json"
+          },
+          {
+            "identity": "{\"artifact_id\":\"snapshot-a03-cc8a2a7883b71ca91f4d624c\",\"book_id\":\"book-r8-r1-synthetic\",\"revision\":1,\"schema_version\":\"1.4.0-a03-native-proposal\",\"scope_id\":\"scope-r8-r1\"}",
+            "book": "book-r8-r1-synthetic",
+            "scope": "scope-r8-r1",
+            "ref": "{\"artifact_id\":\"snapshot-a03-cc8a2a7883b71ca91f4d624c\",\"content_hash\":\"babb45dec7805ac4649c22ea6ad0dc8abe253b8c9d8b5c2d9aa6a66465e00302\",\"kind\":\"PlatformSnapshot\",\"revision\":1}",
+            "path": "C:\\Users\\ASUS\\.codex\\worktrees\\a03-runtime-recovery\\1800\\docs\\evidence\\A03\\execution\\P2-R8-R1-producer\\validation\\native-r1-01\\cases\\N1\\runtime\\objects\\d2b81e2803d4801d306299c73dfcd561df35975c45afbf1a987853e10ab8524e.json"
+          },
+          {
+            "identity": "{\"artifact_id\":\"pre-r8-r1-N1\",\"book_id\":\"book-r8-r1-synthetic\",\"revision\":1,\"schema_version\":\"1.4.0-a03-native-proposal\",\"scope_id\":\"scope-r8-r1\"}",
+            "book": "book-r8-r1-synthetic",
+            "scope": "scope-r8-r1",
+            "ref": "{\"artifact_id\":\"pre-r8-r1-N1\",\"content_hash\":\"104b68c5fd31800e17a0238480b401a8044c7d66cc029c9c7748234684431b84\",\"kind\":\"CheckReport\",\"revision\":1}",
+            "path": "C:\\Users\\ASUS\\.codex\\worktrees\\a03-runtime-recovery\\1800\\docs\\evidence\\A03\\execution\\P2-R8-R1-producer\\validation\\native-r1-01\\cases\\N1\\runtime\\objects\\9de1dce9c8ef6ece207143c2e88393bcb23080b8cb48442fedbe3b9edc136faa.json"
+          },
+          {
+            "identity": "{\"artifact_id\":\"target-r8-r1-n1\",\"book_id\":\"book-r8-r1-synthetic\",\"revision\":1,\"schema_version\":\"1.4.0-a03-native-proposal\",\"scope_id\":\"scope-r8-r1\"}",
+            "book": "book-r8-r1-synthetic",
+            "scope": "scope-r8-r1",
+            "ref": "{\"artifact_id\":\"target-r8-r1-n1\",\"content_hash\":\"233422d41a6b658ae805356df63bb81d242f6bc9db2ea8b6dd986ef0f505462f\",\"kind\":\"CheckReport\",\"revision\":1}",
+            "path": "C:\\Users\\ASUS\\.codex\\worktrees\\a03-runtime-recovery\\1800\\docs\\evidence\\A03\\execution\\P2-R8-R1-producer\\validation\\native-r1-01\\cases\\N1\\runtime\\objects\\0a84f3850b993256580159ae88df613d169fed0f33873430c07a52168c8d4592.json"
+          },
+          {
+            "identity": "{\"artifact_id\":\"plan-r8-r1-n1\",\"book_id\":\"book-r8-r1-synthetic\",\"revision\":1,\"schema_version\":\"1.4.0-a03-native-proposal\",\"scope_id\":\"scope-r8-r1\"}",
+            "book": "book-r8-r1-synthetic",
+            "scope": "scope-r8-r1",
+            "ref": "{\"artifact_id\":\"plan-r8-r1-n1\",\"content_hash\":\"4d72f3e37cb94a1fe3a69f1f3ed2dce1321cf8f7cb8c0733e3e854184b630c65\",\"kind\":\"ApplyPlan\",\"revision\":1}",
+            "path": "C:\\Users\\ASUS\\.codex\\worktrees\\a03-runtime-recovery\\1800\\docs\\evidence\\A03\\execution\\P2-R8-R1-producer\\validation\\native-r1-01\\cases\\N1\\runtime\\objects\\d6f1497cc310a40d2b5224330817cfa3f1dc1df464a32fda90df6cdf5fb85fc5.json"
+          },
+          {
+            "identity": "{\"artifact_id\":\"snapshot-a03-121a34ad245deaebcf493cc8\",\"book_id\":\"book-r8-r1-synthetic\",\"revision\":1,\"schema_version\":\"1.4.0-a03-native-proposal\",\"scope_id\":\"scope-r8-r1\"}",
+            "book": "book-r8-r1-synthetic",
+            "scope": "scope-r8-r1",
+            "ref": "{\"artifact_id\":\"snapshot-a03-121a34ad245deaebcf493cc8\",\"content_hash\":\"33942e9d83aefea341c8344d2d7001776ef20edb19a4c6178424b9cd6218af7c\",\"kind\":\"PlatformSnapshot\",\"revision\":1}",
+            "path": "C:\\Users\\ASUS\\.codex\\worktrees\\a03-runtime-recovery\\1800\\docs\\evidence\\A03\\execution\\P2-R8-R1-producer\\validation\\native-r1-01\\cases\\N1\\runtime\\objects\\91073c783c71b90aa3bf4b8525c36b790931790a5d3b177b0f47894b67f364ce.json"
+          },
+          {
+            "identity": "{\"artifact_id\":\"writeintent-ad781d79747d4fb09f14c351206b8bf0\",\"book_id\":\"book-r8-r1-synthetic\",\"revision\":1,\"schema_version\":\"1.4.0-a03-native-proposal\",\"scope_id\":\"scope-r8-r1\"}",
+            "book": "book-r8-r1-synthetic",
+            "scope": "scope-r8-r1",
+            "ref": "{\"artifact_id\":\"writeintent-ad781d79747d4fb09f14c351206b8bf0\",\"content_hash\":\"ed09d9e5f450571c70d27a00980e2b68d162251b6359a77c2594ad392a6d7697\",\"kind\":\"WriteIntent\",\"revision\":1}",
+            "path": "C:\\Users\\ASUS\\.codex\\worktrees\\a03-runtime-recovery\\1800\\docs\\evidence\\A03\\execution\\P2-R8-R1-producer\\validation\\native-r1-01\\cases\\N1\\runtime\\objects\\92d11b8dc1689701cda88ac9f69f781f9fdfd2ea1ccde8ce0920e0714a98bef4.json"
+          },
+          {
+            "identity": "{\"artifact_id\":\"executionprogress-8ecc5056ff834b2985bab57c9d41d13d\",\"book_id\":\"book-r8-r1-synthetic\",\"revision\":1,\"schema_version\":\"1.4.0-a03-native-proposal\",\"scope_id\":\"scope-r8-r1\"}",
+            "book": "book-r8-r1-synthetic",
+            "scope": "scope-r8-r1",
+            "ref": "{\"artifact_id\":\"executionprogress-8ecc5056ff834b2985bab57c9d41d13d\",\"content_hash\":\"11a822ad78b5b954f64aff99c23ba00b347ce77e710c2576b8b37fb249ab0284\",\"kind\":\"ExecutionProgress\",\"revision\":1}",
+            "path": "C:\\Users\\ASUS\\.codex\\worktrees\\a03-runtime-recovery\\1800\\docs\\evidence\\A03\\execution\\P2-R8-R1-producer\\validation\\native-r1-01\\cases\\N1\\runtime\\objects\\209449a2c25b8d50db0b2ad699a2ac848585aef1ccea1d27f3ab38530da00815.json"
+          },
+          {
+            "identity": "{\"artifact_id\":\"snapshot-a03-98190e331f388485d0b16527\",\"book_id\":\"book-r8-r1-synthetic\",\"revision\":1,\"schema_version\":\"1.4.0-a03-native-proposal\",\"scope_id\":\"scope-r8-r1\"}",
+            "book": "book-r8-r1-synthetic",
+            "scope": "scope-r8-r1",
+            "ref": "{\"artifact_id\":\"snapshot-a03-98190e331f388485d0b16527\",\"content_hash\":\"07bc93d828f96b6e7a1e8e94d7b657a4e045f8a39e7fb558ad80435fab879eba\",\"kind\":\"PlatformSnapshot\",\"revision\":1}",
+            "path": "C:\\Users\\ASUS\\.codex\\worktrees\\a03-runtime-recovery\\1800\\docs\\evidence\\A03\\execution\\P2-R8-R1-producer\\validation\\native-r1-01\\cases\\N1\\runtime\\objects\\619e3dc92a11296750d7dfa4e6524aff1738ec2d03e32aa9ca1ecde5cbe39c0c.json"
+          },
+          {
+            "identity": "{\"artifact_id\":\"resolution-f28027ba9bac41b68c203064915fb437\",\"book_id\":\"book-r8-r1-synthetic\",\"revision\":1,\"schema_version\":\"1.4.0-a03-native-proposal\",\"scope_id\":\"scope-r8-r1\"}",
+            "book": "book-r8-r1-synthetic",
+            "scope": "scope-r8-r1",
+            "ref": "{\"artifact_id\":\"resolution-f28027ba9bac41b68c203064915fb437\",\"content_hash\":\"bde0d3109f0685532f1c97ae2aa618a9d9b386ed662e73cb33091b13004d3322\",\"kind\":\"ReconciliationResult\",\"revision\":1}",
+            "path": "C:\\Users\\ASUS\\.codex\\worktrees\\a03-runtime-recovery\\1800\\docs\\evidence\\A03\\execution\\P2-R8-R1-producer\\validation\\native-r1-01\\cases\\N1\\runtime\\objects\\75e8adce649d8364ee15dec1d6df3c668cb40a5c225710d8de8bfa0a9f5daa46.json"
+          },
+          {
+            "identity": "{\"artifact_id\":\"executionprogress-e1cf78da009d4dcfbec9f179e743351f\",\"book_id\":\"book-r8-r1-synthetic\",\"revision\":1,\"schema_version\":\"1.4.0-a03-native-proposal\",\"scope_id\":\"scope-r8-r1\"}",
+            "book": "book-r8-r1-synthetic",
+            "scope": "scope-r8-r1",
+            "ref": "{\"artifact_id\":\"executionprogress-e1cf78da009d4dcfbec9f179e743351f\",\"content_hash\":\"2aa642cca7e5e147aa8ebab96c2933d9b35064001f785f4164c289131c524006\",\"kind\":\"ExecutionProgress\",\"revision\":1}",
+            "path": "C:\\Users\\ASUS\\.codex\\worktrees\\a03-runtime-recovery\\1800\\docs\\evidence\\A03\\execution\\P2-R8-R1-producer\\validation\\native-r1-01\\cases\\N1\\runtime\\objects\\fcd0bf12910343b8404fccdcae7164aceaf1ed8ea4eba0632a0656aab133c7fb.json"
+          }
+        ],
+        "native_creation_anchors": [
+          {
+            "plan_artifact_id": "plan-r8-r1-n1",
+            "input_path": "C:\\Users\\ASUS\\.codex\\worktrees\\a03-runtime-recovery\\1800\\docs\\evidence\\A03\\execution\\P2-R8-R1-producer\\validation\\native-r1-01\\cases\\N1\\runtime\\objects\\12be092ea378a4cfdf3201fc54b67c0b25f7118f4a78ad432f6139d49112d88a.json",
+            "input_sha": "12be092ea378a4cfdf3201fc54b67c0b25f7118f4a78ad432f6139d49112d88a",
+            "manifest": "[{\"media_type\":\"application/json\",\"origin\":\"SYNTHETIC\",\"path\":\"assets/inventory.json\",\"sha256\":\"6e942b2902e7383f1e3e59874f2b4ca8be485abd32d6503e77a4dcb96f75c9c9\"},{\"media_type\":\"application/json\",\"origin\":\"SYNTHETIC\",\"path\":\"assets/native-pre/02bd8ce00709dc4c9bec0e78089b33bec22ce23c0c6d28ee2a25871a1700f2f1.json\",\"sha256\":\"02bd8ce00709dc4c9bec0e78089b33bec22ce23c0c6d28ee2a25871a1700f2f1\"},{\"media_type\":\"application/json\",\"origin\":\"SYNTHETIC\",\"path\":\"assets/native-pre/659a715bd293026e28ec50f6bccbe1cecdf6511d168afc9f98d9ab05f6e8efb9.json\",\"sha256\":\"659a715bd293026e28ec50f6bccbe1cecdf6511d168afc9f98d9ab05f6e8efb9\"},{\"media_type\":\"image/x-portable-graymap\",\"origin\":\"SYNTHETIC\",\"path\":\"assets/page.pgm\",\"sha256\":\"1f82898615c67c676c532b17a8bd8e801c73eb6e7e2ba5a7f685bf1c3582cc7a\"},{\"media_type\":\"text/plain\",\"origin\":\"SYNTHETIC\",\"path\":\"assets/proof.txt\",\"sha256\":\"d2318eddb5d61af0286cf83097780ec933b297f9e00b6af6f10b7073d6b69eff\"},{\"media_type\":\"application/json\",\"origin\":\"SYNTHETIC\",\"path\":\"assets/runtime/72acabc7012f7128a87b26fc36bf750bcba10f55f996bae70e552d7c2d1cfbaf.json\",\"sha256\":\"72acabc7012f7128a87b26fc36bf750bcba10f55f996bae70e552d7c2d1cfbaf\"}]",
+            "config": "{\"allowed_operations\":[\"CREATE_FRAMES\"],\"book_id\":\"book-r8-r1-synthetic\",\"directory_map\":{\"directory-r8-r1\":\"platform-r8-r1\"},\"scope_id\":\"scope-r8-r1\",\"session_mode\":\"SAME_SESSION_HANDOFF\",\"target_id\":\"target-r8-r1\"}",
+            "created_at": "2026-10-17T15:52:47.033252Z",
+            "run_id": "input-r8-r1"
+          }
+        ],
+        "events": [
+          {
+            "book": "02cf8722b8849ad5a276d582b9d8aa9f91b362d9e720a0d4bed119c4b8111cef",
+            "sequence": 1,
+            "body": "{\"event\":\"OWNER_CLAIM_RESERVED\",\"event_hash\":\"ff734268681919683dacd5fd3e66d718d214f2787ba6a55bac69180554b02f8d\",\"generation\":1,\"journal_id\":\"journal-2941f636d7104afabcda56da558418e3\",\"owner_id\":\"process-d4a2b9351ee349c3882f7a7aba087e7f\",\"payload\":{},\"plan_ref\":null,\"previous_hash\":\"0000000000000000000000000000000000000000000000000000000000000000\",\"recorded_at\":\"2026-10-17T15:52:44.961282Z\",\"sequence\":1,\"target_key\":{\"book_id\":\"book-r8-r1-synthetic\",\"platform_namespace\":\"a03-r8-r1-native\",\"target_id\":\"target-r8-r1\"}}"
+          },
+          {
+            "book": "02cf8722b8849ad5a276d582b9d8aa9f91b362d9e720a0d4bed119c4b8111cef",
+            "sequence": 2,
+            "body": "{\"event\":\"OWNER_ACTIVE\",\"event_hash\":\"ea652626b75de9f547818009101795b2af185eb712a685ff63eeb09e60807082\",\"generation\":1,\"journal_id\":\"journal-2941f636d7104afabcda56da558418e3\",\"owner_id\":\"process-d4a2b9351ee349c3882f7a7aba087e7f\",\"payload\":{},\"plan_ref\":null,\"previous_hash\":\"ff734268681919683dacd5fd3e66d718d214f2787ba6a55bac69180554b02f8d\",\"recorded_at\":\"2026-10-17T15:52:44.989451Z\",\"sequence\":2,\"target_key\":{\"book_id\":\"book-r8-r1-synthetic\",\"platform_namespace\":\"a03-r8-r1-native\",\"target_id\":\"target-r8-r1\"}}"
+          },
+          {
+            "book": "02cf8722b8849ad5a276d582b9d8aa9f91b362d9e720a0d4bed119c4b8111cef",
+            "sequence": 3,
+            "body": "{\"event\":\"PLAN_ACCEPTED\",\"event_hash\":\"4c3118b3f4d56b590a378e0350d187fb22fb5c3bc3ad2fe2b06d92cd36266678\",\"generation\":1,\"journal_id\":\"journal-2941f636d7104afabcda56da558418e3\",\"owner_id\":\"process-d4a2b9351ee349c3882f7a7aba087e7f\",\"payload\":{\"actions\":[{\"action_digest\":\"232d7bd293a7b9d76749182420c8c6d7783af008a81362b96f7b675e8af9c3a0\",\"action_id\":\"action-a02-ed35e8b58ec2c814f28402e742c19299\"}],\"plan_ref\":{\"artifact_id\":\"plan-r8-r1-n1\",\"content_hash\":\"4d72f3e37cb94a1fe3a69f1f3ed2dce1321cf8f7cb8c0733e3e854184b630c65\",\"kind\":\"ApplyPlan\",\"revision\":1}},\"plan_ref\":{\"artifact_id\":\"plan-r8-r1-n1\",\"content_hash\":\"4d72f3e37cb94a1fe3a69f1f3ed2dce1321cf8f7cb8c0733e3e854184b630c65\",\"kind\":\"ApplyPlan\",\"revision\":1},\"previous_hash\":\"ea652626b75de9f547818009101795b2af185eb712a685ff63eeb09e60807082\",\"recorded_at\":\"2026-10-17T15:52:49.489400Z\",\"sequence\":3,\"target_key\":{\"book_id\":\"book-r8-r1-synthetic\",\"platform_namespace\":\"a03-r8-r1-native\",\"target_id\":\"target-r8-r1\"}}"
+          },
+          {
+            "book": "02cf8722b8849ad5a276d582b9d8aa9f91b362d9e720a0d4bed119c4b8111cef",
+            "sequence": 4,
+            "body": "{\"event\":\"PLAN_ACTIONS_RESERVED\",\"event_hash\":\"29df81b6b85d57646513da4d871a22a23c1fd02415ca26255c2f9ec1919590c2\",\"generation\":1,\"journal_id\":\"journal-2941f636d7104afabcda56da558418e3\",\"owner_id\":\"process-d4a2b9351ee349c3882f7a7aba087e7f\",\"payload\":{\"plan_ref\":{\"artifact_id\":\"plan-r8-r1-n1\",\"content_hash\":\"4d72f3e37cb94a1fe3a69f1f3ed2dce1321cf8f7cb8c0733e3e854184b630c65\",\"kind\":\"ApplyPlan\",\"revision\":1},\"reservations\":[{\"action_digest\":\"232d7bd293a7b9d76749182420c8c6d7783af008a81362b96f7b675e8af9c3a0\",\"action_id\":\"action-a02-ed35e8b58ec2c814f28402e742c19299\"}]},\"plan_ref\":{\"artifact_id\":\"plan-r8-r1-n1\",\"content_hash\":\"4d72f3e37cb94a1fe3a69f1f3ed2dce1321cf8f7cb8c0733e3e854184b630c65\",\"kind\":\"ApplyPlan\",\"revision\":1},\"previous_hash\":\"4c3118b3f4d56b590a378e0350d187fb22fb5c3bc3ad2fe2b06d92cd36266678\",\"recorded_at\":\"2026-10-17T15:52:49.489400Z\",\"sequence\":4,\"target_key\":{\"book_id\":\"book-r8-r1-synthetic\",\"platform_namespace\":\"a03-r8-r1-native\",\"target_id\":\"target-r8-r1\"}}"
+          },
+          {
+            "book": "02cf8722b8849ad5a276d582b9d8aa9f91b362d9e720a0d4bed119c4b8111cef",
+            "sequence": 5,
+            "body": "{\"event\":\"PLAN_STARTED\",\"event_hash\":\"cbacb2b8e4e9b87e4413fdb05d505a200e1e988c155f2d9e4ad9d8d3aad0416f\",\"generation\":1,\"journal_id\":\"journal-2941f636d7104afabcda56da558418e3\",\"owner_id\":\"process-d4a2b9351ee349c3882f7a7aba087e7f\",\"payload\":{\"plan_ref\":{\"artifact_id\":\"plan-r8-r1-n1\",\"content_hash\":\"4d72f3e37cb94a1fe3a69f1f3ed2dce1321cf8f7cb8c0733e3e854184b630c65\",\"kind\":\"ApplyPlan\",\"revision\":1},\"plan_state\":\"RUNNING\"},\"plan_ref\":{\"artifact_id\":\"plan-r8-r1-n1\",\"content_hash\":\"4d72f3e37cb94a1fe3a69f1f3ed2dce1321cf8f7cb8c0733e3e854184b630c65\",\"kind\":\"ApplyPlan\",\"revision\":1},\"previous_hash\":\"29df81b6b85d57646513da4d871a22a23c1fd02415ca26255c2f9ec1919590c2\",\"recorded_at\":\"2026-10-17T15:52:49.490399Z\",\"sequence\":5,\"target_key\":{\"book_id\":\"book-r8-r1-synthetic\",\"platform_namespace\":\"a03-r8-r1-native\",\"target_id\":\"target-r8-r1\"}}"
+          },
+          {
+            "book": "02cf8722b8849ad5a276d582b9d8aa9f91b362d9e720a0d4bed119c4b8111cef",
+            "sequence": 6,
+            "body": "{\"event\":\"WRITE_INTENT_COMMITTED\",\"event_hash\":\"00bfa8f5270b1183a8594841d4eea9d3d80b29bee04648e525a5d1f81abf8dd9\",\"generation\":1,\"journal_id\":\"journal-2941f636d7104afabcda56da558418e3\",\"owner_id\":\"process-d4a2b9351ee349c3882f7a7aba087e7f\",\"payload\":{\"action_digest\":\"232d7bd293a7b9d76749182420c8c6d7783af008a81362b96f7b675e8af9c3a0\",\"action_id\":\"action-a02-ed35e8b58ec2c814f28402e742c19299\",\"intent_ref\":{\"artifact_id\":\"writeintent-ad781d79747d4fb09f14c351206b8bf0\",\"content_hash\":\"ed09d9e5f450571c70d27a00980e2b68d162251b6359a77c2594ad392a6d7697\",\"kind\":\"WriteIntent\",\"revision\":1},\"obligation_id\":\"obl-4eb5989d7d5e6c3c2384d444edbc7498975ec87e3c2b97ef72841c8d3ddec317\",\"plan_ref\":{\"artifact_id\":\"plan-r8-r1-n1\",\"content_hash\":\"4d72f3e37cb94a1fe3a69f1f3ed2dce1321cf8f7cb8c0733e3e854184b630c65\",\"kind\":\"ApplyPlan\",\"revision\":1}},\"plan_ref\":{\"artifact_id\":\"plan-r8-r1-n1\",\"content_hash\":\"4d72f3e37cb94a1fe3a69f1f3ed2dce1321cf8f7cb8c0733e3e854184b630c65\",\"kind\":\"ApplyPlan\",\"revision\":1},\"previous_hash\":\"cbacb2b8e4e9b87e4413fdb05d505a200e1e988c155f2d9e4ad9d8d3aad0416f\",\"recorded_at\":\"2026-10-17T15:52:52.794192Z\",\"sequence\":6,\"target_key\":{\"book_id\":\"book-r8-r1-synthetic\",\"platform_namespace\":\"a03-r8-r1-native\",\"target_id\":\"target-r8-r1\"}}"
+          },
+          {
+            "book": "02cf8722b8849ad5a276d582b9d8aa9f91b362d9e720a0d4bed119c4b8111cef",
+            "sequence": 7,
+            "body": "{\"event\":\"DISPATCH_PERMIT_ISSUED\",\"event_hash\":\"6e038f687856cf913b30d280e60e436ad74cb3a206ba25477d30c84b7d546a51\",\"generation\":1,\"journal_id\":\"journal-2941f636d7104afabcda56da558418e3\",\"owner_id\":\"process-d4a2b9351ee349c3882f7a7aba087e7f\",\"payload\":{\"action_id\":\"action-a02-ed35e8b58ec2c814f28402e742c19299\",\"intent_ref\":{\"artifact_id\":\"writeintent-ad781d79747d4fb09f14c351206b8bf0\",\"content_hash\":\"ed09d9e5f450571c70d27a00980e2b68d162251b6359a77c2594ad392a6d7697\",\"kind\":\"WriteIntent\",\"revision\":1},\"permit_id\":\"permit-fe68d54c833f4eabb6868baa93d69ae2\",\"plan_ref\":{\"artifact_id\":\"plan-r8-r1-n1\",\"content_hash\":\"4d72f3e37cb94a1fe3a69f1f3ed2dce1321cf8f7cb8c0733e3e854184b630c65\",\"kind\":\"ApplyPlan\",\"revision\":1}},\"plan_ref\":{\"artifact_id\":\"plan-r8-r1-n1\",\"content_hash\":\"4d72f3e37cb94a1fe3a69f1f3ed2dce1321cf8f7cb8c0733e3e854184b630c65\",\"kind\":\"ApplyPlan\",\"revision\":1},\"previous_hash\":\"00bfa8f5270b1183a8594841d4eea9d3d80b29bee04648e525a5d1f81abf8dd9\",\"recorded_at\":\"2026-10-17T15:52:53.988643Z\",\"sequence\":7,\"target_key\":{\"book_id\":\"book-r8-r1-synthetic\",\"platform_namespace\":\"a03-r8-r1-native\",\"target_id\":\"target-r8-r1\"}}"
+          },
+          {
+            "book": "02cf8722b8849ad5a276d582b9d8aa9f91b362d9e720a0d4bed119c4b8111cef",
+            "sequence": 8,
+            "body": "{\"event\":\"DISPATCH_PERMIT_CONSUMED\",\"event_hash\":\"f748d57f2323b06467460d1965061dd7ccc43ee35e575826e6afbd1a319dbf0b\",\"generation\":1,\"journal_id\":\"journal-2941f636d7104afabcda56da558418e3\",\"owner_id\":\"process-d4a2b9351ee349c3882f7a7aba087e7f\",\"payload\":{\"action_id\":\"action-a02-ed35e8b58ec2c814f28402e742c19299\",\"intent_ref\":{\"artifact_id\":\"writeintent-ad781d79747d4fb09f14c351206b8bf0\",\"content_hash\":\"ed09d9e5f450571c70d27a00980e2b68d162251b6359a77c2594ad392a6d7697\",\"kind\":\"WriteIntent\",\"revision\":1},\"permit_id\":\"permit-fe68d54c833f4eabb6868baa93d69ae2\",\"plan_ref\":{\"artifact_id\":\"plan-r8-r1-n1\",\"content_hash\":\"4d72f3e37cb94a1fe3a69f1f3ed2dce1321cf8f7cb8c0733e3e854184b630c65\",\"kind\":\"ApplyPlan\",\"revision\":1}},\"plan_ref\":{\"artifact_id\":\"plan-r8-r1-n1\",\"content_hash\":\"4d72f3e37cb94a1fe3a69f1f3ed2dce1321cf8f7cb8c0733e3e854184b630c65\",\"kind\":\"ApplyPlan\",\"revision\":1},\"previous_hash\":\"6e038f687856cf913b30d280e60e436ad74cb3a206ba25477d30c84b7d546a51\",\"recorded_at\":\"2026-10-17T15:52:56.041683Z\",\"sequence\":8,\"target_key\":{\"book_id\":\"book-r8-r1-synthetic\",\"platform_namespace\":\"a03-r8-r1-native\",\"target_id\":\"target-r8-r1\"}}"
+          },
+          {
+            "book": "02cf8722b8849ad5a276d582b9d8aa9f91b362d9e720a0d4bed119c4b8111cef",
+            "sequence": 9,
+            "body": "{\"event\":\"DISPATCH_STARTED\",\"event_hash\":\"dc029473f89152bb09696847c71c7767fbcdf34a62118abe22b055d39ffb80a2\",\"generation\":1,\"journal_id\":\"journal-2941f636d7104afabcda56da558418e3\",\"owner_id\":\"process-d4a2b9351ee349c3882f7a7aba087e7f\",\"payload\":{\"action_id\":\"action-a02-ed35e8b58ec2c814f28402e742c19299\",\"intent_ref\":{\"artifact_id\":\"writeintent-ad781d79747d4fb09f14c351206b8bf0\",\"content_hash\":\"ed09d9e5f450571c70d27a00980e2b68d162251b6359a77c2594ad392a6d7697\",\"kind\":\"WriteIntent\",\"revision\":1},\"permit_id\":\"permit-fe68d54c833f4eabb6868baa93d69ae2\",\"plan_ref\":{\"artifact_id\":\"plan-r8-r1-n1\",\"content_hash\":\"4d72f3e37cb94a1fe3a69f1f3ed2dce1321cf8f7cb8c0733e3e854184b630c65\",\"kind\":\"ApplyPlan\",\"revision\":1}},\"plan_ref\":{\"artifact_id\":\"plan-r8-r1-n1\",\"content_hash\":\"4d72f3e37cb94a1fe3a69f1f3ed2dce1321cf8f7cb8c0733e3e854184b630c65\",\"kind\":\"ApplyPlan\",\"revision\":1},\"previous_hash\":\"f748d57f2323b06467460d1965061dd7ccc43ee35e575826e6afbd1a319dbf0b\",\"recorded_at\":\"2026-10-17T15:52:56.042336Z\",\"sequence\":9,\"target_key\":{\"book_id\":\"book-r8-r1-synthetic\",\"platform_namespace\":\"a03-r8-r1-native\",\"target_id\":\"target-r8-r1\"}}"
+          },
+          {
+            "book": "02cf8722b8849ad5a276d582b9d8aa9f91b362d9e720a0d4bed119c4b8111cef",
+            "sequence": 10,
+            "body": "{\"event\":\"OWNER_CLAIM_RESERVED\",\"event_hash\":\"a8e0128f1284f2451f653807dd82d78246a4d79eb0dd2bacb1968947f564a749\",\"generation\":2,\"journal_id\":\"journal-2941f636d7104afabcda56da558418e3\",\"owner_id\":\"process-e5a8a63990e74018b6bca080c2d121b9\",\"payload\":{},\"plan_ref\":null,\"previous_hash\":\"dc029473f89152bb09696847c71c7767fbcdf34a62118abe22b055d39ffb80a2\",\"recorded_at\":\"2026-10-17T15:53:04.050888Z\",\"sequence\":10,\"target_key\":{\"book_id\":\"book-r8-r1-synthetic\",\"platform_namespace\":\"a03-r8-r1-native\",\"target_id\":\"target-r8-r1\"}}"
+          },
+          {
+            "book": "02cf8722b8849ad5a276d582b9d8aa9f91b362d9e720a0d4bed119c4b8111cef",
+            "sequence": 11,
+            "body": "{\"event\":\"OWNER_ACTIVE\",\"event_hash\":\"a5b30d64eacdd4157704ef9447e3e896fd21cb3161db0f205094c1e24b33998b\",\"generation\":2,\"journal_id\":\"journal-2941f636d7104afabcda56da558418e3\",\"owner_id\":\"process-e5a8a63990e74018b6bca080c2d121b9\",\"payload\":{},\"plan_ref\":null,\"previous_hash\":\"a8e0128f1284f2451f653807dd82d78246a4d79eb0dd2bacb1968947f564a749\",\"recorded_at\":\"2026-10-17T15:53:04.076427Z\",\"sequence\":11,\"target_key\":{\"book_id\":\"book-r8-r1-synthetic\",\"platform_namespace\":\"a03-r8-r1-native\",\"target_id\":\"target-r8-r1\"}}"
+          },
+          {
+            "book": "02cf8722b8849ad5a276d582b9d8aa9f91b362d9e720a0d4bed119c4b8111cef",
+            "sequence": 12,
+            "body": "{\"event\":\"RECONCILIATION_COMMITTED\",\"event_hash\":\"235322b385152ef29a3329d39af77b7fae4b2c88a2daa52cf46f259fb8b086c7\",\"generation\":2,\"journal_id\":\"journal-2941f636d7104afabcda56da558418e3\",\"owner_id\":\"process-e5a8a63990e74018b6bca080c2d121b9\",\"payload\":{\"action_digest\":\"232d7bd293a7b9d76749182420c8c6d7783af008a81362b96f7b675e8af9c3a0\",\"action_id\":\"action-a02-ed35e8b58ec2c814f28402e742c19299\",\"intent_ref\":{\"artifact_id\":\"writeintent-ad781d79747d4fb09f14c351206b8bf0\",\"content_hash\":\"ed09d9e5f450571c70d27a00980e2b68d162251b6359a77c2594ad392a6d7697\",\"kind\":\"WriteIntent\",\"revision\":1},\"obligation_id\":\"obl-4eb5989d7d5e6c3c2384d444edbc7498975ec87e3c2b97ef72841c8d3ddec317\",\"observation_id\":\"native-observation-3e4fabdac5e949ef97a32b38ca010c73\",\"plan_ref\":{\"artifact_id\":\"plan-r8-r1-n1\",\"content_hash\":\"4d72f3e37cb94a1fe3a69f1f3ed2dce1321cf8f7cb8c0733e3e854184b630c65\",\"kind\":\"ApplyPlan\",\"revision\":1},\"plan_state\":\"INTERRUPTED\",\"resolution\":\"RESOLVED_APPLIED\",\"resolution_ref\":{\"artifact_id\":\"resolution-f28027ba9bac41b68c203064915fb437\",\"content_hash\":\"bde0d3109f0685532f1c97ae2aa618a9d9b386ed662e73cb33091b13004d3322\",\"kind\":\"ReconciliationResult\",\"revision\":1}},\"plan_ref\":{\"artifact_id\":\"plan-r8-r1-n1\",\"content_hash\":\"4d72f3e37cb94a1fe3a69f1f3ed2dce1321cf8f7cb8c0733e3e854184b630c65\",\"kind\":\"ApplyPlan\",\"revision\":1},\"previous_hash\":\"a5b30d64eacdd4157704ef9447e3e896fd21cb3161db0f205094c1e24b33998b\",\"recorded_at\":\"2026-10-17T15:53:06.509120Z\",\"sequence\":12,\"target_key\":{\"book_id\":\"book-r8-r1-synthetic\",\"platform_namespace\":\"a03-r8-r1-native\",\"target_id\":\"target-r8-r1\"}}"
+          },
+          {
+            "book": "02cf8722b8849ad5a276d582b9d8aa9f91b362d9e720a0d4bed119c4b8111cef",
+            "sequence": 13,
+            "body": "{\"event\":\"OWNER_RELEASED\",\"event_hash\":\"ff838bd96bb2482e6ab634edd802c7c70e3eb21e6d1b68998f4d76d27d56c36f\",\"generation\":2,\"journal_id\":\"journal-2941f636d7104afabcda56da558418e3\",\"owner_id\":null,\"payload\":{},\"plan_ref\":null,\"previous_hash\":\"235322b385152ef29a3329d39af77b7fae4b2c88a2daa52cf46f259fb8b086c7\",\"recorded_at\":\"2026-10-17T15:53:07.690748Z\",\"sequence\":13,\"target_key\":{\"book_id\":\"book-r8-r1-synthetic\",\"platform_namespace\":\"a03-r8-r1-native\",\"target_id\":\"target-r8-r1\"}}"
+          }
+        ],
+        "meta": {
+          "version": "a03-native-runtime-db-1",
+          "ledger_id": "ledger-r8-r1-N1",
+          "target_store_id": "target-store-r8-r1-N1",
+          "state_dir": "C:\\Users\\ASUS\\.codex\\worktrees\\a03-runtime-recovery\\1800\\docs\\evidence\\A03\\execution\\P2-R8-R1-producer\\validation\\native-r1-01\\cases\\N1\\runtime",
+          "profile": "a03-native-synthetic-1-PROPOSAL",
+          "profile_sha256": "0bcf724c66206784d8526b3b73b3ef0fde953295dd3ac689379135bde52fee26",
+          "adoption_sha256": "480ab1b902639630a9c0172a6178a7d9b07776656242cf918076641ff63d775c",
+          "initialization": "COMPLETE",
+          "migration": "NOT_IMPLEMENTED_BLOCKED"
+        },
+        "native_pre_runs": [
+          {
+            "id": "native-pre-1dd716b993ea401db6fbf08a5a283953",
+            "registration": "registration-r8-r1-N1",
+            "status": "ADMITTED",
+            "reads": 1,
+            "pre_ref": "{\"artifact_id\":\"pre-r8-r1-N1\",\"content_hash\":\"104b68c5fd31800e17a0238480b401a8044c7d66cc029c9c7748234684431b84\",\"kind\":\"CheckReport\",\"revision\":1}",
+            "run_sha": "02bd8ce00709dc4c9bec0e78089b33bec22ce23c0c6d28ee2a25871a1700f2f1",
+            "accepted_plan": "fdb845e8ed02016c16302fcce064cd19d5a63ba29cc1a052a3d49e8372055d58",
+            "input_sha": "894dcc98fb0c0bf15ef4d9def526b02962bda4077e43c6a95ecdd6ee82a4dbba",
+            "input_manifest": "[{\"media_type\":\"application/json\",\"origin\":\"SYNTHETIC\",\"path\":\"assets/inventory.json\",\"sha256\":\"6e942b2902e7383f1e3e59874f2b4ca8be485abd32d6503e77a4dcb96f75c9c9\"},{\"media_type\":\"image/x-portable-graymap\",\"origin\":\"SYNTHETIC\",\"path\":\"assets/page.pgm\",\"sha256\":\"1f82898615c67c676c532b17a8bd8e801c73eb6e7e2ba5a7f685bf1c3582cc7a\"},{\"media_type\":\"text/plain\",\"origin\":\"SYNTHETIC\",\"path\":\"assets/proof.txt\",\"sha256\":\"d2318eddb5d61af0286cf83097780ec933b297f9e00b6af6f10b7073d6b69eff\"}]"
+          }
+        ]
+      }
+    },
+    {
+      "source": "docs/evidence/A03/execution/P2-R8-R1-producer/validation/native-r1-01/cases/N1/target/target.sqlite3",
+      "source_sha256": "ba44cc6289e6c0166cad309989957684f32cf049146341b76e6b96969e1243d2",
+      "copy_path": "C:\\Users\\ASUS\\AppData\\Local\\Temp\\a03-r8-r1-review-immutable-o1iwnfe6\\01.sqlite3",
+      "copy_sha256_before": "ba44cc6289e6c0166cad309989957684f32cf049146341b76e6b96969e1243d2",
+      "copy_sha256_after": "ba44cc6289e6c0166cad309989957684f32cf049146341b76e6b96969e1243d2",
+      "source_sha256_after": "ba44cc6289e6c0166cad309989957684f32cf049146341b76e6b96969e1243d2",
+      "mode": "mode=ro&immutable=1; query_only=ON",
+      "quick_check": "ok",
+      "application_id": 1093678164,
+      "user_version": 4,
+      "counts": {
+        "effects": 1,
+        "meta": 2,
+        "observations": 3,
+        "sqlite_sequence": 1
+      },
+      "sql": [
+        "PRAGMA query_only=ON",
+        "PRAGMA quick_check",
+        "PRAGMA application_id",
+        "PRAGMA user_version",
+        "SELECT name FROM sqlite_master WHERE type='table' ORDER BY name",
+        "SELECT count(*) FROM \"effects\"",
+        "SELECT count(*) FROM \"meta\"",
+        "SELECT count(*) FROM \"observations\"",
+        "SELECT count(*) FROM \"sqlite_sequence\"",
+        "SELECT * FROM effects",
+        "SELECT * FROM meta"
+      ],
+      "selected_rows": {
+        "effects": [
+          {
+            "sequence": 1,
+            "body": "{\"action_digest\":\"232d7bd293a7b9d76749182420c8c6d7783af008a81362b96f7b675e8af9c3a0\",\"action_id\":\"action-a02-ed35e8b58ec2c814f28402e742c19299\",\"effect_fault\":\"after_effect_exit\",\"epoch\":1,\"execution_mode\":\"SIMULATED\",\"generation\":1,\"mutated\":true,\"origin\":\"SYNTHETIC\",\"owner_id\":\"process-d4a2b9351ee349c3882f7a7aba087e7f\",\"plan_ref\":{\"artifact_id\":\"plan-r8-r1-n1\",\"content_hash\":\"4d72f3e37cb94a1fe3a69f1f3ed2dce1321cf8f7cb8c0733e3e854184b630c65\",\"kind\":\"ApplyPlan\",\"revision\":1},\"recorded_at\":\"2026-10-17T15:52:56.061700Z\",\"target_key\":{\"book_id\":\"book-r8-r1-synthetic\",\"platform_namespace\":\"a03-r8-r1-native\",\"target_id\":\"target-r8-r1\"},\"target_session_id\":\"target-session-r8-r1-N1\",\"target_state_hash\":\"1e4260b7de60c7bf36f58fea5452fb5375b80b2dc358f9bf2a1164d85b33e590\"}"
+          }
+        ],
+        "meta": {
+          "descriptor": "{\"application_id\":1093678164,\"asset_root\":\"C:\\\\Users\\\\ASUS\\\\.codex\\\\worktrees\\\\a03-runtime-recovery\\\\1800\\\\docs\\\\evidence\\\\A03\\\\execution\\\\P2-R8-R1-producer\\\\validation\\\\native-r1-01\\\\cases\\\\N1\\\\runtime\\\\packages\\\\3267fee043e5d5404818e0aff7b2b6e0873c352b019b92f468573d8542c79974\",\"base_snapshot_ref\":{\"artifact_id\":\"input-r8-r1-PlatformSnapshot\",\"content_hash\":\"d1cf7668f90a005470b693e68268637b17ea334e15c9e33bb64976973a202838\",\"kind\":\"PlatformSnapshot\",\"revision\":1},\"book_id\":\"book-r8-r1-synthetic\",\"directory\":\"C:\\\\Users\\\\ASUS\\\\.codex\\\\worktrees\\\\a03-runtime-recovery\\\\1800\\\\docs\\\\evidence\\\\A03\\\\execution\\\\P2-R8-R1-producer\\\\validation\\\\native-r1-01\\\\cases\\\\N1\\\\target\",\"fixed_scope_id\":\"scope-r8-r1\",\"fixed_source_ref\":{\"artifact_id\":\"input-r8-r1-SourceBundle\",\"content_hash\":\"9a0c4b39733870c22b1fba49189aaab38f32c6a48af3d00b9ea016193d2e5d76\",\"kind\":\"SourceBundle\",\"revision\":1},\"format\":\"a03-native-target-db-1\",\"initial_state_digest\":\"f3bf3163ee568eafcce431bd904450d7ca7f0b6e00dcfefe078267d3db7416e4\",\"native_adoption\":{\"adoption_sha256\":\"480ab1b902639630a9c0172a6178a7d9b07776656242cf918076641ff63d775c\",\"format\":\"a03-native-target-adoption-1\",\"initialization\":\"COMPLETE\",\"migration\":\"NOT_IMPLEMENTED_BLOCKED\",\"profile\":\"a03-native-synthetic-1-PROPOSAL\",\"profile_sha256\":\"0bcf724c66206784d8526b3b73b3ef0fde953295dd3ac689379135bde52fee26\"},\"store_id\":\"target-store-r8-r1-N1\",\"target_key\":{\"book_id\":\"book-r8-r1-synthetic\",\"platform_namespace\":\"a03-r8-r1-native\",\"target_id\":\"target-r8-r1\"},\"target_session_id\":\"target-session-r8-r1-N1\",\"user_version\":4}",
+          "state": "{\"base\":{\"artifact_id\":\"input-r8-r1-PlatformSnapshot\",\"book_id\":\"book-r8-r1-synthetic\",\"content_hash\":\"d1cf7668f90a005470b693e68268637b17ea334e15c9e33bb64976973a202838\",\"created_at\":\"2026-10-17T00:00:00Z\",\"input_refs\":[],\"kind\":\"PlatformSnapshot\",\"payload\":{\"authorized_scope_id\":\"scope-r8-r1\",\"capabilities\":[{\"evidence_refs\":[],\"name\":\"persistent_draft\",\"platform_version\":\"a02-synthetic-platform-1\",\"status\":\"UNKNOWN\"},{\"evidence_refs\":[\"proof-r8-r1\"],\"name\":\"frame_readback\",\"platform_version\":\"a02-synthetic-platform-1\",\"status\":\"VERIFIED\"},{\"evidence_refs\":[],\"name\":\"content_readback\",\"platform_version\":\"a02-synthetic-platform-1\",\"status\":\"UNKNOWN\"},{\"evidence_refs\":[],\"name\":\"ocr_before_submit\",\"platform_version\":\"a02-synthetic-platform-1\",\"status\":\"UNKNOWN\"},{\"evidence_refs\":[],\"name\":\"resume_after_restart\",\"platform_version\":\"a02-synthetic-platform-1\",\"status\":\"UNKNOWN\"},{\"evidence_refs\":[],\"name\":\"multi_session\",\"platform_version\":\"a02-synthetic-platform-1\",\"status\":\"UNKNOWN\"},{\"evidence_refs\":[\"proof-r8-r1\"],\"name\":\"same_session_handoff\",\"platform_version\":\"a02-synthetic-platform-1\",\"status\":\"VERIFIED\"}],\"directories\":[\"platform-r8-r1\"],\"evidence_refs\":[\"proof-r8-r1\"],\"frames\":[],\"observed_at\":\"2026-10-17T00:00:00Z\",\"observed_hash\":\"3aa385c24167c7067ed8947b8cd2b631805bb38bd081572b3ac249636662651d\",\"observed_version\":\"a03-target-epoch-0\",\"platform_version\":\"a02-synthetic-platform-1\",\"questions\":[],\"target_id\":\"target-r8-r1\"},\"producer\":{\"config_version\":\"r8-input-1\",\"evidence_mode\":\"SYNTHETIC\",\"implementation_version\":\"UNIMPLEMENTED\",\"model_version\":null,\"module\":\"r8-fresh-input-author\",\"policy_versions\":[{\"content_hash\":\"69a6a074be4ce981d61e5021bcaf61480ca9ce9742774a14def2ad6246ddedc2\",\"policy_id\":\"policy-r8-r1\",\"revision\":1}],\"prompt_version\":null},\"revision\":1,\"run_id\":\"input-r8-r1\",\"schema_version\":\"1.4.0-a03-native-proposal\",\"scope_id\":\"scope-r8-r1\"},\"context\":{\"event_head\":{\"hash\":\"cbacb2b8e4e9b87e4413fdb05d505a200e1e988c155f2d9e4ad9d8d3aad0416f\",\"sequence\":5},\"generation\":1,\"history_refs\":[{\"artifact_id\":\"input-r8-r1-SourceBundle\",\"content_hash\":\"9a0c4b39733870c22b1fba49189aaab38f32c6a48af3d00b9ea016193d2e5d76\",\"kind\":\"SourceBundle\",\"revision\":1},{\"artifact_id\":\"input-r8-r1-EvidenceBundle\",\"content_hash\":\"5b95c792c10792e9fd44b14e5ad6c554cfdd819b716cc10828e4c6a9751971ae\",\"kind\":\"EvidenceBundle\",\"revision\":1},{\"artifact_id\":\"input-r8-r1-QuestionGraph\",\"content_hash\":\"fe1e7ce272b2d4f0986e1c97cf7a2f6b060e763eb6d48105ea78f477509837f6\",\"kind\":\"QuestionGraph\",\"revision\":1},{\"artifact_id\":\"input-r8-r1-PlatformSnapshot\",\"content_hash\":\"d1cf7668f90a005470b693e68268637b17ea334e15c9e33bb64976973a202838\",\"kind\":\"PlatformSnapshot\",\"revision\":1},{\"artifact_id\":\"snapshot-a03-cc8a2a7883b71ca91f4d624c\",\"content_hash\":\"babb45dec7805ac4649c22ea6ad0dc8abe253b8c9d8b5c2d9aa6a66465e00302\",\"kind\":\"PlatformSnapshot\",\"revision\":1},{\"artifact_id\":\"pre-r8-r1-N1\",\"content_hash\":\"104b68c5fd31800e17a0238480b401a8044c7d66cc029c9c7748234684431b84\",\"kind\":\"CheckReport\",\"revision\":1},{\"artifact_id\":\"target-r8-r1-n1\",\"content_hash\":\"233422d41a6b658ae805356df63bb81d242f6bc9db2ea8b6dd986ef0f505462f\",\"kind\":\"CheckReport\",\"revision\":1},{\"artifact_id\":\"plan-r8-r1-n1\",\"content_hash\":\"4d72f3e37cb94a1fe3a69f1f3ed2dce1321cf8f7cb8c0733e3e854184b630c65\",\"kind\":\"ApplyPlan\",\"revision\":1}],\"instance\":\"process-d4a2b9351ee349c3882f7a7aba087e7f\",\"kind\":\"context\",\"ledger_id\":\"ledger-r8-r1-N1\",\"owner_id\":\"process-d4a2b9351ee349c3882f7a7aba087e7f\",\"pause_reasons\":[],\"pending\":[],\"progress_refs\":[],\"registrations\":[{\"book\":\"02cf8722b8849ad5a276d582b9d8aa9f91b362d9e720a0d4bed119c4b8111cef\",\"bundle_path\":\"C:\\\\Users\\\\ASUS\\\\.codex\\\\worktrees\\\\a03-runtime-recovery\\\\1800\\\\docs\\\\evidence\\\\A03\\\\execution\\\\P2-R8-R1-producer\\\\validation\\\\native-r1-01\\\\cases\\\\N1\\\\runtime\\\\packages\\\\3267fee043e5d5404818e0aff7b2b6e0873c352b019b92f468573d8542c79974\\\\bundle-9028de7e085433dd32a00fcae44f948c2cdff36b439ddad3715dec9a1ada2c33.json\",\"config\":\"{\\\"allowed_operations\\\":[\\\"CREATE_FRAMES\\\"],\\\"book_id\\\":\\\"book-r8-r1-synthetic\\\",\\\"directory_map\\\":{\\\"directory-r8-r1\\\":\\\"platform-r8-r1\\\"},\\\"scope_id\\\":\\\"scope-r8-r1\\\",\\\"session_mode\\\":\\\"SAME_SESSION_HANDOFF\\\",\\\"target_id\\\":\\\"target-r8-r1\\\"}\",\"id\":\"registration-r8-r1-N1\",\"package_root\":\"C:\\\\Users\\\\ASUS\\\\.codex\\\\worktrees\\\\a03-runtime-recovery\\\\1800\\\\docs\\\\evidence\\\\A03\\\\execution\\\\P2-R8-R1-producer\\\\validation\\\\native-r1-01\\\\cases\\\\N1\\\\runtime\\\\packages\\\\3267fee043e5d5404818e0aff7b2b6e0873c352b019b92f468573d8542c79974\",\"scope\":\"scope-r8-r1\",\"session\":\"target-session-r8-r1-N1\",\"source\":\"{\\\"artifact_id\\\":\\\"input-r8-r1-SourceBundle\\\",\\\"content_hash\\\":\\\"9a0c4b39733870c22b1fba49189aaab38f32c6a48af3d00b9ea016193d2e5d76\\\",\\\"kind\\\":\\\"SourceBundle\\\",\\\"revision\\\":1}\",\"target_dir\":\"C:\\\\Users\\\\ASUS\\\\.codex\\\\worktrees\\\\a03-runtime-recovery\\\\1800\\\\docs\\\\evidence\\\\A03\\\\execution\\\\P2-R8-R1-producer\\\\validation\\\\native-r1-01\\\\cases\\\\N1\\\\target\"}],\"target_key\":{\"book_id\":\"book-r8-r1-synthetic\",\"platform_namespace\":\"a03-r8-r1-native\",\"target_id\":\"target-r8-r1\"},\"target_store_id\":\"target-store-r8-r1-N1\"},\"epoch\":1,\"fence_generation\":2,\"fence_owner_id\":\"process-e5a8a63990e74018b6bca080c2d121b9\",\"frame_projections\":{\"mock-frame-1\":{\"box\":{\"bbox\":[4,4,28,10],\"image\":{\"asset_id\":\"page-r8-r1\",\"height\":32,\"sha256\":\"1f82898615c67c676c532b17a8bd8e801c73eb6e7e2ba5a7f685bf1c3582cc7a\",\"width\":32}},\"fragment_id\":\"fragment-stem-r8-r1\",\"platform_role\":\"Q\",\"platform_type\":\"text\",\"region_id\":\"region-stem-r8-r1\"},\"mock-frame-2\":{\"box\":{\"bbox\":[4,18,28,24],\"image\":{\"asset_id\":\"page-r8-r1\",\"height\":32,\"sha256\":\"1f82898615c67c676c532b17a8bd8e801c73eb6e7e2ba5a7f685bf1c3582cc7a\",\"width\":32}},\"fragment_id\":\"fragment-r8-r1nswer-r8-r1\",\"platform_role\":\"A\",\"platform_type\":\"text\",\"region_id\":\"region-r8-r1nswer-r8-r1\"}},\"internal_bindings\":{\"question-r8-r1\":\"mock-question-1\"},\"read_sequence\":3,\"target\":{\"authorized_scope_id\":\"scope-r8-r1\",\"capabilities\":[{\"evidence_refs\":[],\"name\":\"persistent_draft\",\"platform_version\":\"a02-synthetic-platform-1\",\"status\":\"UNKNOWN\"},{\"evidence_refs\":[\"proof-r8-r1\"],\"name\":\"frame_readback\",\"platform_version\":\"a02-synthetic-platform-1\",\"status\":\"VERIFIED\"},{\"evidence_refs\":[],\"name\":\"content_readback\",\"platform_version\":\"a02-synthetic-platform-1\",\"status\":\"UNKNOWN\"},{\"evidence_refs\":[],\"name\":\"ocr_before_submit\",\"platform_version\":\"a02-synthetic-platform-1\",\"status\":\"UNKNOWN\"},{\"evidence_refs\":[],\"name\":\"resume_after_restart\",\"platform_version\":\"a02-synthetic-platform-1\",\"status\":\"UNKNOWN\"},{\"evidence_refs\":[],\"name\":\"multi_session\",\"platform_version\":\"a02-synthetic-platform-1\",\"status\":\"UNKNOWN\"},{\"evidence_refs\":[\"proof-r8-r1\"],\"name\":\"same_session_handoff\",\"platform_version\":\"a02-synthetic-platform-1\",\"status\":\"VERIFIED\"}],\"directories\":[\"platform-r8-r1\"],\"evidence_refs\":[\"proof-r8-r1\"],\"frames\":[{\"box\":{\"bbox\":[4,4,28,10],\"image\":{\"asset_id\":\"page-r8-r1\",\"height\":32,\"sha256\":\"1f82898615c67c676c532b17a8bd8e801c73eb6e7e2ba5a7f685bf1c3582cc7a\",\"width\":32}},\"platform_frame_id\":\"mock-frame-1\",\"platform_question_id\":\"mock-question-1\",\"platform_role\":\"Q\"},{\"box\":{\"bbox\":[4,18,28,24],\"image\":{\"asset_id\":\"page-r8-r1\",\"height\":32,\"sha256\":\"1f82898615c67c676c532b17a8bd8e801c73eb6e7e2ba5a7f685bf1c3582cc7a\",\"width\":32}},\"platform_frame_id\":\"mock-frame-2\",\"platform_question_id\":\"mock-question-1\",\"platform_role\":\"A\"}],\"observed_at\":\"2026-10-17T00:00:00Z\",\"observed_hash\":\"3aa385c24167c7067ed8947b8cd2b631805bb38bd081572b3ac249636662651d\",\"observed_version\":\"a03-target-epoch-0\",\"platform_version\":\"a02-synthetic-platform-1\",\"questions\":[{\"directory_id\":\"platform-r8-r1\",\"platform_order\":1,\"platform_question_id\":\"mock-question-1\"}],\"target_id\":\"target-r8-r1\"}}"
+        }
+      }
+    }
+  ],
+  "temporary_root": "C:\\Users\\ASUS\\AppData\\Local\\Temp\\a03-r8-r1-review-immutable-o1iwnfe6",
+  "removed": true,
+  "runtime_originals_opened": false,
+  "candidate_API_calls": 0
+}

@@ -1,0 +1,101 @@
+{
+  "status": "PRODUCER_GAP_CLOSED_WITH_FROZEN_EVIDENCE_RUNTIME_BLOCKER_CONFIRMED_STATICALLY",
+  "producer_unified_diff": [
+    "--- base/producer",
+    "+++ target/producer",
+    "@@ -87,6 +87,16 @@",
+    "         (source_ok, structure_ok, answer_ok, coverage_ok, policy_ok)]))",
+    " ",
+    " ",
+    "+def _pre_coverage_decision(bundle, graph, checks):",
+    "+    \"\"\"Keep the public pair contract and retain completeness in PRE decisions.\"\"\"",
+    "+    coverage, complete = coverage_for(bundle, graph)",
+    "+    checked = dict(checks)",
+    "+    if not complete:",
+    "+        checked['coverage'] = 'FAIL'",
+    "+    decision = 'PASS' if complete and all(value == 'PASS' for value in checked.values()) else 'HOLD'",
+    "+    return coverage, checked, decision",
+    "+",
+    "+",
+    " def produce_a03_pre_run(bundle, source_ref, evidence_ref, graph_ref, policy_reference, *,",
+    "                         bridge_context, registered_run_handle, actual_snapshot_ref,",
+    "                         actual_observation, asset_root, artifact_id, created_at):",
+    "@@ -100,6 +110,7 @@",
+    "     evidence = resolve_artifact(bundle, evidence_ref, 'EvidenceBundle')",
+    "     snapshot = resolve_artifact(bundle, actual_snapshot_ref, 'PlatformSnapshot')",
+    "     results = compare_synthetic_inputs(bundle, source_ref, evidence_ref, graph_ref, policy_reference, asset_root=asset_root)",
+    "+    coverage, results, decision = _pre_coverage_decision(bundle, graph, results)",
+    "     oracle_resource = _write(Path(asset_root), _raw_oracle(), '.json')",
+    "     run = {'format_version': 'a03-native-pre-run-1', 'run_id': binding['run_id'],",
+    "         'context': binding['context'], 'source_ref': source_ref, 'evidence_ref': evidence_ref,",
+    "@@ -119,10 +130,10 @@",
+    "     bridge_context = derive_context(bridge_context, augmented)",
+    "     bundle = validate_bundle(augmented, bridge_context=bridge_context, asset_root=asset_root)",
+    "     payload = {'stage': 'PRE_APPLY', 'subject': graph_ref, 'graph': graph_ref, 'policy': policy_reference,",
+    "-        'snapshot': actual_snapshot_ref, 'receipt': None, 'coverage': coverage_for(bundle, graph),",
+    "+        'snapshot': actual_snapshot_ref, 'receipt': None, 'coverage': coverage,",
+    "         'checks': [{'check_id': key, 'outcome': value, 'evidence_refs': [evidence_id], 'reason': 'Actual fixed synthetic comparison: ' + value}",
+    "                    for key, value in results.items()], 'issues': [],",
+    "-        'decision': 'PASS' if all(v == 'PASS' for v in results.values()) else 'HOLD',",
+    "+        'decision': decision,",
+    "         'reason': 'Actual five fixed synthetic comparisons; content remains unverified',",
+    "         'recovery_refs': [], 'synthetic_run_ref': run_resource, 'verification_context': binding['context']}",
+    "     pre = make_artifact('CheckReport', artifact_id, graph, payload, list(bundle.artifacts),"
+  ],
+  "producer_sha256": "f1a212e4b7693362945da1843c14e13264d16f7187b612671bec0b9f4f010aef",
+  "profile_sha256": "0bcf724c66206784d8526b3b73b3ef0fde953295dd3ac689379135bde52fee26",
+  "adoption_sha256": "480ab1b902639630a9c0172a6178a7d9b07776656242cf918076641ff63d775c",
+  "profile_delta_only_producer_pin": true,
+  "adoption_delta_only_profile_pin": true,
+  "schema_pins_verified": 6,
+  "implementation_pins_verified": 23,
+  "minimal_original_cases": [
+    {
+      "actual_checks": {
+        "answer_matching": "PASS",
+        "coverage": "PASS",
+        "policy": "PASS",
+        "source_integrity": "PASS",
+        "structure": "PASS"
+      },
+      "actual_pgm_sha256": "1f82898615c67c676c532b17a8bd8e801c73eb6e7e2ba5a7f685bf1c3582cc7a",
+      "complete": true,
+      "coverage_type": "dict",
+      "decision": "PASS",
+      "incomplete": false,
+      "runtime_admission_claim": false
+    },
+    {
+      "actual_checks": {
+        "answer_matching": "PASS",
+        "coverage": "FAIL",
+        "policy": "PASS",
+        "source_integrity": "PASS",
+        "structure": "PASS"
+      },
+      "actual_pgm_sha256": "1f82898615c67c676c532b17a8bd8e801c73eb6e7e2ba5a7f685bf1c3582cc7a",
+      "complete": false,
+      "coverage_type": "dict",
+      "decision": "HOLD",
+      "incomplete": true,
+      "runtime_admission_claim": false
+    }
+  ],
+  "minimal_original_script_sha256": "dbc7e91cb49ccc9eaebe4ba670d1ff8e184344b320ce7460af0a5dc6b3ca850f",
+  "minimal_checks_rerun": 0,
+  "runtime_source_sha256": {
+    "storage/__init__.py": "09b30cbab55f49100d228d79bdf8bb21d6bcbde78c69a04e83caf63d1868c827",
+    "storage/native.py": "e42ec5840e01bcdf7fc5eae6b96bd79002bc424621c95eeff6788780ed3b130d",
+    "contracts/recovery.py": "691e847171004c25b160458e675a6bb23a42426d83878d6a320f29714a9fb5ab"
+  },
+  "static_guard_fields": [
+    "plan_ref",
+    "action_id",
+    "attempt_fact",
+    "intent_ref"
+  ],
+  "guard_trace_sha256": "92706a74be9a9fdeafa02d0cb3df9c135d7b2a002e716f4a27f59d79cc6ff609",
+  "projection_value_is_static_inference_not_a_persisted_progress": true,
+  "candidate_imports_native_API_or_tests": 0,
+  "field_reset": "NOT_EXECUTED_NO_RERUN_VARIANT_OR_DELEGATION"
+}

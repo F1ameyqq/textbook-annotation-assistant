@@ -1,0 +1,119 @@
+{
+  "action_row_intent_equals_intent_row_id": true,
+  "action_row_plan_equals_plan_row_id": true,
+  "action_state_update_lines": "runtime/storage/native.py:283-284",
+  "actual_guard_line": "contracts/recovery.py:663",
+  "actual_trace": "runs/N1/stderr.txt",
+  "database_action_state": "APPLIED",
+  "database_intent_id": "intent-64fed260b0494869a09ed95b2fce3db1",
+  "database_plan_id": "fdb845e8ed02016c16302fcce064cd19d5a63ba29cc1a052a3d49e8372055d58",
+  "failed_projection_values_from_saved_row_and_frozen_branch": {
+    "action_id": "action-a02-ed35e8b58ec2c814f28402e742c19299",
+    "attempt_fact": "ATTEMPTED",
+    "intent_ref": {
+      "artifact_id": "writeintent-ad781d79747d4fb09f14c351206b8bf0",
+      "content_hash": "ed09d9e5f450571c70d27a00980e2b68d162251b6359a77c2594ad392a6d7697",
+      "kind": "WriteIntent",
+      "revision": 1
+    },
+    "plan_ref": {
+      "artifact_id": "plan-r8-r1-n1",
+      "content_hash": "4d72f3e37cb94a1fe3a69f1f3ed2dce1321cf8f7cb8c0733e3e854184b630c65",
+      "kind": "ApplyPlan",
+      "revision": 1
+    }
+  },
+  "failing_progress_persisted": false,
+  "guard_inequality_terms": {
+    "action_id": false,
+    "attempt_fact": true,
+    "intent_ref": false,
+    "plan_ref": false
+  },
+  "input_readback_sha256": "1d426dbf70910a8d7fd206f2da3f55b066722fe4a450ed1f13273c5624b4e6a8",
+  "interpretation": "Rejected progress is not a durable Artifact; ATTEMPTED is uniquely inferred from saved APPLIED row and executed frozen source. The raw actual trace fails at the same four-term guard.",
+  "late_fact_line": "runtime/storage/native.py:273",
+  "late_material_fact_values": {
+    "action_id": "action-a02-ed35e8b58ec2c814f28402e742c19299",
+    "attempt_fact": "MAY_HAVE_BEEN_ATTEMPTED",
+    "intent_ref": {
+      "artifact_id": "writeintent-ad781d79747d4fb09f14c351206b8bf0",
+      "content_hash": "ed09d9e5f450571c70d27a00980e2b68d162251b6359a77c2594ad392a6d7697",
+      "kind": "WriteIntent",
+      "revision": 1
+    },
+    "plan_ref": {
+      "artifact_id": "plan-r8-r1-n1",
+      "content_hash": "4d72f3e37cb94a1fe3a69f1f3ed2dce1321cf8f7cb8c0733e3e854184b630c65",
+      "kind": "ApplyPlan",
+      "revision": 1
+    }
+  },
+  "persisted_progress": [
+    {
+      "actions": [
+        {
+          "action_id": "action-a02-ed35e8b58ec2c814f28402e742c19299",
+          "attempt_evidence_refs": [],
+          "attempt_fact": "MAY_HAVE_BEEN_ATTEMPTED",
+          "dependency_status": "SATISFIED",
+          "effective_outcome": "UNKNOWN",
+          "intent_ref": {
+            "artifact_id": "writeintent-ad781d79747d4fb09f14c351206b8bf0",
+            "content_hash": "ed09d9e5f450571c70d27a00980e2b68d162251b6359a77c2594ad392a6d7697",
+            "kind": "WriteIntent",
+            "revision": 1
+          },
+          "receipt_ref": null,
+          "resolution_head_ref": null,
+          "result_fact": null
+        }
+      ],
+      "ref": {
+        "artifact_id": "executionprogress-8ecc5056ff834b2985bab57c9d41d13d",
+        "content_hash": "11a822ad78b5b954f64aff99c23ba00b347ce77e710c2576b8b37fb249ab0284",
+        "kind": "ExecutionProgress",
+        "revision": 1
+      }
+    },
+    {
+      "actions": [
+        {
+          "action_id": "action-a02-ed35e8b58ec2c814f28402e742c19299",
+          "attempt_evidence_refs": [],
+          "attempt_fact": "MAY_HAVE_BEEN_ATTEMPTED",
+          "dependency_status": "SATISFIED",
+          "effective_outcome": "APPLIED",
+          "intent_ref": {
+            "artifact_id": "writeintent-ad781d79747d4fb09f14c351206b8bf0",
+            "content_hash": "ed09d9e5f450571c70d27a00980e2b68d162251b6359a77c2594ad392a6d7697",
+            "kind": "WriteIntent",
+            "revision": 1
+          },
+          "receipt_ref": null,
+          "resolution_head_ref": {
+            "artifact_id": "resolution-f28027ba9bac41b68c203064915fb437",
+            "content_hash": "bde0d3109f0685532f1c97ae2aa618a9d9b386ed662e73cb33091b13004d3322",
+            "kind": "ReconciliationResult",
+            "revision": 1
+          },
+          "result_fact": null
+        }
+      ],
+      "ref": {
+        "artifact_id": "executionprogress-e1cf78da009d4dcfbec9f179e743351f",
+        "content_hash": "2aa642cca7e5e147aa8ebab96c2933d9b35064001f785f4164c289131c524006",
+        "kind": "ExecutionProgress",
+        "revision": 1
+      }
+    }
+  ],
+  "product_tests_executed": 0,
+  "projection_branch_line": "runtime/storage/__init__.py:799",
+  "source_sha256": {
+    "contracts/recovery.py": "691e847171004c25b160458e675a6bb23a42426d83878d6a320f29714a9fb5ab",
+    "runtime/storage/__init__.py": "09b30cbab55f49100d228d79bdf8bb21d6bcbde78c69a04e83caf63d1868c827",
+    "runtime/storage/native.py": "e42ec5840e01bcdf7fc5eae6b96bd79002bc424621c95eeff6788780ed3b130d"
+  },
+  "status": "CONFIRMED_SAVED_CASE_IDENTITY_AND_STATIC_BRANCH"
+}
