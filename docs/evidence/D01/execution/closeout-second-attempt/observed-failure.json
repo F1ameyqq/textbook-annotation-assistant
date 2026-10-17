@@ -1,0 +1,10 @@
+{
+  "source": "Copied from exec_command tool output 89e065; the failed command itself returned exit_code 1",
+  "argv": ["C:/Users/ASUS/AppData/Local/Programs/Python/Python39/python.exe", "-I", "examples/d01/finalize.py"],
+  "exit_code": 1,
+  "stderr_terminal": "AssertionError: preserve previous closeout output: workflow-links-index.json",
+  "cause": "Idempotence guard serialized fresh JSON as LF bytes, while the initial Windows write_text had written exact CRLF bytes.",
+  "observed_existing_bytes": {"CRLF_count": 23, "LF_count": 23},
+  "correction": "Serialize the exact originally used platform newline bytes before equality comparison. Existing workflow-links-index.json and negative-input-index.json remain byte-identical; no normalization of archived inputs and no tolerance expansion.",
+  "functional_test_replay": false
+}

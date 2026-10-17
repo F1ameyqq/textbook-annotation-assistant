@@ -1,0 +1,24 @@
+{
+  "source": "Copied from exec_command tool output de7c68; raw output was returned by the tool rather than separately redirected to a file",
+  "functional_test_replay": false,
+  "commands": [
+    {
+      "argv": ["C:/Users/ASUS/AppData/Local/Programs/Python/Python39/python.exe", "-I", "examples/d01/finalize.py"],
+      "actual_result": "AssertionError before closeout-audit.json was generated",
+      "stderr_terminal": "AssertionError: C:\\Users\\ASUS\\.codex\\worktrees\\d01-clean-install\\1800\\docs\\evidence\\D01\\execution\\closeout-audit.json",
+      "subprocess_exit_code": 1
+    },
+    {
+      "argv": ["C:/Users/ASUS/AppData/Local/Programs/Python/Python39/python.exe", "-I", "examples/d01/verify.py"],
+      "actual_result": "FileNotFoundError: SHA256SUMS.json was not created after the earlier failure",
+      "subprocess_exit_code": 1
+    },
+    {
+      "argv": ["git", "diff", "--check"],
+      "subprocess_exit_code": 0
+    }
+  ],
+  "composite_powershell_exit_code": 0,
+  "composite_exit_is_not_python_success": true,
+  "correction": "Check two declared generated links after their files are created. Preserve existing partial static outputs only if byte-identical. Run finalization and verification in separate checked tool calls; no product test rerun."
+}

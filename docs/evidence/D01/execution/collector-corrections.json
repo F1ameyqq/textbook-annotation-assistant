@@ -1,0 +1,39 @@
+{
+  "format": "d01-collector-corrections-1",
+  "product_changes_from_corrections": false,
+  "records": [
+    {
+      "attempt": "initial implementation commit receipt",
+      "boundary": "PowerShell command parsing, after successful product commit",
+      "failed_command": "git rev-parse HEAD^{tree}",
+      "exit_code": 1,
+      "observed_output_excerpt": "-encodedCommand\ndAByAGUAZQA=\nfatal: ambiguous argument 'dAByAGUAZQA=': unknown revision or path not in the working tree.",
+      "provenance": "Copied from exec_command tool output, chunk 143745; not a saved raw subprocess stream",
+      "correction": "Quoted 'HEAD^{tree}' in PowerShell; later Python subprocess argv queries use the literal ^{tree} argument.",
+      "correct_source_tree": "06ffc28412a7aff9dc16ebb517686fc3046b7814"
+    },
+    {
+      "attempt": "collector-run01",
+      "exit_code": 1,
+      "boundary": "Collector path guard, before stage/venv creation",
+      "reason": "CPython 3.9 on Windows left a nonexistent relative Path.resolve result relative.",
+      "correction": "Call absolute().resolve() before checking containment; preserve original run.py and outer raw logs.",
+      "evidence": "collector-run01/command.json"
+    },
+    {
+      "attempt": "collector-run02",
+      "exit_code": 1,
+      "boundary": "Collector reading old-book limitations.json after the unmodified consumer succeeded",
+      "reason": "read_text() used Windows GBK for an exact UTF-8 file.",
+      "correction": "Read JSON explicitly as UTF-8; preserve run02 environment, scripts, wheel, reports, and all raw logs.",
+      "additional_boundary_correction": "run02 cwd was under the task .local directory and does not prove a physically outside-worktree cwd. run03 uses a new actual OS temporary directory outside the worktree and build source.",
+      "evidence": "collector-run02/command.json"
+    },
+    {
+      "attempt": "collector-run03",
+      "exit_code": 0,
+      "scope": "New CPython 3.9 venv and complete bounded run; earlier successful commands are retained as earlier-attempt evidence only.",
+      "evidence": "collector-run03/command.json"
+    }
+  ]
+}
