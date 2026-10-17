@@ -2,7 +2,7 @@
   "schema_version": 1,
   "project": "D:\\1800",
   "coordinator_thread_id": "01a13f26-7567-75e1-99ee-c9d2194e78bb",
-  "updated_at": "2026-10-17T15:37:31.495423+08:00",
+  "updated_at": "2026-10-17T15:39:01.037522+08:00",
   "automation": {
     "id": "1800-a",
     "kind": "heartbeat",
@@ -1921,20 +1921,23 @@
         "scope": "Fixed R3 offline PNG completeness and reviewed source gates only; whole A04 not accepted",
         "previous_raw_reproduction": "docs/evidence/A04/coordinator/coordinate-R3-acceptance/checks.json",
         "new_test_rerun": false,
-        "remote_push": false
+        "remote_push": false,
+        "workflow_commit": "0a668650f3dfdc00898032fb9c89e96694260d23"
       },
       "review_archive_r3_raw_bytes": {
-        "status": "READY_FOR_LOCAL_ARCHIVE",
+        "status": "ARCHIVED_LOCALLY",
         "manifest": "docs/evidence/A04/review/coordinate-R3-raw-bytes/sha256-manifest.json",
         "manifest_sha256": "391d604ba305236f0ae6aa8dee778c5ae3157e5a89b32e96d3c1e6d25ad4a47d",
         "manifest_entries": 602,
         "report": "docs/tasks/A04-coordinate-R3-raw-bytes-review-report.md",
-        "remote_push": false
+        "remote_push": false,
+        "commit": "0a668650f3dfdc00898032fb9c89e96694260d23",
+        "raw_committed_files": 603
       }
     },
     "A03": {
       "status": "REVIEW",
-      "phase": "P2_R2_STATIC_REVIEW_PENDING",
+      "phase": "P2_R2_PROPOSAL_STATIC_REVIEW_RUNNING",
       "depends_on": [
         "A02"
       ],
@@ -1943,7 +1946,7 @@
       "review_task": "docs/tasks/A03-independent-review.md",
       "acceptance_scope": "P1 design accepted; P2 SQLite/offline recovery functionality remains unaccepted.",
       "next_dependency": "Independent review of three static closures and separately bounded R17/version and registration-positive residuals; then coordinator scope decision. Product implementation, exact oracle adoption and I01 remain blocked.",
-      "dispatch_status": "EXECUTION_ACKNOWLEDGED",
+      "dispatch_status": "INDEPENDENT_REVIEW_ACKNOWLEDGED",
       "B_confirmation": "NOT_CONFIRMED",
       "workflow_commit": "a354f95f1d0b40a8f0847b57fa3978cac999e7a2",
       "worktree_name": "a03-runtime-recovery",
@@ -1995,58 +1998,41 @@
       "review": {
         "thread_id": "01a145aa-8d59-7c70-8d81-731712103a9a",
         "host_id": "local",
-        "cursor": "abdea222-4697-4046-86b1-a5dc48889fac:10",
-        "turn_status": "completed",
-        "turn_id": "01a14887-5638-7c53-ac09-761a20cacf14",
-        "phase": "P2_R1_PROPOSAL_STATIC_REWORK",
-        "target_commit": "7fdbde8f16569fd3bc399013115e13269d5d33fa",
-        "task_document": "docs/tasks/A03-P2-R1-proposal-review-handoff.md",
-        "task_sha256": "d0ef157bcb1dfc828db30682694b83c3e418e427eeacaea25720f29b2e40585f",
-        "expected_report": "docs/tasks/A03-P2-R1-proposal-review-report.md",
-        "decision": "REWORK",
+        "cursor": "abdea222-4697-4046-86b1-a5dc48889fac:11",
+        "turn_id": "01a148cc-34a7-7d61-84b9-b4841ca17b14",
+        "turn_status": "inProgress",
+        "observed_thread_status": "active",
+        "phase": "P2_R2_PROPOSAL_STATIC_REVIEW_RUNNING",
+        "target_commit": "526d264284f36f856c306db88c1d7e71c04152e1",
+        "task_document": "docs/tasks/A03-P2-R2-proposal-review-handoff.md",
+        "task_sha256": "fe179d0cdd803bf8742732b3d6e3dd454424fe0d9ff3a21f3c9342321a2e8061",
+        "expected_report": "docs/tasks/A03-P2-R2-proposal-review-report.md",
+        "decision": "PENDING",
         "reasoning_effort": "xhigh",
-        "observed_thread_status": "idle",
-        "last_checked_at": "2026-10-17T14:53:55.977466+08:00",
-        "workflow_commit": "c135542791cb9172dd3163bf593273814a556968",
-        "last_progress": "Static review REWORK: frame consumer closure, session/CAS and new initial-kind consistency gaps. Coordinator chose bounded design constraints; no implementation/contract adoption or I01 release.",
-        "latest_lightweight_observation": {
-          "at": "2026-10-17T14:53:55.977466+08:00",
-          "root_head": "29b3cdcddeffe166948b63e1e409bc59e555a1b1",
-          "target_commit": "7fdbde8f16569fd3bc399013115e13269d5d33fa",
-          "report_present": true,
-          "evidence_directory_present": true,
-          "frozen_delivery_verified": true,
-          "scope": "309 manifest entries and read-only archive verifier checked; no product/DB run."
-        },
-        "formal_decision": "REWORK",
-        "report": "docs/tasks/A03-P2-R1-proposal-review-report.md",
-        "report_sha256": "265d5b8a67548b4e6322c105859475a852ca6d82bc8c0c04ec10bf2eedb411f0",
-        "evidence_manifest": "docs/evidence/A03/review/P2-R1-proposal/sha256-manifest.json",
-        "evidence_manifest_sha256": "68b7c8f16f0a5973fa20e962525b8dab12b095b85b2343e95e6373ae38d152ac",
-        "session_released": true
+        "workflow_commit": "0a668650f3dfdc00898032fb9c89e96694260d23",
+        "last_checked_at": "2026-10-17T15:39:01.037522+08:00",
+        "last_progress": "Reviewer acknowledged exact workflow/raw blob scope, three static closures and explicit R17/version plus registration-positive residuals; no product/native run or oracle adoption/I01 release."
       },
       "review_handoff": {
-        "key": "A03:review:P2-R1-proposal:7fdbde8f16569fd3bc399013115e13269d5d33fa",
+        "key": "A03:review:P2-R2-proposal:526d264284f36f856c306db88c1d7e71c04152e1",
         "task": "A03",
-        "stage": "P2_R1_PROPOSAL_STATIC_REVIEW",
+        "stage": "P2_R2_PROPOSAL_STATIC_REVIEW",
         "role": "review",
-        "state": "COMPLETED",
-        "created_at": "2026-10-17T14:22:55.314506+08:00",
-        "target_commit": "7fdbde8f16569fd3bc399013115e13269d5d33fa",
-        "document": "docs/tasks/A03-P2-R1-proposal-review-handoff.md",
-        "document_sha256": "d0ef157bcb1dfc828db30682694b83c3e418e427eeacaea25720f29b2e40585f",
+        "state": "ACKNOWLEDGED",
+        "created_at": "2026-10-17T15:37:31.495423+08:00",
+        "target_commit": "526d264284f36f856c306db88c1d7e71c04152e1",
+        "document": "docs/tasks/A03-P2-R2-proposal-review-handoff.md",
+        "document_sha256": "fe179d0cdd803bf8742732b3d6e3dd454424fe0d9ff3a21f3c9342321a2e8061",
         "thread_id": "01a145aa-8d59-7c70-8d81-731712103a9a",
         "host_id": "local",
         "reasoning_effort": "xhigh",
-        "scope": "Static proposal only; no product/DB/functional runs; coordinator decisions required; I01 blocked.",
-        "sent_at": "2026-10-17T14:26:53.693802+08:00",
-        "acknowledged_at": "2026-10-17T14:26:53.693802+08:00",
-        "workflow_commit": "c135542791cb9172dd3163bf593273814a556968",
-        "turn_id": "01a14887-5638-7c53-ac09-761a20cacf14",
-        "cursor": "abdea222-4697-4046-86b1-a5dc48889fac:10",
-        "result": "Frozen independent static review REWORK; archive verified and coordinator decisions recorded.",
-        "completed_at": "2026-10-17T14:53:55.977466+08:00",
-        "decision": "REWORK"
+        "scope": "Three bounded static closure checks and explicit residual classification; no product/DB/native sessions or I01 release.",
+        "sent_at": "2026-10-17T15:39:01.037522+08:00",
+        "acknowledged_at": "2026-10-17T15:39:01.037522+08:00",
+        "workflow_commit": "0a668650f3dfdc00898032fb9c89e96694260d23",
+        "turn_id": "01a148cc-34a7-7d61-84b9-b4841ca17b14",
+        "cursor": "abdea222-4697-4046-86b1-a5dc48889fac:11",
+        "result": "Original independent A03 review active at xhigh; three bounded static closures and separate residual classification; no duplicate chat or product/native action."
       },
       "rework_round": 2,
       "review_archive": {
@@ -2431,7 +2417,7 @@
           "task": "A03",
           "stage": "P2-R2-proposal",
           "role": "execution",
-          "state": "ACKNOWLEDGED",
+          "state": "COMPLETED_FROZEN_DELIVERY",
           "created_at": "2026-10-17T14:53:55.977466+08:00",
           "document": "docs/tasks/A03-P2-R2-static-rework.md",
           "document_sha256": "f1e48e85b7b9a07762cca3c0d50d259dfc302edb0b3f4f667aa3e53099c442a0",
@@ -2444,8 +2430,10 @@
           "acknowledged_at": "2026-10-17T14:56:48.588330+08:00",
           "workflow_commit": "d834bf531f95abac7ed30b89b3ca55105fa6f491",
           "turn_id": "01a148a4-3e96-7dd2-9d40-400bd319f809",
-          "cursor": "506fd3cf-091f-418b-b002-636f503b5e4b:10",
-          "result": "Existing A-side chat active at xhigh; no duplicate chat, platform action or B message."
+          "cursor": "506fd3cf-091f-418b-b002-636f503b5e4b:14",
+          "result": "Existing A-side chat active at xhigh; no duplicate chat, platform action or B message.",
+          "completed_at": "2026-10-17T15:39:01.037522+08:00",
+          "delivery_commit": "526d264284f36f856c306db88c1d7e71c04152e1"
         }
       ],
       "operational_status": "P2_RUNNING_AFTER_BOUNDED_RESUME",
@@ -2720,6 +2708,39 @@
           "report_sha256": "6352813e1721ed7d66175d02d98c337fed4a6d6e5004c8186321db5d4c4d2d79",
           "evidence_manifest_sha256": "99fe88bab32ffae995b371e2f43e5a3be88324cb5e25ef7dee1add9ef92ec42a",
           "session_released": true
+        },
+        {
+          "thread_id": "01a145aa-8d59-7c70-8d81-731712103a9a",
+          "host_id": "local",
+          "cursor": "abdea222-4697-4046-86b1-a5dc48889fac:10",
+          "turn_status": "completed",
+          "turn_id": "01a14887-5638-7c53-ac09-761a20cacf14",
+          "phase": "P2_R1_PROPOSAL_STATIC_REWORK",
+          "target_commit": "7fdbde8f16569fd3bc399013115e13269d5d33fa",
+          "task_document": "docs/tasks/A03-P2-R1-proposal-review-handoff.md",
+          "task_sha256": "d0ef157bcb1dfc828db30682694b83c3e418e427eeacaea25720f29b2e40585f",
+          "expected_report": "docs/tasks/A03-P2-R1-proposal-review-report.md",
+          "decision": "REWORK",
+          "reasoning_effort": "xhigh",
+          "observed_thread_status": "idle",
+          "last_checked_at": "2026-10-17T14:53:55.977466+08:00",
+          "workflow_commit": "c135542791cb9172dd3163bf593273814a556968",
+          "last_progress": "Static review REWORK: frame consumer closure, session/CAS and new initial-kind consistency gaps. Coordinator chose bounded design constraints; no implementation/contract adoption or I01 release.",
+          "latest_lightweight_observation": {
+            "at": "2026-10-17T14:53:55.977466+08:00",
+            "root_head": "29b3cdcddeffe166948b63e1e409bc59e555a1b1",
+            "target_commit": "7fdbde8f16569fd3bc399013115e13269d5d33fa",
+            "report_present": true,
+            "evidence_directory_present": true,
+            "frozen_delivery_verified": true,
+            "scope": "309 manifest entries and read-only archive verifier checked; no product/DB run."
+          },
+          "formal_decision": "REWORK",
+          "report": "docs/tasks/A03-P2-R1-proposal-review-report.md",
+          "report_sha256": "265d5b8a67548b4e6322c105859475a852ca6d82bc8c0c04ec10bf2eedb411f0",
+          "evidence_manifest": "docs/evidence/A03/review/P2-R1-proposal/sha256-manifest.json",
+          "evidence_manifest_sha256": "68b7c8f16f0a5973fa20e962525b8dab12b095b85b2343e95e6373ae38d152ac",
+          "session_released": true
         }
       ],
       "coordinator_reproduction_history": [
@@ -2905,7 +2926,7 @@
         "task": "A03",
         "stage": "P2_R2_PROPOSAL_STATIC_REVIEW",
         "role": "review",
-        "state": "INTENT_RECORDED",
+        "state": "ACKNOWLEDGED",
         "created_at": "2026-10-17T15:37:31.495423+08:00",
         "target_commit": "526d264284f36f856c306db88c1d7e71c04152e1",
         "document": "docs/tasks/A03-P2-R2-proposal-review-handoff.md",
@@ -2913,7 +2934,13 @@
         "thread_id": "01a145aa-8d59-7c70-8d81-731712103a9a",
         "host_id": "local",
         "reasoning_effort": "xhigh",
-        "scope": "Three bounded static closure checks and explicit residual classification; no product/DB/native sessions or I01 release."
+        "scope": "Three bounded static closure checks and explicit residual classification; no product/DB/native sessions or I01 release.",
+        "sent_at": "2026-10-17T15:39:01.037522+08:00",
+        "acknowledged_at": "2026-10-17T15:39:01.037522+08:00",
+        "workflow_commit": "0a668650f3dfdc00898032fb9c89e96694260d23",
+        "turn_id": "01a148cc-34a7-7d61-84b9-b4841ca17b14",
+        "cursor": "abdea222-4697-4046-86b1-a5dc48889fac:11",
+        "result": "Original independent A03 review active at xhigh; three bounded static closures and separate residual classification; no duplicate chat or product/native action."
       }
     },
     "D01": {
@@ -3795,7 +3822,7 @@
       "task": "A03",
       "stage": "P2-R2-proposal",
       "role": "execution",
-      "state": "ACKNOWLEDGED",
+      "state": "COMPLETED_FROZEN_DELIVERY",
       "created_at": "2026-10-17T14:53:55.977466+08:00",
       "document": "docs/tasks/A03-P2-R2-static-rework.md",
       "document_sha256": "f1e48e85b7b9a07762cca3c0d50d259dfc302edb0b3f4f667aa3e53099c442a0",
@@ -3808,8 +3835,10 @@
       "acknowledged_at": "2026-10-17T14:56:48.588330+08:00",
       "workflow_commit": "d834bf531f95abac7ed30b89b3ca55105fa6f491",
       "turn_id": "01a148a4-3e96-7dd2-9d40-400bd319f809",
-      "cursor": "506fd3cf-091f-418b-b002-636f503b5e4b:10",
-      "result": "Existing A-side chat active at xhigh; no duplicate chat, platform action or B message."
+      "cursor": "506fd3cf-091f-418b-b002-636f503b5e4b:14",
+      "result": "Existing A-side chat active at xhigh; no duplicate chat, platform action or B message.",
+      "completed_at": "2026-10-17T15:39:01.037522+08:00",
+      "delivery_commit": "526d264284f36f856c306db88c1d7e71c04152e1"
     },
     {
       "key": "A04:review:coordinate-R3:6c8137a4fadddc01a47906d564ab3460277c8958",
@@ -3859,7 +3888,7 @@
       "task": "A03",
       "stage": "P2_R2_PROPOSAL_STATIC_REVIEW",
       "role": "review",
-      "state": "INTENT_RECORDED",
+      "state": "ACKNOWLEDGED",
       "created_at": "2026-10-17T15:37:31.495423+08:00",
       "target_commit": "526d264284f36f856c306db88c1d7e71c04152e1",
       "document": "docs/tasks/A03-P2-R2-proposal-review-handoff.md",
@@ -3867,14 +3896,21 @@
       "thread_id": "01a145aa-8d59-7c70-8d81-731712103a9a",
       "host_id": "local",
       "reasoning_effort": "xhigh",
-      "scope": "Three bounded static closure checks and explicit residual classification; no product/DB/native sessions or I01 release."
+      "scope": "Three bounded static closure checks and explicit residual classification; no product/DB/native sessions or I01 release.",
+      "sent_at": "2026-10-17T15:39:01.037522+08:00",
+      "acknowledged_at": "2026-10-17T15:39:01.037522+08:00",
+      "workflow_commit": "0a668650f3dfdc00898032fb9c89e96694260d23",
+      "turn_id": "01a148cc-34a7-7d61-84b9-b4841ca17b14",
+      "cursor": "abdea222-4697-4046-86b1-a5dc48889fac:11",
+      "result": "Original independent A03 review active at xhigh; three bounded static closures and separate residual classification; no duplicate chat or product/native action."
     }
   ],
   "last_action": {
-    "at": "2026-10-17T15:37:31.495423+08:00",
+    "at": "2026-10-17T15:39:01.037522+08:00",
     "task_id": "A03/A04",
-    "action": "A04 raw-byte supplement verified and limited offline acceptance recorded; A03 R2 frozen delivery verified and independent static review intent recorded. No product integration or push.",
-    "remote_push": false
+    "action": "A04 limited OFFLINE_R3 accepted and 603-file raw-byte supplement archived; whole A04 remains blocked and unintegrated. A03 R2 independent static review acknowledged at xhigh, I01 blocked.",
+    "remote_push": false,
+    "workflow_commit": "0a668650f3dfdc00898032fb9c89e96694260d23"
   },
   "limitations": [
     "Current route uses mock B artifacts until independently agreed interface/artifact versions exist.",
@@ -3894,8 +3930,9 @@
     "full_suite_rerun": false,
     "notification": "NOTIFY",
     "next_dependencies": "Independent review of three static closures and separately bounded R17/version and registration-positive residuals; then coordinator scope decision. Product implementation, exact oracle adoption and I01 remain blocked.",
-    "dispatch_result": "A03 review intent recorded; A04 limited offline accepted and whole task blocked.",
-    "no_duplicate_chat": true
+    "dispatch_result": "Original independent A03 review active at xhigh; three bounded static closures and separate residual classification; no duplicate chat or product/native action.",
+    "no_duplicate_chat": true,
+    "completed_at": "2026-10-17T15:39:01.037522+08:00"
   },
   "prepared_next_batch": {
     "status": "DISPATCHED",
