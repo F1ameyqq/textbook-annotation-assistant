@@ -1,0 +1,55 @@
+{
+  "note": "Observed top-level tool receipts. Bootstrap/closeout/process-check stdout were returned by tools, not separately redirected startup raw-byte logs. Runtime collector and all verifier/OS/singleton subprocess original output bytes were captured at startup and are retained.",
+  "receipts": [
+    {
+      "argv": [
+        "python",
+        "-B",
+        "D:\\1800\\docs\\evidence\\A01\\review-integration-R2\\bootstrap.py"
+      ],
+      "cwd": "D:/1800",
+      "observed_exit_code": 0,
+      "output": "bootstrap.json; bootstrap-commands.json"
+    },
+    {
+      "argv": [
+        "python",
+        "-B",
+        "D:\\1800\\docs\\evidence\\A01\\review-integration-R2\\launch_runtime.py"
+      ],
+      "cwd": "D:/1800",
+      "observed_exit_code": 0,
+      "output": "collector-runtime/command.json; stdout.log; stderr.log"
+    },
+    {
+      "argv": [
+        "python",
+        "-B",
+        "D:\\1800\\docs\\evidence\\A01\\review-integration-R2\\closeout_audit.py"
+      ],
+      "cwd": "D:/1800",
+      "observed_exit_code": 0,
+      "output": "closeout-integrity.json"
+    },
+    {
+      "argv": [
+        "PowerShell",
+        "process-check.ps1"
+      ],
+      "observed_exit_code": 0,
+      "output": "process-check.json"
+    },
+    {
+      "argv": [
+        "git",
+        "diff",
+        "--check",
+        "--",
+        "docs/tasks/A01-integration-R2-review-report.md",
+        "docs/evidence/A01/review-integration-R2"
+      ],
+      "cwd": "D:/1800",
+      "observed_exit_code": 0
+    }
+  ]
+}

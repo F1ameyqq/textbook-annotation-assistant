@@ -1,0 +1,156 @@
+{
+  "related_A01_files_rechecked": 186,
+  "reusable_cases": [
+    {
+      "label": "I01-source-functional",
+      "expected_exit_code": 1,
+      "actual_exit_code": 1,
+      "expected_matched": true,
+      "child_exit_code": 1,
+      "passed": false,
+      "first_load_bundle": "NOT_APPLICABLE: code/fixture preservation control",
+      "source_restored": true
+    },
+    {
+      "label": "I02-encoded-content",
+      "expected_exit_code": 1,
+      "actual_exit_code": 1,
+      "expected_matched": true,
+      "child_exit_code": 1,
+      "passed": false,
+      "first_load_bundle": "NOT_APPLICABLE: code/fixture preservation control",
+      "source_restored": true
+    },
+    {
+      "label": "I03-file-identity",
+      "expected_exit_code": 1,
+      "actual_exit_code": 1,
+      "expected_matched": true,
+      "child_exit_code": 1,
+      "passed": false,
+      "first_load_bundle": "NOT_APPLICABLE: code/fixture preservation control",
+      "source_restored": true
+    },
+    {
+      "label": "I05-source-manifest-identity",
+      "expected_exit_code": 1,
+      "actual_exit_code": 1,
+      "expected_matched": true,
+      "child_exit_code": 1,
+      "passed": false,
+      "first_load_bundle": "NOT_APPLICABLE: code/fixture preservation control",
+      "source_restored": true
+    },
+    {
+      "label": "F00-raw",
+      "path": "tests/test_contracts.py",
+      "expected_passed": true,
+      "actual_passed": true,
+      "expected_matched": true
+    },
+    {
+      "label": "F01-allowed-CRLF",
+      "path": "tests/test_contracts.py",
+      "expected_passed": true,
+      "actual_passed": true,
+      "expected_matched": true
+    },
+    {
+      "label": "F02-mixed-EOL",
+      "path": "tests/test_contracts.py",
+      "expected_passed": false,
+      "actual_passed": false,
+      "expected_matched": true
+    },
+    {
+      "label": "F03-unlisted-CRLF",
+      "path": "examples/a01/build.py",
+      "expected_passed": false,
+      "actual_passed": false,
+      "expected_matched": true
+    },
+    {
+      "label": "F04-binary",
+      "path": "tests/fixtures/contracts/normal/assets/asset-page-a1.pgm",
+      "expected_passed": false,
+      "actual_passed": false,
+      "expected_matched": true
+    },
+    {
+      "label": "R00-clean",
+      "expected_exit_code": 0,
+      "actual_exit_code": 0,
+      "outcome": {
+        "status": "REVIEW",
+        "passed": true,
+        "commands": 0,
+        "preserved_files": 971,
+        "representations": [
+          "GIT_BLOB"
+        ]
+      },
+      "source_restored": true
+    },
+    {
+      "label": "R01-source",
+      "expected_exit_code": 1,
+      "actual_exit_code": 1,
+      "outcome": {
+        "status": "REVIEW",
+        "passed": false,
+        "gate": "implementation",
+        "errors": [
+          {
+            "code": "CONTENT_MISMATCH",
+            "path": "src/annotation/source/static/consistency.py",
+            "actual_sha256": "9e525bb46a41afb39c3d2bb812eaf4c141ce34dd8a880c128ca4a4d84fe54952",
+            "accepted_sha256": [
+              "2d44ffc21f510cb090070cf5966775dfa498af2cae31f2ca4fe26fb7ea95575c",
+              "8266c7a81515b0e8a3961250bc06e43eb0aa4c70e4c0890fa794984970dc0d80"
+            ]
+          }
+        ]
+      },
+      "source_restored": true
+    },
+    {
+      "label": "R02-image",
+      "expected_exit_code": 1,
+      "actual_exit_code": 1,
+      "outcome": {
+        "status": "REVIEW",
+        "passed": false,
+        "gate": "preservation",
+        "errors": [
+          {
+            "code": "CONTENT_MISMATCH",
+            "path": "data/derived/analysis/coord_evidence/annimg/46006966_10_analysis_0@page_234_otnod9du.jpg",
+            "actual_sha256": "591b0b7b2be6291144ad0c83e3de0d832c6eb69401b01b877439ba06540c6614",
+            "accepted_sha256": [
+              "d8d79a942910fceba4eef240118dec479517f7a52ba45e1ecfa9689184c5bc51"
+            ]
+          }
+        ]
+      },
+      "source_restored": true
+    }
+  ],
+  "reusable_error_propagation": "Byte-identical complete entry accumulates child nonzero; historical failing raw command and negative nonzero receipts remain evidence of propagation.",
+  "limitation_I04": {
+    "label": "I04-root-reference-identity",
+    "expected_exit_code": 1,
+    "actual_exit_code": 0,
+    "expected_matched": false,
+    "child_exit_code": 0,
+    "passed": true,
+    "first_load_bundle": "NOT_APPLICABLE: code/fixture preservation control",
+    "source_restored": true
+  },
+  "not_reusable_as_R2_acceptance": [
+    "Old raw complete entry failed I1-GIT-01; must run the new fixed combined complete entry.",
+    "Old A02 count 52; new accepted suite is 62 and must be observed this round.",
+    "Old actual import paths/checkouts or noGit environment probes cannot prove this round imports or OS launch failure.",
+    "No new 630-case geometry run, platform acceptance, whole-book coverage, B confirmation or A04/D01 release is proved."
+  ],
+  "functional_negatives_rerun": 0
+}
