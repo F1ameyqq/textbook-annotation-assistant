@@ -2,7 +2,7 @@
   "schema_version": 1,
   "project": "D:\\1800",
   "coordinator_thread_id": "01a13f26-7567-75e1-99ee-c9d2194e78bb",
-  "updated_at": "2026-10-17T14:07:27.599625+08:00",
+  "updated_at": "2026-10-17T14:22:55.314506+08:00",
   "automation": {
     "id": "1800-a",
     "kind": "heartbeat",
@@ -1474,7 +1474,7 @@
       "review": {
         "thread_id": "01a144cc-e93d-7841-a259-d6aac22c94f4",
         "host_id": "local",
-        "cursor": "33f1ce70-74e3-46de-b04f-ceafd8e7f74b:8",
+        "cursor": "33f1ce70-74e3-46de-b04f-ceafd8e7f74b:9",
         "turn_status": "inProgress",
         "turn_id": "01a14878-834c-7030-9cc7-827d60d5b2d9",
         "phase": "COORDINATE_R2_OFFLINE_REVIEW_RUNNING",
@@ -1485,9 +1485,9 @@
         "decision": "PENDING",
         "reasoning_effort": "xhigh",
         "observed_thread_status": "active",
-        "last_checked_at": "2026-10-17T14:07:27.599625+08:00",
+        "last_checked_at": "2026-10-17T14:22:55.314506+08:00",
         "workflow_commit": "e7ff892776f53636fcddfe136d1659204c4ff738",
-        "last_progress": "Original independent reviewer acknowledged R2 scope and is isolating the frozen input. No browser/network/platform; full A04 remains blocked."
+        "last_progress": "Reviewer reports CRC/zlib-valid PNG with missing pixel rows accepted by public CLI/loader; formal report/manifest not yet frozen. Potential R2 REWORK; no acceptance or new repair dispatch before evidence closure."
       },
       "dispatch_record_commit": "d6738cf239b203496c9e84cb87178eb82f2d4f89",
       "blocked_reason": "Frozen coordinate-R1 delivered; live DIRECTORY/SOURCE_INDEX timeouts leave R02-R05 incomplete. Offline independent review dispatched.",
@@ -1724,8 +1724,8 @@
       ]
     },
     "A03": {
-      "status": "REWORK",
-      "phase": "P2_R1_PROPOSAL_RUNNING",
+      "status": "REVIEW",
+      "phase": "P2_R1_PROPOSAL_REVIEW_PENDING",
       "depends_on": [
         "A02"
       ],
@@ -1733,7 +1733,7 @@
       "execution_task": "docs/tasks/A03-runtime-recovery.md",
       "review_task": "docs/tasks/A03-independent-review.md",
       "acceptance_scope": "P1 design accepted; P2 SQLite/offline recovery functionality remains unaccepted.",
-      "next_dependency": "Bounded R1 contract amendment proposal and approval, implementation/evidence rework, independent re-review; I01 remains blocked.",
+      "next_dependency": "Independent static review, coordinator contract/scope decisions, then bounded implementation and functional re-review. I01 remains blocked.",
       "dispatch_status": "REPAIR_ACKNOWLEDGED",
       "B_confirmation": "NOT_CONFIRMED",
       "workflow_commit": "a354f95f1d0b40a8f0847b57fa3978cac999e7a2",
@@ -1745,31 +1745,28 @@
       "execution": {
         "thread_id": "01a145aa-2fea-7942-97f9-ad260acf4e30",
         "host_id": "local",
-        "cursor": "506fd3cf-091f-418b-b002-636f503b5e4b:8",
-        "turn_status": "inProgress",
+        "cursor": "506fd3cf-091f-418b-b002-636f503b5e4b:9",
+        "turn_status": "completed",
         "turn_id": "01a14864-6e9c-7af2-8999-a1bcd7862526",
-        "last_checked_at": "2026-10-17T14:06:46.970023+08:00",
-        "observed_thread_status": "active",
-        "phase": "P2_R1_PROPOSAL_RUNNING",
+        "last_checked_at": "2026-10-17T14:22:55.314506+08:00",
+        "observed_thread_status": "idle",
+        "phase": "P2_R1_PROPOSAL_FROZEN",
         "base_commit": "c30526958e313141bf64152627591b0907b04aa8",
         "task_document": "docs/tasks/A03-P2-R1-amendment-proposal.md",
         "task_sha256": "70fcec1e49c208c2c53e1d7f37585eeecc9501d4649013536c1adf45481d397f",
-        "last_progress": "Static proposal samples generated; author is checking format, hashes, references and old-file preservation. No frozen delivery or functional acceptance.",
+        "last_progress": "P2-R1 static proposal frozen; 501 manifest entries verified, all 27168 prior Git files unchanged. Cross-scope and R17 reachability unresolved; no product approval or I01 release.",
         "decision": "PENDING",
-        "report": null,
-        "target_commit": "c30526958e313141bf64152627591b0907b04aa8",
-        "commit": null,
+        "report": "docs/tasks/A03-P2-R1-amendment-delivery.md",
+        "target_commit": "7fdbde8f16569fd3bc399013115e13269d5d33fa",
+        "commit": "7fdbde8f16569fd3bc399013115e13269d5d33fa",
         "workflow_commit": "e1b1475597f80d46c5ace5c004f5091d139ac6cc",
         "latest_lightweight_observation": {
-          "at": "2026-10-17T14:06:46.970023+08:00",
-          "head": "c30526958e313141bf64152627591b0907b04aa8",
-          "status": [
-            "?? docs/evidence/A03/execution/P2-R1-proposal/",
-            "?? examples/a03/P2-R1-proposal/"
-          ],
-          "report_present": false,
-          "frozen_delivery_verified": false,
-          "scope": "Lightweight Git/report existence observed earlier this wake; active work is not accepted."
+          "at": "2026-10-17T14:22:55.314506+08:00",
+          "head": "7fdbde8f16569fd3bc399013115e13269d5d33fa",
+          "status": [],
+          "report_present": true,
+          "frozen_delivery_verified": true,
+          "scope": "Static proposal integrity and exit records only; not design or functional acceptance."
         },
         "interruption": {
           "reason": "USAGE_LIMIT",
@@ -1777,22 +1774,23 @@
           "observed_at": "2026-10-17T04:35:36.962860+00:00",
           "current_quota_availability": "NOT_PROVEN"
         },
-        "report_sha256": null,
-        "implementation_commit": "fa645ac8fd70688f3293edc5cfb1077fc7bd9daa",
-        "working_tree_clean": false,
-        "completed_turn_confirms_freeze": false,
-        "session_released": false,
-        "evidence_manifest": null,
-        "evidence_manifest_sha256": null,
+        "report_sha256": "0f70c125dbbfa2f4897a43cef9762e9aef6bfcc65d8708ca50d9b11813fc4cf4",
+        "implementation_commit": null,
+        "working_tree_clean": true,
+        "completed_turn_confirms_freeze": true,
+        "session_released": true,
+        "evidence_manifest": "docs/evidence/A03/execution/P2-R1-proposal/sha256-manifest.json",
+        "evidence_manifest_sha256": "2eea068aba8b1e678cc8e8984165cd0025ac8a21f6cfdfebc439aeb08d2010ab",
         "delivery_preflight": {
-          "path": "docs/evidence/coordinator/heartbeat-20261017-0516/A03-delivery-preflight.json",
-          "sha256": "97a0c1f12b9b687c9dcfbddffa13faed2c11d8e05f3d893d2adb20c1b331f510",
-          "entries": 17429,
+          "path": "docs/evidence/coordinator/heartbeat-20261017-0619/A03-proposal-delivery-preflight.json",
+          "sha256": "3577e954051bdb4379d7571e6e80ab1abac69a04f9d269f875d774a714dfc9a0",
+          "entries": 501,
           "functional_tests_run": false
         },
         "reasoning_effort": "xhigh",
         "previous_delivery_commit": "c30526958e313141bf64152627591b0907b04aa8",
-        "expected_report": "docs/tasks/A03-P2-R1-amendment-delivery.md"
+        "expected_report": "docs/tasks/A03-P2-R1-amendment-delivery.md",
+        "session_release_basis": "Completed execution turn and ten frozen synchronous static subprocess exit records; no product/browser/profile sessions were started. No OS process scan."
       },
       "review": {
         "thread_id": "01a145aa-8d59-7c70-8d81-731712103a9a",
@@ -1800,62 +1798,28 @@
         "cursor": "abdea222-4697-4046-86b1-a5dc48889fac:7",
         "turn_status": "completed",
         "turn_id": "01a14851-2842-7353-8d37-126b7cd50160",
-        "last_checked_at": "2026-10-17T13:38:17.014529+08:00",
-        "observed_thread_status": "idle",
-        "phase": "P2_REWORK_CONTRACT_AMENDMENT_REQUIRED",
-        "base_commit": "940a5de33a24b1a3a9ded6e69ade1dd0609ed83a",
-        "task_document": "docs/tasks/A03-P2-dispatch.md",
-        "task_sha256": "af2c4afe620ffe6ce3d3c24c25051a49e443ea9ea9094c802c38cb4cb47e891d",
-        "last_progress": "我会按冻结交付 c30526958e313141bf64152627591b0907b04aa8 开展一次有界正式复验，先读取固定 workflow 的交接和预检记录，再选择必要的独立检查。被安全审查拒绝的字段重置动作保持 NOT_EXECUTED；本轮不复跑或变形重做该动作，不修改产品或状态，I01 保持未释放。",
-        "decision": "REWORK",
-        "report": "docs/tasks/A03-review-report.md",
-        "target_commit": "c30526958e313141bf64152627591b0907b04aa8",
-        "workflow_commit": "6b77c436742cf2826083b109d8ed86b85539cba6",
-        "preparation_report": "docs/tasks/A03-P2-review-preparation.md",
-        "preparation_report_sha256": "c497055b60c15be50462c050540c7e65e45e9addc9be2152ffb4604dc38983c2",
-        "formal_decision": "REWORK",
-        "preparation_archive": {
-          "status": "ARCHIVED_LOCALLY",
-          "manifest": "docs/evidence/A03/review/P2-preparation/sha256-manifest.json",
-          "manifest_sha256": "85edaa711e7f4b6d6afd95839a22533c314e99984eb95255b61df8d3ae92bb3b",
-          "manifest_entries": 35,
-          "total_files_including_manifest": 36,
-          "preflight": "docs/evidence/A03/coordinator/P2-preparation-audit.json",
-          "preflight_sha256": "72819a740b145d7ab21767ed472a08e1b5d226eda7e46d0e2a59e0aa0290e38a",
-          "scenarios_not_run": 28,
-          "scope": "Preparation only; no functional acceptance or dependency release.",
-          "remote_push": false,
-          "commit": "3ed8dcba2f921c7a89b7f1d2ef9f6ace40aed583",
-          "checks": "docs/evidence/coordinator/heartbeat-20261017-0336/archive-checks.json",
-          "raw_committed_paths_verified": 49
-        },
-        "reasoning_effort": "xhigh",
-        "handoff_document": "docs/tasks/A03-P2-review-handoff.md",
-        "evidence_manifest": "docs/evidence/A03/review/P2/sha256-manifest.json",
-        "report_sha256": "6352813e1721ed7d66175d02d98c337fed4a6d6e5004c8186321db5d4c4d2d79",
-        "evidence_manifest_sha256": "99fe88bab32ffae995b371e2f43e5a3be88324cb5e25ef7dee1add9ef92ec42a",
-        "session_released": true
+        "phase": "P2_R1_PROPOSAL_REVIEW_DISPATCH_INTENT",
+        "target_commit": "7fdbde8f16569fd3bc399013115e13269d5d33fa",
+        "task_document": "docs/tasks/A03-P2-R1-proposal-review-handoff.md",
+        "task_sha256": "d0ef157bcb1dfc828db30682694b83c3e418e427eeacaea25720f29b2e40585f",
+        "expected_report": "docs/tasks/A03-P2-R1-proposal-review-report.md",
+        "decision": "PENDING",
+        "reasoning_effort": "xhigh"
       },
       "review_handoff": {
-        "key": "A03:review:c30526958e313141bf64152627591b0907b04aa8",
+        "key": "A03:review:P2-R1-proposal:7fdbde8f16569fd3bc399013115e13269d5d33fa",
         "task": "A03",
-        "stage": "P2_REVIEW_WITH_KNOWN_GAPS",
+        "stage": "P2_R1_PROPOSAL_STATIC_REVIEW",
         "role": "review",
-        "state": "COMPLETED",
-        "created_at": "2026-10-17T13:22:34.237703+08:00",
-        "target_commit": "c30526958e313141bf64152627591b0907b04aa8",
-        "document": "docs/tasks/A03-P2-review-handoff.md",
-        "document_sha256": "bed1f0ec8ec507e22c9073f02b10ba90b247e76669780239f00cca0ed170b9ba",
+        "state": "INTENT_RECORDED",
+        "created_at": "2026-10-17T14:22:55.314506+08:00",
+        "target_commit": "7fdbde8f16569fd3bc399013115e13269d5d33fa",
+        "document": "docs/tasks/A03-P2-R1-proposal-review-handoff.md",
+        "document_sha256": "d0ef157bcb1dfc828db30682694b83c3e418e427eeacaea25720f29b2e40585f",
         "thread_id": "01a145aa-8d59-7c70-8d81-731712103a9a",
         "host_id": "local",
         "reasoning_effort": "xhigh",
-        "sent_at": "2026-10-17T13:24:13.869386+08:00",
-        "workflow_commit": "2ef3bfda20476dff3bdd23912d5bf2d1e3eb5ce1",
-        "result": "Existing independent reviewer active in a new xhigh turn; no duplicate chat created.",
-        "acknowledged_at": "2026-10-17T13:25:15.563168+08:00",
-        "turn_id": "01a14851-2842-7353-8d37-126b7cd50160",
-        "cursor": "abdea222-4697-4046-86b1-a5dc48889fac:2",
-        "decision": "REWORK"
+        "scope": "Static proposal only; no product/DB/functional runs; coordinator decisions required; I01 blocked."
       },
       "rework_round": 2,
       "review_archive": {
@@ -2167,7 +2131,7 @@
           "task": "A03",
           "stage": "P2-R1-amendment-proposal",
           "role": "execution",
-          "state": "ACKNOWLEDGED",
+          "state": "COMPLETED_FROZEN_PROPOSAL",
           "created_at": "2026-10-17T13:42:21.608409+08:00",
           "base_commit": "c30526958e313141bf64152627591b0907b04aa8",
           "document": "docs/tasks/A03-P2-R1-amendment-proposal.md",
@@ -2181,7 +2145,9 @@
           "workflow_commit": "e1b1475597f80d46c5ace5c004f5091d139ac6cc",
           "turn_id": "01a14864-6e9c-7af2-8999-a1bcd7862526",
           "cursor": "506fd3cf-091f-418b-b002-636f503b5e4b:6",
-          "result": "Original chat active; no duplicate task; no platform/B messages."
+          "result": "Original chat active; no duplicate task; no platform/B messages.",
+          "delivery_commit": "7fdbde8f16569fd3bc399013115e13269d5d33fa",
+          "completed_turn": "01a14864-6e9c-7af2-8999-a1bcd7862526"
         }
       ],
       "operational_status": "P2_RUNNING_AFTER_BOUNDED_RESUME",
@@ -2414,6 +2380,48 @@
             "checks": "docs/evidence/coordinator/heartbeat-20261017-0336/archive-checks.json",
             "raw_committed_paths_verified": 49
           }
+        },
+        {
+          "thread_id": "01a145aa-8d59-7c70-8d81-731712103a9a",
+          "host_id": "local",
+          "cursor": "abdea222-4697-4046-86b1-a5dc48889fac:7",
+          "turn_status": "completed",
+          "turn_id": "01a14851-2842-7353-8d37-126b7cd50160",
+          "last_checked_at": "2026-10-17T13:38:17.014529+08:00",
+          "observed_thread_status": "idle",
+          "phase": "P2_REWORK_CONTRACT_AMENDMENT_REQUIRED",
+          "base_commit": "940a5de33a24b1a3a9ded6e69ade1dd0609ed83a",
+          "task_document": "docs/tasks/A03-P2-dispatch.md",
+          "task_sha256": "af2c4afe620ffe6ce3d3c24c25051a49e443ea9ea9094c802c38cb4cb47e891d",
+          "last_progress": "我会按冻结交付 c30526958e313141bf64152627591b0907b04aa8 开展一次有界正式复验，先读取固定 workflow 的交接和预检记录，再选择必要的独立检查。被安全审查拒绝的字段重置动作保持 NOT_EXECUTED；本轮不复跑或变形重做该动作，不修改产品或状态，I01 保持未释放。",
+          "decision": "REWORK",
+          "report": "docs/tasks/A03-review-report.md",
+          "target_commit": "c30526958e313141bf64152627591b0907b04aa8",
+          "workflow_commit": "6b77c436742cf2826083b109d8ed86b85539cba6",
+          "preparation_report": "docs/tasks/A03-P2-review-preparation.md",
+          "preparation_report_sha256": "c497055b60c15be50462c050540c7e65e45e9addc9be2152ffb4604dc38983c2",
+          "formal_decision": "REWORK",
+          "preparation_archive": {
+            "status": "ARCHIVED_LOCALLY",
+            "manifest": "docs/evidence/A03/review/P2-preparation/sha256-manifest.json",
+            "manifest_sha256": "85edaa711e7f4b6d6afd95839a22533c314e99984eb95255b61df8d3ae92bb3b",
+            "manifest_entries": 35,
+            "total_files_including_manifest": 36,
+            "preflight": "docs/evidence/A03/coordinator/P2-preparation-audit.json",
+            "preflight_sha256": "72819a740b145d7ab21767ed472a08e1b5d226eda7e46d0e2a59e0aa0290e38a",
+            "scenarios_not_run": 28,
+            "scope": "Preparation only; no functional acceptance or dependency release.",
+            "remote_push": false,
+            "commit": "3ed8dcba2f921c7a89b7f1d2ef9f6ace40aed583",
+            "checks": "docs/evidence/coordinator/heartbeat-20261017-0336/archive-checks.json",
+            "raw_committed_paths_verified": 49
+          },
+          "reasoning_effort": "xhigh",
+          "handoff_document": "docs/tasks/A03-P2-review-handoff.md",
+          "evidence_manifest": "docs/evidence/A03/review/P2/sha256-manifest.json",
+          "report_sha256": "6352813e1721ed7d66175d02d98c337fed4a6d6e5004c8186321db5d4c4d2d79",
+          "evidence_manifest_sha256": "99fe88bab32ffae995b371e2f43e5a3be88324cb5e25ef7dee1add9ef92ec42a",
+          "session_released": true
         }
       ],
       "coordinator_reproduction_history": [
@@ -3400,14 +3408,28 @@
       "turn_id": "01a14878-834c-7030-9cc7-827d60d5b2d9",
       "cursor": "33f1ce70-74e3-46de-b04f-ceafd8e7f74b:8",
       "result": "Existing independent reviewer active at xhigh; no duplicate chat; no functional acceptance or platform action."
+    },
+    {
+      "key": "A03:review:P2-R1-proposal:7fdbde8f16569fd3bc399013115e13269d5d33fa",
+      "task": "A03",
+      "stage": "P2_R1_PROPOSAL_STATIC_REVIEW",
+      "role": "review",
+      "state": "INTENT_RECORDED",
+      "created_at": "2026-10-17T14:22:55.314506+08:00",
+      "target_commit": "7fdbde8f16569fd3bc399013115e13269d5d33fa",
+      "document": "docs/tasks/A03-P2-R1-proposal-review-handoff.md",
+      "document_sha256": "d0ef157bcb1dfc828db30682694b83c3e418e427eeacaea25720f29b2e40585f",
+      "thread_id": "01a145aa-8d59-7c70-8d81-731712103a9a",
+      "host_id": "local",
+      "reasoning_effort": "xhigh",
+      "scope": "Static proposal only; no product/DB/functional runs; coordinator decisions required; I01 blocked."
     }
   ],
   "last_action": {
-    "at": "2026-10-17T14:07:27.599625+08:00",
-    "task_id": "A04/A03",
-    "action": "A04 R2 158-file delivery verified and original independent-review continuation acknowledged at xhigh. A03 proposal still in progress; I01 not released.",
-    "remote_push": false,
-    "workflow_commit": "e7ff892776f53636fcddfe136d1659204c4ff738"
+    "at": "2026-10-17T14:22:55.314506+08:00",
+    "task_id": "A03/A04",
+    "action": "A03 proposal preflight passed and static-review intent recorded. A04 reviewer reports new missing-pixel-row defect; waiting frozen report before repair decision.",
+    "remote_push": false
   },
   "limitations": [
     "Current route uses mock B artifacts until independently agreed interface/artifact versions exist.",
@@ -3415,9 +3437,9 @@
     "Platform test is single-book serial, no book submission, no unbudgeted paid models."
   ],
   "last_check": {
-    "at": "2026-10-17T14:06:46.970023+08:00",
-    "heartbeat_time": "2026-10-17T06:04:01.773Z",
-    "root_head": "e7ff892776f53636fcddfe136d1659204c4ff738",
+    "at": "2026-10-17T14:22:55.314506+08:00",
+    "heartbeat_time": "2026-10-17T06:19:01.996Z",
+    "root_head": "1f0cc25b80ed0b2498156ac2568990a14efa4447",
     "checked_task_ids": [
       "A03",
       "A04"
@@ -3426,10 +3448,9 @@
     "paid_model_calls": 0,
     "full_suite_rerun": false,
     "notification": "NOTIFY",
-    "next_dependencies": "A04 R2 offline independent review. A03 proposal freeze, review and bounded implementation approval before functional repair. I01 remains blocked.",
-    "dispatch_result": "A04 R2 original independent-review chat ACKNOWLEDGED at xhigh. A03 proposal remains active without frozen report. No duplicate chat, repeated suites or platform action.",
-    "no_duplicate_chat": true,
-    "completed_at": "2026-10-17T14:07:27.599625+08:00"
+    "next_dependencies": "A03 static independent proposal review and coordinator decisions; A04 formal review evidence closure. I01 blocked.",
+    "dispatch_result": "A03 existing reviewer continuation intent recorded; A04 remains active; no duplicate chat.",
+    "no_duplicate_chat": true
   },
   "prepared_next_batch": {
     "status": "DISPATCHED",
