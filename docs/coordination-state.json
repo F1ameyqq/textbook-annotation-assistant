@@ -2,7 +2,7 @@
   "schema_version": 1,
   "project": "D:\\1800",
   "coordinator_thread_id": "01a13f26-7567-75e1-99ee-c9d2194e78bb",
-  "updated_at": "2026-10-17T05:09:11.185274+00:00",
+  "updated_at": "2026-10-17T05:13:53.529429+00:00",
   "automation": {
     "id": "1800-a",
     "kind": "heartbeat",
@@ -169,7 +169,14 @@
         "login_tests": 8,
         "remote_push": false
       },
-      "integration_commit": "223b0b3d9ae0bd50ef2ac045219a41ad41611856"
+      "integration_commit": "223b0b3d9ae0bd50ef2ac045219a41ad41611856",
+      "publication": {
+        "status": "PUBLISHED_ON_STAGE1_BRANCH",
+        "branch": "codex/a-stage1-handoff",
+        "verified_content_commit": "a14262cf797cafc75a7c30473aec6bf9920c3eff",
+        "at": "2026-10-17T05:13:53.529429+00:00",
+        "B_acceptance": false
+      }
     },
     "A01": {
       "status": "INTEGRATED",
@@ -902,7 +909,14 @@
           "merge_aborted": true,
           "remote_push": false
         }
-      ]
+      ],
+      "publication": {
+        "status": "PUBLISHED_ON_STAGE1_BRANCH",
+        "branch": "codex/a-stage1-handoff",
+        "verified_content_commit": "a14262cf797cafc75a7c30473aec6bf9920c3eff",
+        "at": "2026-10-17T05:13:53.529429+00:00",
+        "B_acceptance": false
+      }
     },
     "A02": {
       "status": "INTEGRATED",
@@ -1380,7 +1394,14 @@
           "login_tests": 8,
           "remote_push": false
         }
-      ]
+      ],
+      "publication": {
+        "status": "PUBLISHED_ON_STAGE1_BRANCH",
+        "branch": "codex/a-stage1-handoff",
+        "verified_content_commit": "a14262cf797cafc75a7c30473aec6bf9920c3eff",
+        "at": "2026-10-17T05:13:53.529429+00:00",
+        "B_acceptance": false
+      }
     },
     "A04": {
       "status": "RUNNING",
@@ -2839,10 +2860,11 @@
     }
   ],
   "last_action": {
-    "at": "2026-10-17T05:09:11.185274+00:00",
+    "at": "2026-10-17T05:13:53.529429+00:00",
     "task_id": "A-STAGE1-HANDOFF",
-    "action": "Prepared user-requested publication of accepted A-side checkpoint on a new branch; no remote push yet.",
-    "remote_push": false
+    "action": "Pushed accepted A-side snapshot to dedicated remote branch and verified exact content commit; main, architecture and B branch unchanged.",
+    "remote_push": true,
+    "verified_content_commit": "a14262cf797cafc75a7c30473aec6bf9920c3eff"
   },
   "limitations": [
     "Current route uses mock B artifacts until independently agreed interface/artifact versions exist.",
@@ -3025,7 +3047,7 @@
     "recorded_at": "2026-10-17T04:47:12.048734+00:00"
   },
   "publication": {
-    "status": "PREPARED_NOT_PUSHED",
+    "status": "PUBLISHED",
     "requested_by_user": true,
     "prepared_at": "2026-10-17T05:09:11.185274+00:00",
     "branch": "codex/a-stage1-handoff",
@@ -3049,7 +3071,7 @@
     "handoff": "docs/a-stage1-handoff.md",
     "manifest": "docs/handoff/a-stage1/manifest.json",
     "audit": "docs/handoff/a-stage1/publication-audit.json",
-    "remote_push": false,
+    "remote_push": true,
     "B_acceptance": false,
     "remote_architecture_observed": "aac335bcee72005dcebf02fe9131db8a0d463e37",
     "remote_B_observed": "c3cc2df7a0be24c125c83681c0499c0d328d78f6",
@@ -3062,6 +3084,11 @@
       "docs/development-plan.md"
     ],
     "remote_status_entry_also_exists": "docs/status/a.md",
-    "next_action": "Push only this new branch after staged audit; verify exact remote ref, then record receipt locally. Shared branches and B branch remain unchanged."
+    "next_action": "A03/A04/D01 continue through existing acceptance gates. Shared-branch integration requires reconciling remote increments and public documents; no B confirmation inferred.",
+    "verified_at": "2026-10-17T05:13:53.529429+00:00",
+    "verified_content_commit": "a14262cf797cafc75a7c30473aec6bf9920c3eff",
+    "remote_content_ref_verified": true,
+    "receipt": "docs/handoff/a-stage1/push-receipt.json",
+    "B_availability": "AVAILABLE_IN_REMOTE_BRANCH; not messaged or confirmed"
   }
 }
