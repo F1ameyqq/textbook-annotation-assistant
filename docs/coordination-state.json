@@ -2,7 +2,7 @@
   "schema_version": 1,
   "project": "D:\\1800",
   "coordinator_thread_id": "01a13f26-7567-75e1-99ee-c9d2194e78bb",
-  "updated_at": "2026-10-17T23:48:33.197228+08:00",
+  "updated_at": "2026-10-17T23:49:33.522279+08:00",
   "automation": {
     "id": "1800-a",
     "kind": "heartbeat",
@@ -1937,7 +1937,7 @@
     },
     "A03": {
       "status": "REWORK",
-      "phase": "P2_R8_R1_PRODUCER_REPAIR_INTENT_RECORDED",
+      "phase": "P2_R8_R1_PRODUCER_REPAIR_RUNNING",
       "depends_on": [
         "A02"
       ],
@@ -1946,7 +1946,7 @@
       "review_task": "docs/tasks/A03-P2-R7-readonly-codec-review-handoff.md",
       "acceptance_scope": "P1 and limited R2-R6 scopes accepted; R7 read-only product locally INTEGRATED. Native P2/UNKNOWN recovery remains unaccepted.",
       "next_dependency": "Producer correction and actual N1; N2-N7, independent functional review and scoped integration before I01. B read-only HOLD slice independently awaits mapping confirmation.",
-      "dispatch_status": "INTENT_RECORDED",
+      "dispatch_status": "ACKNOWLEDGED",
       "B_confirmation": "NOT_CONFIRMED",
       "workflow_commit": "77d3e123ab7247eae6f81f7acd669e3a69c934a0",
       "worktree_name": "a03-runtime-recovery",
@@ -1957,20 +1957,20 @@
       "execution": {
         "thread_id": "01a145aa-2fea-7942-97f9-ad260acf4e30",
         "host_id": "local",
-        "cursor": "506fd3cf-091f-418b-b002-636f503b5e4b:38",
-        "turn_status": "completed",
-        "observed_thread_status": "idle",
-        "phase": "P2_R8_FROZEN_REVIEW_N1_BLOCKED",
+        "cursor": "506fd3cf-091f-418b-b002-636f503b5e4b:39",
+        "turn_status": "inProgress",
+        "observed_thread_status": "active",
+        "phase": "P2_R8_R1_PRODUCER_REPAIR_RUNNING",
         "base_commit": "8ad45dd07214ae406a3fab28d76a4b5abd6eef03",
         "task_document": "docs/tasks/A03-P2-R8-native-bridge-implementation.md",
         "task_sha256": "b7dbf94ff06d8ba272b1bd20bf61afbe09fa1dd99c501dcb70f865ab36737721",
         "expected_report": "docs/tasks/A03-P2-R8-native-bridge-delivery.md",
         "reasoning_policy": "PRESERVE_USER_SETTING",
         "dispatch_key": "A03:execution:P2-R8-native-bridge:8ad45dd07214ae406a3fab28d76a4b5abd6eef03",
-        "last_checked_at": "2026-10-17T23:26:00.874833+08:00",
+        "last_checked_at": "2026-10-17T23:49:33.522279+08:00",
         "workflow_commit": "873d8151000430fc79e63b312ccd21978fc15f79",
-        "turn_id": "01a14a2c-3001-7213-a96e-91b75749e59c",
-        "last_progress": "Frozen REVIEW at fa6edeb7; author stopped after one local repair and independent PRE producer/schema blocker. N1 incomplete, N2-N7 not run, no target effect. Raw delivery/release preflight passed; functional acceptance not granted.",
+        "turn_id": "01a14a8d-865f-7c43-bcce-655bf9cee3d8",
+        "last_progress": "Bounded producer repair dispatched; no new product result yet.",
         "latest_lightweight_observation": {
           "at": "2026-10-17T23:25:37.231039+08:00",
           "head": "fa6edeb7e9dd0c9502781747e5fce012931d9441",
@@ -1994,14 +1994,15 @@
         "evidence_manifest_sha256": "c9d195c5a97ef6293cece1627372ecf8f7404d4537bac9a9bda5e298841f0c7e",
         "working_tree_clean": true,
         "completed_turn_confirms_freeze": true,
-        "session_released": true,
-        "session_release_basis": "28 historical preregistration/started/completed records and raw logs verified against frozen Git; no current OS/profile scan.",
+        "session_released": false,
+        "session_release_basis": "New offline repair turn active; fresh release required for new delivery.",
         "delivery_preflight": {
           "path": "docs/evidence/coordinator/heartbeat-20261017-1510/A03-R8-delivery-preflight.json",
           "sha256": "a416e8ac974ffbc9ca6f78ac22a44d54fe3c9d7d6c2d043bba68b8e59ec311b8",
           "entries": 462,
           "functional_tests_run": false
-        }
+        },
+        "previous_frozen_commit": "fa6edeb7e9dd0c9502781747e5fce012931d9441"
       },
       "review": {
         "thread_id": "01a145aa-8d59-7c70-8d81-731712103a9a",
@@ -2733,7 +2734,7 @@
           "task": "A03",
           "stage": "P2_R8_R1_PRODUCER_REWORK",
           "role": "execution",
-          "state": "INTENT_RECORDED",
+          "state": "ACKNOWLEDGED",
           "created_at": "2026-10-17T23:48:33.197228+08:00",
           "base_commit": "fa6edeb7e9dd0c9502781747e5fce012931d9441",
           "document": "docs/tasks/A03-P2-R8-R1-producer-rework.md",
@@ -2744,7 +2745,12 @@
           "send_message_thinking": "OMIT",
           "send_message_model": "OMIT",
           "scope": "Confirmed producer unpacking and identity pins; N1 then original N2-N7 when dependencies hold; no second product fix.",
-          "result": "NOT_SENT"
+          "result": "Original execution thread active on bounded R8-R1; no model/thinking override or duplicate chat.",
+          "sent_at": "2026-10-17T23:49:33.522279+08:00",
+          "acknowledged_at": "2026-10-17T23:49:33.522279+08:00",
+          "workflow_commit": "b9889efd29baa364bdd0ce9e356a8cde7054f8d9",
+          "cursor": "506fd3cf-091f-418b-b002-636f503b5e4b:39",
+          "turn_id": "01a14a8d-865f-7c43-bcce-655bf9cee3d8"
         }
       ],
       "operational_status": "SINGLE_CONTROL_INDEPENDENT_REVIEW_PENDING",
@@ -3868,7 +3874,7 @@
         "task": "A03",
         "stage": "P2_R8_R1_PRODUCER_REWORK",
         "role": "execution",
-        "state": "INTENT_RECORDED",
+        "state": "ACKNOWLEDGED",
         "created_at": "2026-10-17T23:48:33.197228+08:00",
         "base_commit": "fa6edeb7e9dd0c9502781747e5fce012931d9441",
         "document": "docs/tasks/A03-P2-R8-R1-producer-rework.md",
@@ -3879,7 +3885,12 @@
         "send_message_thinking": "OMIT",
         "send_message_model": "OMIT",
         "scope": "Confirmed producer unpacking and identity pins; N1 then original N2-N7 when dependencies hold; no second product fix.",
-        "result": "NOT_SENT"
+        "result": "Original execution thread active on bounded R8-R1; no model/thinking override or duplicate chat.",
+        "sent_at": "2026-10-17T23:49:33.522279+08:00",
+        "acknowledged_at": "2026-10-17T23:49:33.522279+08:00",
+        "workflow_commit": "b9889efd29baa364bdd0ce9e356a8cde7054f8d9",
+        "cursor": "506fd3cf-091f-418b-b002-636f503b5e4b:39",
+        "turn_id": "01a14a8d-865f-7c43-bcce-655bf9cee3d8"
       },
       "review_r7_frozen_record": {
         "thread_id": "01a145aa-8d59-7c70-8d81-731712103a9a",
@@ -5634,19 +5645,21 @@
     "shown_in_codex": "QUEUED"
   },
   "last_interactive_check": {
-    "at": "2026-10-17T23:48:33.197228+08:00",
+    "at": "2026-10-17T23:49:33.522279+08:00",
     "request": "A03 repeated rework: confirmed gap and minimum integration steps",
     "task_id": "A03",
     "root_head": "cb7786a7fbedd80756ddc285593ef2911e381cf0",
-    "result": "R8_REWORK_CONFIRMED_REPAIR_INTENT_RECORDED",
+    "result": "R8_REWORK_CONFIRMED_R8_R1_DISPATCHED",
     "coordinator_decision": "docs/evidence/coordinator/A03-R8-review-decision/decision.json",
     "execution_thread_id": "01a145aa-2fea-7942-97f9-ad260acf4e30",
-    "execution_cursor": "506fd3cf-091f-418b-b002-636f503b5e4b:38",
+    "execution_cursor": "506fd3cf-091f-418b-b002-636f503b5e4b:39",
     "review_thread_id": "01a145aa-8d59-7c70-8d81-731712103a9a",
     "review_cursor": "abdea222-4697-4046-86b1-a5dc48889fac:30",
     "next_dependency": "Producer correction and actual N1; N2-N7, independent functional review and scoped integration before I01. B read-only HOLD slice independently awaits mapping confirmation.",
     "A03_settings_changed": false,
-    "B_message_sent": false
+    "B_message_sent": false,
+    "execution_turn_id": "01a14a8d-865f-7c43-bcce-655bf9cee3d8",
+    "dispatch_result": "Original execution thread active on bounded R8-R1; no model/thinking override or duplicate chat."
   },
   "external_handoff_history": [
     {
