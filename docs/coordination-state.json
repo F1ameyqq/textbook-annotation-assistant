@@ -2,7 +2,7 @@
   "schema_version": 1,
   "project": "D:\\1800",
   "coordinator_thread_id": "01a13f26-7567-75e1-99ee-c9d2194e78bb",
-  "updated_at": "2026-10-17T16:19:40.080751+08:00",
+  "updated_at": "2026-10-17T16:27:06.073469+08:00",
   "automation": {
     "id": "1800-a",
     "kind": "heartbeat",
@@ -3041,6 +3041,20 @@
         "oracle_adopted": false,
         "I01_released": false,
         "workflow_commit": "c3b5f38c7e9a3a4a51ae8cbe16a3821ff2f36970"
+      },
+      "reasoning_policy": {
+        "task_id": "A03",
+        "policy": "PRESERVE_USER_SETTING",
+        "send_message_thinking": "OMIT",
+        "current_user_selected_effort": "NOT_SPECIFIED",
+        "thread_ids": [
+          "01a145aa-2fea-7942-97f9-ad260acf4e30",
+          "01a145aa-8d59-7c70-8d81-731712103a9a"
+        ],
+        "source": "Direct user instruction 2026-10-17: user manually changed A03 reasoning because it was too slow; do not change it back.",
+        "recorded_at": "2026-10-17T16:27:06.073469+08:00",
+        "interrupt_or_restart": false,
+        "historical_dispatch_effort_fields": "Historical only; do not use them to override current A03 settings."
       }
     },
     "D01": {
@@ -4028,11 +4042,10 @@
     }
   ],
   "last_action": {
-    "at": "2026-10-17T16:19:40.080751+08:00",
+    "at": "2026-10-17T16:27:06.073469+08:00",
     "task_id": "A03",
-    "action": "Saved ongoing bounded evidence closure execution progress and cursor; no frozen delivery, duplicate dispatch, test rerun, acceptance or integration.",
-    "remote_push": false,
-    "workflow_commit": "c3b5f38c7e9a3a4a51ae8cbe16a3821ff2f36970"
+    "action": "Recorded user-controlled reasoning exception in AGENTS, coordination policy and state. Future A03 execution/review continuation messages omit thinking; no settings API, message, interruption, restart, test or dispatch was performed.",
+    "remote_push": false
   },
   "limitations": [
     "Current route uses mock B artifacts until independently agreed interface/artifact versions exist.",
@@ -4216,10 +4229,26 @@
   "agent_policy": {
     "reasoning_effort": "xhigh",
     "source": "Explicit user instruction 2026-10-17: use very high, not ultra",
-    "applies_to": "New helper agents, execution/review chats and subsequent authorized continuation messages",
+    "applies_to": "Default for new helper agents, execution/review chats and subsequent continuation messages; task-specific exceptions take precedence.",
     "interrupt_current_work_for_setting": false,
     "account_global_setting_changed": false,
-    "recorded_at": "2026-10-17T04:47:12.048734+00:00"
+    "recorded_at": "2026-10-17T04:47:12.048734+00:00",
+    "exceptions": {
+      "A03": {
+        "task_id": "A03",
+        "policy": "PRESERVE_USER_SETTING",
+        "send_message_thinking": "OMIT",
+        "current_user_selected_effort": "NOT_SPECIFIED",
+        "thread_ids": [
+          "01a145aa-2fea-7942-97f9-ad260acf4e30",
+          "01a145aa-8d59-7c70-8d81-731712103a9a"
+        ],
+        "source": "Direct user instruction 2026-10-17: user manually changed A03 reasoning because it was too slow; do not change it back.",
+        "recorded_at": "2026-10-17T16:27:06.073469+08:00",
+        "interrupt_or_restart": false,
+        "historical_dispatch_effort_fields": "Historical only; do not use them to override current A03 settings."
+      }
+    }
   },
   "publication": {
     "status": "PUBLISHED",
