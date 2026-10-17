@@ -1,0 +1,1598 @@
+{
+  "design_only": true,
+  "plan": {
+    "schema_version": "1.1.0-a-recovery-proposal",
+    "artifact_id": "a02-plan",
+    "revision": 1,
+    "kind": "ApplyPlan",
+    "run_id": "a03-design-run",
+    "book_id": "synthetic-book",
+    "scope_id": "synthetic-scope",
+    "input_refs": [
+      {
+        "artifact_id": "a02-graph",
+        "revision": 1,
+        "kind": "QuestionGraph",
+        "content_hash": "823bf8915cf77eeaec54362efa557028170268bb85d8e376b9300f96be9511db"
+      },
+      {
+        "artifact_id": "a02-precheck-stub",
+        "revision": 1,
+        "kind": "CheckReport",
+        "content_hash": "fab09d44042fd82d18a8795e27ebb69693039bc0df04a998035bcc438d6ab490"
+      },
+      {
+        "artifact_id": "a02-targetcheck",
+        "revision": 1,
+        "kind": "CheckReport",
+        "content_hash": "9ccfb6b360ddf27d22cb1de976da6c2770402f6b2ae901797e02a058042b498e"
+      },
+      {
+        "artifact_id": "a02-snapshot",
+        "revision": 1,
+        "kind": "PlatformSnapshot",
+        "content_hash": "038f8876bfff4e958cbf15279e56b3858d6d599c24a22410a5f34f22bb60b503"
+      }
+    ],
+    "producer": {
+      "module": "a02-planner",
+      "implementation_version": "a03-P1-NOT-IMPLEMENTED",
+      "config_version": "DESIGN_ONLY",
+      "policy_versions": [
+        {
+          "policy_id": "synthetic-a02-policy",
+          "revision": 1,
+          "content_hash": "5d914617cad7f10009ff34919b1c313d5c73bd322069b77cde54659a407ebc32"
+        }
+      ],
+      "model_version": null,
+      "prompt_version": null,
+      "evidence_mode": "SYNTHETIC"
+    },
+    "content_hash": "6ecfa6b0f1f372534de8036b41b31ca8b937e624f16dc7157277e7a51a75aa30",
+    "created_at": "2026-10-17T00:00:00Z",
+    "payload": {
+      "graph": {
+        "artifact_id": "a02-graph",
+        "revision": 1,
+        "kind": "QuestionGraph",
+        "content_hash": "823bf8915cf77eeaec54362efa557028170268bb85d8e376b9300f96be9511db"
+      },
+      "precheck": {
+        "artifact_id": "a02-precheck-stub",
+        "revision": 1,
+        "kind": "CheckReport",
+        "content_hash": "fab09d44042fd82d18a8795e27ebb69693039bc0df04a998035bcc438d6ab490"
+      },
+      "targetcheck": {
+        "artifact_id": "a02-targetcheck",
+        "revision": 1,
+        "kind": "CheckReport",
+        "content_hash": "9ccfb6b360ddf27d22cb1de976da6c2770402f6b2ae901797e02a058042b498e"
+      },
+      "snapshot": {
+        "artifact_id": "a02-snapshot",
+        "revision": 1,
+        "kind": "PlatformSnapshot",
+        "content_hash": "038f8876bfff4e958cbf15279e56b3858d6d599c24a22410a5f34f22bb60b503"
+      },
+      "policy": {
+        "policy_id": "synthetic-a02-policy",
+        "revision": 1,
+        "content_hash": "5d914617cad7f10009ff34919b1c313d5c73bd322069b77cde54659a407ebc32"
+      },
+      "readiness": "READY",
+      "execution_mode": "SIMULATED",
+      "session_mode": "SAME_SESSION_HANDOFF",
+      "required_capabilities": [
+        "frame_readback",
+        "same_session_handoff"
+      ],
+      "actions": [
+        {
+          "action_id": "action-a02-a80e543226fa0df5fcdcb8c585e1c125",
+          "target": {
+            "target_id": "synthetic-target",
+            "question_id": "question-alpha",
+            "platform_question_id": null
+          },
+          "source_entity_ids": [
+            "question-alpha",
+            "fragment-alpha-start",
+            "fragment-shared",
+            "fragment-alpha-end",
+            "fragment-alpha-answer"
+          ],
+          "expected_before": {
+            "question_exists": false,
+            "platform_question_id": null,
+            "directory_id": "platform-unit-a",
+            "frame_count": 0,
+            "frames_hash": "2ac0a74c84218685193184e7b18963e5ff2b14ac42146d8b70282e7d6e23110f",
+            "next_order": 1
+          },
+          "operation": "CREATE_FRAMES",
+          "expected_after": {
+            "question_exists": true,
+            "directory_id": "platform-unit-a",
+            "platform_order": 1,
+            "frames": "[{\"box\":{\"bbox\":[5.0,5.0,65.0,20.0],\"image\":{\"asset_id\":\"asset-page-a1\",\"height\":100,\"sha256\":\"8c1f2dc9061d60bad2a28778bf18f0356409b9fa8c370a0db6bd737012db2a75\",\"width\":80}},\"fragment_id\":\"fragment-alpha-start\",\"platform_role\":\"Q\",\"platform_type\":\"text\",\"region_id\":\"region-alpha-start\"},{\"box\":{\"bbox\":[5.0,25.0,65.0,35.0],\"image\":{\"asset_id\":\"asset-page-a1\",\"height\":100,\"sha256\":\"8c1f2dc9061d60bad2a28778bf18f0356409b9fa8c370a0db6bd737012db2a75\",\"width\":80}},\"fragment_id\":\"fragment-shared\",\"platform_role\":\"Q\",\"platform_type\":\"text\",\"region_id\":\"region-shared\"},{\"box\":{\"bbox\":[5.0,5.0,65.0,20.0],\"image\":{\"asset_id\":\"asset-page-a2\",\"height\":100,\"sha256\":\"9f4ab681d43e03b397154a2ba6dabf9b77e1bbfe576c62955d4385755f6d5d1b\",\"width\":80}},\"fragment_id\":\"fragment-alpha-end\",\"platform_role\":\"Q\",\"platform_type\":\"text\",\"region_id\":\"region-alpha-end\"},{\"box\":{\"bbox\":[5.0,25.0,65.0,35.0],\"image\":{\"asset_id\":\"asset-page-a2\",\"height\":100,\"sha256\":\"9f4ab681d43e03b397154a2ba6dabf9b77e1bbfe576c62955d4385755f6d5d1b\",\"width\":80}},\"fragment_id\":\"fragment-alpha-answer\",\"platform_role\":\"A\",\"platform_type\":\"text\",\"region_id\":\"region-alpha-answer\"}]"
+          },
+          "depends_on": []
+        },
+        {
+          "action_id": "action-a02-bb4ce2935b7f9cc278385b35e2ac3562",
+          "target": {
+            "target_id": "synthetic-target",
+            "question_id": "question-child",
+            "platform_question_id": null
+          },
+          "source_entity_ids": [
+            "question-child",
+            "fragment-shared",
+            "fragment-child-stem",
+            "fragment-child-answer"
+          ],
+          "expected_before": {
+            "question_exists": false,
+            "platform_question_id": null,
+            "directory_id": "platform-unit-a",
+            "frame_count": 0,
+            "frames_hash": "2ac0a74c84218685193184e7b18963e5ff2b14ac42146d8b70282e7d6e23110f",
+            "next_order": 2
+          },
+          "operation": "CREATE_FRAMES",
+          "expected_after": {
+            "question_exists": true,
+            "directory_id": "platform-unit-a",
+            "platform_order": 2,
+            "frames": "[{\"box\":{\"bbox\":[5.0,25.0,65.0,35.0],\"image\":{\"asset_id\":\"asset-page-a1\",\"height\":100,\"sha256\":\"8c1f2dc9061d60bad2a28778bf18f0356409b9fa8c370a0db6bd737012db2a75\",\"width\":80}},\"fragment_id\":\"fragment-shared\",\"platform_role\":\"Q\",\"platform_type\":\"text\",\"region_id\":\"region-shared\"},{\"box\":{\"bbox\":[5.0,40.0,65.0,50.0],\"image\":{\"asset_id\":\"asset-page-a2\",\"height\":100,\"sha256\":\"9f4ab681d43e03b397154a2ba6dabf9b77e1bbfe576c62955d4385755f6d5d1b\",\"width\":80}},\"fragment_id\":\"fragment-child-stem\",\"platform_role\":\"Q\",\"platform_type\":\"text\",\"region_id\":\"region-child-stem\"},{\"box\":{\"bbox\":[5.0,55.0,65.0,65.0],\"image\":{\"asset_id\":\"asset-page-a2\",\"height\":100,\"sha256\":\"9f4ab681d43e03b397154a2ba6dabf9b77e1bbfe576c62955d4385755f6d5d1b\",\"width\":80}},\"fragment_id\":\"fragment-child-answer\",\"platform_role\":\"A\",\"platform_type\":\"text\",\"region_id\":\"region-child-answer\"}]"
+          },
+          "depends_on": [
+            "action-a02-a80e543226fa0df5fcdcb8c585e1c125"
+          ]
+        },
+        {
+          "action_id": "action-a02-dec0905217fd2d98a7c02bd44beb3f5c",
+          "target": {
+            "target_id": "synthetic-target",
+            "question_id": "question-beta",
+            "platform_question_id": null
+          },
+          "source_entity_ids": [
+            "question-beta",
+            "fragment-beta-stem",
+            "fragment-beta-answer"
+          ],
+          "expected_before": {
+            "question_exists": false,
+            "platform_question_id": null,
+            "directory_id": "platform-unit-b",
+            "frame_count": 0,
+            "frames_hash": "2ac0a74c84218685193184e7b18963e5ff2b14ac42146d8b70282e7d6e23110f",
+            "next_order": 1
+          },
+          "operation": "CREATE_FRAMES",
+          "expected_after": {
+            "question_exists": true,
+            "directory_id": "platform-unit-b",
+            "platform_order": 1,
+            "frames": "[{\"box\":{\"bbox\":[5.0,5.0,65.0,20.0],\"image\":{\"asset_id\":\"asset-page-b1\",\"height\":100,\"sha256\":\"f4d0189a5c4953e4401ef67acdc922d73a4414b7e86328e44b0ca98955243b84\",\"width\":80}},\"fragment_id\":\"fragment-beta-stem\",\"platform_role\":\"Q\",\"platform_type\":\"text\",\"region_id\":\"region-beta-stem\"},{\"box\":{\"bbox\":[5.0,60.0,65.0,70.0],\"image\":{\"asset_id\":\"asset-page-b1\",\"height\":100,\"sha256\":\"f4d0189a5c4953e4401ef67acdc922d73a4414b7e86328e44b0ca98955243b84\",\"width\":80}},\"fragment_id\":\"fragment-beta-answer\",\"platform_role\":\"A\",\"platform_type\":\"text\",\"region_id\":\"region-beta-answer\"}]"
+          },
+          "depends_on": [
+            "action-a02-bb4ce2935b7f9cc278385b35e2ac3562"
+          ]
+        }
+      ],
+      "blocked_issue_ids": [],
+      "previous_receipt": null,
+      "final_submission": "HUMAN_ONLY"
+    }
+  },
+  "mutants": [
+    {
+      "mutation": "delete_first_PLAN_ACCEPTED_then_renumber_rehash_complete_true",
+      "source": {
+        "path": "assets/r2/d3cbee7497c5b19603b9218266545b526ad4d312a5f6a2b3785ac5efb6b35ede.json",
+        "sha256": "d3cbee7497c5b19603b9218266545b526ad4d312a5f6a2b3785ac5efb6b35ede",
+        "media_type": "application/json",
+        "origin": "SYNTHETIC"
+      },
+      "candidate": {
+        "format_version": "a03-event-prefix-1",
+        "design_only": true,
+        "journal_id": "journal-design",
+        "target_key": {
+          "platform_namespace": "a02-mock",
+          "target_id": "synthetic-target",
+          "book_id": "synthetic-book"
+        },
+        "plan_ref": {
+          "artifact_id": "a02-plan",
+          "revision": 1,
+          "kind": "ApplyPlan",
+          "content_hash": "6ecfa6b0f1f372534de8036b41b31ca8b937e624f16dc7157277e7a51a75aa30"
+        },
+        "owner_id": "owner-design",
+        "generation": 1,
+        "scope_id": "synthetic-scope",
+        "subject_action_id": "action-a02-dec0905217fd2d98a7c02bd44beb3f5c",
+        "genesis_hash": "0000000000000000000000000000000000000000000000000000000000000000",
+        "from_sequence": 1,
+        "through_sequence": 12,
+        "head_hash": "776774cdda65f80361d778c6e3b011e1cc0f2febaa168501520230e787472819",
+        "events": [
+          {
+            "sequence": 1,
+            "event": "PLAN_ACTIONS_RESERVED",
+            "journal_id": "journal-design",
+            "target_key": {
+              "platform_namespace": "a02-mock",
+              "target_id": "synthetic-target",
+              "book_id": "synthetic-book"
+            },
+            "plan_ref": {
+              "artifact_id": "a02-plan",
+              "revision": 1,
+              "kind": "ApplyPlan",
+              "content_hash": "6ecfa6b0f1f372534de8036b41b31ca8b937e624f16dc7157277e7a51a75aa30"
+            },
+            "owner_id": "owner-design",
+            "generation": 1,
+            "recorded_at": "2026-10-17T00:00:00Z",
+            "payload": {
+              "reservations": [
+                {
+                  "action_id": "action-a02-a80e543226fa0df5fcdcb8c585e1c125",
+                  "action_digest": "720d94fb6630bf8f47ec73a3c23282aa6e5a7413b0dc10bcd736b6fd1533eba2"
+                },
+                {
+                  "action_id": "action-a02-bb4ce2935b7f9cc278385b35e2ac3562",
+                  "action_digest": "66689db3b1cf58bfe0ec5e42b97a36edae6311695e0c7385a9751f4751083438"
+                },
+                {
+                  "action_id": "action-a02-dec0905217fd2d98a7c02bd44beb3f5c",
+                  "action_digest": "cd4aec0a1f47ce5ded97b2c2c17eea8f663525ed818ca8ab7855a8f7f84bd069"
+                }
+              ]
+            },
+            "previous_hash": "0000000000000000000000000000000000000000000000000000000000000000",
+            "event_hash": "3b467b2901004ecf522a90f81b47dd0fde85c5cbf0f25423c2d17777e5a417c0"
+          },
+          {
+            "sequence": 2,
+            "event": "PLAN_STARTED",
+            "journal_id": "journal-design",
+            "target_key": {
+              "platform_namespace": "a02-mock",
+              "target_id": "synthetic-target",
+              "book_id": "synthetic-book"
+            },
+            "plan_ref": {
+              "artifact_id": "a02-plan",
+              "revision": 1,
+              "kind": "ApplyPlan",
+              "content_hash": "6ecfa6b0f1f372534de8036b41b31ca8b937e624f16dc7157277e7a51a75aa30"
+            },
+            "owner_id": "owner-design",
+            "generation": 1,
+            "recorded_at": "2026-10-17T00:00:00Z",
+            "payload": {
+              "plan_state": "RUNNING"
+            },
+            "previous_hash": "3b467b2901004ecf522a90f81b47dd0fde85c5cbf0f25423c2d17777e5a417c0",
+            "event_hash": "1d6b6d9f76e94a76363c165befb35fdefa274903f0f93dea5c6962bb41d41a7d"
+          },
+          {
+            "sequence": 3,
+            "event": "WRITE_INTENT_COMMITTED",
+            "journal_id": "journal-design",
+            "target_key": {
+              "platform_namespace": "a02-mock",
+              "target_id": "synthetic-target",
+              "book_id": "synthetic-book"
+            },
+            "plan_ref": {
+              "artifact_id": "a02-plan",
+              "revision": 1,
+              "kind": "ApplyPlan",
+              "content_hash": "6ecfa6b0f1f372534de8036b41b31ca8b937e624f16dc7157277e7a51a75aa30"
+            },
+            "owner_id": "owner-design",
+            "generation": 1,
+            "recorded_at": "2026-10-17T00:00:02Z",
+            "payload": {
+              "action_id": "action-a02-a80e543226fa0df5fcdcb8c585e1c125",
+              "action_digest": "720d94fb6630bf8f47ec73a3c23282aa6e5a7413b0dc10bcd736b6fd1533eba2",
+              "intent_ref": {
+                "artifact_id": "intent-design-1",
+                "revision": 1,
+                "kind": "WriteIntent",
+                "content_hash": "667beca33bd1c1d330398d45f43ae1a191080e94d359405092eda53a7b81bdcf"
+              },
+              "obligation_id": "obl-216fb6ef67c5d0e09cf1406cd637c4d4ec6040c2c7fda983c7422cedcd2ee09c"
+            },
+            "previous_hash": "1d6b6d9f76e94a76363c165befb35fdefa274903f0f93dea5c6962bb41d41a7d",
+            "event_hash": "49621f94e25ed5e128b50faf6700aeeed45e9050e97af377c59fb42fc5648ca8"
+          },
+          {
+            "sequence": 4,
+            "event": "DISPATCH_PERMIT_ISSUED",
+            "journal_id": "journal-design",
+            "target_key": {
+              "platform_namespace": "a02-mock",
+              "target_id": "synthetic-target",
+              "book_id": "synthetic-book"
+            },
+            "plan_ref": {
+              "artifact_id": "a02-plan",
+              "revision": 1,
+              "kind": "ApplyPlan",
+              "content_hash": "6ecfa6b0f1f372534de8036b41b31ca8b937e624f16dc7157277e7a51a75aa30"
+            },
+            "owner_id": "owner-design",
+            "generation": 1,
+            "recorded_at": "2026-10-17T00:00:02Z",
+            "payload": {
+              "action_id": "action-a02-a80e543226fa0df5fcdcb8c585e1c125",
+              "action_digest": "720d94fb6630bf8f47ec73a3c23282aa6e5a7413b0dc10bcd736b6fd1533eba2",
+              "intent_ref": {
+                "artifact_id": "intent-design-1",
+                "revision": 1,
+                "kind": "WriteIntent",
+                "content_hash": "667beca33bd1c1d330398d45f43ae1a191080e94d359405092eda53a7b81bdcf"
+              },
+              "permit_id": "permit-r2-1"
+            },
+            "previous_hash": "49621f94e25ed5e128b50faf6700aeeed45e9050e97af377c59fb42fc5648ca8",
+            "event_hash": "baf1ece401e0bdc040e13c3f669a367c67c651215149a916e746bc60cf882251"
+          },
+          {
+            "sequence": 5,
+            "event": "DISPATCH_PERMIT_CONSUMED",
+            "journal_id": "journal-design",
+            "target_key": {
+              "platform_namespace": "a02-mock",
+              "target_id": "synthetic-target",
+              "book_id": "synthetic-book"
+            },
+            "plan_ref": {
+              "artifact_id": "a02-plan",
+              "revision": 1,
+              "kind": "ApplyPlan",
+              "content_hash": "6ecfa6b0f1f372534de8036b41b31ca8b937e624f16dc7157277e7a51a75aa30"
+            },
+            "owner_id": "owner-design",
+            "generation": 1,
+            "recorded_at": "2026-10-17T00:00:02Z",
+            "payload": {
+              "action_id": "action-a02-a80e543226fa0df5fcdcb8c585e1c125",
+              "action_digest": "720d94fb6630bf8f47ec73a3c23282aa6e5a7413b0dc10bcd736b6fd1533eba2",
+              "intent_ref": {
+                "artifact_id": "intent-design-1",
+                "revision": 1,
+                "kind": "WriteIntent",
+                "content_hash": "667beca33bd1c1d330398d45f43ae1a191080e94d359405092eda53a7b81bdcf"
+              },
+              "permit_id": "permit-r2-1"
+            },
+            "previous_hash": "baf1ece401e0bdc040e13c3f669a367c67c651215149a916e746bc60cf882251",
+            "event_hash": "159799df791ff0165dd828a4621f0d2ab15baac6b5a16bd612ea71fb1582120d"
+          },
+          {
+            "sequence": 6,
+            "event": "DISPATCH_STARTED",
+            "journal_id": "journal-design",
+            "target_key": {
+              "platform_namespace": "a02-mock",
+              "target_id": "synthetic-target",
+              "book_id": "synthetic-book"
+            },
+            "plan_ref": {
+              "artifact_id": "a02-plan",
+              "revision": 1,
+              "kind": "ApplyPlan",
+              "content_hash": "6ecfa6b0f1f372534de8036b41b31ca8b937e624f16dc7157277e7a51a75aa30"
+            },
+            "owner_id": "owner-design",
+            "generation": 1,
+            "recorded_at": "2026-10-17T00:00:02Z",
+            "payload": {
+              "action_id": "action-a02-a80e543226fa0df5fcdcb8c585e1c125",
+              "action_digest": "720d94fb6630bf8f47ec73a3c23282aa6e5a7413b0dc10bcd736b6fd1533eba2",
+              "intent_ref": {
+                "artifact_id": "intent-design-1",
+                "revision": 1,
+                "kind": "WriteIntent",
+                "content_hash": "667beca33bd1c1d330398d45f43ae1a191080e94d359405092eda53a7b81bdcf"
+              },
+              "permit_id": "permit-r2-1"
+            },
+            "previous_hash": "159799df791ff0165dd828a4621f0d2ab15baac6b5a16bd612ea71fb1582120d",
+            "event_hash": "adebb987f397b1baa97cb136a0ab272e91c1ce0471a4f3b82a16da2f33677ce8"
+          },
+          {
+            "sequence": 7,
+            "event": "ACTION_RESULT_COMMITTED",
+            "journal_id": "journal-design",
+            "target_key": {
+              "platform_namespace": "a02-mock",
+              "target_id": "synthetic-target",
+              "book_id": "synthetic-book"
+            },
+            "plan_ref": {
+              "artifact_id": "a02-plan",
+              "revision": 1,
+              "kind": "ApplyPlan",
+              "content_hash": "6ecfa6b0f1f372534de8036b41b31ca8b937e624f16dc7157277e7a51a75aa30"
+            },
+            "owner_id": "owner-design",
+            "generation": 1,
+            "recorded_at": "2026-10-17T00:00:03Z",
+            "payload": {
+              "action_id": "action-a02-a80e543226fa0df5fcdcb8c585e1c125",
+              "action_digest": "720d94fb6630bf8f47ec73a3c23282aa6e5a7413b0dc10bcd736b6fd1533eba2",
+              "intent_ref": {
+                "artifact_id": "intent-design-1",
+                "revision": 1,
+                "kind": "WriteIntent",
+                "content_hash": "667beca33bd1c1d330398d45f43ae1a191080e94d359405092eda53a7b81bdcf"
+              },
+              "obligation_id": "obl-216fb6ef67c5d0e09cf1406cd637c4d4ec6040c2c7fda983c7422cedcd2ee09c",
+              "fact": {
+                "path": "assets/r2/4bfcbb78e91842de8f23c77c00e088fb4c6fd3d338e853fd51c56763a574b431.json",
+                "sha256": "4bfcbb78e91842de8f23c77c00e088fb4c6fd3d338e853fd51c56763a574b431",
+                "media_type": "application/json",
+                "origin": "SYNTHETIC"
+              },
+              "outcome": "APPLIED",
+              "plan_state": "RUNNING"
+            },
+            "previous_hash": "adebb987f397b1baa97cb136a0ab272e91c1ce0471a4f3b82a16da2f33677ce8",
+            "event_hash": "a605e598b887b288649d53160b3882e511b94734048a8fc59ffa36ed953ea81f"
+          },
+          {
+            "sequence": 8,
+            "event": "WRITE_INTENT_COMMITTED",
+            "journal_id": "journal-design",
+            "target_key": {
+              "platform_namespace": "a02-mock",
+              "target_id": "synthetic-target",
+              "book_id": "synthetic-book"
+            },
+            "plan_ref": {
+              "artifact_id": "a02-plan",
+              "revision": 1,
+              "kind": "ApplyPlan",
+              "content_hash": "6ecfa6b0f1f372534de8036b41b31ca8b937e624f16dc7157277e7a51a75aa30"
+            },
+            "owner_id": "owner-design",
+            "generation": 1,
+            "recorded_at": "2026-10-17T00:00:05Z",
+            "payload": {
+              "action_id": "action-a02-bb4ce2935b7f9cc278385b35e2ac3562",
+              "action_digest": "66689db3b1cf58bfe0ec5e42b97a36edae6311695e0c7385a9751f4751083438",
+              "intent_ref": {
+                "artifact_id": "intent-design-2",
+                "revision": 1,
+                "kind": "WriteIntent",
+                "content_hash": "820954aa56840f83b9f8eac040e6a9e2b725de244e86b3426da602995d59b540"
+              },
+              "obligation_id": "obl-872810cce1431f9393133b9c6a59a13ae40be9b0b26bb3d75578546e5358c633"
+            },
+            "previous_hash": "a605e598b887b288649d53160b3882e511b94734048a8fc59ffa36ed953ea81f",
+            "event_hash": "b3e8ad1ee1a2f1d792949f162fd924c206a6a2b43c2a77d157f2d5935e9ddda3"
+          },
+          {
+            "sequence": 9,
+            "event": "DISPATCH_PERMIT_ISSUED",
+            "journal_id": "journal-design",
+            "target_key": {
+              "platform_namespace": "a02-mock",
+              "target_id": "synthetic-target",
+              "book_id": "synthetic-book"
+            },
+            "plan_ref": {
+              "artifact_id": "a02-plan",
+              "revision": 1,
+              "kind": "ApplyPlan",
+              "content_hash": "6ecfa6b0f1f372534de8036b41b31ca8b937e624f16dc7157277e7a51a75aa30"
+            },
+            "owner_id": "owner-design",
+            "generation": 1,
+            "recorded_at": "2026-10-17T00:00:05Z",
+            "payload": {
+              "action_id": "action-a02-bb4ce2935b7f9cc278385b35e2ac3562",
+              "action_digest": "66689db3b1cf58bfe0ec5e42b97a36edae6311695e0c7385a9751f4751083438",
+              "intent_ref": {
+                "artifact_id": "intent-design-2",
+                "revision": 1,
+                "kind": "WriteIntent",
+                "content_hash": "820954aa56840f83b9f8eac040e6a9e2b725de244e86b3426da602995d59b540"
+              },
+              "permit_id": "permit-r2-2"
+            },
+            "previous_hash": "b3e8ad1ee1a2f1d792949f162fd924c206a6a2b43c2a77d157f2d5935e9ddda3",
+            "event_hash": "936434745e129e7d55fd44b9f9ae83e1f6e16f5d6582aa6049064391c5dcedf2"
+          },
+          {
+            "sequence": 10,
+            "event": "DISPATCH_PERMIT_CONSUMED",
+            "journal_id": "journal-design",
+            "target_key": {
+              "platform_namespace": "a02-mock",
+              "target_id": "synthetic-target",
+              "book_id": "synthetic-book"
+            },
+            "plan_ref": {
+              "artifact_id": "a02-plan",
+              "revision": 1,
+              "kind": "ApplyPlan",
+              "content_hash": "6ecfa6b0f1f372534de8036b41b31ca8b937e624f16dc7157277e7a51a75aa30"
+            },
+            "owner_id": "owner-design",
+            "generation": 1,
+            "recorded_at": "2026-10-17T00:00:05Z",
+            "payload": {
+              "action_id": "action-a02-bb4ce2935b7f9cc278385b35e2ac3562",
+              "action_digest": "66689db3b1cf58bfe0ec5e42b97a36edae6311695e0c7385a9751f4751083438",
+              "intent_ref": {
+                "artifact_id": "intent-design-2",
+                "revision": 1,
+                "kind": "WriteIntent",
+                "content_hash": "820954aa56840f83b9f8eac040e6a9e2b725de244e86b3426da602995d59b540"
+              },
+              "permit_id": "permit-r2-2"
+            },
+            "previous_hash": "936434745e129e7d55fd44b9f9ae83e1f6e16f5d6582aa6049064391c5dcedf2",
+            "event_hash": "81c4d5cbb81214bd70c0627907488c32647a1df3e2f93df65f1f5f20fc9428da"
+          },
+          {
+            "sequence": 11,
+            "event": "DISPATCH_STARTED",
+            "journal_id": "journal-design",
+            "target_key": {
+              "platform_namespace": "a02-mock",
+              "target_id": "synthetic-target",
+              "book_id": "synthetic-book"
+            },
+            "plan_ref": {
+              "artifact_id": "a02-plan",
+              "revision": 1,
+              "kind": "ApplyPlan",
+              "content_hash": "6ecfa6b0f1f372534de8036b41b31ca8b937e624f16dc7157277e7a51a75aa30"
+            },
+            "owner_id": "owner-design",
+            "generation": 1,
+            "recorded_at": "2026-10-17T00:00:05Z",
+            "payload": {
+              "action_id": "action-a02-bb4ce2935b7f9cc278385b35e2ac3562",
+              "action_digest": "66689db3b1cf58bfe0ec5e42b97a36edae6311695e0c7385a9751f4751083438",
+              "intent_ref": {
+                "artifact_id": "intent-design-2",
+                "revision": 1,
+                "kind": "WriteIntent",
+                "content_hash": "820954aa56840f83b9f8eac040e6a9e2b725de244e86b3426da602995d59b540"
+              },
+              "permit_id": "permit-r2-2"
+            },
+            "previous_hash": "81c4d5cbb81214bd70c0627907488c32647a1df3e2f93df65f1f5f20fc9428da",
+            "event_hash": "fa990a8aa8d8fe68fb2cf35b0315cbbccd6857864c2e45e18ae9af6b2724238f"
+          },
+          {
+            "sequence": 12,
+            "event": "ACTION_RESULT_COMMITTED",
+            "journal_id": "journal-design",
+            "target_key": {
+              "platform_namespace": "a02-mock",
+              "target_id": "synthetic-target",
+              "book_id": "synthetic-book"
+            },
+            "plan_ref": {
+              "artifact_id": "a02-plan",
+              "revision": 1,
+              "kind": "ApplyPlan",
+              "content_hash": "6ecfa6b0f1f372534de8036b41b31ca8b937e624f16dc7157277e7a51a75aa30"
+            },
+            "owner_id": "owner-design",
+            "generation": 1,
+            "recorded_at": "2026-10-17T00:00:06Z",
+            "payload": {
+              "action_id": "action-a02-bb4ce2935b7f9cc278385b35e2ac3562",
+              "action_digest": "66689db3b1cf58bfe0ec5e42b97a36edae6311695e0c7385a9751f4751083438",
+              "intent_ref": {
+                "artifact_id": "intent-design-2",
+                "revision": 1,
+                "kind": "WriteIntent",
+                "content_hash": "820954aa56840f83b9f8eac040e6a9e2b725de244e86b3426da602995d59b540"
+              },
+              "obligation_id": "obl-872810cce1431f9393133b9c6a59a13ae40be9b0b26bb3d75578546e5358c633",
+              "fact": {
+                "path": "assets/r2/bc247e84a69566a0adb96dd90dd8adb46517cc519ea9afcc654ff57ff970fe06.json",
+                "sha256": "bc247e84a69566a0adb96dd90dd8adb46517cc519ea9afcc654ff57ff970fe06",
+                "media_type": "application/json",
+                "origin": "SYNTHETIC"
+              },
+              "outcome": "UNKNOWN",
+              "plan_state": "INTERRUPTED"
+            },
+            "previous_hash": "fa990a8aa8d8fe68fb2cf35b0315cbbccd6857864c2e45e18ae9af6b2724238f",
+            "event_hash": "776774cdda65f80361d778c6e3b011e1cc0f2febaa168501520230e787472819"
+          }
+        ],
+        "complete": true
+      },
+      "actual": {
+        "errors": [
+          "ACCEPTANCE_MISSING",
+          "REGISTRATION_PREFIX_MISSING",
+          "RESERVATION_MISMATCH",
+          "START_STATE_MISMATCH"
+        ],
+        "event_names": [
+          "PLAN_ACTIONS_RESERVED",
+          "PLAN_STARTED",
+          "WRITE_INTENT_COMMITTED",
+          "DISPATCH_PERMIT_ISSUED",
+          "DISPATCH_PERMIT_CONSUMED",
+          "DISPATCH_STARTED",
+          "ACTION_RESULT_COMMITTED",
+          "WRITE_INTENT_COMMITTED",
+          "DISPATCH_PERMIT_ISSUED",
+          "DISPATCH_PERMIT_CONSUMED",
+          "DISPATCH_STARTED",
+          "ACTION_RESULT_COMMITTED"
+        ],
+        "through": 12,
+        "head": "776774cdda65f80361d778c6e3b011e1cc0f2febaa168501520230e787472819",
+        "outcomes": {
+          "action-a02-a80e543226fa0df5fcdcb8c585e1c125": "APPLIED",
+          "action-a02-bb4ce2935b7f9cc278385b35e2ac3562": "UNKNOWN"
+        },
+        "facts": []
+      }
+    },
+    {
+      "mutation": "delete_first_DISPATCH_STARTED_then_renumber_rehash_complete_true",
+      "source": {
+        "path": "assets/r2/d3cbee7497c5b19603b9218266545b526ad4d312a5f6a2b3785ac5efb6b35ede.json",
+        "sha256": "d3cbee7497c5b19603b9218266545b526ad4d312a5f6a2b3785ac5efb6b35ede",
+        "media_type": "application/json",
+        "origin": "SYNTHETIC"
+      },
+      "candidate": {
+        "format_version": "a03-event-prefix-1",
+        "design_only": true,
+        "journal_id": "journal-design",
+        "target_key": {
+          "platform_namespace": "a02-mock",
+          "target_id": "synthetic-target",
+          "book_id": "synthetic-book"
+        },
+        "plan_ref": {
+          "artifact_id": "a02-plan",
+          "revision": 1,
+          "kind": "ApplyPlan",
+          "content_hash": "6ecfa6b0f1f372534de8036b41b31ca8b937e624f16dc7157277e7a51a75aa30"
+        },
+        "owner_id": "owner-design",
+        "generation": 1,
+        "scope_id": "synthetic-scope",
+        "subject_action_id": "action-a02-dec0905217fd2d98a7c02bd44beb3f5c",
+        "genesis_hash": "0000000000000000000000000000000000000000000000000000000000000000",
+        "from_sequence": 1,
+        "through_sequence": 12,
+        "head_hash": "e34d705002222b3fb918c79c9b1c6d46327e8231420bbbe39cc64e0ce3f9d9ce",
+        "events": [
+          {
+            "sequence": 1,
+            "event": "PLAN_ACCEPTED",
+            "journal_id": "journal-design",
+            "target_key": {
+              "platform_namespace": "a02-mock",
+              "target_id": "synthetic-target",
+              "book_id": "synthetic-book"
+            },
+            "plan_ref": {
+              "artifact_id": "a02-plan",
+              "revision": 1,
+              "kind": "ApplyPlan",
+              "content_hash": "6ecfa6b0f1f372534de8036b41b31ca8b937e624f16dc7157277e7a51a75aa30"
+            },
+            "owner_id": "owner-design",
+            "generation": 1,
+            "recorded_at": "2026-10-17T00:00:00Z",
+            "payload": {
+              "plan_ref": {
+                "artifact_id": "a02-plan",
+                "revision": 1,
+                "kind": "ApplyPlan",
+                "content_hash": "6ecfa6b0f1f372534de8036b41b31ca8b937e624f16dc7157277e7a51a75aa30"
+              },
+              "actions": [
+                {
+                  "action_id": "action-a02-a80e543226fa0df5fcdcb8c585e1c125",
+                  "action_digest": "720d94fb6630bf8f47ec73a3c23282aa6e5a7413b0dc10bcd736b6fd1533eba2"
+                },
+                {
+                  "action_id": "action-a02-bb4ce2935b7f9cc278385b35e2ac3562",
+                  "action_digest": "66689db3b1cf58bfe0ec5e42b97a36edae6311695e0c7385a9751f4751083438"
+                },
+                {
+                  "action_id": "action-a02-dec0905217fd2d98a7c02bd44beb3f5c",
+                  "action_digest": "cd4aec0a1f47ce5ded97b2c2c17eea8f663525ed818ca8ab7855a8f7f84bd069"
+                }
+              ]
+            },
+            "previous_hash": "0000000000000000000000000000000000000000000000000000000000000000",
+            "event_hash": "aef9f75987e1c579df93f38f219226aed9a245ec821d4e46411bc0c387f5ab75"
+          },
+          {
+            "sequence": 2,
+            "event": "PLAN_ACTIONS_RESERVED",
+            "journal_id": "journal-design",
+            "target_key": {
+              "platform_namespace": "a02-mock",
+              "target_id": "synthetic-target",
+              "book_id": "synthetic-book"
+            },
+            "plan_ref": {
+              "artifact_id": "a02-plan",
+              "revision": 1,
+              "kind": "ApplyPlan",
+              "content_hash": "6ecfa6b0f1f372534de8036b41b31ca8b937e624f16dc7157277e7a51a75aa30"
+            },
+            "owner_id": "owner-design",
+            "generation": 1,
+            "recorded_at": "2026-10-17T00:00:00Z",
+            "payload": {
+              "reservations": [
+                {
+                  "action_id": "action-a02-a80e543226fa0df5fcdcb8c585e1c125",
+                  "action_digest": "720d94fb6630bf8f47ec73a3c23282aa6e5a7413b0dc10bcd736b6fd1533eba2"
+                },
+                {
+                  "action_id": "action-a02-bb4ce2935b7f9cc278385b35e2ac3562",
+                  "action_digest": "66689db3b1cf58bfe0ec5e42b97a36edae6311695e0c7385a9751f4751083438"
+                },
+                {
+                  "action_id": "action-a02-dec0905217fd2d98a7c02bd44beb3f5c",
+                  "action_digest": "cd4aec0a1f47ce5ded97b2c2c17eea8f663525ed818ca8ab7855a8f7f84bd069"
+                }
+              ]
+            },
+            "previous_hash": "aef9f75987e1c579df93f38f219226aed9a245ec821d4e46411bc0c387f5ab75",
+            "event_hash": "a52148907981918cc2161fd26bb92063d828f4878c466c68c25712f68072a604"
+          },
+          {
+            "sequence": 3,
+            "event": "PLAN_STARTED",
+            "journal_id": "journal-design",
+            "target_key": {
+              "platform_namespace": "a02-mock",
+              "target_id": "synthetic-target",
+              "book_id": "synthetic-book"
+            },
+            "plan_ref": {
+              "artifact_id": "a02-plan",
+              "revision": 1,
+              "kind": "ApplyPlan",
+              "content_hash": "6ecfa6b0f1f372534de8036b41b31ca8b937e624f16dc7157277e7a51a75aa30"
+            },
+            "owner_id": "owner-design",
+            "generation": 1,
+            "recorded_at": "2026-10-17T00:00:00Z",
+            "payload": {
+              "plan_state": "RUNNING"
+            },
+            "previous_hash": "a52148907981918cc2161fd26bb92063d828f4878c466c68c25712f68072a604",
+            "event_hash": "db15c34f5c23817dc160bc7654e6f1027efcf95507ba639ba35b9b960d52fa4d"
+          },
+          {
+            "sequence": 4,
+            "event": "WRITE_INTENT_COMMITTED",
+            "journal_id": "journal-design",
+            "target_key": {
+              "platform_namespace": "a02-mock",
+              "target_id": "synthetic-target",
+              "book_id": "synthetic-book"
+            },
+            "plan_ref": {
+              "artifact_id": "a02-plan",
+              "revision": 1,
+              "kind": "ApplyPlan",
+              "content_hash": "6ecfa6b0f1f372534de8036b41b31ca8b937e624f16dc7157277e7a51a75aa30"
+            },
+            "owner_id": "owner-design",
+            "generation": 1,
+            "recorded_at": "2026-10-17T00:00:02Z",
+            "payload": {
+              "action_id": "action-a02-a80e543226fa0df5fcdcb8c585e1c125",
+              "action_digest": "720d94fb6630bf8f47ec73a3c23282aa6e5a7413b0dc10bcd736b6fd1533eba2",
+              "intent_ref": {
+                "artifact_id": "intent-design-1",
+                "revision": 1,
+                "kind": "WriteIntent",
+                "content_hash": "667beca33bd1c1d330398d45f43ae1a191080e94d359405092eda53a7b81bdcf"
+              },
+              "obligation_id": "obl-216fb6ef67c5d0e09cf1406cd637c4d4ec6040c2c7fda983c7422cedcd2ee09c"
+            },
+            "previous_hash": "db15c34f5c23817dc160bc7654e6f1027efcf95507ba639ba35b9b960d52fa4d",
+            "event_hash": "3c258496e04886b06543ba65f33fecc59930f16bb9242119c1bd71b9c630d2c8"
+          },
+          {
+            "sequence": 5,
+            "event": "DISPATCH_PERMIT_ISSUED",
+            "journal_id": "journal-design",
+            "target_key": {
+              "platform_namespace": "a02-mock",
+              "target_id": "synthetic-target",
+              "book_id": "synthetic-book"
+            },
+            "plan_ref": {
+              "artifact_id": "a02-plan",
+              "revision": 1,
+              "kind": "ApplyPlan",
+              "content_hash": "6ecfa6b0f1f372534de8036b41b31ca8b937e624f16dc7157277e7a51a75aa30"
+            },
+            "owner_id": "owner-design",
+            "generation": 1,
+            "recorded_at": "2026-10-17T00:00:02Z",
+            "payload": {
+              "action_id": "action-a02-a80e543226fa0df5fcdcb8c585e1c125",
+              "action_digest": "720d94fb6630bf8f47ec73a3c23282aa6e5a7413b0dc10bcd736b6fd1533eba2",
+              "intent_ref": {
+                "artifact_id": "intent-design-1",
+                "revision": 1,
+                "kind": "WriteIntent",
+                "content_hash": "667beca33bd1c1d330398d45f43ae1a191080e94d359405092eda53a7b81bdcf"
+              },
+              "permit_id": "permit-r2-1"
+            },
+            "previous_hash": "3c258496e04886b06543ba65f33fecc59930f16bb9242119c1bd71b9c630d2c8",
+            "event_hash": "170a1f21a9bbac8ea7fb5570d022e67839a9c8719e85324cc9604095bdea9d63"
+          },
+          {
+            "sequence": 6,
+            "event": "DISPATCH_PERMIT_CONSUMED",
+            "journal_id": "journal-design",
+            "target_key": {
+              "platform_namespace": "a02-mock",
+              "target_id": "synthetic-target",
+              "book_id": "synthetic-book"
+            },
+            "plan_ref": {
+              "artifact_id": "a02-plan",
+              "revision": 1,
+              "kind": "ApplyPlan",
+              "content_hash": "6ecfa6b0f1f372534de8036b41b31ca8b937e624f16dc7157277e7a51a75aa30"
+            },
+            "owner_id": "owner-design",
+            "generation": 1,
+            "recorded_at": "2026-10-17T00:00:02Z",
+            "payload": {
+              "action_id": "action-a02-a80e543226fa0df5fcdcb8c585e1c125",
+              "action_digest": "720d94fb6630bf8f47ec73a3c23282aa6e5a7413b0dc10bcd736b6fd1533eba2",
+              "intent_ref": {
+                "artifact_id": "intent-design-1",
+                "revision": 1,
+                "kind": "WriteIntent",
+                "content_hash": "667beca33bd1c1d330398d45f43ae1a191080e94d359405092eda53a7b81bdcf"
+              },
+              "permit_id": "permit-r2-1"
+            },
+            "previous_hash": "170a1f21a9bbac8ea7fb5570d022e67839a9c8719e85324cc9604095bdea9d63",
+            "event_hash": "595bb27d91718a6faa97c40c6a5181203123ee1db6096d91ac4100d37bb05311"
+          },
+          {
+            "sequence": 7,
+            "event": "ACTION_RESULT_COMMITTED",
+            "journal_id": "journal-design",
+            "target_key": {
+              "platform_namespace": "a02-mock",
+              "target_id": "synthetic-target",
+              "book_id": "synthetic-book"
+            },
+            "plan_ref": {
+              "artifact_id": "a02-plan",
+              "revision": 1,
+              "kind": "ApplyPlan",
+              "content_hash": "6ecfa6b0f1f372534de8036b41b31ca8b937e624f16dc7157277e7a51a75aa30"
+            },
+            "owner_id": "owner-design",
+            "generation": 1,
+            "recorded_at": "2026-10-17T00:00:03Z",
+            "payload": {
+              "action_id": "action-a02-a80e543226fa0df5fcdcb8c585e1c125",
+              "action_digest": "720d94fb6630bf8f47ec73a3c23282aa6e5a7413b0dc10bcd736b6fd1533eba2",
+              "intent_ref": {
+                "artifact_id": "intent-design-1",
+                "revision": 1,
+                "kind": "WriteIntent",
+                "content_hash": "667beca33bd1c1d330398d45f43ae1a191080e94d359405092eda53a7b81bdcf"
+              },
+              "obligation_id": "obl-216fb6ef67c5d0e09cf1406cd637c4d4ec6040c2c7fda983c7422cedcd2ee09c",
+              "fact": {
+                "path": "assets/r2/4bfcbb78e91842de8f23c77c00e088fb4c6fd3d338e853fd51c56763a574b431.json",
+                "sha256": "4bfcbb78e91842de8f23c77c00e088fb4c6fd3d338e853fd51c56763a574b431",
+                "media_type": "application/json",
+                "origin": "SYNTHETIC"
+              },
+              "outcome": "APPLIED",
+              "plan_state": "RUNNING"
+            },
+            "previous_hash": "595bb27d91718a6faa97c40c6a5181203123ee1db6096d91ac4100d37bb05311",
+            "event_hash": "9b514a029ce6c3424dd2fab2a943616c5c485aa023c8a6f2383e5823ba266d03"
+          },
+          {
+            "sequence": 8,
+            "event": "WRITE_INTENT_COMMITTED",
+            "journal_id": "journal-design",
+            "target_key": {
+              "platform_namespace": "a02-mock",
+              "target_id": "synthetic-target",
+              "book_id": "synthetic-book"
+            },
+            "plan_ref": {
+              "artifact_id": "a02-plan",
+              "revision": 1,
+              "kind": "ApplyPlan",
+              "content_hash": "6ecfa6b0f1f372534de8036b41b31ca8b937e624f16dc7157277e7a51a75aa30"
+            },
+            "owner_id": "owner-design",
+            "generation": 1,
+            "recorded_at": "2026-10-17T00:00:05Z",
+            "payload": {
+              "action_id": "action-a02-bb4ce2935b7f9cc278385b35e2ac3562",
+              "action_digest": "66689db3b1cf58bfe0ec5e42b97a36edae6311695e0c7385a9751f4751083438",
+              "intent_ref": {
+                "artifact_id": "intent-design-2",
+                "revision": 1,
+                "kind": "WriteIntent",
+                "content_hash": "820954aa56840f83b9f8eac040e6a9e2b725de244e86b3426da602995d59b540"
+              },
+              "obligation_id": "obl-872810cce1431f9393133b9c6a59a13ae40be9b0b26bb3d75578546e5358c633"
+            },
+            "previous_hash": "9b514a029ce6c3424dd2fab2a943616c5c485aa023c8a6f2383e5823ba266d03",
+            "event_hash": "9be4a9b064deeeb843bdc5f8b0978e0fc2a728dc018625838e5775ec48007f04"
+          },
+          {
+            "sequence": 9,
+            "event": "DISPATCH_PERMIT_ISSUED",
+            "journal_id": "journal-design",
+            "target_key": {
+              "platform_namespace": "a02-mock",
+              "target_id": "synthetic-target",
+              "book_id": "synthetic-book"
+            },
+            "plan_ref": {
+              "artifact_id": "a02-plan",
+              "revision": 1,
+              "kind": "ApplyPlan",
+              "content_hash": "6ecfa6b0f1f372534de8036b41b31ca8b937e624f16dc7157277e7a51a75aa30"
+            },
+            "owner_id": "owner-design",
+            "generation": 1,
+            "recorded_at": "2026-10-17T00:00:05Z",
+            "payload": {
+              "action_id": "action-a02-bb4ce2935b7f9cc278385b35e2ac3562",
+              "action_digest": "66689db3b1cf58bfe0ec5e42b97a36edae6311695e0c7385a9751f4751083438",
+              "intent_ref": {
+                "artifact_id": "intent-design-2",
+                "revision": 1,
+                "kind": "WriteIntent",
+                "content_hash": "820954aa56840f83b9f8eac040e6a9e2b725de244e86b3426da602995d59b540"
+              },
+              "permit_id": "permit-r2-2"
+            },
+            "previous_hash": "9be4a9b064deeeb843bdc5f8b0978e0fc2a728dc018625838e5775ec48007f04",
+            "event_hash": "d122ce3ead763560f751d04c9a5fbdabad5d5328df483f3562c182f600f546a7"
+          },
+          {
+            "sequence": 10,
+            "event": "DISPATCH_PERMIT_CONSUMED",
+            "journal_id": "journal-design",
+            "target_key": {
+              "platform_namespace": "a02-mock",
+              "target_id": "synthetic-target",
+              "book_id": "synthetic-book"
+            },
+            "plan_ref": {
+              "artifact_id": "a02-plan",
+              "revision": 1,
+              "kind": "ApplyPlan",
+              "content_hash": "6ecfa6b0f1f372534de8036b41b31ca8b937e624f16dc7157277e7a51a75aa30"
+            },
+            "owner_id": "owner-design",
+            "generation": 1,
+            "recorded_at": "2026-10-17T00:00:05Z",
+            "payload": {
+              "action_id": "action-a02-bb4ce2935b7f9cc278385b35e2ac3562",
+              "action_digest": "66689db3b1cf58bfe0ec5e42b97a36edae6311695e0c7385a9751f4751083438",
+              "intent_ref": {
+                "artifact_id": "intent-design-2",
+                "revision": 1,
+                "kind": "WriteIntent",
+                "content_hash": "820954aa56840f83b9f8eac040e6a9e2b725de244e86b3426da602995d59b540"
+              },
+              "permit_id": "permit-r2-2"
+            },
+            "previous_hash": "d122ce3ead763560f751d04c9a5fbdabad5d5328df483f3562c182f600f546a7",
+            "event_hash": "ff5f07e97582e4282e872dcfdf7beea5971b0f8a8fb419e411b83c37a22d864f"
+          },
+          {
+            "sequence": 11,
+            "event": "DISPATCH_STARTED",
+            "journal_id": "journal-design",
+            "target_key": {
+              "platform_namespace": "a02-mock",
+              "target_id": "synthetic-target",
+              "book_id": "synthetic-book"
+            },
+            "plan_ref": {
+              "artifact_id": "a02-plan",
+              "revision": 1,
+              "kind": "ApplyPlan",
+              "content_hash": "6ecfa6b0f1f372534de8036b41b31ca8b937e624f16dc7157277e7a51a75aa30"
+            },
+            "owner_id": "owner-design",
+            "generation": 1,
+            "recorded_at": "2026-10-17T00:00:05Z",
+            "payload": {
+              "action_id": "action-a02-bb4ce2935b7f9cc278385b35e2ac3562",
+              "action_digest": "66689db3b1cf58bfe0ec5e42b97a36edae6311695e0c7385a9751f4751083438",
+              "intent_ref": {
+                "artifact_id": "intent-design-2",
+                "revision": 1,
+                "kind": "WriteIntent",
+                "content_hash": "820954aa56840f83b9f8eac040e6a9e2b725de244e86b3426da602995d59b540"
+              },
+              "permit_id": "permit-r2-2"
+            },
+            "previous_hash": "ff5f07e97582e4282e872dcfdf7beea5971b0f8a8fb419e411b83c37a22d864f",
+            "event_hash": "b2f2e0747b59884dff4dfb974a9919ac2b44bddd7643ac52650366480aec8d3d"
+          },
+          {
+            "sequence": 12,
+            "event": "ACTION_RESULT_COMMITTED",
+            "journal_id": "journal-design",
+            "target_key": {
+              "platform_namespace": "a02-mock",
+              "target_id": "synthetic-target",
+              "book_id": "synthetic-book"
+            },
+            "plan_ref": {
+              "artifact_id": "a02-plan",
+              "revision": 1,
+              "kind": "ApplyPlan",
+              "content_hash": "6ecfa6b0f1f372534de8036b41b31ca8b937e624f16dc7157277e7a51a75aa30"
+            },
+            "owner_id": "owner-design",
+            "generation": 1,
+            "recorded_at": "2026-10-17T00:00:06Z",
+            "payload": {
+              "action_id": "action-a02-bb4ce2935b7f9cc278385b35e2ac3562",
+              "action_digest": "66689db3b1cf58bfe0ec5e42b97a36edae6311695e0c7385a9751f4751083438",
+              "intent_ref": {
+                "artifact_id": "intent-design-2",
+                "revision": 1,
+                "kind": "WriteIntent",
+                "content_hash": "820954aa56840f83b9f8eac040e6a9e2b725de244e86b3426da602995d59b540"
+              },
+              "obligation_id": "obl-872810cce1431f9393133b9c6a59a13ae40be9b0b26bb3d75578546e5358c633",
+              "fact": {
+                "path": "assets/r2/bc247e84a69566a0adb96dd90dd8adb46517cc519ea9afcc654ff57ff970fe06.json",
+                "sha256": "bc247e84a69566a0adb96dd90dd8adb46517cc519ea9afcc654ff57ff970fe06",
+                "media_type": "application/json",
+                "origin": "SYNTHETIC"
+              },
+              "outcome": "UNKNOWN",
+              "plan_state": "INTERRUPTED"
+            },
+            "previous_hash": "b2f2e0747b59884dff4dfb974a9919ac2b44bddd7643ac52650366480aec8d3d",
+            "event_hash": "e34d705002222b3fb918c79c9b1c6d46327e8231420bbbe39cc64e0ce3f9d9ce"
+          }
+        ],
+        "complete": true
+      },
+      "actual": {
+        "errors": [
+          "RESULT_DISPATCH_MISSING"
+        ],
+        "event_names": [
+          "PLAN_ACCEPTED",
+          "PLAN_ACTIONS_RESERVED",
+          "PLAN_STARTED",
+          "WRITE_INTENT_COMMITTED",
+          "DISPATCH_PERMIT_ISSUED",
+          "DISPATCH_PERMIT_CONSUMED",
+          "ACTION_RESULT_COMMITTED",
+          "WRITE_INTENT_COMMITTED",
+          "DISPATCH_PERMIT_ISSUED",
+          "DISPATCH_PERMIT_CONSUMED",
+          "DISPATCH_STARTED",
+          "ACTION_RESULT_COMMITTED"
+        ],
+        "through": 12,
+        "head": "e34d705002222b3fb918c79c9b1c6d46327e8231420bbbe39cc64e0ce3f9d9ce",
+        "outcomes": {
+          "action-a02-a80e543226fa0df5fcdcb8c585e1c125": "APPLIED",
+          "action-a02-bb4ce2935b7f9cc278385b35e2ac3562": "UNKNOWN"
+        },
+        "facts": []
+      }
+    },
+    {
+      "mutation": "delete_first_DISPATCH_PERMIT_CONSUMED_then_renumber_rehash_complete_true",
+      "source": {
+        "path": "assets/r2/d3cbee7497c5b19603b9218266545b526ad4d312a5f6a2b3785ac5efb6b35ede.json",
+        "sha256": "d3cbee7497c5b19603b9218266545b526ad4d312a5f6a2b3785ac5efb6b35ede",
+        "media_type": "application/json",
+        "origin": "SYNTHETIC"
+      },
+      "candidate": {
+        "format_version": "a03-event-prefix-1",
+        "design_only": true,
+        "journal_id": "journal-design",
+        "target_key": {
+          "platform_namespace": "a02-mock",
+          "target_id": "synthetic-target",
+          "book_id": "synthetic-book"
+        },
+        "plan_ref": {
+          "artifact_id": "a02-plan",
+          "revision": 1,
+          "kind": "ApplyPlan",
+          "content_hash": "6ecfa6b0f1f372534de8036b41b31ca8b937e624f16dc7157277e7a51a75aa30"
+        },
+        "owner_id": "owner-design",
+        "generation": 1,
+        "scope_id": "synthetic-scope",
+        "subject_action_id": "action-a02-dec0905217fd2d98a7c02bd44beb3f5c",
+        "genesis_hash": "0000000000000000000000000000000000000000000000000000000000000000",
+        "from_sequence": 1,
+        "through_sequence": 12,
+        "head_hash": "8cb5ee652850646363ce0e01033e80a3b95135c5aaf643686cda505d8536cac0",
+        "events": [
+          {
+            "sequence": 1,
+            "event": "PLAN_ACCEPTED",
+            "journal_id": "journal-design",
+            "target_key": {
+              "platform_namespace": "a02-mock",
+              "target_id": "synthetic-target",
+              "book_id": "synthetic-book"
+            },
+            "plan_ref": {
+              "artifact_id": "a02-plan",
+              "revision": 1,
+              "kind": "ApplyPlan",
+              "content_hash": "6ecfa6b0f1f372534de8036b41b31ca8b937e624f16dc7157277e7a51a75aa30"
+            },
+            "owner_id": "owner-design",
+            "generation": 1,
+            "recorded_at": "2026-10-17T00:00:00Z",
+            "payload": {
+              "plan_ref": {
+                "artifact_id": "a02-plan",
+                "revision": 1,
+                "kind": "ApplyPlan",
+                "content_hash": "6ecfa6b0f1f372534de8036b41b31ca8b937e624f16dc7157277e7a51a75aa30"
+              },
+              "actions": [
+                {
+                  "action_id": "action-a02-a80e543226fa0df5fcdcb8c585e1c125",
+                  "action_digest": "720d94fb6630bf8f47ec73a3c23282aa6e5a7413b0dc10bcd736b6fd1533eba2"
+                },
+                {
+                  "action_id": "action-a02-bb4ce2935b7f9cc278385b35e2ac3562",
+                  "action_digest": "66689db3b1cf58bfe0ec5e42b97a36edae6311695e0c7385a9751f4751083438"
+                },
+                {
+                  "action_id": "action-a02-dec0905217fd2d98a7c02bd44beb3f5c",
+                  "action_digest": "cd4aec0a1f47ce5ded97b2c2c17eea8f663525ed818ca8ab7855a8f7f84bd069"
+                }
+              ]
+            },
+            "previous_hash": "0000000000000000000000000000000000000000000000000000000000000000",
+            "event_hash": "aef9f75987e1c579df93f38f219226aed9a245ec821d4e46411bc0c387f5ab75"
+          },
+          {
+            "sequence": 2,
+            "event": "PLAN_ACTIONS_RESERVED",
+            "journal_id": "journal-design",
+            "target_key": {
+              "platform_namespace": "a02-mock",
+              "target_id": "synthetic-target",
+              "book_id": "synthetic-book"
+            },
+            "plan_ref": {
+              "artifact_id": "a02-plan",
+              "revision": 1,
+              "kind": "ApplyPlan",
+              "content_hash": "6ecfa6b0f1f372534de8036b41b31ca8b937e624f16dc7157277e7a51a75aa30"
+            },
+            "owner_id": "owner-design",
+            "generation": 1,
+            "recorded_at": "2026-10-17T00:00:00Z",
+            "payload": {
+              "reservations": [
+                {
+                  "action_id": "action-a02-a80e543226fa0df5fcdcb8c585e1c125",
+                  "action_digest": "720d94fb6630bf8f47ec73a3c23282aa6e5a7413b0dc10bcd736b6fd1533eba2"
+                },
+                {
+                  "action_id": "action-a02-bb4ce2935b7f9cc278385b35e2ac3562",
+                  "action_digest": "66689db3b1cf58bfe0ec5e42b97a36edae6311695e0c7385a9751f4751083438"
+                },
+                {
+                  "action_id": "action-a02-dec0905217fd2d98a7c02bd44beb3f5c",
+                  "action_digest": "cd4aec0a1f47ce5ded97b2c2c17eea8f663525ed818ca8ab7855a8f7f84bd069"
+                }
+              ]
+            },
+            "previous_hash": "aef9f75987e1c579df93f38f219226aed9a245ec821d4e46411bc0c387f5ab75",
+            "event_hash": "a52148907981918cc2161fd26bb92063d828f4878c466c68c25712f68072a604"
+          },
+          {
+            "sequence": 3,
+            "event": "PLAN_STARTED",
+            "journal_id": "journal-design",
+            "target_key": {
+              "platform_namespace": "a02-mock",
+              "target_id": "synthetic-target",
+              "book_id": "synthetic-book"
+            },
+            "plan_ref": {
+              "artifact_id": "a02-plan",
+              "revision": 1,
+              "kind": "ApplyPlan",
+              "content_hash": "6ecfa6b0f1f372534de8036b41b31ca8b937e624f16dc7157277e7a51a75aa30"
+            },
+            "owner_id": "owner-design",
+            "generation": 1,
+            "recorded_at": "2026-10-17T00:00:00Z",
+            "payload": {
+              "plan_state": "RUNNING"
+            },
+            "previous_hash": "a52148907981918cc2161fd26bb92063d828f4878c466c68c25712f68072a604",
+            "event_hash": "db15c34f5c23817dc160bc7654e6f1027efcf95507ba639ba35b9b960d52fa4d"
+          },
+          {
+            "sequence": 4,
+            "event": "WRITE_INTENT_COMMITTED",
+            "journal_id": "journal-design",
+            "target_key": {
+              "platform_namespace": "a02-mock",
+              "target_id": "synthetic-target",
+              "book_id": "synthetic-book"
+            },
+            "plan_ref": {
+              "artifact_id": "a02-plan",
+              "revision": 1,
+              "kind": "ApplyPlan",
+              "content_hash": "6ecfa6b0f1f372534de8036b41b31ca8b937e624f16dc7157277e7a51a75aa30"
+            },
+            "owner_id": "owner-design",
+            "generation": 1,
+            "recorded_at": "2026-10-17T00:00:02Z",
+            "payload": {
+              "action_id": "action-a02-a80e543226fa0df5fcdcb8c585e1c125",
+              "action_digest": "720d94fb6630bf8f47ec73a3c23282aa6e5a7413b0dc10bcd736b6fd1533eba2",
+              "intent_ref": {
+                "artifact_id": "intent-design-1",
+                "revision": 1,
+                "kind": "WriteIntent",
+                "content_hash": "667beca33bd1c1d330398d45f43ae1a191080e94d359405092eda53a7b81bdcf"
+              },
+              "obligation_id": "obl-216fb6ef67c5d0e09cf1406cd637c4d4ec6040c2c7fda983c7422cedcd2ee09c"
+            },
+            "previous_hash": "db15c34f5c23817dc160bc7654e6f1027efcf95507ba639ba35b9b960d52fa4d",
+            "event_hash": "3c258496e04886b06543ba65f33fecc59930f16bb9242119c1bd71b9c630d2c8"
+          },
+          {
+            "sequence": 5,
+            "event": "DISPATCH_PERMIT_ISSUED",
+            "journal_id": "journal-design",
+            "target_key": {
+              "platform_namespace": "a02-mock",
+              "target_id": "synthetic-target",
+              "book_id": "synthetic-book"
+            },
+            "plan_ref": {
+              "artifact_id": "a02-plan",
+              "revision": 1,
+              "kind": "ApplyPlan",
+              "content_hash": "6ecfa6b0f1f372534de8036b41b31ca8b937e624f16dc7157277e7a51a75aa30"
+            },
+            "owner_id": "owner-design",
+            "generation": 1,
+            "recorded_at": "2026-10-17T00:00:02Z",
+            "payload": {
+              "action_id": "action-a02-a80e543226fa0df5fcdcb8c585e1c125",
+              "action_digest": "720d94fb6630bf8f47ec73a3c23282aa6e5a7413b0dc10bcd736b6fd1533eba2",
+              "intent_ref": {
+                "artifact_id": "intent-design-1",
+                "revision": 1,
+                "kind": "WriteIntent",
+                "content_hash": "667beca33bd1c1d330398d45f43ae1a191080e94d359405092eda53a7b81bdcf"
+              },
+              "permit_id": "permit-r2-1"
+            },
+            "previous_hash": "3c258496e04886b06543ba65f33fecc59930f16bb9242119c1bd71b9c630d2c8",
+            "event_hash": "170a1f21a9bbac8ea7fb5570d022e67839a9c8719e85324cc9604095bdea9d63"
+          },
+          {
+            "sequence": 6,
+            "event": "DISPATCH_STARTED",
+            "journal_id": "journal-design",
+            "target_key": {
+              "platform_namespace": "a02-mock",
+              "target_id": "synthetic-target",
+              "book_id": "synthetic-book"
+            },
+            "plan_ref": {
+              "artifact_id": "a02-plan",
+              "revision": 1,
+              "kind": "ApplyPlan",
+              "content_hash": "6ecfa6b0f1f372534de8036b41b31ca8b937e624f16dc7157277e7a51a75aa30"
+            },
+            "owner_id": "owner-design",
+            "generation": 1,
+            "recorded_at": "2026-10-17T00:00:02Z",
+            "payload": {
+              "action_id": "action-a02-a80e543226fa0df5fcdcb8c585e1c125",
+              "action_digest": "720d94fb6630bf8f47ec73a3c23282aa6e5a7413b0dc10bcd736b6fd1533eba2",
+              "intent_ref": {
+                "artifact_id": "intent-design-1",
+                "revision": 1,
+                "kind": "WriteIntent",
+                "content_hash": "667beca33bd1c1d330398d45f43ae1a191080e94d359405092eda53a7b81bdcf"
+              },
+              "permit_id": "permit-r2-1"
+            },
+            "previous_hash": "170a1f21a9bbac8ea7fb5570d022e67839a9c8719e85324cc9604095bdea9d63",
+            "event_hash": "5e416158f293f364fa53090deaa4c94dd83f09e147dc14a92908d6a273c91939"
+          },
+          {
+            "sequence": 7,
+            "event": "ACTION_RESULT_COMMITTED",
+            "journal_id": "journal-design",
+            "target_key": {
+              "platform_namespace": "a02-mock",
+              "target_id": "synthetic-target",
+              "book_id": "synthetic-book"
+            },
+            "plan_ref": {
+              "artifact_id": "a02-plan",
+              "revision": 1,
+              "kind": "ApplyPlan",
+              "content_hash": "6ecfa6b0f1f372534de8036b41b31ca8b937e624f16dc7157277e7a51a75aa30"
+            },
+            "owner_id": "owner-design",
+            "generation": 1,
+            "recorded_at": "2026-10-17T00:00:03Z",
+            "payload": {
+              "action_id": "action-a02-a80e543226fa0df5fcdcb8c585e1c125",
+              "action_digest": "720d94fb6630bf8f47ec73a3c23282aa6e5a7413b0dc10bcd736b6fd1533eba2",
+              "intent_ref": {
+                "artifact_id": "intent-design-1",
+                "revision": 1,
+                "kind": "WriteIntent",
+                "content_hash": "667beca33bd1c1d330398d45f43ae1a191080e94d359405092eda53a7b81bdcf"
+              },
+              "obligation_id": "obl-216fb6ef67c5d0e09cf1406cd637c4d4ec6040c2c7fda983c7422cedcd2ee09c",
+              "fact": {
+                "path": "assets/r2/4bfcbb78e91842de8f23c77c00e088fb4c6fd3d338e853fd51c56763a574b431.json",
+                "sha256": "4bfcbb78e91842de8f23c77c00e088fb4c6fd3d338e853fd51c56763a574b431",
+                "media_type": "application/json",
+                "origin": "SYNTHETIC"
+              },
+              "outcome": "APPLIED",
+              "plan_state": "RUNNING"
+            },
+            "previous_hash": "5e416158f293f364fa53090deaa4c94dd83f09e147dc14a92908d6a273c91939",
+            "event_hash": "b96561149ff4b3fb5ecdb509b87dbfe2d3a5cbe57fda78ffffae4b00bdaf1d34"
+          },
+          {
+            "sequence": 8,
+            "event": "WRITE_INTENT_COMMITTED",
+            "journal_id": "journal-design",
+            "target_key": {
+              "platform_namespace": "a02-mock",
+              "target_id": "synthetic-target",
+              "book_id": "synthetic-book"
+            },
+            "plan_ref": {
+              "artifact_id": "a02-plan",
+              "revision": 1,
+              "kind": "ApplyPlan",
+              "content_hash": "6ecfa6b0f1f372534de8036b41b31ca8b937e624f16dc7157277e7a51a75aa30"
+            },
+            "owner_id": "owner-design",
+            "generation": 1,
+            "recorded_at": "2026-10-17T00:00:05Z",
+            "payload": {
+              "action_id": "action-a02-bb4ce2935b7f9cc278385b35e2ac3562",
+              "action_digest": "66689db3b1cf58bfe0ec5e42b97a36edae6311695e0c7385a9751f4751083438",
+              "intent_ref": {
+                "artifact_id": "intent-design-2",
+                "revision": 1,
+                "kind": "WriteIntent",
+                "content_hash": "820954aa56840f83b9f8eac040e6a9e2b725de244e86b3426da602995d59b540"
+              },
+              "obligation_id": "obl-872810cce1431f9393133b9c6a59a13ae40be9b0b26bb3d75578546e5358c633"
+            },
+            "previous_hash": "b96561149ff4b3fb5ecdb509b87dbfe2d3a5cbe57fda78ffffae4b00bdaf1d34",
+            "event_hash": "c5ce9a68036205473a015cf4e99d36600103a4274be8574f32e13bc4c35d8a1f"
+          },
+          {
+            "sequence": 9,
+            "event": "DISPATCH_PERMIT_ISSUED",
+            "journal_id": "journal-design",
+            "target_key": {
+              "platform_namespace": "a02-mock",
+              "target_id": "synthetic-target",
+              "book_id": "synthetic-book"
+            },
+            "plan_ref": {
+              "artifact_id": "a02-plan",
+              "revision": 1,
+              "kind": "ApplyPlan",
+              "content_hash": "6ecfa6b0f1f372534de8036b41b31ca8b937e624f16dc7157277e7a51a75aa30"
+            },
+            "owner_id": "owner-design",
+            "generation": 1,
+            "recorded_at": "2026-10-17T00:00:05Z",
+            "payload": {
+              "action_id": "action-a02-bb4ce2935b7f9cc278385b35e2ac3562",
+              "action_digest": "66689db3b1cf58bfe0ec5e42b97a36edae6311695e0c7385a9751f4751083438",
+              "intent_ref": {
+                "artifact_id": "intent-design-2",
+                "revision": 1,
+                "kind": "WriteIntent",
+                "content_hash": "820954aa56840f83b9f8eac040e6a9e2b725de244e86b3426da602995d59b540"
+              },
+              "permit_id": "permit-r2-2"
+            },
+            "previous_hash": "c5ce9a68036205473a015cf4e99d36600103a4274be8574f32e13bc4c35d8a1f",
+            "event_hash": "cd50453f00a2f54c6a6ce85a10c02b82e01c58b7ef0395773d9d30be3022e523"
+          },
+          {
+            "sequence": 10,
+            "event": "DISPATCH_PERMIT_CONSUMED",
+            "journal_id": "journal-design",
+            "target_key": {
+              "platform_namespace": "a02-mock",
+              "target_id": "synthetic-target",
+              "book_id": "synthetic-book"
+            },
+            "plan_ref": {
+              "artifact_id": "a02-plan",
+              "revision": 1,
+              "kind": "ApplyPlan",
+              "content_hash": "6ecfa6b0f1f372534de8036b41b31ca8b937e624f16dc7157277e7a51a75aa30"
+            },
+            "owner_id": "owner-design",
+            "generation": 1,
+            "recorded_at": "2026-10-17T00:00:05Z",
+            "payload": {
+              "action_id": "action-a02-bb4ce2935b7f9cc278385b35e2ac3562",
+              "action_digest": "66689db3b1cf58bfe0ec5e42b97a36edae6311695e0c7385a9751f4751083438",
+              "intent_ref": {
+                "artifact_id": "intent-design-2",
+                "revision": 1,
+                "kind": "WriteIntent",
+                "content_hash": "820954aa56840f83b9f8eac040e6a9e2b725de244e86b3426da602995d59b540"
+              },
+              "permit_id": "permit-r2-2"
+            },
+            "previous_hash": "cd50453f00a2f54c6a6ce85a10c02b82e01c58b7ef0395773d9d30be3022e523",
+            "event_hash": "6233236af4da9e83c52547c3a33cfbfe457747ae62258353c394274685190a43"
+          },
+          {
+            "sequence": 11,
+            "event": "DISPATCH_STARTED",
+            "journal_id": "journal-design",
+            "target_key": {
+              "platform_namespace": "a02-mock",
+              "target_id": "synthetic-target",
+              "book_id": "synthetic-book"
+            },
+            "plan_ref": {
+              "artifact_id": "a02-plan",
+              "revision": 1,
+              "kind": "ApplyPlan",
+              "content_hash": "6ecfa6b0f1f372534de8036b41b31ca8b937e624f16dc7157277e7a51a75aa30"
+            },
+            "owner_id": "owner-design",
+            "generation": 1,
+            "recorded_at": "2026-10-17T00:00:05Z",
+            "payload": {
+              "action_id": "action-a02-bb4ce2935b7f9cc278385b35e2ac3562",
+              "action_digest": "66689db3b1cf58bfe0ec5e42b97a36edae6311695e0c7385a9751f4751083438",
+              "intent_ref": {
+                "artifact_id": "intent-design-2",
+                "revision": 1,
+                "kind": "WriteIntent",
+                "content_hash": "820954aa56840f83b9f8eac040e6a9e2b725de244e86b3426da602995d59b540"
+              },
+              "permit_id": "permit-r2-2"
+            },
+            "previous_hash": "6233236af4da9e83c52547c3a33cfbfe457747ae62258353c394274685190a43",
+            "event_hash": "4560538572190b4688ee24b13772a8d2f8c0914852744d9605b685af2a8d1379"
+          },
+          {
+            "sequence": 12,
+            "event": "ACTION_RESULT_COMMITTED",
+            "journal_id": "journal-design",
+            "target_key": {
+              "platform_namespace": "a02-mock",
+              "target_id": "synthetic-target",
+              "book_id": "synthetic-book"
+            },
+            "plan_ref": {
+              "artifact_id": "a02-plan",
+              "revision": 1,
+              "kind": "ApplyPlan",
+              "content_hash": "6ecfa6b0f1f372534de8036b41b31ca8b937e624f16dc7157277e7a51a75aa30"
+            },
+            "owner_id": "owner-design",
+            "generation": 1,
+            "recorded_at": "2026-10-17T00:00:06Z",
+            "payload": {
+              "action_id": "action-a02-bb4ce2935b7f9cc278385b35e2ac3562",
+              "action_digest": "66689db3b1cf58bfe0ec5e42b97a36edae6311695e0c7385a9751f4751083438",
+              "intent_ref": {
+                "artifact_id": "intent-design-2",
+                "revision": 1,
+                "kind": "WriteIntent",
+                "content_hash": "820954aa56840f83b9f8eac040e6a9e2b725de244e86b3426da602995d59b540"
+              },
+              "obligation_id": "obl-872810cce1431f9393133b9c6a59a13ae40be9b0b26bb3d75578546e5358c633",
+              "fact": {
+                "path": "assets/r2/bc247e84a69566a0adb96dd90dd8adb46517cc519ea9afcc654ff57ff970fe06.json",
+                "sha256": "bc247e84a69566a0adb96dd90dd8adb46517cc519ea9afcc654ff57ff970fe06",
+                "media_type": "application/json",
+                "origin": "SYNTHETIC"
+              },
+              "outcome": "UNKNOWN",
+              "plan_state": "INTERRUPTED"
+            },
+            "previous_hash": "4560538572190b4688ee24b13772a8d2f8c0914852744d9605b685af2a8d1379",
+            "event_hash": "8cb5ee652850646363ce0e01033e80a3b95135c5aaf643686cda505d8536cac0"
+          }
+        ],
+        "complete": true
+      },
+      "actual": {
+        "errors": [
+          "PERMIT_STAGE_MISMATCH",
+          "RESULT_DISPATCH_MISSING"
+        ],
+        "event_names": [
+          "PLAN_ACCEPTED",
+          "PLAN_ACTIONS_RESERVED",
+          "PLAN_STARTED",
+          "WRITE_INTENT_COMMITTED",
+          "DISPATCH_PERMIT_ISSUED",
+          "DISPATCH_STARTED",
+          "ACTION_RESULT_COMMITTED",
+          "WRITE_INTENT_COMMITTED",
+          "DISPATCH_PERMIT_ISSUED",
+          "DISPATCH_PERMIT_CONSUMED",
+          "DISPATCH_STARTED",
+          "ACTION_RESULT_COMMITTED"
+        ],
+        "through": 12,
+        "head": "8cb5ee652850646363ce0e01033e80a3b95135c5aaf643686cda505d8536cac0",
+        "outcomes": {
+          "action-a02-a80e543226fa0df5fcdcb8c585e1c125": "APPLIED",
+          "action-a02-bb4ce2935b7f9cc278385b35e2ac3562": "UNKNOWN"
+        },
+        "facts": []
+      }
+    }
+  ],
+  "runtime_actual": "NOT_EXECUTED"
+}

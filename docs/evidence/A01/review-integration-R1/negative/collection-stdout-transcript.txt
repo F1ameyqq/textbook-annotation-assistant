@@ -1,0 +1,180 @@
+{
+  "final": "5f872150a237b195f73c78e02e13a91d2f4f46a7",
+  "patch": "f8f2981a815f96147144d3747d26752b564cc9f7",
+  "main_parent": "4946b8ab307f88bdc25c14ace5ead774e3119fc5",
+  "base": "180bb1e86fb2a7eb1546be85af70f466f069daf5",
+  "integration_tree": "2078731114ad3a07368ca46a2f34c3544af64e2b",
+  "task": "independent bounded negative controls",
+  "temporary": "C:\\Users\\ASUS\\AppData\\Local\\Temp\\A01-integration-R1-negative-3qod_9mh",
+  "stage": "D:\\1800\\.local\\stages\\A01-review-integration-R1\\negative",
+  "python": "C:\\Users\\ASUS\\AppData\\Local\\Programs\\Python\\Python39\\python.exe",
+  "focused": [
+    {
+      "label": "I00-clean",
+      "expected_exit_code": 0,
+      "actual_exit_code": 0,
+      "expected_matched": true,
+      "child_exit_code": 0,
+      "passed": true,
+      "first_load_bundle": "NOT_APPLICABLE: code/fixture preservation control",
+      "source_restored": true
+    },
+    {
+      "label": "I01-source-functional",
+      "expected_exit_code": 1,
+      "actual_exit_code": 1,
+      "expected_matched": true,
+      "child_exit_code": 1,
+      "passed": false,
+      "first_load_bundle": "NOT_APPLICABLE: code/fixture preservation control",
+      "source_restored": true
+    },
+    {
+      "label": "I02-encoded-content",
+      "expected_exit_code": 1,
+      "actual_exit_code": 1,
+      "expected_matched": true,
+      "child_exit_code": 1,
+      "passed": false,
+      "first_load_bundle": "NOT_APPLICABLE: code/fixture preservation control",
+      "source_restored": true
+    },
+    {
+      "label": "I03-file-identity",
+      "expected_exit_code": 1,
+      "actual_exit_code": 1,
+      "expected_matched": true,
+      "child_exit_code": 1,
+      "passed": false,
+      "first_load_bundle": "NOT_APPLICABLE: code/fixture preservation control",
+      "source_restored": true
+    },
+    {
+      "label": "I04-root-reference-identity",
+      "expected_exit_code": 1,
+      "actual_exit_code": 0,
+      "expected_matched": false,
+      "child_exit_code": 0,
+      "passed": true,
+      "first_load_bundle": "NOT_APPLICABLE: code/fixture preservation control",
+      "source_restored": true
+    },
+    {
+      "label": "I05-source-manifest-identity",
+      "expected_exit_code": 1,
+      "actual_exit_code": 1,
+      "expected_matched": true,
+      "child_exit_code": 1,
+      "passed": false,
+      "first_load_bundle": "NOT_APPLICABLE: code/fixture preservation control",
+      "source_restored": true
+    }
+  ],
+  "auxiliary": [
+    {
+      "label": "F00-raw",
+      "path": "tests/test_contracts.py",
+      "expected_passed": true,
+      "actual_passed": true,
+      "expected_matched": true
+    },
+    {
+      "label": "F01-allowed-CRLF",
+      "path": "tests/test_contracts.py",
+      "expected_passed": true,
+      "actual_passed": true,
+      "expected_matched": true
+    },
+    {
+      "label": "F02-mixed-EOL",
+      "path": "tests/test_contracts.py",
+      "expected_passed": false,
+      "actual_passed": false,
+      "expected_matched": true
+    },
+    {
+      "label": "F03-unlisted-CRLF",
+      "path": "examples/a01/build.py",
+      "expected_passed": false,
+      "actual_passed": false,
+      "expected_matched": true
+    },
+    {
+      "label": "F04-binary",
+      "path": "tests/fixtures/contracts/normal/assets/asset-page-a1.pgm",
+      "expected_passed": false,
+      "actual_passed": false,
+      "expected_matched": true
+    }
+  ],
+  "original_release": [
+    {
+      "label": "R00-clean",
+      "expected_exit_code": 0,
+      "actual_exit_code": 0,
+      "outcome": {
+        "status": "REVIEW",
+        "passed": true,
+        "commands": 0,
+        "preserved_files": 971,
+        "representations": [
+          "GIT_BLOB"
+        ]
+      },
+      "source_restored": true
+    },
+    {
+      "label": "R01-source",
+      "expected_exit_code": 1,
+      "actual_exit_code": 1,
+      "outcome": {
+        "status": "REVIEW",
+        "passed": false,
+        "gate": "implementation",
+        "errors": [
+          {
+            "code": "CONTENT_MISMATCH",
+            "path": "src/annotation/source/static/consistency.py",
+            "actual_sha256": "9e525bb46a41afb39c3d2bb812eaf4c141ce34dd8a880c128ca4a4d84fe54952",
+            "accepted_sha256": [
+              "2d44ffc21f510cb090070cf5966775dfa498af2cae31f2ca4fe26fb7ea95575c",
+              "8266c7a81515b0e8a3961250bc06e43eb0aa4c70e4c0890fa794984970dc0d80"
+            ]
+          }
+        ]
+      },
+      "source_restored": true
+    },
+    {
+      "label": "R02-image",
+      "expected_exit_code": 1,
+      "actual_exit_code": 1,
+      "outcome": {
+        "status": "REVIEW",
+        "passed": false,
+        "gate": "preservation",
+        "errors": [
+          {
+            "code": "CONTENT_MISMATCH",
+            "path": "data/derived/analysis/coord_evidence/annimg/46006966_10_analysis_0@page_234_otnod9du.jpg",
+            "actual_sha256": "591b0b7b2be6291144ad0c83e3de0d832c6eb69401b01b877439ba06540c6614",
+            "accepted_sha256": [
+              "d8d79a942910fceba4eef240118dec479517f7a52ba45e1ecfa9689184c5bc51"
+            ]
+          }
+        ]
+      },
+      "source_restored": true
+    }
+  ],
+  "focused_expected_failures": [
+    "I04-root-reference-identity"
+  ],
+  "raw_root_files_unchanged": 9937,
+  "frozen_root_files_unchanged": 1144,
+  "independent_subset_files": 508,
+  "original_release_files": 1144,
+  "old_evidence_written": false,
+  "network_browser_platform_credential_model_calls": 0,
+  "sessions_to_release": 0
+}

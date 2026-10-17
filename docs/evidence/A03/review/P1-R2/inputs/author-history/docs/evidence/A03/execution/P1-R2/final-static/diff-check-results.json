@@ -1,0 +1,33 @@
+{
+  "commands": [
+    {
+      "name": "default-diff-check",
+      "argv": [
+        "git",
+        "diff",
+        "--check",
+        "ca4fba4f505467228a8164c3999e0cecc54ffc4e",
+        "HEAD"
+      ],
+      "actual_exit_code": 2,
+      "stdout_bytes": 614617,
+      "stderr_bytes": 0
+    },
+    {
+      "name": "crlf-aware-diff-check",
+      "argv": [
+        "git",
+        "-c",
+        "core.whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol",
+        "diff",
+        "--check",
+        "ca4fba4f505467228a8164c3999e0cecc54ffc4e",
+        "HEAD"
+      ],
+      "actual_exit_code": 0,
+      "stdout_bytes": 0,
+      "stderr_bytes": 0
+    }
+  ],
+  "note": "Unfiltered retained CRLF logs/snapshots trigger default Git trailing CR diagnostics. A per-command cr-at-eol check retains all other default whitespace checks without byte normalization or global settings."
+}

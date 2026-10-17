@@ -1,0 +1,29 @@
+{
+  "design_only": true,
+  "review_harness_failures_not_candidate_findings": [
+    {
+      "operation": "Exploratory one-line Python suffix read",
+      "command_ending": "for a in (c:=json.loads((b/\"cases\"/(n+\".json\")).read_text()))[\"bundle\"][\"artifacts\"]",
+      "actual_exit_code": 1,
+      "stderr": "SyntaxError: assignment expression cannot be used in a comprehension iterable expression",
+      "correction": "Used a saved independent script with explicit statements. No candidate bytes changed."
+    },
+    {
+      "operation": "Initial independent audit_prefix.py run",
+      "argv": ["python", "-B", "D:/1800/docs/evidence/A03/review/P1-R2/prefix-agent/audit_prefix.py", "--root", "D:/1800/.local/stages/A03-review-P1-R2/940a5de33a24b1a3a9ded6e69ade1dd0609ed83a/examples/a03/P1-R2/data", "--output", "D:/1800/docs/evidence/A03/review/P1-R2/prefix-agent/independent-results.json"],
+      "actual_exit_code": 1,
+      "stderr": "Traceback (most recent call last):\n  File \"D:\\1800\\docs\\evidence\\A03\\review\\P1-R2\\prefix-agent\\audit_prefix.py\", line 220, in <module>\n    main()\n  File \"D:\\1800\\docs\\evidence\\A03\\review\\P1-R2\\prefix-agent\\audit_prefix.py\", line 213, in main\n    result[\"cases\"].append(audit.positive(name))\n  File \"D:\\1800\\docs\\evidence\\A03\\review\\P1-R2\\prefix-agent\\audit_prefix.py\", line 152, in positive\n    progress = next(a for a in artifacts if a[\"kind\"] == \"ExecutionProgress\")\nStopIteration",
+      "correction": "The original-unknown-preserved case has no ExecutionProgress. Optional progress handling now checks only actual artifacts. This was a review-script assumption, not a delivery failure.",
+      "initial_script_hash": "NOT_RECORDED_BEFORE_LOCAL_REVIEW_SCRIPT_CORRECTION"
+    },
+    {
+      "operation": "Exploratory PowerShell read of guessed case name",
+      "attempted_relative_path": "examples/a03/P1-R2/data/cases/prefix-missing-plan-accepted.json",
+      "actual_powershell_message": "Cannot find path because it does not exist.",
+      "actual_combined_command_exit_code": 0,
+      "correction": "Enumerated frozen case filenames using rg --files; the existing file is prefix-missing-acceptance.json. No candidate byte changed."
+    }
+  ],
+  "automatic_approval_rejections_this_subreview": 0,
+  "database_recovery_platform_model_api_executed": false
+}

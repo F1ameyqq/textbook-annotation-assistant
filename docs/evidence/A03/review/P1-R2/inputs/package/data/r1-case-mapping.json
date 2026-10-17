@@ -1,0 +1,4132 @@
+{
+  "design_only": true,
+  "candidate_revision": "P1-R2",
+  "baseline_commit": "ca4fba4f505467228a8164c3999e0cecc54ffc4e",
+  "original_case_count": 69,
+  "new_neighbor_count": 3,
+  "mappings": [
+    {
+      "r1_case_id": "normal",
+      "r1_path": "cases/normal.json",
+      "r1_sha256": "7cb20bb7c4263f0fc61fca3325f30440fc09c77ded6c8772f9cf682b8b5cc565",
+      "r2_case_id": "normal",
+      "r2_path": "cases/normal.json",
+      "r2_sha256": "7cb20bb7c4263f0fc61fca3325f30440fc09c77ded6c8772f9cf682b8b5cc565",
+      "expected_layer": "SEMANTIC",
+      "expected_code": "PENDING_NOT_SUBMITTED",
+      "expected_static": "PASS",
+      "bytes_unchanged": true,
+      "semantic_trigger_retained": true,
+      "bounded_change": "none; byte-exact R1 input",
+      "primary_trigger_comparison": {
+        "method": "byte-exact",
+        "equal": true
+      }
+    },
+    {
+      "r1_case_id": "intent-no-receipt-match",
+      "r1_path": "cases/intent-no-receipt-match.json",
+      "r1_sha256": "514eb98ad32fca993982c372ea43bc59b5571890d238280077441fbe3e5fcb70",
+      "r2_case_id": "intent-no-receipt-match",
+      "r2_path": "cases/intent-no-receipt-match.json",
+      "r2_sha256": "514eb98ad32fca993982c372ea43bc59b5571890d238280077441fbe3e5fcb70",
+      "expected_layer": "SEMANTIC",
+      "expected_code": "RESOLVED_APPLIED_NO_REPLAY",
+      "expected_static": "PASS",
+      "bytes_unchanged": true,
+      "semantic_trigger_retained": true,
+      "bounded_change": "none; byte-exact R1 input",
+      "primary_trigger_comparison": {
+        "method": "byte-exact",
+        "equal": true
+      }
+    },
+    {
+      "r1_case_id": "intent-no-receipt-absent",
+      "r1_path": "cases/intent-no-receipt-absent.json",
+      "r1_sha256": "56d05b478f5398c041f335295dd454088538a9aadcfb1608abebfc2ecf6cb982",
+      "r2_case_id": "intent-no-receipt-absent",
+      "r2_path": "cases/intent-no-receipt-absent.json",
+      "r2_sha256": "56d05b478f5398c041f335295dd454088538a9aadcfb1608abebfc2ecf6cb982",
+      "expected_layer": "SEMANTIC",
+      "expected_code": "RESOLVED_NOT_APPLIED_REPLAN_REQUIRED",
+      "expected_static": "PASS",
+      "bytes_unchanged": true,
+      "semantic_trigger_retained": true,
+      "bounded_change": "none; byte-exact R1 input",
+      "primary_trigger_comparison": {
+        "method": "byte-exact",
+        "equal": true
+      }
+    },
+    {
+      "r1_case_id": "partial-without-absent",
+      "r1_path": "cases/partial-without-absent.json",
+      "r1_sha256": "3a8bb558eba3a8793f05b02cb5fe41a4ea565c19de4836f7f869f61437dc92e3",
+      "r2_case_id": "partial-without-absent",
+      "r2_path": "cases/partial-without-absent.json",
+      "r2_sha256": "3a8bb558eba3a8793f05b02cb5fe41a4ea565c19de4836f7f869f61437dc92e3",
+      "expected_layer": "SEMANTIC",
+      "expected_code": "PROGRESS_ONLY_BOOK_PENDING",
+      "expected_static": "PASS",
+      "bytes_unchanged": true,
+      "semantic_trigger_retained": true,
+      "bounded_change": "none; byte-exact R1 input",
+      "primary_trigger_comparison": {
+        "method": "byte-exact",
+        "equal": true
+      }
+    },
+    {
+      "r1_case_id": "partial-with-complete-absent",
+      "r1_path": "cases/partial-with-complete-absent.json",
+      "r1_sha256": "8c3a322f0a6fa9693a321e491ac3a7af2a071fb544f320e19ff25a68cf886b6d",
+      "r2_case_id": "partial-with-complete-absent",
+      "r2_path": "cases/partial-with-complete-absent.json",
+      "r2_sha256": "a31393b69861a207325449d42d64a3e5028a8b1b442dcf81a35a67499d6ee7f8",
+      "expected_layer": "SEMANTIC",
+      "expected_code": "NOT_ATTEMPTED_NOT_APPLIED_BOOK_PENDING",
+      "expected_static": "PASS",
+      "bytes_unchanged": false,
+      "semantic_trigger_retained": true,
+      "bounded_change": "complete event prefix and derived intent/obligation/fact/CAS/consumer refs only",
+      "primary_trigger_comparison": {
+        "r1": {
+          "runtime_fields": {
+            "plan_status": "INTERRUPTED",
+            "old_tail_dispatches": 0,
+            "original_unknown_preserved": true,
+            "original_B_unknown_preserved": true,
+            "intent_for_tail": false,
+            "obligation_for_tail": false,
+            "resolution_for_tail": false,
+            "independent_absent": true,
+            "actual_new_read": true,
+            "complete_uncalled_prefix": true,
+            "supplied_generation": 1,
+            "current_generation": 1
+          },
+          "request_action": {
+            "action_id": "action-a02-dec0905217fd2d98a7c02bd44beb3f5c",
+            "action_digest": "cd4aec0a1f47ce5ded97b2c2c17eea8f663525ed818ca8ab7855a8f7f84bd069"
+          },
+          "receipt": [
+            {
+              "action_id": "action-a02-a80e543226fa0df5fcdcb8c585e1c125",
+              "outcome": "APPLIED",
+              "effect_match": "MATCH",
+              "attempt_fact": "ATTEMPTED",
+              "next_step": "POSTCHECK",
+              "replay_allowed": false,
+              "has_intent": true
+            },
+            {
+              "action_id": "action-a02-bb4ce2935b7f9cc278385b35e2ac3562",
+              "outcome": "UNKNOWN",
+              "effect_match": "INDETERMINATE",
+              "attempt_fact": "MAY_HAVE_BEEN_ATTEMPTED",
+              "next_step": "RECONCILE",
+              "replay_allowed": false,
+              "has_intent": true
+            },
+            {
+              "action_id": "action-a02-dec0905217fd2d98a7c02bd44beb3f5c",
+              "outcome": "NOT_APPLIED",
+              "effect_match": "ABSENT",
+              "attempt_fact": "NOT_ATTEMPTED",
+              "next_step": "RECHECK_TARGET",
+              "replay_allowed": false,
+              "has_intent": false
+            }
+          ],
+          "progress": [
+            {
+              "action_id": "action-a02-a80e543226fa0df5fcdcb8c585e1c125",
+              "attempt_fact": "ATTEMPTED",
+              "dependency_status": "SATISFIED",
+              "effective_outcome": "APPLIED",
+              "has_intent": true,
+              "has_resolution": false,
+              "has_fact": true
+            },
+            {
+              "action_id": "action-a02-bb4ce2935b7f9cc278385b35e2ac3562",
+              "attempt_fact": "MAY_HAVE_BEEN_ATTEMPTED",
+              "dependency_status": "BLOCKED",
+              "effective_outcome": "UNKNOWN",
+              "has_intent": true,
+              "has_resolution": false,
+              "has_fact": true
+            },
+            {
+              "action_id": "action-a02-dec0905217fd2d98a7c02bd44beb3f5c",
+              "attempt_fact": "NOT_ATTEMPTED",
+              "dependency_status": "BLOCKED",
+              "effective_outcome": "NOT_APPLIED",
+              "has_intent": false,
+              "has_resolution": false,
+              "has_fact": true
+            }
+          ],
+          "pending_action_ids": [
+            "action-a02-bb4ce2935b7f9cc278385b35e2ac3562"
+          ],
+          "pause": {
+            "paused": true,
+            "reason_codes": [
+              "SAVE_UNKNOWN"
+            ],
+            "event_ids": [
+              "event-partial-B-unknown"
+            ]
+          },
+          "unresolved_events": [
+            {
+              "event_id": "event-partial-B-unknown",
+              "scope_id": "synthetic-scope",
+              "classification": "UNKNOWN"
+            }
+          ]
+        },
+        "r2": {
+          "runtime_fields": {
+            "plan_status": "INTERRUPTED",
+            "old_tail_dispatches": 0,
+            "original_unknown_preserved": true,
+            "original_B_unknown_preserved": true,
+            "intent_for_tail": false,
+            "obligation_for_tail": false,
+            "resolution_for_tail": false,
+            "independent_absent": true,
+            "actual_new_read": true,
+            "complete_uncalled_prefix": true,
+            "supplied_generation": 1,
+            "current_generation": 1
+          },
+          "request_action": {
+            "action_id": "action-a02-dec0905217fd2d98a7c02bd44beb3f5c",
+            "action_digest": "cd4aec0a1f47ce5ded97b2c2c17eea8f663525ed818ca8ab7855a8f7f84bd069"
+          },
+          "receipt": [
+            {
+              "action_id": "action-a02-a80e543226fa0df5fcdcb8c585e1c125",
+              "outcome": "APPLIED",
+              "effect_match": "MATCH",
+              "attempt_fact": "ATTEMPTED",
+              "next_step": "POSTCHECK",
+              "replay_allowed": false,
+              "has_intent": true
+            },
+            {
+              "action_id": "action-a02-bb4ce2935b7f9cc278385b35e2ac3562",
+              "outcome": "UNKNOWN",
+              "effect_match": "INDETERMINATE",
+              "attempt_fact": "MAY_HAVE_BEEN_ATTEMPTED",
+              "next_step": "RECONCILE",
+              "replay_allowed": false,
+              "has_intent": true
+            },
+            {
+              "action_id": "action-a02-dec0905217fd2d98a7c02bd44beb3f5c",
+              "outcome": "NOT_APPLIED",
+              "effect_match": "ABSENT",
+              "attempt_fact": "NOT_ATTEMPTED",
+              "next_step": "RECHECK_TARGET",
+              "replay_allowed": false,
+              "has_intent": false
+            }
+          ],
+          "progress": [
+            {
+              "action_id": "action-a02-a80e543226fa0df5fcdcb8c585e1c125",
+              "attempt_fact": "ATTEMPTED",
+              "dependency_status": "SATISFIED",
+              "effective_outcome": "APPLIED",
+              "has_intent": true,
+              "has_resolution": false,
+              "has_fact": true
+            },
+            {
+              "action_id": "action-a02-bb4ce2935b7f9cc278385b35e2ac3562",
+              "attempt_fact": "MAY_HAVE_BEEN_ATTEMPTED",
+              "dependency_status": "BLOCKED",
+              "effective_outcome": "UNKNOWN",
+              "has_intent": true,
+              "has_resolution": false,
+              "has_fact": true
+            },
+            {
+              "action_id": "action-a02-dec0905217fd2d98a7c02bd44beb3f5c",
+              "attempt_fact": "NOT_ATTEMPTED",
+              "dependency_status": "BLOCKED",
+              "effective_outcome": "NOT_APPLIED",
+              "has_intent": false,
+              "has_resolution": false,
+              "has_fact": true
+            }
+          ],
+          "pending_action_ids": [
+            "action-a02-bb4ce2935b7f9cc278385b35e2ac3562"
+          ],
+          "pause": {
+            "paused": true,
+            "reason_codes": [
+              "SAVE_UNKNOWN"
+            ],
+            "event_ids": [
+              "event-partial-B-unknown"
+            ]
+          },
+          "unresolved_events": [
+            {
+              "event_id": "event-partial-B-unknown",
+              "scope_id": "synthetic-scope",
+              "classification": "UNKNOWN"
+            }
+          ]
+        },
+        "equal": true
+      }
+    },
+    {
+      "r1_case_id": "partial-fabricated-receipt",
+      "r1_path": "cases/partial-fabricated-receipt.json",
+      "r1_sha256": "301c39593ef1c0dcc72a641ce3a5164bb2f1cdf3077dd0c2997315cd9180cd4b",
+      "r2_case_id": "partial-fabricated-receipt",
+      "r2_path": "cases/partial-fabricated-receipt.json",
+      "r2_sha256": "301c39593ef1c0dcc72a641ce3a5164bb2f1cdf3077dd0c2997315cd9180cd4b",
+      "expected_layer": "REFERENCE",
+      "expected_code": "ACTION_FACT_RESULT_MISMATCH",
+      "expected_static": "DESIGN_FIELD_FAIL",
+      "bytes_unchanged": true,
+      "semantic_trigger_retained": true,
+      "bounded_change": "none; byte-exact R1 input",
+      "primary_trigger_comparison": {
+        "method": "byte-exact",
+        "equal": true
+      }
+    },
+    {
+      "r1_case_id": "conflict",
+      "r1_path": "cases/conflict.json",
+      "r1_sha256": "c6088382364372cb2b29c1441ef24e87f05eb02f33995244f5e897bcb41cd59d",
+      "r2_case_id": "conflict",
+      "r2_path": "cases/conflict.json",
+      "r2_sha256": "c6088382364372cb2b29c1441ef24e87f05eb02f33995244f5e897bcb41cd59d",
+      "expected_layer": "SEMANTIC",
+      "expected_code": "STILL_UNKNOWN",
+      "expected_static": "PASS",
+      "bytes_unchanged": true,
+      "semantic_trigger_retained": true,
+      "bounded_change": "none; byte-exact R1 input",
+      "primary_trigger_comparison": {
+        "method": "byte-exact",
+        "equal": true
+      }
+    },
+    {
+      "r1_case_id": "indeterminate",
+      "r1_path": "cases/indeterminate.json",
+      "r1_sha256": "f9c61d79755ce569d9969c9ce773e67f1fda8874d836a599c2857a2c9a83f550",
+      "r2_case_id": "indeterminate",
+      "r2_path": "cases/indeterminate.json",
+      "r2_sha256": "f9c61d79755ce569d9969c9ce773e67f1fda8874d836a599c2857a2c9a83f550",
+      "expected_layer": "SEMANTIC",
+      "expected_code": "STILL_UNKNOWN",
+      "expected_static": "PASS",
+      "bytes_unchanged": true,
+      "semantic_trigger_retained": true,
+      "bounded_change": "none; byte-exact R1 input",
+      "primary_trigger_comparison": {
+        "method": "byte-exact",
+        "equal": true
+      }
+    },
+    {
+      "r1_case_id": "original-unknown-preserved",
+      "r1_path": "cases/original-unknown-preserved.json",
+      "r1_sha256": "1656d3ef351a3970cc61b45e8229a8ce7734ba565ab8d3865007b48d1c809dff",
+      "r2_case_id": "original-unknown-preserved",
+      "r2_path": "cases/original-unknown-preserved.json",
+      "r2_sha256": "21758ed5ccfb820d69efc850df8502bfda911f502610b38bee845d021f0e1f19",
+      "expected_layer": "SEMANTIC",
+      "expected_code": "RESOLVED_APPLIED_ORIGINAL_UNKNOWN_RETAINED",
+      "expected_static": "PASS",
+      "bytes_unchanged": false,
+      "semantic_trigger_retained": true,
+      "bounded_change": "complete event prefix and derived intent/obligation/fact/CAS/consumer refs only",
+      "primary_trigger_comparison": {
+        "r1": {
+          "runtime_fields": {
+            "plan_status": "INTERRUPTED",
+            "old_tail_dispatches": 0,
+            "original_unknown_preserved": true
+          },
+          "receipt": [
+            {
+              "action_id": "action-a02-a80e543226fa0df5fcdcb8c585e1c125",
+              "outcome": "UNKNOWN",
+              "effect_match": "INDETERMINATE",
+              "attempt_fact": "MAY_HAVE_BEEN_ATTEMPTED",
+              "next_step": "RECONCILE",
+              "replay_allowed": false,
+              "has_intent": true
+            },
+            {
+              "action_id": "action-a02-bb4ce2935b7f9cc278385b35e2ac3562",
+              "outcome": "NOT_APPLIED",
+              "effect_match": "ABSENT",
+              "attempt_fact": "NOT_ATTEMPTED",
+              "next_step": "RECHECK_TARGET",
+              "replay_allowed": false,
+              "has_intent": false
+            },
+            {
+              "action_id": "action-a02-dec0905217fd2d98a7c02bd44beb3f5c",
+              "outcome": "NOT_APPLIED",
+              "effect_match": "ABSENT",
+              "attempt_fact": "NOT_ATTEMPTED",
+              "next_step": "RECHECK_TARGET",
+              "replay_allowed": false,
+              "has_intent": false
+            }
+          ],
+          "resolution": {
+            "action_id": "action-a02-a80e543226fa0df5fcdcb8c585e1c125",
+            "action_digest": "720d94fb6630bf8f47ec73a3c23282aa6e5a7413b0dc10bcd736b6fd1533eba2",
+            "observation_id": "observation-match",
+            "observation": "MATCH",
+            "resolution": "RESOLVED_APPLIED",
+            "replay_allowed": false,
+            "original_receipt_id": "receipt-design"
+          },
+          "pending_action_ids": [],
+          "pause": {
+            "paused": false,
+            "reason_codes": [],
+            "event_ids": []
+          },
+          "unresolved_events": []
+        },
+        "r2": {
+          "runtime_fields": {
+            "plan_status": "INTERRUPTED",
+            "old_tail_dispatches": 0,
+            "original_unknown_preserved": true
+          },
+          "receipt": [
+            {
+              "action_id": "action-a02-a80e543226fa0df5fcdcb8c585e1c125",
+              "outcome": "UNKNOWN",
+              "effect_match": "INDETERMINATE",
+              "attempt_fact": "MAY_HAVE_BEEN_ATTEMPTED",
+              "next_step": "RECONCILE",
+              "replay_allowed": false,
+              "has_intent": true
+            },
+            {
+              "action_id": "action-a02-bb4ce2935b7f9cc278385b35e2ac3562",
+              "outcome": "NOT_APPLIED",
+              "effect_match": "ABSENT",
+              "attempt_fact": "NOT_ATTEMPTED",
+              "next_step": "RECHECK_TARGET",
+              "replay_allowed": false,
+              "has_intent": false
+            },
+            {
+              "action_id": "action-a02-dec0905217fd2d98a7c02bd44beb3f5c",
+              "outcome": "NOT_APPLIED",
+              "effect_match": "ABSENT",
+              "attempt_fact": "NOT_ATTEMPTED",
+              "next_step": "RECHECK_TARGET",
+              "replay_allowed": false,
+              "has_intent": false
+            }
+          ],
+          "resolution": {
+            "action_id": "action-a02-a80e543226fa0df5fcdcb8c585e1c125",
+            "action_digest": "720d94fb6630bf8f47ec73a3c23282aa6e5a7413b0dc10bcd736b6fd1533eba2",
+            "observation_id": "observation-match",
+            "observation": "MATCH",
+            "resolution": "RESOLVED_APPLIED",
+            "replay_allowed": false,
+            "original_receipt_id": "receipt-design"
+          },
+          "pending_action_ids": [],
+          "pause": {
+            "paused": false,
+            "reason_codes": [],
+            "event_ids": []
+          },
+          "unresolved_events": []
+        },
+        "equal": true
+      }
+    },
+    {
+      "r1_case_id": "recovered-report-binding",
+      "r1_path": "cases/recovered-report-binding.json",
+      "r1_sha256": "9dafac0180fc642fe9924c65ec0002dedd5e184bd649b2e226769d38297dcb51",
+      "r2_case_id": "recovered-report-binding",
+      "r2_path": "cases/recovered-report-binding.json",
+      "r2_sha256": "185ed7b52d5fcb23f03f6b8b19d49d9e84774ccf7c6fbe84816c743a95565bae",
+      "expected_layer": "SEMANTIC",
+      "expected_code": "RECOVERY_REPORT_PENDING_NOT_SUBMITTED",
+      "expected_static": "PASS",
+      "bytes_unchanged": false,
+      "semantic_trigger_retained": true,
+      "bounded_change": "complete event prefix and derived intent/obligation/fact/CAS/consumer refs only",
+      "primary_trigger_comparison": {
+        "r1": {
+          "runtime_fields": {
+            "plan_status": "INTERRUPTED",
+            "old_tail_dispatches": 0,
+            "original_unknown_preserved": true
+          },
+          "receipt": [
+            {
+              "action_id": "action-a02-a80e543226fa0df5fcdcb8c585e1c125",
+              "outcome": "UNKNOWN",
+              "effect_match": "INDETERMINATE",
+              "attempt_fact": "MAY_HAVE_BEEN_ATTEMPTED",
+              "next_step": "RECONCILE",
+              "replay_allowed": false,
+              "has_intent": true
+            },
+            {
+              "action_id": "action-a02-bb4ce2935b7f9cc278385b35e2ac3562",
+              "outcome": "NOT_APPLIED",
+              "effect_match": "ABSENT",
+              "attempt_fact": "NOT_ATTEMPTED",
+              "next_step": "RECHECK_TARGET",
+              "replay_allowed": false,
+              "has_intent": false
+            },
+            {
+              "action_id": "action-a02-dec0905217fd2d98a7c02bd44beb3f5c",
+              "outcome": "NOT_APPLIED",
+              "effect_match": "ABSENT",
+              "attempt_fact": "NOT_ATTEMPTED",
+              "next_step": "RECHECK_TARGET",
+              "replay_allowed": false,
+              "has_intent": false
+            }
+          ],
+          "resolution": {
+            "action_id": "action-a02-a80e543226fa0df5fcdcb8c585e1c125",
+            "action_digest": "720d94fb6630bf8f47ec73a3c23282aa6e5a7413b0dc10bcd736b6fd1533eba2",
+            "observation_id": "observation-match",
+            "observation": "MATCH",
+            "resolution": "RESOLVED_APPLIED",
+            "replay_allowed": false,
+            "original_receipt_id": "receipt-design"
+          },
+          "progress": [
+            {
+              "action_id": "action-a02-a80e543226fa0df5fcdcb8c585e1c125",
+              "attempt_fact": "MAY_HAVE_BEEN_ATTEMPTED",
+              "dependency_status": "SATISFIED",
+              "effective_outcome": "APPLIED",
+              "has_intent": true,
+              "has_resolution": true,
+              "has_fact": true
+            },
+            {
+              "action_id": "action-a02-bb4ce2935b7f9cc278385b35e2ac3562",
+              "attempt_fact": "NOT_ATTEMPTED",
+              "dependency_status": "BLOCKED",
+              "effective_outcome": "NOT_APPLIED",
+              "has_intent": false,
+              "has_resolution": false,
+              "has_fact": true
+            },
+            {
+              "action_id": "action-a02-dec0905217fd2d98a7c02bd44beb3f5c",
+              "attempt_fact": "NOT_ATTEMPTED",
+              "dependency_status": "BLOCKED",
+              "effective_outcome": "NOT_APPLIED",
+              "has_intent": false,
+              "has_resolution": false,
+              "has_fact": true
+            }
+          ],
+          "report": {
+            "submission_status": "NOT_SUBMITTED",
+            "content_check_status": "PENDING",
+            "frame_check_status": "FAIL",
+            "state": "NEEDS_REVIEW",
+            "total_expected": 3,
+            "questions": [
+              {
+                "question_id": "question-alpha",
+                "state": "PENDING",
+                "reason": "Design first action resolved, content pending"
+              },
+              {
+                "question_id": "question-child",
+                "state": "EXCEPTION",
+                "reason": "Design tail known not applied; replan required"
+              },
+              {
+                "question_id": "question-beta",
+                "state": "EXCEPTION",
+                "reason": "Design tail known not applied; replan required"
+              }
+            ],
+            "unresolved_issue_ids": [
+              "issue-tail-not-applied"
+            ]
+          },
+          "pending_action_ids": [],
+          "pause": {
+            "paused": false,
+            "reason_codes": [],
+            "event_ids": []
+          },
+          "unresolved_events": []
+        },
+        "r2": {
+          "runtime_fields": {
+            "plan_status": "INTERRUPTED",
+            "old_tail_dispatches": 0,
+            "original_unknown_preserved": true
+          },
+          "receipt": [
+            {
+              "action_id": "action-a02-a80e543226fa0df5fcdcb8c585e1c125",
+              "outcome": "UNKNOWN",
+              "effect_match": "INDETERMINATE",
+              "attempt_fact": "MAY_HAVE_BEEN_ATTEMPTED",
+              "next_step": "RECONCILE",
+              "replay_allowed": false,
+              "has_intent": true
+            },
+            {
+              "action_id": "action-a02-bb4ce2935b7f9cc278385b35e2ac3562",
+              "outcome": "NOT_APPLIED",
+              "effect_match": "ABSENT",
+              "attempt_fact": "NOT_ATTEMPTED",
+              "next_step": "RECHECK_TARGET",
+              "replay_allowed": false,
+              "has_intent": false
+            },
+            {
+              "action_id": "action-a02-dec0905217fd2d98a7c02bd44beb3f5c",
+              "outcome": "NOT_APPLIED",
+              "effect_match": "ABSENT",
+              "attempt_fact": "NOT_ATTEMPTED",
+              "next_step": "RECHECK_TARGET",
+              "replay_allowed": false,
+              "has_intent": false
+            }
+          ],
+          "resolution": {
+            "action_id": "action-a02-a80e543226fa0df5fcdcb8c585e1c125",
+            "action_digest": "720d94fb6630bf8f47ec73a3c23282aa6e5a7413b0dc10bcd736b6fd1533eba2",
+            "observation_id": "observation-match",
+            "observation": "MATCH",
+            "resolution": "RESOLVED_APPLIED",
+            "replay_allowed": false,
+            "original_receipt_id": "receipt-design"
+          },
+          "progress": [
+            {
+              "action_id": "action-a02-a80e543226fa0df5fcdcb8c585e1c125",
+              "attempt_fact": "MAY_HAVE_BEEN_ATTEMPTED",
+              "dependency_status": "SATISFIED",
+              "effective_outcome": "APPLIED",
+              "has_intent": true,
+              "has_resolution": true,
+              "has_fact": true
+            },
+            {
+              "action_id": "action-a02-bb4ce2935b7f9cc278385b35e2ac3562",
+              "attempt_fact": "NOT_ATTEMPTED",
+              "dependency_status": "BLOCKED",
+              "effective_outcome": "NOT_APPLIED",
+              "has_intent": false,
+              "has_resolution": false,
+              "has_fact": true
+            },
+            {
+              "action_id": "action-a02-dec0905217fd2d98a7c02bd44beb3f5c",
+              "attempt_fact": "NOT_ATTEMPTED",
+              "dependency_status": "BLOCKED",
+              "effective_outcome": "NOT_APPLIED",
+              "has_intent": false,
+              "has_resolution": false,
+              "has_fact": true
+            }
+          ],
+          "report": {
+            "submission_status": "NOT_SUBMITTED",
+            "content_check_status": "PENDING",
+            "frame_check_status": "FAIL",
+            "state": "NEEDS_REVIEW",
+            "total_expected": 3,
+            "questions": [
+              {
+                "question_id": "question-alpha",
+                "state": "PENDING",
+                "reason": "Design first action resolved, content pending"
+              },
+              {
+                "question_id": "question-child",
+                "state": "EXCEPTION",
+                "reason": "Design tail known not applied; replan required"
+              },
+              {
+                "question_id": "question-beta",
+                "state": "EXCEPTION",
+                "reason": "Design tail known not applied; replan required"
+              }
+            ],
+            "unresolved_issue_ids": [
+              "issue-tail-not-applied"
+            ]
+          },
+          "pending_action_ids": [],
+          "pause": {
+            "paused": false,
+            "reason_codes": [],
+            "event_ids": []
+          },
+          "unresolved_events": []
+        },
+        "equal": true
+      }
+    },
+    {
+      "r1_case_id": "new-read-unchanged-state-version",
+      "r1_path": "cases/new-read-unchanged-state-version.json",
+      "r1_sha256": "b71b0e782d7ebce50440f4860b1fe0904ffb26fcb5d00d21d0eada5af59aa40c",
+      "r2_case_id": "new-read-unchanged-state-version",
+      "r2_path": "cases/new-read-unchanged-state-version.json",
+      "r2_sha256": "b71b0e782d7ebce50440f4860b1fe0904ffb26fcb5d00d21d0eada5af59aa40c",
+      "expected_layer": "SEMANTIC",
+      "expected_code": "FRESH_READ_SAME_EFFECT_VERSION",
+      "expected_static": "PASS",
+      "bytes_unchanged": true,
+      "semantic_trigger_retained": true,
+      "bounded_change": "none; byte-exact R1 input",
+      "primary_trigger_comparison": {
+        "method": "byte-exact",
+        "equal": true
+      }
+    },
+    {
+      "r1_case_id": "cross-scope-only-one-resolved",
+      "r1_path": "cases/cross-scope-only-one-resolved.json",
+      "r1_sha256": "3f0f5312799cb12f4f38db65d717ece1329347eaa92b6560b48f3a068e7bcd7f",
+      "r2_case_id": "cross-scope-only-one-resolved",
+      "r2_path": "cases/cross-scope-only-one-resolved.json",
+      "r2_sha256": "3f0f5312799cb12f4f38db65d717ece1329347eaa92b6560b48f3a068e7bcd7f",
+      "expected_layer": "RUNTIME_TRANSACTION",
+      "expected_code": "BOOK_PENDING_SCOPE_SWITCH_UNSUPPORTED",
+      "expected_static": "PASS",
+      "bytes_unchanged": true,
+      "semantic_trigger_retained": true,
+      "bounded_change": "none; byte-exact R1 input",
+      "primary_trigger_comparison": {
+        "method": "byte-exact",
+        "equal": true
+      }
+    },
+    {
+      "r1_case_id": "legacy-unrecorded-no-intent",
+      "r1_path": "cases/legacy-unrecorded-no-intent.json",
+      "r1_sha256": "a2661bb64a06bd7579adeeb84f3b6c821ca475f3a6d4c2cbda1fb6800bbd41af",
+      "r2_case_id": "legacy-unrecorded-no-intent",
+      "r2_path": "cases/legacy-unrecorded-no-intent.json",
+      "r2_sha256": "a2661bb64a06bd7579adeeb84f3b6c821ca475f3a6d4c2cbda1fb6800bbd41af",
+      "expected_layer": "RUNTIME_TRANSACTION",
+      "expected_code": "LEGACY_UNRECORDED",
+      "expected_static": "PASS",
+      "bytes_unchanged": true,
+      "semantic_trigger_retained": true,
+      "bounded_change": "none; byte-exact R1 input",
+      "primary_trigger_comparison": {
+        "method": "byte-exact",
+        "equal": true
+      }
+    },
+    {
+      "r1_case_id": "wrong-schema-version",
+      "r1_path": "cases/wrong-schema-version.json",
+      "r1_sha256": "9f578bd23bcc2f2483f3dcf6d2a42a5fa30c174e1c017d5ca38802e44657e180",
+      "r2_case_id": "wrong-schema-version",
+      "r2_path": "cases/wrong-schema-version.json",
+      "r2_sha256": "9f578bd23bcc2f2483f3dcf6d2a42a5fa30c174e1c017d5ca38802e44657e180",
+      "expected_layer": "STRUCTURE",
+      "expected_code": "RECOVERY_VERSION_UNSUPPORTED",
+      "expected_static": "STRUCTURE_FAIL",
+      "bytes_unchanged": true,
+      "semantic_trigger_retained": true,
+      "bounded_change": "none; byte-exact R1 input",
+      "primary_trigger_comparison": {
+        "method": "byte-exact",
+        "equal": true
+      }
+    },
+    {
+      "r1_case_id": "wrong-exchange-version",
+      "r1_path": "cases/wrong-exchange-version.json",
+      "r1_sha256": "12699732c8f0bb7d205d922aed9e65826c1120b5a306b3439dc36f36c29aa43c",
+      "r2_case_id": "wrong-exchange-version",
+      "r2_path": "cases/wrong-exchange-version.json",
+      "r2_sha256": "12699732c8f0bb7d205d922aed9e65826c1120b5a306b3439dc36f36c29aa43c",
+      "expected_layer": "STRUCTURE",
+      "expected_code": "RECOVERY_VERSION_UNSUPPORTED",
+      "expected_static": "STRUCTURE_FAIL",
+      "bytes_unchanged": true,
+      "semantic_trigger_retained": true,
+      "bounded_change": "none; byte-exact R1 input",
+      "primary_trigger_comparison": {
+        "method": "byte-exact",
+        "equal": true
+      }
+    },
+    {
+      "r1_case_id": "wrong-action-digest",
+      "r1_path": "cases/wrong-action-digest.json",
+      "r1_sha256": "193ad6ea7836fe25293087dd341d5e0b606aef3361b63294342add0a54672ba2",
+      "r2_case_id": "wrong-action-digest",
+      "r2_path": "cases/wrong-action-digest.json",
+      "r2_sha256": "193ad6ea7836fe25293087dd341d5e0b606aef3361b63294342add0a54672ba2",
+      "expected_layer": "SEMANTIC",
+      "expected_code": "ACTION_DIGEST_MISMATCH",
+      "expected_static": "PASS",
+      "bytes_unchanged": true,
+      "semantic_trigger_retained": true,
+      "bounded_change": "none; byte-exact R1 input",
+      "primary_trigger_comparison": {
+        "method": "byte-exact",
+        "equal": true
+      }
+    },
+    {
+      "r1_case_id": "wrong-target-identity",
+      "r1_path": "cases/wrong-target-identity.json",
+      "r1_sha256": "2906c2d1703588789cabd661b5538c6db3bcc8a7e22f056f9de461fe65905005",
+      "r2_case_id": "wrong-target-identity",
+      "r2_path": "cases/wrong-target-identity.json",
+      "r2_sha256": "2906c2d1703588789cabd661b5538c6db3bcc8a7e22f056f9de461fe65905005",
+      "expected_layer": "SEMANTIC",
+      "expected_code": "TARGET_IDENTITY_MISMATCH",
+      "expected_static": "PASS",
+      "bytes_unchanged": true,
+      "semantic_trigger_retained": true,
+      "bounded_change": "none; byte-exact R1 input",
+      "primary_trigger_comparison": {
+        "method": "byte-exact",
+        "equal": true
+      }
+    },
+    {
+      "r1_case_id": "wrong-book-identity",
+      "r1_path": "cases/wrong-book-identity.json",
+      "r1_sha256": "d140956442f87587fef983aaccb3e050179a1eb9a9cb076597e6d4eb4c4ac967",
+      "r2_case_id": "wrong-book-identity",
+      "r2_path": "cases/wrong-book-identity.json",
+      "r2_sha256": "d140956442f87587fef983aaccb3e050179a1eb9a9cb076597e6d4eb4c4ac967",
+      "expected_layer": "REFERENCE",
+      "expected_code": "CROSS_BOOK_REFERENCE",
+      "expected_static": "REFERENCE_FAIL",
+      "bytes_unchanged": true,
+      "semantic_trigger_retained": true,
+      "bounded_change": "none; byte-exact R1 input",
+      "primary_trigger_comparison": {
+        "method": "byte-exact",
+        "equal": true
+      }
+    },
+    {
+      "r1_case_id": "wrong-scope-reference",
+      "r1_path": "cases/wrong-scope-reference.json",
+      "r1_sha256": "6b8de77177a006ba9edd1126ee37b934856e07caa71c466564174271857cbb83",
+      "r2_case_id": "wrong-scope-reference",
+      "r2_path": "cases/wrong-scope-reference.json",
+      "r2_sha256": "6b8de77177a006ba9edd1126ee37b934856e07caa71c466564174271857cbb83",
+      "expected_layer": "REFERENCE",
+      "expected_code": "CROSS_SCOPE_REFERENCE",
+      "expected_static": "REFERENCE_FAIL",
+      "bytes_unchanged": true,
+      "semantic_trigger_retained": true,
+      "bounded_change": "none; byte-exact R1 input",
+      "primary_trigger_comparison": {
+        "method": "byte-exact",
+        "equal": true
+      }
+    },
+    {
+      "r1_case_id": "missing-plan-reference",
+      "r1_path": "cases/missing-plan-reference.json",
+      "r1_sha256": "628837e36520ad89f459a5690fcddbf014083ebfef4a52cf9ec4c26ae44d4c94",
+      "r2_case_id": "missing-plan-reference",
+      "r2_path": "cases/missing-plan-reference.json",
+      "r2_sha256": "628837e36520ad89f459a5690fcddbf014083ebfef4a52cf9ec4c26ae44d4c94",
+      "expected_layer": "REFERENCE",
+      "expected_code": "MISSING_REFERENCE",
+      "expected_static": "REFERENCE_FAIL",
+      "bytes_unchanged": true,
+      "semantic_trigger_retained": true,
+      "bounded_change": "none; byte-exact R1 input",
+      "primary_trigger_comparison": {
+        "method": "byte-exact",
+        "equal": true
+      }
+    },
+    {
+      "r1_case_id": "wrong-resource-hash",
+      "r1_path": "cases/wrong-resource-hash.json",
+      "r1_sha256": "f2e3fff57e5e05d0a45b5e8dd8fd6b70ad3769adbbefc4ba55b4220d7e929a97",
+      "r2_case_id": "wrong-resource-hash",
+      "r2_path": "cases/wrong-resource-hash.json",
+      "r2_sha256": "f2e3fff57e5e05d0a45b5e8dd8fd6b70ad3769adbbefc4ba55b4220d7e929a97",
+      "expected_layer": "RESOURCE",
+      "expected_code": "RESOURCE_HASH_MISMATCH",
+      "expected_static": "RESOURCE_FAIL",
+      "bytes_unchanged": true,
+      "semantic_trigger_retained": true,
+      "bounded_change": "none; byte-exact R1 input",
+      "primary_trigger_comparison": {
+        "method": "byte-exact",
+        "equal": true
+      }
+    },
+    {
+      "r1_case_id": "missing-readback",
+      "r1_path": "cases/missing-readback.json",
+      "r1_sha256": "94a5cc55148b22d14c9c0bedfd105d2e14110f5faaeedeb375a26079dea0449b",
+      "r2_case_id": "missing-readback",
+      "r2_path": "cases/missing-readback.json",
+      "r2_sha256": "94a5cc55148b22d14c9c0bedfd105d2e14110f5faaeedeb375a26079dea0449b",
+      "expected_layer": "SEMANTIC",
+      "expected_code": "CONCLUSIVE_READBACK_REQUIRED",
+      "expected_static": "PASS",
+      "bytes_unchanged": true,
+      "semantic_trigger_retained": true,
+      "bounded_change": "none; byte-exact R1 input",
+      "primary_trigger_comparison": {
+        "method": "byte-exact",
+        "equal": true
+      }
+    },
+    {
+      "r1_case_id": "wrong-observed-state-hash",
+      "r1_path": "cases/wrong-observed-state-hash.json",
+      "r1_sha256": "c954cec3fdbc6a2a25b5ab812b929d7f22a088d207c42d0ee2bf2ac4fb604ac4",
+      "r2_case_id": "wrong-observed-state-hash",
+      "r2_path": "cases/wrong-observed-state-hash.json",
+      "r2_sha256": "c954cec3fdbc6a2a25b5ab812b929d7f22a088d207c42d0ee2bf2ac4fb604ac4",
+      "expected_layer": "SEMANTIC",
+      "expected_code": "OBSERVATION_BINDING_MISMATCH",
+      "expected_static": "PASS",
+      "bytes_unchanged": true,
+      "semantic_trigger_retained": true,
+      "bounded_change": "none; byte-exact R1 input",
+      "primary_trigger_comparison": {
+        "method": "byte-exact",
+        "equal": true
+      }
+    },
+    {
+      "r1_case_id": "wrong-obligation-identity",
+      "r1_path": "cases/wrong-obligation-identity.json",
+      "r1_sha256": "a2d12633d69067ce8576ed7f33be72b638a260c39f425298961ab1e00b3837e8",
+      "r2_case_id": "wrong-obligation-identity",
+      "r2_path": "cases/wrong-obligation-identity.json",
+      "r2_sha256": "a2d12633d69067ce8576ed7f33be72b638a260c39f425298961ab1e00b3837e8",
+      "expected_layer": "SEMANTIC",
+      "expected_code": "OBLIGATION_MISMATCH",
+      "expected_static": "PASS",
+      "bytes_unchanged": true,
+      "semantic_trigger_retained": true,
+      "bounded_change": "none; byte-exact R1 input",
+      "primary_trigger_comparison": {
+        "method": "byte-exact",
+        "equal": true
+      }
+    },
+    {
+      "r1_case_id": "real-original-rejected",
+      "r1_path": "cases/real-original-rejected.json",
+      "r1_sha256": "aeb37cb424ba3921eb03b28a30e605bd9e4d9d3c62beed5aa5b253e97d56c011",
+      "r2_case_id": "real-original-rejected",
+      "r2_path": "cases/real-original-rejected.json",
+      "r2_sha256": "aeb37cb424ba3921eb03b28a30e605bd9e4d9d3c62beed5aa5b253e97d56c011",
+      "expected_layer": "SYNTHETIC_ADMISSION",
+      "expected_code": "SYNTHETIC_ONLY",
+      "expected_static": "PASS",
+      "bytes_unchanged": true,
+      "semantic_trigger_retained": true,
+      "bounded_change": "none; byte-exact R1 input",
+      "primary_trigger_comparison": {
+        "method": "byte-exact",
+        "equal": true
+      }
+    },
+    {
+      "r1_case_id": "observed-producer-rejected",
+      "r1_path": "cases/observed-producer-rejected.json",
+      "r1_sha256": "da38cd277aaea5602c4ce7bddfa0d498b5cfdd9da2bee01fd1cc77c41bd2909d",
+      "r2_case_id": "observed-producer-rejected",
+      "r2_path": "cases/observed-producer-rejected.json",
+      "r2_sha256": "da38cd277aaea5602c4ce7bddfa0d498b5cfdd9da2bee01fd1cc77c41bd2909d",
+      "expected_layer": "SYNTHETIC_ADMISSION",
+      "expected_code": "SYNTHETIC_ONLY",
+      "expected_static": "PASS",
+      "bytes_unchanged": true,
+      "semantic_trigger_retained": true,
+      "bounded_change": "none; byte-exact R1 input",
+      "primary_trigger_comparison": {
+        "method": "byte-exact",
+        "equal": true
+      }
+    },
+    {
+      "r1_case_id": "observed-resource-rejected",
+      "r1_path": "cases/observed-resource-rejected.json",
+      "r1_sha256": "83bcd673f678b678aa692b5790f22aa9283e09be49b5a1c65343c50811e5d245",
+      "r2_case_id": "observed-resource-rejected",
+      "r2_path": "cases/observed-resource-rejected.json",
+      "r2_sha256": "83bcd673f678b678aa692b5790f22aa9283e09be49b5a1c65343c50811e5d245",
+      "expected_layer": "SYNTHETIC_ADMISSION",
+      "expected_code": "SYNTHETIC_ONLY",
+      "expected_static": "PASS",
+      "bytes_unchanged": true,
+      "semantic_trigger_retained": true,
+      "bounded_change": "none; byte-exact R1 input",
+      "primary_trigger_comparison": {
+        "method": "byte-exact",
+        "equal": true
+      }
+    },
+    {
+      "r1_case_id": "observed-evidence-rejected",
+      "r1_path": "cases/observed-evidence-rejected.json",
+      "r1_sha256": "0ecb1dda806e4fb5049671ef20c66dd3fe04a74f058e5a928f6bd76f62a1b789",
+      "r2_case_id": "observed-evidence-rejected",
+      "r2_path": "cases/observed-evidence-rejected.json",
+      "r2_sha256": "0ecb1dda806e4fb5049671ef20c66dd3fe04a74f058e5a928f6bd76f62a1b789",
+      "expected_layer": "SYNTHETIC_ADMISSION",
+      "expected_code": "SYNTHETIC_ONLY",
+      "expected_static": "PASS",
+      "bytes_unchanged": true,
+      "semantic_trigger_retained": true,
+      "bounded_change": "none; byte-exact R1 input",
+      "primary_trigger_comparison": {
+        "method": "byte-exact",
+        "equal": true
+      }
+    },
+    {
+      "r1_case_id": "real-policy-rejected",
+      "r1_path": "cases/real-policy-rejected.json",
+      "r1_sha256": "85a69e63d9d96c70e715006764455e5b50ab04173508bad024a169ee1eebc8cf",
+      "r2_case_id": "real-policy-rejected",
+      "r2_path": "cases/real-policy-rejected.json",
+      "r2_sha256": "85a69e63d9d96c70e715006764455e5b50ab04173508bad024a169ee1eebc8cf",
+      "expected_layer": "SYNTHETIC_ADMISSION",
+      "expected_code": "SYNTHETIC_ONLY",
+      "expected_static": "PASS",
+      "bytes_unchanged": true,
+      "semantic_trigger_retained": true,
+      "bounded_change": "none; byte-exact R1 input",
+      "primary_trigger_comparison": {
+        "method": "byte-exact",
+        "equal": true
+      }
+    },
+    {
+      "r1_case_id": "platform-mode-rejected",
+      "r1_path": "cases/platform-mode-rejected.json",
+      "r1_sha256": "d1766db9c0ce1e80ab86820c0e3d42444f1f16da9c923cb6a1a3594ae9dd807e",
+      "r2_case_id": "platform-mode-rejected",
+      "r2_path": "cases/platform-mode-rejected.json",
+      "r2_sha256": "d1766db9c0ce1e80ab86820c0e3d42444f1f16da9c923cb6a1a3594ae9dd807e",
+      "expected_layer": "SYNTHETIC_ADMISSION",
+      "expected_code": "SYNTHETIC_ONLY",
+      "expected_static": "PASS",
+      "bytes_unchanged": true,
+      "semantic_trigger_retained": true,
+      "bounded_change": "none; byte-exact R1 input",
+      "primary_trigger_comparison": {
+        "method": "byte-exact",
+        "equal": true
+      }
+    },
+    {
+      "r1_case_id": "unknown-scope-integrity",
+      "r1_path": "cases/unknown-scope-integrity.json",
+      "r1_sha256": "c9c3b99bc93823f84f836bb3af7bb60eaae61aec381e25b0e28ac66254b2c7f3",
+      "r2_case_id": "unknown-scope-integrity",
+      "r2_path": "cases/unknown-scope-integrity.json",
+      "r2_sha256": "c9c3b99bc93823f84f836bb3af7bb60eaae61aec381e25b0e28ac66254b2c7f3",
+      "expected_layer": "SYNTHETIC_ADMISSION",
+      "expected_code": "SYNTHETIC_COMPLETE_REQUIRED",
+      "expected_static": "PASS",
+      "bytes_unchanged": true,
+      "semantic_trigger_retained": true,
+      "bounded_change": "none; byte-exact R1 input",
+      "primary_trigger_comparison": {
+        "method": "byte-exact",
+        "equal": true
+      }
+    },
+    {
+      "r1_case_id": "stale-owner-generation",
+      "r1_path": "cases/stale-owner-generation.json",
+      "r1_sha256": "81e3c84e345b6255e4f5925defbfa914a5916ced24c1e1c895ede2eb2ed17400",
+      "r2_case_id": "stale-owner-generation",
+      "r2_path": "cases/stale-owner-generation.json",
+      "r2_sha256": "81e3c84e345b6255e4f5925defbfa914a5916ced24c1e1c895ede2eb2ed17400",
+      "expected_layer": "RUNTIME_TRANSACTION",
+      "expected_code": "OWNER_GENERATION_STALE",
+      "expected_static": "PASS",
+      "bytes_unchanged": true,
+      "semantic_trigger_retained": true,
+      "bounded_change": "none; byte-exact R1 input",
+      "primary_trigger_comparison": {
+        "method": "byte-exact",
+        "equal": true
+      }
+    },
+    {
+      "r1_case_id": "wrong-state-directory",
+      "r1_path": "cases/wrong-state-directory.json",
+      "r1_sha256": "06835e4f7cb29dd19388cb68b05710663cf29b89c02348359a2cc0268aedeaef",
+      "r2_case_id": "wrong-state-directory",
+      "r2_path": "cases/wrong-state-directory.json",
+      "r2_sha256": "06835e4f7cb29dd19388cb68b05710663cf29b89c02348359a2cc0268aedeaef",
+      "expected_layer": "RUNTIME_TRANSACTION",
+      "expected_code": "STATE_DIRECTORY_IDENTITY_MISMATCH",
+      "expected_static": "PASS",
+      "bytes_unchanged": true,
+      "semantic_trigger_retained": true,
+      "bounded_change": "none; byte-exact R1 input",
+      "primary_trigger_comparison": {
+        "method": "byte-exact",
+        "equal": true
+      }
+    },
+    {
+      "r1_case_id": "fake-empty-ledger",
+      "r1_path": "cases/fake-empty-ledger.json",
+      "r1_sha256": "34a3181241fe431f3614c68b65b5cd90904ba16f3293f79c08cce17475abe42c",
+      "r2_case_id": "fake-empty-ledger",
+      "r2_path": "cases/fake-empty-ledger.json",
+      "r2_sha256": "34a3181241fe431f3614c68b65b5cd90904ba16f3293f79c08cce17475abe42c",
+      "expected_layer": "RUNTIME_TRANSACTION",
+      "expected_code": "BOOK_WRITE_PAUSED",
+      "expected_static": "PASS",
+      "bytes_unchanged": true,
+      "semantic_trigger_retained": true,
+      "bounded_change": "none; byte-exact R1 input",
+      "primary_trigger_comparison": {
+        "method": "byte-exact",
+        "equal": true
+      }
+    },
+    {
+      "r1_case_id": "intent-not-locally-committed",
+      "r1_path": "cases/intent-not-locally-committed.json",
+      "r1_sha256": "81cdd2500d4862cba0dc59323f785af586b0c3d3a3e313cbc7ffd19cbe3d88bc",
+      "r2_case_id": "intent-not-locally-committed",
+      "r2_path": "cases/intent-not-locally-committed.json",
+      "r2_sha256": "81cdd2500d4862cba0dc59323f785af586b0c3d3a3e313cbc7ffd19cbe3d88bc",
+      "expected_layer": "RUNTIME_TRANSACTION",
+      "expected_code": "LOCAL_INTENT_COMMIT_REQUIRED",
+      "expected_static": "PASS",
+      "bytes_unchanged": true,
+      "semantic_trigger_retained": true,
+      "bounded_change": "none; byte-exact R1 input",
+      "primary_trigger_comparison": {
+        "method": "byte-exact",
+        "equal": true
+      }
+    },
+    {
+      "r1_case_id": "attempt-limit-four",
+      "r1_path": "cases/attempt-limit-four.json",
+      "r1_sha256": "9cde064f676b2aec54b065bf53edcb5725067b862fccf313a08c1b7499212e4f",
+      "r2_case_id": "attempt-limit-four",
+      "r2_path": "cases/attempt-limit-four.json",
+      "r2_sha256": "9cde064f676b2aec54b065bf53edcb5725067b862fccf313a08c1b7499212e4f",
+      "expected_layer": "STRUCTURE",
+      "expected_code": "RECONCILE_ATTEMPT_LIMIT",
+      "expected_static": "STRUCTURE_FAIL",
+      "bytes_unchanged": true,
+      "semantic_trigger_retained": true,
+      "bounded_change": "none; byte-exact R1 input",
+      "primary_trigger_comparison": {
+        "method": "byte-exact",
+        "equal": true
+      }
+    },
+    {
+      "r1_case_id": "old-observation-reuse",
+      "r1_path": "cases/old-observation-reuse.json",
+      "r1_sha256": "78d461ff4a81484306b436d3e42a2b9f5591027cd672d3f8d7d787c8234eef70",
+      "r2_case_id": "old-observation-reuse",
+      "r2_path": "cases/old-observation-reuse.json",
+      "r2_sha256": "78d461ff4a81484306b436d3e42a2b9f5591027cd672d3f8d7d787c8234eef70",
+      "expected_layer": "RUNTIME_TRANSACTION",
+      "expected_code": "OBSERVATION_NOT_FRESH",
+      "expected_static": "PASS",
+      "bytes_unchanged": true,
+      "semantic_trigger_retained": true,
+      "bounded_change": "none; byte-exact R1 input",
+      "primary_trigger_comparison": {
+        "method": "byte-exact",
+        "equal": true
+      }
+    },
+    {
+      "r1_case_id": "resolved-chain-successor",
+      "r1_path": "cases/resolved-chain-successor.json",
+      "r1_sha256": "77db75401cb3271a04fb76228311521ed82e20378c98483c7dda2bbe4dfa92a6",
+      "r2_case_id": "resolved-chain-successor",
+      "r2_path": "cases/resolved-chain-successor.json",
+      "r2_sha256": "77db75401cb3271a04fb76228311521ed82e20378c98483c7dda2bbe4dfa92a6",
+      "expected_layer": "SEMANTIC",
+      "expected_code": "RESOLUTION_TERMINAL",
+      "expected_static": "PASS",
+      "bytes_unchanged": true,
+      "semantic_trigger_retained": true,
+      "bounded_change": "none; byte-exact R1 input",
+      "primary_trigger_comparison": {
+        "method": "byte-exact",
+        "equal": true
+      }
+    },
+    {
+      "r1_case_id": "resolution-fork",
+      "r1_path": "cases/resolution-fork.json",
+      "r1_sha256": "eaadec1c450e1aafda92e2276006ad296a47b75d758dd29dc07b17bc54d87f0f",
+      "r2_case_id": "resolution-fork",
+      "r2_path": "cases/resolution-fork.json",
+      "r2_sha256": "eaadec1c450e1aafda92e2276006ad296a47b75d758dd29dc07b17bc54d87f0f",
+      "expected_layer": "SEMANTIC",
+      "expected_code": "RESOLUTION_FORK",
+      "expected_static": "PASS",
+      "bytes_unchanged": true,
+      "semantic_trigger_retained": true,
+      "bounded_change": "none; byte-exact R1 input",
+      "primary_trigger_comparison": {
+        "method": "byte-exact",
+        "equal": true
+      }
+    },
+    {
+      "r1_case_id": "resolution-cycle",
+      "r1_path": "cases/resolution-cycle.json",
+      "r1_sha256": "c24b3ce7697f505f1b0c320a5ba1ec4f9c42a76e4554d4988e99741cfa809c1d",
+      "r2_case_id": "resolution-cycle",
+      "r2_path": "cases/resolution-cycle.json",
+      "r2_sha256": "c24b3ce7697f505f1b0c320a5ba1ec4f9c42a76e4554d4988e99741cfa809c1d",
+      "expected_layer": "REFERENCE",
+      "expected_code": "DEPENDENCY_CYCLE",
+      "expected_static": "REFERENCE_FAIL",
+      "bytes_unchanged": true,
+      "semantic_trigger_retained": true,
+      "bounded_change": "none; byte-exact R1 input",
+      "primary_trigger_comparison": {
+        "method": "byte-exact",
+        "equal": true
+      }
+    },
+    {
+      "r1_case_id": "source-only-unknown-denominator",
+      "r1_path": "cases/source-only-unknown-denominator.json",
+      "r1_sha256": "f7ee9c11b51c1655ed9eb0386fd6ec740f182c69cf90aee25dc482dea039a359",
+      "r2_case_id": "source-only-unknown-denominator",
+      "r2_path": "cases/source-only-unknown-denominator.json",
+      "r2_sha256": "f7ee9c11b51c1655ed9eb0386fd6ec740f182c69cf90aee25dc482dea039a359",
+      "expected_layer": "SYNTHETIC_ADMISSION",
+      "expected_code": "SYNTHETIC_COMPLETE_REQUIRED",
+      "expected_static": "PASS",
+      "bytes_unchanged": true,
+      "semantic_trigger_retained": true,
+      "bounded_change": "none; byte-exact R1 input",
+      "primary_trigger_comparison": {
+        "method": "byte-exact",
+        "equal": true
+      }
+    },
+    {
+      "r1_case_id": "source-only-zero-actions",
+      "r1_path": "cases/source-only-zero-actions.json",
+      "r1_sha256": "402474edc48d76dfd4f79f75e633c8922bb581262ee37c071fa27b2da69d21c2",
+      "r2_case_id": "source-only-zero-actions",
+      "r2_path": "cases/source-only-zero-actions.json",
+      "r2_sha256": "402474edc48d76dfd4f79f75e633c8922bb581262ee37c071fa27b2da69d21c2",
+      "expected_layer": "SEMANTIC",
+      "expected_code": "NO_ACTIONS",
+      "expected_static": "PASS",
+      "bytes_unchanged": true,
+      "semantic_trigger_retained": true,
+      "bounded_change": "none; byte-exact R1 input",
+      "primary_trigger_comparison": {
+        "method": "byte-exact",
+        "equal": true
+      }
+    },
+    {
+      "r1_case_id": "unattempted-absence-commit",
+      "r1_path": "cases/unattempted-absence-commit.json",
+      "r1_sha256": "fe77e6a339171a1ce735c5db94278a25c4c54d7c9474d493d461257e69d628cf",
+      "r2_case_id": "unattempted-absence-commit",
+      "r2_path": "cases/unattempted-absence-commit.json",
+      "r2_sha256": "41788ac3beecd54b9516bd3cec49d282ca2295182ffae05e675825b5f64fbbaa",
+      "expected_layer": "RUNTIME_TRANSACTION",
+      "expected_code": "UNATTEMPTED_ABSENCE_COMMITTED",
+      "expected_static": "PASS",
+      "bytes_unchanged": false,
+      "semantic_trigger_retained": true,
+      "bounded_change": "complete event prefix and derived intent/obligation/fact/CAS/consumer refs only",
+      "primary_trigger_comparison": {
+        "r1": {
+          "runtime_fields": {
+            "plan_status": "INTERRUPTED",
+            "old_tail_dispatches": 0,
+            "original_unknown_preserved": true,
+            "original_B_unknown_preserved": true,
+            "intent_for_tail": false,
+            "obligation_for_tail": false,
+            "resolution_for_tail": false,
+            "independent_absent": true,
+            "actual_new_read": true,
+            "complete_uncalled_prefix": true,
+            "supplied_generation": 1,
+            "current_generation": 1
+          },
+          "request_action": {
+            "action_id": "action-a02-dec0905217fd2d98a7c02bd44beb3f5c",
+            "action_digest": "cd4aec0a1f47ce5ded97b2c2c17eea8f663525ed818ca8ab7855a8f7f84bd069"
+          },
+          "receipt": [
+            {
+              "action_id": "action-a02-a80e543226fa0df5fcdcb8c585e1c125",
+              "outcome": "APPLIED",
+              "effect_match": "MATCH",
+              "attempt_fact": "ATTEMPTED",
+              "next_step": "POSTCHECK",
+              "replay_allowed": false,
+              "has_intent": true
+            },
+            {
+              "action_id": "action-a02-bb4ce2935b7f9cc278385b35e2ac3562",
+              "outcome": "UNKNOWN",
+              "effect_match": "INDETERMINATE",
+              "attempt_fact": "MAY_HAVE_BEEN_ATTEMPTED",
+              "next_step": "RECONCILE",
+              "replay_allowed": false,
+              "has_intent": true
+            },
+            {
+              "action_id": "action-a02-dec0905217fd2d98a7c02bd44beb3f5c",
+              "outcome": "NOT_APPLIED",
+              "effect_match": "ABSENT",
+              "attempt_fact": "NOT_ATTEMPTED",
+              "next_step": "RECHECK_TARGET",
+              "replay_allowed": false,
+              "has_intent": false
+            }
+          ],
+          "progress": [
+            {
+              "action_id": "action-a02-a80e543226fa0df5fcdcb8c585e1c125",
+              "attempt_fact": "ATTEMPTED",
+              "dependency_status": "SATISFIED",
+              "effective_outcome": "APPLIED",
+              "has_intent": true,
+              "has_resolution": false,
+              "has_fact": true
+            },
+            {
+              "action_id": "action-a02-bb4ce2935b7f9cc278385b35e2ac3562",
+              "attempt_fact": "MAY_HAVE_BEEN_ATTEMPTED",
+              "dependency_status": "BLOCKED",
+              "effective_outcome": "UNKNOWN",
+              "has_intent": true,
+              "has_resolution": false,
+              "has_fact": true
+            },
+            {
+              "action_id": "action-a02-dec0905217fd2d98a7c02bd44beb3f5c",
+              "attempt_fact": "NOT_ATTEMPTED",
+              "dependency_status": "BLOCKED",
+              "effective_outcome": "NOT_APPLIED",
+              "has_intent": false,
+              "has_resolution": false,
+              "has_fact": true
+            }
+          ],
+          "pending_action_ids": [
+            "action-a02-bb4ce2935b7f9cc278385b35e2ac3562"
+          ],
+          "pause": {
+            "paused": true,
+            "reason_codes": [
+              "SAVE_UNKNOWN"
+            ],
+            "event_ids": [
+              "event-partial-B-unknown"
+            ]
+          },
+          "unresolved_events": [
+            {
+              "event_id": "event-partial-B-unknown",
+              "scope_id": "synthetic-scope",
+              "classification": "UNKNOWN"
+            }
+          ]
+        },
+        "r2": {
+          "runtime_fields": {
+            "plan_status": "INTERRUPTED",
+            "old_tail_dispatches": 0,
+            "original_unknown_preserved": true,
+            "original_B_unknown_preserved": true,
+            "intent_for_tail": false,
+            "obligation_for_tail": false,
+            "resolution_for_tail": false,
+            "independent_absent": true,
+            "actual_new_read": true,
+            "complete_uncalled_prefix": true,
+            "supplied_generation": 1,
+            "current_generation": 1
+          },
+          "request_action": {
+            "action_id": "action-a02-dec0905217fd2d98a7c02bd44beb3f5c",
+            "action_digest": "cd4aec0a1f47ce5ded97b2c2c17eea8f663525ed818ca8ab7855a8f7f84bd069"
+          },
+          "receipt": [
+            {
+              "action_id": "action-a02-a80e543226fa0df5fcdcb8c585e1c125",
+              "outcome": "APPLIED",
+              "effect_match": "MATCH",
+              "attempt_fact": "ATTEMPTED",
+              "next_step": "POSTCHECK",
+              "replay_allowed": false,
+              "has_intent": true
+            },
+            {
+              "action_id": "action-a02-bb4ce2935b7f9cc278385b35e2ac3562",
+              "outcome": "UNKNOWN",
+              "effect_match": "INDETERMINATE",
+              "attempt_fact": "MAY_HAVE_BEEN_ATTEMPTED",
+              "next_step": "RECONCILE",
+              "replay_allowed": false,
+              "has_intent": true
+            },
+            {
+              "action_id": "action-a02-dec0905217fd2d98a7c02bd44beb3f5c",
+              "outcome": "NOT_APPLIED",
+              "effect_match": "ABSENT",
+              "attempt_fact": "NOT_ATTEMPTED",
+              "next_step": "RECHECK_TARGET",
+              "replay_allowed": false,
+              "has_intent": false
+            }
+          ],
+          "progress": [
+            {
+              "action_id": "action-a02-a80e543226fa0df5fcdcb8c585e1c125",
+              "attempt_fact": "ATTEMPTED",
+              "dependency_status": "SATISFIED",
+              "effective_outcome": "APPLIED",
+              "has_intent": true,
+              "has_resolution": false,
+              "has_fact": true
+            },
+            {
+              "action_id": "action-a02-bb4ce2935b7f9cc278385b35e2ac3562",
+              "attempt_fact": "MAY_HAVE_BEEN_ATTEMPTED",
+              "dependency_status": "BLOCKED",
+              "effective_outcome": "UNKNOWN",
+              "has_intent": true,
+              "has_resolution": false,
+              "has_fact": true
+            },
+            {
+              "action_id": "action-a02-dec0905217fd2d98a7c02bd44beb3f5c",
+              "attempt_fact": "NOT_ATTEMPTED",
+              "dependency_status": "BLOCKED",
+              "effective_outcome": "NOT_APPLIED",
+              "has_intent": false,
+              "has_resolution": false,
+              "has_fact": true
+            }
+          ],
+          "pending_action_ids": [
+            "action-a02-bb4ce2935b7f9cc278385b35e2ac3562"
+          ],
+          "pause": {
+            "paused": true,
+            "reason_codes": [
+              "SAVE_UNKNOWN"
+            ],
+            "event_ids": [
+              "event-partial-B-unknown"
+            ]
+          },
+          "unresolved_events": [
+            {
+              "event_id": "event-partial-B-unknown",
+              "scope_id": "synthetic-scope",
+              "classification": "UNKNOWN"
+            }
+          ]
+        },
+        "equal": true
+      }
+    },
+    {
+      "r1_case_id": "unattempted-missing-absent",
+      "r1_path": "cases/unattempted-missing-absent.json",
+      "r1_sha256": "fa11fe19baca2c425bcb7a8af7a89962e181096eb616fa9cced3cbd757699a7a",
+      "r2_case_id": "unattempted-missing-absent",
+      "r2_path": "cases/unattempted-missing-absent.json",
+      "r2_sha256": "c5cfed23a07834ac690d50f0a632e7073cc77b368ca20a1b6a6a11f5eaf07d2a",
+      "expected_layer": "RUNTIME_TRANSACTION",
+      "expected_code": "CONCLUSIVE_READBACK_REQUIRED",
+      "expected_static": "PASS",
+      "bytes_unchanged": false,
+      "semantic_trigger_retained": true,
+      "bounded_change": "complete event prefix and derived intent/obligation/fact/CAS/consumer refs only",
+      "primary_trigger_comparison": {
+        "r1": {
+          "runtime_fields": {
+            "plan_status": "INTERRUPTED",
+            "old_tail_dispatches": 0,
+            "original_unknown_preserved": true,
+            "original_B_unknown_preserved": true,
+            "intent_for_tail": false,
+            "obligation_for_tail": false,
+            "resolution_for_tail": false,
+            "independent_absent": false,
+            "actual_new_read": true,
+            "complete_uncalled_prefix": true,
+            "supplied_generation": 1,
+            "current_generation": 1
+          },
+          "request_action": {
+            "action_id": "action-a02-dec0905217fd2d98a7c02bd44beb3f5c",
+            "action_digest": "cd4aec0a1f47ce5ded97b2c2c17eea8f663525ed818ca8ab7855a8f7f84bd069"
+          },
+          "candidate_observation": {
+            "observation_id": "observation-unattempted-3-after",
+            "read_sequence": 12,
+            "observed_at": "2026-10-17T00:00:12Z"
+          },
+          "receipt": [
+            {
+              "action_id": "action-a02-a80e543226fa0df5fcdcb8c585e1c125",
+              "outcome": "APPLIED",
+              "effect_match": "MATCH",
+              "attempt_fact": "ATTEMPTED",
+              "next_step": "POSTCHECK",
+              "replay_allowed": false,
+              "has_intent": true
+            },
+            {
+              "action_id": "action-a02-bb4ce2935b7f9cc278385b35e2ac3562",
+              "outcome": "UNKNOWN",
+              "effect_match": "INDETERMINATE",
+              "attempt_fact": "MAY_HAVE_BEEN_ATTEMPTED",
+              "next_step": "RECONCILE",
+              "replay_allowed": false,
+              "has_intent": true
+            },
+            {
+              "action_id": "action-a02-dec0905217fd2d98a7c02bd44beb3f5c",
+              "outcome": "NOT_APPLIED",
+              "effect_match": "ABSENT",
+              "attempt_fact": "NOT_ATTEMPTED",
+              "next_step": "RECHECK_TARGET",
+              "replay_allowed": false,
+              "has_intent": false
+            }
+          ],
+          "progress": [
+            {
+              "action_id": "action-a02-a80e543226fa0df5fcdcb8c585e1c125",
+              "attempt_fact": "ATTEMPTED",
+              "dependency_status": "SATISFIED",
+              "effective_outcome": "APPLIED",
+              "has_intent": true,
+              "has_resolution": false,
+              "has_fact": true
+            },
+            {
+              "action_id": "action-a02-bb4ce2935b7f9cc278385b35e2ac3562",
+              "attempt_fact": "MAY_HAVE_BEEN_ATTEMPTED",
+              "dependency_status": "BLOCKED",
+              "effective_outcome": "UNKNOWN",
+              "has_intent": true,
+              "has_resolution": false,
+              "has_fact": true
+            },
+            {
+              "action_id": "action-a02-dec0905217fd2d98a7c02bd44beb3f5c",
+              "attempt_fact": "NOT_ATTEMPTED",
+              "dependency_status": "BLOCKED",
+              "effective_outcome": "NOT_APPLIED",
+              "has_intent": false,
+              "has_resolution": false,
+              "has_fact": true
+            }
+          ],
+          "pending_action_ids": [
+            "action-a02-bb4ce2935b7f9cc278385b35e2ac3562"
+          ],
+          "pause": {
+            "paused": true,
+            "reason_codes": [
+              "SAVE_UNKNOWN"
+            ],
+            "event_ids": [
+              "event-partial-B-unknown"
+            ]
+          },
+          "unresolved_events": [
+            {
+              "event_id": "event-partial-B-unknown",
+              "scope_id": "synthetic-scope",
+              "classification": "UNKNOWN"
+            }
+          ]
+        },
+        "r2": {
+          "runtime_fields": {
+            "plan_status": "INTERRUPTED",
+            "old_tail_dispatches": 0,
+            "original_unknown_preserved": true,
+            "original_B_unknown_preserved": true,
+            "intent_for_tail": false,
+            "obligation_for_tail": false,
+            "resolution_for_tail": false,
+            "independent_absent": false,
+            "actual_new_read": true,
+            "complete_uncalled_prefix": true,
+            "supplied_generation": 1,
+            "current_generation": 1
+          },
+          "request_action": {
+            "action_id": "action-a02-dec0905217fd2d98a7c02bd44beb3f5c",
+            "action_digest": "cd4aec0a1f47ce5ded97b2c2c17eea8f663525ed818ca8ab7855a8f7f84bd069"
+          },
+          "candidate_observation": {
+            "observation_id": "observation-unattempted-3-after",
+            "read_sequence": 12,
+            "observed_at": "2026-10-17T00:00:12Z"
+          },
+          "receipt": [
+            {
+              "action_id": "action-a02-a80e543226fa0df5fcdcb8c585e1c125",
+              "outcome": "APPLIED",
+              "effect_match": "MATCH",
+              "attempt_fact": "ATTEMPTED",
+              "next_step": "POSTCHECK",
+              "replay_allowed": false,
+              "has_intent": true
+            },
+            {
+              "action_id": "action-a02-bb4ce2935b7f9cc278385b35e2ac3562",
+              "outcome": "UNKNOWN",
+              "effect_match": "INDETERMINATE",
+              "attempt_fact": "MAY_HAVE_BEEN_ATTEMPTED",
+              "next_step": "RECONCILE",
+              "replay_allowed": false,
+              "has_intent": true
+            },
+            {
+              "action_id": "action-a02-dec0905217fd2d98a7c02bd44beb3f5c",
+              "outcome": "NOT_APPLIED",
+              "effect_match": "ABSENT",
+              "attempt_fact": "NOT_ATTEMPTED",
+              "next_step": "RECHECK_TARGET",
+              "replay_allowed": false,
+              "has_intent": false
+            }
+          ],
+          "progress": [
+            {
+              "action_id": "action-a02-a80e543226fa0df5fcdcb8c585e1c125",
+              "attempt_fact": "ATTEMPTED",
+              "dependency_status": "SATISFIED",
+              "effective_outcome": "APPLIED",
+              "has_intent": true,
+              "has_resolution": false,
+              "has_fact": true
+            },
+            {
+              "action_id": "action-a02-bb4ce2935b7f9cc278385b35e2ac3562",
+              "attempt_fact": "MAY_HAVE_BEEN_ATTEMPTED",
+              "dependency_status": "BLOCKED",
+              "effective_outcome": "UNKNOWN",
+              "has_intent": true,
+              "has_resolution": false,
+              "has_fact": true
+            },
+            {
+              "action_id": "action-a02-dec0905217fd2d98a7c02bd44beb3f5c",
+              "attempt_fact": "NOT_ATTEMPTED",
+              "dependency_status": "BLOCKED",
+              "effective_outcome": "NOT_APPLIED",
+              "has_intent": false,
+              "has_resolution": false,
+              "has_fact": true
+            }
+          ],
+          "pending_action_ids": [
+            "action-a02-bb4ce2935b7f9cc278385b35e2ac3562"
+          ],
+          "pause": {
+            "paused": true,
+            "reason_codes": [
+              "SAVE_UNKNOWN"
+            ],
+            "event_ids": [
+              "event-partial-B-unknown"
+            ]
+          },
+          "unresolved_events": [
+            {
+              "event_id": "event-partial-B-unknown",
+              "scope_id": "synthetic-scope",
+              "classification": "UNKNOWN"
+            }
+          ]
+        },
+        "equal": true
+      }
+    },
+    {
+      "r1_case_id": "unattempted-stale-observation",
+      "r1_path": "cases/unattempted-stale-observation.json",
+      "r1_sha256": "1227c560afa749e826e13db7295fb47b4d43986d8879190da0981309d1c3780f",
+      "r2_case_id": "unattempted-stale-observation",
+      "r2_path": "cases/unattempted-stale-observation.json",
+      "r2_sha256": "50fafb74f3e177da7977f6280b890803051f64754c33018da991e7010595375e",
+      "expected_layer": "RUNTIME_TRANSACTION",
+      "expected_code": "OBSERVATION_NOT_FRESH",
+      "expected_static": "PASS",
+      "bytes_unchanged": false,
+      "semantic_trigger_retained": true,
+      "bounded_change": "complete event prefix and derived intent/obligation/fact/CAS/consumer refs only",
+      "primary_trigger_comparison": {
+        "r1": {
+          "runtime_fields": {
+            "plan_status": "INTERRUPTED",
+            "old_tail_dispatches": 0,
+            "original_unknown_preserved": true,
+            "original_B_unknown_preserved": true,
+            "intent_for_tail": false,
+            "obligation_for_tail": false,
+            "resolution_for_tail": false,
+            "independent_absent": true,
+            "actual_new_read": false,
+            "complete_uncalled_prefix": true,
+            "supplied_generation": 1,
+            "current_generation": 1
+          },
+          "request_action": {
+            "action_id": "action-a02-dec0905217fd2d98a7c02bd44beb3f5c",
+            "action_digest": "cd4aec0a1f47ce5ded97b2c2c17eea8f663525ed818ca8ab7855a8f7f84bd069"
+          },
+          "candidate_observation": {
+            "observation_id": "observation-unattempted-3-before",
+            "read_sequence": 11,
+            "observed_at": "2026-10-17T00:00:11Z"
+          },
+          "receipt": [
+            {
+              "action_id": "action-a02-a80e543226fa0df5fcdcb8c585e1c125",
+              "outcome": "APPLIED",
+              "effect_match": "MATCH",
+              "attempt_fact": "ATTEMPTED",
+              "next_step": "POSTCHECK",
+              "replay_allowed": false,
+              "has_intent": true
+            },
+            {
+              "action_id": "action-a02-bb4ce2935b7f9cc278385b35e2ac3562",
+              "outcome": "UNKNOWN",
+              "effect_match": "INDETERMINATE",
+              "attempt_fact": "MAY_HAVE_BEEN_ATTEMPTED",
+              "next_step": "RECONCILE",
+              "replay_allowed": false,
+              "has_intent": true
+            },
+            {
+              "action_id": "action-a02-dec0905217fd2d98a7c02bd44beb3f5c",
+              "outcome": "NOT_APPLIED",
+              "effect_match": "ABSENT",
+              "attempt_fact": "NOT_ATTEMPTED",
+              "next_step": "RECHECK_TARGET",
+              "replay_allowed": false,
+              "has_intent": false
+            }
+          ],
+          "progress": [
+            {
+              "action_id": "action-a02-a80e543226fa0df5fcdcb8c585e1c125",
+              "attempt_fact": "ATTEMPTED",
+              "dependency_status": "SATISFIED",
+              "effective_outcome": "APPLIED",
+              "has_intent": true,
+              "has_resolution": false,
+              "has_fact": true
+            },
+            {
+              "action_id": "action-a02-bb4ce2935b7f9cc278385b35e2ac3562",
+              "attempt_fact": "MAY_HAVE_BEEN_ATTEMPTED",
+              "dependency_status": "BLOCKED",
+              "effective_outcome": "UNKNOWN",
+              "has_intent": true,
+              "has_resolution": false,
+              "has_fact": true
+            },
+            {
+              "action_id": "action-a02-dec0905217fd2d98a7c02bd44beb3f5c",
+              "attempt_fact": "NOT_ATTEMPTED",
+              "dependency_status": "BLOCKED",
+              "effective_outcome": "NOT_APPLIED",
+              "has_intent": false,
+              "has_resolution": false,
+              "has_fact": true
+            }
+          ],
+          "pending_action_ids": [
+            "action-a02-bb4ce2935b7f9cc278385b35e2ac3562"
+          ],
+          "pause": {
+            "paused": true,
+            "reason_codes": [
+              "SAVE_UNKNOWN"
+            ],
+            "event_ids": [
+              "event-partial-B-unknown"
+            ]
+          },
+          "unresolved_events": [
+            {
+              "event_id": "event-partial-B-unknown",
+              "scope_id": "synthetic-scope",
+              "classification": "UNKNOWN"
+            }
+          ]
+        },
+        "r2": {
+          "runtime_fields": {
+            "plan_status": "INTERRUPTED",
+            "old_tail_dispatches": 0,
+            "original_unknown_preserved": true,
+            "original_B_unknown_preserved": true,
+            "intent_for_tail": false,
+            "obligation_for_tail": false,
+            "resolution_for_tail": false,
+            "independent_absent": true,
+            "actual_new_read": false,
+            "complete_uncalled_prefix": true,
+            "supplied_generation": 1,
+            "current_generation": 1
+          },
+          "request_action": {
+            "action_id": "action-a02-dec0905217fd2d98a7c02bd44beb3f5c",
+            "action_digest": "cd4aec0a1f47ce5ded97b2c2c17eea8f663525ed818ca8ab7855a8f7f84bd069"
+          },
+          "candidate_observation": {
+            "observation_id": "observation-unattempted-3-before",
+            "read_sequence": 11,
+            "observed_at": "2026-10-17T00:00:11Z"
+          },
+          "receipt": [
+            {
+              "action_id": "action-a02-a80e543226fa0df5fcdcb8c585e1c125",
+              "outcome": "APPLIED",
+              "effect_match": "MATCH",
+              "attempt_fact": "ATTEMPTED",
+              "next_step": "POSTCHECK",
+              "replay_allowed": false,
+              "has_intent": true
+            },
+            {
+              "action_id": "action-a02-bb4ce2935b7f9cc278385b35e2ac3562",
+              "outcome": "UNKNOWN",
+              "effect_match": "INDETERMINATE",
+              "attempt_fact": "MAY_HAVE_BEEN_ATTEMPTED",
+              "next_step": "RECONCILE",
+              "replay_allowed": false,
+              "has_intent": true
+            },
+            {
+              "action_id": "action-a02-dec0905217fd2d98a7c02bd44beb3f5c",
+              "outcome": "NOT_APPLIED",
+              "effect_match": "ABSENT",
+              "attempt_fact": "NOT_ATTEMPTED",
+              "next_step": "RECHECK_TARGET",
+              "replay_allowed": false,
+              "has_intent": false
+            }
+          ],
+          "progress": [
+            {
+              "action_id": "action-a02-a80e543226fa0df5fcdcb8c585e1c125",
+              "attempt_fact": "ATTEMPTED",
+              "dependency_status": "SATISFIED",
+              "effective_outcome": "APPLIED",
+              "has_intent": true,
+              "has_resolution": false,
+              "has_fact": true
+            },
+            {
+              "action_id": "action-a02-bb4ce2935b7f9cc278385b35e2ac3562",
+              "attempt_fact": "MAY_HAVE_BEEN_ATTEMPTED",
+              "dependency_status": "BLOCKED",
+              "effective_outcome": "UNKNOWN",
+              "has_intent": true,
+              "has_resolution": false,
+              "has_fact": true
+            },
+            {
+              "action_id": "action-a02-dec0905217fd2d98a7c02bd44beb3f5c",
+              "attempt_fact": "NOT_ATTEMPTED",
+              "dependency_status": "BLOCKED",
+              "effective_outcome": "NOT_APPLIED",
+              "has_intent": false,
+              "has_resolution": false,
+              "has_fact": true
+            }
+          ],
+          "pending_action_ids": [
+            "action-a02-bb4ce2935b7f9cc278385b35e2ac3562"
+          ],
+          "pause": {
+            "paused": true,
+            "reason_codes": [
+              "SAVE_UNKNOWN"
+            ],
+            "event_ids": [
+              "event-partial-B-unknown"
+            ]
+          },
+          "unresolved_events": [
+            {
+              "event_id": "event-partial-B-unknown",
+              "scope_id": "synthetic-scope",
+              "classification": "UNKNOWN"
+            }
+          ]
+        },
+        "equal": true
+      }
+    },
+    {
+      "r1_case_id": "unattempted-incomplete-prefix",
+      "r1_path": "cases/unattempted-incomplete-prefix.json",
+      "r1_sha256": "b461c9c94df26968584d22961487687ace36ba44e119945cbd0f67e5eacd31ec",
+      "r2_case_id": "unattempted-incomplete-prefix",
+      "r2_path": "cases/unattempted-incomplete-prefix.json",
+      "r2_sha256": "16bee827ee0503aa18260200717363cecc55b90c4f3d271c6f33b78a2ae49a0b",
+      "expected_layer": "RUNTIME_TRANSACTION",
+      "expected_code": "EVENT_PREFIX_INCOMPLETE",
+      "expected_static": "PASS",
+      "bytes_unchanged": false,
+      "semantic_trigger_retained": true,
+      "bounded_change": "complete event prefix and derived intent/obligation/fact/CAS/consumer refs only",
+      "primary_trigger_comparison": {
+        "r1": {
+          "runtime_fields": {
+            "plan_status": "INTERRUPTED",
+            "old_tail_dispatches": 0,
+            "original_unknown_preserved": true,
+            "original_B_unknown_preserved": true,
+            "intent_for_tail": false,
+            "obligation_for_tail": false,
+            "resolution_for_tail": false,
+            "independent_absent": true,
+            "actual_new_read": true,
+            "complete_uncalled_prefix": false,
+            "supplied_generation": 1,
+            "current_generation": 1
+          },
+          "request_action": {
+            "action_id": "action-a02-dec0905217fd2d98a7c02bd44beb3f5c",
+            "action_digest": "cd4aec0a1f47ce5ded97b2c2c17eea8f663525ed818ca8ab7855a8f7f84bd069"
+          },
+          "candidate_has_acceptance": false,
+          "receipt": [
+            {
+              "action_id": "action-a02-a80e543226fa0df5fcdcb8c585e1c125",
+              "outcome": "APPLIED",
+              "effect_match": "MATCH",
+              "attempt_fact": "ATTEMPTED",
+              "next_step": "POSTCHECK",
+              "replay_allowed": false,
+              "has_intent": true
+            },
+            {
+              "action_id": "action-a02-bb4ce2935b7f9cc278385b35e2ac3562",
+              "outcome": "UNKNOWN",
+              "effect_match": "INDETERMINATE",
+              "attempt_fact": "MAY_HAVE_BEEN_ATTEMPTED",
+              "next_step": "RECONCILE",
+              "replay_allowed": false,
+              "has_intent": true
+            },
+            {
+              "action_id": "action-a02-dec0905217fd2d98a7c02bd44beb3f5c",
+              "outcome": "NOT_APPLIED",
+              "effect_match": "ABSENT",
+              "attempt_fact": "NOT_ATTEMPTED",
+              "next_step": "RECHECK_TARGET",
+              "replay_allowed": false,
+              "has_intent": false
+            }
+          ],
+          "progress": [
+            {
+              "action_id": "action-a02-a80e543226fa0df5fcdcb8c585e1c125",
+              "attempt_fact": "ATTEMPTED",
+              "dependency_status": "SATISFIED",
+              "effective_outcome": "APPLIED",
+              "has_intent": true,
+              "has_resolution": false,
+              "has_fact": true
+            },
+            {
+              "action_id": "action-a02-bb4ce2935b7f9cc278385b35e2ac3562",
+              "attempt_fact": "MAY_HAVE_BEEN_ATTEMPTED",
+              "dependency_status": "BLOCKED",
+              "effective_outcome": "UNKNOWN",
+              "has_intent": true,
+              "has_resolution": false,
+              "has_fact": true
+            },
+            {
+              "action_id": "action-a02-dec0905217fd2d98a7c02bd44beb3f5c",
+              "attempt_fact": "NOT_ATTEMPTED",
+              "dependency_status": "BLOCKED",
+              "effective_outcome": "NOT_APPLIED",
+              "has_intent": false,
+              "has_resolution": false,
+              "has_fact": true
+            }
+          ],
+          "pending_action_ids": [
+            "action-a02-bb4ce2935b7f9cc278385b35e2ac3562"
+          ],
+          "pause": {
+            "paused": true,
+            "reason_codes": [
+              "SAVE_UNKNOWN"
+            ],
+            "event_ids": [
+              "event-partial-B-unknown"
+            ]
+          },
+          "unresolved_events": [
+            {
+              "event_id": "event-partial-B-unknown",
+              "scope_id": "synthetic-scope",
+              "classification": "UNKNOWN"
+            }
+          ]
+        },
+        "r2": {
+          "runtime_fields": {
+            "plan_status": "INTERRUPTED",
+            "old_tail_dispatches": 0,
+            "original_unknown_preserved": true,
+            "original_B_unknown_preserved": true,
+            "intent_for_tail": false,
+            "obligation_for_tail": false,
+            "resolution_for_tail": false,
+            "independent_absent": true,
+            "actual_new_read": true,
+            "complete_uncalled_prefix": false,
+            "supplied_generation": 1,
+            "current_generation": 1
+          },
+          "request_action": {
+            "action_id": "action-a02-dec0905217fd2d98a7c02bd44beb3f5c",
+            "action_digest": "cd4aec0a1f47ce5ded97b2c2c17eea8f663525ed818ca8ab7855a8f7f84bd069"
+          },
+          "candidate_has_acceptance": false,
+          "receipt": [
+            {
+              "action_id": "action-a02-a80e543226fa0df5fcdcb8c585e1c125",
+              "outcome": "APPLIED",
+              "effect_match": "MATCH",
+              "attempt_fact": "ATTEMPTED",
+              "next_step": "POSTCHECK",
+              "replay_allowed": false,
+              "has_intent": true
+            },
+            {
+              "action_id": "action-a02-bb4ce2935b7f9cc278385b35e2ac3562",
+              "outcome": "UNKNOWN",
+              "effect_match": "INDETERMINATE",
+              "attempt_fact": "MAY_HAVE_BEEN_ATTEMPTED",
+              "next_step": "RECONCILE",
+              "replay_allowed": false,
+              "has_intent": true
+            },
+            {
+              "action_id": "action-a02-dec0905217fd2d98a7c02bd44beb3f5c",
+              "outcome": "NOT_APPLIED",
+              "effect_match": "ABSENT",
+              "attempt_fact": "NOT_ATTEMPTED",
+              "next_step": "RECHECK_TARGET",
+              "replay_allowed": false,
+              "has_intent": false
+            }
+          ],
+          "progress": [
+            {
+              "action_id": "action-a02-a80e543226fa0df5fcdcb8c585e1c125",
+              "attempt_fact": "ATTEMPTED",
+              "dependency_status": "SATISFIED",
+              "effective_outcome": "APPLIED",
+              "has_intent": true,
+              "has_resolution": false,
+              "has_fact": true
+            },
+            {
+              "action_id": "action-a02-bb4ce2935b7f9cc278385b35e2ac3562",
+              "attempt_fact": "MAY_HAVE_BEEN_ATTEMPTED",
+              "dependency_status": "BLOCKED",
+              "effective_outcome": "UNKNOWN",
+              "has_intent": true,
+              "has_resolution": false,
+              "has_fact": true
+            },
+            {
+              "action_id": "action-a02-dec0905217fd2d98a7c02bd44beb3f5c",
+              "attempt_fact": "NOT_ATTEMPTED",
+              "dependency_status": "BLOCKED",
+              "effective_outcome": "NOT_APPLIED",
+              "has_intent": false,
+              "has_resolution": false,
+              "has_fact": true
+            }
+          ],
+          "pending_action_ids": [
+            "action-a02-bb4ce2935b7f9cc278385b35e2ac3562"
+          ],
+          "pause": {
+            "paused": true,
+            "reason_codes": [
+              "SAVE_UNKNOWN"
+            ],
+            "event_ids": [
+              "event-partial-B-unknown"
+            ]
+          },
+          "unresolved_events": [
+            {
+              "event_id": "event-partial-B-unknown",
+              "scope_id": "synthetic-scope",
+              "classification": "UNKNOWN"
+            }
+          ]
+        },
+        "equal": true
+      }
+    },
+    {
+      "r1_case_id": "unattempted-wrong-plan-action",
+      "r1_path": "cases/unattempted-wrong-plan-action.json",
+      "r1_sha256": "453203777711666c733ba1e866c30d7c4be37a879a046a7c6121bd8083fbb1fa",
+      "r2_case_id": "unattempted-wrong-plan-action",
+      "r2_path": "cases/unattempted-wrong-plan-action.json",
+      "r2_sha256": "8e95bddff52cba1f88a3b0f002f747d85468c5e8106373300145c54f88f1296e",
+      "expected_layer": "RUNTIME_TRANSACTION",
+      "expected_code": "PLAN_ACTION_MISMATCH",
+      "expected_static": "PASS",
+      "bytes_unchanged": false,
+      "semantic_trigger_retained": true,
+      "bounded_change": "complete event prefix and derived intent/obligation/fact/CAS/consumer refs only",
+      "primary_trigger_comparison": {
+        "r1": {
+          "runtime_fields": {
+            "plan_status": "INTERRUPTED",
+            "old_tail_dispatches": 0,
+            "original_unknown_preserved": true,
+            "original_B_unknown_preserved": true,
+            "intent_for_tail": false,
+            "obligation_for_tail": false,
+            "resolution_for_tail": false,
+            "independent_absent": true,
+            "actual_new_read": true,
+            "complete_uncalled_prefix": true,
+            "supplied_generation": 1,
+            "current_generation": 1,
+            "requested_action_belongs_to_plan": false
+          },
+          "request_action": {
+            "action_id": "action-not-in-registered-plan",
+            "action_digest": "cd4aec0a1f47ce5ded97b2c2c17eea8f663525ed818ca8ab7855a8f7f84bd069"
+          },
+          "receipt": [
+            {
+              "action_id": "action-a02-a80e543226fa0df5fcdcb8c585e1c125",
+              "outcome": "APPLIED",
+              "effect_match": "MATCH",
+              "attempt_fact": "ATTEMPTED",
+              "next_step": "POSTCHECK",
+              "replay_allowed": false,
+              "has_intent": true
+            },
+            {
+              "action_id": "action-a02-bb4ce2935b7f9cc278385b35e2ac3562",
+              "outcome": "UNKNOWN",
+              "effect_match": "INDETERMINATE",
+              "attempt_fact": "MAY_HAVE_BEEN_ATTEMPTED",
+              "next_step": "RECONCILE",
+              "replay_allowed": false,
+              "has_intent": true
+            },
+            {
+              "action_id": "action-a02-dec0905217fd2d98a7c02bd44beb3f5c",
+              "outcome": "NOT_APPLIED",
+              "effect_match": "ABSENT",
+              "attempt_fact": "NOT_ATTEMPTED",
+              "next_step": "RECHECK_TARGET",
+              "replay_allowed": false,
+              "has_intent": false
+            }
+          ],
+          "progress": [
+            {
+              "action_id": "action-a02-a80e543226fa0df5fcdcb8c585e1c125",
+              "attempt_fact": "ATTEMPTED",
+              "dependency_status": "SATISFIED",
+              "effective_outcome": "APPLIED",
+              "has_intent": true,
+              "has_resolution": false,
+              "has_fact": true
+            },
+            {
+              "action_id": "action-a02-bb4ce2935b7f9cc278385b35e2ac3562",
+              "attempt_fact": "MAY_HAVE_BEEN_ATTEMPTED",
+              "dependency_status": "BLOCKED",
+              "effective_outcome": "UNKNOWN",
+              "has_intent": true,
+              "has_resolution": false,
+              "has_fact": true
+            },
+            {
+              "action_id": "action-a02-dec0905217fd2d98a7c02bd44beb3f5c",
+              "attempt_fact": "NOT_ATTEMPTED",
+              "dependency_status": "BLOCKED",
+              "effective_outcome": "NOT_APPLIED",
+              "has_intent": false,
+              "has_resolution": false,
+              "has_fact": true
+            }
+          ],
+          "pending_action_ids": [
+            "action-a02-bb4ce2935b7f9cc278385b35e2ac3562"
+          ],
+          "pause": {
+            "paused": true,
+            "reason_codes": [
+              "SAVE_UNKNOWN"
+            ],
+            "event_ids": [
+              "event-partial-B-unknown"
+            ]
+          },
+          "unresolved_events": [
+            {
+              "event_id": "event-partial-B-unknown",
+              "scope_id": "synthetic-scope",
+              "classification": "UNKNOWN"
+            }
+          ]
+        },
+        "r2": {
+          "runtime_fields": {
+            "plan_status": "INTERRUPTED",
+            "old_tail_dispatches": 0,
+            "original_unknown_preserved": true,
+            "original_B_unknown_preserved": true,
+            "intent_for_tail": false,
+            "obligation_for_tail": false,
+            "resolution_for_tail": false,
+            "independent_absent": true,
+            "actual_new_read": true,
+            "complete_uncalled_prefix": true,
+            "supplied_generation": 1,
+            "current_generation": 1,
+            "requested_action_belongs_to_plan": false
+          },
+          "request_action": {
+            "action_id": "action-not-in-registered-plan",
+            "action_digest": "cd4aec0a1f47ce5ded97b2c2c17eea8f663525ed818ca8ab7855a8f7f84bd069"
+          },
+          "receipt": [
+            {
+              "action_id": "action-a02-a80e543226fa0df5fcdcb8c585e1c125",
+              "outcome": "APPLIED",
+              "effect_match": "MATCH",
+              "attempt_fact": "ATTEMPTED",
+              "next_step": "POSTCHECK",
+              "replay_allowed": false,
+              "has_intent": true
+            },
+            {
+              "action_id": "action-a02-bb4ce2935b7f9cc278385b35e2ac3562",
+              "outcome": "UNKNOWN",
+              "effect_match": "INDETERMINATE",
+              "attempt_fact": "MAY_HAVE_BEEN_ATTEMPTED",
+              "next_step": "RECONCILE",
+              "replay_allowed": false,
+              "has_intent": true
+            },
+            {
+              "action_id": "action-a02-dec0905217fd2d98a7c02bd44beb3f5c",
+              "outcome": "NOT_APPLIED",
+              "effect_match": "ABSENT",
+              "attempt_fact": "NOT_ATTEMPTED",
+              "next_step": "RECHECK_TARGET",
+              "replay_allowed": false,
+              "has_intent": false
+            }
+          ],
+          "progress": [
+            {
+              "action_id": "action-a02-a80e543226fa0df5fcdcb8c585e1c125",
+              "attempt_fact": "ATTEMPTED",
+              "dependency_status": "SATISFIED",
+              "effective_outcome": "APPLIED",
+              "has_intent": true,
+              "has_resolution": false,
+              "has_fact": true
+            },
+            {
+              "action_id": "action-a02-bb4ce2935b7f9cc278385b35e2ac3562",
+              "attempt_fact": "MAY_HAVE_BEEN_ATTEMPTED",
+              "dependency_status": "BLOCKED",
+              "effective_outcome": "UNKNOWN",
+              "has_intent": true,
+              "has_resolution": false,
+              "has_fact": true
+            },
+            {
+              "action_id": "action-a02-dec0905217fd2d98a7c02bd44beb3f5c",
+              "attempt_fact": "NOT_ATTEMPTED",
+              "dependency_status": "BLOCKED",
+              "effective_outcome": "NOT_APPLIED",
+              "has_intent": false,
+              "has_resolution": false,
+              "has_fact": true
+            }
+          ],
+          "pending_action_ids": [
+            "action-a02-bb4ce2935b7f9cc278385b35e2ac3562"
+          ],
+          "pause": {
+            "paused": true,
+            "reason_codes": [
+              "SAVE_UNKNOWN"
+            ],
+            "event_ids": [
+              "event-partial-B-unknown"
+            ]
+          },
+          "unresolved_events": [
+            {
+              "event_id": "event-partial-B-unknown",
+              "scope_id": "synthetic-scope",
+              "classification": "UNKNOWN"
+            }
+          ]
+        },
+        "equal": true
+      }
+    },
+    {
+      "r1_case_id": "unattempted-stale-generation",
+      "r1_path": "cases/unattempted-stale-generation.json",
+      "r1_sha256": "9d17f8d566e82a217ddfbc20b432ea8918dbbea1f02bd45c76e04db8193aeb65",
+      "r2_case_id": "unattempted-stale-generation",
+      "r2_path": "cases/unattempted-stale-generation.json",
+      "r2_sha256": "dcccebf2b9d4e1cd3a960cd014ef07b4b9357cf36c1eafa3ea841e0b9a6dd87c",
+      "expected_layer": "RUNTIME_TRANSACTION",
+      "expected_code": "OWNER_GENERATION_STALE",
+      "expected_static": "PASS",
+      "bytes_unchanged": false,
+      "semantic_trigger_retained": true,
+      "bounded_change": "complete event prefix and derived intent/obligation/fact/CAS/consumer refs only",
+      "primary_trigger_comparison": {
+        "r1": {
+          "runtime_fields": {
+            "plan_status": "INTERRUPTED",
+            "old_tail_dispatches": 0,
+            "original_unknown_preserved": true,
+            "original_B_unknown_preserved": true,
+            "intent_for_tail": false,
+            "obligation_for_tail": false,
+            "resolution_for_tail": false,
+            "independent_absent": true,
+            "actual_new_read": true,
+            "complete_uncalled_prefix": true,
+            "supplied_generation": 0,
+            "current_generation": 1
+          },
+          "request_action": {
+            "action_id": "action-a02-dec0905217fd2d98a7c02bd44beb3f5c",
+            "action_digest": "cd4aec0a1f47ce5ded97b2c2c17eea8f663525ed818ca8ab7855a8f7f84bd069"
+          },
+          "receipt": [
+            {
+              "action_id": "action-a02-a80e543226fa0df5fcdcb8c585e1c125",
+              "outcome": "APPLIED",
+              "effect_match": "MATCH",
+              "attempt_fact": "ATTEMPTED",
+              "next_step": "POSTCHECK",
+              "replay_allowed": false,
+              "has_intent": true
+            },
+            {
+              "action_id": "action-a02-bb4ce2935b7f9cc278385b35e2ac3562",
+              "outcome": "UNKNOWN",
+              "effect_match": "INDETERMINATE",
+              "attempt_fact": "MAY_HAVE_BEEN_ATTEMPTED",
+              "next_step": "RECONCILE",
+              "replay_allowed": false,
+              "has_intent": true
+            },
+            {
+              "action_id": "action-a02-dec0905217fd2d98a7c02bd44beb3f5c",
+              "outcome": "NOT_APPLIED",
+              "effect_match": "ABSENT",
+              "attempt_fact": "NOT_ATTEMPTED",
+              "next_step": "RECHECK_TARGET",
+              "replay_allowed": false,
+              "has_intent": false
+            }
+          ],
+          "progress": [
+            {
+              "action_id": "action-a02-a80e543226fa0df5fcdcb8c585e1c125",
+              "attempt_fact": "ATTEMPTED",
+              "dependency_status": "SATISFIED",
+              "effective_outcome": "APPLIED",
+              "has_intent": true,
+              "has_resolution": false,
+              "has_fact": true
+            },
+            {
+              "action_id": "action-a02-bb4ce2935b7f9cc278385b35e2ac3562",
+              "attempt_fact": "MAY_HAVE_BEEN_ATTEMPTED",
+              "dependency_status": "BLOCKED",
+              "effective_outcome": "UNKNOWN",
+              "has_intent": true,
+              "has_resolution": false,
+              "has_fact": true
+            },
+            {
+              "action_id": "action-a02-dec0905217fd2d98a7c02bd44beb3f5c",
+              "attempt_fact": "NOT_ATTEMPTED",
+              "dependency_status": "BLOCKED",
+              "effective_outcome": "NOT_APPLIED",
+              "has_intent": false,
+              "has_resolution": false,
+              "has_fact": true
+            }
+          ],
+          "pending_action_ids": [
+            "action-a02-bb4ce2935b7f9cc278385b35e2ac3562"
+          ],
+          "pause": {
+            "paused": true,
+            "reason_codes": [
+              "SAVE_UNKNOWN"
+            ],
+            "event_ids": [
+              "event-partial-B-unknown"
+            ]
+          },
+          "unresolved_events": [
+            {
+              "event_id": "event-partial-B-unknown",
+              "scope_id": "synthetic-scope",
+              "classification": "UNKNOWN"
+            }
+          ]
+        },
+        "r2": {
+          "runtime_fields": {
+            "plan_status": "INTERRUPTED",
+            "old_tail_dispatches": 0,
+            "original_unknown_preserved": true,
+            "original_B_unknown_preserved": true,
+            "intent_for_tail": false,
+            "obligation_for_tail": false,
+            "resolution_for_tail": false,
+            "independent_absent": true,
+            "actual_new_read": true,
+            "complete_uncalled_prefix": true,
+            "supplied_generation": 0,
+            "current_generation": 1
+          },
+          "request_action": {
+            "action_id": "action-a02-dec0905217fd2d98a7c02bd44beb3f5c",
+            "action_digest": "cd4aec0a1f47ce5ded97b2c2c17eea8f663525ed818ca8ab7855a8f7f84bd069"
+          },
+          "receipt": [
+            {
+              "action_id": "action-a02-a80e543226fa0df5fcdcb8c585e1c125",
+              "outcome": "APPLIED",
+              "effect_match": "MATCH",
+              "attempt_fact": "ATTEMPTED",
+              "next_step": "POSTCHECK",
+              "replay_allowed": false,
+              "has_intent": true
+            },
+            {
+              "action_id": "action-a02-bb4ce2935b7f9cc278385b35e2ac3562",
+              "outcome": "UNKNOWN",
+              "effect_match": "INDETERMINATE",
+              "attempt_fact": "MAY_HAVE_BEEN_ATTEMPTED",
+              "next_step": "RECONCILE",
+              "replay_allowed": false,
+              "has_intent": true
+            },
+            {
+              "action_id": "action-a02-dec0905217fd2d98a7c02bd44beb3f5c",
+              "outcome": "NOT_APPLIED",
+              "effect_match": "ABSENT",
+              "attempt_fact": "NOT_ATTEMPTED",
+              "next_step": "RECHECK_TARGET",
+              "replay_allowed": false,
+              "has_intent": false
+            }
+          ],
+          "progress": [
+            {
+              "action_id": "action-a02-a80e543226fa0df5fcdcb8c585e1c125",
+              "attempt_fact": "ATTEMPTED",
+              "dependency_status": "SATISFIED",
+              "effective_outcome": "APPLIED",
+              "has_intent": true,
+              "has_resolution": false,
+              "has_fact": true
+            },
+            {
+              "action_id": "action-a02-bb4ce2935b7f9cc278385b35e2ac3562",
+              "attempt_fact": "MAY_HAVE_BEEN_ATTEMPTED",
+              "dependency_status": "BLOCKED",
+              "effective_outcome": "UNKNOWN",
+              "has_intent": true,
+              "has_resolution": false,
+              "has_fact": true
+            },
+            {
+              "action_id": "action-a02-dec0905217fd2d98a7c02bd44beb3f5c",
+              "attempt_fact": "NOT_ATTEMPTED",
+              "dependency_status": "BLOCKED",
+              "effective_outcome": "NOT_APPLIED",
+              "has_intent": false,
+              "has_resolution": false,
+              "has_fact": true
+            }
+          ],
+          "pending_action_ids": [
+            "action-a02-bb4ce2935b7f9cc278385b35e2ac3562"
+          ],
+          "pause": {
+            "paused": true,
+            "reason_codes": [
+              "SAVE_UNKNOWN"
+            ],
+            "event_ids": [
+              "event-partial-B-unknown"
+            ]
+          },
+          "unresolved_events": [
+            {
+              "event_id": "event-partial-B-unknown",
+              "scope_id": "synthetic-scope",
+              "classification": "UNKNOWN"
+            }
+          ]
+        },
+        "equal": true
+      }
+    },
+    {
+      "r1_case_id": "unattempted-duplicate-fact",
+      "r1_path": "cases/unattempted-duplicate-fact.json",
+      "r1_sha256": "54a06afc89510cf97fe96179c6d1cfa03095fb456d24c7a36bc8e69463853b81",
+      "r2_case_id": "unattempted-duplicate-fact",
+      "r2_path": "cases/unattempted-duplicate-fact.json",
+      "r2_sha256": "d478431a053e236c3d5e1ca8e63546cb7232a2a4eb6ddb34baa2207a16d3b2da",
+      "expected_layer": "RUNTIME_TRANSACTION",
+      "expected_code": "UNATTEMPTED_FACT_DUPLICATE",
+      "expected_static": "PASS",
+      "bytes_unchanged": false,
+      "semantic_trigger_retained": true,
+      "bounded_change": "complete event prefix and derived intent/obligation/fact/CAS/consumer refs only",
+      "primary_trigger_comparison": {
+        "r1": {
+          "runtime_fields": {
+            "plan_status": "INTERRUPTED",
+            "old_tail_dispatches": 0,
+            "original_unknown_preserved": true,
+            "original_B_unknown_preserved": true,
+            "intent_for_tail": false,
+            "obligation_for_tail": false,
+            "resolution_for_tail": false,
+            "independent_absent": true,
+            "actual_new_read": true,
+            "complete_uncalled_prefix": true,
+            "supplied_generation": 1,
+            "current_generation": 1,
+            "same_committed_fact": true
+          },
+          "request_action": {
+            "action_id": "action-a02-dec0905217fd2d98a7c02bd44beb3f5c",
+            "action_digest": "cd4aec0a1f47ce5ded97b2c2c17eea8f663525ed818ca8ab7855a8f7f84bd069"
+          },
+          "existing_binding_action": {
+            "action_id": "action-a02-dec0905217fd2d98a7c02bd44beb3f5c",
+            "action_digest": "cd4aec0a1f47ce5ded97b2c2c17eea8f663525ed818ca8ab7855a8f7f84bd069"
+          },
+          "receipt": [
+            {
+              "action_id": "action-a02-a80e543226fa0df5fcdcb8c585e1c125",
+              "outcome": "APPLIED",
+              "effect_match": "MATCH",
+              "attempt_fact": "ATTEMPTED",
+              "next_step": "POSTCHECK",
+              "replay_allowed": false,
+              "has_intent": true
+            },
+            {
+              "action_id": "action-a02-bb4ce2935b7f9cc278385b35e2ac3562",
+              "outcome": "UNKNOWN",
+              "effect_match": "INDETERMINATE",
+              "attempt_fact": "MAY_HAVE_BEEN_ATTEMPTED",
+              "next_step": "RECONCILE",
+              "replay_allowed": false,
+              "has_intent": true
+            },
+            {
+              "action_id": "action-a02-dec0905217fd2d98a7c02bd44beb3f5c",
+              "outcome": "NOT_APPLIED",
+              "effect_match": "ABSENT",
+              "attempt_fact": "NOT_ATTEMPTED",
+              "next_step": "RECHECK_TARGET",
+              "replay_allowed": false,
+              "has_intent": false
+            }
+          ],
+          "progress": [
+            {
+              "action_id": "action-a02-a80e543226fa0df5fcdcb8c585e1c125",
+              "attempt_fact": "ATTEMPTED",
+              "dependency_status": "SATISFIED",
+              "effective_outcome": "APPLIED",
+              "has_intent": true,
+              "has_resolution": false,
+              "has_fact": true
+            },
+            {
+              "action_id": "action-a02-bb4ce2935b7f9cc278385b35e2ac3562",
+              "attempt_fact": "MAY_HAVE_BEEN_ATTEMPTED",
+              "dependency_status": "BLOCKED",
+              "effective_outcome": "UNKNOWN",
+              "has_intent": true,
+              "has_resolution": false,
+              "has_fact": true
+            },
+            {
+              "action_id": "action-a02-dec0905217fd2d98a7c02bd44beb3f5c",
+              "attempt_fact": "NOT_ATTEMPTED",
+              "dependency_status": "BLOCKED",
+              "effective_outcome": "NOT_APPLIED",
+              "has_intent": false,
+              "has_resolution": false,
+              "has_fact": true
+            }
+          ],
+          "pending_action_ids": [
+            "action-a02-bb4ce2935b7f9cc278385b35e2ac3562"
+          ],
+          "pause": {
+            "paused": true,
+            "reason_codes": [
+              "SAVE_UNKNOWN"
+            ],
+            "event_ids": [
+              "event-partial-B-unknown"
+            ]
+          },
+          "unresolved_events": [
+            {
+              "event_id": "event-partial-B-unknown",
+              "scope_id": "synthetic-scope",
+              "classification": "UNKNOWN"
+            }
+          ]
+        },
+        "r2": {
+          "runtime_fields": {
+            "plan_status": "INTERRUPTED",
+            "old_tail_dispatches": 0,
+            "original_unknown_preserved": true,
+            "original_B_unknown_preserved": true,
+            "intent_for_tail": false,
+            "obligation_for_tail": false,
+            "resolution_for_tail": false,
+            "independent_absent": true,
+            "actual_new_read": true,
+            "complete_uncalled_prefix": true,
+            "supplied_generation": 1,
+            "current_generation": 1,
+            "same_committed_fact": true
+          },
+          "request_action": {
+            "action_id": "action-a02-dec0905217fd2d98a7c02bd44beb3f5c",
+            "action_digest": "cd4aec0a1f47ce5ded97b2c2c17eea8f663525ed818ca8ab7855a8f7f84bd069"
+          },
+          "existing_binding_action": {
+            "action_id": "action-a02-dec0905217fd2d98a7c02bd44beb3f5c",
+            "action_digest": "cd4aec0a1f47ce5ded97b2c2c17eea8f663525ed818ca8ab7855a8f7f84bd069"
+          },
+          "receipt": [
+            {
+              "action_id": "action-a02-a80e543226fa0df5fcdcb8c585e1c125",
+              "outcome": "APPLIED",
+              "effect_match": "MATCH",
+              "attempt_fact": "ATTEMPTED",
+              "next_step": "POSTCHECK",
+              "replay_allowed": false,
+              "has_intent": true
+            },
+            {
+              "action_id": "action-a02-bb4ce2935b7f9cc278385b35e2ac3562",
+              "outcome": "UNKNOWN",
+              "effect_match": "INDETERMINATE",
+              "attempt_fact": "MAY_HAVE_BEEN_ATTEMPTED",
+              "next_step": "RECONCILE",
+              "replay_allowed": false,
+              "has_intent": true
+            },
+            {
+              "action_id": "action-a02-dec0905217fd2d98a7c02bd44beb3f5c",
+              "outcome": "NOT_APPLIED",
+              "effect_match": "ABSENT",
+              "attempt_fact": "NOT_ATTEMPTED",
+              "next_step": "RECHECK_TARGET",
+              "replay_allowed": false,
+              "has_intent": false
+            }
+          ],
+          "progress": [
+            {
+              "action_id": "action-a02-a80e543226fa0df5fcdcb8c585e1c125",
+              "attempt_fact": "ATTEMPTED",
+              "dependency_status": "SATISFIED",
+              "effective_outcome": "APPLIED",
+              "has_intent": true,
+              "has_resolution": false,
+              "has_fact": true
+            },
+            {
+              "action_id": "action-a02-bb4ce2935b7f9cc278385b35e2ac3562",
+              "attempt_fact": "MAY_HAVE_BEEN_ATTEMPTED",
+              "dependency_status": "BLOCKED",
+              "effective_outcome": "UNKNOWN",
+              "has_intent": true,
+              "has_resolution": false,
+              "has_fact": true
+            },
+            {
+              "action_id": "action-a02-dec0905217fd2d98a7c02bd44beb3f5c",
+              "attempt_fact": "NOT_ATTEMPTED",
+              "dependency_status": "BLOCKED",
+              "effective_outcome": "NOT_APPLIED",
+              "has_intent": false,
+              "has_resolution": false,
+              "has_fact": true
+            }
+          ],
+          "pending_action_ids": [
+            "action-a02-bb4ce2935b7f9cc278385b35e2ac3562"
+          ],
+          "pause": {
+            "paused": true,
+            "reason_codes": [
+              "SAVE_UNKNOWN"
+            ],
+            "event_ids": [
+              "event-partial-B-unknown"
+            ]
+          },
+          "unresolved_events": [
+            {
+              "event_id": "event-partial-B-unknown",
+              "scope_id": "synthetic-scope",
+              "classification": "UNKNOWN"
+            }
+          ]
+        },
+        "equal": true
+      }
+    },
+    {
+      "r1_case_id": "unattempted-conflicting-fact",
+      "r1_path": "cases/unattempted-conflicting-fact.json",
+      "r1_sha256": "9187976c9118a7009d3b43e8200f059362b2b2b7f149d9a1c54f152729be7a8f",
+      "r2_case_id": "unattempted-conflicting-fact",
+      "r2_path": "cases/unattempted-conflicting-fact.json",
+      "r2_sha256": "e67f8b2a3cdcae5cf4e218dc55bb5d1e00611ee43a5781f0e1de7b8f52266d90",
+      "expected_layer": "RUNTIME_TRANSACTION",
+      "expected_code": "UNATTEMPTED_FACT_CONFLICT",
+      "expected_static": "PASS",
+      "bytes_unchanged": false,
+      "semantic_trigger_retained": true,
+      "bounded_change": "complete event prefix and derived intent/obligation/fact/CAS/consumer refs only",
+      "primary_trigger_comparison": {
+        "r1": {
+          "runtime_fields": {
+            "plan_status": "INTERRUPTED",
+            "old_tail_dispatches": 0,
+            "original_unknown_preserved": true,
+            "original_B_unknown_preserved": true,
+            "intent_for_tail": false,
+            "obligation_for_tail": false,
+            "resolution_for_tail": false,
+            "independent_absent": true,
+            "actual_new_read": true,
+            "complete_uncalled_prefix": true,
+            "supplied_generation": 1,
+            "current_generation": 1,
+            "different_existing_fact": true
+          },
+          "request_action": {
+            "action_id": "action-a02-dec0905217fd2d98a7c02bd44beb3f5c",
+            "action_digest": "cd4aec0a1f47ce5ded97b2c2c17eea8f663525ed818ca8ab7855a8f7f84bd069"
+          },
+          "existing_binding_action": {
+            "action_id": "action-a02-dec0905217fd2d98a7c02bd44beb3f5c",
+            "action_digest": "0000000000000000000000000000000000000000000000000000000000000000"
+          },
+          "receipt": [
+            {
+              "action_id": "action-a02-a80e543226fa0df5fcdcb8c585e1c125",
+              "outcome": "APPLIED",
+              "effect_match": "MATCH",
+              "attempt_fact": "ATTEMPTED",
+              "next_step": "POSTCHECK",
+              "replay_allowed": false,
+              "has_intent": true
+            },
+            {
+              "action_id": "action-a02-bb4ce2935b7f9cc278385b35e2ac3562",
+              "outcome": "UNKNOWN",
+              "effect_match": "INDETERMINATE",
+              "attempt_fact": "MAY_HAVE_BEEN_ATTEMPTED",
+              "next_step": "RECONCILE",
+              "replay_allowed": false,
+              "has_intent": true
+            },
+            {
+              "action_id": "action-a02-dec0905217fd2d98a7c02bd44beb3f5c",
+              "outcome": "NOT_APPLIED",
+              "effect_match": "ABSENT",
+              "attempt_fact": "NOT_ATTEMPTED",
+              "next_step": "RECHECK_TARGET",
+              "replay_allowed": false,
+              "has_intent": false
+            }
+          ],
+          "progress": [
+            {
+              "action_id": "action-a02-a80e543226fa0df5fcdcb8c585e1c125",
+              "attempt_fact": "ATTEMPTED",
+              "dependency_status": "SATISFIED",
+              "effective_outcome": "APPLIED",
+              "has_intent": true,
+              "has_resolution": false,
+              "has_fact": true
+            },
+            {
+              "action_id": "action-a02-bb4ce2935b7f9cc278385b35e2ac3562",
+              "attempt_fact": "MAY_HAVE_BEEN_ATTEMPTED",
+              "dependency_status": "BLOCKED",
+              "effective_outcome": "UNKNOWN",
+              "has_intent": true,
+              "has_resolution": false,
+              "has_fact": true
+            },
+            {
+              "action_id": "action-a02-dec0905217fd2d98a7c02bd44beb3f5c",
+              "attempt_fact": "NOT_ATTEMPTED",
+              "dependency_status": "BLOCKED",
+              "effective_outcome": "NOT_APPLIED",
+              "has_intent": false,
+              "has_resolution": false,
+              "has_fact": true
+            }
+          ],
+          "pending_action_ids": [
+            "action-a02-bb4ce2935b7f9cc278385b35e2ac3562"
+          ],
+          "pause": {
+            "paused": true,
+            "reason_codes": [
+              "SAVE_UNKNOWN"
+            ],
+            "event_ids": [
+              "event-partial-B-unknown"
+            ]
+          },
+          "unresolved_events": [
+            {
+              "event_id": "event-partial-B-unknown",
+              "scope_id": "synthetic-scope",
+              "classification": "UNKNOWN"
+            }
+          ]
+        },
+        "r2": {
+          "runtime_fields": {
+            "plan_status": "INTERRUPTED",
+            "old_tail_dispatches": 0,
+            "original_unknown_preserved": true,
+            "original_B_unknown_preserved": true,
+            "intent_for_tail": false,
+            "obligation_for_tail": false,
+            "resolution_for_tail": false,
+            "independent_absent": true,
+            "actual_new_read": true,
+            "complete_uncalled_prefix": true,
+            "supplied_generation": 1,
+            "current_generation": 1,
+            "different_existing_fact": true
+          },
+          "request_action": {
+            "action_id": "action-a02-dec0905217fd2d98a7c02bd44beb3f5c",
+            "action_digest": "cd4aec0a1f47ce5ded97b2c2c17eea8f663525ed818ca8ab7855a8f7f84bd069"
+          },
+          "existing_binding_action": {
+            "action_id": "action-a02-dec0905217fd2d98a7c02bd44beb3f5c",
+            "action_digest": "0000000000000000000000000000000000000000000000000000000000000000"
+          },
+          "receipt": [
+            {
+              "action_id": "action-a02-a80e543226fa0df5fcdcb8c585e1c125",
+              "outcome": "APPLIED",
+              "effect_match": "MATCH",
+              "attempt_fact": "ATTEMPTED",
+              "next_step": "POSTCHECK",
+              "replay_allowed": false,
+              "has_intent": true
+            },
+            {
+              "action_id": "action-a02-bb4ce2935b7f9cc278385b35e2ac3562",
+              "outcome": "UNKNOWN",
+              "effect_match": "INDETERMINATE",
+              "attempt_fact": "MAY_HAVE_BEEN_ATTEMPTED",
+              "next_step": "RECONCILE",
+              "replay_allowed": false,
+              "has_intent": true
+            },
+            {
+              "action_id": "action-a02-dec0905217fd2d98a7c02bd44beb3f5c",
+              "outcome": "NOT_APPLIED",
+              "effect_match": "ABSENT",
+              "attempt_fact": "NOT_ATTEMPTED",
+              "next_step": "RECHECK_TARGET",
+              "replay_allowed": false,
+              "has_intent": false
+            }
+          ],
+          "progress": [
+            {
+              "action_id": "action-a02-a80e543226fa0df5fcdcb8c585e1c125",
+              "attempt_fact": "ATTEMPTED",
+              "dependency_status": "SATISFIED",
+              "effective_outcome": "APPLIED",
+              "has_intent": true,
+              "has_resolution": false,
+              "has_fact": true
+            },
+            {
+              "action_id": "action-a02-bb4ce2935b7f9cc278385b35e2ac3562",
+              "attempt_fact": "MAY_HAVE_BEEN_ATTEMPTED",
+              "dependency_status": "BLOCKED",
+              "effective_outcome": "UNKNOWN",
+              "has_intent": true,
+              "has_resolution": false,
+              "has_fact": true
+            },
+            {
+              "action_id": "action-a02-dec0905217fd2d98a7c02bd44beb3f5c",
+              "attempt_fact": "NOT_ATTEMPTED",
+              "dependency_status": "BLOCKED",
+              "effective_outcome": "NOT_APPLIED",
+              "has_intent": false,
+              "has_resolution": false,
+              "has_fact": true
+            }
+          ],
+          "pending_action_ids": [
+            "action-a02-bb4ce2935b7f9cc278385b35e2ac3562"
+          ],
+          "pause": {
+            "paused": true,
+            "reason_codes": [
+              "SAVE_UNKNOWN"
+            ],
+            "event_ids": [
+              "event-partial-B-unknown"
+            ]
+          },
+          "unresolved_events": [
+            {
+              "event_id": "event-partial-B-unknown",
+              "scope_id": "synthetic-scope",
+              "classification": "UNKNOWN"
+            }
+          ]
+        },
+        "equal": true
+      }
+    },
+    {
+      "r1_case_id": "unattempted-wrong-plan-state",
+      "r1_path": "cases/unattempted-wrong-plan-state.json",
+      "r1_sha256": "6d0a81ff5effcb34b953145cbda089f3922bf4fe5ff6776c72a1a33f920af10c",
+      "r2_case_id": "unattempted-wrong-plan-state",
+      "r2_path": "cases/unattempted-wrong-plan-state.json",
+      "r2_sha256": "70c038c623e839d71232f413cd1c6b80de3ae8e08930c74ad02d56e2ed2938a7",
+      "expected_layer": "RUNTIME_TRANSACTION",
+      "expected_code": "PLAN_STATE_INVALID",
+      "expected_static": "PASS",
+      "bytes_unchanged": false,
+      "semantic_trigger_retained": true,
+      "bounded_change": "complete event prefix and derived intent/obligation/fact/CAS/consumer refs only",
+      "primary_trigger_comparison": {
+        "r1": {
+          "runtime_fields": {
+            "plan_status": "INTERRUPTED",
+            "old_tail_dispatches": 0,
+            "original_unknown_preserved": true,
+            "original_B_unknown_preserved": true,
+            "intent_for_tail": false,
+            "obligation_for_tail": false,
+            "resolution_for_tail": false,
+            "independent_absent": true,
+            "actual_new_read": true,
+            "complete_uncalled_prefix": true,
+            "supplied_generation": 1,
+            "current_generation": 1,
+            "current_plan_status": "RUNNING"
+          },
+          "request_action": {
+            "action_id": "action-a02-dec0905217fd2d98a7c02bd44beb3f5c",
+            "action_digest": "cd4aec0a1f47ce5ded97b2c2c17eea8f663525ed818ca8ab7855a8f7f84bd069"
+          },
+          "receipt": [
+            {
+              "action_id": "action-a02-a80e543226fa0df5fcdcb8c585e1c125",
+              "outcome": "APPLIED",
+              "effect_match": "MATCH",
+              "attempt_fact": "ATTEMPTED",
+              "next_step": "POSTCHECK",
+              "replay_allowed": false,
+              "has_intent": true
+            },
+            {
+              "action_id": "action-a02-bb4ce2935b7f9cc278385b35e2ac3562",
+              "outcome": "UNKNOWN",
+              "effect_match": "INDETERMINATE",
+              "attempt_fact": "MAY_HAVE_BEEN_ATTEMPTED",
+              "next_step": "RECONCILE",
+              "replay_allowed": false,
+              "has_intent": true
+            },
+            {
+              "action_id": "action-a02-dec0905217fd2d98a7c02bd44beb3f5c",
+              "outcome": "NOT_APPLIED",
+              "effect_match": "ABSENT",
+              "attempt_fact": "NOT_ATTEMPTED",
+              "next_step": "RECHECK_TARGET",
+              "replay_allowed": false,
+              "has_intent": false
+            }
+          ],
+          "progress": [
+            {
+              "action_id": "action-a02-a80e543226fa0df5fcdcb8c585e1c125",
+              "attempt_fact": "ATTEMPTED",
+              "dependency_status": "SATISFIED",
+              "effective_outcome": "APPLIED",
+              "has_intent": true,
+              "has_resolution": false,
+              "has_fact": true
+            },
+            {
+              "action_id": "action-a02-bb4ce2935b7f9cc278385b35e2ac3562",
+              "attempt_fact": "MAY_HAVE_BEEN_ATTEMPTED",
+              "dependency_status": "BLOCKED",
+              "effective_outcome": "UNKNOWN",
+              "has_intent": true,
+              "has_resolution": false,
+              "has_fact": true
+            },
+            {
+              "action_id": "action-a02-dec0905217fd2d98a7c02bd44beb3f5c",
+              "attempt_fact": "NOT_ATTEMPTED",
+              "dependency_status": "BLOCKED",
+              "effective_outcome": "NOT_APPLIED",
+              "has_intent": false,
+              "has_resolution": false,
+              "has_fact": true
+            }
+          ],
+          "pending_action_ids": [
+            "action-a02-bb4ce2935b7f9cc278385b35e2ac3562"
+          ],
+          "pause": {
+            "paused": true,
+            "reason_codes": [
+              "SAVE_UNKNOWN"
+            ],
+            "event_ids": [
+              "event-partial-B-unknown"
+            ]
+          },
+          "unresolved_events": [
+            {
+              "event_id": "event-partial-B-unknown",
+              "scope_id": "synthetic-scope",
+              "classification": "UNKNOWN"
+            }
+          ]
+        },
+        "r2": {
+          "runtime_fields": {
+            "plan_status": "INTERRUPTED",
+            "old_tail_dispatches": 0,
+            "original_unknown_preserved": true,
+            "original_B_unknown_preserved": true,
+            "intent_for_tail": false,
+            "obligation_for_tail": false,
+            "resolution_for_tail": false,
+            "independent_absent": true,
+            "actual_new_read": true,
+            "complete_uncalled_prefix": true,
+            "supplied_generation": 1,
+            "current_generation": 1,
+            "current_plan_status": "RUNNING"
+          },
+          "request_action": {
+            "action_id": "action-a02-dec0905217fd2d98a7c02bd44beb3f5c",
+            "action_digest": "cd4aec0a1f47ce5ded97b2c2c17eea8f663525ed818ca8ab7855a8f7f84bd069"
+          },
+          "receipt": [
+            {
+              "action_id": "action-a02-a80e543226fa0df5fcdcb8c585e1c125",
+              "outcome": "APPLIED",
+              "effect_match": "MATCH",
+              "attempt_fact": "ATTEMPTED",
+              "next_step": "POSTCHECK",
+              "replay_allowed": false,
+              "has_intent": true
+            },
+            {
+              "action_id": "action-a02-bb4ce2935b7f9cc278385b35e2ac3562",
+              "outcome": "UNKNOWN",
+              "effect_match": "INDETERMINATE",
+              "attempt_fact": "MAY_HAVE_BEEN_ATTEMPTED",
+              "next_step": "RECONCILE",
+              "replay_allowed": false,
+              "has_intent": true
+            },
+            {
+              "action_id": "action-a02-dec0905217fd2d98a7c02bd44beb3f5c",
+              "outcome": "NOT_APPLIED",
+              "effect_match": "ABSENT",
+              "attempt_fact": "NOT_ATTEMPTED",
+              "next_step": "RECHECK_TARGET",
+              "replay_allowed": false,
+              "has_intent": false
+            }
+          ],
+          "progress": [
+            {
+              "action_id": "action-a02-a80e543226fa0df5fcdcb8c585e1c125",
+              "attempt_fact": "ATTEMPTED",
+              "dependency_status": "SATISFIED",
+              "effective_outcome": "APPLIED",
+              "has_intent": true,
+              "has_resolution": false,
+              "has_fact": true
+            },
+            {
+              "action_id": "action-a02-bb4ce2935b7f9cc278385b35e2ac3562",
+              "attempt_fact": "MAY_HAVE_BEEN_ATTEMPTED",
+              "dependency_status": "BLOCKED",
+              "effective_outcome": "UNKNOWN",
+              "has_intent": true,
+              "has_resolution": false,
+              "has_fact": true
+            },
+            {
+              "action_id": "action-a02-dec0905217fd2d98a7c02bd44beb3f5c",
+              "attempt_fact": "NOT_ATTEMPTED",
+              "dependency_status": "BLOCKED",
+              "effective_outcome": "NOT_APPLIED",
+              "has_intent": false,
+              "has_resolution": false,
+              "has_fact": true
+            }
+          ],
+          "pending_action_ids": [
+            "action-a02-bb4ce2935b7f9cc278385b35e2ac3562"
+          ],
+          "pause": {
+            "paused": true,
+            "reason_codes": [
+              "SAVE_UNKNOWN"
+            ],
+            "event_ids": [
+              "event-partial-B-unknown"
+            ]
+          },
+          "unresolved_events": [
+            {
+              "event_id": "event-partial-B-unknown",
+              "scope_id": "synthetic-scope",
+              "classification": "UNKNOWN"
+            }
+          ]
+        },
+        "equal": true
+      }
+    },
+    {
+      "r1_case_id": "unattempted-already-called",
+      "r1_path": "cases/unattempted-already-called.json",
+      "r1_sha256": "93c97bd029675b1de9f1e57ce0fe102fe2a5f2cf1bfa77d857f9d66824e7e6e3",
+      "r2_case_id": "unattempted-already-called",
+      "r2_path": "cases/unattempted-already-called.json",
+      "r2_sha256": "4fef6867c297287b93f964ecbd341963f64fa73941641d94605caa1337e74660",
+      "expected_layer": "RUNTIME_TRANSACTION",
+      "expected_code": "ACTION_ALREADY_ATTEMPTED",
+      "expected_static": "PASS",
+      "bytes_unchanged": false,
+      "semantic_trigger_retained": true,
+      "bounded_change": "complete event prefix and derived intent/obligation/fact/CAS/consumer refs only",
+      "primary_trigger_comparison": {
+        "r1": {
+          "runtime_fields": {
+            "plan_status": "INTERRUPTED",
+            "old_tail_dispatches": 0,
+            "original_unknown_preserved": true,
+            "original_B_unknown_preserved": true,
+            "intent_for_tail": false,
+            "obligation_for_tail": false,
+            "resolution_for_tail": false,
+            "independent_absent": true,
+            "actual_new_read": true,
+            "complete_uncalled_prefix": true,
+            "supplied_generation": 1,
+            "current_generation": 1,
+            "current_action_dispatch_count": 1
+          },
+          "request_action": {
+            "action_id": "action-a02-dec0905217fd2d98a7c02bd44beb3f5c",
+            "action_digest": "cd4aec0a1f47ce5ded97b2c2c17eea8f663525ed818ca8ab7855a8f7f84bd069"
+          },
+          "receipt": [
+            {
+              "action_id": "action-a02-a80e543226fa0df5fcdcb8c585e1c125",
+              "outcome": "APPLIED",
+              "effect_match": "MATCH",
+              "attempt_fact": "ATTEMPTED",
+              "next_step": "POSTCHECK",
+              "replay_allowed": false,
+              "has_intent": true
+            },
+            {
+              "action_id": "action-a02-bb4ce2935b7f9cc278385b35e2ac3562",
+              "outcome": "UNKNOWN",
+              "effect_match": "INDETERMINATE",
+              "attempt_fact": "MAY_HAVE_BEEN_ATTEMPTED",
+              "next_step": "RECONCILE",
+              "replay_allowed": false,
+              "has_intent": true
+            },
+            {
+              "action_id": "action-a02-dec0905217fd2d98a7c02bd44beb3f5c",
+              "outcome": "NOT_APPLIED",
+              "effect_match": "ABSENT",
+              "attempt_fact": "NOT_ATTEMPTED",
+              "next_step": "RECHECK_TARGET",
+              "replay_allowed": false,
+              "has_intent": false
+            }
+          ],
+          "progress": [
+            {
+              "action_id": "action-a02-a80e543226fa0df5fcdcb8c585e1c125",
+              "attempt_fact": "ATTEMPTED",
+              "dependency_status": "SATISFIED",
+              "effective_outcome": "APPLIED",
+              "has_intent": true,
+              "has_resolution": false,
+              "has_fact": true
+            },
+            {
+              "action_id": "action-a02-bb4ce2935b7f9cc278385b35e2ac3562",
+              "attempt_fact": "MAY_HAVE_BEEN_ATTEMPTED",
+              "dependency_status": "BLOCKED",
+              "effective_outcome": "UNKNOWN",
+              "has_intent": true,
+              "has_resolution": false,
+              "has_fact": true
+            },
+            {
+              "action_id": "action-a02-dec0905217fd2d98a7c02bd44beb3f5c",
+              "attempt_fact": "NOT_ATTEMPTED",
+              "dependency_status": "BLOCKED",
+              "effective_outcome": "NOT_APPLIED",
+              "has_intent": false,
+              "has_resolution": false,
+              "has_fact": true
+            }
+          ],
+          "pending_action_ids": [
+            "action-a02-bb4ce2935b7f9cc278385b35e2ac3562"
+          ],
+          "pause": {
+            "paused": true,
+            "reason_codes": [
+              "SAVE_UNKNOWN"
+            ],
+            "event_ids": [
+              "event-partial-B-unknown"
+            ]
+          },
+          "unresolved_events": [
+            {
+              "event_id": "event-partial-B-unknown",
+              "scope_id": "synthetic-scope",
+              "classification": "UNKNOWN"
+            }
+          ]
+        },
+        "r2": {
+          "runtime_fields": {
+            "plan_status": "INTERRUPTED",
+            "old_tail_dispatches": 0,
+            "original_unknown_preserved": true,
+            "original_B_unknown_preserved": true,
+            "intent_for_tail": false,
+            "obligation_for_tail": false,
+            "resolution_for_tail": false,
+            "independent_absent": true,
+            "actual_new_read": true,
+            "complete_uncalled_prefix": true,
+            "supplied_generation": 1,
+            "current_generation": 1,
+            "current_action_dispatch_count": 1
+          },
+          "request_action": {
+            "action_id": "action-a02-dec0905217fd2d98a7c02bd44beb3f5c",
+            "action_digest": "cd4aec0a1f47ce5ded97b2c2c17eea8f663525ed818ca8ab7855a8f7f84bd069"
+          },
+          "receipt": [
+            {
+              "action_id": "action-a02-a80e543226fa0df5fcdcb8c585e1c125",
+              "outcome": "APPLIED",
+              "effect_match": "MATCH",
+              "attempt_fact": "ATTEMPTED",
+              "next_step": "POSTCHECK",
+              "replay_allowed": false,
+              "has_intent": true
+            },
+            {
+              "action_id": "action-a02-bb4ce2935b7f9cc278385b35e2ac3562",
+              "outcome": "UNKNOWN",
+              "effect_match": "INDETERMINATE",
+              "attempt_fact": "MAY_HAVE_BEEN_ATTEMPTED",
+              "next_step": "RECONCILE",
+              "replay_allowed": false,
+              "has_intent": true
+            },
+            {
+              "action_id": "action-a02-dec0905217fd2d98a7c02bd44beb3f5c",
+              "outcome": "NOT_APPLIED",
+              "effect_match": "ABSENT",
+              "attempt_fact": "NOT_ATTEMPTED",
+              "next_step": "RECHECK_TARGET",
+              "replay_allowed": false,
+              "has_intent": false
+            }
+          ],
+          "progress": [
+            {
+              "action_id": "action-a02-a80e543226fa0df5fcdcb8c585e1c125",
+              "attempt_fact": "ATTEMPTED",
+              "dependency_status": "SATISFIED",
+              "effective_outcome": "APPLIED",
+              "has_intent": true,
+              "has_resolution": false,
+              "has_fact": true
+            },
+            {
+              "action_id": "action-a02-bb4ce2935b7f9cc278385b35e2ac3562",
+              "attempt_fact": "MAY_HAVE_BEEN_ATTEMPTED",
+              "dependency_status": "BLOCKED",
+              "effective_outcome": "UNKNOWN",
+              "has_intent": true,
+              "has_resolution": false,
+              "has_fact": true
+            },
+            {
+              "action_id": "action-a02-dec0905217fd2d98a7c02bd44beb3f5c",
+              "attempt_fact": "NOT_ATTEMPTED",
+              "dependency_status": "BLOCKED",
+              "effective_outcome": "NOT_APPLIED",
+              "has_intent": false,
+              "has_resolution": false,
+              "has_fact": true
+            }
+          ],
+          "pending_action_ids": [
+            "action-a02-bb4ce2935b7f9cc278385b35e2ac3562"
+          ],
+          "pause": {
+            "paused": true,
+            "reason_codes": [
+              "SAVE_UNKNOWN"
+            ],
+            "event_ids": [
+              "event-partial-B-unknown"
+            ]
+          },
+          "unresolved_events": [
+            {
+              "event_id": "event-partial-B-unknown",
+              "scope_id": "synthetic-scope",
+              "classification": "UNKNOWN"
+            }
+          ]
+        },
+        "equal": true
+      }
+    },
+    {
+      "r1_case_id": "unattempted-event-head-stale",
+      "r1_path": "cases/unattempted-event-head-stale.json",
+      "r1_sha256": "dcd34a2c70bae13782d36810142479d8aed1baea555fcb3127e7fffa1118af26",
+      "r2_case_id": "unattempted-event-head-stale",
+      "r2_path": "cases/unattempted-event-head-stale.json",
+      "r2_sha256": "e4e4c8a582c1c70828680c0f4c6774f93afef6012097f9e65ca2a4ec211dd43d",
+      "expected_layer": "RUNTIME_TRANSACTION",
+      "expected_code": "EVENT_HEAD_CAS_MISMATCH",
+      "expected_static": "PASS",
+      "bytes_unchanged": false,
+      "semantic_trigger_retained": true,
+      "bounded_change": "complete event prefix and derived intent/obligation/fact/CAS/consumer refs only",
+      "primary_trigger_comparison": {
+        "r1": {
+          "runtime_fields": {
+            "plan_status": "INTERRUPTED",
+            "old_tail_dispatches": 0,
+            "original_unknown_preserved": true,
+            "original_B_unknown_preserved": true,
+            "intent_for_tail": false,
+            "obligation_for_tail": false,
+            "resolution_for_tail": false,
+            "independent_absent": true,
+            "actual_new_read": true,
+            "complete_uncalled_prefix": true,
+            "supplied_generation": 1,
+            "current_generation": 1
+          },
+          "request_action": {
+            "action_id": "action-a02-dec0905217fd2d98a7c02bd44beb3f5c",
+            "action_digest": "cd4aec0a1f47ce5ded97b2c2c17eea8f663525ed818ca8ab7855a8f7f84bd069"
+          },
+          "stale_head_delta": 1,
+          "stale_head_is_zero": true,
+          "receipt": [
+            {
+              "action_id": "action-a02-a80e543226fa0df5fcdcb8c585e1c125",
+              "outcome": "APPLIED",
+              "effect_match": "MATCH",
+              "attempt_fact": "ATTEMPTED",
+              "next_step": "POSTCHECK",
+              "replay_allowed": false,
+              "has_intent": true
+            },
+            {
+              "action_id": "action-a02-bb4ce2935b7f9cc278385b35e2ac3562",
+              "outcome": "UNKNOWN",
+              "effect_match": "INDETERMINATE",
+              "attempt_fact": "MAY_HAVE_BEEN_ATTEMPTED",
+              "next_step": "RECONCILE",
+              "replay_allowed": false,
+              "has_intent": true
+            },
+            {
+              "action_id": "action-a02-dec0905217fd2d98a7c02bd44beb3f5c",
+              "outcome": "NOT_APPLIED",
+              "effect_match": "ABSENT",
+              "attempt_fact": "NOT_ATTEMPTED",
+              "next_step": "RECHECK_TARGET",
+              "replay_allowed": false,
+              "has_intent": false
+            }
+          ],
+          "progress": [
+            {
+              "action_id": "action-a02-a80e543226fa0df5fcdcb8c585e1c125",
+              "attempt_fact": "ATTEMPTED",
+              "dependency_status": "SATISFIED",
+              "effective_outcome": "APPLIED",
+              "has_intent": true,
+              "has_resolution": false,
+              "has_fact": true
+            },
+            {
+              "action_id": "action-a02-bb4ce2935b7f9cc278385b35e2ac3562",
+              "attempt_fact": "MAY_HAVE_BEEN_ATTEMPTED",
+              "dependency_status": "BLOCKED",
+              "effective_outcome": "UNKNOWN",
+              "has_intent": true,
+              "has_resolution": false,
+              "has_fact": true
+            },
+            {
+              "action_id": "action-a02-dec0905217fd2d98a7c02bd44beb3f5c",
+              "attempt_fact": "NOT_ATTEMPTED",
+              "dependency_status": "BLOCKED",
+              "effective_outcome": "NOT_APPLIED",
+              "has_intent": false,
+              "has_resolution": false,
+              "has_fact": true
+            }
+          ],
+          "pending_action_ids": [
+            "action-a02-bb4ce2935b7f9cc278385b35e2ac3562"
+          ],
+          "pause": {
+            "paused": true,
+            "reason_codes": [
+              "SAVE_UNKNOWN"
+            ],
+            "event_ids": [
+              "event-partial-B-unknown"
+            ]
+          },
+          "unresolved_events": [
+            {
+              "event_id": "event-partial-B-unknown",
+              "scope_id": "synthetic-scope",
+              "classification": "UNKNOWN"
+            }
+          ]
+        },
+        "r2": {
+          "runtime_fields": {
+            "plan_status": "INTERRUPTED",
+            "old_tail_dispatches": 0,
+            "original_unknown_preserved": true,
+            "original_B_unknown_preserved": true,
+            "intent_for_tail": false,
+            "obligation_for_tail": false,
+            "resolution_for_tail": false,
+            "independent_absent": true,
+            "actual_new_read": true,
+            "complete_uncalled_prefix": true,
+            "supplied_generation": 1,
+            "current_generation": 1
+          },
+          "request_action": {
+            "action_id": "action-a02-dec0905217fd2d98a7c02bd44beb3f5c",
+            "action_digest": "cd4aec0a1f47ce5ded97b2c2c17eea8f663525ed818ca8ab7855a8f7f84bd069"
+          },
+          "stale_head_delta": 1,
+          "stale_head_is_zero": true,
+          "receipt": [
+            {
+              "action_id": "action-a02-a80e543226fa0df5fcdcb8c585e1c125",
+              "outcome": "APPLIED",
+              "effect_match": "MATCH",
+              "attempt_fact": "ATTEMPTED",
+              "next_step": "POSTCHECK",
+              "replay_allowed": false,
+              "has_intent": true
+            },
+            {
+              "action_id": "action-a02-bb4ce2935b7f9cc278385b35e2ac3562",
+              "outcome": "UNKNOWN",
+              "effect_match": "INDETERMINATE",
+              "attempt_fact": "MAY_HAVE_BEEN_ATTEMPTED",
+              "next_step": "RECONCILE",
+              "replay_allowed": false,
+              "has_intent": true
+            },
+            {
+              "action_id": "action-a02-dec0905217fd2d98a7c02bd44beb3f5c",
+              "outcome": "NOT_APPLIED",
+              "effect_match": "ABSENT",
+              "attempt_fact": "NOT_ATTEMPTED",
+              "next_step": "RECHECK_TARGET",
+              "replay_allowed": false,
+              "has_intent": false
+            }
+          ],
+          "progress": [
+            {
+              "action_id": "action-a02-a80e543226fa0df5fcdcb8c585e1c125",
+              "attempt_fact": "ATTEMPTED",
+              "dependency_status": "SATISFIED",
+              "effective_outcome": "APPLIED",
+              "has_intent": true,
+              "has_resolution": false,
+              "has_fact": true
+            },
+            {
+              "action_id": "action-a02-bb4ce2935b7f9cc278385b35e2ac3562",
+              "attempt_fact": "MAY_HAVE_BEEN_ATTEMPTED",
+              "dependency_status": "BLOCKED",
+              "effective_outcome": "UNKNOWN",
+              "has_intent": true,
+              "has_resolution": false,
+              "has_fact": true
+            },
+            {
+              "action_id": "action-a02-dec0905217fd2d98a7c02bd44beb3f5c",
+              "attempt_fact": "NOT_ATTEMPTED",
+              "dependency_status": "BLOCKED",
+              "effective_outcome": "NOT_APPLIED",
+              "has_intent": false,
+              "has_resolution": false,
+              "has_fact": true
+            }
+          ],
+          "pending_action_ids": [
+            "action-a02-bb4ce2935b7f9cc278385b35e2ac3562"
+          ],
+          "pause": {
+            "paused": true,
+            "reason_codes": [
+              "SAVE_UNKNOWN"
+            ],
+            "event_ids": [
+              "event-partial-B-unknown"
+            ]
+          },
+          "unresolved_events": [
+            {
+              "event_id": "event-partial-B-unknown",
+              "scope_id": "synthetic-scope",
+              "classification": "UNKNOWN"
+            }
+          ]
+        },
+        "equal": true
+      }
+    },
+    {
+      "r1_case_id": "unattempted-prepared-mismatch",
+      "r1_path": "cases/unattempted-prepared-mismatch.json",
+      "r1_sha256": "b5f589d4e13d8e72b217fbb61e58a101d1077a4748d380caaa5804a3a062a0f5",
+      "r2_case_id": "unattempted-prepared-mismatch",
+      "r2_path": "cases/unattempted-prepared-mismatch.json",
+      "r2_sha256": "a4733efd58d9c5f35c1fa92816efe29720dfe04839a375f3bb4297966f8f1b0b",
+      "expected_layer": "RUNTIME_TRANSACTION",
+      "expected_code": "PREPARED_BEFORE_MISMATCH",
+      "expected_static": "PASS",
+      "bytes_unchanged": false,
+      "semantic_trigger_retained": true,
+      "bounded_change": "complete event prefix and derived intent/obligation/fact/CAS/consumer refs only",
+      "primary_trigger_comparison": {
+        "r1": {
+          "runtime_fields": {
+            "plan_status": "INTERRUPTED",
+            "old_tail_dispatches": 0,
+            "original_unknown_preserved": true,
+            "original_B_unknown_preserved": true,
+            "intent_for_tail": false,
+            "obligation_for_tail": false,
+            "resolution_for_tail": false,
+            "independent_absent": true,
+            "actual_new_read": true,
+            "complete_uncalled_prefix": true,
+            "supplied_generation": 1,
+            "current_generation": 1,
+            "readonly_prepared_action_id": "different-action"
+          },
+          "request_action": {
+            "action_id": "action-a02-dec0905217fd2d98a7c02bd44beb3f5c",
+            "action_digest": "cd4aec0a1f47ce5ded97b2c2c17eea8f663525ed818ca8ab7855a8f7f84bd069"
+          },
+          "receipt": [
+            {
+              "action_id": "action-a02-a80e543226fa0df5fcdcb8c585e1c125",
+              "outcome": "APPLIED",
+              "effect_match": "MATCH",
+              "attempt_fact": "ATTEMPTED",
+              "next_step": "POSTCHECK",
+              "replay_allowed": false,
+              "has_intent": true
+            },
+            {
+              "action_id": "action-a02-bb4ce2935b7f9cc278385b35e2ac3562",
+              "outcome": "UNKNOWN",
+              "effect_match": "INDETERMINATE",
+              "attempt_fact": "MAY_HAVE_BEEN_ATTEMPTED",
+              "next_step": "RECONCILE",
+              "replay_allowed": false,
+              "has_intent": true
+            },
+            {
+              "action_id": "action-a02-dec0905217fd2d98a7c02bd44beb3f5c",
+              "outcome": "NOT_APPLIED",
+              "effect_match": "ABSENT",
+              "attempt_fact": "NOT_ATTEMPTED",
+              "next_step": "RECHECK_TARGET",
+              "replay_allowed": false,
+              "has_intent": false
+            }
+          ],
+          "progress": [
+            {
+              "action_id": "action-a02-a80e543226fa0df5fcdcb8c585e1c125",
+              "attempt_fact": "ATTEMPTED",
+              "dependency_status": "SATISFIED",
+              "effective_outcome": "APPLIED",
+              "has_intent": true,
+              "has_resolution": false,
+              "has_fact": true
+            },
+            {
+              "action_id": "action-a02-bb4ce2935b7f9cc278385b35e2ac3562",
+              "attempt_fact": "MAY_HAVE_BEEN_ATTEMPTED",
+              "dependency_status": "BLOCKED",
+              "effective_outcome": "UNKNOWN",
+              "has_intent": true,
+              "has_resolution": false,
+              "has_fact": true
+            },
+            {
+              "action_id": "action-a02-dec0905217fd2d98a7c02bd44beb3f5c",
+              "attempt_fact": "NOT_ATTEMPTED",
+              "dependency_status": "BLOCKED",
+              "effective_outcome": "NOT_APPLIED",
+              "has_intent": false,
+              "has_resolution": false,
+              "has_fact": true
+            }
+          ],
+          "pending_action_ids": [
+            "action-a02-bb4ce2935b7f9cc278385b35e2ac3562"
+          ],
+          "pause": {
+            "paused": true,
+            "reason_codes": [
+              "SAVE_UNKNOWN"
+            ],
+            "event_ids": [
+              "event-partial-B-unknown"
+            ]
+          },
+          "unresolved_events": [
+            {
+              "event_id": "event-partial-B-unknown",
+              "scope_id": "synthetic-scope",
+              "classification": "UNKNOWN"
+            }
+          ]
+        },
+        "r2": {
+          "runtime_fields": {
+            "plan_status": "INTERRUPTED",
+            "old_tail_dispatches": 0,
+            "original_unknown_preserved": true,
+            "original_B_unknown_preserved": true,
+            "intent_for_tail": false,
+            "obligation_for_tail": false,
+            "resolution_for_tail": false,
+            "independent_absent": true,
+            "actual_new_read": true,
+            "complete_uncalled_prefix": true,
+            "supplied_generation": 1,
+            "current_generation": 1,
+            "readonly_prepared_action_id": "different-action"
+          },
+          "request_action": {
+            "action_id": "action-a02-dec0905217fd2d98a7c02bd44beb3f5c",
+            "action_digest": "cd4aec0a1f47ce5ded97b2c2c17eea8f663525ed818ca8ab7855a8f7f84bd069"
+          },
+          "receipt": [
+            {
+              "action_id": "action-a02-a80e543226fa0df5fcdcb8c585e1c125",
+              "outcome": "APPLIED",
+              "effect_match": "MATCH",
+              "attempt_fact": "ATTEMPTED",
+              "next_step": "POSTCHECK",
+              "replay_allowed": false,
+              "has_intent": true
+            },
+            {
+              "action_id": "action-a02-bb4ce2935b7f9cc278385b35e2ac3562",
+              "outcome": "UNKNOWN",
+              "effect_match": "INDETERMINATE",
+              "attempt_fact": "MAY_HAVE_BEEN_ATTEMPTED",
+              "next_step": "RECONCILE",
+              "replay_allowed": false,
+              "has_intent": true
+            },
+            {
+              "action_id": "action-a02-dec0905217fd2d98a7c02bd44beb3f5c",
+              "outcome": "NOT_APPLIED",
+              "effect_match": "ABSENT",
+              "attempt_fact": "NOT_ATTEMPTED",
+              "next_step": "RECHECK_TARGET",
+              "replay_allowed": false,
+              "has_intent": false
+            }
+          ],
+          "progress": [
+            {
+              "action_id": "action-a02-a80e543226fa0df5fcdcb8c585e1c125",
+              "attempt_fact": "ATTEMPTED",
+              "dependency_status": "SATISFIED",
+              "effective_outcome": "APPLIED",
+              "has_intent": true,
+              "has_resolution": false,
+              "has_fact": true
+            },
+            {
+              "action_id": "action-a02-bb4ce2935b7f9cc278385b35e2ac3562",
+              "attempt_fact": "MAY_HAVE_BEEN_ATTEMPTED",
+              "dependency_status": "BLOCKED",
+              "effective_outcome": "UNKNOWN",
+              "has_intent": true,
+              "has_resolution": false,
+              "has_fact": true
+            },
+            {
+              "action_id": "action-a02-dec0905217fd2d98a7c02bd44beb3f5c",
+              "attempt_fact": "NOT_ATTEMPTED",
+              "dependency_status": "BLOCKED",
+              "effective_outcome": "NOT_APPLIED",
+              "has_intent": false,
+              "has_resolution": false,
+              "has_fact": true
+            }
+          ],
+          "pending_action_ids": [
+            "action-a02-bb4ce2935b7f9cc278385b35e2ac3562"
+          ],
+          "pause": {
+            "paused": true,
+            "reason_codes": [
+              "SAVE_UNKNOWN"
+            ],
+            "event_ids": [
+              "event-partial-B-unknown"
+            ]
+          },
+          "unresolved_events": [
+            {
+              "event_id": "event-partial-B-unknown",
+              "scope_id": "synthetic-scope",
+              "classification": "UNKNOWN"
+            }
+          ]
+        },
+        "equal": true
+      }
+    },
+    {
+      "r1_case_id": "resource-fact-missing-declaration",
+      "r1_path": "cases/resource-fact-missing-declaration.json",
+      "r1_sha256": "1c2a27fb68fa43cc74dd4143b0c1a4ee42e17db460f1da188c9d6dcd7919309f",
+      "r2_case_id": "resource-fact-missing-declaration",
+      "r2_path": "cases/resource-fact-missing-declaration.json",
+      "r2_sha256": "1c2a27fb68fa43cc74dd4143b0c1a4ee42e17db460f1da188c9d6dcd7919309f",
+      "expected_layer": "REFERENCE",
+      "expected_code": "UNDECLARED_RESOURCE_REFERENCE",
+      "expected_static": "REFERENCE_FAIL",
+      "bytes_unchanged": true,
+      "semantic_trigger_retained": true,
+      "bounded_change": "none; byte-exact R1 input",
+      "primary_trigger_comparison": {
+        "method": "byte-exact",
+        "equal": true
+      }
+    },
+    {
+      "r1_case_id": "shared-resource-second-consumer-missing",
+      "r1_path": "cases/shared-resource-second-consumer-missing.json",
+      "r1_sha256": "522a7815e75523d3572de9b49e7b95604669bb827eb0f0aa4f64ddd690bab181",
+      "r2_case_id": "shared-resource-second-consumer-missing",
+      "r2_path": "cases/shared-resource-second-consumer-missing.json",
+      "r2_sha256": "522a7815e75523d3572de9b49e7b95604669bb827eb0f0aa4f64ddd690bab181",
+      "expected_layer": "REFERENCE",
+      "expected_code": "UNDECLARED_RESOURCE_REFERENCE",
+      "expected_static": "REFERENCE_FAIL",
+      "bytes_unchanged": true,
+      "semantic_trigger_retained": true,
+      "bounded_change": "none; byte-exact R1 input",
+      "primary_trigger_comparison": {
+        "method": "byte-exact",
+        "equal": true
+      }
+    },
+    {
+      "r1_case_id": "nested-prepared-missing-declaration",
+      "r1_path": "cases/nested-prepared-missing-declaration.json",
+      "r1_sha256": "4fcf34e40c3a9799e14cf6d6bf932028a312ee8e8dc240df5288162d212a4877",
+      "r2_case_id": "nested-prepared-missing-declaration",
+      "r2_path": "cases/nested-prepared-missing-declaration.json",
+      "r2_sha256": "4fcf34e40c3a9799e14cf6d6bf932028a312ee8e8dc240df5288162d212a4877",
+      "expected_layer": "REFERENCE",
+      "expected_code": "UNDECLARED_RESOURCE_REFERENCE",
+      "expected_static": "REFERENCE_FAIL",
+      "bytes_unchanged": true,
+      "semantic_trigger_retained": true,
+      "bounded_change": "none; byte-exact R1 input",
+      "primary_trigger_comparison": {
+        "method": "byte-exact",
+        "equal": true
+      }
+    },
+    {
+      "r1_case_id": "nested-prepared-positive",
+      "r1_path": "cases/nested-prepared-positive.json",
+      "r1_sha256": "2f0b6f5cd2bfd065b6faa6b2b560b6c3a64cdfe717f2acec721c82f5a65a9029",
+      "r2_case_id": "nested-prepared-positive",
+      "r2_path": "cases/nested-prepared-positive.json",
+      "r2_sha256": "2f0b6f5cd2bfd065b6faa6b2b560b6c3a64cdfe717f2acec721c82f5a65a9029",
+      "expected_layer": "STATIC_REFERENCE_CLOSURE",
+      "expected_code": "RECURSIVE_DECLARATION_CLOSED",
+      "expected_static": "PASS",
+      "bytes_unchanged": true,
+      "semantic_trigger_retained": true,
+      "bounded_change": "none; byte-exact R1 input",
+      "primary_trigger_comparison": {
+        "method": "byte-exact",
+        "equal": true
+      }
+    },
+    {
+      "r1_case_id": "nested-prepared-wrong-ref-hash",
+      "r1_path": "cases/nested-prepared-wrong-ref-hash.json",
+      "r1_sha256": "967272847165f7290ca331df1565a79bf8b5ebe20452f62cf167e03feaea281f",
+      "r2_case_id": "nested-prepared-wrong-ref-hash",
+      "r2_path": "cases/nested-prepared-wrong-ref-hash.json",
+      "r2_sha256": "967272847165f7290ca331df1565a79bf8b5ebe20452f62cf167e03feaea281f",
+      "expected_layer": "REFERENCE",
+      "expected_code": "REFERENCE_HASH_MISMATCH",
+      "expected_static": "REFERENCE_FAIL",
+      "bytes_unchanged": true,
+      "semantic_trigger_retained": true,
+      "bounded_change": "none; byte-exact R1 input",
+      "primary_trigger_comparison": {
+        "method": "byte-exact",
+        "equal": true
+      }
+    },
+    {
+      "r1_case_id": "nested-prepared-cross-book",
+      "r1_path": "cases/nested-prepared-cross-book.json",
+      "r1_sha256": "036d11303113a74e3e88503b145456c83e31ec5b04c4a5775017f1a0803013a3",
+      "r2_case_id": "nested-prepared-cross-book",
+      "r2_path": "cases/nested-prepared-cross-book.json",
+      "r2_sha256": "036d11303113a74e3e88503b145456c83e31ec5b04c4a5775017f1a0803013a3",
+      "expected_layer": "REFERENCE",
+      "expected_code": "REFERENCE_SCOPE_MISMATCH",
+      "expected_static": "REFERENCE_FAIL",
+      "bytes_unchanged": true,
+      "semantic_trigger_retained": true,
+      "bounded_change": "none; byte-exact R1 input",
+      "primary_trigger_comparison": {
+        "method": "byte-exact",
+        "equal": true
+      }
+    },
+    {
+      "r1_case_id": "nested-prepared-cross-scope",
+      "r1_path": "cases/nested-prepared-cross-scope.json",
+      "r1_sha256": "cbd6a9f9f971e9b9d2099e1799c843164ec5469f47200dd77bf67d411d5306ce",
+      "r2_case_id": "nested-prepared-cross-scope",
+      "r2_path": "cases/nested-prepared-cross-scope.json",
+      "r2_sha256": "cbd6a9f9f971e9b9d2099e1799c843164ec5469f47200dd77bf67d411d5306ce",
+      "expected_layer": "REFERENCE",
+      "expected_code": "REFERENCE_SCOPE_MISMATCH",
+      "expected_static": "REFERENCE_FAIL",
+      "bytes_unchanged": true,
+      "semantic_trigger_retained": true,
+      "bounded_change": "none; byte-exact R1 input",
+      "primary_trigger_comparison": {
+        "method": "byte-exact",
+        "equal": true
+      }
+    },
+    {
+      "r1_case_id": "nested-prepared-wrong-resource-hash",
+      "r1_path": "cases/nested-prepared-wrong-resource-hash.json",
+      "r1_sha256": "756cd5c54779b93203d43217ecc5b0247105392cf00383d026394c7de29f20eb",
+      "r2_case_id": "nested-prepared-wrong-resource-hash",
+      "r2_path": "cases/nested-prepared-wrong-resource-hash.json",
+      "r2_sha256": "756cd5c54779b93203d43217ecc5b0247105392cf00383d026394c7de29f20eb",
+      "expected_layer": "REFERENCE",
+      "expected_code": "RESOURCE_HASH_MISMATCH",
+      "expected_static": "RESOURCE_FAIL",
+      "bytes_unchanged": true,
+      "semantic_trigger_retained": true,
+      "bounded_change": "none; byte-exact R1 input",
+      "primary_trigger_comparison": {
+        "method": "byte-exact",
+        "equal": true
+      }
+    },
+    {
+      "r1_case_id": "mixed-artifact-resource-cycle",
+      "r1_path": "cases/mixed-artifact-resource-cycle.json",
+      "r1_sha256": "74c0d30a3b23a07bfa011c06879537e0fa4eb995a7c95029f660892813ce684d",
+      "r2_case_id": "mixed-artifact-resource-cycle",
+      "r2_path": "cases/mixed-artifact-resource-cycle.json",
+      "r2_sha256": "74c0d30a3b23a07bfa011c06879537e0fa4eb995a7c95029f660892813ce684d",
+      "expected_layer": "REFERENCE",
+      "expected_code": "REFERENCE_CYCLE",
+      "expected_static": "REFERENCE_FAIL",
+      "bytes_unchanged": true,
+      "semantic_trigger_retained": true,
+      "bounded_change": "none; byte-exact R1 input",
+      "primary_trigger_comparison": {
+        "method": "byte-exact",
+        "equal": true
+      }
+    },
+    {
+      "r1_case_id": "nested-resource-cycle",
+      "r1_path": "cases/nested-resource-cycle.json",
+      "r1_sha256": "9e11b7b7c9612878a300cd7c4c3ca987c44e63673b9c00b44db02d44cd6c186d",
+      "r2_case_id": "nested-resource-cycle",
+      "r2_path": "cases/nested-resource-cycle.json",
+      "r2_sha256": "9e11b7b7c9612878a300cd7c4c3ca987c44e63673b9c00b44db02d44cd6c186d",
+      "expected_layer": "REFERENCE",
+      "expected_code": "RESOURCE_HASH_MISMATCH",
+      "expected_static": "RESOURCE_FAIL",
+      "bytes_unchanged": true,
+      "semantic_trigger_retained": true,
+      "bounded_change": "none; byte-exact R1 input",
+      "primary_trigger_comparison": {
+        "method": "byte-exact",
+        "equal": true
+      }
+    },
+    {
+      "r1_case_id": "nested-resource-nonportable-path",
+      "r1_path": "cases/nested-resource-nonportable-path.json",
+      "r1_sha256": "4aa3602885046c3b5ebdf42f8efa3fe44ad0ecff40f06e0bdf1c47f75ddabf62",
+      "r2_case_id": "nested-resource-nonportable-path",
+      "r2_path": "cases/nested-resource-nonportable-path.json",
+      "r2_sha256": "4aa3602885046c3b5ebdf42f8efa3fe44ad0ecff40f06e0bdf1c47f75ddabf62",
+      "expected_layer": "REFERENCE",
+      "expected_code": "NONPORTABLE_RESOURCE_PATH",
+      "expected_static": "RESOURCE_FAIL",
+      "bytes_unchanged": true,
+      "semantic_trigger_retained": true,
+      "bounded_change": "none; byte-exact R1 input",
+      "primary_trigger_comparison": {
+        "method": "byte-exact",
+        "equal": true
+      }
+    },
+    {
+      "r1_case_id": "evidence-id-resource-closed",
+      "r1_path": "cases/evidence-id-resource-closed.json",
+      "r1_sha256": "9f1e9c8df42f19fff446a46b8dd2f3497bc8ce92cc1091111434def58389d8ca",
+      "r2_case_id": "evidence-id-resource-closed",
+      "r2_path": "cases/evidence-id-resource-closed.json",
+      "r2_sha256": "9f1e9c8df42f19fff446a46b8dd2f3497bc8ce92cc1091111434def58389d8ca",
+      "expected_layer": "STATIC_REFERENCE_CLOSURE",
+      "expected_code": "RECURSIVE_DECLARATION_CLOSED",
+      "expected_static": "PASS",
+      "bytes_unchanged": true,
+      "semantic_trigger_retained": true,
+      "bounded_change": "none; byte-exact R1 input",
+      "primary_trigger_comparison": {
+        "method": "byte-exact",
+        "equal": true
+      }
+    },
+    {
+      "r1_case_id": "evidence-id-resource-missing-declaration",
+      "r1_path": "cases/evidence-id-resource-missing-declaration.json",
+      "r1_sha256": "5f994c8927ec5c46c69ad2412a4d5c09151193dfbf000615fced27b82e44d675",
+      "r2_case_id": "evidence-id-resource-missing-declaration",
+      "r2_path": "cases/evidence-id-resource-missing-declaration.json",
+      "r2_sha256": "5f994c8927ec5c46c69ad2412a4d5c09151193dfbf000615fced27b82e44d675",
+      "expected_layer": "REFERENCE",
+      "expected_code": "UNDECLARED_RESOURCE_REFERENCE",
+      "expected_static": "REFERENCE_FAIL",
+      "bytes_unchanged": true,
+      "semantic_trigger_retained": true,
+      "bounded_change": "none; byte-exact R1 input",
+      "primary_trigger_comparison": {
+        "method": "byte-exact",
+        "equal": true
+      }
+    },
+    {
+      "r1_case_id": "unattempted-schema-tail-missing-basis",
+      "r1_path": "cases/unattempted-schema-tail-missing-basis.json",
+      "r1_sha256": "4fee0f69087ca9f3423ed5ec76280a8644efdb0e5089dd14b87ee1d104653c97",
+      "r2_case_id": "unattempted-schema-tail-missing-basis",
+      "r2_path": "cases/unattempted-schema-tail-missing-basis.json",
+      "r2_sha256": "4fee0f69087ca9f3423ed5ec76280a8644efdb0e5089dd14b87ee1d104653c97",
+      "expected_layer": "STRUCTURE",
+      "expected_code": "UNATTEMPTED_BASIS_ORIGIN_MISMATCH",
+      "expected_static": "STRUCTURE_FAIL",
+      "bytes_unchanged": true,
+      "semantic_trigger_retained": true,
+      "bounded_change": "none; byte-exact R1 input",
+      "primary_trigger_comparison": {
+        "method": "byte-exact",
+        "equal": true
+      }
+    },
+    {
+      "r1_case_id": "unattempted-schema-execution-with-basis",
+      "r1_path": "cases/unattempted-schema-execution-with-basis.json",
+      "r1_sha256": "d3a0fdd03dd60516ffd48bd06ec22bb7d5ed245c858a6fa242baeb647389dbef",
+      "r2_case_id": "unattempted-schema-execution-with-basis",
+      "r2_path": "cases/unattempted-schema-execution-with-basis.json",
+      "r2_sha256": "d3a0fdd03dd60516ffd48bd06ec22bb7d5ed245c858a6fa242baeb647389dbef",
+      "expected_layer": "STRUCTURE",
+      "expected_code": "UNATTEMPTED_BASIS_ORIGIN_MISMATCH",
+      "expected_static": "STRUCTURE_FAIL",
+      "bytes_unchanged": true,
+      "semantic_trigger_retained": true,
+      "bounded_change": "none; byte-exact R1 input",
+      "primary_trigger_comparison": {
+        "method": "byte-exact",
+        "equal": true
+      }
+    }
+  ]
+}

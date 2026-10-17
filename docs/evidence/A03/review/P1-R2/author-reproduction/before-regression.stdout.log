@@ -1,0 +1,94 @@
+{
+  "kind": "RETAINED_R1_BYTES_STATIC_PREFIX_REGRESSION",
+  "results": [
+    {
+      "case_id": "unattempted-absence-commit",
+      "prefix_resource": {
+        "path": "assets/r1/ac54edf82226784e4f40c4fb0fd48de8fc48bd3cbef24423e260f85f8968eb16.json",
+        "sha256": "ac54edf82226784e4f40c4fb0fd48de8fc48bd3cbef24423e260f85f8968eb16",
+        "media_type": "application/json",
+        "origin": "SYNTHETIC"
+      },
+      "actual_event_names": [
+        "PLAN_REGISTERED",
+        "WRITE_INTENT_COMMITTED",
+        "ACTION_RESULT_COMMITTED",
+        "WRITE_INTENT_COMMITTED",
+        "ACTION_RESULT_COMMITTED"
+      ],
+      "actual_errors": [
+        "PREFIX_SHAPE_INVALID",
+        "PREFIX_BINDING_MISMATCH",
+        "PREFIX_ACCEPTANCE_MISSING",
+        "PREFIX_CAS_MISMATCH",
+        "PREFIX_EVENT_INVALID",
+        "PREFIX_HASH_BROKEN",
+        "PREFIX_EVENT_TIME_INVALID",
+        "PREFIX_RESERVATION_INVALID",
+        "PREFIX_STATE_INVALID"
+      ],
+      "passed_regression": true
+    },
+    {
+      "case_id": "partial-with-complete-absent",
+      "prefix_resource": {
+        "path": "assets/r1/ac54edf82226784e4f40c4fb0fd48de8fc48bd3cbef24423e260f85f8968eb16.json",
+        "sha256": "ac54edf82226784e4f40c4fb0fd48de8fc48bd3cbef24423e260f85f8968eb16",
+        "media_type": "application/json",
+        "origin": "SYNTHETIC"
+      },
+      "actual_event_names": [
+        "PLAN_REGISTERED",
+        "WRITE_INTENT_COMMITTED",
+        "ACTION_RESULT_COMMITTED",
+        "WRITE_INTENT_COMMITTED",
+        "ACTION_RESULT_COMMITTED"
+      ],
+      "actual_errors": [
+        "PREFIX_SHAPE_INVALID",
+        "PREFIX_BINDING_MISMATCH",
+        "PREFIX_ACCEPTANCE_MISSING",
+        "PREFIX_CAS_MISMATCH",
+        "PREFIX_EVENT_INVALID",
+        "PREFIX_HASH_BROKEN",
+        "PREFIX_EVENT_TIME_INVALID",
+        "PREFIX_RESERVATION_INVALID",
+        "PREFIX_STATE_INVALID"
+      ],
+      "passed_regression": true
+    }
+  ],
+  "descriptive_complete_flag_checks": [
+    {
+      "case_id": "prefix-missing-acceptance",
+      "original_resource_bytes_verified": true,
+      "in_memory_complete_assertion": true,
+      "actual_errors": [
+        "PREFIX_ACCEPTANCE_MISSING",
+        "PREFIX_RESERVATION_INVALID",
+        "PREFIX_STATE_INVALID"
+      ],
+      "passed_regression": true
+    },
+    {
+      "case_id": "prefix-missing-dispatch",
+      "original_resource_bytes_verified": true,
+      "in_memory_complete_assertion": true,
+      "actual_errors": [
+        "PREFIX_DISPATCH_MISSING"
+      ],
+      "passed_regression": true
+    },
+    {
+      "case_id": "prefix-broken-hash",
+      "original_resource_bytes_verified": true,
+      "in_memory_complete_assertion": true,
+      "actual_errors": [
+        "PREFIX_HASH_BROKEN"
+      ],
+      "passed_regression": true
+    }
+  ],
+  "passed": true,
+  "runtime_or_recovery_executed": false
+}
