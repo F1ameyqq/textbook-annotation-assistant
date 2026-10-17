@@ -2,7 +2,7 @@
   "schema_version": 1,
   "project": "D:\\1800",
   "coordinator_thread_id": "01a13f26-7567-75e1-99ee-c9d2194e78bb",
-  "updated_at": "2026-10-17T04:47:12.048734+00:00",
+  "updated_at": "2026-10-17T04:50:38.214171+00:00",
   "automation": {
     "id": "1800-a",
     "kind": "heartbeat",
@@ -227,12 +227,12 @@
           "actual_import_path_evidence": "NOT_PROVEN_BY_AUTHOR_SOURCE_FILES; independent review required"
         },
         "latest_lightweight_observation": {
-          "at": "2026-10-17T04:09:51.999243+00:00",
+          "at": "2026-10-17T04:50:38.214171+00:00",
           "head": "5f872150a237b195f73c78e02e13a91d2f4f46a7",
           "status": [],
           "report_present": true,
           "frozen_delivery_verified": true,
-          "verification_scope": "Current Git and report-existence observation only; previous acceptance retained. No functional suite or unfinished implementation reviewed."
+          "scope": "Actual version and report existence only; active work is not frozen or accepted."
         }
       },
       "review": {
@@ -913,7 +913,7 @@
       "review_task": "docs/tasks/A02-independent-review.md",
       "acceptance_scope": "Planner, targetcheck and in-memory mock; no real writes or cross-process recovery.",
       "dispatch_status": "ACKNOWLEDGED",
-      "next_dependency": "A01 new fixed combined-entry independent review, coordinator reproduction and actual integration before A04/D01; existing A02 business scope unchanged.",
+      "next_dependency": "A02 accepted business and identity repair remain locally integrated. A01 is now integrated; I01 still awaits A03 functionality.",
       "base_commit": "39341c98d73c354d639f3beeb55429f55d0e9be5",
       "workflow_commit": "39341c98d73c354d639f3beeb55429f55d0e9be5",
       "worktree_name": "a02-planner-mock",
@@ -940,12 +940,12 @@
         "commit": "a1e5be00909172429d792b6c41bdaf384258694e",
         "workflow_commit": "6b77c436742cf2826083b109d8ed86b85539cba6",
         "latest_lightweight_observation": {
-          "at": "2026-10-17T04:09:51.999243+00:00",
+          "at": "2026-10-17T04:50:38.214171+00:00",
           "head": "a1e5be00909172429d792b6c41bdaf384258694e",
           "status": [],
           "report_present": true,
           "frozen_delivery_verified": true,
-          "verification_scope": "Current Git and report-existence observation only; previous acceptance retained. No functional suite or unfinished implementation reviewed."
+          "scope": "Actual version and report existence only; active work is not frozen or accepted."
         },
         "implementation_commit": "ad71284f3b6ffc8454ee1d1e30933c8e39d7c1d8",
         "report_sha256": "afb339fda44156cbb2ba1aaf4589b65e0746afedc3b2f3aa2a88403eae9b1a34",
@@ -1383,14 +1383,14 @@
       ]
     },
     "A04": {
-      "status": "READY",
+      "status": "RUNNING",
       "depends_on": [
         "C01"
       ],
       "execution_task": "docs/tasks/A04-headless-readonly.md",
       "review_task": "docs/tasks/A04-independent-review.md",
       "acceptance_scope": "Headless read-only book46007447 pages14/173 and one adjacent body page; coordinates after accepted A01.",
-      "dispatch_status": "PENDING_COORDINATE_R1_CONTINUATION",
+      "dispatch_status": "COORDINATE_R1_ACKNOWLEDGED",
       "next_dependency": "Original executor merges exact A01 integration and delivers complete read-only coordinate evidence plus fresh profile release; then original independent reviewer.",
       "geometry_dependency": {
         "task": "A01",
@@ -1407,13 +1407,13 @@
       "execution": {
         "thread_id": "01a144cc-dde4-73a1-9e83-be485380ea25",
         "host_id": "local",
-        "turn_status": "completed",
-        "cursor": "b9579e65-1c72-4a28-92c5-38e9d1fe7a0f:1",
+        "turn_status": "inProgress",
+        "cursor": "34833b27-6230-45ea-8e92-ee1cc9e0ac8f:1",
         "report": null,
-        "turn_id": "01a144cc-e1a4-7523-bf4b-11cce1462585",
-        "last_progress": "A04 阶段交付已冻结，回 REVIEW。 代码提交：d28a58f1859d00c70fc86aeecbb11ec2e7f06f89 交付 HEAD：3e4dba5676c2dc4a71d7826827a76df11017a68b 131 项 A04、70 项合同、8 项登录测试通过。 真实只读取得 14/15/173 页；本次读回 22题68框，前后状态一致。浏览器/profile 已释放，worktree 干净。 执行报告 A01 接受提交仍未发布，正式坐标联调未执行；未标记 ACCEPTED，未推送或集成，模型调用及花费均为 0。",
-        "phase": "COORDINATE_R1_READY",
-        "last_checked_at": "2026-10-17T04:35:36.962860+00:00",
+        "turn_id": "01a14831-6747-7063-b05a-9cbfefd2f6ee",
+        "last_progress": "我先从指定 workflow Git 对象读取本轮任务和验收要求，再核对冻结工作树与确切依赖。坐标验证会消费已接受的 A01 API，真实会话前重新检查 profile 占用。",
+        "phase": "COORDINATE_R1_RUNNING",
+        "last_checked_at": "2026-10-17T04:50:38.214171+00:00",
         "observed_worktree": {
           "observed_at": "2026-10-16T18:12:37.657140+00:00",
           "head": "3e4dba5676c2dc4a71d7826827a76df11017a68b",
@@ -1453,21 +1453,23 @@
           "functional_tests_run": false
         },
         "session_released": true,
-        "observed_thread_status": "notLoaded",
+        "observed_thread_status": "active",
         "latest_lightweight_observation": {
-          "at": "2026-10-17T04:09:51.999243+00:00",
-          "head": "3e4dba5676c2dc4a71d7826827a76df11017a68b",
+          "at": "2026-10-17T04:50:38.214171+00:00",
+          "head": "3d4d10a0e12faa1af8d47e9f180d086ce401509c",
           "status": [],
-          "report_present": true,
-          "frozen_delivery_verified": true,
-          "verification_scope": "Current Git and report-existence observation only; previous acceptance retained. No functional suite or unfinished implementation reviewed."
+          "report_present": false,
+          "frozen_delivery_verified": false,
+          "scope": "Actual version and report existence only; active work is not frozen or accepted."
         },
         "target_commit": null,
         "base_commit": "3e4dba5676c2dc4a71d7826827a76df11017a68b",
         "dependency_commit": "c6bebdf43eb93f7a6ae21e96ec07ed155686777d",
         "task_document": "docs/tasks/A04-coordinate-R1-dispatch.md",
         "task_sha256": "6b1cac14dc7cbe3be7bb1385e000eb0af02bca52c69b9e5cb772304001ac428c",
-        "expected_report": "docs/tasks/A04-coordinate-R1-execution-report.md"
+        "expected_report": "docs/tasks/A04-coordinate-R1-execution-report.md",
+        "workflow_commit": "f15f7bc03fac8994ade1642fa7547cbd823c6d43",
+        "reasoning_effort": "xhigh"
       },
       "review": {
         "thread_id": "01a144cc-e93d-7841-a259-d6aac22c94f4",
@@ -1556,15 +1558,20 @@
           }
         }
       ],
-      "phase": "COORDINATE_R1_READY",
+      "phase": "COORDINATE_R1_RUNNING",
       "coordinate_resume": {
         "stage": "coordinate-R1",
-        "state": "PENDING_DISPATCH",
+        "state": "ACKNOWLEDGED",
         "base_commit": "3e4dba5676c2dc4a71d7826827a76df11017a68b",
         "dependency_commit": "c6bebdf43eb93f7a6ae21e96ec07ed155686777d",
         "document": "docs/tasks/A04-coordinate-R1-dispatch.md",
         "document_sha256": "6b1cac14dc7cbe3be7bb1385e000eb0af02bca52c69b9e5cb772304001ac428c",
-        "scope": "Original A04 scope, read-only book46007447 pages14/15/173; fresh exclusivity and release required. D01 separate."
+        "scope": "Original A04 scope, read-only book46007447 pages14/15/173; fresh exclusivity and release required. D01 separate.",
+        "workflow_commit": "f15f7bc03fac8994ade1642fa7547cbd823c6d43",
+        "sent_at": "2026-10-17T04:49:20.434487+00:00",
+        "acknowledged_at": "2026-10-17T04:50:38.214171+00:00",
+        "turn_id": "01a14831-6747-7063-b05a-9cbfefd2f6ee",
+        "cursor": "34833b27-6230-45ea-8e92-ee1cc9e0ac8f:1"
       }
     },
     "A03": {
@@ -1589,43 +1596,32 @@
       "execution": {
         "thread_id": "01a145aa-2fea-7942-97f9-ad260acf4e30",
         "host_id": "local",
-        "cursor": "506fd3cf-091f-418b-b002-636f503b5e4b:1",
+        "cursor": "506fd3cf-091f-418b-b002-636f503b5e4b:2",
         "turn_status": "inProgress",
         "turn_id": "01a14824-df3e-7e81-8f2b-9d6751b1c8aa",
-        "last_checked_at": "2026-10-17T04:38:35.135822+00:00",
+        "last_checked_at": "2026-10-17T04:50:38.214171+00:00",
         "observed_thread_status": "active",
         "phase": "P2_RUNNING",
         "base_commit": "940a5de33a24b1a3a9ded6e69ade1dd0609ed83a",
         "task_document": "docs/tasks/A03-P2-dispatch.md",
         "task_sha256": "af2c4afe620ffe6ce3d3c24c25051a49e443ea9ea9094c802c38cb4cb47e891d",
-        "last_progress": "新报告分支已接入正常执行：只有完整回执才能生成 POST_APPLY/BatchReport，内容保持 PENDING、提交保持 NOT_SUBMITTED。实测还确认了 2 秒续租，以及仅伪造 held=True 无法消费许可。报告会列出尚未闭合的前缀合同、报告引用限制和新 PRE 生产者；另有一轮早期单元失败的临时目录被测试框架清理，原件缺失也会如实记录。",
+        "last_progress": "最终检查发现 ABSENT 后新计划的一次执行因 SQLite busy 退出，现场保留了 2 次已完成效果，没有重发。代码复核发现 project_plan 写事务未持书级闸门，可能与 2 秒续租线程竞争。当前检查结束后，我会把该写入纳入同一闸门，再针对新计划流程复跑；SQLite 的 1 秒 busy 限制保持不变。",
         "decision": "PENDING",
         "report": null,
         "target_commit": null,
         "commit": null,
         "workflow_commit": "6b77c436742cf2826083b109d8ed86b85539cba6",
         "latest_lightweight_observation": {
-          "at": "2026-10-17T04:35:36.962860+00:00",
-          "head": "d2a9d37900228b590f1c1a527fbdb38a591076d9",
+          "at": "2026-10-17T04:50:38.214171+00:00",
+          "head": "12ecced6f0a81f8c48a7d0f5635c7a5d42955104",
           "status": [
-            " M src/annotation/delivery/mock/__init__.py",
-            " M src/annotation/delivery/planner/__init__.py",
-            " M src/annotation/quality/targetcheck/__init__.py",
             "?? docs/a03-runtime-recovery.md",
             "?? docs/evidence/A03/execution/P2/",
-            "?? examples/a03/P2/",
-            "?? src/annotation/delivery/mock/persistent.py",
-            "?? src/annotation/delivery/reconciler/",
-            "?? src/annotation/runtime/",
-            "?? tests/fixtures/a03/",
-            "?? tests/test_a03_hold.py",
-            "?? tests/test_a03_process.py",
-            "?? tests/test_a03_quality.py",
-            "?? tests/test_a03_runtime_authority.py",
-            "?? tests/test_a03_target.py"
+            "?? docs/tasks/A03-execution-report.md"
           ],
+          "report_present": false,
           "frozen_delivery_verified": false,
-          "report_present": false
+          "scope": "Actual version and report existence only; active work is not frozen or accepted."
         },
         "interruption": {
           "reason": "USAGE_LIMIT",
@@ -2291,8 +2287,8 @@
       }
     },
     "D01": {
-      "status": "READY",
-      "phase": "DEPENDENCY_IMPLEMENTATION_READY",
+      "status": "RUNNING",
+      "phase": "EXECUTION_AND_PREPARATION_RUNNING",
       "depends_on": [
         "A01"
       ],
@@ -2301,26 +2297,58 @@
       "review_task": "docs/tasks/D01-independent-review.md",
       "acceptance_scope": "Pinned Pillow declaration and CPython3.9 clean non-editable installation, isolated imports and two relocated source consumers; no browser/platform or full deployment.",
       "next_dependency": "Frozen D01 delivery, independent review and coordinator local integration.",
-      "dispatch_status": "PENDING_WORKTREE_AND_CHATS",
+      "dispatch_status": "ACKNOWLEDGED",
       "worktree_name": "d01-clean-install",
       "branch": "codex/d01-clean-install",
       "worktree": "C:\\Users\\ASUS\\.codex\\worktrees\\d01-clean-install\\1800",
       "execution": {
-        "thread_id": null,
+        "thread_id": "01a14831-6b32-7372-9d9c-b5dd46d3d4c2",
         "host_id": "local",
-        "phase": "NOT_DISPATCHED",
-        "report": null
+        "phase": "IMPLEMENTATION_RUNNING",
+        "report": null,
+        "reasoning_effort": "xhigh",
+        "base_commit": "c6bebdf43eb93f7a6ae21e96ec07ed155686777d",
+        "workflow_commit": "f15f7bc03fac8994ade1642fa7547cbd823c6d43",
+        "task_document": "docs/tasks/D01-dependency-implementation.md",
+        "expected_report": "docs/tasks/D01-execution-report.md",
+        "cursor": "bfa32354-d1cc-4f54-b8cb-d9b6225647c3:1",
+        "turn_status": "inProgress",
+        "turn_id": "01a14831-6fcd-7a43-9a7c-148eac070273",
+        "observed_thread_status": "active",
+        "last_checked_at": "2026-10-17T04:50:38.214171+00:00",
+        "last_progress": "我先核对独立工作树、基线和 workflow 中的任务约定，再按 D01 范围完成安装验证与证据归档，交付后停在 REVIEW。",
+        "latest_lightweight_observation": {
+          "at": "2026-10-17T04:50:38.214171+00:00",
+          "head": "c6bebdf43eb93f7a6ae21e96ec07ed155686777d",
+          "status": [],
+          "report_present": false,
+          "frozen_delivery_verified": false,
+          "scope": "Actual version and report existence only; active work is not frozen or accepted."
+        }
       },
       "review": {
-        "thread_id": null,
+        "thread_id": "01a14831-ba82-7311-89da-4bded9e8a117",
         "host_id": "local",
-        "phase": "NOT_DISPATCHED",
-        "report": null
+        "phase": "PREPARATION_RUNNING",
+        "report": null,
+        "reasoning_effort": "xhigh",
+        "base_commit": "c6bebdf43eb93f7a6ae21e96ec07ed155686777d",
+        "workflow_commit": "f15f7bc03fac8994ade1642fa7547cbd823c6d43",
+        "task_document": "docs/tasks/D01-independent-review.md",
+        "preparation_report": "docs/tasks/D01-review-preparation.md",
+        "formal_decision": "NOT_STARTED",
+        "cursor": "886cbb22-0646-469a-8fe0-9a39a31254a4:1",
+        "turn_status": "inProgress",
+        "turn_id": "01a14831-bdff-7963-aef8-baffdd280402",
+        "observed_thread_status": "active",
+        "last_checked_at": "2026-10-17T04:50:38.214171+00:00",
+        "last_progress": "当前 checkout 有其他工作的未提交改动。我会使用独立工作目录保存准备材料，并应用已有的 frozen-offline-independent-review 验收流程，保持检查范围绑定到固定 Git 对象。"
       },
       "remote_push": false,
       "worktree_operation_id": "445c032e-3f41-4aeb-bfb2-5ad0a319bb30",
       "worktree_status": "READY",
-      "reasoning_effort": "xhigh"
+      "reasoning_effort": "xhigh",
+      "workflow_commit": "f15f7bc03fac8994ade1642fa7547cbd823c6d43"
     }
   },
   "route": [
@@ -2756,13 +2784,19 @@
       "task": "A04",
       "stage": "coordinate-R1-continuation",
       "role": "execution",
-      "state": "PENDING_DISPATCH",
+      "state": "ACKNOWLEDGED",
       "created_at": "2026-10-17T04:46:57.383802+00:00",
       "base_commit": "c6bebdf43eb93f7a6ae21e96ec07ed155686777d",
       "document": "docs/tasks/A04-coordinate-R1-dispatch.md",
       "document_sha256": "6b1cac14dc7cbe3be7bb1385e000eb0af02bca52c69b9e5cb772304001ac428c",
       "thread_id": "01a144cc-dde4-73a1-9e83-be485380ea25",
-      "reasoning_effort": "xhigh"
+      "reasoning_effort": "xhigh",
+      "workflow_commit": "f15f7bc03fac8994ade1642fa7547cbd823c6d43",
+      "sent_at": "2026-10-17T04:49:20.434487+00:00",
+      "result": "Expected original/new chat active on a new turn; exact xhigh supplied for A04/D01 dispatch.",
+      "acknowledged_at": "2026-10-17T04:50:38.214171+00:00",
+      "turn_id": "01a14831-6747-7063-b05a-9cbfefd2f6ee",
+      "cursor": "34833b27-6230-45ea-8e92-ee1cc9e0ac8f:1"
     },
     {
       "key": "D01:worktree:c6bebdf43eb93f7a6ae21e96ec07ed155686777d",
@@ -2785,32 +2819,46 @@
       "task": "D01",
       "stage": "clean-install-execution",
       "role": "execution",
-      "state": "PENDING_DISPATCH",
+      "state": "ACKNOWLEDGED",
       "created_at": "2026-10-17T04:46:57.383802+00:00",
       "base_commit": "c6bebdf43eb93f7a6ae21e96ec07ed155686777d",
       "document": "docs/tasks/D01-dependency-implementation.md",
       "document_sha256": "d44969c5af72c18216a842a6c36e801a2975bc1d0fcb54c525041fad64f49f5e",
-      "thread_id": null,
-      "reasoning_effort": "xhigh"
+      "thread_id": "01a14831-6b32-7372-9d9c-b5dd46d3d4c2",
+      "reasoning_effort": "xhigh",
+      "workflow_commit": "f15f7bc03fac8994ade1642fa7547cbd823c6d43",
+      "host_id": "local",
+      "sent_at": "2026-10-17T04:49:40.784332+00:00",
+      "result": "Expected original/new chat active on a new turn; exact xhigh supplied for A04/D01 dispatch.",
+      "acknowledged_at": "2026-10-17T04:50:38.214171+00:00",
+      "turn_id": "01a14831-6fcd-7a43-9a7c-148eac070273",
+      "cursor": "bfa32354-d1cc-4f54-b8cb-d9b6225647c3:1"
     },
     {
       "key": "D01:review:c6bebdf43eb93f7a6ae21e96ec07ed155686777d",
       "task": "D01",
       "stage": "clean-install-review",
       "role": "review",
-      "state": "PENDING_DISPATCH",
+      "state": "ACKNOWLEDGED",
       "created_at": "2026-10-17T04:46:57.383802+00:00",
       "base_commit": "c6bebdf43eb93f7a6ae21e96ec07ed155686777d",
       "document": "docs/tasks/D01-independent-review.md",
       "document_sha256": "4df00171db731a7c7a2fef485c7125733c5296eda90c336ee785db2ca587ea62",
-      "thread_id": null,
-      "reasoning_effort": "xhigh"
+      "thread_id": "01a14831-ba82-7311-89da-4bded9e8a117",
+      "reasoning_effort": "xhigh",
+      "workflow_commit": "f15f7bc03fac8994ade1642fa7547cbd823c6d43",
+      "host_id": "local",
+      "sent_at": "2026-10-17T04:49:59.541468+00:00",
+      "result": "Expected original/new chat active on a new turn; exact xhigh supplied for A04/D01 dispatch.",
+      "acknowledged_at": "2026-10-17T04:50:38.214171+00:00",
+      "turn_id": "01a14831-bdff-7963-aef8-baffdd280402",
+      "cursor": "886cbb22-0646-469a-8fe0-9a39a31254a4:1"
     }
   ],
   "last_action": {
-    "at": "2026-10-17T04:46:57.383802+00:00",
-    "task_id": "A01/A04/D01",
-    "action": "A01 actual local integration passed; recorded bounded A04 continuation and D01 stage dispatch intents.",
+    "at": "2026-10-17T04:50:38.214171+00:00",
+    "task_id": "A01/A04/D01/A03",
+    "action": "Recorded actual A01 integration and acknowledged bounded A04/D01 dispatch; explicit xhigh preference saved. Current A03 SQLite busy repair remains active, not accepted.",
     "remote_push": false
   },
   "limitations": [
@@ -2819,21 +2867,22 @@
     "Platform test is single-book serial, no book submission, no unbudgeted paid models."
   ],
   "last_check": {
-    "at": "2026-10-17T04:46:57.383802+00:00",
+    "at": "2026-10-17T04:50:38.214171+00:00",
     "heartbeat_time": "2026-10-17T04:21:38.422Z",
-    "root_head": "c6bebdf43eb93f7a6ae21e96ec07ed155686777d",
+    "root_head": "f15f7bc03fac8994ade1642fa7547cbd823c6d43",
     "checked_task_ids": [
       "A01",
       "A02",
       "A03",
-      "A04"
+      "A04",
+      "D01"
     ],
-    "thread_snapshots": 9,
+    "thread_snapshots": 13,
     "platform_actions": 0,
     "paid_model_calls": 0,
     "full_suite_rerun": "One A01 conventional integrated entry, 11 commands, after actual merge; unchanged geometry630 not rerun.",
-    "dispatch_result": "A01 integrated; A03 original execution resumed after usage-limit interruption. A04 continuation and D01 worktree/new chats intents recorded, not yet sent.",
-    "next_dependencies": "A04 coordinate frozen delivery before review; D01 clean install before independent acceptance; A03 frozen P2 before formal review; I01 held.",
+    "dispatch_result": "A01 accepted and actually integrated. A04 original coordinate continuation and D01 new execution/review chats acknowledged at xhigh. A03 resumed and remains active.",
+    "next_dependencies": "A04 frozen full read-only delivery plus fresh session release before independent review; D01 frozen installation delivery before formal review; A03 frozen P2 implementation before formal review; I01 held.",
     "notification": "NOTIFY"
   },
   "prepared_next_batch": {
