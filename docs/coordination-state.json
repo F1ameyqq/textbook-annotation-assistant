@@ -2,7 +2,7 @@
   "schema_version": 1,
   "project": "D:\\1800",
   "coordinator_thread_id": "01a13f26-7567-75e1-99ee-c9d2194e78bb",
-  "updated_at": "2026-10-17T21:52:30.043856+08:00",
+  "updated_at": "2026-10-17T22:02:12.235651+08:00",
   "automation": {
     "id": "1800-a",
     "kind": "heartbeat",
@@ -1936,16 +1936,16 @@
       }
     },
     "A03": {
-      "status": "REVIEW",
-      "phase": "P2_R7_READONLY_INTEGRATED_NATIVE_PENDING",
+      "status": "IN_PROGRESS",
+      "phase": "P2_R8_NATIVE_BRIDGE_DISPATCH_PENDING",
       "depends_on": [
         "A02"
       ],
       "base_commit": "ec1b4defbfa3ec0f181d291106fb53313983e493",
       "execution_task": "docs/tasks/A03-P2-R7-readonly-codec-implementation.md",
       "review_task": "docs/tasks/A03-P2-R7-readonly-codec-review-handoff.md",
-      "acceptance_scope": "P1 and prior limited static scopes accepted; R7 product read-only codec pending independent acceptance. Native P2 recovery remains unaccepted.",
-      "next_dependency": "Bounded native PRE/CURRENT, creation-input history and original P2 UNKNOWN recovery acceptance before I01-A.",
+      "acceptance_scope": "P1 and limited R2-R6 scopes accepted; R7 read-only product locally INTEGRATED. Native P2/UNKNOWN recovery remains unaccepted.",
+      "next_dependency": "R8 exact implementation/release, original independent review and coordinator checks; remaining original A03 P2 criteria before I01-A.",
       "dispatch_status": "ACKNOWLEDGED",
       "B_confirmation": "NOT_CONFIRMED",
       "workflow_commit": "77d3e123ab7247eae6f81f7acd669e3a69c934a0",
@@ -1958,47 +1958,16 @@
         "thread_id": "01a145aa-2fea-7942-97f9-ad260acf4e30",
         "host_id": "local",
         "cursor": "506fd3cf-091f-418b-b002-636f503b5e4b:31",
-        "phase": "P2_R7_FROZEN_REVIEW_DELIVERY",
         "turn_status": "completed",
         "observed_thread_status": "idle",
-        "base_commit": "81d3ec7e42e0a1a76ad744bf59536fc5f68adee4",
-        "task_document": "docs/tasks/A03-P2-R7-readonly-codec-implementation.md",
-        "task_sha256": "fc32fe579d2131cb38a9682b6497060cc3469b604507a9dde9bb145919d7766c",
-        "expected_report": "docs/tasks/A03-P2-R7-readonly-codec-delivery.md",
+        "phase": "P2_R8_DISPATCH_INTENT_RECORDED",
+        "base_commit": "8ad45dd07214ae406a3fab28d76a4b5abd6eef03",
+        "task_document": "docs/tasks/A03-P2-R8-native-bridge-implementation.md",
+        "task_sha256": "b7dbf94ff06d8ba272b1bd20bf61afbe09fa1dd99c501dcb70f865ab36737721",
+        "expected_report": "docs/tasks/A03-P2-R8-native-bridge-delivery.md",
         "reasoning_policy": "PRESERVE_USER_SETTING",
-        "dispatch_key": "A03:execution:P2-R7-readonly-codec:81d3ec7e42e0a1a76ad744bf59536fc5f68adee4",
-        "last_checked_at": "2026-10-17T21:18:58.462231+08:00",
-        "last_progress": "R7 product read-only codec frozen at exact target; coordinator byte/scope/pin/release preflight passed. Independent product acceptance pending.",
-        "workflow_commit": "5a69df310517f0ca22708262c737db9a5676be32",
-        "turn_id": "01a149b6-51ab-7003-ad81-04b8c995fa2d",
-        "latest_lightweight_observation": {
-          "at": "2026-10-17T21:18:58.462231+08:00",
-          "head": "8ad45dd07214ae406a3fab28d76a4b5abd6eef03",
-          "status": [],
-          "report_present": true,
-          "manifest_present": true,
-          "scope": "Lightweight Git/artifact check; frozen delivery unchanged. No repeated preflight or candidate tests."
-        },
-        "target_commit": "8ad45dd07214ae406a3fab28d76a4b5abd6eef03",
-        "commit": "8ad45dd07214ae406a3fab28d76a4b5abd6eef03",
-        "report": "docs/tasks/A03-P2-R7-readonly-codec-delivery.md",
-        "report_sha256": "24ae0a28230da26458d6dc6427587e932788d7b8d71e1eceded771001028b2ad",
-        "evidence_manifest": "docs/evidence/A03/execution/P2-R7-readonly-codec/sha256-manifest.json",
-        "evidence_manifest_sha256": "92361002a2fad609255a7954fabef9f0ffa45082962811ca41b27aaf43a5c8d3",
-        "working_tree_clean": true,
-        "session_released": true,
-        "session_release_basis": "Frozen registrations/starts/exits plus raw stdout/stderr hashes. Historical owned-process completion evidence; no OS/profile scan.",
-        "delivery_preflight": {
-          "path": "docs/evidence/coordinator/heartbeat-20261017-1229/A03-R7-delivery-preflight.json",
-          "sha256": "e6ef6a6b8334974e4075047c9ecfa8f96651962dbe3df0bea3df584804f23788",
-          "manifest_entries": 339,
-          "changed_paths": 340,
-          "old_paths_preserved": 28410,
-          "raw_input_pins_verified": 171,
-          "parent_release_records": 13,
-          "nested_release_records": 10,
-          "functional_tests_run": false
-        }
+        "dispatch_key": "A03:execution:P2-R8-native-bridge:8ad45dd07214ae406a3fab28d76a4b5abd6eef03",
+        "last_checked_at": "2026-10-17T22:02:12.235651+08:00"
       },
       "review": {
         "thread_id": "01a145aa-8d59-7c70-8d81-731712103a9a",
@@ -2006,7 +1975,7 @@
         "cursor": "abdea222-4697-4046-86b1-a5dc48889fac:27",
         "turn_status": "completed",
         "observed_thread_status": "idle",
-        "phase": "P2_R7_READONLY_CODEC_ACCEPTED",
+        "phase": "P2_R7_ACCEPTED_WAITING_R8_FROZEN_DELIVERY",
         "target_commit": "8ad45dd07214ae406a3fab28d76a4b5abd6eef03",
         "task_document": "docs/tasks/A03-P2-R7-readonly-codec-review-handoff.md",
         "task_sha256": "4f8f16072268d38b9e2a1f5313f4e0d72b2f85a6214e6e5b3d35970b654eed89",
@@ -2014,7 +1983,7 @@
         "decision": "ACCEPTED",
         "reasoning_policy": "PRESERVE_USER_SETTING",
         "last_checked_at": "2026-10-17T21:51:02.035297+08:00",
-        "last_progress": "Frozen independent R7 read-only codec acceptance verified by coordinator; native A03 P2 recovery still unaccepted.",
+        "last_progress": "R7 read-only product accepted and locally integrated; waiting for next exact executor delivery. No premature R8 review.",
         "workflow_commit": "5cb696378f8c53a7720a5b775b3188012bf5626b",
         "turn_id": "01a149dc-cab4-76c0-82c5-ff54fefe065d",
         "latest_lightweight_observation": {
@@ -2568,6 +2537,52 @@
           "session_release_basis": "Completed execution turn plus byte-verified owned synchronous process exits/logs; no OS/profile scan.",
           "delivery_preflight": "docs/evidence/coordinator/heartbeat-20261017-1129/A03-R6-delivery-preflight.json",
           "delivery_preflight_sha256": "fbbe0e5a09583f5a21465486b08bed9d044e3052c51bda44133fd1d49ab8054b"
+        },
+        {
+          "thread_id": "01a145aa-2fea-7942-97f9-ad260acf4e30",
+          "host_id": "local",
+          "cursor": "506fd3cf-091f-418b-b002-636f503b5e4b:31",
+          "phase": "P2_R7_FROZEN_REVIEW_DELIVERY",
+          "turn_status": "completed",
+          "observed_thread_status": "idle",
+          "base_commit": "81d3ec7e42e0a1a76ad744bf59536fc5f68adee4",
+          "task_document": "docs/tasks/A03-P2-R7-readonly-codec-implementation.md",
+          "task_sha256": "fc32fe579d2131cb38a9682b6497060cc3469b604507a9dde9bb145919d7766c",
+          "expected_report": "docs/tasks/A03-P2-R7-readonly-codec-delivery.md",
+          "reasoning_policy": "PRESERVE_USER_SETTING",
+          "dispatch_key": "A03:execution:P2-R7-readonly-codec:81d3ec7e42e0a1a76ad744bf59536fc5f68adee4",
+          "last_checked_at": "2026-10-17T21:18:58.462231+08:00",
+          "last_progress": "R7 product read-only codec frozen at exact target; coordinator byte/scope/pin/release preflight passed. Independent product acceptance pending.",
+          "workflow_commit": "5a69df310517f0ca22708262c737db9a5676be32",
+          "turn_id": "01a149b6-51ab-7003-ad81-04b8c995fa2d",
+          "latest_lightweight_observation": {
+            "at": "2026-10-17T21:18:58.462231+08:00",
+            "head": "8ad45dd07214ae406a3fab28d76a4b5abd6eef03",
+            "status": [],
+            "report_present": true,
+            "manifest_present": true,
+            "scope": "Lightweight Git/artifact check; frozen delivery unchanged. No repeated preflight or candidate tests."
+          },
+          "target_commit": "8ad45dd07214ae406a3fab28d76a4b5abd6eef03",
+          "commit": "8ad45dd07214ae406a3fab28d76a4b5abd6eef03",
+          "report": "docs/tasks/A03-P2-R7-readonly-codec-delivery.md",
+          "report_sha256": "24ae0a28230da26458d6dc6427587e932788d7b8d71e1eceded771001028b2ad",
+          "evidence_manifest": "docs/evidence/A03/execution/P2-R7-readonly-codec/sha256-manifest.json",
+          "evidence_manifest_sha256": "92361002a2fad609255a7954fabef9f0ffa45082962811ca41b27aaf43a5c8d3",
+          "working_tree_clean": true,
+          "session_released": true,
+          "session_release_basis": "Frozen registrations/starts/exits plus raw stdout/stderr hashes. Historical owned-process completion evidence; no OS/profile scan.",
+          "delivery_preflight": {
+            "path": "docs/evidence/coordinator/heartbeat-20261017-1229/A03-R7-delivery-preflight.json",
+            "sha256": "e6ef6a6b8334974e4075047c9ecfa8f96651962dbe3df0bea3df584804f23788",
+            "manifest_entries": 339,
+            "changed_paths": 340,
+            "old_paths_preserved": 28410,
+            "raw_input_pins_verified": 171,
+            "parent_release_records": 13,
+            "nested_release_records": 10,
+            "functional_tests_run": false
+          }
         }
       ],
       "repair_requests": [
@@ -3758,7 +3773,7 @@
         "integrated": true,
         "I01_released": false,
         "local_integration_status": "INTEGRATED",
-        "integration_commit": "PENDING_CURRENT_COMMIT",
+        "integration_commit": "eb7a18d874fb1d702169c5b7ada2ebbb7ca1049a",
         "integration_files": "docs/evidence/coordinator/heartbeat-20261017-1329/integration-files.json",
         "integration_tests": {
           "R7": 13,
@@ -3768,6 +3783,26 @@
           "skips": 0
         },
         "remote_push": false
+      },
+      "execution_dispatch": {
+        "key": "A03:execution:P2-R8-native-bridge:8ad45dd07214ae406a3fab28d76a4b5abd6eef03",
+        "task": "A03",
+        "stage": "P2_R8_NATIVE_BRIDGE_IMPLEMENTATION",
+        "role": "execution",
+        "state": "INTENT_RECORDED",
+        "created_at": "2026-10-17T22:02:12.235651+08:00",
+        "base_commit": "8ad45dd07214ae406a3fab28d76a4b5abd6eef03",
+        "document": "docs/tasks/A03-P2-R8-native-bridge-implementation.md",
+        "document_sha256": "b7dbf94ff06d8ba272b1bd20bf61afbe09fa1dd99c501dcb70f865ab36737721",
+        "input_pins": "docs/evidence/coordinator/heartbeat-20261017-1329/R8-input-pins.json",
+        "input_pins_sha256": "47a8c7cff9384ea433709c5d2bdc2b30770580e39f0228e0a0d6fad90f3a2fc1",
+        "thread_id": "01a145aa-2fea-7942-97f9-ad260acf4e30",
+        "host_id": "local",
+        "reasoning_policy": "PRESERVE_USER_SETTING",
+        "send_message_thinking": "OMIT",
+        "send_message_model": "OMIT",
+        "scope": "A-internal synthetic native PRE/currentness, creation-input anchor and one actual single-action UNKNOWN recovery chain; bounded N1-N7; no real platform or I01 release",
+        "result": "NOT_SENT"
       }
     },
     "D01": {
@@ -4982,6 +5017,26 @@
       "turn_id": "01a149dc-cab4-76c0-82c5-ff54fefe065d",
       "cursor": "abdea222-4697-4046-86b1-a5dc48889fac:27",
       "last_observed_at": "2026-10-17T21:51:02.035297+08:00"
+    },
+    {
+      "key": "A03:execution:P2-R8-native-bridge:8ad45dd07214ae406a3fab28d76a4b5abd6eef03",
+      "task": "A03",
+      "stage": "P2_R8_NATIVE_BRIDGE_IMPLEMENTATION",
+      "role": "execution",
+      "state": "INTENT_RECORDED",
+      "created_at": "2026-10-17T22:02:12.235651+08:00",
+      "base_commit": "8ad45dd07214ae406a3fab28d76a4b5abd6eef03",
+      "document": "docs/tasks/A03-P2-R8-native-bridge-implementation.md",
+      "document_sha256": "b7dbf94ff06d8ba272b1bd20bf61afbe09fa1dd99c501dcb70f865ab36737721",
+      "input_pins": "docs/evidence/coordinator/heartbeat-20261017-1329/R8-input-pins.json",
+      "input_pins_sha256": "47a8c7cff9384ea433709c5d2bdc2b30770580e39f0228e0a0d6fad90f3a2fc1",
+      "thread_id": "01a145aa-2fea-7942-97f9-ad260acf4e30",
+      "host_id": "local",
+      "reasoning_policy": "PRESERVE_USER_SETTING",
+      "send_message_thinking": "OMIT",
+      "send_message_model": "OMIT",
+      "scope": "A-internal synthetic native PRE/currentness, creation-input anchor and one actual single-action UNKNOWN recovery chain; bounded N1-N7; no real platform or I01 release",
+      "result": "NOT_SENT"
     }
   ],
   "last_action": {
@@ -5385,18 +5440,21 @@
     }
   ],
   "last_heartbeat": {
-    "at": "2026-10-17T21:52:30.043856+08:00",
+    "at": "2026-10-17T22:02:12.235651+08:00",
     "trigger": "2026-10-17T13:29:08.748Z",
     "task_id": "A03",
-    "phase": "P2_R7_READONLY_INTEGRATED_NATIVE_PENDING",
+    "phase": "P2_R8_NATIVE_BRIDGE_DISPATCH_PENDING",
     "review_thread_id": "01a145aa-8d59-7c70-8d81-731712103a9a",
     "review_cursor": "abdea222-4697-4046-86b1-a5dc48889fac:27",
     "review_target": "8ad45dd07214ae406a3fab28d76a4b5abd6eef03",
     "decision": "R7_READONLY_ACCEPTED_AND_LOCALLY_INTEGRATED",
-    "next_dependencies": "Bounded native PRE/CURRENT, creation-input history and original P2 UNKNOWN recovery acceptance before I01-A.",
-    "dispatch_result": "NO_NEW_DISPATCH_YET",
+    "next_dependencies": "R8 exact implementation/release, original independent review and coordinator checks; remaining original A03 P2 criteria before I01-A.",
+    "dispatch_result": "R8_INTENT_RECORDED_PENDING_SEND",
     "notification": "NOTIFY",
     "platform_actions": 0,
-    "paid_model_calls": 0
+    "paid_model_calls": 0,
+    "root_head": "eb7a18d874fb1d702169c5b7ada2ebbb7ca1049a",
+    "execution_thread_id": "01a145aa-2fea-7942-97f9-ad260acf4e30",
+    "execution_cursor": "506fd3cf-091f-418b-b002-636f503b5e4b:31"
   }
 }
