@@ -2,7 +2,7 @@
   "schema_version": 1,
   "project": "D:\\1800",
   "coordinator_thread_id": "01a13f26-7567-75e1-99ee-c9d2194e78bb",
-  "updated_at": "2026-10-17T14:26:53.693802+08:00",
+  "updated_at": "2026-10-17T14:27:38.450262+08:00",
   "automation": {
     "id": "1800-a",
     "kind": "heartbeat",
@@ -1411,7 +1411,7 @@
       "execution_task": "docs/tasks/A04-headless-readonly.md",
       "review_task": "docs/tasks/A04-independent-review.md",
       "acceptance_scope": "Headless read-only book46007447 pages14/173 and one adjacent body page; coordinates after accepted A01.",
-      "dispatch_status": "REPAIR_INTENT_RECORDED",
+      "dispatch_status": "REPAIR_ACKNOWLEDGED",
       "next_dependency": "Bounded PNG missing-pixel repair and frozen independent review; full A04 stays blocked on six live requirements.",
       "geometry_dependency": {
         "task": "A01",
@@ -1430,25 +1430,23 @@
       "execution": {
         "thread_id": "01a144cc-dde4-73a1-9e83-be485380ea25",
         "host_id": "local",
-        "turn_status": "completed",
-        "cursor": "34833b27-6230-45ea-8e92-ee1cc9e0ac8f:6",
+        "turn_status": "inProgress",
+        "cursor": "34833b27-6230-45ea-8e92-ee1cc9e0ac8f:7",
         "report": null,
-        "turn_id": "01a14864-6bb3-73b3-bb0e-ab2edfaabf94",
-        "last_progress": "R2 frozen at 76898657 with execution report and release evidence. Delivery integrity verified; independent offline review pending.",
-        "phase": "COORDINATE_R3_REWORK_PENDING",
-        "last_checked_at": "2026-10-17T14:06:46.970023+08:00",
+        "turn_id": "01a1488b-066f-7212-98b9-32a536394110",
+        "last_progress": "Original execution chat acknowledged one bounded R3 missing-pixel PNG repair at xhigh. No new frozen delivery.",
+        "phase": "COORDINATE_R3_REWORK_RUNNING",
+        "last_checked_at": "2026-10-17T14:27:38.450262+08:00",
         "commit": null,
         "working_tree_clean": null,
         "completed_turn_confirms_freeze": false,
         "session_released": false,
-        "observed_thread_status": "idle",
+        "observed_thread_status": "active",
         "latest_lightweight_observation": {
-          "at": "2026-10-17T14:06:46.970023+08:00",
-          "head": "76898657e76ac2db071327e90c6ca5031d17571f",
-          "status": [],
-          "report_present": true,
-          "frozen_delivery_verified": true,
-          "scope": "158 manifest entries verified against raw Git and disk, scope and execution-authored release inspected; no functional acceptance."
+          "at": "2026-10-17T14:27:38.450262+08:00",
+          "base_commit": "76898657e76ac2db071327e90c6ca5031d17571f",
+          "frozen_delivery_verified": false,
+          "scope": "Previous R2 delivery retained in execution_history; R3 has just started and has not been inspected or accepted."
         },
         "target_commit": "76898657e76ac2db071327e90c6ca5031d17571f",
         "base_commit": "76898657e76ac2db071327e90c6ca5031d17571f",
@@ -1456,20 +1454,15 @@
         "task_document": "docs/tasks/A04-coordinate-R3-rework.md",
         "task_sha256": "f2aed3c85b06509e524b1403fbebeaa2174bc89e3f796a65e8a9440075ba38bd",
         "expected_report": "docs/tasks/A04-coordinate-R3-execution-report.md",
-        "workflow_commit": "e1b1475597f80d46c5ace5c004f5091d139ac6cc",
+        "workflow_commit": "99bae146ee01525005f269dfde27f507d9e8124c",
         "reasoning_effort": "xhigh",
         "report_sha256": null,
         "implementation_commit": null,
         "evidence_manifest": null,
         "evidence_manifest_sha256": null,
-        "delivery_preflight": {
-          "path": "docs/evidence/coordinator/heartbeat-20261017-0604/A04-delivery-preflight.json",
-          "sha256": "3e066d2097043a189d68d553d13bdfe591b26a5e8deadb8aa591d95e6f8c4c9f",
-          "entries": 158,
-          "functional_tests_run": false
-        },
+        "delivery_preflight": null,
         "previous_delivery_commit": "76898657e76ac2db071327e90c6ca5031d17571f",
-        "session_release_basis": "Frozen execution-authored process release and completed turn; no current profile/OS ownership probe."
+        "session_release_basis": null
       },
       "review": {
         "thread_id": "01a144cc-e93d-7841-a259-d6aac22c94f4",
@@ -1645,7 +1638,7 @@
           "session_release_basis": "Frozen execution-authored process release and completed turn; no current profile/OS ownership probe."
         }
       ],
-      "phase": "COORDINATE_R3_REWORK_PENDING",
+      "phase": "COORDINATE_R3_REWORK_RUNNING",
       "coordinate_resume": {
         "stage": "coordinate-R1",
         "state": "ACKNOWLEDGED",
@@ -1779,7 +1772,7 @@
           "task": "A04",
           "stage": "coordinate-R3",
           "role": "execution",
-          "state": "INTENT_RECORDED",
+          "state": "ACKNOWLEDGED",
           "created_at": "2026-10-17T14:26:53.693802+08:00",
           "base_commit": "76898657e76ac2db071327e90c6ca5031d17571f",
           "document": "docs/tasks/A04-coordinate-R3-rework.md",
@@ -1787,17 +1780,25 @@
           "thread_id": "01a144cc-dde4-73a1-9e83-be485380ea25",
           "host_id": "local",
           "reasoning_effort": "xhigh",
-          "scope": "One bounded offline PNG pixel-row integrity repair; no new dependencies, browser/network/platform/model actions."
+          "scope": "One bounded offline PNG pixel-row integrity repair; no new dependencies, browser/network/platform/model actions.",
+          "sent_at": "2026-10-17T14:27:38.450262+08:00",
+          "acknowledged_at": "2026-10-17T14:27:38.450262+08:00",
+          "workflow_commit": "99bae146ee01525005f269dfde27f507d9e8124c",
+          "turn_id": "01a1488b-066f-7212-98b9-32a536394110",
+          "cursor": "34833b27-6230-45ea-8e92-ee1cc9e0ac8f:7",
+          "result": "Original execution chat active at xhigh; one bounded offline repair; no duplicate task or platform/B action."
         }
       ],
       "review_archive_r2": {
-        "status": "READY_FOR_LOCAL_ARCHIVE",
+        "status": "ARCHIVED_LOCALLY",
         "manifest": "docs/evidence/A04/review/coordinate-R2/sha256-manifest.json",
         "manifest_sha256": "85dd149c08e055b3b8dcb4f380cd72cca1957a935edc219ee8da3b557f9a5567",
         "manifest_entries": 333,
         "report": "docs/tasks/A04-coordinate-R2-review-report.md",
         "remote_push": false,
-        "scope": "R2 offline REWORK; live BLOCKED. Exact original review bytes preserved including tool failures."
+        "scope": "R2 offline REWORK; live BLOCKED. Exact original review bytes preserved including tool failures.",
+        "commit": "99bae146ee01525005f269dfde27f507d9e8124c",
+        "raw_committed_manifest_entries": 333
       }
     },
     "A03": {
@@ -3524,7 +3525,7 @@
       "task": "A04",
       "stage": "coordinate-R3",
       "role": "execution",
-      "state": "INTENT_RECORDED",
+      "state": "ACKNOWLEDGED",
       "created_at": "2026-10-17T14:26:53.693802+08:00",
       "base_commit": "76898657e76ac2db071327e90c6ca5031d17571f",
       "document": "docs/tasks/A04-coordinate-R3-rework.md",
@@ -3532,14 +3533,21 @@
       "thread_id": "01a144cc-dde4-73a1-9e83-be485380ea25",
       "host_id": "local",
       "reasoning_effort": "xhigh",
-      "scope": "One bounded offline PNG pixel-row integrity repair; no new dependencies, browser/network/platform/model actions."
+      "scope": "One bounded offline PNG pixel-row integrity repair; no new dependencies, browser/network/platform/model actions.",
+      "sent_at": "2026-10-17T14:27:38.450262+08:00",
+      "acknowledged_at": "2026-10-17T14:27:38.450262+08:00",
+      "workflow_commit": "99bae146ee01525005f269dfde27f507d9e8124c",
+      "turn_id": "01a1488b-066f-7212-98b9-32a536394110",
+      "cursor": "34833b27-6230-45ea-8e92-ee1cc9e0ac8f:7",
+      "result": "Original execution chat active at xhigh; one bounded offline repair; no duplicate task or platform/B action."
     }
   ],
   "last_action": {
-    "at": "2026-10-17T14:26:53.693802+08:00",
+    "at": "2026-10-17T14:27:38.450262+08:00",
     "task_id": "A03/A04",
-    "action": "A03 frozen proposal review acknowledged at xhigh. A04 R2 formal REWORK reproduced; exact archive and one bounded coordinate-R3 repair intent prepared. No integration, push or I01 release.",
-    "remote_push": false
+    "action": "A04 R2 REWORK archived and independently reproduced; bounded R3 original-chat repair acknowledged at xhigh. A03 static proposal independent review also active; no integration/push/I01 release.",
+    "remote_push": false,
+    "workflow_commit": "99bae146ee01525005f269dfde27f507d9e8124c"
   },
   "limitations": [
     "Current route uses mock B artifacts until independently agreed interface/artifact versions exist.",
@@ -3549,7 +3557,7 @@
   "last_check": {
     "at": "2026-10-17T14:22:55.314506+08:00",
     "heartbeat_time": "2026-10-17T06:19:01.996Z",
-    "root_head": "1f0cc25b80ed0b2498156ac2568990a14efa4447",
+    "root_head": "99bae146ee01525005f269dfde27f507d9e8124c",
     "checked_task_ids": [
       "A03",
       "A04"
@@ -3559,9 +3567,9 @@
     "full_suite_rerun": false,
     "notification": "NOTIFY",
     "next_dependencies": "A03 static proposal review and coordinator decisions; A04 R3 bounded repair then independent re-review. I01 blocked.",
-    "dispatch_result": "A03 existing reviewer active; A04 R3 intent recorded before message. No duplicate chat.",
+    "dispatch_result": "A03 static review and A04 R3 bounded repair acknowledged in original chats at xhigh. No duplicates or live platform actions.",
     "no_duplicate_chat": true,
-    "completed_at": "2026-10-17T14:26:53.693802+08:00"
+    "completed_at": "2026-10-17T14:27:38.450262+08:00"
   },
   "prepared_next_batch": {
     "status": "DISPATCHED",
