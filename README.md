@@ -2,6 +2,8 @@
 
 全项目入口：[实施框架与关口](docs/project-framework.md) · [协作与交接](docs/collaboration.md) · [B 状态](docs/status/b.md) · [A 材料清单](docs/a-side-request.md)。公共合同仍为草案，识别模块使用隔离的试验格式。
 
+当前并行工作入口：[来源覆盖报告工具](tools/report_source_coverage_b.py) · [B→A 消费样例提案](docs/b-a-consumer-samples.md) · [Q16 独立人工核对模板](docs/q16-independent-review.md)。这些产物分别用于清点、接口讨论和待实施的内容签核，不代表整章完整、A 已接收或 Q16 正确。
+
 46007447 当前增量：[38条OCR回补与真实跨页检查](docs/b-recovery-46007447.md)。34题候选均有唯一同范围答案候选，19条数学来源仍待归属；公式与跨页检查保持HOLD，没有修改网站标注。
 
 B 侧持续推进的终点与验收路线见[长期目标](docs/b-long-term-goal.md)：完整答案 → 完整章节试交付 → 整本 46007447 → A/B 接收与人工最终确认 → 跨书复用和维护发布。离线复核流程、独立内容验收及每阶段退出条件属于正式交付；Q16 区域草稿及本机复核入口已接入，完整自动识别、独立内容核准、整书来源、19 条材料身份与 A 接收仍待补齐，网站标注保持只读。

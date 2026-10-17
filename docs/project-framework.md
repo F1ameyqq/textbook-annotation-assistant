@@ -134,6 +134,8 @@ flowchart LR
 
 这些工作包是建议的共同工作面，不替 A 分配内部任务或宣布其排期。双方通过 [协作约定](collaboration.md)记录各自状态、PR/SHA 和接收结果；可以先交最小包，不等待所有材料一次到齐。
 
+当前 S0 可运行 [B 来源覆盖报告](../tools/report_source_coverage_b.py)，只汇总固定开发证据并保留整章/整书分母 `UNKNOWN`；C0 有[B→A 消费样例提案](b-a-consumer-samples.md)，仍缺可独立导入的完整对象闭包与 A 的消费者回执；B1 有[Q16 独立核对模板](q16-independent-review.md)，尚无签署的正确转写。这些是准备工作，不提升关口状态。
+
 ## 5. 代码与数据骨架如何逐步落地
 
 现有 `src/annotation/recognition/` 承载 B 的识别、组题、区域修订、质量和流水线实验；`tools/` 是 CLI，`tests/fixtures/` 存固定样例，`evaluation/` 存运行回执，`data/runs/` 存不入库的实际运行。按通过的合同和消费需求逐步抽出边界，不一次性搬动已有可重放产物：
