@@ -1,0 +1,36 @@
+{
+  "conclusion": "REWORK",
+  "cases": [
+    {
+      "id": "NORMAL_CONTROL",
+      "result": "PASS_BOUNDED_CASE",
+      "effects": 3,
+      "replay_code": "REPLAY_FORBIDDEN",
+      "limitations": "not complete V01 or R01-R18 acceptance"
+    },
+    {
+      "id": "A03-P2-UNATTEMPTED-01",
+      "result": "FAIL_REQUIRED_POSITIVE_PATH",
+      "expected": "dedicated entry performs two new complete reads and can commit sufficient ABSENT for first reserved never-called action, with no business effect/intent/obligation/permit",
+      "actual_exit_code": 2,
+      "actual": {
+        "ok": false,
+        "operation": "tail-absence",
+        "code": "EVENT_PREFIX_CONTRACT_GAP",
+        "message": "P2 global prefix profile requires explicit coordinator approval"
+      },
+      "accepted_plan_event_sequence": 3,
+      "reserved_actions": 3,
+      "before_effects": 0,
+      "after_effects": 0,
+      "target_reads_before": 2,
+      "target_reads_after": 2,
+      "unattempted_fact_events": 0,
+      "input_preconditions": "genuine atomic acceptance/permanent reservations; BEFORE_INTENT_COMMIT exit90; fixed current source/scope/target; first action no predecessor; CLI obtains current ACTIVE claim and marks plan INTERRUPTED before dedicated API",
+      "limits": "No two-read fact was actually attempted because the entry is an unconditional contract-gap stub. This is not an APPLIED/B UNKNOWN/C partial-path functional pass. Full matrix not run.",
+      "review_tool_failure_preserved": "run_review.attempt-01.py and review-run-failure.json; original case was continued, not regenerated",
+      "prohibited_authorization_field_reset": "NOT_EXECUTED"
+    }
+  ],
+  "other_functional_checks": "NOT_RUN_IN_THIS_REVIEW"
+}

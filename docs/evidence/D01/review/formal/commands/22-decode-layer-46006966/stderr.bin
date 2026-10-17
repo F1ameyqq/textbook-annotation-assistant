@@ -1,0 +1,21 @@
+Traceback (most recent call last):
+  File "C:\Users\ASUS\.codex\worktrees\d01-review-preparation\1800\.local\d01-formal-48accd7d\cp39\lib\site-packages\annotation\source\static\importer.py", line 68, in decode_image
+    image.load()  # Header-only validation is insufficient.
+  File "C:\Users\ASUS\.codex\worktrees\d01-review-preparation\1800\.local\d01-formal-48accd7d\cp39\lib\site-packages\PIL\ImageFile.py", line 387, in load
+    raise OSError(msg)
+OSError: image file is truncated (64 bytes not processed)
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\ASUS\.codex\worktrees\d01-review-preparation\1800\docs\evidence\D01\review\formal\probe.py", line 243, in <module>
+    {"provenance": provenance, "consume": consume, "decode": decode_case,
+  File "C:\Users\ASUS\.codex\worktrees\d01-review-preparation\1800\docs\evidence\D01\review\formal\probe.py", line 193, in decode_case
+    load_static_bundle(path, expected_book_id=book)
+  File "C:\Users\ASUS\.codex\worktrees\d01-review-preparation\1800\.local\d01-formal-48accd7d\cp39\lib\site-packages\annotation\source\static\importer.py", line 448, in load_static_bundle
+    if decode_image(safe_path(path.parent,asset.path)) != (asset.width,asset.height):
+  File "C:\Users\ASUS\.codex\worktrees\d01-review-preparation\1800\.local\d01-formal-48accd7d\cp39\lib\site-packages\annotation\source\static\importer.py", line 73, in decode_image
+    fail("IMAGE_DECODE", path.name, str(error))
+  File "C:\Users\ASUS\.codex\worktrees\d01-review-preparation\1800\.local\d01-formal-48accd7d\cp39\lib\site-packages\annotation\source\static\importer.py", line 28, in fail
+    raise StaticSourceError(code, location, message)
+annotation.source.static.importer.StaticSourceError: 5d6202e74285043e19688ee7e548965039e11933997923c9d08afb01c5805243.jpg: [IMAGE_DECODE] image file is truncated (64 bytes not processed)

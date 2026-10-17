@@ -4,6 +4,8 @@
 
 阶段发布入口：[A 侧第一阶段交接](a-stage1-handoff.md)。用户已要求将已接受的 C01/A01/A02 推送到独立的 `codex/a-stage1-handoff` 分支；发布结果及确切远端提交以 [调度状态](coordination-state.json) 的 `publication` 记录为准。下文和冻结验收报告中的“未推送”是其记录时点的事实，不代表后续发布回执。发布不改变 B 的接口确认状态，也不自动合并远端架构分支的新改动。
 
+2026-10-17 本轮复验收口：A03 P2 为 REWORK，后续先进行[有界合同补充提案](tasks/A03-P2-R1-amendment-proposal.md)；A04 coordinate-R1 为 REWORK 且真实项仍 BLOCKED，后续进行[离线原图修复](tasks/A04-coordinate-R2-rework.md)；D01 已接受并本地集成于 `c78c8a123437e6c53096e0c48f1dd14aad10c2c3`，见[收口](tasks/D01-coordinator-acceptance.md)。I01仍等待A03。用户要求的[B侧最小联调交接清单](b-minimal-integration-handoff-2026-10-17.md)已在上述三个验收对话结束后整理，仅本地、由用户转发；不构成B派单或共同合同确认。以下阶段表保留此前时点记录，实际当前状态与派发回执以调度JSON为准。
+
 ## 1. 谁做什么
 
 | 角色 | 职责 |

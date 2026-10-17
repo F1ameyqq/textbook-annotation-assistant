@@ -1,0 +1,1623 @@
+08549b506f6280c63acecff4e5e85912b4f96f33 blob 2377
+# 项目开发约定
+
+- 公共技术语义见 `docs/architecture.md` 和 `docs/contracts-v1.md`。A 侧任务另读 `docs/coordination.md`，以任务号、基线和改动范围确定本次工作；B 侧参考 `docs/b-side-handoff.md`，自行管理开发流程。
+- 当前主对话仅负责 A 侧开发调度与验收，不向 B 派单、安排排期或做其内部研发验收。A 侧任务交付确切提交、复现命令、样例及限制，执行者不能自行把“写完”记为“验收通过”。
+- 用户于2026-10-17指定：后续子智能体及执行/验收对话派发明确使用极高推理强度 `xhigh`，不要使用 `ultra`；不为改强度中断正在执行的任务，后续继续消息按该约定设置。
+- 对 B 提供接口、样例、平台已知行为与变更说明；只检查交接兼容性及 A 侧集成结果。跨侧合同须双方确认，不把 A 的内部通过当作 B 已接受。
+- 每个共享改动范围协调主要写入者并保留他人改动；公共合同与根依赖由指定负责人整合。A 侧执行者使用独立分支/工作目录，B 侧工作方式由 B 自定。
+- 算法模块不依赖浏览器或 delivery；quality 只报告检查结果；runtime 编排流程但不包含题型规则。
+- 内部身份独立于印刷题号和平台题序；通用坐标绑定原始图像、尺寸及摘要。
+- 区分离线测试、模拟执行、真实平台验收。保存结果 UNKNOWN 时先核对实际状态，不自动重发。
+- 线上操作遵守用户已明确的书籍、范围和允许操作。开发任务不隐含扩大线上写入权限；最终提交人工负责。已经获得的授权不重复索取。
+- 当前后续写入测试书为 `46007447`《名校课堂八年级数学上册》，具体约定见 `docs/coordination.md` 的“当前测试用书与授权”。旧样书 `46006966` 继续作为离线参考，不能混用书籍状态或测试证据。
+- `.local/` 中的凭据和 profile 不输出、不入库；不要把 token、未脱敏请求或原始视频加入任务单或提交。用户授权的本地登录工具见 `docs/local-login.md`。
+- 仅在明确要求时使用当前运行的证书忽略参数，不修改全局设置或变成默认行为。
+- 根据改动风险执行相关验证；文档变更检查链接与差异即可。未运行、失败或无法验证的部分如实记录。
+
+d0cf2d849a75bde25470787c72e1a78bf32f6e8c blob 16154
+# 自动化架构 v2：自动推进、异常处理、人工最终提交
+
+日期：2026-10-16。状态：开发设计，尚未实现或完成平台验收。
+
+本设计依据当前对话调整：正常题默认自动完成识别、组题配答、检查与录入；人工处理异常、进行抽查，并最终确认提交。逐题人工批准不再是正常流程的前置条件。
+
+开发入口：[接口约定](contracts-v1.md) · [模块分工与里程碑](development-plan.md)。原 [识别路线研究](solution.md) 保留为算法试验记录；与本设计冲突的模块边界、主键及全局数据格式，以本设计为后续开发依据。
+
+## 1. 产品目标与验收终点
+
+使用流程：选择书籍及范围 → 启动任务 → 自动运行 → 集中处理异常 → 批次检查 → 人工最终提交。
+
+- 正常题经过程序检查即可继续，不需要在工作台逐题点“通过”。
+- 支持提交前完整内容检查时，自动运行终点是“已录入并核验，待最终提交”；提交后才触发 OCR 的分支见第 6 节。不能把生成 JSON 或收到保存响应称为完成。
+- 人工最终提交后，若能观察平台反馈和重新读取结果，才记录“已提交确认”；无法核实时标记未确认。
+- 组合题、跨页、公式、图表、七选五仍属于目标支持范围。可以分阶段开发，但未支持的类型必须显式进入异常统计。
+- 运行前明确书籍、目录/页范围及允许操作。开发文档不替代当前只读调查范围的线上写入授权。
+
+推荐单仓库、模块化单体。首版用 Python 后端、文件产物、SQLite 状态和轻量本地工作台即可；模块先通过函数与 JSON 交换，不先部署多个服务。
+
+## 2. 主流程与异常旁路
+
+```mermaid
+flowchart TD
+    S["来源接入：原图、目录、历史参考"] --> R["内容识别：版面、文字、公式、图表"]
+    R --> A["组题配答：完整题目关系"]
+    A --> Q["前置检查：题目结构＋整页覆盖"]
+    Q -->|通过| K["目标状态与平台能力检查"]
+    K -->|通过| P["生成执行计划"]
+    K -->|状态冲突或能力不明| X
+    Q -->|有明确补救策略| T["有限自动补救"]
+    T --> R
+    Q -->|仍不确定或未支持| X["异常工作台"]
+    X -->|修正产生新版本| Q
+    P --> D["独立无头浏览器执行"]
+    D --> V["后置检查：刷新读回＋最终内容"]
+    V -->|一致| B["待人工批次确认提交"]
+    V -->|内容或结构差异| X
+    D -->|保存结果不明| U["暂停该书写入，读取实际状态"]
+    U -->|核清已生效| V
+    U -->|核清未生效，重新检查| K
+    U -->|需人工判断| X
+```
+
+图示为提交前能够完成内容核验的主路径；提交后 OCR 的特殊分支按第 6 节处理。图中的自动补救表示回到受影响阶段：扩大裁片只重做相关识别；答案上下文不足只补采集和配答。无需每次从整本书重新开始。
+
+工作台显示进度、费用、异常和抽查预览。它消费主流程产物，正常题不会先进入人工等待队列。
+
+## 3. 六个功能模块与运行底座
+
+| 模块 | 输入 → 输出 | 职责 | 边界 |
+|---|---|---|---|
+| 来源接入 source | 任务范围 → SourceBundle | 导入原图、目录、资源映射及历史参考，检查完整性与哈希 | 不做切题或写平台 |
+| 内容识别 recognition | SourceBundle → EvidenceBundle | 分片、检测、OCR、公式/图表识别，保留原图坐标及证据 | 不决定最终题答归属，不输出平台操作 |
+| 组题配答 assembly | EvidenceBundle → QuestionGraph | 识别题目语义，合并跨页，组织小问，匹配答案与解析 | 不操作浏览器，不以平台题序充当内部身份 |
+| 自动检查 quality | 来源、证据、图谱、目标快照/平台读回 → CheckReport | 内容前置检查、目标状态/能力检查、后置录入与内容检查；给出问题和补救建议 | 不执行重试、不调用平台写入、不自行修改候选 |
+| 平台交付 delivery | 通过检查的图谱＋目标快照 → ApplyPlan → ExecutionReceipt | 投影平台规则、增量计划、执行、核对实际效果 | 不重新识别题目，不临时猜答案 |
+| 异常工作台 exceptions | 问题及证据 → ReviewPatch | 查看原因、修正、暂存、抽查，形成有来源的新版本 | 不绕过检查直接写平台，不覆盖旧结果 |
+| 运行底座 runtime | 任务及阶段结果 → 状态/事件/账本 | 调度、缓存、费用、限额、浏览器生命周期、持久化和恢复 | 不包含题型、分栏、Q/W/A/E 等业务判断 |
+
+quality 的检查逻辑独立于生成算法。首版可以由同一人实现两者，但必须有不同的入口、输入和失败样例。
+
+平台交付再分三个内部单元：planner（纯计划）、executor（页面操作）、reconciler（核对未知结果）。它们不需要拆成独立服务。
+
+## 4. 正交性的四条核心规则
+
+### 4.1 原图内容、题目语义和平台表示分开
+
+- 内容类型：text / formula / image / table。
+- 题目角色：stem / option / answer / explanation / shared_material。
+- 平台表示：Q/W/A/E、平台框类型、平台题序等。
+
+例如组合题的小选项，在内部仍是 option；交付层按已确定的业务政策映射为 Q。公式在内部可保留专门的内容类型，在当前平台按文本类型交付。模型和检测器无需理解这些平台差异。
+
+原始需求的普通选择题每选项独立框，与历史视频的合框表现存在差异。政策文件记录采用口径、来源和确认状态；受影响规则未确定时不能静默自动放行。
+
+### 4.2 统一身份与坐标
+
+- question_id 是内部稳定身份，印刷题号、目录 ID、order_in_level 是可重复或会变化的外部属性。
+- 题目匹配综合书籍、目录、印刷题号、小问、顺序和内容证据；不能依靠某个全局题序匹配未知新题。
+- 所有通用框使用原始图像像素坐标，并绑定 asset_id、尺寸和哈希。
+- 分片/缩放变换由 geometry 工具处理；浏览器 CSS 坐标只在平台适配器中出现。
+- YOLO 归一化框仅作为某个训练/检测后端的输入输出格式。
+- 当前样书已核实的 N → N-1 页资源映射封装在来源适配器，不推广为所有来源的固定规则。
+
+### 4.3 有头/无头仅改变运行方式
+
+运行底座启动专用浏览器，管理独立 profile、固定 viewport、登录有效性、截图与故障现场。平台适配器使用相同操作代码。
+
+日常录入使用无头模式；登录和人工接管使用专用有窗口模式。一个 profile 同时只有一个浏览器进程，同一本书只有一个写入者。先验证单任务；跨书并行仍需验证平台账号的多会话行为。
+
+切换模式前核对草稿是否持久化、保存检查点、释放旧进程；不得假定未保存的页面内存能跨重启保留。两种模式都不接管日常 Edge 配置目录。
+
+### 4.4 版本化产物代替共享可变状态
+
+模块只读取明确版本的输入，输出新产物；不修改别的模块文件或直接操作它的数据库表。
+
+人工修改是绑定基线版本的 patch。重识别产生新版本；可以证明不冲突的修改才自动迁移，有冲突的变更进入异常。已录入版本发生修改时重新生成增量计划，不能复用旧回执。
+
+模型、识别器或浏览器模式变化，应只影响对应适配器和配置，不改变其他模块的业务语义。
+
+## 5. 自动检查与自动补救
+
+CheckReport 同时包含题级检查与页级覆盖检查。检查结果是操作依据，不代表数学意义上的正确性证明。
+
+| 检查层 | 必须观察的内容 | 典型问题 |
+|---|---|---|
+| 来源 | 范围内页图、目录、资源映射、尺寸与哈希 | 缺页、错页、来源变化 |
+| 整页覆盖 | 从整页文字/图块/题号线索出发，记录归属、明确排除和未归属区域 | 整题漏识别、图形漏掉、跨页未闭合 |
+| 题目结构 | 题干、选项、小问、片段阅读顺序、重复与缺失 | 两题误合、选项缺项、子题归属错误 |
+| 配答 | 章节上下文、题号重置、候选唯一性、答案与解析归属 | 题号相同但章节不同、答案跨入邻题 |
+| 目标平台 | 当前题目/目录状态、能力、规则版本、计划前置条件 | 目标被他人修改、所需操作未验证 |
+
+覆盖检查不能只遍历已生成题目，也不能以“框覆盖全部黑像素”或“题号连续”证明没有漏题。保留不同于切题结果的整页证据；对页眉、留白、说明等排除项给出依据。与识别算法共享的证据必须标明，避免把同一结论当成两次独立验证。
+
+统一决策：
+- PASS：本阶段必需检查通过，允许进入下一阶段。
+- RETRY：存在具体补救策略且次数、预算允许；运行底座安排补采集、扩上下文或更换识别后端。
+- EXCEPTION：需要人工处理，或当前支持范围之外。
+- HOLD：运行条件不成立，例如登录失效、预算暂停、平台状态未知。
+
+有限补救示例：扩大边缘裁片、读取相邻页、增加答案上下文、切换公式识别器。每种策略有次数上限和费用上限；不能无限重复相同提示或同一个输入。
+
+自动放行范围按题型、版面和识别版本管理。先用经人工核准的开发/验证样本制定规则，再在独立留出样本上检查漏错；模型自报置信度只作辅助证据。
+
+## 6. 平台执行、OCR 与保存语义
+
+### 6.1 执行和核验
+
+计划绑定具体图谱版本、规则版本、内容和目标两份通过报告及平台快照。quality.targetcheck 负责目标状态、能力和允许范围检查；只有内容检查与目标检查均通过，planner 才生成计划。每一步记录目标、前置条件、预期变化及动作标识。
+
+执行结果分为：
+- APPLIED：本次动作的预期变化得到重新读取的支持。
+- NOT_APPLIED：有明确证据未生效，才可按策略重试。
+- UNKNOWN：超时、断线、读回矛盾或无法确认，进入 NEEDS_RECONCILIATION。
+
+UNKNOWN 时暂停同一本书后续写入，读取实际状态并与原计划核对。核清已生效则进入后置检查；核清未生效则重新检查目标前置条件，再决定续执行或重新规划。独立的离线识别任务可继续。同一动作再次启动前先核对日志和平台状态，不能通过重复提交整题“试试看”。
+
+本地 action_id 能防止本程序重复调度，但不自动提供平台的 exactly-once 保证。崩溃发生在平台保存之后、本地回执落盘之前时，恢复必须先核对实际状态。
+
+### 6.2 发现平台能力，再选择流程
+
+平台适配器报告经过验证的能力：草稿持久化、框读回、内容读回、OCR 触发时点、重开恢复、提交是否不可逆。
+
+- 若 OCR 在保存框后、最终提交前完成：等待 OCR，读取结果，做后置内容检查，然后进入待提交。
+- 若由本系统提供最终文本：检查平台实际接收的文本、公式、图片与结构。
+- 若 OCR 只能由最终提交触发：提交前只能证明框与对应关系已核验；标记 CONTENT_PENDING，最终人工提交后再读取 OCR 内容并检查。
+- 若没有可恢复草稿，或该能力仍是 UNKNOWN：先生成本地批次预览，本批从执行开始就使用可人工接管的同一专用会话，并保持到人工提交。首版采用专用有窗口会话；只有验证过不会丢状态的接管方式才允许切换。后台持久录入能力保持未验证。
+
+同会话有窗口方案须显式选择并验证，再生成对应计划；它不要求重启后草稿恢复，其他必需能力仍须核实。planner 不能在执行中悄悄切换模式。
+
+不能把保存成功或 OCR SUCCESS 等同于题目正确。公式检查需要关注结构、缺项和图像证据，不能承诺字符串相等即可证明数学语义正确。
+
+READY_FOR_SUBMISSION 只用于必需检查均已完成的批次。内容只能提交后检查时，使用 AWAITING_HUMAN_SUBMIT_FOR_OCR，并明确显示尚未验证内容。
+
+## 7. 异常工作台是旁路
+
+只提供首版必要能力：
+1. 按原因列出异常，显示受影响的题、页和阻断动作。
+2. 题目原图、答案原图和候选结构并排查看；支持补框、调框、拆并、改归属、换答案。
+3. 保存 patch，重新检查受影响范围；跨页/公共材料修改会使依赖题目检查失效。
+4. 显示录入差异和未知保存现场；处理未知保存时先核对平台，不先重写。
+5. 展示正常题抽查预览与整页覆盖图，以及最终批次统计。
+
+内容错误按题/关联题组处理；完整性问题可能阻断该页或目录单元；登录和未知保存等运行问题按书籍合并为一个异常，避免为每道题重复报警。
+
+用户可推迟异常，继续独立工作单元。未处理题仍计入总范围和待处理统计；若允许部分提交，必须明确列出被排除部分，不能把剩余题静默算作完成。
+
+## 8. 状态、成本和评测
+
+主状态：
+`QUEUED → SOURCED → RECOGNIZED → ASSEMBLED → CHECKED → PLANNED → APPLYING → VERIFYING → READY_FOR_SUBMISSION → COMPLETED`
+
+另存两个独立字段：submission_status = NOT_SUBMITTED / CONFIRMED / UNKNOWN；content_check_status = PENDING / VERIFIED / MISMATCH / UNAVAILABLE。COMPLETED 要求人工提交已确认、必需的框结构检查通过且最终内容已核验。已提交但 OCR 尚未结束或内容有错的批次不能进入 COMPLETED。
+
+旁路：
+`RETRY_PENDING / NEEDS_REVIEW / UNSUPPORTED / LOGIN_REQUIRED / BUDGET_PAUSED / NEEDS_RECONCILIATION / CONTENT_PENDING / AWAITING_HUMAN_SUBMIT_FOR_OCR`。
+每个旁路状态记录恢复条件、恢复阶段和依赖版本；最后一个状态在人工提交后回到 VERIFYING，保留 submission_status，再更新内容检查结果，不能直接跳到成功。
+
+文件保存原图引用、版本化产物与截图；SQLite 保存任务状态、写入锁、动作日志、外部 ID 对应及调用账本。重启后先处理未决写入，再恢复其他工作。
+
+模型调用统一经过网关，记录模型/提示版本、输入摘要、usage、价格版本、耗时、失败与重试。未知账单金额标记未知，不能记为零。缓存键包含输入哈希、模块/模型/提示/政策版本及参数；对失效依赖只重算必要阶段。
+
+每批报告：
+- 自动完成率：在固定测试范围内，无需人工修正且达到约定自动终点的题数 / 全部应处理题数。
+- 漏错率：独立核查中，自动通过题里实际有错的比例；说明抽样与样本量。
+- 每百题人工分钟：异常、抽查、最终检查及返工均计入。
+- 每道合格题模型费用：全部调用费用（含失败/重试）/ 最终验收通过题数；分母为零时只报总花费。
+- 总耗时、重复录入、未知保存、未支持/跳过和缓存命中情况。
+
+只有候选集合无法知道“全部应处理题数”；验证集必须建立独立清单，生产报告则注明已知总量及页级覆盖的剩余不确定性。
+
+## 9. 当前证据与设计之间的距离
+
+本轮只读核对的远端基线：`origin/main = 561ca5a`；本地开发基线 `3fb3bca`。现有 6 张样图、14 题、36 个历史框用于开发参考，历史框及自动紧致框均不能直接成为独立真值。
+
+可复用：取图/哈希、宽图分片、版面候选、OCR 后端探测、叠图和页映射核查。尚需实现/验证：新题配答、独立质量检查、异常工作台、运行底座、独立无头会话以及真实画框保存读回。
+
+先完成 [开发计划 M0–M2](development-plan.md)，即可同时推进算法与平台端；无需等识别模型达到最终准确率才开始平台开发。
+
+参考：[探索清单](../试题标注项目_探索清单与技术路线_20261015.md)、[页映射更正](../data/derived/CORRECTION-page-mapping.md)、[现有脚本](../tools/)。
+
+d3c25ddd560f0b01a1956d77c00c927686433162 blob 9954
+# 模块接口约定 v1（待 M0 固化）
+
+日期：2026-10-16。配套：[架构](architecture.md) · [开发计划](development-plan.md)。
+
+本文件定义模块交接语义，不代表已有实现。M0 将本约定变成可校验的数据类型及固定样例；业务必填字段变化须由双方共同审查、唯一负责人合并。
+
+## 1. 公共信封与存储约定
+
+所有产物包含：
+- schema_version、artifact_id、revision、kind。
+- run_id、book_id、scope_id：区分运行、书籍和明确处理范围。
+- input_refs：依赖产物及版本/摘要。
+- producer：模块与实现版本、配置/政策/模型/提示版本（适用时）。
+- content_hash、created_at、payload。
+
+文件引用使用相对资产路径或 asset_id，不把个人电脑绝对路径写进共享合同。图像引用带 SHA-256、宽高；登录状态不作为业务产物传递。
+
+运行状态属于 runtime；算法不能通过修改产物中的 status 字段控制其他模块。
+
+## 2. 核心产物
+
+| 产物 | 必需内容 | 约束 |
+|---|---|---|
+| SourceBundle | 原图清单、目录树、明确页范围、外部页码映射、历史参考及其质量标记 | 原图不可覆盖；250 页元数据不代表已取得 250 页 |
+| EvidenceBundle | 区域、原图框、裁片变换、文字/公式/图表证据、候选题号与全页覆盖线索 | 未确认候选保留不确定性；不同证据来源明确标记 |
+| QuestionGraph | 稳定题目/片段 ID、语义角色、内容类型、阅读顺序、父子/共享/跨页关系、答案候选与选定关系 | 一个逻辑题可包含多页多框；平台属性只能作为 external_refs |
+| CheckReport | stage、输入版本、逐项问题、页级 coverage、决策、建议策略及其原因 | PASS 必须有必需检查结果；不能只存一个置信度 |
+| ApplyPlan | 图谱版本、内容和目标两份通过报告、政策、目标快照、能力要求、动作及预期效果 | 任一依赖变动须重新评估；默认不包含最终提交 |
+| ExecutionReceipt | 每动作结果、平台 ID、执行前后证据、读回内容或其引用、未决事项 | UNKNOWN 不能归为普通可重试失败 |
+| ReviewPatch | 基线版本、实体 ID、改动、操作者/原因、相关异常 ID | 生成新版本；不能绕过自动检查直接进入执行 |
+| BatchReport | 范围清单、各题状态、覆盖检查、成本、人工时间、未决事项、submission_status 和 content_check_status | 提交事实与内容质量独立；不把异常/跳过从总量里删除 |
+
+PlatformSnapshot 是交付接口的快照对象，包含 target_id、observed_at、observed_version/hash、现有目录/题目/框和能力引用。source 和 delivery 可通过同一个受控只读适配器取得所需数据，但使用不同业务视图。
+
+## 3. 统一坐标与身份
+
+- bbox = [x1, y1, x2, y2]，原图像素，左上原点，右/下边界采用半开区间，可用浮点。
+- 合法范围：0 ≤ x1 < x2 ≤ width，0 ≤ y1 < y2 ≤ height。
+- 历史越界数据作为原始证据保留；修正生成派生版本，不静默裁边覆盖原件。
+- crop_transform 保存原图到处理图的缩放、偏移、旋转及补边；无法准确回投时报告异常。
+- question_id、fragment_id、region_id 稳定独立，不能用 bbox、印刷题号或平台顺序作为唯一 ID。
+- 新一轮识别若不能可靠对应旧实体，使用新 ID 并记录关系待核，禁止错误套用人工 patch。
+- 平台 Q/W/A/E、CSS 坐标和 YOLO 类别不进入通用语义枚举。
+
+## 4. 统一问题对象和决策
+
+Issue 必须包含：
+`issue_id, code, scope_type, scope_id, evidence_refs, severity, blocks, suggested_strategy`。
+
+建议 code：
+`SOURCE_MISSING, PAGE_MAPPING_UNCERTAIN, UNASSIGNED_CONTENT, CROSS_PAGE_OPEN,
+OPTION_INCOMPLETE, ANSWER_AMBIGUOUS, POLICY_UNRESOLVED, UNSUPPORTED_LAYOUT,
+TARGET_CHANGED, CONTENT_MISMATCH, SAVE_UNKNOWN, LOGIN_REQUIRED, BUDGET_LIMIT`。
+
+决策枚举为 PASS / RETRY / EXCEPTION / HOLD；stage 为 PRE_APPLY / TARGET / POST_APPLY。由 CheckReport 决定哪一阶段可继续，runtime 执行重试或暂停。建议策略是标识及参数，不能包含任意可执行代码或自由文本浏览器指令。
+
+以下为示意 payload（完整文件还需公共信封）：
+
+```json
+{
+  "stage": "PRE_APPLY",
+  "subject": {"artifact_id": "graph-demo", "revision": 3},
+  "decision": "EXCEPTION",
+  "coverage": {
+    "scope_id": "unit-demo",
+    "pages_expected": ["asset-8", "asset-9"],
+    "pages_checked": ["asset-8", "asset-9"],
+    "unassigned_region_ids": ["region-42"]
+  },
+  "issues": [{
+    "issue_id": "issue-7",
+    "code": "CROSS_PAGE_OPEN",
+    "scope_type": "question",
+    "scope_id": "question-demo-12",
+    "evidence_refs": ["region-42"],
+    "severity": "blocking",
+    "blocks": ["PLAN"],
+    "suggested_strategy": "LOAD_ADJACENT_PAGE"
+  }]
+}
+```
+
+示例中的 EXCEPTION 表示自动补救未解决或当前无法继续；有预算且策略尚可执行时应返回 RETRY。coverage 是必填范围说明，不以一个统计比例代替实质内容的归属证据。
+
+## 5. 模块调用边界
+
+以下为规划接口签名，不是已存在的命令或可导入 API。
+
+```text
+source.collect(scope, source_config) -> SourceBundle
+recognition.extract(SourceBundle, recognition_config) -> EvidenceBundle
+assembly.build(SourceBundle, EvidenceBundle, domain_policy) -> QuestionGraph
+quality.precheck(SourceBundle, EvidenceBundle, QuestionGraph, support_profile) -> CheckReport
+
+platform.snapshot(target) -> PlatformSnapshot
+quality.targetcheck(QuestionGraph, PlatformSnapshot, platform_policy, authorized_scope) -> CheckReport
+delivery.plan(QuestionGraph, precheck_report, targetcheck_report, PlatformSnapshot, platform_policy) -> ApplyPlan
+delivery.apply(ApplyPlan, BrowserSession) -> ExecutionReceipt
+delivery.reconcile(ApplyPlan, ExecutionReceipt, PlatformSnapshot) -> ReconciliationResult
+quality.postcheck(QuestionGraph, ApplyPlan, ExecutionReceipt, platform_content) -> CheckReport
+
+exceptions.patch(base_artifact, ReviewPatch) -> new_artifact_revision
+runtime.summarize(run_id) -> BatchReport
+```
+
+组题模块可在内部区分 semantic labeling 和 assembly；它们使用可替换实现，不必增加顶层服务。公式识别和外部模型调用通过统一网关，计费和重试不写进题型规则。
+
+precheck_report 与 targetcheck_report 必须均为 PASS，并绑定同一图谱/政策以及当前目标快照，planner 才可运行。TARGET_CHANGED、本计划必需能力未验证或范围不符由 targetcheck 返回具体问题与 EXCEPTION/HOLD；不能让 planner 猜测或悄悄降级。已明确选择并验证的同会话有窗口方案，可以不要求重启后草稿恢复能力。
+
+runtime 根据依赖关系调用模块；模块间仅传合同，禁止跨模块读取私有文件/数据库或共享可变全局变量。
+
+## 6. 执行事务和恢复合同
+
+每个 Action 至少包含：
+`action_id, target, source_entity_ids, expected_before, operation, expected_after, depends_on`。
+
+- expected_before 只检查本动作相关事实；前一步由本程序造成的预期变化不能被误判为外部冲突。
+- 写入前持久化 intent；写入后取得实际读回，再持久化 receipt。
+- 同一计划/动作 ID 用于本地去重。平台不支持幂等键时，仍必须依赖读回核对。
+- APPLIED 需要实际效果证据；NOT_APPLIED 需要明确未生效证据；其他情况是 UNKNOWN。
+- UNKNOWN 或重启后存在 intent 无结论时，先 reconcile；不得自动重发。
+- 目标状态变化则使相关计划失效，重新读取、检查和规划。
+- ReviewPatch 改动已经录入的题时，产生新计划并引用旧回执；只有明确支持的差量修改才能执行。
+
+ReconciliationResult 包含 `RESOLVED_APPLIED / RESOLVED_NOT_APPLIED / STILL_UNKNOWN` 以及证据；STILL_UNKNOWN 保持该书写入暂停。
+
+## 7. 平台能力和最终内容
+
+能力记录逐项使用 VERIFIED / UNKNOWN / UNSUPPORTED，并带测试证据与适用平台版本：
+`persistent_draft, frame_readback, content_readback, ocr_before_submit,
+resume_after_restart, multi_session`。
+
+- POST_APPLY 必须区分框结构一致与最终文字/公式内容一致。
+- OCR 未完成、内容不可读或只有任务成功标记时，不能输出“内容已核验”。
+- OCR 只能最终提交触发时，批次保留 CONTENT_PENDING 并走人工提交后核验分支。
+- 不提供“自动确认最终提交”的隐含动作。最终提交观察与业务质量检查是两种独立证据。
+
+submission_status 枚举：NOT_SUBMITTED / CONFIRMED / UNKNOWN。
+content_check_status 枚举：PENDING / VERIFIED / MISMATCH / UNAVAILABLE。
+只有提交 CONFIRMED、内容 VERIFIED 且必需框结构检查通过，整批才可标为 COMPLETED。提交后 OCR 分支先更新提交事实，再等待并检查内容。
+
+## 8. 固定样例与独立验收
+
+每个共享样例包含 `input.json, expected.json, assets/, README.md`；说明来源、适用合同版本、哪些值精确比较、哪些采用范围/语义断言。
+
+最小样例组：
+1. 普通单页选择题，正常自动通过。
+2. 两个目录都有第 1 题，防止串答。
+3. 同题跨页、组合题共享材料、多框属于一题。
+4. 拼合答案图切片后回投原图。
+5. 整题未进入候选列表：整页覆盖必须发现未归属内容。
+6. 保存实际成功但响应超时，恢复不能重复建框。
+7. 目标在计划后被修改，计划不能盲执行。
+8. 人工 patch 后重识别，旧修改不会静默丢失。
+9. 平台 OCR 结束但公式/选项缺失，后置检查不能直接通过。
+10. 登录失效、预算用尽、未支持类型和内容尚未可读。
+
+真实样例与人为故障样例分别标识；构造用例可验证接口与状态机，不能替代平台验收或真实识别精度评测。用于调参的样例不进入独立验收成绩。
+
+e206722b32bea491756209e53e449918db3361b3 blob 19890
+# A 侧开发调度与验收
+
+更新：2026-10-17（Asia/Shanghai）。本对话只负责 A 侧开发调度与验收，B 侧独立管理开发。技术语义以 [架构](architecture.md)、[合同](contracts-v1.md) 和 [开发计划](development-plan.md) 为准；提供给 B 的信息集中在 [B 侧协作交接](b-side-handoff.md)。
+
+阶段发布入口：[A 侧第一阶段交接](a-stage1-handoff.md)。用户已要求将已接受的 C01/A01/A02 推送到独立的 `codex/a-stage1-handoff` 分支；发布结果及确切远端提交以 [调度状态](coordination-state.json) 的 `publication` 记录为准。下文和冻结验收报告中的“未推送”是其记录时点的事实，不代表后续发布回执。发布不改变 B 的接口确认状态，也不自动合并远端架构分支的新改动。
+
+## 1. 谁做什么
+
+| 角色 | 职责 |
+|---|---|
+| 用户 | 产品目标、业务口径、预算、线上允许操作范围及最终提交 |
+| A 侧调度中心（本对话） | A 侧任务拆解、派发、复现验收和集成；维护接口提案、资料及跨侧联调问题 |
+| A 侧开发（用户侧执行任务） | contracts、geometry、source、delivery、runtime、exceptions、quality 的 targetcheck/postcheck |
+| B 侧开发（搭档及其 GPT） | 独立管理 recognition、assembly、quality 的 precheck/coverage；自行决定实现、人员、排期和内部验收 |
+| A 侧复核者 | 对照 A 侧任务条款检查交付；可由独立子代理承担 |
+
+A 侧调度中心可以分派本地子代理，但不向 B 侧派单、催排期或安排返工，不代替 B 做开发验收。双方交换接口版本、样例、变更说明及集成结果；A 侧核对 B 的交接产物是否符合共同约定并能被 A 消费，这不等于验收 B 的整个模块。发现问题时提供输入、版本、复现和影响，由 B 自主安排处理。
+
+用户可以在本对话发“派下一批 A 侧任务”“验收 A 侧 <任务号/PR/提交>”“更新给 B 的资料”“核对交接接口”。调度中心每次先读取此文件与最新代码，再行动。用户于 2026-10-16 要求自动检查进度、验收和按路线派发后续任务；已配置绑定本对话的定期唤醒“1800 A侧开发调度与验收”（ID `1800-a`），当前 ACTIVE，每 15 分钟检查一次。自动化是实际触发器，本文件及 [调度状态](coordination-state.json) 保存路线与去重信息。
+
+每次检查完成产物后再决定验收、返修和后续派单；执行 completed 不等于验收通过，验收通过不等于已集成。新阶段执行/验收分别新建对话；同一任务已有对话时在原对话补证据或修复，避免重复派发。既有 A 侧任务派发授权包含必要的定向跟进，不延伸到 B 或外部联系人。没有新进展时不重复通知；只有阶段结果、重要派发、失败或需要用户决定时简短汇报。
+
+用户于2026-10-17要求后续子智能体使用“极高”，不使用 ultra。之后新建子智能体、执行/验收对话及必要的继续消息明确设置 `xhigh`；现有运行任务不为调整强度而中断，后续消息再应用。此为项目派发约定，不修改账号全局模型设置。
+
+任务去重键为“任务号 + 阶段 + 基线版本”，保存对话 ID、产物版本、cursor 和下一依赖；创建前落盘意图、创建后落盘 ID，结果不明先查现有对话。以 C01 → A01/A02/A04 → A03 → I01 A 侧集成为当前开发主线，后续真实平台/难例阶段仍须具体任务单及有界范围。全部约定路线完成后停止扩张并暂停调度；未决业务政策、B 的接口确认或费用授权不假装已解决。运行需本机与桌面应用可用，见 [OpenAI Docs：定时任务](https://learn.chatgpt.com/docs/automations?surface=app)。
+
+2026-10-16 用户进一步要求：“新的阶段性任务你新建对话做任务派发和验收”。从 A05 起，阶段执行和独立验收使用各自的新对话，本对话维护范围、依赖、结果与集成决定。先给执行对话具体任务单，再给验收对话独立标准；验收等待执行交付并释放线上会话，不能与执行者并行占用同一书籍/profile。任务对话创建成功仅表示已派发，不能记成开发完成。
+
+## 2. 基线与当前事实
+
+下列远端条目是之前的只读核对基线，本次没有重新查询远端：
+
+- 架构基线：`codex/automation-architecture`，提交 `79b7195dc0ff98ff6b4ce3fe5f97ae707e3bb0d5`。
+- `main` 仍是 `561ca5a2fa11026f6667e1c7a897782dd3a205f4`，尚未包含上述架构文档。
+- A05 执行交付提交为 `a56ce0e23ee613cd81c09f7f21392ffc2ff17d60`。登录、调度及本轮验收材料的后续本地归档版本以调度状态记录为准；尚未推送给 B。
+- [登录记录](local-login.md) 保留登录阶段历史证据；当前 A05 已完成单个样例的原图加载、定位、框保存、刷新和关闭重开读回，见 [独立验收](tasks/A05-review-report.md) 及 [主调度收口](tasks/A05-coordinator-acceptance.md)。这不是通用 A04/A03 模块的验收。
+- 自动标注应用尚未完成。C01 R1 已独立验收通过，经主调度复现并本地集成于 `223b0b3d9ae0bd50ef2ac045219a41ad41611856`；70 项合同测试和8项登录工具测试通过，见 [主调度收口](tasks/C01-coordinator-acceptance.md)。A01/A02/A04 的 C01 依赖已释放，实际派发以调度状态为准；B 合同确认仍未取得，尚未推送远端。
+
+### 当前测试用书与授权
+
+2026-10-16，用户明确指定：“接下来的写入使用这本书做测试”。附图可识别的目标如下：
+
+| 字段 | 用户附图信息 |
+|---|---|
+| 书籍 ID | `46007447` |
+| 平台标题 | `0917-136-9787555396581-名校课堂八年级数学上册` |
+| 标题中的 ISBN | `9787555396581` |
+| 截图状态 | 标注中、已验重 |
+
+该授权覆盖在本书开展必要的标注写入与保存测试，更新此前仅限页面体验的范围；用户随后明确“可以开始了”，无需重复询问是否可在这本书测试。首个页/题由 A 读取现状后选择，并记录目录、页图、题目及实际动作。先做单题最小闭环，核对写前状态、保存结果与刷新读回，再扩大测试。
+
+执行前核对实际目标 ID 必须为 `46007447`。保留原有目录与历史标注，测试优先使用尚未录入的题；不将书级测试授权扩大为全书清理、删除原有框、目录重构或最终提交。最终提交仍由人工负责。若保存结果未知，先核对，不重复写入。
+
+旧样书 `46006966` 的六张原图、14 条导出题和 36 条历史框仍属离线参考，不能作为新书的既有状态或验收结果。新书已通过独立无头浏览器采集[只读基线](evidence/A05/baseline/manifest.json)：书籍接口 question_count=21，全量 66 框，来源元数据 214 页，书状态标注中；这些数量来自实时接口而非截图右侧无列头的数字。正文原图、候选题和答案尚待执行者采集核准。调度中心此次只进行了 GET 和页面导航，未画框/保存/OCR，已关闭会话并释放 profile。
+
+题级“提交修改”在缓存源码中调用 `commit_unified_submit`；书级送审调用独立的 `claim_book/submit-review/{id}`，送交调用 `submit-delivery/{id}`。当前授权允许前者的单题保存，后两者仍由人工决定。代码证据详见 [A05 任务单](tasks/A05-single-question-write.md)，必须再以实际保存回执与书状态读回验证，不能把源码结论当作平台验收。
+
+### 已派发的阶段对话
+
+| 阶段 | 对话 ID（local） | 当前安排 |
+|---|---|---|
+| A05 单题写入试验 | `01a14454-610f-75f0-8baa-225518a51136` | completed；21题66框 → 22题68框，执行会话已释放；[执行报告](tasks/A05-execution-report.md) |
+| A05 独立验收 | `01a14454-a318-72d1-ad1d-62243d475888` | completed；独立验收 ACCEPTED，主调度复现34+33项通过；[收口记录](tasks/A05-coordinator-acceptance.md) |
+| C01 合同实现 | `01a14481-79b3-7ed3-a29e-fdbeb11e0da9` | R1 completed；交付 `4e42668ab28eda37a37285285d2f6c595d3bba12`；已本地集成，原工作树保留冻结 |
+| C01 独立验收 | `01a14481-d20d-7e21-898a-a650d52f9a9e` | [R1 ACCEPTED](tasks/C01-review-R1-report.md)，主调度已复现并集成；[首轮 REWORK](tasks/C01-review-report.md) 保留 |
+| A01 来源与公共几何 | `01a144ca-ed53-7303-ace2-21a4ca42e13c` | `5f872150`已接受并合入`c6bebdf4`；[集成收口](tasks/A01-integration-R2-coordinator-acceptance.md) |
+| A01 独立验收 | `01a144cb-69e8-7981-a8d5-8832eae61829` | [集成R2接受](tasks/A01-integration-R2-review-report.md)，主调度复现和实际集成通过；旧失败保留 |
+| A02 计划与模拟执行 | `01a144cc-23e9-7c80-9a90-02162ef99b64` | portability-R2 `a1e5be00`已接受，合并于`2d1dc8b9`；仅身份工具修复，原R1业务范围保留 |
+| A02 独立验收 | `01a144cc-2eae-7a23-b299-03f533e30951` | [R2接受](tasks/A02-portability-R2-review-report.md)，[主调度复现及集成](tasks/A02-portability-R2-coordinator-acceptance.md)完成；实际集成62项通过 |
+| A04 无头只读适配 | `01a144cc-dde4-73a1-9e83-be485380ea25` | A01依赖释放，原对话续派[坐标R1](tasks/A04-coordinate-R1-dispatch.md)；实际状态见调度JSON，新会话需独占检查 |
+| A04 独立验收 | `01a144cc-e93d-7841-a259-d6aac22c94f4` | 已登记；只准备场景，正式复验等待交付、geometry 依赖及执行会话释放 |
+| A03 恢复合同与运行状态 | `01a145aa-2fea-7942-97f9-ad260acf4e30` | P1-R2 `940a5de3`设计接受；主调度批准[P2离线实现](tasks/A03-P2-dispatch.md)，功能未验收 |
+| A03 独立验收 | `01a145aa-8d59-7c70-8d81-731712103a9a` | [P1设计通过](tasks/A03-P1-R2-review-report.md)及[调度收口](tasks/A03-P1-coordinator-acceptance.md)；P2先准备，待冻结实现 |
+
+上述任务属于 A 侧，不向 B 派单。A05仅证明题22的Q/A框保存与重开，不能重放，内容PENDING、NOT_SUBMITTED。C01、A02 R1及无Git身份工具修复已本地集成。A01组合复验已接受，并实际合入`c6bebdf43eb93f7a6ae21e96ec07ed155686777d`，合并后的11个常规子入口全通过；旧R3接受、原REWORK和受限表示保留。A04恢复原只读坐标联调；D01由指定独立执行对话实现根Pillow依赖与清洁安装验证，主调度整合，见[执行任务](tasks/D01-dependency-implementation.md)和[独立验收](tasks/D01-independent-review.md)。A03 P2曾因使用额度中断，已原对话有界续接；功能尚未验收，I01仍阻断。S01、D01安装、B确认、真实平台恢复及质量/成本未解决。所有记录仅本地，未推送或共享B；实际派发回执与cursor见[调度状态](coordination-state.json)。
+
+A 侧派发前记录实际 `base_commit` 和包含调度规则的 `workflow_commit`。上述架构提交不包含本轮新增规则，执行者必须获得实际采用的规则版本。向 B 分享信息时另外标明资料所在提交及“草案/已共同确认/已实现”状态；本地草拟不算已发布。A 侧分支名默认 `codex/<任务号>-<简短描述>`，每个任务有自己的工作目录或 worktree；B 自定开发流程。不得覆盖当前未提交文件，也不把本机登录文件/profile 传给另一开发侧。
+
+## 3. A 侧派发与交付流程
+
+1. 调度中心写任务单：可观察的目标、输入/合同版本、允许改动范围、依赖、验收条件、资源限额。
+2. 执行者回执任务号、基线提交、工作分支及阻塞项。接单后记为 RUNNING。
+3. 执行者提交代码、输入输出样例、复现命令、真实运行结果和未解决问题，转为 REVIEW。
+4. 调度中心在对应提交上复现、检查失败路径；必要时安排独立复核。结论为 ACCEPTED、REWORK 或 BLOCKED。
+5. 验收通过后安排集成；记录合并提交并运行受影响集成检查，通过后才记为 INTEGRATED、释放依赖。
+
+状态：BACKLOG（等待依赖）、READY（可派）、RUNNING、REVIEW、REWORK、BLOCKED、ACCEPTED、INTEGRATED。BLOCKED 必须写清缺少什么以及恢复条件。代码写完、测试自报通过、已合并是三种不同事实。
+
+若单独验收某任务时使用固定上游样例，记录该样例版本；真实上游接入后仍需联调。依赖已经 ACCEPTED 但尚未集成时，可显式指定其提交供下游开发；不能按分支名猜测内容。
+
+A 负责维护共享合同实现、geometry 公共接口、根依赖文件、公共样例和 A 侧集成入口，避免多个 A 侧执行者同时修改。跨侧合同的必填字段或语义变更须形成提案，说明版本、样例、迁移及消费者影响，经双方确认后采用；A 内部验收不代表 B 已接受接口。两侧分别拥有 quality 的不同入口，共享文件变更提前协调。
+
+## 4. A 侧首轮队列
+
+以下仅为 A 侧内部安排。C01 是当前优先项；B 不进入本任务队列，也不记录为“待接单”或“待验收”。A 在缺少 B 侧真实交接产物时继续使用明确标注的合同桩和固定样例。
+
+| 任务 | 建议执行方 | 当前状态 | 依赖/产物 | 验收重点 |
+|---|---|---|---|---|
+| C01 | A | INTEGRATED（本地） | R1 被接受，合同实现及固定样例已集成 | 原失败证据保留；独立80项矩阵/22映射场景通过；B 确认仍未取得 |
+| A01 | A | INTEGRATED（本地） | [集成R2收口](tasks/A01-integration-R2-coordinator-acceptance.md) | 独立接受、调度复现和实际常规入口通过；来源完整性仍有限 |
+| A02 | A | R1、portability-R2均已本地集成 | [R2收口](tasks/A02-portability-R2-coordinator-acceptance.md) | R2仅无Git身份工具；原规划/模拟功能与A03依赖保持 |
+| A04 | A | 坐标R1续派 | [续派任务](tasks/A04-coordinate-R1-dispatch.md)；[独立验收](tasks/A04-independent-review.md) | A01依赖释放；当前profile实际独占和最终释放需新证据 |
+| D01 | A | 清洁安装任务派发中 | [执行任务](tasks/D01-dependency-implementation.md)；[验收](tasks/D01-independent-review.md) | 只补Pillow根依赖和独立安装消费验证，未验收 |
+| A03 | A | P1设计接受；P2实现中 | [主调度收口](tasks/A03-P1-coordinator-acceptance.md)；[P2任务](tasks/A03-P2-dispatch.md) | SQLite/恢复/并发仍待实现和独立功能验收；I01不释放 |
+| I01（A 侧部分） | A | BACKLOG | A01/A02/A03；先使用合同桩，真实联调使用双方约定版本 | 验证 A 的模拟消费、异常和恢复；真实算法接入后另记联合联调结果；A04 不阻塞离线集成 |
+
+除上述规划目录外，现有 `tools/` 和历史证据不做并发大改。迁移可通过新模块适配旧实现，后续单独安排清理。
+
+[A01/A02/A04 派发准备](tasks/A01-A02-A04-preparation.md) 保留来源预检与分工依据；正式范围以上述六份执行/验收任务单为准。三个模块各用独立工作树，公共 geometry 由 A01 独占；合同、根依赖与父入口仍由主调度单独整合。
+
+### C01 任务单
+
+完整执行任务：[C01 合同实现与固定样例](tasks/C01-contracts-implementation.md)；独立验收：[C01 验收任务](tasks/C01-independent-review.md)。
+
+- 目标：把 `contracts-v1.md` 转成可导入、可校验、可独立消费的第一版合同。
+- 基线：`79b7195dc0ff98ff6b4ce3fe5f97ae707e3bb0d5`；实际派发时复查是否有已验收的新基线。
+- 主要改动范围：`src/annotation/contracts/`、`tests/fixtures/contracts/`、对应合同测试、`config/policies/`；A 同时维护必要的最小包入口与依赖说明。坐标语义纳入合同提案，经双方确认后冻结；公共几何实现由 A01/A02 按需要补充，A 侧指定唯一写入者，跨侧消费采用双方确认的接口版本。
+- 输入：三份设计文档、既有来源清单和导出；不需要平台登录或付费模型。
+- 交付：类型/校验入口、正常/异常/UNKNOWN 三类完整样例、一个消费者读写示例、最短运行说明。构造样例显式标注，不伪装成真实平台验收。
+- 验收：合法样例通过；缺失引用、越界框、版本冲突和不合法状态组合有可定位错误；未知保存不能变成成功；相对资产路径可跨目录运行；同一类型定义是唯一权威。
+- 提供给 B：字段说明、正常/异常样例、兼容性检查方法与待确认项。B 按自己的安排反馈；反馈未收到时记录为未确认，不代写 B 的结论。
+- 边界：本任务完成不宣称识别准确率、真实保存成功或自动标注功能交付。
+
+## 5. A 侧验收与跨侧联调的区别
+
+每张 A 侧任务单在开始前写清适用的验收层级，交付时逐项标记“通过/失败/未执行及原因”。下列算法质量信息用于跨侧联调所需的证据沟通，B 的内部研发验收由 B 自行组织。
+
+| 层级 | 必需证据 |
+|---|---|
+| 合同与模块 | 确切提交、运行环境、固定输入输出、类型与引用检查、关键失败样例 |
+| 算法质量 | 可追溯原图、叠框/配答结果、独立留出样本、漏题与错配统计；声明调参与评测是否共享样例 |
+| 执行与恢复 | 动作计划、intent/receipt、模拟或实际类型、超时后读回、重复动作检查 |
+| 真实平台 | 明确书籍/题目/范围、实际效果证据、刷新读回、原有数据未受意外影响；由具备本机访问权限的一侧执行 |
+| 成本 | 运行范围、实际调用/失败/重试用量、价格版本、缓存、合格题数；不调用付费模型时标记“未测” |
+
+调度中心复现关键路径，不仅阅读开发者的“已完成”。独立复核优先检查作者容易遗漏的失败条件；多个代理同意不等于业务正确。若本机无法复现，保留为未验收并给出缺失环境/证据；不能以一段成功日志代替真实平台效果。
+
+上述 ACCEPTED/REWORK 等状态只管理 A 侧任务。B 侧交接只记录“产物版本、兼容性检查结果、A 的集成就绪情况、待沟通问题”，不标记 B 开发完成、返工或排期。模型实现与内部测试方法由 B 自主选择，双方共同约定跨侧输出及质量边界。
+
+线上操作采用本文件“当前测试用书与授权”中的 `46007447` 范围。开发派单不自行扩大范围，最终提交仍由人工负责。付费模型任务先给出预算上限、数据范围与停止条件；离线模块任务不需要等待这类确认。
+
+## 6. A 侧交付与验收模板
+
+```text
+任务号：
+base_commit / head_commit / PR：
+workflow_commit（调度规则版本）：
+合同版本与样例版本：
+改动范围：
+运行环境及复现命令：
+实际输入、输出及证据路径（仓库相对路径）：
+逐条验收结果：
+失败、未执行项及原因：
+模型调用/花费（未调用写 0，未测写未测）：
+已知限制及下一步：
+```
+
+```text
+验收任务号 / 被验收提交：
+复现命令与结果：
+独立复核结果：
+结论：ACCEPTED / REWORK / BLOCKED
+必须修复项或缺失证据：
+集成提交与受影响检查结果（尚未集成则写明）：
+可释放的后续任务：
+```
+
+仓库里只保存脱敏证据。账号密码、token、浏览器 profile、原始视频不进入任务单、PR 或共享提交。跨账号传递的是任务和代码版本，不是登录状态。
+
+本机制采用现有 A 侧项目编号与模块边界。关于代理分工和持久工作记录，可参考 [OpenAI Docs：Subagents](https://learn.chatgpt.com/docs/agent-configuration/subagents) 与 [Codex 开发流程示例](https://developers.openai.com/cookbook/examples/codex/iterating-development-workflows-with-codex)；本文件不是对 B 侧的开发管理规则。
+
+621933f4343f2e228ed231b3a8d41164c7d11255 blob 2842
+# D01 冻结交付独立复验续派
+
+2026-10-17。继续原独立验收对话，明确使用 `xhigh`。状态为复验输入交付，不是接受或集成。
+
+- 执行目录：`C:\Users\ASUS\.codex\worktrees\d01-clean-install\1800`。
+- 冻结交付：`48accd7d885fbc7ecdd8b438ada33a0eafd5bc55`；实现：`9a7b9d7e374ee7a3ee124c9ff20e0b4003e57464`；原任务 workflow：`f15f7bc03fac8994ade1642fa7547cbd823c6d43`。
+- 执行报告：`docs/tasks/D01-execution-report.md`，SHA256 `19c9553422b3d42daa693e22bfaf135272f5ab36837c8180bcaba7b2a1076c8b`。
+- 完整清单：`docs/evidence/D01/execution/SHA256SUMS.json`，SHA256 `58336c047aa881e16bafff47a90ee9050a1af068bbc4a4065c27e9fc1040b2ad`。
+- 主调度已按原始 Git blob 核对清单 188 项，确认执行对话结束、命令级 longpaths 状态干净，并核对冻结释放记录。[预检记录](../evidence/coordinator/heartbeat-20261017-0516/D01-delivery-preflight.json)。磁盘与 Git 表示差异以记录为准。
+
+从确切 Git blob 构造自己的隔离输入，不使用浮动源码或作者环境代替独立验证。保留旧证据和本轮失败，报告、输入、脚本、原始输出及必要忽略日志统一列摘要。主调度独占调度 state/根产品集成；验收者不改产品、不提交/合并/推送、不联系执行者或 B。输出结论与自有进程返回证明后结束，等待主调度。
+
+按 [D01 独立标准](D01-independent-review.md)执行已准备的16项正式复验。保留 `C:/Users/ASUS/.codex/worktrees/d01-review-preparation/1800` 内原准备材料（主调度已精确归档27文件）；可在该独立目录新增正式结果。报告 `docs/tasks/D01-review-report.md`，新证据 `docs/evidence/D01/review/formal/`。只产品 pyproject.toml 增加 Pillow==11.3.0，其余基线 c6bebdf43eb93f7a6ae21e96ec07ed155686777d 保全；辅助范围按原任务。
+
+自建新的 CPython3.9 venv，非editable wheel安装，独立绑定Git源码→制品SHA→安装报告/RECORD/direct_url→实际模块字节，pip check，仓库外 -I 导入；两个冻结R3包和consumer搬运到含空格目录后完整解码，坏资源/解码层分别验证。允许仅向自有新环境安装必要公开 Python 依赖；来源和制品摘要无凭据。不得复用作者venv或把现有宿主Pillow当通过。原合同测试设置 PYTHONPATH 的子进程单列，不能替代隔离安装证明。准备N02需要证明解码层而非仅摘要层，依原边界独立设计有界副本测试。
+
+作者 run03 外层和18同步命令均返回，最终进程观察无残留；该历史证据只满足移交门，正式检查须自己的进程证据。只证明记录的 CPython3.9/Windows，REFERENCE_ONLY、6/2资源及coverage_eligible=false边界保留，不泛化为部署/全书/B兼容。平台/浏览器/profile/模型均禁止。
+
+0baf589d558db02a211159b9b83e5f5b3de91cab blob 1943
+# D01：依赖与安装独立验收
+
+2026-10-17。按[执行任务](D01-dependency-implementation.md)独立验收。先准备检查清单；收到主调度正式冻结提交、执行报告、SHA清单及自有会话释放证据后才运行功能检查，不读取浮动实现代替交付。
+
+从确切 Git blob/提交构造独立源码副本，核对唯一产品差异是 `Pillow==11.3.0` 根依赖声明，其余旧实现/配置和证据保持。自有临时环境用新的独占目录，不复用作者 venv、已安装轮子环境或源码路径。
+
+独立证明 CPython3.9新venv、非editable安装、pip check、分发元数据及 -I 仓库外导入路径；用环境内 `python -I -m pip`，记录源码提交/树、实际构建制品摘要及安装报告，关联安装分发与该制品，不能仅凭版本和路径判断源码来源。记录公开依赖无凭据来源和制品摘要，允许缓存。两书R3包与consumer绑定冻结Git字节，复制前后不变，搬运并换cwd，以实际安装代码验证资源与完整图像解码；坏资源另建副本并明确拒绝。必须保留 argv/cwd/退出码/原始输出、导入 __file__、固定输入和文件清单。不能用作者日志、源码sys.path注入或系统已安装 PIL 代替独立复现；也不泛称其他Python版本已验证。
+
+报告 `docs/tasks/D01-review-report.md`，证据 `docs/evidence/D01/review/`；准备与正式复验分开，所有旧失败和未执行项保留。主目录不改产品实现/依赖/state，不提交/合并/推送，不联系执行者或 B。只安装本任务必需公开 Python 依赖到自己的新环境，不访问平台/浏览器/凭据，不调用付费模型。
+
+结论 ACCEPTED / REWORK / BLOCKED 绑定确切交付和依赖基线，给出范围、限制及自有同步进程全部返回证明。主调度复现必要检查并集成后才能关闭 D01；不扩大为整套部署、全书来源或质量验收。
+
+6f9e5c68394d7a224ae05bdbbe948bd086ca9854 blob 3380
+# D01：离线来源依赖与清洁安装
+
+2026-10-17。正式执行以主调度给出的确切 A01 已集成基线和 workflow 为准；依据[准备单](D01-dependency-preparation.md)。本阶段使用新的执行与独立验收对话，主调度统一验收和整合根依赖。
+
+唯一产品改动是在根 `pyproject.toml` 默认 dependencies 中增加 `Pillow==11.3.0`；保留 Python>=3.9、现有 Pydantic 固定版本、包名及其他配置。A01 默认来源入口直接依赖 PIL，本轮不改源码、合同、算法、浏览器安装或平台。若发现包发现/依赖安装的额外实质问题，交付最小失败证据与变更提案，不顺带修改其他模块。
+
+在指定独立工作树开展工作，不在主目录编辑根依赖。辅助文件限 `examples/d01/`、`docs/evidence/D01/execution/`、`docs/tasks/D01-execution-report.md`；环境和临时包产物在被忽略的本任务独占目录。不要修改全局 Python、pip/网络设置或现有虚拟环境。
+
+必须完成以下可复现证据：
+
+1. 新建不存在的 CPython3.9虚拟环境，不用 `--system-site-packages`。记录解释器路径/版本及 venv 配置；不依赖用户包或宿主 PYTHONPATH。
+2. 在该环境对固定源码做非 editable 安装。用新环境的 `python -I -m pip`；可先构建固定源码 wheel，再安装该 wheel。保存源码提交/树、实际构建制品 SHA256、安装报告（支持时使用 `--report`）、分发元数据及存在时的 `direct_url.json`，把安装位置与确切构建制品关联。公开依赖记录无凭据来源、版本和下载制品摘要，允许正常缓存。保存命令、构建/安装结果和原始脱敏输出。允许安装此次必需的公开 Python 依赖；不访问平台、不调用模型、不下载浏览器，不输出含凭据镜像地址。
+3. `pip check` 成功，安装分发的 Requires-Dist 包含 Pillow 指定版本。以 `python -I` 在仓库外 cwd 导入 contracts、source.static、geometry、PIL；实际 `__file__` 全部来自新环境安装位置，不能由源码插入、editable 或宿主包偶然满足。
+4. 两本已接受 R3 有限来源包与公开 consumer 均绑定正式基线的确切 Git blob/SHA256；复制前后核对字节。把包复制到含空格的另一目录，在仓库外 cwd 用 `-I` 与未插入源码路径的 consumer 执行完整资源/图像解码，旧书6资源与新书2资源据实记录；仍为 REFERENCE_ONLY、coverage_eligible=false，不声称全书采集或质量通过。
+5. 在同一安装环境做相关合同/来源最小回归，实际导入定位到安装包；测试若自己注入源码，明确区分并以直接隔离消费补足安装证明。故障检查以缺失/损坏资源的受控副本确认可定位拒绝，不修改冻结样例。
+
+交付确切实现及冻结提交、允许范围差异、可复现脚本、报告、输入输出/脚本摘要清单、真实成功/失败记录及自有进程退出证明。失败证据保留；网络不可达等外部阻塞如实列出，不无限重试、不用宿主环境替代清洁安装。
+
+执行完成停在 REVIEW，不自行 ACCEPTED、集成或推送。仅证明本次CPython3.9环境，不泛称所有Python>=3.9均验证；版本 pin 不等于全传递依赖锁定。本轮不解决 S01、B接口确认、平台、识别质量、模型费用或部署全流程。
+
+6ac6707357eae29b253250b67e7a11f66477a4f5 blob 40709
+{
+  "format": "d01-execution-sha256-2",
+  "base_commit": "c6bebdf43eb93f7a6ae21e96ec07ed155686777d",
+  "implementation_commit": "9a7b9d7e374ee7a3ee124c9ff20e0b4003e57464",
+  "source_and_external_fixed_inputs": [
+    "run03/source-index.json",
+    "run03/sample-index.json",
+    "run03/regression-input-index.json",
+    "run03/public-dependencies.json",
+    "negative-input-index.json",
+    "run03/workflow-index.json",
+    "workflow-links-index.json"
+  ],
+  "excluded_self": [
+    "docs/evidence/D01/execution/SHA256SUMS.json"
+  ],
+  "files": [
+    {
+      "path": "docs/evidence/D01/execution/checkout-byte-audit.json",
+      "bytes": 3873,
+      "sha256": "b0a6f2a394e3714bfa2e203e374aa42ab2366fb8a2f94412eef25bcabcff5f13"
+    },
+    {
+      "path": "docs/evidence/D01/execution/closeout-audit.json",
+      "bytes": 37219,
+      "sha256": "4a6f58e4ac092f0d1a8b8a14ffe7db3fca6b3cdc5ddccde0b165f354ea07ad6b"
+    },
+    {
+      "path": "docs/evidence/D01/execution/closeout-first-attempt/finalize.py",
+      "bytes": 7934,
+      "sha256": "faa244e1e7fd2c9d059179d950770b00009600971f76b2667d6b9b86a0b9a1ba"
+    },
+    {
+      "path": "docs/evidence/D01/execution/closeout-first-attempt/observed-failure.json",
+      "bytes": 1275,
+      "sha256": "ee56356326187c6d06054e9bcf2388bfbbf36c9dd54f93d1ed83a44856e75f90"
+    },
+    {
+      "path": "docs/evidence/D01/execution/closeout-second-attempt/finalize.py",
+      "bytes": 8277,
+      "sha256": "475790ea726c76b32f567404de4de4f5c8afa145d7ff64b4c695dc46df60b065"
+    },
+    {
+      "path": "docs/evidence/D01/execution/closeout-second-attempt/observed-failure.json",
+      "bytes": 834,
+      "sha256": "e9461602893bb34b6647b7430d663df2cf312725c4a18742ba004ed6a88c16e1"
+    },
+    {
+      "path": "docs/evidence/D01/execution/collector-corrections.json",
+      "bytes": 2132,
+      "sha256": "5fc459b75ffc465d396172aa25d28953c08fe33c5e99f654ab2d36f1999f4405"
+    },
+    {
+      "path": "docs/evidence/D01/execution/collector-run01/command.json",
+      "bytes": 838,
+      "sha256": "1a4d98a91e5e44b0f4811c3323d2ef4f1cffa9b20b8995e84a1dbbf90b09f933"
+    },
+    {
+      "path": "docs/evidence/D01/execution/collector-run01/run.py",
+      "bytes": 16509,
+      "sha256": "69bc03007876a7e54b3cce434a605cb03c22f1d374835f04fa7ed0941802d973"
+    },
+    {
+      "path": "docs/evidence/D01/execution/collector-run01/stderr.txt",
+      "bytes": 408,
+      "sha256": "f7d96c530ef4ef405789d89d6c9976a67dcca7c4be7787a2fc06ac740d3777a1"
+    },
+    {
+      "path": "docs/evidence/D01/execution/collector-run01/stdout.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/evidence/D01/execution/collector-run02/command.json",
+      "bytes": 837,
+      "sha256": "e80e1d073133ce71caac3051ce9d337738a3bfc17569e735a4dbed6584f67566"
+    },
+    {
+      "path": "docs/evidence/D01/execution/collector-run02/probe.py",
+      "bytes": 6894,
+      "sha256": "3b5d43c29b505c0d4e3426d342b30ee444069e6e393425866e94085f812680f0"
+    },
+    {
+      "path": "docs/evidence/D01/execution/collector-run02/run.py",
+      "bytes": 16610,
+      "sha256": "d0eb3383c7027b16e2cea43d1dfe98160b0bc6195ac4a1f6b6e1fb30bc253ffd"
+    },
+    {
+      "path": "docs/evidence/D01/execution/collector-run02/stderr.txt",
+      "bytes": 557,
+      "sha256": "5efdfa7abfcd7fd4dcfd3642cdb35b04134571e9584829168a8fbe8954e28d27"
+    },
+    {
+      "path": "docs/evidence/D01/execution/collector-run02/stdout.txt",
+      "bytes": 289,
+      "sha256": "e746756d8e09d8d1baa2d264de00ec4969a3e211fb490c1e96ed2a882ef9fb4d"
+    },
+    {
+      "path": "docs/evidence/D01/execution/collector-run03/collect.py",
+      "bytes": 1757,
+      "sha256": "b97f72ae36a1e7bd670ccce400dd4442897c047c564b6f3b23e1e5a15a95f829"
+    },
+    {
+      "path": "docs/evidence/D01/execution/collector-run03/command.json",
+      "bytes": 838,
+      "sha256": "100e16bdc9afb6f0fff5ef260668eba834b9e3ce93e692d6daf06b5cb97e19a4"
+    },
+    {
+      "path": "docs/evidence/D01/execution/collector-run03/probe.py",
+      "bytes": 6894,
+      "sha256": "3b5d43c29b505c0d4e3426d342b30ee444069e6e393425866e94085f812680f0"
+    },
+    {
+      "path": "docs/evidence/D01/execution/collector-run03/run.py",
+      "bytes": 17021,
+      "sha256": "92faf97477b0bffa5577630172f5c29d9cf67f4ce3b3e4c84b05cb74db7f71cc"
+    },
+    {
+      "path": "docs/evidence/D01/execution/collector-run03/stderr.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/evidence/D01/execution/collector-run03/stdout.txt",
+      "bytes": 496,
+      "sha256": "94aa40a7168400c79e2bc6969ec82550e0fb1cbf773f0ef9d0d8fa80c4038982"
+    },
+    {
+      "path": "docs/evidence/D01/execution/index-byte-first-attempt/D01-execution-report.md",
+      "bytes": 13157,
+      "sha256": "b98e12bbaf69f540a507a81cce582ebd624e2d4d213374a3fd49d6e741f61e2d"
+    },
+    {
+      "path": "docs/evidence/D01/execution/index-byte-first-attempt/finalize.py",
+      "bytes": 8471,
+      "sha256": "a7bca24cab0b737ea2742e5bbea7c5ef371e38913ff926a87017ddd0e2de9a2c"
+    },
+    {
+      "path": "docs/evidence/D01/execution/index-byte-first-attempt/SHA256SUMS.json",
+      "bytes": 37544,
+      "sha256": "6f1a0451900e6b8f9607782d98cbf43e3b153de32b3bb501deb25c13729055ba"
+    },
+    {
+      "path": "docs/evidence/D01/execution/index-byte-first-attempt/verify.py",
+      "bytes": 1653,
+      "sha256": "792dd0fee2f0bd15ae1d04b437659a039d4fa6ef0a1e7383431c50c456788c60"
+    },
+    {
+      "path": "docs/evidence/D01/execution/negative-input-index.json",
+      "bytes": 24553,
+      "sha256": "604832ab09e2542454873d8bc4dc856a8046abf5b14d3523e484f1fd20cde58d"
+    },
+    {
+      "path": "docs/evidence/D01/execution/process-observation-final.json",
+      "bytes": 821,
+      "sha256": "94ab1cb351f9ed9d79aea020c711ca8bf107ae5607af0ef298b85e3e18bed853"
+    },
+    {
+      "path": "docs/evidence/D01/execution/process-observation.json",
+      "bytes": 635,
+      "sha256": "fcc7c7dd3fe3bc88f6df1641f4efb549f3b509f6904d7d7b46de662e17ae9b22"
+    },
+    {
+      "path": "docs/evidence/D01/execution/run02/artifacts/annotation_contracts-0.1.0-py3-none-any.whl",
+      "bytes": 53422,
+      "sha256": "7cf800297c53b9e9295d8d19fecbb793659b2bdd886b9f9a7924678fc3c3aaf9"
+    },
+    {
+      "path": "docs/evidence/D01/execution/run02/attempt-failure.json",
+      "bytes": 211,
+      "sha256": "08d12f76cf4960f909cff7a419316d1e89987aec02d85955a2dbd77be1a3d262"
+    },
+    {
+      "path": "docs/evidence/D01/execution/run02/build-tools-install-report.json",
+      "bytes": 11531,
+      "sha256": "eb0258c1b9ead46c7379ae0eaad57e7436afcfe36ca0c0a56758546d9be55285"
+    },
+    {
+      "path": "docs/evidence/D01/execution/run02/commands/01-create-venv/command.json",
+      "bytes": 1177,
+      "sha256": "1c1c1d7e77932d10b547741b02667f12dc78a42f74cb3faab50c4fbd904292cb"
+    },
+    {
+      "path": "docs/evidence/D01/execution/run02/commands/01-create-venv/stderr.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/evidence/D01/execution/run02/commands/01-create-venv/stdout.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/evidence/D01/execution/run02/commands/02-new-environment/command.json",
+      "bytes": 1408,
+      "sha256": "7c5f45cb717727f634ef2b77006737f51a62ff5e22700694b119c9ee50a62c23"
+    },
+    {
+      "path": "docs/evidence/D01/execution/run02/commands/02-new-environment/stderr.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/evidence/D01/execution/run02/commands/02-new-environment/stdout.txt",
+      "bytes": 931,
+      "sha256": "48a69aa3478c299a0b2b0e34228319ac7e006c464fcdbda052c8b99e36bc0333"
+    },
+    {
+      "path": "docs/evidence/D01/execution/run02/commands/03-download-pip/command.json",
+      "bytes": 1514,
+      "sha256": "73ca122a83a7fc13ebd23154698a20f83d4f59aad2248d449b53b169d89e8ce1"
+    },
+    {
+      "path": "docs/evidence/D01/execution/run02/commands/03-download-pip/stderr.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/evidence/D01/execution/run02/commands/03-download-pip/stdout.txt",
+      "bytes": 1954,
+      "sha256": "e039e06cdaf3aec52be92ac891c46ba8479950cdbcc553408bcf13e5de630904"
+    },
+    {
+      "path": "docs/evidence/D01/execution/run02/commands/04-bootstrap-pip/command.json",
+      "bytes": 1397,
+      "sha256": "76cd03d66193b477e08e56a02010d929760893a4fe417ac81860d26e38a100c9"
+    },
+    {
+      "path": "docs/evidence/D01/execution/run02/commands/04-bootstrap-pip/stderr.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/evidence/D01/execution/run02/commands/04-bootstrap-pip/stdout.txt",
+      "bytes": 342,
+      "sha256": "fef37230ee25db9ed2a2cd92742c92745f7aef2cd4de49818f5eeeccb7f73f5d"
+    },
+    {
+      "path": "docs/evidence/D01/execution/run02/commands/05-build-tools/command.json",
+      "bytes": 1549,
+      "sha256": "7115bc7101e6ff68f4d1676927e5bfa3a28845b69c7b1e51dc91b8c606348d3f"
+    },
+    {
+      "path": "docs/evidence/D01/execution/run02/commands/05-build-tools/stderr.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/evidence/D01/execution/run02/commands/05-build-tools/stdout.txt",
+      "bytes": 654,
+      "sha256": "a509d2f9b7f0bde8294453b6e16fb6ef74fad07ef69093172be674174213c4d0"
+    },
+    {
+      "path": "docs/evidence/D01/execution/run02/commands/06-build-wheel/command.json",
+      "bytes": 1487,
+      "sha256": "23281b20bba6ad86019c6ccdc8e907771147898c6f78940cabaad444c8a12eb7"
+    },
+    {
+      "path": "docs/evidence/D01/execution/run02/commands/06-build-wheel/stderr.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/evidence/D01/execution/run02/commands/06-build-wheel/stdout.txt",
+      "bytes": 850,
+      "sha256": "e677937f2562e3e53194b9085b5f99427078a34fbe3af54aa6db3d81cb777d11"
+    },
+    {
+      "path": "docs/evidence/D01/execution/run02/commands/07-install-wheel/command.json",
+      "bytes": 1654,
+      "sha256": "20b01e175f8776fbd54e1f536a1ad2e2b962ea003107be90885f12d80025b44c"
+    },
+    {
+      "path": "docs/evidence/D01/execution/run02/commands/07-install-wheel/stderr.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/evidence/D01/execution/run02/commands/07-install-wheel/stdout.txt",
+      "bytes": 1765,
+      "sha256": "da9e920f83a7820309f48a3723a01de548a4d9521ba18f7940bcf06110dca3ea"
+    },
+    {
+      "path": "docs/evidence/D01/execution/run02/commands/08-pip-check/command.json",
+      "bytes": 1202,
+      "sha256": "7132b4e9d51a1081b21545f9bc9df6973e2aed6d1967f852a41a7f321d59dc2b"
+    },
+    {
+      "path": "docs/evidence/D01/execution/run02/commands/08-pip-check/stderr.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/evidence/D01/execution/run02/commands/08-pip-check/stdout.txt",
+      "bytes": 31,
+      "sha256": "672aec65a45bed50e70229c70934a7eebf0462595c459b83023027645d57cccf"
+    },
+    {
+      "path": "docs/evidence/D01/execution/run02/commands/09-installed-provenance/command.json",
+      "bytes": 1558,
+      "sha256": "141fcad1384906ddc367abe726628f6caf8e3aea0f4cce59fb436cff88995609"
+    },
+    {
+      "path": "docs/evidence/D01/execution/run02/commands/09-installed-provenance/stderr.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/evidence/D01/execution/run02/commands/09-installed-provenance/stdout.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/evidence/D01/execution/run02/commands/10-pip-public-hash/command.json",
+      "bytes": 1656,
+      "sha256": "8f0cda4968a98c40654585ebc25fcc280f79b4bbcbeefe4573c295ce6e78f7d5"
+    },
+    {
+      "path": "docs/evidence/D01/execution/run02/commands/10-pip-public-hash/stderr.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/evidence/D01/execution/run02/commands/10-pip-public-hash/stdout.txt",
+      "bytes": 275,
+      "sha256": "e634e28ed74d7a00dfff77981e6918921d89f8bef88cfc487d68031f15e13bbb"
+    },
+    {
+      "path": "docs/evidence/D01/execution/run02/commands/11-consume-46006966/command.json",
+      "bytes": 1764,
+      "sha256": "a49f4a0e9c0d92651c63a04d980c38bfbde64b9b83bf0fed22ac2eddb69ae912"
+    },
+    {
+      "path": "docs/evidence/D01/execution/run02/commands/11-consume-46006966/stderr.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/evidence/D01/execution/run02/commands/11-consume-46006966/stdout.txt",
+      "bytes": 321,
+      "sha256": "ba9a9ba6b19e62ad4a5a09d2f5c83f71850f27b3e1452dccea7295ca3b08e44f"
+    },
+    {
+      "path": "docs/evidence/D01/execution/run02/commands.json",
+      "bytes": 17114,
+      "sha256": "5ba4396d56baabbcf2b01f9afcc84b8746ee74dd75b53ee51f39b5d3c29b6b57"
+    },
+    {
+      "path": "docs/evidence/D01/execution/run02/consumer-46006966.json",
+      "bytes": 18362,
+      "sha256": "bd0d6d6ac67ab22d659c8376cd29311122e821f15aa4e6b992d96867b36b67f9"
+    },
+    {
+      "path": "docs/evidence/D01/execution/run02/install-report.json",
+      "bytes": 137213,
+      "sha256": "869586a6a0d172ea800f8477cdcf6e6e6493fed4c01f46554ef4ff1c071f5062"
+    },
+    {
+      "path": "docs/evidence/D01/execution/run02/installed-provenance.json",
+      "bytes": 23922,
+      "sha256": "70e66ee7a0a0782065e5b1deffc4fe06e6a25c0531370eedc77d2f1ef907c13b"
+    },
+    {
+      "path": "docs/evidence/D01/execution/run02/process-ledger.json",
+      "bytes": 1901,
+      "sha256": "8abfc8a005200bb0869988dd25a6269406c97959235acc2d414426558a46de81"
+    },
+    {
+      "path": "docs/evidence/D01/execution/run02/public-dependencies.json",
+      "bytes": 3097,
+      "sha256": "851af732f6e300767719de2f5c565303a532b01537079517f5a976deda1d4cb2"
+    },
+    {
+      "path": "docs/evidence/D01/execution/run02/pyvenv.cfg",
+      "bytes": 117,
+      "sha256": "ec899e974552ee88c4aadc1512a08a6df0b7827fdfa49730b305b40abe6c1cbe"
+    },
+    {
+      "path": "docs/evidence/D01/execution/run02/receipt.json",
+      "bytes": 483,
+      "sha256": "4ff977f308c15e0ba1f685dd7a19813dc55028de6707f81b8d5454cf36674b49"
+    },
+    {
+      "path": "docs/evidence/D01/execution/run02/sample-index.json",
+      "bytes": 15909,
+      "sha256": "bc0b1a55ad890f6d85b393bfdd0fe10ae5e5fec3c6b9bcb59a7b56fc23e204e2"
+    },
+    {
+      "path": "docs/evidence/D01/execution/run02/source-index.json",
+      "bytes": 6282,
+      "sha256": "7de487d734fd757ea4681a8c4a9153c2f29fa29eecf737b5667a4dbbccb0f51e"
+    },
+    {
+      "path": "docs/evidence/D01/execution/run02/wheel-binding.json",
+      "bytes": 3465,
+      "sha256": "0ede212c4c468c8c35b126465e4869e4df623e81e62bfaa1ced26a79a37656c6"
+    },
+    {
+      "path": "docs/evidence/D01/execution/run02/workflow/AGENTS.md",
+      "bytes": 2377,
+      "sha256": "5aca1977505515ae671305e087d56383e43b42d93a752ce2e295f5f491680cb9"
+    },
+    {
+      "path": "docs/evidence/D01/execution/run02/workflow/docs/architecture.md",
+      "bytes": 16154,
+      "sha256": "c2b5dce8b862d6d274d87ce75cbbb844d75b12e6c3e6885884984b0b5c321b5f"
+    },
+    {
+      "path": "docs/evidence/D01/execution/run02/workflow/docs/contracts-v1.md",
+      "bytes": 9954,
+      "sha256": "8fdc31e5b6671f4995ea95b3271b916d784c300336a9ee1420e79dfb3ccfcaae"
+    },
+    {
+      "path": "docs/evidence/D01/execution/run02/workflow/docs/coordination.md",
+      "bytes": 19411,
+      "sha256": "6b1a5ef38f9be8fb05fd35c7589f5aaf882e3974e7de1eb1d66eb557502ba80b"
+    },
+    {
+      "path": "docs/evidence/D01/execution/run02/workflow/docs/tasks/A01-integration-R2-coordinator-acceptance.md",
+      "bytes": 3475,
+      "sha256": "f62310e5003dba7462c0165cd911b7cf0a97022ef9e4219db1fa927629de3135"
+    },
+    {
+      "path": "docs/evidence/D01/execution/run02/workflow/docs/tasks/D01-dependency-implementation.md",
+      "bytes": 3380,
+      "sha256": "d44969c5af72c18216a842a6c36e801a2975bc1d0fcb54c525041fad64f49f5e"
+    },
+    {
+      "path": "docs/evidence/D01/execution/run02/workflow/docs/tasks/D01-dependency-preparation.md",
+      "bytes": 2879,
+      "sha256": "7123f97432a922e1e5dd09c7f592fb2c07d6cda8138bd7c3ccd3702ad1501894"
+    },
+    {
+      "path": "docs/evidence/D01/execution/run02/workflow/docs/tasks/D01-independent-review.md",
+      "bytes": 1943,
+      "sha256": "4df00171db731a7c7a2fef485c7125733c5296eda90c336ee785db2ca587ea62"
+    },
+    {
+      "path": "docs/evidence/D01/execution/run02/workflow-index.json",
+      "bytes": 3002,
+      "sha256": "b0380655f59ff104db309ca2b96ece178168d89b415f9d260cc7fd697297941b"
+    },
+    {
+      "path": "docs/evidence/D01/execution/run03/12-46006966-corrupt.json",
+      "bytes": 13216,
+      "sha256": "2469f15151a8ed37e90382bbfff0b8f98621222b45d9c7227daf2076d7baaf9d"
+    },
+    {
+      "path": "docs/evidence/D01/execution/run03/12-46006966-missing.json",
+      "bytes": 13216,
+      "sha256": "730f87fd0697a384770ad8cbc1f0aa3efa98c86a358226d52bb127e11d8e4e35"
+    },
+    {
+      "path": "docs/evidence/D01/execution/run03/12-46007447-corrupt.json",
+      "bytes": 13216,
+      "sha256": "12dfcba98c123aced81b8f1e0eac3de7cfdedf6297e0a8f6b9f363c9bedb3f9b"
+    },
+    {
+      "path": "docs/evidence/D01/execution/run03/12-46007447-missing.json",
+      "bytes": 13216,
+      "sha256": "524de8fe4408453653bb6bb7dc066d9cb8d46b576f37de75b27ece90c0c9f816"
+    },
+    {
+      "path": "docs/evidence/D01/execution/run03/artifacts/annotation_contracts-0.1.0-py3-none-any.whl",
+      "bytes": 53422,
+      "sha256": "7cf800297c53b9e9295d8d19fecbb793659b2bdd886b9f9a7924678fc3c3aaf9"
+    },
+    {
+      "path": "docs/evidence/D01/execution/run03/build-tools-install-report.json",
+      "bytes": 11531,
+      "sha256": "eb0258c1b9ead46c7379ae0eaad57e7436afcfe36ca0c0a56758546d9be55285"
+    },
+    {
+      "path": "docs/evidence/D01/execution/run03/commands/01-create-venv/command.json",
+      "bytes": 1165,
+      "sha256": "42aebeca26a6332536416a7cdcc1ff124c599561cfa482e37a690bd20aa642a3"
+    },
+    {
+      "path": "docs/evidence/D01/execution/run03/commands/01-create-venv/stderr.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/evidence/D01/execution/run03/commands/01-create-venv/stdout.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/evidence/D01/execution/run03/commands/02-new-environment/command.json",
+      "bytes": 1397,
+      "sha256": "53142d2eb56178822e1484573a1bf7eb5693b7a928530321b0605916a0205ecf"
+    },
+    {
+      "path": "docs/evidence/D01/execution/run03/commands/02-new-environment/stderr.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/evidence/D01/execution/run03/commands/02-new-environment/stdout.txt",
+      "bytes": 931,
+      "sha256": "6976c2622fe53eebf2365b7353d5f7f73f05e910201b1b4570f66f0e8064d7ca"
+    },
+    {
+      "path": "docs/evidence/D01/execution/run03/commands/03-download-pip/command.json",
+      "bytes": 1503,
+      "sha256": "06883acc0af5a8136030c082477876ae14f86a0293d67e31f8a2004e8f538548"
+    },
+    {
+      "path": "docs/evidence/D01/execution/run03/commands/03-download-pip/stderr.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/evidence/D01/execution/run03/commands/03-download-pip/stdout.txt",
+      "bytes": 1874,
+      "sha256": "5f82e740a8b83522f6e05eea5b9dc90f49a72ef137108266287ddee3492d6872"
+    },
+    {
+      "path": "docs/evidence/D01/execution/run03/commands/04-bootstrap-pip/command.json",
+      "bytes": 1386,
+      "sha256": "fc22f7f2255fae3a92cf60ca8d7231e4f6a6fbaab142c087151a815194c8531a"
+    },
+    {
+      "path": "docs/evidence/D01/execution/run03/commands/04-bootstrap-pip/stderr.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/evidence/D01/execution/run03/commands/04-bootstrap-pip/stdout.txt",
+      "bytes": 342,
+      "sha256": "f66647d43ea57bd7e9152386492eadf4e19125b92b069f6fd462158cdb5932a4"
+    },
+    {
+      "path": "docs/evidence/D01/execution/run03/commands/05-build-tools/command.json",
+      "bytes": 1538,
+      "sha256": "99e41a77ea38fade5d966089234de26516b7c6d48d7bc70ef887c689ffc1b51d"
+    },
+    {
+      "path": "docs/evidence/D01/execution/run03/commands/05-build-tools/stderr.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/evidence/D01/execution/run03/commands/05-build-tools/stdout.txt",
+      "bytes": 582,
+      "sha256": "9f006ec537de9c0951e63a6fe907418fc1d604fa15012da09712f8255d854b40"
+    },
+    {
+      "path": "docs/evidence/D01/execution/run03/commands/06-build-wheel/command.json",
+      "bytes": 1475,
+      "sha256": "b4be5dff93ff50055c9ff965822cd288e9977cafcadfe4ab72ad7e29d441ebd7"
+    },
+    {
+      "path": "docs/evidence/D01/execution/run03/commands/06-build-wheel/stderr.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/evidence/D01/execution/run03/commands/06-build-wheel/stdout.txt",
+      "bytes": 850,
+      "sha256": "e8ddca3901aad0f3288fc2fcfbb6ce79a6a6849c47604e2b19691f2e67c6f65a"
+    },
+    {
+      "path": "docs/evidence/D01/execution/run03/commands/07-install-wheel/command.json",
+      "bytes": 1642,
+      "sha256": "689ceea0437ec85924b2bfb6efa888f40cdf4c52889382c04e860fc540cb7876"
+    },
+    {
+      "path": "docs/evidence/D01/execution/run03/commands/07-install-wheel/stderr.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/evidence/D01/execution/run03/commands/07-install-wheel/stdout.txt",
+      "bytes": 1765,
+      "sha256": "41965c2bd717f59c5d70e94acedc99e296d07db15b7d506645afa1eec25660cb"
+    },
+    {
+      "path": "docs/evidence/D01/execution/run03/commands/08-pip-check/command.json",
+      "bytes": 1191,
+      "sha256": "d9926bf8da362163ce9d783aa0a0b5611bcbdeb175b385b66e654edd47c0a140"
+    },
+    {
+      "path": "docs/evidence/D01/execution/run03/commands/08-pip-check/stderr.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/evidence/D01/execution/run03/commands/08-pip-check/stdout.txt",
+      "bytes": 31,
+      "sha256": "672aec65a45bed50e70229c70934a7eebf0462595c459b83023027645d57cccf"
+    },
+    {
+      "path": "docs/evidence/D01/execution/run03/commands/09-installed-provenance/command.json",
+      "bytes": 1546,
+      "sha256": "4b2b368001bf4c63ff4d2b033a70246ba13a1a3f09ad47d095d3615d02762c52"
+    },
+    {
+      "path": "docs/evidence/D01/execution/run03/commands/09-installed-provenance/stderr.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/evidence/D01/execution/run03/commands/09-installed-provenance/stdout.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/evidence/D01/execution/run03/commands/10-pip-public-hash/command.json",
+      "bytes": 1645,
+      "sha256": "025a2f274d4da934fafbd64c1070809aeb869311d9dbbcacd7d591127591e742"
+    },
+    {
+      "path": "docs/evidence/D01/execution/run03/commands/10-pip-public-hash/stderr.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/evidence/D01/execution/run03/commands/10-pip-public-hash/stdout.txt",
+      "bytes": 275,
+      "sha256": "e634e28ed74d7a00dfff77981e6918921d89f8bef88cfc487d68031f15e13bbb"
+    },
+    {
+      "path": "docs/evidence/D01/execution/run03/commands/11-consume-46006966/command.json",
+      "bytes": 1752,
+      "sha256": "5b5f721daa30dbd596a3a33fac97d909a1d91775aff330337a144bae4ab279c6"
+    },
+    {
+      "path": "docs/evidence/D01/execution/run03/commands/11-consume-46006966/stderr.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/evidence/D01/execution/run03/commands/11-consume-46006966/stdout.txt",
+      "bytes": 321,
+      "sha256": "ba9a9ba6b19e62ad4a5a09d2f5c83f71850f27b3e1452dccea7295ca3b08e44f"
+    },
+    {
+      "path": "docs/evidence/D01/execution/run03/commands/11-consume-46007447/command.json",
+      "bytes": 1754,
+      "sha256": "9fc0cc4d7fc8e5a7bfe44f2fd8175ca8f92f73e88afdf3f6705c248f5cbb7767"
+    },
+    {
+      "path": "docs/evidence/D01/execution/run03/commands/11-consume-46007447/stderr.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/evidence/D01/execution/run03/commands/11-consume-46007447/stdout.txt",
+      "bytes": 320,
+      "sha256": "2d53a1591f150ad06f76dbe0bfbf298fedba02c4b7804ea6966cc40c69684335"
+    },
+    {
+      "path": "docs/evidence/D01/execution/run03/commands/12-46006966-corrupt/command.json",
+      "bytes": 1725,
+      "sha256": "fa19ba75bb005b271587fce0096e35e01047fc28850d25770ee180300f69f73f"
+    },
+    {
+      "path": "docs/evidence/D01/execution/run03/commands/12-46006966-corrupt/stderr.txt",
+      "bytes": 2457,
+      "sha256": "bb8f3ef7e0b8a261c8ada6c8d6382026896c470200e9b767fda28e3193329583"
+    },
+    {
+      "path": "docs/evidence/D01/execution/run03/commands/12-46006966-corrupt/stdout.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/evidence/D01/execution/run03/commands/12-46006966-missing/command.json",
+      "bytes": 1726,
+      "sha256": "0fad9fd637be75196740c42a583ddf15f1c3f452b18db558db64798700a0f9ac"
+    },
+    {
+      "path": "docs/evidence/D01/execution/run03/commands/12-46006966-missing/stderr.txt",
+      "bytes": 2463,
+      "sha256": "f744a9cabc8a5c8449022b439354ea11bbccc675162e42a347b456d907e6ee70"
+    },
+    {
+      "path": "docs/evidence/D01/execution/run03/commands/12-46006966-missing/stdout.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/evidence/D01/execution/run03/commands/12-46007447-corrupt/command.json",
+      "bytes": 1725,
+      "sha256": "1c30739b27a9ecab9b6a469f89ea1c2d04d7012220ef8916dccb4c1955b417b3"
+    },
+    {
+      "path": "docs/evidence/D01/execution/run03/commands/12-46007447-corrupt/stderr.txt",
+      "bytes": 2457,
+      "sha256": "bb8f3ef7e0b8a261c8ada6c8d6382026896c470200e9b767fda28e3193329583"
+    },
+    {
+      "path": "docs/evidence/D01/execution/run03/commands/12-46007447-corrupt/stdout.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/evidence/D01/execution/run03/commands/12-46007447-missing/command.json",
+      "bytes": 1727,
+      "sha256": "f38aa7018d516c00645a677ed18e02e53d84a133f6982989fee6cf49589422f3"
+    },
+    {
+      "path": "docs/evidence/D01/execution/run03/commands/12-46007447-missing/stderr.txt",
+      "bytes": 2463,
+      "sha256": "f744a9cabc8a5c8449022b439354ea11bbccc675162e42a347b456d907e6ee70"
+    },
+    {
+      "path": "docs/evidence/D01/execution/run03/commands/12-46007447-missing/stdout.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/evidence/D01/execution/run03/commands/13-source-regression/command.json",
+      "bytes": 1358,
+      "sha256": "d9fd9ebc2fe2122d8c0ca7176165db1470f34bb7bd37c34696932b6a954e53e7"
+    },
+    {
+      "path": "docs/evidence/D01/execution/run03/commands/13-source-regression/stderr.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/evidence/D01/execution/run03/commands/13-source-regression/stdout.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/evidence/D01/execution/run03/commands/14-contract-regression/command.json",
+      "bytes": 1504,
+      "sha256": "54d86e110d98aa58f3c8acb5b259b5f7e32286e3fd18a05194c9df2dcc9f318e"
+    },
+    {
+      "path": "docs/evidence/D01/execution/run03/commands/14-contract-regression/stderr.txt",
+      "bytes": 7237,
+      "sha256": "b494c15e3ef0b8d4dc88af8ef98ff09aacf46f678bb69a6b7b0abd62b89dfd4d"
+    },
+    {
+      "path": "docs/evidence/D01/execution/run03/commands/14-contract-regression/stdout.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/evidence/D01/execution/run03/commands.json",
+      "bytes": 28970,
+      "sha256": "550665938177d3c76c8d579db820c44b8632fd35ad73c84315435123dd6d54de"
+    },
+    {
+      "path": "docs/evidence/D01/execution/run03/consumer-46006966.json",
+      "bytes": 18351,
+      "sha256": "ce69e5a690570e29e6aecf6d15be8e6cede252cb1a689e0bffd720f3b9a30808"
+    },
+    {
+      "path": "docs/evidence/D01/execution/run03/consumer-46007447.json",
+      "bytes": 18351,
+      "sha256": "30c61a38315fe0a3bec76af36b2f85b0a800dbf1bda30b6d78ab514ddd9989b5"
+    },
+    {
+      "path": "docs/evidence/D01/execution/run03/consumption-summary.json",
+      "bytes": 2574,
+      "sha256": "6894ddf6310af870a0efb04cfce3620e2b298f4f543dc70716fe1ae1d0e2bec9"
+    },
+    {
+      "path": "docs/evidence/D01/execution/run03/contract-regression.json",
+      "bytes": 13229,
+      "sha256": "4004a4123cb9a7aa9fa0c219b0c0bb7c43b5caff305015b9929d3d4f037ad89f"
+    },
+    {
+      "path": "docs/evidence/D01/execution/run03/install-report.json",
+      "bytes": 137213,
+      "sha256": "5ed96068ebf3043993d9c6c8c1c69f3c6ab06ee4a5443185e715512b38f199a9"
+    },
+    {
+      "path": "docs/evidence/D01/execution/run03/installed-provenance.json",
+      "bytes": 23911,
+      "sha256": "7431f86b17898dc4ddccbe2224386085bfd84483d4f5e5929183a8012e4e8092"
+    },
+    {
+      "path": "docs/evidence/D01/execution/run03/invalid-image.jpg",
+      "bytes": 30,
+      "sha256": "05e1fb798f665d2ff98f1a13d7742e39f1d3e87932831c090f49a0cad9bb4b44"
+    },
+    {
+      "path": "docs/evidence/D01/execution/run03/outside-cwd.json",
+      "bytes": 251,
+      "sha256": "8ee2e692fdb0c86e51a1b968eafb3a6efea2d2d9a2672a61ce04a529f3d5ee3f"
+    },
+    {
+      "path": "docs/evidence/D01/execution/run03/post-run-input-integrity.json",
+      "bytes": 36573,
+      "sha256": "73705a9ca36c9be5db2b1311f1191e3bb1eed159aa04457a941077ed77969084"
+    },
+    {
+      "path": "docs/evidence/D01/execution/run03/process-ledger.json",
+      "bytes": 3017,
+      "sha256": "d64e95f80f9e91839d5b21d63433d231f0998bf2d300c22516b19f4bfb66e5d3"
+    },
+    {
+      "path": "docs/evidence/D01/execution/run03/public-dependencies.json",
+      "bytes": 3097,
+      "sha256": "851af732f6e300767719de2f5c565303a532b01537079517f5a976deda1d4cb2"
+    },
+    {
+      "path": "docs/evidence/D01/execution/run03/pyvenv.cfg",
+      "bytes": 117,
+      "sha256": "ec899e974552ee88c4aadc1512a08a6df0b7827fdfa49730b305b40abe6c1cbe"
+    },
+    {
+      "path": "docs/evidence/D01/execution/run03/receipt.json",
+      "bytes": 483,
+      "sha256": "4ff977f308c15e0ba1f685dd7a19813dc55028de6707f81b8d5454cf36674b49"
+    },
+    {
+      "path": "docs/evidence/D01/execution/run03/regression-input-index.json",
+      "bytes": 27435,
+      "sha256": "fa3ba16803981f67f4ec66ca81ee3a60bc88bfe0ee5fe37602da8b5b962a905d"
+    },
+    {
+      "path": "docs/evidence/D01/execution/run03/run-result.json",
+      "bytes": 381,
+      "sha256": "2cc8133b91be393ef9c6e7c94c9b42a9beaefdae6a96cb445e5591ef3152aa79"
+    },
+    {
+      "path": "docs/evidence/D01/execution/run03/sample-index.json",
+      "bytes": 15909,
+      "sha256": "bc0b1a55ad890f6d85b393bfdd0fe10ae5e5fec3c6b9bcb59a7b56fc23e204e2"
+    },
+    {
+      "path": "docs/evidence/D01/execution/run03/source-index.json",
+      "bytes": 6282,
+      "sha256": "7de487d734fd757ea4681a8c4a9153c2f29fa29eecf737b5667a4dbbccb0f51e"
+    },
+    {
+      "path": "docs/evidence/D01/execution/run03/source-regression.json",
+      "bytes": 31737,
+      "sha256": "eae9e4bf788126f29265c64134b43bf6d946af526fb7adf87452f0d289afcfe7"
+    },
+    {
+      "path": "docs/evidence/D01/execution/run03/wheel-binding.json",
+      "bytes": 3465,
+      "sha256": "a44152c268a19a7f625cb7263812b8c3676010d9eb5ba49099a2b8335fd5a745"
+    },
+    {
+      "path": "docs/evidence/D01/execution/run03/workflow/AGENTS.md",
+      "bytes": 2377,
+      "sha256": "5aca1977505515ae671305e087d56383e43b42d93a752ce2e295f5f491680cb9"
+    },
+    {
+      "path": "docs/evidence/D01/execution/run03/workflow/docs/architecture.md",
+      "bytes": 16154,
+      "sha256": "c2b5dce8b862d6d274d87ce75cbbb844d75b12e6c3e6885884984b0b5c321b5f"
+    },
+    {
+      "path": "docs/evidence/D01/execution/run03/workflow/docs/contracts-v1.md",
+      "bytes": 9954,
+      "sha256": "8fdc31e5b6671f4995ea95b3271b916d784c300336a9ee1420e79dfb3ccfcaae"
+    },
+    {
+      "path": "docs/evidence/D01/execution/run03/workflow/docs/coordination.md",
+      "bytes": 19411,
+      "sha256": "6b1a5ef38f9be8fb05fd35c7589f5aaf882e3974e7de1eb1d66eb557502ba80b"
+    },
+    {
+      "path": "docs/evidence/D01/execution/run03/workflow/docs/tasks/A01-integration-R2-coordinator-acceptance.md",
+      "bytes": 3475,
+      "sha256": "f62310e5003dba7462c0165cd911b7cf0a97022ef9e4219db1fa927629de3135"
+    },
+    {
+      "path": "docs/evidence/D01/execution/run03/workflow/docs/tasks/D01-dependency-implementation.md",
+      "bytes": 3380,
+      "sha256": "d44969c5af72c18216a842a6c36e801a2975bc1d0fcb54c525041fad64f49f5e"
+    },
+    {
+      "path": "docs/evidence/D01/execution/run03/workflow/docs/tasks/D01-dependency-preparation.md",
+      "bytes": 2879,
+      "sha256": "7123f97432a922e1e5dd09c7f592fb2c07d6cda8138bd7c3ccd3702ad1501894"
+    },
+    {
+      "path": "docs/evidence/D01/execution/run03/workflow/docs/tasks/D01-independent-review.md",
+      "bytes": 1943,
+      "sha256": "4df00171db731a7c7a2fef485c7125733c5296eda90c336ee785db2ca587ea62"
+    },
+    {
+      "path": "docs/evidence/D01/execution/run03/workflow-index.json",
+      "bytes": 3002,
+      "sha256": "b0380655f59ff104db309ca2b96ece178168d89b415f9d260cc7fd697297941b"
+    },
+    {
+      "path": "docs/evidence/D01/execution/workflow-links/docs/tasks/A01-integration-R2-review-report.md",
+      "bytes": 15632,
+      "sha256": "aa7ec3b060c30fa8ceefe282a2885669c50ff0138826b7840c8f0f7310c1f645"
+    },
+    {
+      "path": "docs/evidence/D01/execution/workflow-links/docs/tasks/A01-review-R2-handoff.md",
+      "bytes": 3931,
+      "sha256": "3346c510b46cc7f4a8e81bbcf926233825579d7db5b671cefbe4d14fccbcfd37"
+    },
+    {
+      "path": "docs/evidence/D01/execution/workflow-links/docs/tasks/S01-eligibility-preparation.md",
+      "bytes": 5373,
+      "sha256": "9c7aa48c70627a064294f9953490e3597fcc0ed9736e751d75ee004291d9a9af"
+    },
+    {
+      "path": "docs/evidence/D01/execution/workflow-links-index.json",
+      "bytes": 890,
+      "sha256": "c9c62e34ce32633d201839aa62fa8213e31b57069efb8f0368235952efe7bf5c"
+    },
+    {
+      "path": "docs/tasks/D01-execution-report.md",
+      "bytes": 14000,
+      "sha256": "19c9553422b3d42daa693e22bfaf135272f5ab36837c8180bcaba7b2a1076c8b"
+    },
+    {
+      "path": "examples/d01/collect.py",
+      "bytes": 1757,
+      "sha256": "b97f72ae36a1e7bd670ccce400dd4442897c047c564b6f3b23e1e5a15a95f829",
+      "representations": [
+        {
+          "kind": "EXACT_LF_TO_CRLF_FOR_THIS_FILE",
+          "bytes": 1795,
+          "sha256": "f0947a7841410e41c93bffc00bd882e4bc001e2bed6acb933ef51c07bd7fbcf1"
+        }
+      ]
+    },
+    {
+      "path": "examples/d01/finalize.py",
+      "bytes": 8471,
+      "sha256": "a7bca24cab0b737ea2742e5bbea7c5ef371e38913ff926a87017ddd0e2de9a2c",
+      "representations": [
+        {
+          "kind": "EXACT_LF_TO_CRLF_FOR_THIS_FILE",
+          "bytes": 8620,
+          "sha256": "70b14f454547f0dc0d54aac0fcedb8a63633c27d109824240ea66969282cca45"
+        }
+      ]
+    },
+    {
+      "path": "examples/d01/observe-processes.ps1",
+      "bytes": 2082,
+      "sha256": "55553e07602f555dcb0951b25b036b5a8b254d5e27736484d2f6792987b8c0d8",
+      "representations": [
+        {
+          "kind": "EXACT_LF_TO_CRLF_FOR_THIS_FILE",
+          "bytes": 2120,
+          "sha256": "6a4359fd742b1a1b2f2932a0a01561ed3ba5b1bb8064d909ac4f54662e9acd9a"
+        }
+      ]
+    },
+    {
+      "path": "examples/d01/probe.py",
+      "bytes": 6894,
+      "sha256": "3b5d43c29b505c0d4e3426d342b30ee444069e6e393425866e94085f812680f0",
+      "representations": [
+        {
+          "kind": "EXACT_LF_TO_CRLF_FOR_THIS_FILE",
+          "bytes": 7021,
+          "sha256": "590593838f9dee38b945f892618cdda9e93d7f230c0110fda89a8ca11295fe3e"
+        }
+      ]
+    },
+    {
+      "path": "examples/d01/README.md",
+      "bytes": 3351,
+      "sha256": "f3104b1bddd818cbd466993698fb03f9d2c870731a49dc3f5225bacc617f30ee"
+    },
+    {
+      "path": "examples/d01/run.py",
+      "bytes": 17021,
+      "sha256": "92faf97477b0bffa5577630172f5c29d9cf67f4ce3b3e4c84b05cb74db7f71cc",
+      "representations": [
+        {
+          "kind": "EXACT_LF_TO_CRLF_FOR_THIS_FILE",
+          "bytes": 17296,
+          "sha256": "d744d0b0c0bd6611c197ddab8e4e39c841af32c322b209ee4acd49cfc5528680"
+        }
+      ]
+    },
+    {
+      "path": "examples/d01/seal.py",
+      "bytes": 3809,
+      "sha256": "43415206c5fda71ddbfbee47f2270508d3d0722d3b70f20c4fb9d11b9f727e79",
+      "representations": [
+        {
+          "kind": "EXACT_LF_TO_CRLF_FOR_THIS_FILE",
+          "bytes": 3881,
+          "sha256": "35479dee26e26105ae94ceba434bd01a4ecd87ebf3fa60ef3c7ede1fe887fef1"
+        }
+      ]
+    },
+    {
+      "path": "examples/d01/verify.py",
+      "bytes": 1799,
+      "sha256": "090bd4de1e04ef37782c382fbc0ecdef4c922873d2d9740918ba8df7db4a69e4",
+      "representations": [
+        {
+          "kind": "EXACT_LF_TO_CRLF_FOR_THIS_FILE",
+          "bytes": 1839,
+          "sha256": "b12948ac25b9fe6a6b0f35f4c10cd8010a5b7f62aaf1fda398869d0f8485e1d2"
+        }
+      ]
+    },
+    {
+      "path": "pyproject.toml",
+      "bytes": 421,
+      "sha256": "a7a47172d386c297fcf91827ce7c5acab31a2f08f915ab4ae86197a13f6e9c2f",
+      "representations": [
+        {
+          "kind": "EXACT_LF_TO_CRLF_FOR_THIS_FILE",
+          "bytes": 437,
+          "sha256": "f16e807aa9a332d9b959e22d686ed64850f16cb9d2224a2705d7e84fafeae6a4"
+        }
+      ]
+    }
+  ],
+  "byte_policy": "Primary is exact Git bytes; only explicitly enumerated pyproject/D01 helper entries have one fixed CRLF hash. Raw evidence has no alternatives."
+}
+

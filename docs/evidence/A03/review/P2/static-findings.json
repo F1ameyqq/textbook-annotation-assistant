@@ -1,0 +1,93 @@
+{
+  "unattempted_entry": {
+    "source": "src/annotation/runtime/storage/__init__.py",
+    "sha256": "94767f6c31a04fad926d1c31daff44646a688112d93a4b1cee42eddd7e4443ce",
+    "start": 1015,
+    "end": 1018,
+    "text": "    def commit_unattempted_absence(self, bundle, request, *, owner_id, generation, asset_root, observer):\n        # Frozen R2 only models one same-plan journal from sequence one. Do not\n        # rewrite real ledger coordinates or omit control events to fit it.\n        fail(\"EVENT_PREFIX_CONTRACT_GAP\", \"P2 global prefix profile requires explicit coordinator approval\", 2)"
+  },
+  "event_prefix_schema": {
+    "path": "src/annotation/contracts/schemas/event-prefix.schema.json",
+    "sha256": "784c94ca63188ccb4a84de3b679128498fe029abf7cff69d5f892e4de3d0e2d7",
+    "actual_properties": {
+      "from_sequence": {
+        "const": 1
+      },
+      "genesis_hash": {
+        "const": "0000000000000000000000000000000000000000000000000000000000000000"
+      },
+      "design_only": {
+        "const": true
+      }
+    }
+  },
+  "report_producer": {
+    "source": "src/annotation/runtime/recovery/quality.py",
+    "sha256": "da1d285de2d0a1020c16561362f18e07e496092199f7e877e156eed1180a8b0a",
+    "start": 170,
+    "end": 181,
+    "text": "    if receipt is None or not source.payload.scope_manifest:\n        diagnostic[\"report_kind\"] = \"DIAGNOSTIC_ONLY\"\n        return QualityResult(bundle, diagnostic)\n    # Frozen CheckReport has one snapshot and requires exact original-receipt\n    # binding. Do not invent a combined observation or retrofit an original ref.\n    if any(_plain(head.payload.original_receipt_ref) != artifact_ref(receipt) for head in heads):\n        diagnostic.update(state=\"REPORT_CONTRACT_GAP\", reason_code=\"RECOVERY_RECEIPT_BINDING_UNREPRESENTABLE\")\n        return QualityResult(bundle, diagnostic)\n    observed_refs = [_plain(head.payload.observed_snapshot_ref) for head in heads]\n    if observed_refs and any(ref != observed_refs[0] for ref in observed_refs):\n        diagnostic.update(state=\"REPORT_CONTRACT_GAP\", reason_code=\"MULTIPLE_RECOVERY_SNAPSHOTS_UNREPRESENTABLE\")\n        return QualityResult(bundle, diagnostic)"
+  },
+  "report_validator": {
+    "source": "src/annotation/contracts/recovery.py",
+    "sha256": "ad8066d0fa4026c02cdf3975f23c73288bec102f7ae146e5d6bdf0983c685fda",
+    "start": 838,
+    "end": 860,
+    "text": "def _reports(ctx, heads):\n    for artifact in ctx.artifacts.values():\n        p = artifact['payload']\n        if artifact['kind'] == 'CheckReport':\n            if p['stage'] != 'POST_APPLY':\n                if p['recovery_refs']:\n                    fail('$.recovery_refs', 'RECOVERY_CHAIN_INVALID', 'only POST_APPLY may consume recovery results')\n                continue\n            receipt = ctx.resolve(p['receipt'], artifact, 'ExecutionReceipt')\n            plan = ctx.resolve(receipt['payload']['plan'], artifact, 'ApplyPlan')\n            if p['graph'] != plan['payload']['graph'] or p['policy'] != plan['payload']['policy'] or p['subject'] != p['receipt']:\n                fail('$.postcheck', 'RECOVERY_CHAIN_INVALID', 'postcheck graph/policy/subject differs')\n            effective = {r['action_id']: r['outcome'] for r in receipt['payload']['results']}\n            for ref in p['recovery_refs']:\n                resolution = ctx.resolve(ref, artifact, 'ReconciliationResult')\n                rp = resolution['payload']\n                _consumer_resolution_head(ctx, artifact, ref, heads, intent_ref=rp['intent_ref'],\n                                          plan_ref=receipt['payload']['plan'], action_id=rp['action_id'])\n                if rp['original_receipt_ref'] != p['receipt']:\n                    fail('$.postcheck', 'RECOVERY_CHAIN_INVALID', 'postcheck must bind its exact original receipt')\n                effective[rp['action_id']] = {'RESOLVED_APPLIED': 'APPLIED', 'RESOLVED_NOT_APPLIED': 'NOT_APPLIED', 'STILL_UNKNOWN': 'UNKNOWN'}[rp['resolution']]\n                if p['snapshot'] != rp['observed_snapshot_ref']:\n                    fail('$.postcheck', 'OBSERVATION_BINDING_MISMATCH', 'postcheck needs the exact observation of its consumed historical head')"
+  },
+  "report_logic_witnesses": [
+    {
+      "condition": "resolution.original_receipt_ref=null; later receipt_ref is a nonnull ordinary ref",
+      "constraint": "POST receipt must equal every consumed resolution original_receipt_ref",
+      "result": "single requested POST cannot satisfy equality without changing old resolution",
+      "whole_legal_runtime_scene": "NOT_RUN"
+    },
+    {
+      "condition": "two consumed heads have distinct observed_snapshot_ref values S1!=S2",
+      "constraint": "single POST.snapshot must equal each consumed head observed_snapshot_ref",
+      "result": "no single snapshot equals both distinct refs",
+      "whole_legal_runtime_scene": "NOT_RUN"
+    }
+  ],
+  "hold_guards": {
+    "source": "src/annotation/runtime/storage/holds.py",
+    "sha256": "76972fadde32802440334da6352914f41a18fc0aaa82b84758e72113b25462f3",
+    "start": 315,
+    "end": 346,
+    "text": "                refs = [(snapshot_ref, 'PlatformSnapshot'), (precheck_ref, 'CheckReport'),\n                        (targetcheck_ref, 'CheckReport'), (candidate_plan_ref, 'ApplyPlan')]\n                snapshot, precheck, targetcheck, plan = [self._hold_artifact(connection, ref, reg, kind) for ref, kind in refs]\n                native, _, native_resource = self._hold_native_for_snapshot(connection, reg, observer, snapshot_ref)\n            self._hold_fence(observer, target_key, owner_id, generation)\n            hp = hold['payload']\n            if (_time(native['observed_at']) <= max(_time(hp['observed_at']), _time(hold['recorded_at'])) or\n                    native['read_sequence'] <= hp['read_sequence']):\n                fail('OBSERVATION_NOT_FRESH', 'candidate snapshot must be a new actual observation after the hold')\n            if (plain(precheck_ref) in hp['prior_precheck_refs'] or _time(precheck['created_at']) <= _time(hold['recorded_at']) or\n                    precheck['payload']['stage'] != 'PRE_APPLY' or precheck['payload']['decision'] != 'PASS'):\n                fail('HOLD_EVIDENCE_INVALID', 'a genuinely new post-hold PRE_APPLY is required; old PRE cannot be relabeled by this runtime')\n            pp = plan['payload']\n            if (pp['snapshot'] != plain(snapshot_ref) or pp['precheck'] != plain(precheck_ref) or\n                    pp['targetcheck'] != plain(targetcheck_ref) or targetcheck['payload']['stage'] != 'TARGET' or\n                    targetcheck['payload']['snapshot'] != plain(snapshot_ref) or targetcheck['payload']['subject'] != plain(snapshot_ref) or\n                    targetcheck['payload']['decision'] != 'PASS' or _time(targetcheck['created_at']) < _time(native['observed_at']) or\n                    _time(plan['created_at']) < max(_time(native['observed_at']), _time(precheck['created_at']), _time(targetcheck['created_at']))):\n                fail('HOLD_EVIDENCE_INVALID', 'candidate plan/new PRE/new TARGET/current snapshot bindings differ')\n            try:\n                bundle = validate_recovery_bundle(self.bundle(reg['id']), asset_root=reg['package_root'])\n                selected = assert_recovery_plan_ready(bundle, candidate_plan_ref, snapshot_ref)\n                verify_generated_plan(bundle, selected, snapshot_ref, configuration(json.loads(reg['config'])))\n            except ContractError as error:\n                code = error.issues[0]['code'] if error.issues else 'HOLD_EVIDENCE_INVALID'\n                fail(code if code in ('TARGET_CHANGED', 'OBSERVATION_NOT_FRESH', 'BOOK_WRITE_PAUSED') else 'HOLD_EVIDENCE_INVALID', str(error))\n            # Retain the same book gate while the independent target is read.\n            # No dispatch permit is issued or consumed by this route.\n            self.renew(target_key, owner_id=owner_id, generation=generation)\n            captured, verified_snapshot, actual = self._hold_read(reg, observer, deadline)\n            if (actual['target_state_hash'], actual['target_state_version']) != (native['target_state_hash'], native['target_state_version']):\n                fail('TARGET_CHANGED', 'target changed after candidate planning; hold remains', 3)"
+  },
+  "hold_positive_and_second_drift": "NOT_RUN; no genuine newly produced PRE_APPLY was supplied in this review",
+  "conversion": {
+    "source": "src/annotation/contracts/recovery.py",
+    "sha256": "ad8066d0fa4026c02cdf3975f23c73288bec102f7ae146e5d6bdf0983c685fda",
+    "start": 1022,
+    "end": 1050,
+    "text": "def convert_synthetic_fixture(source_path, output_dir, *, conversion_id, expected_input_sha256):\n    \"\"\"Create a new initial simulation fixture; never import execution history.\"\"\"\n    from .validation import load_bundle\n    from .models import Identifier\n    from pydantic import TypeAdapter\n    TypeAdapter(Identifier).validate_python(conversion_id)\n    source_path, output_dir = Path(source_path).resolve(), Path(output_dir).resolve()\n    if file_digest(source_path) != expected_input_sha256:\n        fail('$', 'CONVERSION_INPUT_HASH_MISMATCH', 'exact original file SHA256 differs')\n    if output_dir.exists():\n        fail('$', 'CONVERSION_TARGET_EXISTS', 'conversion requires a new output directory')\n    original = load_bundle(source_path, verify_assets=True).model_dump(mode='json')\n    if any(a['kind'] in ('ExecutionReceipt', 'BatchReport') for a in original['artifacts']):\n        fail('$', 'LEGACY_UNRECORDED', 'execution results cannot become new simulated history')\n    for value in _walk(original):\n        if not isinstance(value, dict):\n            continue\n        if ('evidence_mode' in value and value['evidence_mode'] != 'SYNTHETIC' or\n                'provenance' in value and value['provenance'] != 'SYNTHETIC' or\n                'mode' in value and value['mode'] == 'OBSERVED' or\n                'region_id' in value and value.get('source', 'SYNTHETIC') != 'SYNTHETIC' or\n                'clue_id' in value and value.get('source', 'SYNTHETIC') != 'SYNTHETIC' or\n                'execution_mode' in value and value['execution_mode'] not in ('SIMULATED', 'NOT_EXECUTED')):\n            fail('$', 'SYNTHETIC_ONLY', 'conversion cannot relabel real provenance')\n    output_dir.mkdir(parents=True)\n    incomplete = output_dir / 'conversion-incomplete.json'\n    incomplete.write_text(json.dumps({'conversion_id': conversion_id, 'status': 'INCOMPLETE',\n                                      'source_sha256': expected_input_sha256}, indent=2) + '\\n', encoding='utf-8')\n    artifacts = {(a['artifact_id'], a['revision']): a for a in original['artifacts']}"
+  },
+  "conversion_missing_graph_rejection": {
+    "source": "src/annotation/contracts/recovery.py",
+    "sha256": "ad8066d0fa4026c02cdf3975f23c73288bec102f7ae146e5d6bdf0983c685fda",
+    "start": 1118,
+    "end": 1127,
+    "text": "                evidence = artifacts[(graph['payload']['evidence']['artifact_id'], graph['payload']['evidence']['revision'])]\n                regions = {r['region_id']: r['box']['image']['asset_id'] for r in evidence['payload']['regions']}\n                fragments = {f['fragment_id']: f['region_ids'] for f in graph['payload']['fragments']}\n                for q in graph['payload']['questions']:\n                    for fid in q['fragment_ids'] + q['shared_fragment_ids']:\n                        for rid in fragments[fid]:\n                            per_page[regions[rid]].add(q['question_id'])\n            assigned = set().union(*per_page.values()) if per_page else set()\n            if assigned != set(p['scope_manifest']):\n                fail('$', 'CONVERSION_INPUT_UNSUPPORTED', 'fixture scope contains items without explicit page enumeration')"
+  },
+  "migration_interruption": "NOT_RUN; unknown DB fail-closed is approved and not a requirement for automatic unknown-version migration; archive/explicit new-fixture conversion and its interrupted state still require evidence",
+  "native_identity_retirement": {
+    "source": "src/annotation/runtime/storage/__init__.py",
+    "sha256": "94767f6c31a04fad926d1c31daff44646a688112d93a4b1cee42eddd7e4443ce",
+    "start": 1075,
+    "end": 1093,
+    "text": "    def verify_target_authorization(self, authorization, *, effect_gate, target_key, target_store_id,\n                                    target_session_id, generation, action_digest):\n        self._opaque(authorization, \"authorization\")\n        key = self.book_id(target_key)\n        self._gate_check(effect_gate, key)\n        if (authorization[\"used\"] or authorization[\"target_key\"] != plain(target_key)\n            or authorization[\"generation\"] != generation or authorization[\"action_digest\"] != action_digest\n            or authorization[\"target_store_id\"] != target_store_id or authorization[\"target_session_id\"] != target_session_id):\n            fail(\"DISPATCH_PERMIT_INVALID\")\n        with self.connect() as connection:\n            book = self._lease(connection, key, authorization[\"owner_id\"], generation, pending_ok=True)\n            if book[\"hold\"]:\n                fail(\"TARGET_DRIFT_HOLD\", book[\"hold\"], 3)\n            if self._pending(connection, key, authorization[\"intent_id\"]):\n                fail(\"BOOK_WRITE_PAUSED\")\n        authorization[\"used\"] = True\n        # Retire the actual identity as well as its caller-visible diagnostic.\n        self._issued.pop(id(authorization), None)\n        return authorization"
+  },
+  "authorization_field_reset": "NOT_EXECUTED; pre-existing automatic review block respected, no equivalent or delegated probe",
+  "new_source_equals_fa645ac": true,
+  "old_git_baseline_files": 9710,
+  "modified_old_paths": [
+    "src/annotation/contracts/__init__.py",
+    "src/annotation/delivery/mock/__init__.py",
+    "src/annotation/delivery/planner/__init__.py",
+    "src/annotation/quality/targetcheck/__init__.py"
+  ],
+  "old_failure_originals": "author quality index explicitly NOT_RETAINED; hold summary original top-level stdout/stderr missing; not reconstructed or converted into passes",
+  "limits": "Static constraints and source guards do not constitute runtime proof of the unrun report/hold/migration cases."
+}

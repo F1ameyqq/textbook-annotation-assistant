@@ -1,0 +1,758 @@
+{
+  "target_commit": "a86eca6ec87ced20dc3a8bcc8f2c87d329e87c39",
+  "level": "OFFLINE_INDEPENDENT_ONLY",
+  "results": [
+    {
+      "case": "O01-normal-bundle",
+      "status": "PASS",
+      "detail": {
+        "artifacts": [
+          "SourceBundle",
+          "PlatformSnapshot"
+        ],
+        "page_count": 3,
+        "metadata_page_count": 214,
+        "observed_at": "2026-10-16T13:00:00+00:00",
+        "all_capabilities_unknown": true
+      }
+    },
+    {
+      "case": "O02-relocated-bundle",
+      "status": "PASS",
+      "detail": {
+        "artifacts": 2,
+        "destination": "independent\\relocated complete package with spaces",
+        "paths": "relative"
+      }
+    },
+    {
+      "case": "O03-independent-asset-decode",
+      "status": "PASS",
+      "detail": [
+        {
+          "path": "assets/page-14.pgm",
+          "size": [
+            4,
+            3
+          ],
+          "sha256": "94e2b698be90fd3da9047a5406b3c59c179840f3aa144d2444aeac7cd1515326"
+        },
+        {
+          "path": "assets/page-15.pgm",
+          "size": [
+            4,
+            3
+          ],
+          "sha256": "75ebce577a6facb31a9163b73d03fce1f6b01aae038391bcd6d32b85c1ce06f2"
+        },
+        {
+          "path": "assets/page-173.pgm",
+          "size": [
+            4,
+            3
+          ],
+          "sha256": "947e2d810b2403f276f28c7a0ee82e49c267e254ed775a18259e4f0bb806a763"
+        }
+      ]
+    },
+    {
+      "case": "F01-wrong-book",
+      "status": "PASS",
+      "detail": {
+        "code": "TARGET_MISMATCH",
+        "location": "$.book.id"
+      }
+    },
+    {
+      "case": "F01-missing-book",
+      "status": "PASS",
+      "detail": {
+        "code": "TARGET_MISMATCH",
+        "location": "$.book.id"
+      }
+    },
+    {
+      "case": "F02-missing-14",
+      "status": "PASS",
+      "detail": {
+        "code": "SOURCE_MISSING",
+        "location": "$.pages"
+      }
+    },
+    {
+      "case": "F02-missing-173",
+      "status": "PASS",
+      "detail": {
+        "code": "SOURCE_MISSING",
+        "location": "$.pages"
+      }
+    },
+    {
+      "case": "F03-missing-data",
+      "status": "PASS",
+      "detail": {
+        "code": "INCOMPLETE_RESPONSE",
+        "location": "$.source_metadata"
+      }
+    },
+    {
+      "case": "F03-truncated-json-public-cli",
+      "status": "PASS",
+      "detail": {
+        "returncode": 2,
+        "stdout": "A04_FAILED:A04_FAILED\n"
+      }
+    },
+    {
+      "case": "F04-missing-directory",
+      "status": "PASS",
+      "detail": {
+        "code": "MISSING_REFERENCE",
+        "location": "$.annotations.data[0]"
+      }
+    },
+    {
+      "case": "F04-missing-question",
+      "status": "PASS",
+      "detail": {
+        "code": "MISSING_REFERENCE",
+        "location": "$.annotations.data[0]"
+      }
+    },
+    {
+      "case": "F04-missing-parent",
+      "status": "PASS",
+      "detail": {
+        "code": "MISSING_REFERENCE",
+        "location": "$.annotations.data[0].parent_rect_id"
+      }
+    },
+    {
+      "case": "F05-wrong-sha",
+      "status": "PASS",
+      "detail": {
+        "code": "RESOURCE_MISMATCH",
+        "location": "$.pages[0].sha256"
+      }
+    },
+    {
+      "case": "F05-wrong-size",
+      "status": "PASS",
+      "detail": {
+        "code": "RESOURCE_MISMATCH",
+        "location": "$.pages[0].width"
+      }
+    },
+    {
+      "case": "F06-html",
+      "status": "PASS",
+      "detail": {
+        "code": "RESOURCE_INVALID",
+        "location": "$.pages[0].asset_path"
+      }
+    },
+    {
+      "case": "F06-http404",
+      "status": "PASS",
+      "detail": {
+        "code": "RESOURCE_FAILURE",
+        "location": "$.pages[0].download_status"
+      }
+    },
+    {
+      "case": "F06-truncated-png-parser",
+      "status": "FAIL",
+      "error_type": "AssertionError",
+      "detail": "invalid input accepted by parse_capture: F06-truncated-png-parser",
+      "traceback": "Traceback (most recent call last):\n  File \"D:\\1800\\docs\\evidence\\A04\\review\\coordinate-R1\\scripts\\independent_checks.py\", line 28, in record\n    data=fn();r={'case':case,'status':'PASS','detail':data}\n  File \"D:\\1800\\docs\\evidence\\A04\\review\\coordinate-R1\\scripts\\independent_checks.py\", line 93, in <lambda>\n    record('F06-truncated-png-parser',lambda:rejected('F06-truncated-png-parser',asset=TRUNCATED,codes={'RESOURCE_INVALID'}))\n  File \"D:\\1800\\docs\\evidence\\A04\\review\\coordinate-R1\\scripts\\independent_checks.py\", line 45, in rejected\n    raise AssertionError('invalid input accepted by parse_capture: '+name)\nAssertionError: invalid input accepted by parse_capture: F06-truncated-png-parser\n"
+    },
+    {
+      "case": "F06-truncated-png-public-cli",
+      "status": "FAIL",
+      "error_type": "AssertionError",
+      "detail": "{'input_bytes': 24, 'independent_decoder_rejected': True, 'cli_returncode': 0, 'cli_stdout': 'A04_PACKAGE_CREATED; GEOMETRY_WAITING_ACCEPTED_COMMIT; ACCEPTANCE_NOT_ASSERTED\\n', 'bundle_created': True, 'bundle_public_loader_accepted': True, 'pages_acquired': 3}",
+      "traceback": "Traceback (most recent call last):\n  File \"D:\\1800\\docs\\evidence\\A04\\review\\coordinate-R1\\scripts\\independent_checks.py\", line 28, in record\n    data=fn();r={'case':case,'status':'PASS','detail':data}\n  File \"D:\\1800\\docs\\evidence\\A04\\review\\coordinate-R1\\scripts\\independent_checks.py\", line 108, in truncated_cli\n    assert decode_rejected and rc==2 and not fact['bundle_created'],fact\nAssertionError: {'input_bytes': 24, 'independent_decoder_rejected': True, 'cli_returncode': 0, 'cli_stdout': 'A04_PACKAGE_CREATED; GEOMETRY_WAITING_ACCEPTED_COMMIT; ACCEPTANCE_NOT_ASSERTED\\n', 'bundle_created': True, 'bundle_public_loader_accepted': True, 'pages_acquired': 3}\n"
+    },
+    {
+      "case": "F07-stale",
+      "status": "PASS",
+      "detail": {
+        "code": "STALE_CAPTURE",
+        "location": "$.observed_at"
+      }
+    },
+    {
+      "case": "F07-incomplete",
+      "status": "PASS",
+      "detail": {
+        "code": "INCOMPLETE_RESPONSE",
+        "location": "$.complete"
+      }
+    },
+    {
+      "case": "F07-count-conflict",
+      "status": "PASS",
+      "detail": {
+        "code": "INCOMPLETE_RESPONSE",
+        "location": "$.book.page_count"
+      }
+    },
+    {
+      "case": "F08-auth-401",
+      "status": "PASS",
+      "detail": {
+        "code": "LOGIN_REQUIRED",
+        "location": "$.directory"
+      }
+    },
+    {
+      "case": "F08-auth-403",
+      "status": "PASS",
+      "detail": {
+        "code": "LOGIN_REQUIRED",
+        "location": "$.directory"
+      }
+    },
+    {
+      "case": "F08-HTTP200-login-body",
+      "status": "PASS",
+      "detail": {
+        "code": "LOGIN_REQUIRED",
+        "stage": "fetch"
+      }
+    },
+    {
+      "case": "F09-timeout",
+      "status": "PASS",
+      "detail": {
+        "code": "TIMEOUT",
+        "stage": "fetch"
+      }
+    },
+    {
+      "case": "F10-owned-lock-conflict",
+      "status": "PASS",
+      "detail": {
+        "second_error": "PROFILE_LEASE_CONFLICT",
+        "first_owner_preserved": true,
+        "reacquired": true,
+        "released": true
+      }
+    },
+    {
+      "case": "F11-session-launch",
+      "status": "PASS",
+      "detail": {
+        "failure": {
+          "code": "SESSION_FAILED",
+          "stage": "launch"
+        },
+        "report": {
+          "auth_mode": "UNCONFIRMED",
+          "context_closed": false,
+          "headless": true,
+          "viewport": [
+            1440,
+            1000
+          ],
+          "ignore_https_errors_this_run": false,
+          "failure_stage": "launch",
+          "local_empty_bootstrap_count": 0,
+          "transport_failure_counts": {},
+          "lease": {
+            "acquired": true,
+            "released": true,
+            "owned_lease_present": false,
+            "pre": {
+              "process_count": 0,
+              "chromium_lock_count": 0,
+              "lease_present": false
+            },
+            "post": {
+              "process_count": 0,
+              "chromium_lock_count": 0,
+              "lease_present": false
+            }
+          }
+        },
+        "reacquired_after_failure": true,
+        "actual_browser_started": false,
+        "helper": "synthetic replacement; no real file read"
+      }
+    },
+    {
+      "case": "F11-session-navigate",
+      "status": "PASS",
+      "detail": {
+        "failure": {
+          "code": "TIMEOUT",
+          "stage": "open_viewer"
+        },
+        "report": {
+          "auth_mode": "UNCONFIRMED",
+          "context_closed": true,
+          "headless": true,
+          "viewport": [
+            1440,
+            1000
+          ],
+          "ignore_https_errors_this_run": false,
+          "failure_stage": "open_viewer",
+          "local_empty_bootstrap_count": 0,
+          "transport_failure_counts": {},
+          "lease": {
+            "acquired": true,
+            "released": true,
+            "owned_lease_present": false,
+            "pre": {
+              "process_count": 0,
+              "chromium_lock_count": 0,
+              "lease_present": false
+            },
+            "post": {
+              "process_count": 0,
+              "chromium_lock_count": 0,
+              "lease_present": false
+            }
+          }
+        },
+        "reacquired_after_failure": true,
+        "actual_browser_started": false,
+        "helper": "synthetic replacement; no real file read"
+      }
+    },
+    {
+      "case": "F11-session-auth",
+      "status": "PASS",
+      "detail": {
+        "failure": {
+          "code": "LOGIN_REQUIRED",
+          "stage": "verify"
+        },
+        "report": {
+          "auth_mode": "UNCONFIRMED",
+          "context_closed": true,
+          "headless": true,
+          "viewport": [
+            1440,
+            1000
+          ],
+          "ignore_https_errors_this_run": false,
+          "failure_stage": "login",
+          "local_empty_bootstrap_count": 0,
+          "transport_failure_counts": {},
+          "lease": {
+            "acquired": true,
+            "released": true,
+            "owned_lease_present": false,
+            "pre": {
+              "process_count": 0,
+              "chromium_lock_count": 0,
+              "lease_present": false
+            },
+            "post": {
+              "process_count": 0,
+              "chromium_lock_count": 0,
+              "lease_present": false
+            }
+          }
+        },
+        "reacquired_after_failure": true,
+        "actual_browser_started": false,
+        "helper": "synthetic replacement; no real file read"
+      }
+    },
+    {
+      "case": "F11-session-close",
+      "status": "PASS",
+      "detail": {
+        "failure": {
+          "code": "PROFILE_NOT_RELEASED",
+          "stage": "close"
+        },
+        "report": {
+          "auth_mode": "REUSED",
+          "context_closed": false,
+          "headless": true,
+          "viewport": [
+            1440,
+            1000
+          ],
+          "ignore_https_errors_this_run": false,
+          "failure_stage": null,
+          "local_empty_bootstrap_count": 0,
+          "transport_failure_counts": {},
+          "lease": {
+            "acquired": true,
+            "released": true,
+            "owned_lease_present": false,
+            "pre": {
+              "process_count": 0,
+              "chromium_lock_count": 0,
+              "lease_present": false
+            },
+            "post": {
+              "process_count": 0,
+              "chromium_lock_count": 0,
+              "lease_present": false
+            }
+          }
+        },
+        "reacquired_after_failure": true,
+        "actual_browser_started": false,
+        "helper": "synthetic replacement; no real file read"
+      }
+    },
+    {
+      "case": "F12-F14-mutating-routes-before-fetch",
+      "status": "PASS",
+      "detail": {
+        "routes": [
+          {
+            "method": "POST",
+            "fetch_calls": 0,
+            "abort_calls": 1
+          },
+          {
+            "method": "PUT",
+            "fetch_calls": 0,
+            "abort_calls": 1
+          },
+          {
+            "method": "PATCH",
+            "fetch_calls": 0,
+            "abort_calls": 1
+          },
+          {
+            "method": "DELETE",
+            "fetch_calls": 0,
+            "abort_calls": 1
+          },
+          {
+            "method": "OPTIONS",
+            "fetch_calls": 0,
+            "abort_calls": 1
+          },
+          {
+            "method": "HEAD",
+            "fetch_calls": 0,
+            "abort_calls": 1
+          },
+          {
+            "method": "TRACE",
+            "fetch_calls": 0,
+            "abort_calls": 1
+          }
+        ],
+        "audit": [
+          {
+            "method": "POST",
+            "category": "METHOD_BLOCKED",
+            "decision": "BLOCK",
+            "status": null,
+            "time": "2026-10-17T05:28:23.294501+00:00"
+          },
+          {
+            "method": "PUT",
+            "category": "METHOD_BLOCKED",
+            "decision": "BLOCK",
+            "status": null,
+            "time": "2026-10-17T05:28:23.295021+00:00"
+          },
+          {
+            "method": "PATCH",
+            "category": "METHOD_BLOCKED",
+            "decision": "BLOCK",
+            "status": null,
+            "time": "2026-10-17T05:28:23.295021+00:00"
+          },
+          {
+            "method": "DELETE",
+            "category": "METHOD_BLOCKED",
+            "decision": "BLOCK",
+            "status": null,
+            "time": "2026-10-17T05:28:23.295021+00:00"
+          },
+          {
+            "method": "OPTIONS",
+            "category": "METHOD_BLOCKED",
+            "decision": "BLOCK",
+            "status": null,
+            "time": "2026-10-17T05:28:23.295579+00:00"
+          },
+          {
+            "method": "HEAD",
+            "category": "METHOD_BLOCKED",
+            "decision": "BLOCK",
+            "status": null,
+            "time": "2026-10-17T05:28:23.295579+00:00"
+          },
+          {
+            "method": "UNKNOWN",
+            "category": "METHOD_BLOCKED",
+            "decision": "BLOCK",
+            "status": null,
+            "time": "2026-10-17T05:28:23.296100+00:00"
+          }
+        ],
+        "actual_network_requests": 0
+      }
+    },
+    {
+      "case": "F13-login-single-slot",
+      "status": "PASS",
+      "detail": {
+        "allowed_login_attempts": 1,
+        "second_blocked": true,
+        "lookalikes_blocked": 3
+      }
+    },
+    {
+      "case": "F15-safe-network-errors",
+      "status": "PASS",
+      "detail": {
+        "audit": [
+          {
+            "method": "GET",
+            "category": "NAVIGATION",
+            "decision": "ALLOW",
+            "status": null,
+            "time": "2026-10-17T05:28:23.297105+00:00"
+          },
+          {
+            "method": "GET",
+            "category": "NAVIGATION",
+            "decision": "BLOCK",
+            "status": null,
+            "time": "2026-10-17T05:28:23.297105+00:00"
+          }
+        ],
+        "transport": {
+          "TRANSPORT": 1
+        }
+      }
+    },
+    {
+      "case": "F16-swapped-mapping",
+      "status": "PASS",
+      "detail": {
+        "code": "PAGE_MAPPING_UNCERTAIN",
+        "location": "$.pages[0].mapping_evidence"
+      }
+    },
+    {
+      "case": "F16-extra-page",
+      "status": "PASS",
+      "detail": {
+        "code": "INVALID_SCOPE",
+        "location": "$.pages[3].viewer_page"
+      }
+    },
+    {
+      "case": "F17-scope-and-unknown-capabilities",
+      "status": "PASS",
+      "detail": {
+        "acquired": 3,
+        "metadata": 214,
+        "capabilities": {
+          "persistent_draft": "UNKNOWN",
+          "frame_readback": "UNKNOWN",
+          "content_readback": "UNKNOWN",
+          "ocr_before_submit": "UNKNOWN",
+          "resume_after_restart": "UNKNOWN",
+          "multi_session": "UNKNOWN",
+          "same_session_handoff": "UNKNOWN",
+          "frame_update": "UNKNOWN"
+        }
+      }
+    },
+    {
+      "case": "R05-offline-numeric-oracle",
+      "status": "PASS",
+      "detail": {
+        "checks": [
+          {
+            "original": [
+              120.0,
+              160.0
+            ],
+            "measured_canvas": [
+              182.5,
+              169.9
+            ],
+            "predicted_canvas": [
+              182.5,
+              169.9
+            ],
+            "measured_css": [
+              60.28515625,
+              127.62697916666667
+            ],
+            "predicted_css": [
+              60.28515625,
+              127.62697916666667
+            ],
+            "css_error": 0.0,
+            "inverse_original": [
+              120.0,
+              160.0
+            ],
+            "canvas_error": 0.0,
+            "original_error": 0.0
+          },
+          {
+            "original": [
+              310.0,
+              470.0
+            ],
+            "measured_canvas": [
+              372.5,
+              479.9
+            ],
+            "predicted_canvas": [
+              372.5,
+              479.9
+            ],
+            "measured_css": [
+              155.58203125,
+              282.94989583333336
+            ],
+            "predicted_css": [
+              155.58203125,
+              282.94989583333336
+            ],
+            "css_error": 0.0,
+            "inverse_original": [
+              310.0,
+              470.0
+            ],
+            "canvas_error": 0.0,
+            "original_error": 0.0
+          },
+          {
+            "original": [
+              480.0,
+              640.0
+            ],
+            "measured_canvas": [
+              542.5,
+              649.9
+            ],
+            "predicted_canvas": [
+              542.5,
+              649.9
+            ],
+            "measured_css": [
+              240.84765625,
+              368.1269791666667
+            ],
+            "predicted_css": [
+              240.84765625,
+              368.1269791666667
+            ],
+            "css_error": 0.0,
+            "inverse_original": [
+              480.0,
+              640.0
+            ],
+            "canvas_error": 0.0,
+            "original_error": 0.0
+          }
+        ],
+        "geometry_module": "annotation.geometry"
+      }
+    },
+    {
+      "case": "R05-reject-canvas_ctm",
+      "status": "PASS",
+      "detail": {
+        "self_consistent": true,
+        "independent_rejection": "REFERENCE_MAPPING_MISMATCH"
+      }
+    },
+    {
+      "case": "R05-reject-css_rect",
+      "status": "PASS",
+      "detail": {
+        "self_consistent": true,
+        "independent_rejection": "REFERENCE_MAPPING_MISMATCH"
+      }
+    },
+    {
+      "case": "R05-reject-draw_destination",
+      "status": "PASS",
+      "detail": {
+        "self_consistent": true,
+        "independent_rejection": "REFERENCE_MAPPING_MISMATCH"
+      }
+    },
+    {
+      "case": "R05-binding-asset_id",
+      "status": "PASS",
+      "detail": {
+        "code": "IMAGE_BINDING_MISMATCH"
+      }
+    },
+    {
+      "case": "R05-binding-width",
+      "status": "PASS",
+      "detail": {
+        "code": "IMAGE_BINDING_MISMATCH"
+      }
+    },
+    {
+      "case": "R05-binding-height",
+      "status": "PASS",
+      "detail": {
+        "code": "IMAGE_BINDING_MISMATCH"
+      }
+    },
+    {
+      "case": "R05-binding-sha256",
+      "status": "PASS",
+      "detail": {
+        "code": "IMAGE_BINDING_MISMATCH"
+      }
+    },
+    {
+      "case": "R05-invalid-page",
+      "status": "PASS",
+      "detail": {
+        "code": "IMAGE_BINDING_MISMATCH"
+      }
+    },
+    {
+      "case": "R05-invalid-index",
+      "status": "PASS",
+      "detail": {
+        "code": "IMAGE_BINDING_MISMATCH"
+      }
+    },
+    {
+      "case": "R05-invalid-rotation",
+      "status": "PASS",
+      "detail": {
+        "code": "UNSUPPORTED_CANVAS_TRANSFORM"
+      }
+    },
+    {
+      "case": "R05-invalid-nan",
+      "status": "PASS",
+      "detail": {
+        "code": "INVALID_VIEWER_STATE"
+      }
+    },
+    {
+      "case": "R05-invalid-crop",
+      "status": "PASS",
+      "detail": {
+        "code": "UNSUPPORTED_DRAW_SOURCE"
+      }
+    }
+  ],
+  "passed": 47,
+  "failed": 2,
+  "actual_platform_requests": 0,
+  "actual_persistent_sessions": 0,
+  "credential_files_read": 0
+}
