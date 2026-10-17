@@ -1,0 +1,1799 @@
+{
+  "functions": [
+    {
+      "id": "contract_dispatch",
+      "path": "src/annotation/contracts/__init__.py",
+      "start": 24,
+      "end": 29,
+      "source": "def validate_bundle(bundle, asset_root=None):\n    \"\"\"Select the explicit namespace; C01 validation and defaults stay unchanged.\"\"\"\n    version = bundle.get('format_version') if isinstance(bundle, dict) else getattr(bundle, 'format_version', None)\n    if version == RECOVERY_EXCHANGE_VERSION:\n        return validate_recovery_bundle(bundle, asset_root=asset_root)\n    return _legacy_validate_bundle(bundle, asset_root=asset_root)",
+      "current_output_or_shape": "Current wrapper selects a03-exchange-1 or falls back to C01. Return is C01 ExchangeBundle or recovery bundle record; no 1.3 handler exists.",
+      "proposed_contract": "Select exact BridgeSelection (version+profile+schema/API/interface pins+role); parse 1.3 with a dedicated typed codec and full business/ref rules, not old 1.1 relabeling. asset_root mandatory for any qualification; structure-only results never authority."
+    },
+    {
+      "id": "contract_readiness",
+      "path": "src/annotation/contracts/__init__.py",
+      "start": 39,
+      "end": 43,
+      "source": "def assert_plan_ready(bundle, plan_ref, current_snapshot_ref):\n    version = bundle.get('format_version') if isinstance(bundle, dict) else getattr(bundle, 'format_version', None)\n    if version == RECOVERY_EXCHANGE_VERSION:\n        return assert_recovery_plan_ready(bundle, plan_ref, current_snapshot_ref)\n    return _legacy_assert_plan_ready(bundle, plan_ref, current_snapshot_ref)",
+      "current_output_or_shape": "Returns the exact plan after version-specific pure readiness/history checks; not a native effect permit.",
+      "proposed_contract": "Separate static plan readiness/quality evidence from runtime CurrentWriteEligibility. Resolve exact plan/snapshot refs, approved PRE admission, TARGET equivalence, current full-book effective pending; preserve UNKNOWN/history. HistoricalDerivationView cannot request current eligibility."
+    },
+    {
+      "id": "artifact_factory",
+      "path": "src/annotation/contracts/__init__.py",
+      "start": 32,
+      "end": 36,
+      "source": "def seal_artifact(data):\n    version = data.get('schema_version') if isinstance(data, dict) else getattr(data, 'schema_version', None)\n    if version == RECOVERY_SCHEMA_VERSION:\n        return seal_recovery_artifact(data)\n    return _legacy_seal_artifact(data)",
+      "current_output_or_shape": "Dispatches sealing by explicit artifact namespace; current supported versions do not include 1.3.",
+      "proposed_contract": "Use selected 1.3 model factory, preserve native 1.3 identity/version and complete refs; reject mixed same-id/revision tuples or 1.1 anchor for current 1.3 output. Never silently set defaults to simulate another version."
+    },
+    {
+      "id": "legacy_validator",
+      "path": "src/annotation/contracts/validation.py",
+      "start": 640,
+      "end": 686,
+      "source": "def validate_bundle(bundle, asset_root=None):\n    \"\"\"Validate schema, exact dependencies, geometry, policy and state invariants.\n\n    asset_root=None deliberately skips file-byte validation; load_bundle defaults to it on.\n    Re-parse even model instances to catch mutations of nested Python lists/dicts.\n    \"\"\"\n    try:\n        bundle = ExchangeBundle.model_validate(as_data(bundle))\n    except ValidationError as error:\n        raise ContractError([{\"path\": \"$\" + \"\".join(\"[{}]\".format(x) if isinstance(x, int) else \".\" + x for x in e[\"loc\"]),\n                              \"code\": \"SCHEMA\", \"message\": e[\"msg\"]} for e in error.errors(include_url=False)]) from error\n    ctx = _Context(bundle)\n    _relationships(ctx)\n    _resources(ctx, asset_root)\n    handlers = {\"SourceBundle\": _source, \"EvidenceBundle\": _evidence, \"QuestionGraph\": _graph,\n                \"CheckReport\": _check, \"ApplyPlan\": _plan, \"ExecutionReceipt\": _receipt,\n                \"ReviewPatch\": _patch, \"BatchReport\": _batch}\n    all_issues = {issue.issue_id for a in bundle.artifacts if a.kind == \"CheckReport\" for issue in a.payload.issues}\n    for key, artifact in ctx.artifacts.items():\n        path = ctx.paths[key] + \".payload\"\n        if artifact.kind in handlers:\n            handlers[artifact.kind](ctx, artifact, path)\n        if artifact.kind == \"PlatformSnapshot\":\n            p = artifact.payload\n            distinct(p.directories, path + \".directories\")\n            distinct([c.name for c in p.capabilities], path + \".capabilities\")\n            distinct([q.platform_question_id for q in p.questions], path + \".questions\")\n            distinct([f.platform_frame_id for f in p.frames], path + \".frames\")\n            for i, question in enumerate(p.questions):\n                if question.directory_id not in p.directories:\n                    fail(path + \".questions[{}].directory_id\".format(i), \"MISSING_REFERENCE\", \"platform question directory is absent from this snapshot\")\n            for i, cap in enumerate(p.capabilities):\n                ctx.evrefs(cap.evidence_refs, path + \".capabilities[{}].evidence_refs\".format(i))\n            ctx.evrefs(p.evidence_refs, path + \".evidence_refs\")\n            for i, frame in enumerate(p.frames):\n                subset([frame.platform_question_id], {q.platform_question_id for q in p.questions}, path + \".frames[{}]\".format(i))\n        for name in (\"unresolved_issue_ids\", \"related_issue_ids\"):\n            if hasattr(artifact.payload, name):\n                subset(getattr(artifact.payload, name), all_issues, path + \".\" + name)\n        if artifact.producer.evidence_mode == \"OBSERVED\":\n            # A synthetic evidence file cannot be relabeled into an observation chain.\n            for location, value in walk(artifact, ctx.paths[key]):\n                if isinstance(value, list) and location.endswith(\"evidence_refs\"):\n                    for evidence_id in value:\n                        if evidence_id in ctx.evidence and ctx.evidence[evidence_id].mode == \"SYNTHETIC\":\n                            fail(location, \"SYNTHETIC_EVIDENCE\", \"observed artifact references synthetic evidence\")\n    return bundle",
+      "current_output_or_shape": "C01 model/schema, relationships, geometry, policy, formal evidence and state checks.",
+      "proposed_contract": "Keep legacy reader unchanged. New codec must port corresponding business invariants plus R3 typed EvidenceRecord closure; a whitelist or the limited static Package alone is insufficient for native admission."
+    },
+    {
+      "id": "recovery_validator",
+      "path": "src/annotation/contracts/recovery.py",
+      "start": 901,
+      "end": 922,
+      "source": "def validate_recovery_bundle(bundle, *, asset_root=None, _archive=False):\n    root = asset_root if asset_root is not None else getattr(bundle, 'asset_root', None)\n    data = _data(bundle)\n    if not isinstance(data, dict) or data.get('format_version') != RECOVERY_EXCHANGE_VERSION:\n        fail('$', 'RECOVERY_VERSION_UNSUPPORTED', 'expected approved recovery exchange namespace')\n    if any(a.get('schema_version') != RECOVERY_SCHEMA_VERSION for a in data.get('artifacts', [])):\n        fail('$', 'CROSS_VERSION_REFERENCE', 'one recovery namespace required')\n    FrozenSchemas().check(data)\n    if root is None:\n        fail('$', 'RESOURCE_ROOT_REQUIRED', 'recovery validation never skips actual resource bytes')\n    ctx = _Closure(data, root, synthetic=not _archive)\n    ctx.check()\n    for a in data['artifacts']:\n        _timestamp(a['created_at'])\n    if not _archive:\n        _scope(ctx)\n    _intents(ctx)\n    heads = _resolutions(ctx)\n    _receipts_progress(ctx, heads)\n    _legacy_projection(ctx)\n    _reports(ctx, heads)\n    return RecoveryExchangeBundle(data, root)",
+      "current_output_or_shape": "Exact 1.1 schema/profile handler, hashes/refs/recovery facts/chains/reports.",
+      "proposed_contract": "Keep 1.1 immutable history reader. New 1.3 codec explicitly defines nullable original receipt, per-action facts/snapshots, report-wide observation and exact effective heads; old equality rules cannot accidentally process 1.3."
+    },
+    {
+      "id": "recovery_readiness",
+      "path": "src/annotation/contracts/recovery.py",
+      "start": 967,
+      "end": 1019,
+      "source": "def assert_recovery_plan_ready(bundle, plan_ref, current_snapshot_ref):\n    from .validation import _Context, _plan\n    validated = validate_recovery_bundle(bundle)\n    ctx = _Closure(_data(validated), validated.asset_root)\n    plan = ctx.resolve(_data(plan_ref), kind='ApplyPlan')\n    snapshot = ctx.resolve(_data(current_snapshot_ref), plan, 'PlatformSnapshot')\n    if plan['payload']['readiness'] != 'READY':\n        fail('$.plan', 'PLAN_BLOCKED', 'diagnostic plan has no action authority')\n    if _data(current_snapshot_ref) != plan['payload']['snapshot']:\n        fail('$.plan', 'TARGET_CHANGED', 'current snapshot differs from exact plan observation')\n    local = dict(ctx.bundle, artifacts=[a for a in ctx.bundle['artifacts'] if (a['book_id'], a['scope_id']) == (plan['book_id'], plan['scope_id'])])\n    projected, mapped = _legacy_projection(_Closure(local, ctx.root))\n    if projected is None:\n        fail('$.plan', 'NO_ACTIONS', 'zero scope has no executable plan')\n    p = mapped[(plan['artifact_id'], plan['revision'])]\n    s = mapped[(snapshot['artifact_id'], snapshot['revision'])]\n    c = _Context(projected)\n    _plan(c, c.artifacts[(p['artifact_id'], p['revision'])], '$.plan.payload', _node(recovery_artifact_ref(s)))\n    # The ordinary contract may only inspect its same-scope closure. Runtime\n    # separately scans every historical scope/run in the canonical book store.\n    target_bindings = {canonical_hash(a['payload']['target_key']): a['payload']['target_key']\n                       for a in ctx.artifacts.values() if a['kind'] == 'WriteIntent' and\n                       (a['book_id'], a['scope_id']) == (plan['book_id'], plan['scope_id']) and\n                       a['payload']['target_key']['target_id'] == snapshot['payload']['target_id']}\n    if len(target_bindings) > 1:\n        fail('$.plan', 'TARGET_IDENTITY_MISMATCH', 'plan cannot choose between multiple canonical platform namespaces')\n    target_key = next(iter(target_bindings.values()),\n                      {'platform_namespace': 'a02-mock', 'target_id': snapshot['payload']['target_id'], 'book_id': plan['book_id']})\n    view = _outcomes(ctx, _resolutions(ctx), target_key, plan['scope_id'])\n    if view.paused:\n        code = 'LEGACY_UNRECORDED' if any(r.reason == 'LEGACY_UNRECORDED' for r in view.unresolved) else 'BOOK_WRITE_PAUSED'\n        fail('$.plan', code, 'same-scope unresolved history blocks new actions')\n    # Loading an immutable old plan remains legal. Claiming current eligibility\n    # after a terminal reconciliation requires a genuinely newer observation,\n    # its exact new TARGET report and a plan created after those inputs.\n    terminal_times = []\n    for head in _resolutions(ctx).values():\n        hp = head['payload']\n        intent = ctx.resolve(hp['intent_ref'], head, 'WriteIntent')\n        if (intent['payload']['target_key'] == target_key and head['scope_id'] == plan['scope_id'] and\n                hp['resolution'] != 'STILL_UNKNOWN'):\n            terminal_times.append(_timestamp(hp['observed_at']))\n    if terminal_times:\n        observed_at = _timestamp(snapshot['payload']['observed_at'])\n        target = ctx.resolve(plan['payload']['targetcheck'], plan, 'CheckReport')\n        if observed_at <= max(terminal_times):\n            fail('$.plan.snapshot', 'OBSERVATION_NOT_FRESH', 'new eligibility requires an observation after terminal reconciliation')\n        if target['payload']['snapshot'] != _data(current_snapshot_ref) or target['payload']['subject'] != _data(current_snapshot_ref):\n            fail('$.plan.targetcheck', 'TARGET_CHANGED', 'new TARGET must bind the exact new current observation')\n        if (_timestamp(target['created_at']) < observed_at or _timestamp(plan['created_at']) < observed_at or\n                _timestamp(plan['created_at']) < _timestamp(target['created_at'])):\n            fail('$.plan', 'OBSERVATION_NOT_FRESH', 'new TARGET and plan must be created after their current observation')\n    return _node(plan)",
+      "current_output_or_shape": "Version-specific plan and effective recovery eligibility, pure data checks.",
+      "proposed_contract": "Use the selected new handler for current 1.3 readiness; runtime still checks actual registration/fence/head/pending and persistent counters. Old 1.1 has read-only status in this bridge, regardless of legacy product capabilities."
+    },
+    {
+      "id": "target_factory",
+      "path": "src/annotation/quality/targetcheck/__init__.py",
+      "start": 52,
+      "end": 71,
+      "source": "def make_artifact(kind, identity, anchor, payload, dependencies, config_version,\n                  module, created_at, run_id=None):\n    \"\"\"Seal using C01's single structural authority; no local contract definitions.\"\"\"\n    payload = dict(payload)\n    if anchor.schema_version == \"1.1.0-a-recovery-proposal\" and kind == \"CheckReport\":\n        payload.setdefault(\"recovery_refs\", [])\n    refs = [artifact_ref(item) for item in dependencies]\n    refs = list({(r[\"artifact_id\"], r[\"revision\"]): r for r in refs}.values())\n    policies = [payload[\"policy\"]] if \"policy\" in payload else [\n        p.model_dump(mode=\"json\") for p in anchor.producer.policy_versions]\n    return seal_artifact({\n        \"schema_version\": anchor.schema_version, \"artifact_id\": identity,\n        \"revision\": 1, \"kind\": kind, \"run_id\": run_id or anchor.run_id,\n        \"book_id\": anchor.book_id, \"scope_id\": anchor.scope_id, \"input_refs\": refs,\n        \"producer\": {\"module\": module, \"implementation_version\": VERSION,\n                     \"config_version\": config_version, \"policy_versions\": policies,\n                     \"model_version\": None, \"prompt_version\": None,\n                     \"evidence_mode\": \"SYNTHETIC\"},\n        \"created_at\": created_at, \"payload\": payload,\n    })",
+      "current_output_or_shape": "Seals anchor.schema_version; only the 1.1 CheckReport branch adds recovery_refs; dependencies currently deduplicate by id/revision.",
+      "proposed_contract": "Bridge factory must select exact 1.3 payload shape for PRE/TARGET/POST; require exact dependency four-tuples, reject conflicting id/revision rather than dropping one. All nested Resource/EvidenceRecord refs must be declared by the produced artifact."
+    },
+    {
+      "id": "target_analysis",
+      "path": "src/annotation/quality/targetcheck/__init__.py",
+      "start": 123,
+      "end": 247,
+      "source": "def analyze_target(bundle, graph_ref, snapshot_ref, current_snapshot_ref, policy_reference, config):\n    \"\"\"Compute TARGET payload from facts, independent of any input CheckReport decision.\"\"\"\n    bundle = validate_bundle(bundle)\n    graph = resolve_artifact(bundle, graph_ref, \"QuestionGraph\")\n    snapshot = resolve_artifact(bundle, snapshot_ref, \"PlatformSnapshot\")\n    current = resolve_artifact(bundle, current_snapshot_ref, \"PlatformSnapshot\")\n    policy = resolve_policy(bundle, policy_reference)\n    source = resolve_artifact(bundle, graph.payload.source, \"SourceBundle\")\n    evidence = resolve_artifact(bundle, graph.payload.evidence, \"EvidenceBundle\")\n    proof = list(snapshot.payload.evidence_refs)\n    coverage, complete = coverage_for(bundle, graph)\n    checks, issues = [], []\n    token = content_digest({\"graph\": artifact_ref(graph), \"snapshot\": artifact_ref(snapshot),\n                            \"current\": artifact_ref(current), \"config\": config.version,\n                            \"policy\": policy_ref(policy)})[:20]\n\n    def check(name, problems, code, strategy=\"HUMAN_REVIEW\"):\n        checks.append({\"check_id\": name, \"outcome\": \"FAIL\" if problems else \"PASS\",\n                       \"evidence_refs\": proof, \"reason\": \"; \".join(problems) if problems else\n                       \"SYNTHETIC facts checked by A02: \" + name})\n        if problems:\n            issues.append({\"issue_id\": \"issue-a02-\" + token + \"-\" + name,\n                           \"code\": code, \"scope_type\": \"scope\", \"scope_id\": graph.scope_id,\n                           \"evidence_refs\": proof, \"severity\": \"blocking\", \"blocks\": [\"PLAN\", \"APPLY\"],\n                           \"suggested_strategy\": {\"strategy_id\": strategy, \"max_attempts\": 0, \"max_cost\": 0.0},\n                           \"reason\": \"; \".join(problems)})\n\n    target_problems = []\n    if artifact_ref(snapshot) != artifact_ref(current):\n        target_problems.append(\"current snapshot revision/hash differs from checked snapshot\")\n    platform = {q.platform_question_id: q for q in snapshot.payload.questions}\n    mapped = []\n    for q in graph.payload.questions:\n        ext = q.external_refs\n        if ext.platform_question_id is not None:\n            existing = platform.get(ext.platform_question_id)\n            mapped.append(ext.platform_question_id)\n            if not ext.platform_question_id or existing is None:\n                target_problems.append(q.question_id + \": mapped platform question ID absent/empty\")\n            elif ext.platform_order is not None and ext.platform_order != existing.platform_order:\n                target_problems.append(q.question_id + \": mapped platform order differs\")\n            elif config.directory_map.get(q.directory_id) != existing.directory_id:\n                target_problems.append(q.question_id + \": explicit directory mapping differs\")\n        elif ext.platform_order is not None:\n            target_problems.append(q.question_id + \": unmapped new question cannot claim an existing order\")\n    if len(set(mapped)) != len(mapped):\n        target_problems.append(\"multiple internal questions share one platform ID; projection unsupported\")\n    if graph.schema_version == \"1.1.0-a-recovery-proposal\":\n        from annotation.contracts import effective_recovery_outcomes\n        # Namespace is fixed by the actual runtime target. Same-scope public\n        # eligibility can infer it only from exact locally bound intent inputs.\n        keys = [a.payload.target_key.model_dump(mode=\"json\") for a in bundle.artifacts\n                if a.kind == \"WriteIntent\" and a.book_id == graph.book_id and a.scope_id == graph.scope_id\n                and a.payload.target_key.target_id == snapshot.payload.target_id]\n        if len({content_digest(k) for k in keys}) > 1:\n            reject(\"TARGET_IDENTITY_MISMATCH\", \"same target has conflicting canonical namespace bindings\")\n        unknown = (effective_recovery_outcomes(bundle, target_key=keys[0], scope_id=graph.scope_id).paused\n                   if keys else any(a.kind == \"ExecutionReceipt\" and a.book_id == graph.book_id and\n                                    any(r.outcome == \"UNKNOWN\" for r in a.payload.results) for a in bundle.artifacts))\n    else:\n        unknown = any(a.kind == \"ExecutionReceipt\" and a.book_id == graph.book_id and\n                      any(r.outcome == \"UNKNOWN\" for r in a.payload.results) for a in bundle.artifacts)\n    if unknown:\n        target_problems.append(\"same book has unresolved UNKNOWN history; reconciliation interface missing\")\n    check(\"target_version\", target_problems, \"TARGET_CHANGED\", \"RECHECK_TARGET\")\n\n    auth_problems = []\n    if (config.book_id != graph.book_id or config.book_id != snapshot.book_id or\n            config.target_id != snapshot.payload.target_id or config.scope_id != graph.scope_id or\n            config.scope_id != snapshot.scope_id or config.scope_id != snapshot.payload.authorized_scope_id):\n        auth_problems.append(\"authorization book/target/scope differs from graph or snapshot\")\n    if \"CREATE_FRAMES\" not in config.allowed_operations:\n        auth_problems.append(\"CREATE_FRAMES is not authorized\")\n    for q in graph.payload.questions:\n        if config.directory_map.get(q.directory_id) not in snapshot.payload.directories:\n            auth_problems.append(q.question_id + \": explicit platform directory not authorized/present\")\n    check(\"authorized_scope\", auth_problems, \"TARGET_CHANGED\")\n\n    cap_problems = []\n    if config.session_mode not in (\"PERSISTENT\", \"SAME_SESSION_HANDOFF\"):\n        cap_problems.append(\"unsupported session_mode\")\n    required = [\"frame_readback\", \"persistent_draft\" if config.session_mode == \"PERSISTENT\" else \"same_session_handoff\"]\n    caps = {c.name: c for c in snapshot.payload.capabilities}\n    for name in required:\n        cap = caps.get(name)\n        if cap is None or cap.status != \"VERIFIED\" or not cap.evidence_refs:\n            cap_problems.append(name + \": capability not VERIFIED with evidence\")\n        elif cap.platform_version != snapshot.payload.platform_version:\n            cap_problems.append(name + \": capability applies to a different platform version\")\n    check(\"capabilities\", cap_problems, \"TARGET_CHANGED\")\n\n    policy_problems = []\n    if policy.confirmation_status == \"UNRESOLVED\":\n        policy_problems.append(\"policy confirmation is UNRESOLVED\")\n    if any(a.producer.evidence_mode != \"SYNTHETIC\" for a in (graph, snapshot, source, evidence)):\n        policy_problems.append(\"A02 only supports SYNTHETIC inputs\")\n    for q in graph.payload.questions:\n        if q.question_type not in (\"free_response\", \"ordinary_choice\") or q.parent_question_id is not None:\n            policy_problems.append(q.question_id + \": unsupported combination/seven-choice/parent-child projection\")\n        if q.question_type == \"ordinary_choice\" and not (\n                policy.confirmation_status == \"SYNTHETIC_ASSUMPTION\" and\n                policy.applicability == \"SYNTHETIC_ONLY\" and policy.option_grouping == \"SEPARATE\"):\n            policy_problems.append(q.question_id + \": choice needs explicit synthetic SEPARATE assumption\")\n        if q.question_type == \"free_response\" and any(f.role == \"option\" for f in graph.payload.fragments\n                                                       if f.fragment_id in q.fragment_ids):\n            policy_problems.append(q.question_id + \": free-response option projection unsupported\")\n        relations = [r for r in graph.payload.answer_relations if r.question_id == q.question_id]\n        if not relations or any(r.status != \"SELECTED\" or not r.selected_fragment_ids for r in relations):\n            policy_problems.append(q.question_id + \": selected answer closure required\")\n        if q.external_refs.platform_question_id is not None and any(\n                f.platform_question_id == q.external_refs.platform_question_id for f in snapshot.payload.frames):\n            policy_problems.append(q.question_id + \": existing frames need UPDATE_FRAMES; A02 delta unsupported\")\n    unresolved_policy = policy.confirmation_status == \"UNRESOLVED\" or (\n        policy.option_grouping == \"UNRESOLVED\" and\n        any(q.question_type == \"ordinary_choice\" for q in graph.payload.questions))\n    check(\"policy\", policy_problems, \"POLICY_UNRESOLVED\" if unresolved_policy else \"UNSUPPORTED_LAYOUT\")\n    check(\"coverage\", [] if complete else [\"independent scope/pages/clues are incomplete\"], \"UNASSIGNED_CONTENT\")\n    decision = \"PASS\" if not issues else \"EXCEPTION\" if policy_problems or not complete else \"HOLD\"\n    result = {\"stage\": \"TARGET\", \"subject\": artifact_ref(snapshot), \"graph\": artifact_ref(graph),\n            \"policy\": policy_ref(policy), \"snapshot\": artifact_ref(snapshot), \"receipt\": None,\n            \"coverage\": coverage, \"checks\": checks, \"issues\": issues, \"decision\": decision,\n            \"reason\": \"SYNTHETIC target conditions computed by A02; no algorithm or platform acceptance\"}\n    if graph.schema_version == \"1.1.0-a-recovery-proposal\":\n        result[\"recovery_refs\"] = []\n    return result",
+      "current_output_or_shape": "Computes TARGET checks from graph/current snapshot/config/policy; effective recovery history is special-cased for 1.1.",
+      "proposed_contract": "Keep authorization/capability/coverage/policy and projection support semantics unchanged. Route full history through the new profile effective-head resolver, not generic UNKNOWN deletion or a stale report. Input graph/source/snapshot are current 1.3; old records remain visible read-only."
+    },
+    {
+      "id": "target_producer",
+      "path": "src/annotation/quality/targetcheck/__init__.py",
+      "start": 250,
+      "end": 259,
+      "source": "def check_target(bundle, graph_ref, snapshot_ref, current_snapshot_ref, policy_reference, config,\n                 *, artifact_id, created_at, run_id=None):\n    bundle = validate_bundle(bundle)\n    graph = resolve_artifact(bundle, graph_ref, \"QuestionGraph\")\n    snapshot = resolve_artifact(bundle, snapshot_ref, \"PlatformSnapshot\")\n    current = resolve_artifact(bundle, current_snapshot_ref, \"PlatformSnapshot\")\n    payload = analyze_target(bundle, graph_ref, snapshot_ref, current_snapshot_ref, policy_reference, config)\n    report = make_artifact(\"CheckReport\", artifact_id, graph, payload, [graph, snapshot, current],\n                           config.version, \"a02-targetcheck\", created_at, run_id)\n    return append_artifacts(bundle, report)",
+      "current_output_or_shape": "Actual TARGET report producer: analyze_target -> make_artifact -> append_artifacts.",
+      "proposed_contract": "Require admitted current INITIAL/POST_HOLD PRE context and exact graph/snapshot/current refs in BridgeContext; recompute TARGET, emit new 1.3 report through its factory. A PASS value is not native PRE or write authority."
+    },
+    {
+      "id": "planner_create",
+      "path": "src/annotation/delivery/planner/__init__.py",
+      "start": 223,
+      "end": 299,
+      "source": "def create_plan(bundle, graph_ref, precheck_ref, targetcheck_ref, snapshot_ref,\n                current_snapshot_ref, policy_reference, config, *, artifact_id,\n                created_at, run_id=None, operation=\"CREATE_FRAMES\", previous_receipt=None):\n    \"\"\"Return a new validated bundle. Invalid/missing bindings raise ContractError.\n\n    A valid failed-check chain yields a BLOCKED diagnostic plan with no actions.\n    UPDATE is explicitly unsupported, including when a C01 baseline is provided.\n    \"\"\"\n    bundle = validate_bundle(bundle)\n    graph = resolve_artifact(bundle, graph_ref, \"QuestionGraph\")\n    pre = resolve_artifact(bundle, precheck_ref, \"CheckReport\")\n    target = resolve_artifact(bundle, targetcheck_ref, \"CheckReport\")\n    snapshot = resolve_artifact(bundle, snapshot_ref, \"PlatformSnapshot\")\n    current = resolve_artifact(bundle, current_snapshot_ref, \"PlatformSnapshot\")\n    policy = resolve_policy(bundle, policy_reference)\n    if operation != \"CREATE_FRAMES\" or previous_receipt is not None:\n        reject(\"UPDATE_UNSUPPORTED\", \"A02 supports no delta shape; need old APPLIED receipt, frame_update and future implementation\")\n    if pre.payload.stage != \"PRE_APPLY\" or target.payload.stage != \"TARGET\":\n        reject(\"TWO_CHECK_STAGES\", \"distinct PRE_APPLY and TARGET required\")\n    for report in (pre, target):\n        if artifact_ref(graph) != report.payload.graph.model_dump(mode=\"json\") or policy_ref(policy) != report.payload.policy.model_dump(mode=\"json\"):\n            reject(\"VERSION_CONFLICT\", \"report graph/policy differs from requested plan\")\n        if report.payload.snapshot is not None and report.payload.snapshot.model_dump(mode=\"json\") != artifact_ref(snapshot):\n            reject(\"TARGET_CHANGED\", \"report binds a different snapshot\")\n    if artifact_ref(snapshot) != artifact_ref(current):\n        reject(\"TARGET_CHANGED\", \"explicit current snapshot changed; recheck target\")\n    if snapshot.payload.authorized_scope_id != graph.scope_id:\n        reject(\"AUTHORIZED_SCOPE\", \"snapshot authorization differs; diagnostic plan not representable in C01\")\n    computed = analyze_target(bundle, graph_ref, snapshot_ref, current_snapshot_ref, policy_reference, config)\n    if (target.producer.module != \"a02-targetcheck\" or target.producer.config_version != config.version or\n            target.payload.model_dump(mode=\"json\") != computed):\n        reject(\"TARGET_CHECK_STALE\", \"target report does not equal recomputed conditions/current authorization\")\n    ready = pre.payload.decision == target.payload.decision == \"PASS\"\n    actions = []\n    required = [\"frame_readback\", \"persistent_draft\" if config.session_mode == \"PERSISTENT\" else \"same_session_handoff\"]\n    if ready:\n        platform = {q.platform_question_id: q for q in snapshot.payload.questions}\n        next_orders = {d: max([q.platform_order for q in snapshot.payload.questions if q.directory_id == d] + [0]) + 1\n                       for d in snapshot.payload.directories}\n        for question in graph.payload.questions:\n            qid = question.question_id\n            pid = question.external_refs.platform_question_id\n            directory = config.directory_map[question.directory_id]\n            existing = platform.get(pid)\n            order = existing.platform_order if existing else next_orders[directory]\n            frames = [f.model_dump(mode=\"json\") for f in snapshot.payload.frames if f.platform_question_id == pid] if existing else []\n            before = {\"question_exists\": existing is not None, \"platform_question_id\": pid,\n                      \"directory_id\": directory, \"frame_count\": len(frames), \"frames_hash\": frame_facts(frames)}\n            if existing:\n                before[\"platform_order\"] = order\n            else:\n                before[\"next_order\"] = order\n                next_orders[directory] += 1\n            projected = projection_frames(bundle, graph, question, policy)\n            if not projected:\n                reject(\"EMPTY_PROJECTION\", \"question has no frame projection: \" + qid)\n            action_id = \"action-a02-\" + content_digest({\"plan_id\": artifact_id, \"question_id\": qid,\n                                                        \"graph\": artifact_ref(graph), \"snapshot\": artifact_ref(snapshot)})[:32]\n            actions.append({\"action_id\": action_id,\n                            \"target\": {\"target_id\": snapshot.payload.target_id, \"question_id\": qid, \"platform_question_id\": pid},\n                            \"source_entity_ids\": [qid] + list(dict.fromkeys(f[\"fragment_id\"] for f in projected)),\n                            \"expected_before\": before, \"operation\": \"CREATE_FRAMES\",\n                            \"expected_after\": {\"question_exists\": True, \"directory_id\": directory,\n                                               \"platform_order\": order, \"frames\": encoded(projected)},\n                            \"depends_on\": [actions[-1][\"action_id\"]] if actions else []})\n    issues = [i.issue_id for report in (pre, target) for i in report.payload.issues if i.blocks]\n    payload = {\"graph\": artifact_ref(graph), \"precheck\": artifact_ref(pre), \"targetcheck\": artifact_ref(target),\n               \"snapshot\": artifact_ref(snapshot), \"policy\": policy_ref(policy),\n               \"readiness\": \"READY\" if ready else \"BLOCKED\", \"execution_mode\": \"SIMULATED\",\n               \"session_mode\": config.session_mode, \"required_capabilities\": required, \"actions\": actions,\n               \"blocked_issue_ids\": list(dict.fromkeys(issues)), \"previous_receipt\": None, \"final_submission\": \"HUMAN_ONLY\"}\n    plan = make_artifact(\"ApplyPlan\", artifact_id, graph, payload, [graph, pre, target, snapshot],\n                         config.version, \"a02-planner\", created_at, run_id)\n    output = append_artifacts(bundle, plan)\n    if ready:\n        assert_plan_ready(output, artifact_ref(plan), artifact_ref(current))\n    return output",
+      "current_output_or_shape": "Validates/recomputes TARGET; generates CREATE_FRAMES per question, preserves directory/order/projection/action-id/dependency rules; seals via make_artifact.",
+      "proposed_contract": "Use the new typed validated bundle/factory and admitted PRE. Preserve graph/snapshot/policy/config exact refs and all algorithm rules, operation=CREATE_FRAMES and previous_receipt=None. Real generation only; no handwritten READY replacement. READY remains a plan property, not runtime authority."
+    },
+    {
+      "id": "planner_verify",
+      "path": "src/annotation/delivery/planner/__init__.py",
+      "start": 302,
+      "end": 378,
+      "source": "def verify_generated_plan(bundle, plan, current_ref, config, *, observation_binding=None):\n    \"\"\"Recompute supported projection/facts before mock dispatch; refuse edited actions.\"\"\"\n    bundle = validate_bundle(bundle)\n    payload = plan.payload\n    if observation_binding is not None:\n        binding = _plain(observation_binding)\n        if plan.schema_version != \"1.1.0-a-recovery-proposal\":\n            reject(\"RECOVERY_VERSION_UNSUPPORTED\", \"observation bridge is recovery-version only\")\n        if (binding.get(\"plan_ref\") != artifact_ref(plan) or\n                binding.get(\"before_snapshot_ref\") != _plain(payload.snapshot) or\n                binding.get(\"observed_snapshot_ref\") != _plain(current_ref)):\n            reject(\"OBSERVATION_BINDING_MISMATCH\", \"fresh observation bridge does not bind exact plan/current refs\")\n        current_ref = payload.snapshot\n    if plan.producer.config_version != config.version:\n        reject(\"AUTHORIZATION_CHANGED\", \"current authorization/config differs from planned version\")\n    # Rebuild without this plan or its descendants; retain upstream history so UNKNOWN stays visible.\n    data = bundle.model_dump(mode=\"json\")\n    remove = {(plan.artifact_id, plan.revision)}\n    while True:\n        previous_count = len(remove)\n        for item in data[\"artifacts\"]:\n            if any((r[\"artifact_id\"], r[\"revision\"]) in remove for r in item[\"input_refs\"]):\n                remove.add((item[\"artifact_id\"], item[\"revision\"]))\n        if len(remove) == previous_count:\n            break\n    data[\"artifacts\"] = [a for a in data[\"artifacts\"] if (a[\"artifact_id\"], a[\"revision\"]) not in remove]\n    if plan.schema_version == \"1.1.0-a-recovery-proposal\":\n        # This is an internal historical derivation, after validating the full\n        # package above. Runtime result evidence that is not consumed by any\n        # retained upstream Artifact must not refer back into the intentionally\n        # removed plan/descendants. Retain the complete formal evidence closure\n        # of every retained Artifact; never filter history in the admitted\n        # bundle, return this view, or use it as current write eligibility.\n        from pathlib import Path\n        records = {record[\"evidence_id\"]: record for record in data[\"evidence\"]}\n        needed, seen_resources = set(), set()\n        root = Path(bundle.asset_root)\n        evidence_fields = {\"evidence_refs\", \"before_evidence_refs\", \"after_evidence_refs\", \"submission_evidence_refs\"}\n\n        def consume_evidence(evidence_id):\n            if evidence_id in needed:\n                return\n            if evidence_id not in records:\n                reject(\"MISSING_REFERENCE\", \"upstream formal evidence ID is absent\")\n            needed.add(evidence_id)\n            consume(records[evidence_id][\"resource\"])\n\n        def consume(value):\n            if isinstance(value, list):\n                for member in value:\n                    consume(member)\n            elif isinstance(value, dict):\n                if {\"path\", \"sha256\", \"media_type\"}.issubset(value):\n                    key = (value[\"path\"], value[\"sha256\"], value[\"media_type\"])\n                    if key not in seen_resources and value[\"media_type\"] == \"application/json\":\n                        seen_resources.add(key)\n                        # Full validation already checked safe paths, bytes,\n                        # all ordinary refs and mixed-resource cycle freedom.\n                        consume(json.loads((root / value[\"path\"]).read_text(encoding=\"utf-8\")))\n                else:\n                    for name, child in value.items():\n                        if name in evidence_fields and isinstance(child, list):\n                            for member in child:\n                                if isinstance(member, str):\n                                    consume_evidence(member)\n                        consume(child)\n\n        for upstream_artifact in data[\"artifacts\"]:\n            consume(upstream_artifact)\n        data[\"evidence\"] = [record for record in data[\"evidence\"] if record[\"evidence_id\"] in needed]\n    upstream = validate_bundle(data, asset_root=getattr(bundle, \"asset_root\", None))\n    generated = create_plan(upstream, payload.graph, payload.precheck, payload.targetcheck,\n                            payload.snapshot, current_ref, payload.policy, config,\n                            artifact_id=plan.artifact_id, created_at=plan.created_at, run_id=plan.run_id)\n    rebuilt = generated.artifacts[-1]\n    if rebuilt != plan:\n        reject(\"PLAN_CHANGED\", \"plan does not equal generated supported projection\")",
+      "current_output_or_shape": "Validates full bundle, reconstructs upstream historical inputs, regenerates and compares exact plan; 1.1-only observation binding.",
+      "proposed_contract": "First validate the complete original bundle including UNKNOWN/registration/events and all R3 formal evidence. Internal HistoricalDerivationView carries exact creation-input anchor and complete retained Artifact/Resource/EvidenceRecord closure. Compare same derivation core; view is non-exportable/non-sealable and cannot be passed as current eligibility. Never mutate admitted history."
+    },
+    {
+      "id": "planner_observation_bridge",
+      "path": "src/annotation/delivery/planner/__init__.py",
+      "start": 153,
+      "end": 220,
+      "source": "def bind_plan_observation(bundle, plan_ref, action_id, fresh_observation, config, *, prepared_before, progress_refs=()):\n    \"\"\"Bridge fresh observations using exact generated actions and target effect delta.\n\n    Runtime separately supplies and verifies the committed prefix refs. This pure\n    bridge checks their action results against the independently read target.\n    \"\"\"\n    bundle = validate_bundle(bundle)\n    plan = resolve_artifact(bundle, plan_ref, \"ApplyPlan\")\n    if plan.schema_version != \"1.1.0-a-recovery-proposal\":\n        reject(\"RECOVERY_VERSION_UNSUPPORTED\", \"fresh observation bridge requires recovery version\")\n    observation = _plain(fresh_observation)\n    actions = [_plain(a) for a in plan.payload.actions]\n    index = next((i for i, a in enumerate(actions) if a[\"action_id\"] == action_id), None)\n    if index is None:\n        reject(\"ACTION_DIGEST_MISMATCH\", \"action is absent from plan\")\n    action = actions[index]\n    if observation.get(\"read_status\") != \"OK\" or not observation.get(\"relevant_scope_completeness\"):\n        reject(\"CONCLUSIVE_READBACK_REQUIRED\", \"preparation needs complete actual target read\")\n    if observation.get(\"scope_id\") != plan.scope_id or observation.get(\"target_key\", {}).get(\"book_id\") != plan.book_id:\n        reject(\"TARGET_IDENTITY_MISMATCH\", \"observation book/scope differs from plan\")\n    verify_generated_plan(bundle, plan, plan.payload.snapshot, config)\n    if action_facts(action, _view(observation)) != action[\"expected_before\"]:\n        reject(\"TARGET_CHANGED\", \"current relevant action facts differ from planned precondition\")\n    snapshot = resolve_artifact(bundle, plan.payload.snapshot, \"PlatformSnapshot\")\n    effects = observation.get(\"effect_log\", [])\n    baseline_epoch = observation.get(\"plan_baseline_epoch\", 0)\n    delta = [e for e in effects if e.get(\"epoch\", 0) > baseline_epoch]\n    if len(delta) != index:\n        reject(\"TARGET_CHANGED\", \"independent target effect-log delta is not the exact applied prefix\")\n    if index and not progress_refs:\n        reject(\"DEPENDENCY_UNRESOLVED\", \"later action needs complete committed APPLIED prefix refs\")\n    if index:\n        progress = [resolve_artifact(bundle, ref, \"ExecutionProgress\") for ref in progress_refs]\n        if any(_plain(p.payload.plan_ref) != artifact_ref(plan) or p.scope_id != plan.scope_id for p in progress):\n            reject(\"RECOVERY_CHAIN_INVALID\", \"applied prefix refs bind a different plan/scope\")\n        latest = max(progress, key=lambda p: p.payload.journal_head_sequence)\n        prefix_items = [_plain(item) for item in latest.payload.actions]\n        if [item[\"action_id\"] for item in prefix_items] != [a[\"action_id\"] for a in actions]:\n            reject(\"RECOVERY_CHAIN_INVALID\", \"progress does not enumerate exact complete plan\")\n        for item in prefix_items[:index]:\n            if (item[\"effective_outcome\"] != \"APPLIED\" or item[\"attempt_fact\"] != \"ATTEMPTED\" or\n                    item[\"intent_ref\"] is None or item[\"result_fact\"] is None):\n                reject(\"DEPENDENCY_UNRESOLVED\", \"predecessor lacks a committed sufficient APPLIED fact\")\n        if any(item[\"attempt_fact\"] != \"NOT_ATTEMPTED\" for item in prefix_items[index:]):\n            reject(\"PLAN_INTERRUPTED\", \"old attempted/interrupted plan tail cannot resume\")\n    for expected_action, effect in zip(actions[:index], delta):\n        if (effect.get(\"action_id\") != expected_action[\"action_id\"] or\n                effect.get(\"action_digest\") != content_digest(expected_action) or\n                effect.get(\"plan_ref\") != artifact_ref(plan) or effect.get(\"effect_fault\") not in (\"applied\", \"response_lost_readable\", \"lost_response\", \"after_effect_exit\")):\n            reject(\"TARGET_CHANGED\", \"independent effect log contains unexplained change\")\n        check = compare_action_effect(expected_action, _view(observation), {\"read_status\": \"OK\", \"view\": _view(observation)})\n        if check.effect_match != \"MATCH\":\n            reject(\"DEPENDENCY_UNRESOLVED\", \"predecessor is not fully APPLIED in actual target\")\n    if index and delta[-1].get(\"target_state_hash\") != observation.get(\"target_state_hash\"):\n        reject(\"TARGET_CHANGED\", \"target state changed after the committed applied prefix\")\n    if not index and (snapshot.payload.observed_hash != observation.get(\"target_state_hash\") or\n                      snapshot.payload.observed_version != observation.get(\"target_state_version\")):\n        reject(\"TARGET_CHANGED\", \"first dispatch actual business state differs from planned snapshot\")\n    return PublicRecord(plan_ref=artifact_ref(plan), action_id=action_id,\n                        action_digest=content_digest(action), before_snapshot_ref=_plain(plan.payload.snapshot),\n                        observed_snapshot_ref=observation.get(\"snapshot_ref\"),\n                        observation_id=observation[\"observation_id\"], read_sequence=observation[\"read_sequence\"],\n                        target_key=observation[\"target_key\"], source_ref=observation[\"source_ref\"],\n                        target_session_id=observation[\"target_session_id\"], scope_id=plan.scope_id,\n                        baseline_state_hash=snapshot.payload.observed_hash, current_state_hash=observation[\"target_state_hash\"],\n                        baseline_state_version=snapshot.payload.observed_version, current_state_version=observation[\"target_state_version\"],\n                        prepared_before=prepared_before, applied_prefix=list(progress_refs),\n                        effect_log_delta=observation.get(\"effect_log_resource\"), comparator_version=\"a02-facts-1\")",
+      "current_output_or_shape": "1.1-only; checks actual complete observation, action facts, exact effect prefix/progress and current hash/version; returns PublicRecord.",
+      "proposed_contract": "Same comparator/projection rules under exact 1.3 codec. Preserve observation_binding fields, prepared_before, complete progress_refs, genuine source/book/scope/target/session and exact current/before snapshot refs. Runtime proves committed prefix and native read; JSON binding is diagnostic, not permission."
+    },
+    {
+      "id": "state_comparison",
+      "path": "src/annotation/delivery/planner/__init__.py",
+      "start": 133,
+      "end": 150,
+      "source": "def snapshot_state_equivalent(planned_snapshot, observed_snapshot, *, planned_target_state, observed_target_state):\n    from annotation.contracts import target_state_digest\n    planned, observed = _plain(planned_snapshot), _plain(observed_snapshot)\n    old, new = _plain(planned_target_state), _plain(observed_target_state)\n    if planned[\"schema_version\"] != \"1.1.0-a-recovery-proposal\" or observed[\"schema_version\"] != planned[\"schema_version\"]:\n        reject(\"RECOVERY_VERSION_UNSUPPORTED\", \"state bridge is limited to recovery contracts\")\n    for name in (\"target_key\", \"source_ref\", \"scope_id\", \"target_session_id\"):\n        if old.get(name) != new.get(name) or name not in old:\n            reject(\"OBSERVATION_BINDING_MISMATCH\", \"state bridge fixed identity differs: \" + name)\n    hashes = (target_state_digest(old), target_state_digest(new))\n    if hashes != (planned[\"payload\"][\"observed_hash\"], observed[\"payload\"][\"observed_hash\"]):\n        reject(\"OBSERVATION_BINDING_MISMATCH\", \"snapshot digest does not bind the actual compared business state\")\n    versions = (planned[\"payload\"][\"observed_version\"], observed[\"payload\"][\"observed_version\"])\n    equivalent = hashes[0] == hashes[1] and versions[0] == versions[1]\n    return PublicRecord(equivalent=equivalent, planned_snapshot_ref=artifact_ref(planned),\n                        observed_snapshot_ref=artifact_ref(observed), planned_state_hash=hashes[0],\n                        observed_state_hash=hashes[1], planned_state_version=versions[0], observed_state_version=versions[1],\n                        reasons=[\"business state matches\" if equivalent else \"business state changed\"])",
+      "current_output_or_shape": "1.1-only; validates fixed identity and business digest/version of planned/observed snapshots; returns PublicRecord.equivalent and exact refs.",
+      "proposed_contract": "Select state codec/digest by the exact adopted profile. Do not compare arbitrary JSON hashes or timestamps as business equality. Identity/source/scope/session fixed; return comparison data only, never CurrentWriteEligibility."
+    },
+    {
+      "id": "target_create",
+      "path": "src/annotation/delivery/mock/persistent.py",
+      "start": 262,
+      "end": 310,
+      "source": "def create(cls, target_dir, bundle, snapshot_ref, *, platform_namespace, source_ref,\n               asset_root, expected_store_id, target_session_id):\n        bundle = validate_bundle(bundle, asset_root=asset_root)\n        snapshot = resolve_artifact(bundle, snapshot_ref, \"PlatformSnapshot\")\n        source = resolve_artifact(bundle, source_ref, \"SourceBundle\")\n        if snapshot.schema_version != \"1.1.0-a-recovery-proposal\":\n            reject(\"RECOVERY_VERSION_UNSUPPORTED\", \"persistent target requires explicitly converted recovery input\")\n        if (snapshot.producer.evidence_mode != \"SYNTHETIC\" or source.producer.evidence_mode != \"SYNTHETIC\"):\n            reject(\"SYNTHETIC_ONLY\", \"persistent target accepts all-synthetic inputs only\")\n        if (source.book_id, source.scope_id) != (snapshot.book_id, snapshot.scope_id):\n            reject(\"SOURCE_BINDING\", \"target source book/scope differs\")\n        directory = Path(target_dir).resolve()\n        path = directory / \"target.sqlite3\"\n        directory.mkdir(parents=True, exist_ok=True)\n        try:\n            with path.open(\"xb\"):\n                pass\n        except FileExistsError:\n            reject(\"TARGET_STORE_EXISTS\", \"explicit create cannot reset an existing target\")\n        key = {\"platform_namespace\": platform_namespace, \"target_id\": snapshot.payload.target_id,\n               \"book_id\": snapshot.book_id}\n        descriptor = {\"format\": FORMAT, \"user_version\": 1, \"application_id\": APPLICATION_ID,\n                      \"store_id\": expected_store_id, \"target_session_id\": target_session_id,\n                      \"target_key\": key, \"book_id\": snapshot.book_id,\n                      \"fixed_scope_id\": snapshot.scope_id, \"fixed_source_ref\": artifact_ref(source),\n                      \"base_snapshot_ref\": artifact_ref(snapshot), \"directory\": str(directory),\n                      \"asset_root\": str(Path(asset_root).resolve())}\n        state = {\"base\": _plain(snapshot), \"target\": _plain(snapshot.payload),\n                 \"internal_bindings\": {}, \"frame_projections\": {}, \"epoch\": 0,\n                 \"read_sequence\": 0, \"fence_generation\": 0, \"fence_owner_id\": None,\n                 \"context\": None}\n        from annotation.contracts import target_state_digest\n        descriptor[\"initial_state_digest\"] = target_state_digest({\"target_key\": key,\n            \"source_ref\": artifact_ref(source), \"scope_id\": snapshot.scope_id,\n            \"target\": state[\"target\"], \"internal_bindings\": {}, \"frame_projections\": {}})\n        try:\n            with sqlite3.connect(str(path), timeout=1.0, factory=_ClosingConnection) as db:\n                db.execute(\"PRAGMA application_id=\" + str(APPLICATION_ID))\n                db.execute(\"PRAGMA user_version=1\")\n                db.execute(\"PRAGMA synchronous=FULL\")\n                db.execute(\"CREATE TABLE meta(key TEXT PRIMARY KEY,value TEXT NOT NULL)\")\n                db.execute(\"CREATE TABLE effects(sequence INTEGER PRIMARY KEY AUTOINCREMENT,body TEXT NOT NULL)\")\n                db.execute(\"CREATE TABLE observations(observation_id TEXT PRIMARY KEY,body TEXT NOT NULL)\")\n                db.execute(\"INSERT INTO meta VALUES('descriptor',?)\", (encoded(descriptor),))\n                db.execute(\"INSERT INTO meta VALUES('state',?)\", (encoded(state),))\n            session = cls(directory, descriptor)\n            return session\n        except sqlite3.Error as exc:\n            reject(\"TARGET_STORE_IO\", str(exc))",
+      "current_output_or_shape": "Creates known synthetic persistent target, currently requires converted 1.1; descriptor fixes source/book/scope/store/session.",
+      "proposed_contract": "New explicit profile/descriptor binding must be approved and consistent with runtime adoption meta+event/target fence. No implicit unknown DB migration or source replacement; initialize from real approved 1.3 source/snapshot without downgrading."
+    },
+    {
+      "id": "target_open",
+      "path": "src/annotation/delivery/mock/persistent.py",
+      "start": 313,
+      "end": 342,
+      "source": "def open(cls, target_dir, *, expected_store_id, expected_target_session_id,\n             expected_target_key, expected_scope_id, expected_source_ref):\n        directory = Path(target_dir).resolve()\n        path = directory / \"target.sqlite3\"\n        if not path.is_file():\n            reject(\"TARGET_STORE_MISSING\", \"reopen never initializes a missing target store\")\n        try:\n            with sqlite3.connect(path.as_uri() + \"?mode=rw\", uri=True, timeout=1.0, factory=_ClosingConnection) as db:\n                if db.execute(\"PRAGMA application_id\").fetchone()[0] != APPLICATION_ID or db.execute(\"PRAGMA user_version\").fetchone()[0] != 1:\n                    reject(\"TARGET_STORE_VERSION_UNSUPPORTED\", \"target application or user version differs\")\n                if db.execute(\"PRAGMA quick_check\").fetchone()[0] != \"ok\":\n                    reject(\"TARGET_STORE_CORRUPT\", \"target integrity check failed\")\n                row = db.execute(\"SELECT value FROM meta WHERE key='descriptor'\").fetchone()\n                descriptor = json.loads(row[0])\n                json.loads(db.execute(\"SELECT value FROM meta WHERE key='state'\").fetchone()[0])\n        except (sqlite3.Error, ValueError, TypeError, KeyError) as exc:\n            reject(\"TARGET_STORE_CORRUPT\", str(exc))\n        if descriptor.get(\"directory\") != str(directory):\n            reject(\"STATE_DIRECTORY_IDENTITY_MISMATCH\", \"target directory differs from established identity\")\n        if descriptor.get(\"format\") != FORMAT:\n            reject(\"TARGET_STORE_VERSION_UNSUPPORTED\", \"target format differs\")\n        if descriptor.get(\"store_id\") != expected_store_id or descriptor.get(\"target_key\") != _plain(expected_target_key):\n            reject(\"TARGET_IDENTITY_MISMATCH\", \"target store/key differs\")\n        if descriptor.get(\"target_session_id\") != expected_target_session_id:\n            reject(\"TARGET_SESSION_BINDING_MISMATCH\", \"target session differs\")\n        if descriptor.get(\"fixed_scope_id\") != expected_scope_id:\n            reject(\"TARGET_SCOPE_SWITCH_UNSUPPORTED\", \"fixed session scope cannot change\")\n        if descriptor.get(\"fixed_source_ref\") != _plain(expected_source_ref):\n            reject(\"SOURCE_BINDING\", \"fixed session source revision/hash cannot change\")\n        return cls(directory, descriptor)",
+      "current_output_or_shape": "Reopens exact known target with expected store/session/key/scope/source.",
+      "proposed_contract": "Additionally bind adopted profile/pins and native target fence. Unknown or interrupted adoption and old held writer uncertainty stay blocked; old handles/rows never regain authority by reopening."
+    },
+    {
+      "id": "observation_credential",
+      "path": "src/annotation/delivery/mock/persistent.py",
+      "start": 462,
+      "end": 485,
+      "source": "def _verify_observation(self, observation):\n        value = _plain(observation)\n        with self._connect() as db:\n            row = db.execute(\"SELECT body FROM observations WHERE observation_id=?\", (value.get(\"observation_id\"),)).fetchone()\n        if row is None:\n            reject(\"OBSERVATION_MISSING\", \"actual persisted observation does not exist\")\n        original = json.loads(row[0])\n        resource = value.get(\"resource\", value.get(\"readback\"))\n        if resource is None:\n            reject(\"RESOURCE_MISSING\", \"observation resource is missing\")\n        path = (self.asset_root / resource[\"path\"]).resolve()\n        if not path.is_relative_to(self.asset_root) or not path.is_file() or path.is_symlink():\n            reject(\"RESOURCE_MISSING\", \"observation resource path is missing or outside its root\")\n        raw = path.read_bytes()\n        if hashlib.sha256(raw).hexdigest() != resource[\"sha256\"]:\n            reject(\"RESOURCE_HASH_MISMATCH\", \"observation bytes differ from their resource digest\")\n        if json.loads(raw) != original:\n            reject(\"OBSERVATION_BINDING_MISMATCH\", \"observation resource differs from independent persisted read\")\n        for name, member in original.items():\n            if value.get(name) != member:\n                reject(\"OBSERVATION_BINDING_MISMATCH\", \"observation differs from actual persisted target read\")\n        if original[\"read_status\"] != \"OK\" or not original[\"relevant_scope_completeness\"]:\n            reject(\"READBACK_INCOMPLETE\", \"snapshot requires complete actual target read\")\n        return original",
+      "current_output_or_shape": "Reads independent persisted observation row and verifies resource path/raw SHA/deep equality and complete read status.",
+      "proposed_contract": "Preserve exact-row/resource validation and source/book/scope/key/store/session/hash/version binding under the selected codec. Caller dictionaries, completeness flags or resealed resources are not credentials. No new business observe call is hidden here."
+    },
+    {
+      "id": "snapshot_producer",
+      "path": "src/annotation/delivery/mock/persistent.py",
+      "start": 487,
+      "end": 500,
+      "source": "def snapshot_from_observation(self, observation):\n        value = self._verify_observation(observation)\n        with self._connect() as db:\n            state = self._load(db)\n        snapshot = copy.deepcopy(state[\"base\"])\n        snapshot.pop(\"content_hash\", None)\n        snapshot.update(artifact_id=\"snapshot-a03-\" + content_digest({\"store_id\": value[\"store_id\"], \"observation_id\": value[\"observation_id\"]})[:24],\n                        revision=1, created_at=value[\"observed_at\"])\n        snapshot[\"payload\"] = copy.deepcopy(value[\"view\"][\"target\"])\n        snapshot[\"payload\"].update(observed_at=value[\"observed_at\"], observed_hash=value[\"target_state_hash\"],\n                                   observed_version=value[\"target_state_version\"])\n        snapshot[\"producer\"].update(module=\"a03-persistent-mock\", implementation_version=\"a03-1\")\n        snapshot[\"input_refs\"] = [copy.deepcopy(self.descriptor.fixed_source_ref)]\n        return seal_artifact(snapshot)",
+      "current_output_or_shape": "Only from verified persisted read; snapshot payload derives from observation, source ref from fixed descriptor, seals actual anchor version.",
+      "proposed_contract": "Emit exact 1.3 snapshot via approved factory, retaining observation ID/sequence/time/state hash/version provenance and fixed source/target identity. No fabricated merge; output artifact is separately included in full closure before a persisted consumer is committed."
+    },
+    {
+      "id": "prepare",
+      "path": "src/annotation/delivery/mock/persistent.py",
+      "start": 502,
+      "end": 551,
+      "source": "def prepare_action(self, bundle, plan_ref, action_id, config, *, current_snapshot_ref, asset_root):\n        bundle = validate_bundle(bundle, asset_root=asset_root)\n        plan = resolve_artifact(bundle, plan_ref, \"ApplyPlan\")\n        if _plain(current_snapshot_ref) != _plain(plan.payload.snapshot):\n            reject(\"TARGET_CHANGED\", \"preparation plan-initial snapshot reference differs\")\n        assert_plan_ready(bundle, plan_ref, current_snapshot_ref)\n        action = next((a for a in plan.payload.actions if a.action_id == action_id), None)\n        if action is None:\n            reject(\"ACTION_DIGEST_MISMATCH\", \"action is absent from exact plan\")\n        if (plan.book_id != self.descriptor.book_id or plan.scope_id != self.descriptor.fixed_scope_id or\n                action.target.target_id != self.descriptor.target_key[\"target_id\"]):\n            reject(\"TARGET_IDENTITY_MISMATCH\", \"plan is outside fixed target/session\")\n        graph = resolve_artifact(bundle, plan.payload.graph, \"QuestionGraph\")\n        if _plain(graph.payload.source) != self.descriptor.fixed_source_ref:\n            reject(\"SOURCE_BINDING\", \"plan graph source differs from fixed target session source\")\n        observation = self.observe_target(self.descriptor.target_key, observation_id=\"prepare-\" + uuid.uuid4().hex)\n        snapshot = self.snapshot_from_observation(observation)\n        observation[\"snapshot_ref\"] = artifact_ref(snapshot)\n        before = dict(observation)\n        before.update(format_version=\"a03-prepared-before-1\", action_id=action_id,\n                      action_digest=content_digest(_plain(action)), facts=action_facts(action, observation[\"view\"]))\n        _copy_resources(before, self.asset_root, asset_root)\n        prepared_resource = _write_resource(asset_root, before)\n        with self._connect() as db:\n            context = self._load(db).get(\"context\") or {}\n        proposed_prefix = context.get(\"progress_refs\", context.get(\"applied_prefix_refs\", []))\n        prefix = []\n        for ref in proposed_prefix:\n            progress = next((a for a in bundle.artifacts if artifact_ref(a) == ref and a.kind == \"ExecutionProgress\"), None)\n            if progress is not None and _plain(progress.payload.plan_ref) == artifact_ref(plan):\n                prefix.append(ref)\n        initial = resolve_artifact(bundle, plan.payload.snapshot, \"PlatformSnapshot\")\n        try:\n            observation[\"plan_baseline_epoch\"] = int(initial.payload.observed_version.rsplit(\"-\", 1)[1])\n        except (ValueError, AttributeError):\n            reject(\"OBSERVATION_BINDING_MISMATCH\", \"plan snapshot has no genuine target state version\")\n        binding = bind_plan_observation(bundle, plan_ref, action_id, observation, config,\n                                        prepared_before=prepared_resource, progress_refs=prefix)\n        prepared = PreparedAction(bundle=bundle, plan=plan, action=action, plan_ref=artifact_ref(plan), action_id=action_id,\n                            action_digest=content_digest(_plain(action)), expected_effect_digest=content_digest(_plain(action.expected_after)),\n                            target_key=copy.deepcopy(self.descriptor.target_key), target_store_id=self.descriptor.store_id,\n                            target_session_id=self.descriptor.target_session_id, source_ref=copy.deepcopy(self.descriptor.fixed_source_ref),\n                            scope_id=self.descriptor.fixed_scope_id, comparator_version=\"a02-facts-1\",\n                            before_snapshot_ref=_plain(plan.payload.snapshot), prepared_before=prepared_resource,\n                            observation=observation, snapshot=snapshot, observation_binding=binding,\n                            asset_root=str(Path(asset_root).resolve()))\n        self._prepared_actions[id(prepared)] = {\"object\": prepared, \"digest\": _prepared_digest(prepared),\n            \"config\": copy.deepcopy(config), \"config_version\": config.version,\n            \"plan_ref\": artifact_ref(plan), \"observation_id\": observation[\"observation_id\"]}\n        return prepared",
+      "current_output_or_shape": "Asserts plan readiness, obtains real read/snapshot/prepared_before, binds progress/effect log, registers exact PreparedAction identity+digest/config.",
+      "proposed_contract": "Spend persistent runtime read budget before observe_target; require current 1.3 selection/admitted PRE and native registration. Preserve genuine PreparedAction identity, complete immutable prepared_before, source/book/scope/target/store/session and fresh snapshot. Persisted intent copies cannot recreate this capability."
+    },
+    {
+      "id": "prepare_verification",
+      "path": "src/annotation/delivery/mock/persistent.py",
+      "start": 553,
+      "end": 611,
+      "source": "def verify_prepared_action(self, prepared, *, observation_binding=None,\n                               expected_config_version=None, expected_plan_ref=None):\n        \"\"\"Verify the exact native object through the current controlled observer.\n\n        Runtime calls this instance method on its currently registered observer;\n        neither a caller dictionary nor a self-reported completeness flag can\n        manufacture the registry entry. This method performs no target effect or\n        new observation. Persisted intent copies never recreate the capability.\n        \"\"\"\n        issued = self._prepared_actions.get(id(prepared))\n        if not isinstance(prepared, PreparedAction) or issued is None or issued[\"object\"] is not prepared:\n            reject(\"PREPARED_ACTION_UNVERIFIED\", \"exact current-observer-issued PreparedAction is required\")\n        if _prepared_digest(prepared) != issued[\"digest\"]:\n            reject(\"OBSERVATION_BINDING_MISMATCH\", \"issued prepared action or observation binding was modified\")\n        if expected_config_version is not None and expected_config_version != issued[\"config_version\"]:\n            reject(\"AUTHORIZATION_CHANGED\", \"current runtime configuration differs from the actual preparation\")\n        if expected_plan_ref is not None and _plain(expected_plan_ref) != issued[\"plan_ref\"]:\n            reject(\"PLAN_CHANGED\", \"current accepted plan differs from the actual preparation\")\n        if observation_binding is not None and _plain(observation_binding) != _plain(prepared[\"observation_binding\"]):\n            reject(\"OBSERVATION_BINDING_MISMATCH\", \"dispatch binding differs from the native preparation\")\n        self._key(prepared[\"target_key\"])\n        if (prepared[\"target_store_id\"] != self.store_id or prepared[\"target_session_id\"] != self.target_session_id or\n                prepared[\"source_ref\"] != self.source_ref or prepared[\"scope_id\"] != self.scope_id):\n            reject(\"TARGET_IDENTITY_MISMATCH\", \"prepared target/source/session differs from the controlled observer\")\n        bundle = validate_bundle(prepared[\"bundle\"], asset_root=prepared[\"asset_root\"])\n        observation = prepared[\"observation\"]\n        original = self._verify_observation(observation)\n        if original[\"observation_id\"] != issued[\"observation_id\"]:\n            reject(\"OBSERVATION_BINDING_MISMATCH\", \"prepared observation identity differs from its registry\")\n        snapshot = self.snapshot_from_observation(observation)\n        if snapshot != prepared[\"snapshot\"] or artifact_ref(snapshot) != prepared[\"observation_binding\"][\"observed_snapshot_ref\"]:\n            reject(\"OBSERVATION_BINDING_MISMATCH\", \"prepared snapshot is not from the exact persisted target observation\")\n        resource = prepared[\"prepared_before\"]\n        root = Path(prepared[\"asset_root\"]).resolve()\n        path = (root / resource[\"path\"]).resolve()\n        if not path.is_relative_to(root) or not path.is_file() or path.is_symlink():\n            reject(\"RESOURCE_MISSING\", \"prepared-before immutable resource is missing or unsafe\")\n        raw = path.read_bytes()\n        if hashlib.sha256(raw).hexdigest() != resource[\"sha256\"]:\n            reject(\"RESOURCE_HASH_MISMATCH\", \"prepared-before evidence bytes changed\")\n        before = json.loads(raw)\n        if (before.get(\"format_version\") != \"a03-prepared-before-1\" or\n                any(before.get(name) != value for name, value in original.items() if name != \"format_version\")):\n            reject(\"OBSERVATION_BINDING_MISMATCH\", \"prepared-before evidence differs from actual persisted target read\")\n        if (before.get(\"action_id\") != prepared[\"action_id\"] or before.get(\"action_digest\") != prepared[\"action_digest\"] or\n                before.get(\"facts\") != action_facts(prepared[\"action\"], original[\"view\"])):\n            reject(\"PREPARED_BEFORE_MISMATCH\", \"prepared-before does not bind the exact action and actual relevant facts\")\n        binding = bind_plan_observation(bundle, prepared[\"plan_ref\"], prepared[\"action_id\"], observation,\n            issued[\"config\"], prepared_before=resource, progress_refs=prepared[\"observation_binding\"][\"applied_prefix\"])\n        if binding != prepared[\"observation_binding\"]:\n            reject(\"OBSERVATION_BINDING_MISMATCH\", \"public observation bridge no longer matches native preparation\")\n        return VerifiedPreparedAction(attestation_digest=issued[\"digest\"], config_version=issued[\"config_version\"],\n            plan_ref=copy.deepcopy(issued[\"plan_ref\"]), action_id=prepared[\"action_id\"],\n            action_digest=prepared[\"action_digest\"], target_key=copy.deepcopy(self.target_key),\n            target_store_id=self.store_id, target_session_id=self.target_session_id,\n            source_ref=copy.deepcopy(self.source_ref), scope_id=self.scope_id,\n            prepared_before=copy.deepcopy(resource), observation_id=original[\"observation_id\"],\n            read_sequence=original[\"read_sequence\"], target_state_version=original[\"target_state_version\"],\n            target_state_hash=original[\"target_state_hash\"])",
+      "current_output_or_shape": "Checks exact issued object/digest/config/plan, independent observation row/snapshot/prepared bytes and recomputed bridge; returns VerifiedPreparedAction.",
+      "proposed_contract": "Preserve exact observer-issued identity and native callback verification, no new observe_target. Verify profile/context plus all original bindings and full package closure. VerifiedPreparedAction is a callback result, never alone a dispatch permit; runtime retains effect gate/intent/permit/fence/head/counter checks."
+    }
+  ],
+  "type_inventory": [
+    {
+      "path": "src/annotation/contracts/validation.py",
+      "name": "ContractError",
+      "line": 12,
+      "fields": []
+    },
+    {
+      "path": "src/annotation/contracts/validation.py",
+      "name": "_Context",
+      "line": 96,
+      "fields": []
+    },
+    {
+      "path": "src/annotation/contracts/models.py",
+      "name": "ContractModel",
+      "line": 28,
+      "fields": []
+    },
+    {
+      "path": "src/annotation/contracts/models.py",
+      "name": "ArtifactRef",
+      "line": 45,
+      "fields": [
+        {
+          "name": "artifact_id",
+          "annotation": "Identifier"
+        },
+        {
+          "name": "revision",
+          "annotation": "PositiveInt"
+        },
+        {
+          "name": "kind",
+          "annotation": "Kind"
+        },
+        {
+          "name": "content_hash",
+          "annotation": "Digest"
+        }
+      ]
+    },
+    {
+      "path": "src/annotation/contracts/models.py",
+      "name": "PolicyRef",
+      "line": 52,
+      "fields": [
+        {
+          "name": "policy_id",
+          "annotation": "Identifier"
+        },
+        {
+          "name": "revision",
+          "annotation": "PositiveInt"
+        },
+        {
+          "name": "content_hash",
+          "annotation": "Digest"
+        }
+      ]
+    },
+    {
+      "path": "src/annotation/contracts/models.py",
+      "name": "Producer",
+      "line": 58,
+      "fields": [
+        {
+          "name": "module",
+          "annotation": "Identifier"
+        },
+        {
+          "name": "implementation_version",
+          "annotation": "str"
+        },
+        {
+          "name": "config_version",
+          "annotation": "str"
+        },
+        {
+          "name": "policy_versions",
+          "annotation": "List[PolicyRef]"
+        },
+        {
+          "name": "model_version",
+          "annotation": "Optional[str]"
+        },
+        {
+          "name": "prompt_version",
+          "annotation": "Optional[str]"
+        },
+        {
+          "name": "evidence_mode",
+          "annotation": "Literal['SYNTHETIC', 'OBSERVED']"
+        }
+      ]
+    },
+    {
+      "path": "src/annotation/contracts/models.py",
+      "name": "Envelope",
+      "line": 68,
+      "fields": [
+        {
+          "name": "schema_version",
+          "annotation": "Literal['1.0.0-a-proposal']"
+        },
+        {
+          "name": "artifact_id",
+          "annotation": "Identifier"
+        },
+        {
+          "name": "revision",
+          "annotation": "PositiveInt"
+        },
+        {
+          "name": "kind",
+          "annotation": "Kind"
+        },
+        {
+          "name": "run_id",
+          "annotation": "Identifier"
+        },
+        {
+          "name": "book_id",
+          "annotation": "ExternalIdentifier"
+        },
+        {
+          "name": "scope_id",
+          "annotation": "Identifier"
+        },
+        {
+          "name": "input_refs",
+          "annotation": "List[ArtifactRef]"
+        },
+        {
+          "name": "producer",
+          "annotation": "Producer"
+        },
+        {
+          "name": "content_hash",
+          "annotation": "Digest"
+        },
+        {
+          "name": "created_at",
+          "annotation": "str"
+        }
+      ]
+    },
+    {
+      "path": "src/annotation/contracts/models.py",
+      "name": "Resource",
+      "line": 93,
+      "fields": [
+        {
+          "name": "path",
+          "annotation": "str"
+        },
+        {
+          "name": "sha256",
+          "annotation": "Digest"
+        },
+        {
+          "name": "media_type",
+          "annotation": "Literal['image/png', 'image/jpeg', 'image/x-portable-graymap', 'text/plain', 'application/json']"
+        }
+      ]
+    },
+    {
+      "path": "src/annotation/contracts/models.py",
+      "name": "Asset",
+      "line": 101,
+      "fields": [
+        {
+          "name": "asset_id",
+          "annotation": "Identifier"
+        },
+        {
+          "name": "width",
+          "annotation": "PositiveInt"
+        },
+        {
+          "name": "height",
+          "annotation": "PositiveInt"
+        },
+        {
+          "name": "source_label",
+          "annotation": "str"
+        },
+        {
+          "name": "provenance",
+          "annotation": "Literal['SYNTHETIC', 'ORIGINAL']"
+        }
+      ]
+    },
+    {
+      "path": "src/annotation/contracts/models.py",
+      "name": "ImageBinding",
+      "line": 109,
+      "fields": [
+        {
+          "name": "asset_id",
+          "annotation": "Identifier"
+        },
+        {
+          "name": "width",
+          "annotation": "PositiveInt"
+        },
+        {
+          "name": "height",
+          "annotation": "PositiveInt"
+        },
+        {
+          "name": "sha256",
+          "annotation": "Digest"
+        }
+      ]
+    },
+    {
+      "path": "src/annotation/contracts/models.py",
+      "name": "OriginalBox",
+      "line": 116,
+      "fields": [
+        {
+          "name": "image",
+          "annotation": "ImageBinding"
+        },
+        {
+          "name": "bbox",
+          "annotation": "List[float]"
+        }
+      ]
+    },
+    {
+      "path": "src/annotation/contracts/models.py",
+      "name": "Directory",
+      "line": 130,
+      "fields": [
+        {
+          "name": "directory_id",
+          "annotation": "Identifier"
+        },
+        {
+          "name": "parent_id",
+          "annotation": "Optional[Identifier]"
+        },
+        {
+          "name": "label",
+          "annotation": "str"
+        }
+      ]
+    },
+    {
+      "path": "src/annotation/contracts/models.py",
+      "name": "PageMapping",
+      "line": 136,
+      "fields": [
+        {
+          "name": "asset_id",
+          "annotation": "Identifier"
+        },
+        {
+          "name": "directory_id",
+          "annotation": "Identifier"
+        },
+        {
+          "name": "external_page",
+          "annotation": "str"
+        },
+        {
+          "name": "mapping_status",
+          "annotation": "Literal['CONFIRMED', 'UNCERTAIN']"
+        },
+        {
+          "name": "evidence_refs",
+          "annotation": "List[Identifier]"
+        }
+      ]
+    },
+    {
+      "path": "src/annotation/contracts/models.py",
+      "name": "HistoryReference",
+      "line": 144,
+      "fields": [
+        {
+          "name": "resource",
+          "annotation": "Resource"
+        },
+        {
+          "name": "quality",
+          "annotation": "Literal['UNVERIFIED', 'REVIEWED', 'REJECTED']"
+        },
+        {
+          "name": "reason",
+          "annotation": "str"
+        }
+      ]
+    },
+    {
+      "path": "src/annotation/contracts/models.py",
+      "name": "SourcePayload",
+      "line": 150,
+      "fields": [
+        {
+          "name": "assets",
+          "annotation": "List[Asset]"
+        },
+        {
+          "name": "directories",
+          "annotation": "List[Directory]"
+        },
+        {
+          "name": "pages_expected",
+          "annotation": "List[Identifier]"
+        },
+        {
+          "name": "pages_acquired",
+          "annotation": "List[Identifier]"
+        },
+        {
+          "name": "external_page_mappings",
+          "annotation": "List[PageMapping]"
+        },
+        {
+          "name": "history",
+          "annotation": "List[HistoryReference]"
+        },
+        {
+          "name": "scope_manifest",
+          "annotation": "List[Identifier]"
+        },
+        {
+          "name": "scope_manifest_basis",
+          "annotation": "str"
+        },
+        {
+          "name": "metadata_page_count",
+          "annotation": "Optional[PositiveInt]"
+        }
+      ]
+    },
+    {
+      "path": "src/annotation/contracts/models.py",
+      "name": "SourceBundle",
+      "line": 162,
+      "fields": [
+        {
+          "name": "kind",
+          "annotation": "Literal['SourceBundle']"
+        },
+        {
+          "name": "payload",
+          "annotation": "SourcePayload"
+        }
+      ]
+    },
+    {
+      "path": "src/annotation/contracts/models.py",
+      "name": "CropTransform",
+      "line": 167,
+      "fields": [
+        {
+          "name": "scale_x",
+          "annotation": "float"
+        },
+        {
+          "name": "scale_y",
+          "annotation": "float"
+        },
+        {
+          "name": "offset_x",
+          "annotation": "float"
+        },
+        {
+          "name": "offset_y",
+          "annotation": "float"
+        },
+        {
+          "name": "rotation_degrees",
+          "annotation": "float"
+        },
+        {
+          "name": "padding",
+          "annotation": "List[Nonnegative]"
+        },
+        {
+          "name": "processed_width",
+          "annotation": "PositiveInt"
+        },
+        {
+          "name": "processed_height",
+          "annotation": "PositiveInt"
+        },
+        {
+          "name": "invertible",
+          "annotation": "bool"
+        }
+      ]
+    },
+    {
+      "path": "src/annotation/contracts/models.py",
+      "name": "Region",
+      "line": 179,
+      "fields": [
+        {
+          "name": "region_id",
+          "annotation": "Identifier"
+        },
+        {
+          "name": "box",
+          "annotation": "OriginalBox"
+        },
+        {
+          "name": "crop_transform",
+          "annotation": "CropTransform"
+        },
+        {
+          "name": "content_type",
+          "annotation": "ContentType"
+        },
+        {
+          "name": "text",
+          "annotation": "Optional[str]"
+        },
+        {
+          "name": "source",
+          "annotation": "Literal['SYNTHETIC', 'OCR', 'DETECTOR', 'HUMAN', 'HISTORICAL']"
+        },
+        {
+          "name": "evidence_refs",
+          "annotation": "List[Identifier]"
+        },
+        {
+          "name": "printed_number_candidates",
+          "annotation": "List[str]"
+        },
+        {
+          "name": "certainty",
+          "annotation": "Literal['CONFIRMED', 'UNCERTAIN']"
+        }
+      ]
+    },
+    {
+      "path": "src/annotation/contracts/models.py",
+      "name": "CoverageClue",
+      "line": 191,
+      "fields": [
+        {
+          "name": "clue_id",
+          "annotation": "Identifier"
+        },
+        {
+          "name": "box",
+          "annotation": "OriginalBox"
+        },
+        {
+          "name": "source",
+          "annotation": "Literal['WHOLE_PAGE_SCAN', 'INDEPENDENT_REVIEW', 'SHARED_RECOGNITION', 'SYNTHETIC']"
+        },
+        {
+          "name": "disposition",
+          "annotation": "Literal['ASSIGNED', 'EXCLUDED', 'UNASSIGNED']"
+        },
+        {
+          "name": "region_ids",
+          "annotation": "List[Identifier]"
+        },
+        {
+          "name": "reason",
+          "annotation": "str"
+        },
+        {
+          "name": "evidence_refs",
+          "annotation": "List[Identifier]"
+        }
+      ]
+    },
+    {
+      "path": "src/annotation/contracts/models.py",
+      "name": "EvidencePayload",
+      "line": 201,
+      "fields": [
+        {
+          "name": "source",
+          "annotation": "ArtifactRef"
+        },
+        {
+          "name": "regions",
+          "annotation": "List[Region]"
+        },
+        {
+          "name": "coverage_clues",
+          "annotation": "List[CoverageClue]"
+        }
+      ]
+    },
+    {
+      "path": "src/annotation/contracts/models.py",
+      "name": "EvidenceBundle",
+      "line": 207,
+      "fields": [
+        {
+          "name": "kind",
+          "annotation": "Literal['EvidenceBundle']"
+        },
+        {
+          "name": "payload",
+          "annotation": "EvidencePayload"
+        }
+      ]
+    },
+    {
+      "path": "src/annotation/contracts/models.py",
+      "name": "ExternalRefs",
+      "line": 212,
+      "fields": [
+        {
+          "name": "printed_number",
+          "annotation": "Optional[str]"
+        },
+        {
+          "name": "platform_question_id",
+          "annotation": "Optional[str]"
+        },
+        {
+          "name": "platform_order",
+          "annotation": "Optional[int]"
+        }
+      ]
+    },
+    {
+      "path": "src/annotation/contracts/models.py",
+      "name": "Fragment",
+      "line": 218,
+      "fields": [
+        {
+          "name": "fragment_id",
+          "annotation": "Identifier"
+        },
+        {
+          "name": "region_ids",
+          "annotation": "List[Identifier]"
+        },
+        {
+          "name": "role",
+          "annotation": "Role"
+        },
+        {
+          "name": "content_type",
+          "annotation": "ContentType"
+        },
+        {
+          "name": "reading_order",
+          "annotation": "int"
+        }
+      ]
+    },
+    {
+      "path": "src/annotation/contracts/models.py",
+      "name": "Question",
+      "line": 226,
+      "fields": [
+        {
+          "name": "question_id",
+          "annotation": "Identifier"
+        },
+        {
+          "name": "directory_id",
+          "annotation": "Identifier"
+        },
+        {
+          "name": "question_type",
+          "annotation": "Literal['ordinary_choice', 'free_response', 'combination', 'seven_choice', 'unsupported']"
+        },
+        {
+          "name": "fragment_ids",
+          "annotation": "List[Identifier]"
+        },
+        {
+          "name": "parent_question_id",
+          "annotation": "Optional[Identifier]"
+        },
+        {
+          "name": "shared_fragment_ids",
+          "annotation": "List[Identifier]"
+        },
+        {
+          "name": "cross_page",
+          "annotation": "bool"
+        },
+        {
+          "name": "external_refs",
+          "annotation": "ExternalRefs"
+        }
+      ]
+    },
+    {
+      "path": "src/annotation/contracts/models.py",
+      "name": "AnswerRelation",
+      "line": 237,
+      "fields": [
+        {
+          "name": "relation_id",
+          "annotation": "Identifier"
+        },
+        {
+          "name": "question_id",
+          "annotation": "Identifier"
+        },
+        {
+          "name": "candidate_fragment_ids",
+          "annotation": "List[Identifier]"
+        },
+        {
+          "name": "selected_fragment_ids",
+          "annotation": "List[Identifier]"
+        },
+        {
+          "name": "status",
+          "annotation": "Literal['SELECTED', 'AMBIGUOUS', 'UNRESOLVED']"
+        },
+        {
+          "name": "evidence_refs",
+          "annotation": "List[Identifier]"
+        }
+      ]
+    },
+    {
+      "path": "src/annotation/contracts/models.py",
+      "name": "GraphPayload",
+      "line": 246,
+      "fields": [
+        {
+          "name": "source",
+          "annotation": "ArtifactRef"
+        },
+        {
+          "name": "evidence",
+          "annotation": "ArtifactRef"
+        },
+        {
+          "name": "questions",
+          "annotation": "List[Question]"
+        },
+        {
+          "name": "fragments",
+          "annotation": "List[Fragment]"
+        },
+        {
+          "name": "answer_relations",
+          "annotation": "List[AnswerRelation]"
+        },
+        {
+          "name": "identity_notes",
+          "annotation": "str"
+        }
+      ]
+    },
+    {
+      "path": "src/annotation/contracts/models.py",
+      "name": "QuestionGraph",
+      "line": 255,
+      "fields": [
+        {
+          "name": "kind",
+          "annotation": "Literal['QuestionGraph']"
+        },
+        {
+          "name": "payload",
+          "annotation": "GraphPayload"
+        }
+      ]
+    },
+    {
+      "path": "src/annotation/contracts/models.py",
+      "name": "EvidenceRecord",
+      "line": 260,
+      "fields": [
+        {
+          "name": "evidence_id",
+          "annotation": "Identifier"
+        },
+        {
+          "name": "resource",
+          "annotation": "Resource"
+        },
+        {
+          "name": "description",
+          "annotation": "str"
+        },
+        {
+          "name": "mode",
+          "annotation": "Literal['SYNTHETIC', 'OBSERVED']"
+        }
+      ]
+    },
+    {
+      "path": "src/annotation/contracts/models.py",
+      "name": "Capability",
+      "line": 267,
+      "fields": [
+        {
+          "name": "name",
+          "annotation": "CapabilityName"
+        },
+        {
+          "name": "status",
+          "annotation": "Literal['VERIFIED', 'UNKNOWN', 'UNSUPPORTED']"
+        },
+        {
+          "name": "platform_version",
+          "annotation": "str"
+        },
+        {
+          "name": "evidence_refs",
+          "annotation": "List[Identifier]"
+        }
+      ]
+    },
+    {
+      "path": "src/annotation/contracts/models.py",
+      "name": "PlatformQuestion",
+      "line": 280,
+      "fields": [
+        {
+          "name": "platform_question_id",
+          "annotation": "str"
+        },
+        {
+          "name": "directory_id",
+          "annotation": "str"
+        },
+        {
+          "name": "platform_order",
+          "annotation": "int"
+        }
+      ]
+    },
+    {
+      "path": "src/annotation/contracts/models.py",
+      "name": "PlatformFrame",
+      "line": 286,
+      "fields": [
+        {
+          "name": "platform_frame_id",
+          "annotation": "str"
+        },
+        {
+          "name": "platform_question_id",
+          "annotation": "str"
+        },
+        {
+          "name": "box",
+          "annotation": "OriginalBox"
+        },
+        {
+          "name": "platform_role",
+          "annotation": "Literal['Q', 'W', 'A', 'E']"
+        }
+      ]
+    },
+    {
+      "path": "src/annotation/contracts/models.py",
+      "name": "SnapshotPayload",
+      "line": 293,
+      "fields": [
+        {
+          "name": "target_id",
+          "annotation": "ExternalIdentifier"
+        },
+        {
+          "name": "platform_version",
+          "annotation": "str"
+        },
+        {
+          "name": "observed_at",
+          "annotation": "str"
+        },
+        {
+          "name": "observed_version",
+          "annotation": "str"
+        },
+        {
+          "name": "observed_hash",
+          "annotation": "Digest"
+        },
+        {
+          "name": "authorized_scope_id",
+          "annotation": "Identifier"
+        },
+        {
+          "name": "directories",
+          "annotation": "List[str]"
+        },
+        {
+          "name": "questions",
+          "annotation": "List[PlatformQuestion]"
+        },
+        {
+          "name": "frames",
+          "annotation": "List[PlatformFrame]"
+        },
+        {
+          "name": "capabilities",
+          "annotation": "List[Capability]"
+        },
+        {
+          "name": "evidence_refs",
+          "annotation": "List[Identifier]"
+        }
+      ]
+    },
+    {
+      "path": "src/annotation/contracts/models.py",
+      "name": "PlatformSnapshot",
+      "line": 309,
+      "fields": [
+        {
+          "name": "kind",
+          "annotation": "Literal['PlatformSnapshot']"
+        },
+        {
+          "name": "payload",
+          "annotation": "SnapshotPayload"
+        }
+      ]
+    },
+    {
+      "path": "src/annotation/contracts/models.py",
+      "name": "Strategy",
+      "line": 314,
+      "fields": [
+        {
+          "name": "strategy_id",
+          "annotation": "Literal['NONE', 'LOAD_ADJACENT_PAGE', 'EXPAND_CROP', 'ADD_ANSWER_CONTEXT', 'SWITCH_RECOGNIZER', 'HUMAN_REVIEW', 'RECONCILE', 'RECHECK_TARGET', 'WAIT_CONTENT', 'HUMAN_SUBMIT', 'LOGIN', 'RAISE_BUDGET']"
+        },
+        {
+          "name": "max_attempts",
+          "annotation": "int"
+        },
+        {
+          "name": "max_cost",
+          "annotation": "Nonnegative"
+        }
+      ]
+    },
+    {
+      "path": "src/annotation/contracts/models.py",
+      "name": "Issue",
+      "line": 322,
+      "fields": [
+        {
+          "name": "issue_id",
+          "annotation": "Identifier"
+        },
+        {
+          "name": "code",
+          "annotation": "Literal['SOURCE_MISSING', 'PAGE_MAPPING_UNCERTAIN', 'UNASSIGNED_CONTENT', 'CROSS_PAGE_OPEN', 'OPTION_INCOMPLETE', 'ANSWER_AMBIGUOUS', 'POLICY_UNRESOLVED', 'UNSUPPORTED_LAYOUT', 'TARGET_CHANGED', 'CONTENT_MISMATCH', 'SAVE_UNKNOWN', 'LOGIN_REQUIRED', 'BUDGET_LIMIT']"
+        },
+        {
+          "name": "scope_type",
+          "annotation": "Literal['book', 'scope', 'page', 'question', 'fragment', 'region', 'action']"
+        },
+        {
+          "name": "scope_id",
+          "annotation": "ExternalIdentifier"
+        },
+        {
+          "name": "evidence_refs",
+          "annotation": "List[Identifier]"
+        },
+        {
+          "name": "severity",
+          "annotation": "Literal['blocking', 'warning', 'info']"
+        },
+        {
+          "name": "blocks",
+          "annotation": "List[Literal['PLAN', 'APPLY', 'COMPLETE']]"
+        },
+        {
+          "name": "suggested_strategy",
+          "annotation": "Strategy"
+        },
+        {
+          "name": "reason",
+          "annotation": "str"
+        }
+      ]
+    },
+    {
+      "path": "src/annotation/contracts/models.py",
+      "name": "Coverage",
+      "line": 336,
+      "fields": [
+        {
+          "name": "scope_id",
+          "annotation": "Identifier"
+        },
+        {
+          "name": "pages_expected",
+          "annotation": "List[Identifier]"
+        },
+        {
+          "name": "pages_checked",
+          "annotation": "List[Identifier]"
+        },
+        {
+          "name": "clue_ids",
+          "annotation": "List[Identifier]"
+        },
+        {
+          "name": "unassigned_region_ids",
+          "annotation": "List[Identifier]"
+        }
+      ]
+    },
+    {
+      "path": "src/annotation/contracts/models.py",
+      "name": "CheckResult",
+      "line": 348,
+      "fields": [
+        {
+          "name": "check_id",
+          "annotation": "CheckName"
+        },
+        {
+          "name": "outcome",
+          "annotation": "Literal['PASS', 'FAIL', 'UNAVAILABLE']"
+        },
+        {
+          "name": "evidence_refs",
+          "annotation": "List[Identifier]"
+        },
+        {
+          "name": "reason",
+          "annotation": "str"
+        }
+      ]
+    },
+    {
+      "path": "src/annotation/contracts/models.py",
+      "name": "CheckPayload",
+      "line": 362,
+      "fields": [
+        {
+          "name": "stage",
+          "annotation": "Stage"
+        },
+        {
+          "name": "subject",
+          "annotation": "ArtifactRef"
+        },
+        {
+          "name": "graph",
+          "annotation": "ArtifactRef"
+        },
+        {
+          "name": "policy",
+          "annotation": "PolicyRef"
+        },
+        {
+          "name": "snapshot",
+          "annotation": "Optional[ArtifactRef]"
+        },
+        {
+          "name": "receipt",
+          "annotation": "Optional[ArtifactRef]"
+        },
+        {
+          "name": "coverage",
+          "annotation": "Coverage"
+        },
+        {
+          "name": "checks",
+          "annotation": "List[CheckResult]"
+        },
+        {
+          "name": "issues",
+          "annotation": "List[Issue]"
+        },
+        {
+          "name": "decision",
+          "annotation": "Decision"
+        },
+        {
+          "name": "reason",
+          "annotation": "str"
+        }
+      ]
+    },
+    {
+      "path": "src/annotation/contracts/models.py",
+      "name": "CheckReport",
+      "line": 399,
+      "fields": [
+        {
+          "name": "kind",
+          "annotation": "Literal['CheckReport']"
+        },
+        {
+          "name": "payload",
+          "annotation": "CheckPayload"
+        }
+      ]
+    },
+    {
+      "path": "src/annotation/contracts/models.py",
+      "name": "ActionTarget",
+      "line": 404,
+      "fields": [
+        {
+          "name": "target_id",
+          "annotation": "ExternalIdentifier"
+        },
+        {
+          "name": "question_id",
+          "annotation": "Identifier"
+        },
+        {
+          "name": "platform_question_id",
+          "annotation": "Optional[str]"
+        }
+      ]
+    },
+    {
+      "path": "src/annotation/contracts/models.py",
+      "name": "Action",
+      "line": 410,
+      "fields": [
+        {
+          "name": "action_id",
+          "annotation": "Identifier"
+        },
+        {
+          "name": "target",
+          "annotation": "ActionTarget"
+        },
+        {
+          "name": "source_entity_ids",
+          "annotation": "List[Identifier]"
+        },
+        {
+          "name": "expected_before",
+          "annotation": "Dict[str, FactValue]"
+        },
+        {
+          "name": "operation",
+          "annotation": "Literal['CREATE_FRAMES', 'UPDATE_FRAMES']"
+        },
+        {
+          "name": "expected_after",
+          "annotation": "Dict[str, FactValue]"
+        },
+        {
+          "name": "depends_on",
+          "annotation": "List[Identifier]"
+        }
+      ]
+    },
+    {
+      "path": "src/annotation/contracts/models.py",
+      "name": "PlanPayload",
+      "line": 420,
+      "fields": [
+        {
+          "name": "graph",
+          "annotation": "ArtifactRef"
+        },
+        {
+          "name": "precheck",
+          "annotation": "ArtifactRef"
+        },
+        {
+          "name": "targetcheck",
+          "annotation": "ArtifactRef"
+        },
+        {
+          "name": "snapshot",
+          "annotation": "ArtifactRef"
+        },
+        {
+          "name": "policy",
+          "annotation": "PolicyRef"
+        },
+        {
+          "name": "readiness",
+          "annotation": "Literal['READY', 'BLOCKED']"
+        },
+        {
+          "name": "execution_mode",
+          "annotation": "Literal['SIMULATED', 'PLATFORM']"
+        },
+        {
+          "name": "session_mode",
+          "annotation": "Literal['PERSISTENT', 'SAME_SESSION_HANDOFF']"
+        },
+        {
+          "name": "required_capabilities",
+          "annotation": "List[CapabilityName]"
+        },
+        {
+          "name": "actions",
+          "annotation": "List[Action]"
+        },
+        {
+          "name": "blocked_issue_ids",
+          "annotation": "List[Identifier]"
+        },
+        {
+          "name": "previous_receipt",
+          "annotation": "Optional[ArtifactRef]"
+        },
+        {
+          "name": "final_submission",
+          "annotation": "Literal['HUMAN_ONLY']"
+        }
+      ]
+    },
+    {
+      "path": "src/annotation/contracts/models.py",
+      "name": "ApplyPlan",
+      "line": 444,
+      "fields": [
+        {
+          "name": "kind",
+          "annotation": "Literal['ApplyPlan']"
+        },
+        {
+          "name": "payload",
+          "annotation": "PlanPayload"
+        }
+      ]
+    },
+    {
+      "path": "src/annotation/contracts/models.py",
+      "name": "ActionResult",
+      "line": 449,
+      "fields": [
+        {
+          "name": "action_id",
+          "annotation": "Identifier"
+        },
+        {
+          "name": "outcome",
+          "annotation": "Literal['APPLIED', 'NOT_APPLIED', 'UNKNOWN']"
+        },
+        {
+          "name": "platform_ids",
+          "annotation": "List[str]"
+        },
+        {
+          "name": "before_evidence_refs",
+          "annotation": "List[Identifier]"
+        },
+        {
+          "name": "after_evidence_refs",
+          "annotation": "List[Identifier]"
+        },
+        {
+          "name": "readback",
+          "annotation": "Optional[Resource]"
+        },
+        {
+          "name": "effect_match",
+          "annotation": "Literal['MATCH', 'ABSENT', 'INDETERMINATE']"
+        },
+        {
+          "name": "next_step",
+          "annotation": "Literal['POSTCHECK', 'RECHECK_TARGET', 'RECONCILE']"
+        },
+        {
+          "name": "replay_allowed",
+          "annotation": "Literal[False]"
+        },
+        {
+          "name": "reason",
+          "annotation": "str"
+        }
+      ]
+    },
+    {
+      "path": "src/annotation/contracts/models.py",
+      "name": "ReceiptPayload",
+      "line": 474,
+      "fields": [
+        {
+          "name": "plan",
+          "annotation": "ArtifactRef"
+        },
+        {
+          "name": "execution_mode",
+          "annotation": "Literal['SIMULATED', 'PLATFORM_OBSERVED', 'NOT_EXECUTED']"
+        },
+        {
+          "name": "results",
+          "annotation": "List[ActionResult]"
+        },
+        {
+          "name": "unresolved_issue_ids",
+          "annotation": "List[Identifier]"
+        },
+        {
+          "name": "write_disposition",
+          "annotation": "Literal['POSTCHECK', 'RECHECK_TARGET', 'PAUSE_RECONCILE', 'NOT_EXECUTED']"
+        }
+      ]
+    },
+    {
+      "path": "src/annotation/contracts/models.py",
+      "name": "ExecutionReceipt",
+      "line": 482,
+      "fields": [
+        {
+          "name": "kind",
+          "annotation": "Literal['ExecutionReceipt']"
+        },
+        {
+          "name": "payload",
+          "annotation": "ReceiptPayload"
+        }
+      ]
+    },
+    {
+      "path": "src/annotation/contracts/models.py",
+      "name": "PatchChange",
+      "line": 487,
+      "fields": [
+        {
+          "name": "entity_id",
+          "annotation": "Identifier"
+        },
+        {
+          "name": "field",
+          "annotation": "Literal['role', 'printed_number', 'selected_fragment_ids']"
+        },
+        {
+          "name": "before",
+          "annotation": "Union[str, List[Identifier], None]"
+        },
+        {
+          "name": "after",
+          "annotation": "Union[str, List[Identifier], None]"
+        }
+      ]
+    },
+    {
+      "path": "src/annotation/contracts/models.py",
+      "name": "PatchPayload",
+      "line": 494,
+      "fields": [
+        {
+          "name": "baseline",
+          "annotation": "ArtifactRef"
+        },
+        {
+          "name": "result_revision",
+          "annotation": "PositiveInt"
+        },
+        {
+          "name": "changes",
+          "annotation": "List[PatchChange]"
+        },
+        {
+          "name": "operator",
+          "annotation": "Identifier"
+        },
+        {
+          "name": "reason",
+          "annotation": "str"
+        },
+        {
+          "name": "related_issue_ids",
+          "annotation": "List[Identifier]"
+        },
+        {
+          "name": "requires_recheck",
+          "annotation": "Literal[True]"
+        }
+      ]
+    },
+    {
+      "path": "src/annotation/contracts/models.py",
+      "name": "ReviewPatch",
+      "line": 504,
+      "fields": [
+        {
+          "name": "kind",
+          "annotation": "Literal['ReviewPatch']"
+        },
+        {
+          "name": "payload",
+          "annotation": "PatchPayload"
+        }
+      ]
+    },
+    {
+      "path": "src/annotation/contracts/models.py",
+      "name": "QuestionStatus",
+      "line": 509,
+      "fields": [
+        {
+          "name": "question_id",
+          "annotation": "Identifier"
+        },
+        {
+          "name": "state",
+          "annotation": "Literal['PENDING', 'VERIFIED', 'EXCEPTION', 'SKIPPED', 'UNKNOWN']"
+        },
+        {
+          "name": "reason",
+          "annotation": "str"
+        }
+      ]
+    },
+    {
+      "path": "src/annotation/contracts/models.py",
+      "name": "Cost",
+      "line": 515,
+      "fields": [
+        {
+          "name": "model_calls",
+          "annotation": "int"
+        },
+        {
+          "name": "amount",
+          "annotation": "Optional[Nonnegative]"
+        },
+        {
+          "name": "currency",
+          "annotation": "str"
+        },
+        {
+          "name": "billing_status",
+          "annotation": "Literal['KNOWN', 'UNKNOWN']"
+        },
+        {
+          "name": "human_minutes",
+          "annotation": "Nonnegative"
+        }
+      ]
+    },
+    {
+      "path": "src/annotation/contracts/models.py",
+      "name": "BatchPayload",
+      "line": 529,
+      "fields": [
+        {
+          "name": "source",
+          "annotation": "ArtifactRef"
+        },
+        {
+          "name": "graph",
+          "annotation": "ArtifactRef"
+        },
+        {
+          "name": "receipt",
+          "annotation": "ArtifactRef"
+        },
+        {
+          "name": "postcheck",
+          "annotation": "ArtifactRef"
+        },
+        {
+          "name": "scope_manifest",
+          "annotation": "List[Identifier]"
+        },
+        {
+          "name": "questions",
+          "annotation": "List[QuestionStatus]"
+        },
+        {
+          "name": "total_expected",
+          "annotation": "PositiveInt"
+        },
+        {
+          "name": "coverage",
+          "annotation": "Coverage"
+        },
+        {
+          "name": "cost",
+          "annotation": "Cost"
+        },
+        {
+          "name": "unresolved_issue_ids",
+          "annotation": "List[Identifier]"
+        },
+        {
+          "name": "submission_status",
+          "annotation": "Literal['NOT_SUBMITTED', 'CONFIRMED', 'UNKNOWN']"
+        },
+        {
+          "name": "submission_evidence_refs",
+          "annotation": "List[Identifier]"
+        },
+        {
+          "name": "content_check_status",
+          "annotation": "Literal['PENDING', 'VERIFIED', 'MISMATCH', 'UNAVAILABLE']"
+        },
+        {
+          "name": "frame_check_status",
+          "annotation": "Literal['PASS', 'FAIL', 'UNAVAILABLE']"
+        },
+        {
+          "name": "state",
+          "annotation": "Literal['NEEDS_REVIEW', 'NEEDS_RECONCILIATION', 'CONTENT_PENDING', 'AWAITING_HUMAN_SUBMIT_FOR_OCR', 'READY_FOR_SUBMISSION', 'COMPLETED']"
+        }
+      ]
+    },
+    {
+      "path": "src/annotation/contracts/models.py",
+      "name": "BatchReport",
+      "line": 572,
+      "fields": [
+        {
+          "name": "kind",
+          "annotation": "Literal['BatchReport']"
+        },
+        {
+          "name": "payload",
+          "annotation": "BatchPayload"
+        }
+      ]
+    },
+    {
+      "path": "src/annotation/contracts/models.py",
+      "name": "PlatformPolicy",
+      "line": 581,
+      "fields": [
+        {
+          "name": "policy_id",
+          "annotation": "Identifier"
+        },
+        {
+          "name": "revision",
+          "annotation": "PositiveInt"
+        },
+        {
+          "name": "content_hash",
+          "annotation": "Digest"
+        },
+        {
+          "name": "confirmation_status",
+          "annotation": "Literal['UNRESOLVED', 'A_INTERNAL_PROPOSAL', 'JOINT_CONFIRMED', 'SYNTHETIC_ASSUMPTION']"
+        },
+        {
+          "name": "option_grouping",
+          "annotation": "Literal['UNRESOLVED', 'SEPARATE', 'COMBINED']"
+        },
+        {
+          "name": "role_mapping",
+          "annotation": "Dict[Role, Literal['Q', 'W', 'A', 'E']]"
+        },
+        {
+          "name": "source_notes",
+          "annotation": "List[str]"
+        },
+        {
+          "name": "frame_save_status",
+          "annotation": "Literal['UNVERIFIED', 'BOUNDED_A05_OBSERVED', 'SYNTHETIC']"
+        },
+        {
+          "name": "ocr_status",
+          "annotation": "Literal['UNVERIFIED', 'VERIFIED', 'SYNTHETIC']"
+        },
+        {
+          "name": "applicability",
+          "annotation": "Literal['PROPOSAL_ONLY', 'SYNTHETIC_ONLY', 'JOINT_CONFIRMED']"
+        }
+      ]
+    },
+    {
+      "path": "src/annotation/contracts/models.py",
+      "name": "ExchangeBundle",
+      "line": 594,
+      "fields": [
+        {
+          "name": "format_version",
+          "annotation": "Literal['c01-exchange-1']"
+        },
+        {
+          "name": "evidence",
+          "annotation": "List[EvidenceRecord]"
+        },
+        {
+          "name": "policies",
+          "annotation": "List[PlatformPolicy]"
+        },
+        {
+          "name": "artifacts",
+          "annotation": "List[Artifact]"
+        }
+      ]
+    },
+    {
+      "path": "src/annotation/contracts/recovery.py",
+      "name": "Node",
+      "line": 27,
+      "fields": []
+    },
+    {
+      "path": "src/annotation/contracts/recovery.py",
+      "name": "RecoveryExchangeBundle",
+      "line": 47,
+      "fields": []
+    },
+    {
+      "path": "src/annotation/contracts/recovery.py",
+      "name": "_Closure",
+      "line": 116,
+      "fields": []
+    },
+    {
+      "path": "src/annotation/contracts/recovery_schema.py",
+      "name": "FrozenSchemas",
+      "line": 36,
+      "fields": []
+    },
+    {
+      "path": "src/annotation/quality/targetcheck/__init__.py",
+      "name": "SimulationConfig",
+      "line": 14,
+      "fields": [
+        {
+          "name": "book_id",
+          "annotation": "str"
+        },
+        {
+          "name": "target_id",
+          "annotation": "str"
+        },
+        {
+          "name": "scope_id",
+          "annotation": "str"
+        },
+        {
+          "name": "directory_map",
+          "annotation": "Dict[str, str]"
+        },
+        {
+          "name": "session_mode",
+          "annotation": "str"
+        },
+        {
+          "name": "allowed_operations",
+          "annotation": "Tuple[str, ...]"
+        }
+      ]
+    },
+    {
+      "path": "src/annotation/delivery/planner/__init__.py",
+      "name": "PublicRecord",
+      "line": 47,
+      "fields": []
+    },
+    {
+      "path": "src/annotation/delivery/mock/persistent.py",
+      "name": "_ClosingConnection",
+      "line": 33,
+      "fields": []
+    },
+    {
+      "path": "src/annotation/delivery/mock/persistent.py",
+      "name": "BookEffectGate",
+      "line": 107,
+      "fields": []
+    },
+    {
+      "path": "src/annotation/delivery/mock/persistent.py",
+      "name": "PreparedAction",
+      "line": 189,
+      "fields": []
+    },
+    {
+      "path": "src/annotation/delivery/mock/persistent.py",
+      "name": "VerifiedPreparedAction",
+      "line": 197,
+      "fields": []
+    },
+    {
+      "path": "src/annotation/delivery/mock/persistent.py",
+      "name": "PersistentMockSession",
+      "line": 248,
+      "fields": []
+    },
+    {
+      "path": "src/annotation/runtime/storage/__init__.py",
+      "name": "ClosingConnection",
+      "line": 27,
+      "fields": []
+    },
+    {
+      "path": "src/annotation/runtime/storage/__init__.py",
+      "name": "RuntimeStore",
+      "line": 101,
+      "fields": []
+    },
+    {
+      "path": "src/annotation/runtime/storage/holds.py",
+      "name": "HoldSupport",
+      "line": 27,
+      "fields": []
+    },
+    {
+      "path": "src/annotation/runtime/recovery/quality.py",
+      "name": "QualityResult",
+      "line": 19,
+      "fields": [
+        {
+          "name": "bundle",
+          "annotation": "object"
+        },
+        {
+          "name": "diagnostic",
+          "annotation": "dict"
+        },
+        {
+          "name": "postcheck_ref",
+          "annotation": "object"
+        },
+        {
+          "name": "batch_ref",
+          "annotation": "object"
+        }
+      ]
+    }
+  ]
+}

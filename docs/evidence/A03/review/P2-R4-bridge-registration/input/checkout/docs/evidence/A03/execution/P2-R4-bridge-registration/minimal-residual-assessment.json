@@ -1,0 +1,155 @@
+{
+  "status": "MINIMAL_RESIDUAL_FREEZE_NO_MORE_PACKAGE_RUNS",
+  "method": "static predicate/control-flow reasoning from pinned source and already-produced four packages; no extra validator invocation",
+  "observed": "positive rejected at FRAME_REGISTRATION_BINDING; three controls same code; prepare process exit1 retained",
+  "source_evidence": [
+    {
+      "path": "examples/a03/P2-R2-proposal/check.py",
+      "sha256": "7bf3ea27424f7afaf3d3b264d2ab3d0bfa0fdc8bba1c178e6f488bef09e6257b",
+      "evidence": [
+        {
+          "line": 70,
+          "text": "                        need(source['kind']=='SourceBundle' and snapshot['kind']=='PlatformSnapshot' and source['book_id']==snapshot['book_id']==book and source['scope_id']==snapshot['scope_id']==e['payload']['scope_id'],'FRAME_REGISTRATION_BINDING',path)"
+        }
+      ]
+    },
+    {
+      "path": "examples/a03/P2-R2-proposal/check.py",
+      "sha256": "7bf3ea27424f7afaf3d3b264d2ab3d0bfa0fdc8bba1c178e6f488bef09e6257b",
+      "evidence": [
+        {
+          "line": 87,
+          "text": "        for e in self.bundle['evidence']:self.scan(e['resource'],'E:'+e['evidence_id'],None,None,{},'evidence/'+e['evidence_id'],set(),False)"
+        }
+      ]
+    }
+  ],
+  "guard_inputs": [
+    {
+      "case": "registration-positive",
+      "actual": "FRAME_REGISTRATION_BINDING",
+      "source_ref": {
+        "artifact_id": "origin-b-SourceBundle",
+        "content_hash": "4ff2f555c42a3503355542deff029f7b1715010291fad6a2a1e58d832bff624d",
+        "kind": "SourceBundle",
+        "revision": 1
+      },
+      "snapshot_ref": {
+        "artifact_id": "r4-static-registration-snapshot",
+        "content_hash": "957865c24463ae7c18a4fd49d945c056959b2362fa7fdf2957f355ab6412a254",
+        "kind": "PlatformSnapshot",
+        "revision": 1
+      },
+      "source_book": "synthetic-r2-book",
+      "snapshot_book": "synthetic-r2-book",
+      "actual_consumer_book": "synthetic-r2-book",
+      "global_pool_book": null,
+      "source_scope": "original-b",
+      "snapshot_scope": "original-b",
+      "payload_scope": "original-b",
+      "existing_guard_in_actual_consumer_context": true,
+      "existing_guard_in_global_pool_context": false,
+      "snapshot_target_id": "synthetic-r2-target",
+      "event_target_id": "synthetic-r2-target",
+      "target_tuple_matches": true,
+      "semantic_assessment": "positive blocked by contextless global evidence traversal"
+    },
+    {
+      "case": "source-binding-negative",
+      "actual": "FRAME_REGISTRATION_BINDING",
+      "source_ref": {
+        "artifact_id": "origin-a-SourceBundle",
+        "content_hash": "0604a32d86cf24bcd476ea7fbf0b44b6396b875a550786f5fbd200fe1b6a201c",
+        "kind": "SourceBundle",
+        "revision": 1
+      },
+      "snapshot_ref": {
+        "artifact_id": "r4-static-registration-snapshot",
+        "content_hash": "ec6ea4469ac9dc1046fbfe581cb8356a6d915d7fdaf44028291a493b034d4e93",
+        "kind": "PlatformSnapshot",
+        "revision": 1
+      },
+      "source_book": "synthetic-r2-book",
+      "snapshot_book": "synthetic-r2-book",
+      "actual_consumer_book": "synthetic-r2-book",
+      "global_pool_book": null,
+      "source_scope": "original-a",
+      "snapshot_scope": "original-b",
+      "payload_scope": "original-b",
+      "existing_guard_in_actual_consumer_context": false,
+      "existing_guard_in_global_pool_context": false,
+      "snapshot_target_id": "synthetic-r2-target",
+      "event_target_id": "synthetic-r2-target",
+      "target_tuple_matches": true,
+      "semantic_assessment": "mismatch reached in actual consumer"
+    },
+    {
+      "case": "snapshot-binding-negative",
+      "actual": "FRAME_REGISTRATION_BINDING",
+      "source_ref": {
+        "artifact_id": "origin-b-SourceBundle",
+        "content_hash": "4ff2f555c42a3503355542deff029f7b1715010291fad6a2a1e58d832bff624d",
+        "kind": "SourceBundle",
+        "revision": 1
+      },
+      "snapshot_ref": {
+        "artifact_id": "origin-a-PlatformSnapshot",
+        "content_hash": "075c2b65f3c6f95124a11f2635970d885d708169a360dc7ebb3ca117f9130944",
+        "kind": "PlatformSnapshot",
+        "revision": 1
+      },
+      "source_book": "synthetic-r2-book",
+      "snapshot_book": "synthetic-r2-book",
+      "actual_consumer_book": "synthetic-r2-book",
+      "global_pool_book": null,
+      "source_scope": "original-b",
+      "snapshot_scope": "original-a",
+      "payload_scope": "original-b",
+      "existing_guard_in_actual_consumer_context": false,
+      "existing_guard_in_global_pool_context": false,
+      "snapshot_target_id": "synthetic-r2-target",
+      "event_target_id": "synthetic-r2-target",
+      "target_tuple_matches": true,
+      "semantic_assessment": "mismatch reached in actual consumer"
+    },
+    {
+      "case": "target-tuple-negative",
+      "actual": "FRAME_REGISTRATION_BINDING",
+      "source_ref": {
+        "artifact_id": "origin-b-SourceBundle",
+        "content_hash": "4ff2f555c42a3503355542deff029f7b1715010291fad6a2a1e58d832bff624d",
+        "kind": "SourceBundle",
+        "revision": 1
+      },
+      "snapshot_ref": {
+        "artifact_id": "r4-static-registration-snapshot",
+        "content_hash": "8ac9f1d7d30e45226475d7baa467960bb62da5c6270c1e3027f527daaaf52978",
+        "kind": "PlatformSnapshot",
+        "revision": 1
+      },
+      "source_book": "synthetic-r2-book",
+      "snapshot_book": "synthetic-r2-book",
+      "actual_consumer_book": "synthetic-r2-book",
+      "global_pool_book": null,
+      "source_scope": "original-b",
+      "snapshot_scope": "original-b",
+      "payload_scope": "original-b",
+      "existing_guard_in_actual_consumer_context": true,
+      "existing_guard_in_global_pool_context": false,
+      "snapshot_target_id": "r4-different-registered-target",
+      "event_target_id": "synthetic-r2-target",
+      "target_tuple_matches": false,
+      "semantic_assessment": "target mismatch masked by global pool context failure; not a proved target rejection"
+    }
+  ],
+  "local_choices_not_implemented": [
+    "Separate contextless global EvidenceRecord byte/graph traversal from actual Artifact/frame contextual validation; do not create a book=None consumer. Preserve all real-context checks and mixed DAG. Do not merely waive equality when book is None.",
+    "If coordinator instead restricts placement, explicitly approve a direct Resource consumer field (for example a separately authored unverified Source.history journal reference) and a new bounded package; no rerouting/retesting in this turn.",
+    "After the positive entry is unblocked, independently assess Snapshot.target_id against canonical event/registration target; current target negative is masked, not accepted as a valid rejection."
+  ],
+  "package_calls_total": 4,
+  "old_36_matrix_runs": 0,
+  "product_calls": 0,
+  "native_sessions": 0,
+  "field_reset_probe": "NOT_EXECUTED_NO_RERUN_VARIANT_OR_DELEGATION"
+}
