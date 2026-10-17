@@ -2,7 +2,7 @@
   "schema_version": 1,
   "project": "D:\\1800",
   "coordinator_thread_id": "01a13f26-7567-75e1-99ee-c9d2194e78bb",
-  "updated_at": "2026-10-17T23:15:04.384366+08:00",
+  "updated_at": "2026-10-17T23:16:19.937958+08:00",
   "automation": {
     "id": "1800-a",
     "kind": "heartbeat",
@@ -1937,7 +1937,7 @@
     },
     "A03": {
       "status": "REVIEW",
-      "phase": "P2_R8_FROZEN_FAILURE_REVIEW_PENDING",
+      "phase": "P2_R8_BOUNDED_INDEPENDENT_REVIEW_RUNNING",
       "depends_on": [
         "A02"
       ],
@@ -2006,19 +2006,21 @@
       "review": {
         "thread_id": "01a145aa-8d59-7c70-8d81-731712103a9a",
         "host_id": "local",
-        "cursor": "abdea222-4697-4046-86b1-a5dc48889fac:27",
-        "turn_status": "completed",
-        "observed_thread_status": "idle",
-        "phase": "P2_R8_REVIEW_DISPATCH_PENDING",
+        "cursor": "abdea222-4697-4046-86b1-a5dc48889fac:28",
+        "turn_status": "inProgress",
+        "observed_thread_status": "active",
+        "phase": "P2_R8_BOUNDED_INDEPENDENT_REVIEW_RUNNING",
         "target_commit": "fa6edeb7e9dd0c9502781747e5fce012931d9441",
         "task_document": "docs/tasks/A03-P2-R8-native-bridge-review-handoff.md",
         "task_sha256": "4af279d3be77f3755afda92b7f5efafdbc2b331c039e51ab93c0cb0b97ed5a0d",
         "expected_report": "docs/tasks/A03-P2-R8-native-bridge-review-report.md",
         "decision": "PENDING",
         "reasoning_policy": "PRESERVE_USER_SETTING",
-        "last_checked_at": "2026-10-17T23:15:04.384366+08:00",
-        "last_progress": "Previous R7 review preserved separately; R8 bounded failure review prepared, not yet sent.",
-        "dispatch_key": "A03:review:P2-R8-native-bridge:fa6edeb7e9dd0c9502781747e5fce012931d9441"
+        "last_checked_at": "2026-10-17T23:16:19.937958+08:00",
+        "last_progress": "Original independent reviewer acknowledged frozen read-only R8 verification; checks N1 cause, single repair boundary, SQLite state and process records without rerunning native paths.",
+        "dispatch_key": "A03:review:P2-R8-native-bridge:fa6edeb7e9dd0c9502781747e5fce012931d9441",
+        "turn_id": "01a14a6e-ee0f-7bf3-b22c-d817221b1e95",
+        "workflow_commit": "267bce2b18b04c75d0737da06052db2b31ba01fa"
       },
       "review_handoff": {
         "key": "A03:review:P2-R7-readonly-codec:8ad45dd07214ae406a3fab28d76a4b5abd6eef03",
@@ -3866,7 +3868,7 @@
         "task": "A03",
         "stage": "P2_R8_NATIVE_BRIDGE_BOUNDED_REVIEW",
         "role": "review",
-        "state": "INTENT_RECORDED",
+        "state": "ACKNOWLEDGED",
         "created_at": "2026-10-17T23:15:04.384366+08:00",
         "target_commit": "fa6edeb7e9dd0c9502781747e5fce012931d9441",
         "document": "docs/tasks/A03-P2-R8-native-bridge-review-handoff.md",
@@ -3879,7 +3881,13 @@
         "send_message_thinking": "OMIT",
         "send_message_model": "OMIT",
         "scope": "Read-only independent validation of frozen N1 PRE producer/schema blocker and evidence boundaries; no rerun of N1/N2-N7, product repair or I01 release.",
-        "result": "Prepared before messaging original independent reviewer."
+        "result": "Original independent reviewer messaged successfully and observed active on new turn; model/thinking omitted; no duplicate task.",
+        "sent_at": "2026-10-17T23:16:19.937958+08:00",
+        "acknowledged_at": "2026-10-17T23:16:19.937958+08:00",
+        "last_observed_at": "2026-10-17T23:16:19.937958+08:00",
+        "workflow_commit": "267bce2b18b04c75d0737da06052db2b31ba01fa",
+        "cursor": "abdea222-4697-4046-86b1-a5dc48889fac:28",
+        "turn_id": "01a14a6e-ee0f-7bf3-b22c-d817221b1e95"
       }
     },
     "D01": {
@@ -5126,7 +5134,7 @@
       "task": "A03",
       "stage": "P2_R8_NATIVE_BRIDGE_BOUNDED_REVIEW",
       "role": "review",
-      "state": "INTENT_RECORDED",
+      "state": "ACKNOWLEDGED",
       "created_at": "2026-10-17T23:15:04.384366+08:00",
       "target_commit": "fa6edeb7e9dd0c9502781747e5fce012931d9441",
       "document": "docs/tasks/A03-P2-R8-native-bridge-review-handoff.md",
@@ -5139,16 +5147,25 @@
       "send_message_thinking": "OMIT",
       "send_message_model": "OMIT",
       "scope": "Read-only independent validation of frozen N1 PRE producer/schema blocker and evidence boundaries; no rerun of N1/N2-N7, product repair or I01 release.",
-      "result": "Prepared before messaging original independent reviewer."
+      "result": "Original independent reviewer messaged successfully and observed active on new turn; model/thinking omitted; no duplicate task.",
+      "sent_at": "2026-10-17T23:16:19.937958+08:00",
+      "acknowledged_at": "2026-10-17T23:16:19.937958+08:00",
+      "last_observed_at": "2026-10-17T23:16:19.937958+08:00",
+      "workflow_commit": "267bce2b18b04c75d0737da06052db2b31ba01fa",
+      "cursor": "abdea222-4697-4046-86b1-a5dc48889fac:28",
+      "turn_id": "01a14a6e-ee0f-7bf3-b22c-d817221b1e95"
     }
   ],
   "last_action": {
-    "at": "2026-10-17T23:15:04.384366+08:00",
+    "at": "2026-10-17T23:16:19.937958+08:00",
     "task_id": "A03",
-    "action": "R8_FROZEN_DELIVERY_PREFLIGHT_AND_REVIEW_INTENT",
+    "action": "R8_BOUNDED_INDEPENDENT_REVIEW_DISPATCH_ACKNOWLEDGED",
     "target_commit": "fa6edeb7e9dd0c9502781747e5fce012931d9441",
+    "workflow_commit": "267bce2b18b04c75d0737da06052db2b31ba01fa",
+    "thread_id": "01a145aa-8d59-7c70-8d81-731712103a9a",
+    "turn_id": "01a14a6e-ee0f-7bf3-b22c-d817221b1e95",
+    "cursor": "abdea222-4697-4046-86b1-a5dc48889fac:28",
     "dispatch_key": "A03:review:P2-R8-native-bridge:fa6edeb7e9dd0c9502781747e5fce012931d9441",
-    "scope": "Read-only independent validation of frozen N1 PRE producer/schema blocker and evidence boundaries; no rerun of N1/N2-N7, product repair or I01 release.",
     "next_dependency": "Independent bounded R8 failure review at fa6edeb7, then coordinator determination of a concrete repair scope. N1 chain/N2-N7 and remaining original P2 criteria stay unaccepted; I01-A not released."
   },
   "limitations": [
@@ -5545,7 +5562,7 @@
     }
   ],
   "last_heartbeat": {
-    "at": "2026-10-17T23:15:04.384366+08:00",
+    "at": "2026-10-17T23:16:19.937958+08:00",
     "trigger": "2026-10-17T15:10:15.272Z",
     "task_id": "A03",
     "root_head": "fd952ac21f56b2e055228b546848aae76d86bfe0",
@@ -5568,15 +5585,16 @@
       "scope": "Frozen raw Git report/manifest, allowed changes, 89 pins and 28 recorded process exits verified. No product imports/tests or OS/profile scans."
     },
     "review_thread_id": "01a145aa-8d59-7c70-8d81-731712103a9a",
-    "review_cursor": "abdea222-4697-4046-86b1-a5dc48889fac:27",
-    "phase": "P2_R8_FROZEN_FAILURE_REVIEW_PENDING",
+    "review_cursor": "abdea222-4697-4046-86b1-a5dc48889fac:28",
+    "phase": "P2_R8_BOUNDED_INDEPENDENT_REVIEW_RUNNING",
     "acceptance_scope": "P1 and limited R2-R6 scopes accepted; R7 read-only product locally INTEGRATED. Native P2/UNKNOWN recovery remains unaccepted.",
     "next_dependencies": "Independent bounded R8 failure review at fa6edeb7, then coordinator determination of a concrete repair scope. N1 chain/N2-N7 and remaining original P2 criteria stay unaccepted; I01-A not released.",
-    "dispatch_result": "Independent bounded review intent recorded; original reviewer not yet messaged.",
+    "dispatch_result": "R8 bounded independent failure review sent once to original reviewer; active acknowledgement received. A03 user-selected settings preserved.",
     "platform_actions": 0,
     "paid_model_calls": 0,
     "full_suite_rerun": false,
     "notification": "NOTIFY",
-    "reason": "R8 froze with N1 blocked before PRE admission; exact evidence and recorded release verified. Independent review prepared; I01 remains blocked."
+    "reason": "R8 frozen with N1 PRE producer/schema failure and N2-N7 unrun; delivery/release verified and bounded independent review running. I01 remains blocked.",
+    "review_turn_id": "01a14a6e-ee0f-7bf3-b22c-d817221b1e95"
   }
 }
