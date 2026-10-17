@@ -1,0 +1,109 @@
+{
+  "runner_identity": {
+    "pid": 49584,
+    "creation_filetime": 134366956846994564,
+    "exit_code": 259,
+    "running": true
+  },
+  "jobs": [
+    {
+      "name": "exact",
+      "args": [
+        "C:\\Users\\ASUS\\AppData\\Local\\Programs\\Python\\Python39\\python.exe",
+        "-B",
+        "D:\\1800\\docs\\evidence\\A04\\review\\coordinate-R3-raw-bytes\\inputs\\replay-scripts\\exact\\repro_incomplete_rows.py",
+        "--root",
+        "D:\\1800\\docs\\evidence\\A04\\review\\coordinate-R3-raw-bytes\\inputs\\raw product with spaces",
+        "--output",
+        "D:\\1800\\docs\\evidence\\A04\\review\\coordinate-R3-raw-bytes\\exact-replay"
+      ],
+      "cwd": "D:\\1800\\.local\\stages\\A04-review\\coordinate-R3-raw-bytes",
+      "identity": {
+        "pid": 33144,
+        "creation_filetime": 134366956851220970,
+        "exit_code": 259,
+        "running": true
+      },
+      "returncode": 0,
+      "reaped": true,
+      "timed_out": false,
+      "elapsed_seconds": 2.0292305,
+      "stdout_sha256": "47bb687ab75d309fa0f6b3e4a60f5523e39e602ca80a8430d9e1302323c2bb44",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout": "jobs\\exact\\stdout.txt",
+      "stderr": "jobs\\exact\\stderr.txt",
+      "tail": [
+        "{\"sha256\": \"205543876fb32bb14f003bfeec32279e9fd4886bd1949eee9810999e468969bd\", \"input_bytes\": 180, \"CRC_valid\": true, \"zlib_stream_complete\": true, \"declared_size\": [37, 29], \"actual_scanline_bytes\": 112, \"expected_scanline_bytes\": 3248, \"actual_rows\": 1, \"declared_rows\": 29, \"Pillow_verify_and_load\": \"ACCEPTED\", \"public_cli_returncode\": 2, \"public_cli_stdout\": \"A04_FAILED:RESOURCE_INVALID; LOCATION=$.pages[0].asset_path\\n\", \"final_bundle_created\": false, \"public_loader_accepted\": false, \"expected\": \"Reject incomplete original pixels before publishing a final bundle\", \"defect_reproduced\": false}"
+      ]
+    },
+    {
+      "name": "regression",
+      "args": [
+        "C:\\Users\\ASUS\\AppData\\Local\\Programs\\Python\\Python39\\python.exe",
+        "-B",
+        "D:\\1800\\docs\\evidence\\A04\\review\\coordinate-R3-raw-bytes\\inputs\\replay-scripts\\regression_worker.py",
+        "--root",
+        "D:\\1800\\docs\\evidence\\A04\\review\\coordinate-R3-raw-bytes\\inputs\\raw product with spaces",
+        "--result",
+        "D:\\1800\\docs\\evidence\\A04\\review\\coordinate-R3-raw-bytes\\regression-result.json"
+      ],
+      "cwd": "D:\\1800\\.local\\stages\\A04-review\\coordinate-R3-raw-bytes",
+      "identity": {
+        "pid": 37832,
+        "creation_filetime": 134366956851221010,
+        "exit_code": 259,
+        "running": true
+      },
+      "returncode": 0,
+      "reaped": true,
+      "timed_out": false,
+      "elapsed_seconds": 7.113344199999999,
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderr_sha256": "567809404548a1e8b8eb34e153cb4144dcfa60d73a6c616ed370b8a2a0432d53",
+      "stdout": "jobs\\regression\\stdout.txt",
+      "stderr": "jobs\\regression\\stderr.txt",
+      "tail": [
+        "",
+        "----------------------------------------------------------------------",
+        "Ran 70 tests in 5.733s",
+        "",
+        "OK"
+      ]
+    },
+    {
+      "name": "independent",
+      "args": [
+        "C:\\Users\\ASUS\\AppData\\Local\\Programs\\Python\\Python39\\python.exe",
+        "-B",
+        "D:\\1800\\docs\\evidence\\A04\\review\\coordinate-R3-raw-bytes\\inputs\\replay-scripts\\independent_checks.py",
+        "--root",
+        "D:\\1800\\docs\\evidence\\A04\\review\\coordinate-R3-raw-bytes\\inputs\\raw product with spaces",
+        "--output",
+        "D:\\1800\\docs\\evidence\\A04\\review\\coordinate-R3-raw-bytes\\independent-cases"
+      ],
+      "cwd": "D:\\1800\\.local\\stages\\A04-review\\coordinate-R3-raw-bytes",
+      "identity": {
+        "pid": 48236,
+        "creation_filetime": 134366956851220945,
+        "exit_code": 259,
+        "running": true
+      },
+      "returncode": 0,
+      "reaped": true,
+      "timed_out": false,
+      "elapsed_seconds": 28.1645967,
+      "stdout_sha256": "67ca0c5a48ffc44c9a2beb0fdb86bc1f3eaf9aa1e201ef9f218d90fc564696c7",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout": "jobs\\independent\\stdout.txt",
+      "stderr": "jobs\\independent\\stderr.txt",
+      "tail": [
+        "{\"case\": \"R-bounded-input-read\", \"status\": \"PASS\", \"observation\": {\"actual_file_bytes\": 2600, \"scaled_cap\": 1024, \"read_request_sizes\": [8, 1017], \"maximum_read_bytes\": 1025, \"error\": {\"code\": \"RESOURCE_INVALID\", \"path\": \"$.pages[0].asset_path\"}}}",
+        "{\"case\": \"C-APNG-explicit-rejection\", \"status\": \"PASS\", \"observation\": {\"returncode\": 2, \"stdout\": \"A04_FAILED:RESOURCE_INVALID; LOCATION=$.pages[0].asset_path\\r\\n\", \"input_sha256\": \"45b98c5880728b2fbc1242d7ee2cdac8685fb0f2856e7c10f71619307a2bbe21\", \"input_bytes\": 211, \"output_exists\": false, \"bundle_created\": false}}",
+        "{\"case\": \"C-PNG-trailing-bytes-rejection\", \"status\": \"PASS\", \"observation\": {\"returncode\": 2, \"stdout\": \"A04_FAILED:RESOURCE_INVALID; LOCATION=$.pages[0].asset_path\\r\\n\", \"input_sha256\": \"e520e957c6a582941bb7df8002e54a459a738b1b868d8dbb4f6414eb361a626a\", \"input_bytes\": 88, \"output_exists\": false, \"bundle_created\": false}}",
+        "{\"case\": \"C-indexed-Paeth-palette-sample\", \"status\": \"PASS\", \"observation\": {\"normal_Paeth_padding\": \"PASS\", \"invalid_index_reason\": \"PALETTE_INDEX\"}}",
+        "SUMMARY {\"passed\": 26, \"failed\": 0, \"children\": 20}"
+      ]
+    }
+  ],
+  "all_reaped": true
+}
