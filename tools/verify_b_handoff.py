@@ -71,11 +71,25 @@ def verify(path: str, self_test: bool = False) -> dict:
         output_names = {"evidence_ref": "evidence.json", "graph_ref": "graph.json",
                         "quality_ref": "check.json"}
         final = report["payload"]["final_outputs"]
+        exported = {}
         for key, filename in output_names.items():
             value = json.loads(archive.read("artifacts/" + filename))
             check_artifact(value, final[key])
             if value["book_id"] != manifest["book_id"]:
                 raise ValueError("book identity mismatch")
+            exported[key] = value
+        if "application_ref" in manifest:
+            application = json.loads(archive.read("artifacts/application.json"))
+            plan = json.loads(archive.read("inputs/content-revision-plan.json"))
+            check_artifact(application, manifest["application_ref"])
+            check_artifact(plan, manifest["plan_ref"])
+            if (application["schema_version"] != manifest["application_schema"]
+                    or plan["schema_version"] != manifest["plan_schema"]
+                    or exported["graph_ref"]["schema_version"] != manifest["graph_schema"]
+                    or exported["quality_ref"]["schema_version"] != manifest["check_schema"]
+                    or len(exported["quality_ref"]["payload"]["issues"]) != manifest["quality_issues"]
+                    or application["payload"]["graph"] != exported["graph_ref"]):
+                raise ValueError("revision schema or application projection mismatch")
         for stage in report["payload"]["stages"]:
             descriptor = stage["output"]
             name = descriptor["path"]

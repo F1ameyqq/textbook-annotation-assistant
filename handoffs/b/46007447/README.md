@@ -1,5 +1,15 @@
 # B 侧 46007447 最小离线交接包
 
+## 当前 Q4/Q9/Q16 revision 8 后继包
+
+[合并修订ZIP](B-46007447-Q4-Q9-Q16-revision8-HOLD-2026-10-17.zip)固定代码 `af8e17c2ed60219db4f0da40daea6be0396c4b5b`、运行 `pipeline-run-85c20d4acab3496ea33296b54cc5b8e7`，SHA `318cd49d628437989735f8155ce844041e8d814b8e81db23345d4673749da3df`。78个文件、14阶段、原六张图，34题/66答/134问题；新采集的印刷5、7页不在该内容运行内。计划/应用为trial0.3，图谱/检查0.8，旧0.7消费者未迁移，仍MODEL_DRAFT/HOLD和PENDING_A。
+
+固定Git导出下的包内输入[冷/热重放](Q4-Q9-Q16-revision8-replay.json)均接受且最终引用与包一致：冷0缓存、暖14缓存；沿用本机依赖，禁止模型导入/联网。验证命令：`python tools/verify_b_handoff.py handoffs/b/46007447/B-46007447-Q4-Q9-Q16-revision8-HOLD-2026-10-17.zip --self-test`。独立内容审核和章节覆盖仍未达到人工验收。
+
+[印刷7来源增量](source-increment-viewer15-20261017.zip)单独保存真实原图与完整来源报告，SHA `50f053175c487c2f35b1d1a4749aa1e06a65e52cc20b41db2ba3e976a2610d45`。清单仅保留实测原图URL，明确未记录API请求完整URL；它不代表该页内容已经修复。
+
+## 初始历史包
+
 交付文件：[B-46007447-Q16-offline-HOLD-2026-10-17.zip](B-46007447-Q16-offline-HOLD-2026-10-17.zip)，SHA-256 见 [SHA256SUMS.txt](SHA256SUMS.txt)。本仓库可运行 `python tools/verify_b_handoff.py handoffs/b/46007447/B-46007447-Q16-offline-HOLD-2026-10-17.zip --self-test`；包内也附同一校验器。
 
 固定运行 `pipeline-run-0a2c03e193694ef88953f3ca08b8cde2`；14 阶段 `READY` 仅指流水线成功完成，业务判定仍为 `HOLD`。交付的是 5 张已观察题/答页加独立相邻答案资源上的局部候选，不是整章完成稿，更不是网站标注提交。原始来源图片、裁剪图、14 个阶段封装、运行报告、当前 Evidence/G07/Check07 及输入收据均在 ZIP 内；包中 `manifest.json` 列出每个文件的相对路径、大小及 SHA-256。当前图谱含 34 题候选、66 答案候选，检查报告含 127 项问题。

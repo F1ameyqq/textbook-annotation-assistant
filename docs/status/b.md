@@ -8,12 +8,18 @@
 
 
 
+## 2026-10-17 新增印刷第7页及第5页独立清点
+
+- 用户重新附着后，真实下载并核对viewer15/page_14/印刷7原图，1219×1703，SHA `7c1a4afec69a94371fa31b6111969ca3d6ec39d7d7c6b1c73764f90316a610dd`。单页源包SHA `50f053175c487c2f35b1d1a4749aa1e06a65e52cc20b41db2ba3e976a2610d45`，累计8张原图；随后跳viewer9超时并Debugger unattached，章范围仍未知。
+- 在固定af8e17c上实际本地CPU OCR取得62行，自动两栏无跨栏框但未核准；组题6个（11–16）、0答案、12问题HOLD。冷4阶段/0缓存、1次ocr_atoms入口，暖4缓存/0新增OCR，运行审计接受。题号与模型目视清点相符不等于选项/图形/公式/子题完整性通过，未合入旧内容图谱或自动配答。来源、回执和冻结原始对象见 `evaluation/book-46007447-viewer15-observation.json`。
+- 独立第5页清点逐行映射48原OCR，确认一个Q8、无编号变式、共享阅读材料及三个子任务；目前仍全部unscoped、组题0/答案0，待跨栏标题与共享材料支持。报告 `docs/reviews/printed-page-5-viewer13-independent-census.md` 原样保留，SHA `8a85aa6426fc71c2947e927b981e7c0bcaa55dc8130fa8d4cb3c2f9c6f432698`。这些单页清点不构成整章独立分母或人工验收。第7页独立清点明确内容完整性FAIL/HOLD：Q13选项分式错位、Q13/Q15缺图、Q15末尾要求缺失、Q16分式/空格缺失；新页Q16与旧viewer11的Q16不是同题。源包首次未发布版本曾补入推断API URL，已移除并明确未保存完整API URL；原图和62行OCR不变，旧未发布包保存在总控work，当前观察包为v2。
+
 ## 2026-10-17 Q4 几何修订与 Q9/Q16 合并 revision 8
 
 - [Q4显式来源几何修订](../b-q4-geometry-revision-46007447.md)保留原始框和OCR，另记录分子顶部4像素、分母底部1像素的有效框调整，重建 `2或\frac{25}{8}`。生产与独立消费者重新读取原图，检查完整冲突、裁片摘要及严格整数阈值；固定170阈值下无暗像素不等于绝对空白或人工核准。
 - 合并revision8包含Q9 revision7全部13项操作及Q4新增1项，Q16/Q9不回退。计划/应用升级B trial0.3，图谱/检查0.8；旧reader拒绝，未宣称既有0.7复核界面兼容。章节适配器只接受0.7或0.8各自同版本配对，旧候选另行归档。
-- 实际四轮冷跑14/0缓存、暖14缓存、恢复Q9时12缓存/2重建、再应用14缓存，运行审计均accepted。恢复Q9 payload/hash精确相同，artifact_id因新代码重生成。相关51项测试通过；成员旧基线全套仍在运行且已有待定位失败，未称全套通过。确切引用/源码摘要/回执见 `evaluation/book-46007447-q4-q9-master-integration.json`。
-- [独立终审](../reviews/q4-q9-rev8-independent-audit.md)技术集成PASS、业务验收HOLD，另14项独立focused测试及13组对抗拒绝通过，原报告与摘要随仓库归档。当前34题/66答/134问题/19未归属，原始片段和题答关系不变，新增2项风险保持MODEL_DRAFT/HOLD；章节门禁仍8 gaps/HOLD，A接收PENDING_A。当前本地已验证，发布以本页对应PR head为准，固定提交可搬运包待收口。
+- 实际四轮冷跑14/0缓存、暖14缓存、恢复Q9时12缓存/2重建、再应用14缓存，运行审计均accepted。恢复Q9 payload/hash精确相同，artifact_id因新代码重生成。相关51项测试通过；成员旧基线全套exit1；已定位为测试替身未透传source_path而提前TypeError，仅修测试后整个内容流水线模块17项通过（149.275秒），未称全套通过。确切引用/源码摘要/回执见 `evaluation/book-46007447-q4-q9-master-integration.json`。
+- [独立终审](../reviews/q4-q9-rev8-independent-audit.md)技术集成PASS、业务验收HOLD，另14项独立focused测试及13组对抗拒绝通过，原报告与摘要随仓库归档。当前34题/66答/134问题/19未归属，原始片段和题答关系不变，新增2项风险保持MODEL_DRAFT/HOLD；章节门禁仍8 gaps/HOLD，A接收PENDING_A。固定af8e17c已发布；revision8独立后继包SHA `318cd49d628437989735f8155ce844041e8d814b8e81db23345d4673749da3df`，78文件/14阶段自检与负例通过。包内输入在干净Git代码导出中冷0缓存、暖14缓存，最终引用相同；沿用本机依赖环境。包只含原六图，不混入新页，仍HOLD。
 
 ## 2026-10-17 新增印刷第5页及真实识别
 
