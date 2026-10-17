@@ -1,0 +1,24 @@
+Traceback (most recent call last):
+  File "C:\Users\ASUS\.codex\worktrees\a03-runtime-recovery\1800\tests\test_a03_r8_native_bridge.py", line 358, in <module>
+    n1_child(Path(sys.argv[2]))
+  File "C:\Users\ASUS\.codex\worktrees\a03-runtime-recovery\1800\tests\test_a03_r8_native_bridge.py", line 87, in n1_child
+    store, observer, claim, keeper, bundle, pre_ref, actual, admitted, config = setup_pre(path)
+  File "C:\Users\ASUS\.codex\worktrees\a03-runtime-recovery\1800\tests\test_a03_r8_native_bridge.py", line 51, in setup_pre
+    context = store.bridge_for(raw, source_root)
+  File "C:\Users\ASUS\.codex\worktrees\a03-runtime-recovery\1800\src\annotation\runtime\storage\native.py", line 231, in bridge_for
+    return self.native_registry.context(bundle, root or getattr(bundle, 'asset_root', None))
+  File "C:\Users\ASUS\.codex\worktrees\a03-runtime-recovery\1800\src\annotation\runtime\storage\native.py", line 59, in context
+    return _issue_context(self, bundle, root, binding=binding, historical=historical)
+  File "C:\Users\ASUS\.codex\worktrees\a03-runtime-recovery\1800\src\annotation\contracts\a03_native\__init__.py", line 115, in _issue_context
+    data, manifest = _validate_value(bundle, root)
+  File "C:\Users\ASUS\.codex\worktrees\a03-runtime-recovery\1800\src\annotation\contracts\a03_native\__init__.py", line 154, in _validate_value
+    recovery._legacy_projection(ctx)
+  File "C:\Users\ASUS\.codex\worktrees\a03-runtime-recovery\1800\src\annotation\contracts\recovery.py", line 792, in _legacy_projection
+    return validate_bundle(data), mapped
+  File "C:\Users\ASUS\.codex\worktrees\a03-runtime-recovery\1800\src\annotation\contracts\validation.py", line 655, in validate_bundle
+    ctx = _Context(bundle)
+  File "C:\Users\ASUS\.codex\worktrees\a03-runtime-recovery\1800\src\annotation\contracts\validation.py", line 128, in __init__
+    fail(path + ".content_hash", "HASH_MISMATCH", "artifact digest differs from normalized content")
+  File "C:\Users\ASUS\.codex\worktrees\a03-runtime-recovery\1800\src\annotation\contracts\validation.py", line 19, in fail
+    raise ContractError([{"path": path, "code": code, "message": message}])
+annotation.contracts.validation.ContractError: $.artifacts[1].content_hash: [HASH_MISMATCH] artifact digest differs from normalized content

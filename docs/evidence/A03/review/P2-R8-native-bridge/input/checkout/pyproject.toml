@@ -1,0 +1,20 @@
+[build-system]
+requires = ["setuptools>=61"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "annotation-contracts"
+version = "0.1.0"
+description = "Offline annotation exchange contracts, A-side v1 proposal"
+requires-python = ">=3.9"
+dependencies = ["pydantic==2.12.5"]
+
+[project.scripts]
+annotation-contracts = "annotation.contracts.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools.package-data]
+"annotation.contracts.a03_bridge" = ["data/*.json", "data/schemas/*.json"]
+"annotation.contracts.a03_native" = ["data/*.json", "data/schemas/*.json"]

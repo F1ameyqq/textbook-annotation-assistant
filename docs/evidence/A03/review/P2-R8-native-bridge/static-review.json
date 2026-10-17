@@ -1,0 +1,120 @@
+{
+  "status": "REWORK_CONFIRMED_BY_STATIC_SOURCE_SCHEMA_AND_ACTUAL_LOGS",
+  "target": "fa6edeb7e9dd0c9502781747e5fce012931d9441",
+  "defect": {
+    "id": "R8-N1-COVERAGE-PAIR",
+    "producer_line": 122,
+    "return_line": 109,
+    "schema_pointer": "/$defs/AmendedCheckReport/properties/payload/oneOf/0/properties/coverage",
+    "required_type": "object",
+    "inferred_actual_after_canonical_json": "two-element array [coverage object,complete bool]",
+    "actual_error": "$/payload: SHAPE_oneOf",
+    "positive_native_reruns_by_reviewer": 0
+  },
+  "first_failure": {
+    "code": "HASH_MISMATCH",
+    "boundary": "private C01 semantic projection before registration",
+    "initial_child_stderr_sha256": "44622ef93b1903a8fc78d15a1db80c8374578a5f07427bcd4edc6d1533a0bc79"
+  },
+  "sole_local_fix": {
+    "source_delta": [
+      {
+        "path": "src/annotation/contracts/a03_native/data/adoption.json",
+        "before": {
+          "path": "src/annotation/contracts/a03_native/data/adoption.json",
+          "bytes": 275,
+          "sha256": "d27f14976c3043ff11d4a436a6b00515dedacdb97ff190638810989d73034694"
+        },
+        "after": {
+          "path": "src/annotation/contracts/a03_native/data/adoption.json",
+          "bytes": 275,
+          "sha256": "f0e793d635b5072b7955259f15cc7b389e99c02adbbae4bb98e21a966b1eb6b7"
+        }
+      },
+      {
+        "path": "src/annotation/contracts/a03_native/data/profile.json",
+        "before": {
+          "path": "src/annotation/contracts/a03_native/data/profile.json",
+          "bytes": 4597,
+          "sha256": "0e6c18b4eb91f6080569b52f7aaf216190ec197a28aee8b0b62c5cfc5c643465"
+        },
+        "after": {
+          "path": "src/annotation/contracts/a03_native/data/profile.json",
+          "bytes": 4597,
+          "sha256": "29e9d78190dd702fb944d99d74bd9c40426618b477ed16088422b9b89c45219b"
+        }
+      },
+      {
+        "path": "src/annotation/contracts/recovery.py",
+        "before": {
+          "path": "src/annotation/contracts/recovery.py",
+          "bytes": 74879,
+          "sha256": "5e5586814b37ed447767e05e2a821ca82eab1b13ad8ea1505f182fbe5ba1c905"
+        },
+        "after": {
+          "path": "src/annotation/contracts/recovery.py",
+          "bytes": 75449,
+          "sha256": "691e847171004c25b160458e675a6bb23a42426d83878d6a320f29714a9fb5ab"
+        }
+      }
+    ],
+    "recovery_unified_diff": [
+      "--- N1-initial/recovery.py",
+      "+++ N1-local-fix/recovery.py",
+      "@@ -783,6 +783,14 @@",
+      "                 return [remap(v) for v in item]",
+      "             return item",
+      "         value = remap(value, True)",
+      "+        if getattr(ctx, 'native', False):",
+      "+            # C01 hashes its typed JSON representation (e.g. float boxes).",
+      "+            # Normalize this private semantic view before computing its digest;",
+      "+            # native input bytes, identities and authority remain untouched.",
+      "+            from .models import ExchangeBundle",
+      "+            typed = ExchangeBundle.model_validate({'format_version': 'c01-exchange-1',",
+      "+                'evidence': data['evidence'], 'policies': data['policies'], 'artifacts': [value]})",
+      "+            value = typed.artifacts[0].model_dump(mode='json')",
+      "         value['content_hash'] = content_digest(value)",
+      "         mapped[key] = value",
+      "         return value"
+    ],
+    "classification": "eight native-guarded normalization lines plus regenerated profile/adoption pins; no producer or test fix",
+    "first_three_compatibility_recovery_snapshots_equal_initial": true,
+    "final_recovery_equals_second_snapshot": true
+  },
+  "second_failure": {
+    "code": "SHAPE_oneOf",
+    "boundary": "PRE make_artifact/seal before admission and TARGET",
+    "second_child_stderr_sha256": "80b65ad1ba42d9835fbbd383e54d7cf5ebf5edfd7316a617c6cb9eadcae03042"
+  },
+  "profile_schema_pins_verified": [
+    {
+      "path": "schemas/basis.json",
+      "sha256": "40db0538a512f65e2f8668c528f98643d372cdc195b9b868c446cce2b0743202"
+    },
+    {
+      "path": "schemas/conversion.json",
+      "sha256": "ac28365f16d028af83e385108cb06cdb3a6f81e2a2e792051692952640c116e4"
+    },
+    {
+      "path": "schemas/exchange.json",
+      "sha256": "8417b84787ec3ff95966129e7bf14e388c0b66018f4828d3c438fd2e1134a1af"
+    },
+    {
+      "path": "schemas/fact.json",
+      "sha256": "97eda5084ec698235559977cb29782fa77888cae9f5efbe57bea6a106bb3fb23"
+    },
+    {
+      "path": "schemas/pre_run.json",
+      "sha256": "11c649842353f22d49f63570121df4c62c402c9baa0571a8f0ff7e76a047f0bf"
+    },
+    {
+      "path": "schemas/prefix.json",
+      "sha256": "3d1bec1e23fb666816e74916f25066e5a057c63a14cafa9e6b9130b6d2f706fb"
+    }
+  ],
+  "profile_implementation_pins_verified": 23,
+  "N2_N7": "NOT_RUN_AFTER_INDEPENDENT_BLOCKER",
+  "no_dispatch_or_effect_barrier_files_in_frozen_tree": true,
+  "candidate_modules_imported_or_executed": 0,
+  "field_reset": "NOT_EXECUTED_NO_RERUN_VARIANT_OR_DELEGATION"
+}

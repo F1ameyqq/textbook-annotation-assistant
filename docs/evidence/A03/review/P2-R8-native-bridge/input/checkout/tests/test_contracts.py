@@ -1,0 +1,717 @@
+"""C01 offline contract checks; fixtures are synthetic, not platform acceptance.
+
+Mutations are resealed and their exact old references are propagated, so failure
+tests exercise semantics instead of merely detecting a stale content hash.
+"""
+import copy
+import json
+import os
+from pathlib import Path
+import shutil
+import subprocess
+import sys
+import tempfile
+import unittest
+
+from pydantic import ValidationError
+
+from annotation.contracts import (
+    ContractError, artifact_ref, assert_patch_base, assert_plan_ready,
+    content_digest, load_bundle, policy_ref, schema, seal_artifact, seal_policy,
+    validate_bundle, write_bundle,
+)
+
+
+ROOT = Path(__file__).resolve().parents[1]
+FIXTURES = ROOT / "tests" / "fixtures" / "contracts"
+
+
+def fixture(name="normal"):
+    return json.loads((FIXTURES / name / "input.json").read_text(encoding="utf-8"))
+
+
+def artifact(bundle, kind, stage=None):
+    found = [a for a in bundle["artifacts"] if a["kind"] == kind
+             and (stage is None or a["payload"].get("stage") == stage)]
+    return max(found, key=lambda a: a["revision"])
+
+
+def referenced(bundle, reference):
+    return next(a for a in bundle["artifacts"]
+                if (a["artifact_id"], a["revision"]) ==
+                (reference["artifact_id"], reference["revision"]))
+
+
+def graph(bundle):
+    return referenced(bundle, artifact(bundle, "ApplyPlan")["payload"]["graph"])
+
+
+def replace_reference(value, old, new):
+    if isinstance(value, dict):
+        if value == old:
+            value.clear()
+            value.update(copy.deepcopy(new))
+        else:
+            for child in value.values():
+                replace_reference(child, old, new)
+    elif isinstance(value, list):
+        for child in value:
+            replace_reference(child, old, new)
+
+
+def reseal(bundle):
+    """Rehash a changed DAG while preserving deliberately corrupted references."""
+    for _ in range(len(bundle["artifacts"]) + 2):
+        changed = False
+        for item in bundle["artifacts"]:
+            old = artifact_ref(item)
+            try:
+                item["content_hash"] = seal_artifact(item)["content_hash"]
+            except ValidationError:
+                # Invalid structures still need a digest for the error-location
+                # assertion. validate_bundle must diagnose schema before hashes.
+                item["content_hash"] = content_digest(item)
+            new = artifact_ref(item)
+            if old != new:
+                changed = True
+                for other in bundle["artifacts"]:
+                    if other is not item:
+                        replace_reference(other, old, new)
+        if not changed:
+            return bundle
+    raise AssertionError("test mutation introduced cyclic artifact dependencies")
+
+
+def blocking_issue(item, code="TARGET_CHANGED"):
+    return {
+        "issue_id": "test-blocking-issue", "code": code,
+        "scope_type": "scope", "scope_id": item["scope_id"],
+        "evidence_refs": item["payload"]["checks"][0]["evidence_refs"],
+        "severity": "blocking", "blocks": ["PLAN", "APPLY", "COMPLETE"],
+        "suggested_strategy": {"strategy_id": "HUMAN_REVIEW", "max_attempts": 0,
+                               "max_cost": 0.0},
+        "reason": "Synthetic mutation requires human review.",
+    }
+
+
+class ContractTests(unittest.TestCase):
+    def setUp(self):
+        self.data = fixture()
+
+    def invalid(self, bundle, location, name="normal", do_reseal=True):
+        if do_reseal:
+            reseal(bundle)
+        with self.assertRaises(ContractError) as caught:
+            validate_bundle(bundle, asset_root=FIXTURES / name)
+        message = str(caught.exception)
+        self.assertTrue(any(part in message for part in location),
+                        "error must locate {}: {}".format(location, message))
+        return message
+
+    def test_all_three_complete_fixture_chains_validate(self):
+        required = {"SourceBundle", "EvidenceBundle", "QuestionGraph", "CheckReport",
+                    "ApplyPlan", "ExecutionReceipt", "ReviewPatch", "BatchReport",
+                    "PlatformSnapshot"}
+        for name in ("normal", "exception", "unknown"):
+            with self.subTest(name=name):
+                model = load_bundle(FIXTURES / name / "input.json")
+                self.assertTrue(required.issubset({a.kind for a in model.artifacts}))
+                self.assertTrue(all(a.producer.evidence_mode == "SYNTHETIC"
+                                    for a in model.artifacts))
+
+    def test_sealing_is_repeatable_order_independent_and_not_self_referential(self):
+        item = artifact(self.data, "SourceBundle")
+        reversed_keys = dict(reversed(list(item.items())))
+        self.assertEqual(seal_artifact(item), seal_artifact(reversed_keys))
+        changed_hash = copy.deepcopy(item)
+        changed_hash["content_hash"] = "0" * 64
+        self.assertEqual(seal_artifact(item), seal_artifact(changed_hash))
+        changed_payload = copy.deepcopy(item)
+        changed_payload["payload"]["scope_manifest_basis"] += " altered"
+        self.assertNotEqual(seal_artifact(item)["content_hash"],
+                            seal_artifact(changed_payload)["content_hash"])
+
+    def test_policy_sealing_and_public_references(self):
+        policy = self.data["policies"][0]
+        sealed = seal_policy(policy)
+        self.assertEqual(sealed, seal_policy(sealed))
+        model = load_bundle(FIXTURES / "normal" / "input.json")
+        self.assertEqual(policy_ref(model.policies[0]), policy_ref(policy))
+        self.assertEqual(artifact_ref(model.artifacts[0]),
+                         artifact_ref(self.data["artifacts"][0]))
+
+    def test_schema_is_json_and_contains_every_artifact_definition(self):
+        generated = schema()
+        json.dumps(generated, allow_nan=False)
+        definitions = generated.get("$defs", generated.get("definitions", {}))
+        for kind in {a["kind"] for a in self.data["artifacts"]}:
+            self.assertIn(kind, definitions)
+
+    def test_roundtrip_preserves_exchange_and_closed_references(self):
+        with tempfile.TemporaryDirectory() as folder:
+            target = Path(folder) / "copied"
+            shutil.copytree(FIXTURES / "normal", target)
+            model = load_bundle(target / "input.json")
+            output = target / "roundtrip.json"
+            write_bundle(model, output)
+            restored = load_bundle(output)
+            self.assertEqual(model, restored)
+
+    def test_duplicate_printed_numbers_in_separate_directories_are_legal(self):
+        patch = artifact(self.data, "ReviewPatch")["payload"]
+        baseline = referenced(self.data, patch["baseline"])
+        self.assertGreaterEqual(len(graph(self.data)["payload"]["questions"]), 2)
+        for item in self.data["artifacts"]:
+            if item["kind"] == "QuestionGraph":
+                for question in item["payload"]["questions"]:
+                    before = next((c["before"] for c in patch["changes"]
+                                   if c["entity_id"] == question["question_id"]
+                                   and c["field"] == "printed_number"), "1")
+                    # Preserve the explicit patch while repeating every current
+                    # printed label and platform order across distinct IDs.
+                    question["external_refs"]["printed_number"] = before if item is baseline else "1"
+                    question["external_refs"]["platform_order"] = 1
+        reseal(self.data)
+        validate_bundle(self.data, asset_root=FIXTURES / "normal")
+
+    def test_missing_fragment_entity_is_rejected(self):
+        graph(self.data)["payload"]["questions"][0]["fragment_ids"] = ["missing-fragment"]
+        self.invalid(self.data, ("fragment_ids", "missing-fragment"))
+
+    def test_missing_region_entity_is_rejected(self):
+        graph(self.data)["payload"]["fragments"][0]["region_ids"] = ["missing-region"]
+        self.invalid(self.data, ("region_ids", "missing-region"))
+
+    def test_missing_original_asset_is_rejected(self):
+        item = artifact(self.data, "EvidenceBundle")
+        item["payload"]["regions"][0]["box"]["image"]["asset_id"] = "missing-asset"
+        self.invalid(self.data, ("asset_id", "missing-asset"))
+
+    def test_original_dimensions_and_hash_are_bound_to_the_asset(self):
+        for field, value in (("width", 98765), ("sha256", "0" * 64)):
+            with self.subTest(field=field):
+                bundle = fixture()
+                image = artifact(bundle, "EvidenceBundle")["payload"]["regions"][0]["box"]["image"]
+                image[field] = value
+                self.invalid(bundle, (field, "image", "binding"))
+
+    def test_bbox_rejects_out_of_bounds_and_nonpositive_area(self):
+        for bbox in ([-1.0, 1.0, 2.0, 3.0], [1.0, 1.0, 1.0, 3.0],
+                     [1.0, 3.0, 2.0, 2.0], [1.0, 1.0, 99999.0, 3.0]):
+            with self.subTest(bbox=bbox):
+                bundle = fixture()
+                artifact(bundle, "EvidenceBundle")["payload"]["regions"][0]["box"]["bbox"] = bbox
+                self.invalid(bundle, ("bbox", "box"))
+
+    def test_bbox_rejects_nan_and_both_infinities_with_location(self):
+        for value in (float("nan"), float("inf"), float("-inf")):
+            with self.subTest(value=value):
+                bundle = fixture()
+                artifact(bundle, "EvidenceBundle")["payload"]["regions"][0]["box"]["bbox"][0] = value
+                # Non-finite JSON has no valid canonical digest; structural errors
+                # must still expose the coordinate path, rather than only a hash.
+                self.invalid(bundle, ("bbox", "box"), do_reseal=False)
+
+    def test_missing_artifact_version_is_rejected_after_resealing(self):
+        graph(self.data)["payload"]["source"]["revision"] = 999
+        self.invalid(self.data, ("source", "revision"))
+
+    def test_wrong_reference_digest_is_rejected_after_resealing(self):
+        graph(self.data)["payload"]["evidence"]["content_hash"] = "0" * 64
+        self.invalid(self.data, ("evidence", "content_hash"))
+
+    def test_modified_artifact_without_new_hash_is_rejected(self):
+        artifact(self.data, "SourceBundle")["payload"]["scope_manifest_basis"] += " tampered"
+        self.invalid(self.data, ("content_hash", "digest"), do_reseal=False)
+
+    def test_duplicate_artifact_identity_and_revision_is_rejected(self):
+        duplicate = copy.deepcopy(artifact(self.data, "SourceBundle"))
+        duplicate["payload"]["scope_manifest_basis"] += " conflicting content"
+        self.data["artifacts"].append(seal_artifact(duplicate))
+        self.invalid(self.data, ("artifact_id", "duplicate", "revision"))
+
+    def test_cross_book_dependency_is_rejected_even_with_valid_hashes(self):
+        graph(self.data)["book_id"] = "different-book"
+        self.invalid(self.data, ("book_id", "book"))
+
+    def test_only_one_pass_does_not_make_an_executable_plan(self):
+        target = artifact(self.data, "CheckReport", "TARGET")
+        target["payload"]["decision"] = "EXCEPTION"
+        target["payload"]["checks"][0]["outcome"] = "FAIL"
+        target["payload"]["issues"] = [blocking_issue(target)]
+        self.invalid(self.data, ("targetcheck", "decision", "PASS"))
+
+    def test_two_preapply_passes_do_not_substitute_for_target_pass(self):
+        plan = artifact(self.data, "ApplyPlan")
+        precheck = artifact(self.data, "CheckReport", "PRE_APPLY")
+        plan["payload"]["targetcheck"] = artifact_ref(precheck)
+        self.invalid(self.data, ("targetcheck", "stage", "TARGET"))
+
+    def test_pass_without_required_check_evidence_is_rejected(self):
+        artifact(self.data, "CheckReport", "PRE_APPLY")["payload"]["checks"] = []
+        self.invalid(self.data, ("checks", "PRE_APPLY"))
+
+    def test_required_capability_without_verification_blocks_plan(self):
+        plan = artifact(self.data, "ApplyPlan")
+        snapshot = referenced(self.data, plan["payload"]["snapshot"])
+        required = plan["payload"]["required_capabilities"][0]
+        capability = next(c for c in snapshot["payload"]["capabilities"]
+                          if c["name"] == required)
+        capability["status"] = "UNKNOWN"
+        self.invalid(self.data, ("capabilities", "capability", "VERIFIED"))
+
+    def test_capability_evidence_for_an_old_platform_version_blocks_plan(self):
+        plan = artifact(self.data, "ApplyPlan")
+        snapshot = referenced(self.data, plan["payload"]["snapshot"])
+        required = plan["payload"]["required_capabilities"][0]
+        capability = next(c for c in snapshot["payload"]["capabilities"]
+                          if c["name"] == required)
+        capability["platform_version"] = "obsolete-platform-version"
+        self.invalid(self.data, ("platform_version", "capabilit", "CAPABILITY"))
+
+    def test_numeric_book_and_target_identifiers_are_valid_strings(self):
+        for item in self.data["artifacts"]:
+            item["book_id"] = "46007447"
+            if item["kind"] == "PlatformSnapshot":
+                item["payload"]["target_id"] = "46007447"
+            elif item["kind"] == "ApplyPlan":
+                for action in item["payload"]["actions"]:
+                    action["target"]["target_id"] = "46007447"
+        reseal(self.data)
+        validate_bundle(self.data, asset_root=FIXTURES / "normal")
+
+    def test_current_target_change_invalidates_a_ready_plan(self):
+        plan = artifact(self.data, "ApplyPlan")
+        snapshot = referenced(self.data, plan["payload"]["snapshot"])
+        changed = copy.deepcopy(snapshot)
+        changed["revision"] += 1
+        changed["payload"]["observed_version"] += "-externally-changed"
+        changed["payload"]["observed_hash"] = "f" * 64
+        changed = seal_artifact(changed)
+        self.data["artifacts"].append(changed)
+        model = validate_bundle(self.data, asset_root=FIXTURES / "normal")
+        with self.assertRaises(ContractError) as caught:
+            assert_plan_ready(model, artifact_ref(plan), artifact_ref(changed))
+        self.assertTrue(any(word in str(caught.exception)
+                            for word in ("snapshot", "target", "TARGET")))
+
+    def test_plan_cannot_replace_snapshot_without_new_target_check(self):
+        plan = artifact(self.data, "ApplyPlan")
+        changed = copy.deepcopy(referenced(self.data, plan["payload"]["snapshot"]))
+        changed["revision"] += 1
+        changed["payload"]["observed_version"] += "-new"
+        changed = seal_artifact(changed)
+        self.data["artifacts"].append(changed)
+        plan["payload"]["snapshot"] = artifact_ref(changed)
+        self.invalid(self.data, ("snapshot", "targetcheck"))
+
+    def test_unknown_cannot_claim_a_matching_effect(self):
+        bundle = fixture("unknown")
+        result = next(r for r in artifact(bundle, "ExecutionReceipt")["payload"]["results"]
+                      if r["outcome"] == "UNKNOWN")
+        result["effect_match"] = "MATCH"
+        self.invalid(bundle, ("results", "effect", "outcome"), name="unknown")
+
+    def test_unknown_cannot_claim_replay_permission(self):
+        bundle = fixture("unknown")
+        result = next(r for r in artifact(bundle, "ExecutionReceipt")["payload"]["results"]
+                      if r["outcome"] == "UNKNOWN")
+        result["replay_allowed"] = True
+        self.invalid(bundle, ("replay_allowed",), name="unknown")
+
+    def test_unknown_cannot_be_hidden_by_a_completed_batch(self):
+        bundle = fixture("unknown")
+        batch = artifact(bundle, "BatchReport")["payload"]
+        batch.update(state="COMPLETED", submission_status="CONFIRMED",
+                     content_check_status="VERIFIED", frame_check_status="PASS",
+                     unresolved_issue_ids=[],
+                     submission_evidence_refs=[bundle["evidence"][0]["evidence_id"]])
+        for question in batch["questions"]:
+            question["state"] = "VERIFIED"
+        self.invalid(bundle, ("UNKNOWN", "receipt", "state", "postcheck"), name="unknown")
+
+    def test_new_action_ids_do_not_authorize_replay_of_unknown_receipt(self):
+        bundle = fixture("unknown")
+        replay = copy.deepcopy(artifact(bundle, "ApplyPlan"))
+        replay["artifact_id"] += ".replay"
+        # Claim a fresh create plan without an explicit old receipt. The book
+        # pause must still apply, rather than only checking a declared baseline.
+        replay["payload"]["previous_receipt"] = None
+        renamed = {a["action_id"]: a["action_id"] + ".replay"
+                   for a in replay["payload"]["actions"]}
+        for action in replay["payload"]["actions"]:
+            action["action_id"] = renamed[action["action_id"]]
+            action["depends_on"] = [renamed[dep] for dep in action["depends_on"]]
+        replay = seal_artifact(replay)
+        bundle["artifacts"].append(replay)
+        model = validate_bundle(bundle, asset_root=FIXTURES / "unknown")
+        with self.assertRaises(ContractError) as caught:
+            assert_plan_ready(model, artifact_ref(replay), replay["payload"]["snapshot"])
+        self.assertTrue(any(word in str(caught.exception)
+                            for word in ("UNKNOWN", "reconcil", "BOOK_WRITE_PAUSED")))
+
+    def test_not_applied_without_readback_is_not_conclusive(self):
+        receipt = artifact(self.data, "ExecutionReceipt")
+        result = receipt["payload"]["results"][0]
+        result.update(outcome="NOT_APPLIED", effect_match="ABSENT",
+                      next_step="RECHECK_TARGET", after_evidence_refs=[], readback=None,
+                      platform_ids=[])
+        self.invalid(self.data, ("results", "readback", "evidence"))
+
+    def not_applied_bundle(self):
+        bundle = fixture()
+        receipt = artifact(bundle, "ExecutionReceipt")["payload"]
+        result = receipt["results"][0]
+        result.update(outcome="NOT_APPLIED", effect_match="ABSENT",
+                      next_step="RECHECK_TARGET", platform_ids=[],
+                      reason="Synthetic conclusive absence readback; recheck target.")
+        post = artifact(bundle, "CheckReport", "POST_APPLY")
+        issue = blocking_issue(post)
+        issue["suggested_strategy"] = {
+            "strategy_id": "RECHECK_TARGET", "max_attempts": 1, "max_cost": 0.0,
+        }
+        post["payload"].update(decision="RETRY", issues=[issue])
+        for check in post["payload"]["checks"]:
+            check["outcome"] = "FAIL" if check["check_id"] == "frame_structure" else "UNAVAILABLE"
+        receipt.update(write_disposition="RECHECK_TARGET",
+                       unresolved_issue_ids=[issue["issue_id"]])
+        batch = artifact(bundle, "BatchReport")["payload"]
+        batch.update(state="NEEDS_REVIEW", frame_check_status="FAIL",
+                     content_check_status="UNAVAILABLE",
+                     unresolved_issue_ids=[issue["issue_id"]])
+        batch["questions"][0]["state"] = "EXCEPTION"
+        return reseal(bundle)
+
+    def test_conclusive_not_applied_receipt_is_a_valid_noncompleted_state(self):
+        bundle = self.not_applied_bundle()
+        validate_bundle(bundle, asset_root=FIXTURES / "normal")
+        batch = artifact(bundle, "BatchReport")["payload"]
+        self.assertEqual(batch["state"], "NEEDS_REVIEW")
+        self.assertEqual(batch["content_check_status"], "UNAVAILABLE")
+
+    def test_not_applied_cannot_be_relabelled_ready_for_submission(self):
+        bundle = self.not_applied_bundle()
+        batch = artifact(bundle, "BatchReport")["payload"]
+        batch.update(state="READY_FOR_SUBMISSION", content_check_status="VERIFIED",
+                     frame_check_status="PASS", unresolved_issue_ids=[])
+        for question in batch["questions"]:
+            question["state"] = "VERIFIED"
+        self.invalid(bundle, ("frame_check_status", "content_check_status", "state"))
+
+    def test_confirmed_submission_with_verified_content_and_frames_can_complete(self):
+        batch = artifact(self.data, "BatchReport")["payload"]
+        batch.update(state="COMPLETED", submission_status="CONFIRMED",
+                     submission_evidence_refs=[self.data["evidence"][0]["evidence_id"]])
+        reseal(self.data)
+        model = validate_bundle(self.data, asset_root=FIXTURES / "normal")
+        completed = next(a for a in model.artifacts if a.kind == "BatchReport")
+        self.assertEqual(completed.payload.state, "COMPLETED")
+
+    def test_unknown_billing_uses_null_and_may_not_claim_zero_cost(self):
+        cost = artifact(self.data, "BatchReport")["payload"]["cost"]
+        cost.update(billing_status="UNKNOWN", amount=None)
+        reseal(self.data)
+        validate_bundle(self.data, asset_root=FIXTURES / "normal")
+        cost["amount"] = 0.0
+        self.invalid(self.data, ("cost", "billing"))
+
+    def test_unresolved_choice_grouping_cannot_authorize_a_ready_plan(self):
+        bundle = fixture("choice-assumption")
+        policy = bundle["policies"][0]
+        old_reference = policy_ref(policy)
+        policy.update(option_grouping="UNRESOLVED", confirmation_status="UNRESOLVED",
+                      applicability="PROPOSAL_ONLY")
+        sealed = seal_policy(policy)
+        policy.clear()
+        policy.update(sealed)
+        replace_reference(bundle, old_reference, policy_ref(policy))
+        self.invalid(bundle, ("POLICY_UNRESOLVED", "policy"), name="choice-assumption")
+
+    def test_synthetic_choice_policy_cannot_switch_to_platform_execution(self):
+        bundle = fixture("choice-assumption")
+        artifact(bundle, "ApplyPlan")["payload"]["execution_mode"] = "PLATFORM"
+        artifact(bundle, "ExecutionReceipt")["payload"]["execution_mode"] = "PLATFORM_OBSERVED"
+        self.invalid(bundle, ("SYNTHETIC_ONLY", "policy", "POLICY_UNCONFIRMED"),
+                     name="choice-assumption")
+
+    def test_not_submitted_and_content_pending_cannot_complete(self):
+        for submission, content in (("NOT_SUBMITTED", "VERIFIED"),
+                                    ("CONFIRMED", "PENDING")):
+            with self.subTest(submission=submission, content=content):
+                bundle = fixture()
+                batch = artifact(bundle, "BatchReport")["payload"]
+                batch.update(state="COMPLETED", submission_status=submission,
+                             content_check_status=content, frame_check_status="PASS",
+                             unresolved_issue_ids=[],
+                             submission_evidence_refs=[bundle["evidence"][0]["evidence_id"]])
+                for question in batch["questions"]:
+                    question["state"] = "VERIFIED"
+                self.invalid(bundle, ("COMPLETED", "submission", "content", "payload"))
+
+    def test_exception_and_skipped_questions_remain_in_denominator(self):
+        bundle = fixture("exception")
+        batch = artifact(bundle, "BatchReport")["payload"]
+        skipped = next(q for q in batch["questions"] if q["state"] == "SKIPPED")
+        batch["questions"].remove(skipped)
+        self.invalid(bundle, ("questions", "denominator", "payload"), name="exception")
+
+    def test_recomputed_denominator_cannot_silently_erase_missing_question(self):
+        bundle = fixture("exception")
+        batch = artifact(bundle, "BatchReport")["payload"]
+        skipped = next(q for q in batch["questions"] if q["state"] == "SKIPPED")
+        batch["questions"].remove(skipped)
+        batch["scope_manifest"].remove(skipped["question_id"])
+        batch["total_expected"] = len(batch["scope_manifest"])
+        self.invalid(bundle, ("scope_manifest", "source", "denominator"), name="exception")
+
+    def test_patch_assertion_rejects_a_different_baseline_revision(self):
+        patch = artifact(self.data, "ReviewPatch")
+        model = load_bundle(FIXTURES / "normal" / "input.json")
+        with self.assertRaises(ContractError) as caught:
+            assert_patch_base(model, artifact_ref(patch), artifact_ref(graph(self.data)))
+        self.assertIn("baseline", str(caught.exception))
+
+    def test_patch_with_wrong_baseline_hash_is_rejected(self):
+        artifact(self.data, "ReviewPatch")["payload"]["baseline"]["content_hash"] = "0" * 64
+        self.invalid(self.data, ("baseline", "content_hash"))
+
+    def test_patch_must_advance_the_baseline_revision(self):
+        patch = artifact(self.data, "ReviewPatch")["payload"]
+        patch["result_revision"] = patch["baseline"]["revision"]
+        self.invalid(self.data, ("result_revision", "revision", "baseline"))
+
+    def test_declared_patch_result_cannot_discard_or_add_undeclared_edits(self):
+        for field, changed in (("printed_number", "ignored-patch"),
+                               ("platform_order", 999)):
+            with self.subTest(field=field):
+                bundle = fixture()
+                question = graph(bundle)["payload"]["questions"][0]
+                question["external_refs"][field] = changed
+                self.invalid(bundle, ("PATCH_DERIVATION",))
+
+    def test_previous_receipt_requires_receipt_kind_and_prior_graph_revision(self):
+        for source_kind, expected in (("PlatformSnapshot", "KIND_CONFLICT"),
+                                      ("ExecutionReceipt", "DELTA_BASELINE")):
+            with self.subTest(source_kind=source_kind):
+                bundle = fixture()
+                plan = artifact(bundle, "ApplyPlan")
+                previous = artifact(bundle, source_kind)
+                if source_kind == "ExecutionReceipt":
+                    # Avoid a dependency cycle by adding a new plan whose
+                    # claimed old receipt executed the same graph revision.
+                    plan = copy.deepcopy(plan)
+                    plan["artifact_id"] += ".delta-invalid"
+                    plan["payload"]["previous_receipt"] = artifact_ref(previous)
+                    plan["input_refs"].append(artifact_ref(previous))
+                    bundle["artifacts"].append(seal_artifact(plan))
+                else:
+                    plan["payload"]["previous_receipt"] = artifact_ref(previous)
+                self.invalid(bundle, (expected,))
+
+    def delta_bundle(self, bundle=None, update_capability=True):
+        """A valid synthetic newer revision with an explicit old applied receipt."""
+        bundle = fixture() if bundle is None else bundle
+        old_plan = artifact(bundle, "ApplyPlan")
+        old_graph = graph(bundle)
+        current = copy.deepcopy(old_graph)
+        current["revision"] += 1
+        current["input_refs"] = [copy.deepcopy(current["payload"]["source"]),
+                                 copy.deepcopy(current["payload"]["evidence"]),
+                                 artifact_ref(old_graph)]
+        current = seal_artifact(current)
+        bundle["artifacts"].append(current)
+        reports = {}
+        for stage in ("PRE_APPLY", "TARGET"):
+            old = artifact(bundle, "CheckReport", stage)
+            new = copy.deepcopy(old)
+            new["artifact_id"] += ".delta"
+            replace_reference(new, artifact_ref(old_graph), artifact_ref(current))
+            new = seal_artifact(new)
+            bundle["artifacts"].append(new)
+            reports[stage] = (old, new)
+        plan = copy.deepcopy(old_plan)
+        plan["artifact_id"] += ".delta"
+        replace_reference(plan, artifact_ref(old_graph), artifact_ref(current))
+        for old, new in reports.values():
+            replace_reference(plan, artifact_ref(old), artifact_ref(new))
+        previous = artifact(bundle, "ExecutionReceipt")
+        plan["payload"]["previous_receipt"] = artifact_ref(previous)
+        plan["input_refs"].append(artifact_ref(previous))
+        renamed = {a["action_id"]: a["action_id"] + ".delta"
+                   for a in plan["payload"]["actions"]}
+        for action in plan["payload"]["actions"]:
+            action["action_id"] = renamed[action["action_id"]]
+            action["depends_on"] = [renamed[dep] for dep in action["depends_on"]]
+            action["operation"] = "UPDATE_FRAMES"
+        bundle["artifacts"].append(seal_artifact(plan))
+        if update_capability:
+            snapshot = referenced(bundle, old_plan["payload"]["snapshot"])
+            snapshot["payload"]["capabilities"].append({
+                "name": "frame_update", "status": "VERIFIED",
+                "platform_version": snapshot["payload"]["platform_version"],
+                "evidence_refs": snapshot["payload"]["evidence_refs"],
+            })
+        return reseal(bundle)
+
+    def test_delta_update_needs_verified_capability_and_applied_target_baseline(self):
+        validate_bundle(self.delta_bundle(), asset_root=FIXTURES / "normal")
+        self.invalid(self.delta_bundle(update_capability=False), ("CAPABILITY_UNVERIFIED",))
+        self.invalid(self.delta_bundle(self.not_applied_bundle()), ("DELTA_BASELINE",))
+
+    def test_action_may_not_consume_another_questions_identity_or_fragments(self):
+        current = graph(self.data)
+        questions = current["payload"]["questions"]
+        foreign = questions[-1]
+        first = artifact(self.data, "ApplyPlan")["payload"]["actions"][0]
+        self.assertNotEqual(first["target"]["question_id"], foreign["question_id"])
+        for entity in (foreign["question_id"], foreign["fragment_ids"][0]):
+            with self.subTest(entity=entity):
+                bundle = fixture()
+                artifact(bundle, "ApplyPlan")["payload"]["actions"][0]["source_entity_ids"] = [entity]
+                self.invalid(bundle, ("ACTION_OWNERSHIP",))
+
+    def test_each_unknown_action_target_remains_unknown_in_batch(self):
+        bundle = fixture("unknown")
+        batch = artifact(bundle, "BatchReport")["payload"]
+        self.assertGreaterEqual(sum(q["state"] == "UNKNOWN" for q in batch["questions"]), 2)
+        # A different UNKNOWN status must not mask this target's mislabel.
+        batch["questions"][0]["state"] = "PENDING"
+        self.invalid(bundle, ("UNKNOWN_QUESTION",), name="unknown")
+
+    def test_pass_cannot_omit_scoped_questions_or_use_orphan_fragment_coverage(self):
+        for mutation, expected in (("missing-question", "SCOPE_QUESTION_MISSING"),
+                                   ("orphan-fragment", "UNASSIGNED_CONTENT")):
+            with self.subTest(mutation=mutation):
+                bundle = fixture()
+                for item in bundle["artifacts"]:
+                    if item["kind"] != "QuestionGraph":
+                        continue
+                    questions = item["payload"]["questions"]
+                    beta = next(q for q in questions if q["question_id"] == "question-beta")
+                    if mutation == "missing-question":
+                        questions.remove(beta)
+                        item["payload"]["answer_relations"] = [
+                            r for r in item["payload"]["answer_relations"]
+                            if r["question_id"] != beta["question_id"]]
+                    else:
+                        beta["fragment_ids"].remove("fragment-beta-stem")
+                    # Keep fragments and whole-page clues: merely existing in
+                    # the graph may not substitute for actual question ownership.
+                self.invalid(bundle, (expected,))
+
+    def test_resource_paths_reject_absolute_traversal_and_windows_specials(self):
+        invalid_paths = ["/tmp/source.pgm", "C:/source.pgm", "C:\\source.pgm",
+                         "//server/share/source.pgm", "../source.pgm", "a/../../source.pgm",
+                         "assets\\..\\source.pgm", "assets/./source.pgm",
+                         "assets/source.pgm:secret", "assets/CON.pgm"]
+        for path in invalid_paths:
+            with self.subTest(path=path):
+                bundle = fixture()
+                artifact(bundle, "SourceBundle")["payload"]["assets"][0]["path"] = path
+                self.invalid(bundle, ("path", "relative"))
+
+    def test_missing_resource_and_tampered_asset_bytes_are_rejected(self):
+        for mutation in ("missing", "tampered"):
+            with self.subTest(mutation=mutation), tempfile.TemporaryDirectory() as folder:
+                target = Path(folder) / "sample"
+                shutil.copytree(FIXTURES / "normal", target)
+                asset = artifact(self.data, "SourceBundle")["payload"]["assets"][0]
+                path = target / asset["path"]
+                if mutation == "missing":
+                    path.unlink()
+                else:
+                    path.write_bytes(path.read_bytes() + b"\nTAMPERED")
+                with self.assertRaises(ContractError) as caught:
+                    load_bundle(target / "input.json")
+                self.assertTrue(any(word in str(caught.exception)
+                                    for word in ("path", "sha256", "asset", "resource")))
+
+    def test_relative_symlink_may_not_escape_the_sample_root(self):
+        with tempfile.TemporaryDirectory() as folder:
+            parent = Path(folder)
+            target = parent / "sample"
+            shutil.copytree(FIXTURES / "normal", target)
+            bundle = fixture()
+            asset = artifact(bundle, "SourceBundle")["payload"]["assets"][0]
+            outside = parent / "outside.pgm"
+            shutil.copyfile(target / asset["path"], outside)
+            link = target / "escape.pgm"
+            try:
+                os.symlink(outside, link)
+            except (OSError, NotImplementedError) as error:
+                if os.name != "nt":
+                    self.skipTest("host does not permit creating test symlinks: {}".format(error))
+                # Windows directory junctions usually require no symlink
+                # privilege and exercise the same final-resolution boundary.
+                outside_directory = parent / "outside-directory"
+                outside_directory.mkdir()
+                shutil.copyfile(outside, outside_directory / "outside.pgm")
+                junction = target / "escape"
+                created = subprocess.run(
+                    ["cmd.exe", "/d", "/c", "mklink", "/J", str(junction), str(outside_directory)],
+                    text=True, capture_output=True, timeout=10)
+                if created.returncode != 0:
+                    self.skipTest("host denies both symlink and junction creation")
+                asset["path"] = "escape/outside.pgm"
+            else:
+                asset["path"] = "escape.pgm"
+            reseal(bundle)
+            (target / "input.json").write_text(json.dumps(bundle), encoding="utf-8")
+            with self.assertRaises(ContractError) as caught:
+                load_bundle(target / "input.json")
+            self.assertTrue(any(word in str(caught.exception)
+                                for word in ("escape", "outside", "path", "root")))
+
+    def test_copied_sample_cli_and_public_consumer_work_from_another_cwd(self):
+        with tempfile.TemporaryDirectory() as folder:
+            parent = Path(folder)
+            copied = parent / "sample with spaces"
+            shutil.copytree(FIXTURES / "normal", copied)
+            cwd = parent / "unrelated"
+            cwd.mkdir()
+            env = dict(os.environ)
+            env["PYTHONPATH"] = str(ROOT / "src")
+            commands = [
+                [sys.executable, "-m", "annotation.contracts", "validate", str(copied / "input.json")],
+                [sys.executable, str(ROOT / "examples" / "contracts" / "consume.py"), str(copied),
+                 "--roundtrip", str(parent / "roundtrip" / "input.json")],
+                [sys.executable, str(ROOT / "examples" / "contracts" / "consume.py"),
+                 str(parent / "roundtrip")],
+            ]
+            for command in commands:
+                with self.subTest(command=command):
+                    completed = subprocess.run(command, cwd=str(cwd), env=env,
+                                               text=True, capture_output=True, timeout=30)
+                    self.assertEqual(completed.returncode, 0,
+                                     completed.stdout + "\n" + completed.stderr)
+
+    def test_cli_schema_uses_the_public_schema_authority(self):
+        with tempfile.TemporaryDirectory() as folder:
+            env = dict(os.environ)
+            env["PYTHONPATH"] = str(ROOT / "src")
+            completed = subprocess.run(
+                [sys.executable, "-m", "annotation.contracts", "schema"],
+                cwd=folder, env=env, text=True, capture_output=True, timeout=30)
+            self.assertEqual(completed.returncode, 0, completed.stderr)
+            self.assertEqual(json.loads(completed.stdout), schema())
+
+    def test_cli_rejects_invalid_exchange_with_nonzero_exit_and_location(self):
+        with tempfile.TemporaryDirectory() as folder:
+            copied = Path(folder) / "sample"
+            shutil.copytree(FIXTURES / "normal", copied)
+            bundle = fixture()
+            graph(bundle)["payload"]["questions"][0]["fragment_ids"] = ["missing-fragment"]
+            reseal(bundle)
+            target = copied / "invalid.json"
+            target.write_text(json.dumps(bundle), encoding="utf-8")
+            env = dict(os.environ)
+            env["PYTHONPATH"] = str(ROOT / "src")
+            completed = subprocess.run(
+                [sys.executable, "-m", "annotation.contracts", "validate", str(target)],
+                cwd=folder, env=env, text=True, capture_output=True, timeout=30)
+            self.assertNotEqual(completed.returncode, 0)
+            self.assertIn("fragment_ids", completed.stdout + completed.stderr)
+
+
+if __name__ == "__main__":
+    unittest.main()

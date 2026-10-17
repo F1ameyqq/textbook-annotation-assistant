@@ -1,0 +1,24 @@
+Traceback (most recent call last):
+  File "C:\Users\ASUS\.codex\worktrees\a03-runtime-recovery\1800\tests\test_a03_r8_native_bridge.py", line 358, in <module>
+    n1_child(Path(sys.argv[2]))
+  File "C:\Users\ASUS\.codex\worktrees\a03-runtime-recovery\1800\tests\test_a03_r8_native_bridge.py", line 87, in n1_child
+    store, observer, claim, keeper, bundle, pre_ref, actual, admitted, config = setup_pre(path)
+  File "C:\Users\ASUS\.codex\worktrees\a03-runtime-recovery\1800\tests\test_a03_r8_native_bridge.py", line 69, in setup_pre
+    bundle, pre_ref = produce_a03_pre_run(actual.bundle, artifact_ref(source), artifact_ref(evidence), artifact_ref(graph), policy_ref(bundle.policies[0]),
+  File "C:\Users\ASUS\.codex\worktrees\a03-runtime-recovery\1800\src\annotation\quality\synthetic_precheck.py", line 128, in produce_a03_pre_run
+    pre = make_artifact('CheckReport', artifact_id, graph, payload, list(bundle.artifacts),
+  File "C:\Users\ASUS\.codex\worktrees\a03-runtime-recovery\1800\src\annotation\quality\targetcheck\__init__.py", line 69, in make_artifact
+    return seal_artifact({
+  File "C:\Users\ASUS\.codex\worktrees\a03-runtime-recovery\1800\src\annotation\contracts\__init__.py", line 39, in seal_artifact
+    return seal_native_artifact(data, bridge_context=bridge_context)
+  File "C:\Users\ASUS\.codex\worktrees\a03-runtime-recovery\1800\src\annotation\contracts\a03_native\__init__.py", line 182, in seal_native_artifact
+    NativeSchemas().check(value, definition=value.get('kind'))
+  File "C:\Users\ASUS\.codex\worktrees\a03-runtime-recovery\1800\src\annotation\contracts\a03_native\__init__.py", line 166, in check
+    schema_validate(value, node, document)
+  File "C:\Users\ASUS\.codex\worktrees\a03-runtime-recovery\1800\src\annotation\contracts\a03_bridge\_schema.py", line 59, in validate
+    validate(item, properties[key], doc, path + "/" + key)
+  File "C:\Users\ASUS\.codex\worktrees\a03-runtime-recovery\1800\src\annotation\contracts\a03_bridge\_schema.py", line 43, in validate
+    need(matches == 1 if key == "oneOf" else matches > 0, "SHAPE_" + key, path)
+  File "C:\Users\ASUS\.codex\worktrees\a03-runtime-recovery\1800\src\annotation\contracts\a03_bridge\_errors.py", line 16, in need
+    raise StaticCodecError(code, path, message)
+annotation.contracts.a03_bridge._errors.StaticCodecError: $/payload: [SHAPE_oneOf] SHAPE_oneOf
