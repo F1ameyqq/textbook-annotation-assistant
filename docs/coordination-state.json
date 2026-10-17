@@ -2,7 +2,7 @@
   "schema_version": 1,
   "project": "D:\\1800",
   "coordinator_thread_id": "01a13f26-7567-75e1-99ee-c9d2194e78bb",
-  "updated_at": "2026-10-17T21:18:58.462231+08:00",
+  "updated_at": "2026-10-17T21:52:30.043856+08:00",
   "automation": {
     "id": "1800-a",
     "kind": "heartbeat",
@@ -1937,7 +1937,7 @@
     },
     "A03": {
       "status": "REVIEW",
-      "phase": "P2_R7_READONLY_CODEC_REVIEW",
+      "phase": "P2_R7_READONLY_INTEGRATED_NATIVE_PENDING",
       "depends_on": [
         "A02"
       ],
@@ -1945,7 +1945,7 @@
       "execution_task": "docs/tasks/A03-P2-R7-readonly-codec-implementation.md",
       "review_task": "docs/tasks/A03-P2-R7-readonly-codec-review-handoff.md",
       "acceptance_scope": "P1 and prior limited static scopes accepted; R7 product read-only codec pending independent acceptance. Native P2 recovery remains unaccepted.",
-      "next_dependency": "R7 independent product read-only review and coordinator reproduction; then bounded native PRE/CURRENT and original P2 recovery chain before I01-A.",
+      "next_dependency": "Bounded native PRE/CURRENT, creation-input history and original P2 UNKNOWN recovery acceptance before I01-A.",
       "dispatch_status": "ACKNOWLEDGED",
       "B_confirmation": "NOT_CONFIRMED",
       "workflow_commit": "77d3e123ab7247eae6f81f7acd669e3a69c934a0",
@@ -2003,18 +2003,18 @@
       "review": {
         "thread_id": "01a145aa-8d59-7c70-8d81-731712103a9a",
         "host_id": "local",
-        "cursor": "abdea222-4697-4046-86b1-a5dc48889fac:26",
-        "turn_status": "inProgress",
-        "observed_thread_status": "active",
-        "phase": "P2_R7_READONLY_CODEC_REVIEW",
+        "cursor": "abdea222-4697-4046-86b1-a5dc48889fac:27",
+        "turn_status": "completed",
+        "observed_thread_status": "idle",
+        "phase": "P2_R7_READONLY_CODEC_ACCEPTED",
         "target_commit": "8ad45dd07214ae406a3fab28d76a4b5abd6eef03",
         "task_document": "docs/tasks/A03-P2-R7-readonly-codec-review-handoff.md",
         "task_sha256": "4f8f16072268d38b9e2a1f5313f4e0d72b2f85a6214e6e5b3d35970b654eed89",
         "expected_report": "docs/tasks/A03-P2-R7-readonly-codec-review-report.md",
-        "decision": "PENDING",
+        "decision": "ACCEPTED",
         "reasoning_policy": "PRESERVE_USER_SETTING",
-        "last_checked_at": "2026-10-17T21:18:58.462231+08:00",
-        "last_progress": "Reviewer reports seven codec cases, bounded API and external-wheel checks passed; two affected C01 cases passed a targeted supplemental check with initial failures retained. Final historical-evidence/process-release/hash checks and report freeze pending. Coordinator has not accepted or rerun unfrozen evidence.",
+        "last_checked_at": "2026-10-17T21:51:02.035297+08:00",
+        "last_progress": "Frozen independent R7 read-only codec acceptance verified by coordinator; native A03 P2 recovery still unaccepted.",
         "workflow_commit": "5cb696378f8c53a7720a5b775b3188012bf5626b",
         "turn_id": "01a149dc-cab4-76c0-82c5-ff54fefe065d",
         "latest_lightweight_observation": {
@@ -2023,14 +2023,19 @@
           "manifest_present": false,
           "evidence_directory_present": true,
           "scope": "Active unfrozen review; final report must explain original C01 failures and targeted supplemental checks before acceptance."
-        }
+        },
+        "report": "docs/tasks/A03-P2-R7-readonly-codec-review-report.md",
+        "report_sha256": "5a49c435846423c131f489a67ee412f65c736a7153f80ceb7c0032f807dcfb0e",
+        "evidence_manifest": "docs/evidence/A03/review/P2-R7-readonly-codec/sha256-manifest.json",
+        "evidence_manifest_sha256": "4c53d47a098a2cc3ef3f958322e91b2a57b28f6dfcca5375a9826f97d41f19c6",
+        "session_released": true
       },
       "review_handoff": {
         "key": "A03:review:P2-R7-readonly-codec:8ad45dd07214ae406a3fab28d76a4b5abd6eef03",
         "task": "A03",
         "stage": "P2_R7_READONLY_CODEC_REVIEW",
         "role": "review",
-        "state": "ACKNOWLEDGED",
+        "state": "COMPLETED",
         "created_at": "2026-10-17T20:35:38.522823+08:00",
         "base_commit": "81d3ec7e42e0a1a76ad744bf59536fc5f68adee4",
         "target_commit": "8ad45dd07214ae406a3fab28d76a4b5abd6eef03",
@@ -2044,13 +2049,13 @@
         "send_message_thinking": "OMIT",
         "send_message_model": "OMIT",
         "scope": "Independent actual read-only product codec review: frozen seven cases, bounded API/path/snapshot checks, wheel isolation two cases and C01 compatibility; no native recovery or I01 release.",
-        "result": "Existing reviewer is assembling frozen report after bounded checks; final decision/release not yet delivered. No duplicate dispatch.",
+        "result": "ACCEPTED_READONLY_PRODUCT_ONLY",
         "sent_at": "2026-10-17T20:36:21.153306+08:00",
         "workflow_commit": "5cb696378f8c53a7720a5b775b3188012bf5626b",
         "acknowledged_at": "2026-10-17T20:36:37.404036+08:00",
         "turn_id": "01a149dc-cab4-76c0-82c5-ff54fefe065d",
-        "cursor": "abdea222-4697-4046-86b1-a5dc48889fac:26",
-        "last_observed_at": "2026-10-17T21:18:58.462231+08:00"
+        "cursor": "abdea222-4697-4046-86b1-a5dc48889fac:27",
+        "last_observed_at": "2026-10-17T21:51:02.035297+08:00"
       },
       "rework_round": 2,
       "review_archive": {
@@ -3393,7 +3398,7 @@
         "task": "A03",
         "stage": "P2_R7_READONLY_CODEC_REVIEW",
         "role": "review",
-        "state": "ACKNOWLEDGED",
+        "state": "COMPLETED",
         "created_at": "2026-10-17T20:35:38.522823+08:00",
         "base_commit": "81d3ec7e42e0a1a76ad744bf59536fc5f68adee4",
         "target_commit": "8ad45dd07214ae406a3fab28d76a4b5abd6eef03",
@@ -3407,13 +3412,13 @@
         "send_message_thinking": "OMIT",
         "send_message_model": "OMIT",
         "scope": "Independent actual read-only product codec review: frozen seven cases, bounded API/path/snapshot checks, wheel isolation two cases and C01 compatibility; no native recovery or I01 release.",
-        "result": "Existing reviewer is assembling frozen report after bounded checks; final decision/release not yet delivered. No duplicate dispatch.",
+        "result": "ACCEPTED_READONLY_PRODUCT_ONLY",
         "sent_at": "2026-10-17T20:36:21.153306+08:00",
         "workflow_commit": "5cb696378f8c53a7720a5b775b3188012bf5626b",
         "acknowledged_at": "2026-10-17T20:36:37.404036+08:00",
         "turn_id": "01a149dc-cab4-76c0-82c5-ff54fefe065d",
-        "cursor": "abdea222-4697-4046-86b1-a5dc48889fac:26",
-        "last_observed_at": "2026-10-17T21:18:58.462231+08:00"
+        "cursor": "abdea222-4697-4046-86b1-a5dc48889fac:27",
+        "last_observed_at": "2026-10-17T21:51:02.035297+08:00"
       },
       "review_archive_r2_proposal": {
         "status": "ARCHIVED_LOCALLY",
@@ -3739,6 +3744,30 @@
         "next_task": "docs/tasks/A03-P2-R7-readonly-codec-implementation.md",
         "next_scope": "Actual product read-only codec implementation, no native PRE/current authority",
         "workflow_commit": "5a69df310517f0ca22708262c737db9a5676be32"
+      },
+      "limited_product_acceptance_r7": {
+        "at": "2026-10-17T21:51:02.035297+08:00",
+        "status": "ACCEPTED",
+        "scope": "STATIC_INSPECTION / A_INTERNAL_READONLY product codec only",
+        "target_commit": "8ad45dd07214ae406a3fab28d76a4b5abd6eef03",
+        "decision_document": "docs/tasks/A03-P2-R7-readonly-codec-coordinator-decision.md",
+        "archive_audit": "docs/evidence/coordinator/heartbeat-20261017-1329/review-archive-audit.json",
+        "coordinator_reproduction": "docs/evidence/coordinator/heartbeat-20261017-1329/reproduction-result.json",
+        "coordinator_cases": 3,
+        "native_recovery_accepted": false,
+        "integrated": true,
+        "I01_released": false,
+        "local_integration_status": "INTEGRATED",
+        "integration_commit": "PENDING_CURRENT_COMMIT",
+        "integration_files": "docs/evidence/coordinator/heartbeat-20261017-1329/integration-files.json",
+        "integration_tests": {
+          "R7": 13,
+          "C01": 70,
+          "failures": 0,
+          "errors": 0,
+          "skips": 0
+        },
+        "remote_push": false
       }
     },
     "D01": {
@@ -4932,7 +4961,7 @@
       "task": "A03",
       "stage": "P2_R7_READONLY_CODEC_REVIEW",
       "role": "review",
-      "state": "ACKNOWLEDGED",
+      "state": "COMPLETED",
       "created_at": "2026-10-17T20:35:38.522823+08:00",
       "base_commit": "81d3ec7e42e0a1a76ad744bf59536fc5f68adee4",
       "target_commit": "8ad45dd07214ae406a3fab28d76a4b5abd6eef03",
@@ -4946,13 +4975,13 @@
       "send_message_thinking": "OMIT",
       "send_message_model": "OMIT",
       "scope": "Independent actual read-only product codec review: frozen seven cases, bounded API/path/snapshot checks, wheel isolation two cases and C01 compatibility; no native recovery or I01 release.",
-      "result": "Existing reviewer is assembling frozen report after bounded checks; final decision/release not yet delivered. No duplicate dispatch.",
+      "result": "ACCEPTED_READONLY_PRODUCT_ONLY",
       "sent_at": "2026-10-17T20:36:21.153306+08:00",
       "workflow_commit": "5cb696378f8c53a7720a5b775b3188012bf5626b",
       "acknowledged_at": "2026-10-17T20:36:37.404036+08:00",
       "turn_id": "01a149dc-cab4-76c0-82c5-ff54fefe065d",
-      "cursor": "abdea222-4697-4046-86b1-a5dc48889fac:26",
-      "last_observed_at": "2026-10-17T21:18:58.462231+08:00"
+      "cursor": "abdea222-4697-4046-86b1-a5dc48889fac:27",
+      "last_observed_at": "2026-10-17T21:51:02.035297+08:00"
     }
   ],
   "last_action": {
@@ -5354,5 +5383,20 @@
       "next_dependency": "Agree a small complete real artifact package and requirement version, then A public validator and mock consumer can check compatibility.",
       "dispatch_result": "No B messages or tasks; no branch merge, push, platform activity, or paid model calls."
     }
-  ]
+  ],
+  "last_heartbeat": {
+    "at": "2026-10-17T21:52:30.043856+08:00",
+    "trigger": "2026-10-17T13:29:08.748Z",
+    "task_id": "A03",
+    "phase": "P2_R7_READONLY_INTEGRATED_NATIVE_PENDING",
+    "review_thread_id": "01a145aa-8d59-7c70-8d81-731712103a9a",
+    "review_cursor": "abdea222-4697-4046-86b1-a5dc48889fac:27",
+    "review_target": "8ad45dd07214ae406a3fab28d76a4b5abd6eef03",
+    "decision": "R7_READONLY_ACCEPTED_AND_LOCALLY_INTEGRATED",
+    "next_dependencies": "Bounded native PRE/CURRENT, creation-input history and original P2 UNKNOWN recovery acceptance before I01-A.",
+    "dispatch_result": "NO_NEW_DISPATCH_YET",
+    "notification": "NOTIFY",
+    "platform_actions": 0,
+    "paid_model_calls": 0
+  }
 }

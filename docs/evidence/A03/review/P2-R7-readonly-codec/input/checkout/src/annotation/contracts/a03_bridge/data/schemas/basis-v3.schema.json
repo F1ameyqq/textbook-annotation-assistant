@@ -1,0 +1,463 @@
+{
+  "type": "object",
+  "properties": {
+    "format_version": {
+      "const": "a03-unattempted-basis-3"
+    },
+    "binding": {
+      "type": "object",
+      "properties": {
+        "ledger_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "readonly_session_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "entry_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "parent_call_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "owner_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "generation": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "registration_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "target_store_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "target_session_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "target_key": {
+          "type": "object",
+          "properties": {
+            "book_id": {
+              "type": "string",
+              "minLength": 1
+            },
+            "platform_namespace": {
+              "type": "string",
+              "minLength": 1
+            },
+            "target_id": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          "required": [
+            "book_id",
+            "platform_namespace",
+            "target_id"
+          ],
+          "additionalProperties": false
+        },
+        "plan_ref": {
+          "type": "object",
+          "properties": {
+            "artifact_id": {
+              "type": "string",
+              "minLength": 1
+            },
+            "revision": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "kind": {
+              "type": "string",
+              "minLength": 1
+            },
+            "content_hash": {
+              "type": "string",
+              "pattern": "^[0-9a-f]{64}$"
+            }
+          },
+          "required": [
+            "artifact_id",
+            "revision",
+            "kind",
+            "content_hash"
+          ],
+          "additionalProperties": false
+        },
+        "scope_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "action_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "action_digest": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "fence_token": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "required": [
+        "ledger_id",
+        "readonly_session_id",
+        "entry_id",
+        "parent_call_id",
+        "owner_id",
+        "generation",
+        "registration_id",
+        "target_store_id",
+        "target_session_id",
+        "target_key",
+        "plan_ref",
+        "scope_id",
+        "action_id",
+        "action_digest",
+        "fence_token"
+      ],
+      "additionalProperties": false
+    },
+    "readonly_session_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "gate_binding": {
+      "type": "object",
+      "properties": {
+        "ledger_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "readonly_session_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "entry_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "parent_call_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "owner_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "generation": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "registration_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "target_store_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "target_session_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "target_key": {
+          "type": "object",
+          "properties": {
+            "book_id": {
+              "type": "string",
+              "minLength": 1
+            },
+            "platform_namespace": {
+              "type": "string",
+              "minLength": 1
+            },
+            "target_id": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          "required": [
+            "book_id",
+            "platform_namespace",
+            "target_id"
+          ],
+          "additionalProperties": false
+        },
+        "plan_ref": {
+          "type": "object",
+          "properties": {
+            "artifact_id": {
+              "type": "string",
+              "minLength": 1
+            },
+            "revision": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "kind": {
+              "type": "string",
+              "minLength": 1
+            },
+            "content_hash": {
+              "type": "string",
+              "pattern": "^[0-9a-f]{64}$"
+            }
+          },
+          "required": [
+            "artifact_id",
+            "revision",
+            "kind",
+            "content_hash"
+          ],
+          "additionalProperties": false
+        },
+        "scope_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "action_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "action_digest": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "fence_token": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "required": [
+        "ledger_id",
+        "readonly_session_id",
+        "entry_id",
+        "parent_call_id",
+        "owner_id",
+        "generation",
+        "registration_id",
+        "target_store_id",
+        "target_session_id",
+        "target_key",
+        "plan_ref",
+        "scope_id",
+        "action_id",
+        "action_digest",
+        "fence_token"
+      ],
+      "additionalProperties": false
+    },
+    "initial_event_head": {
+      "type": "object",
+      "properties": {
+        "sequence": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "hash": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        }
+      },
+      "required": [
+        "sequence",
+        "hash"
+      ],
+      "additionalProperties": false
+    },
+    "expected_event_head": {
+      "type": "object",
+      "properties": {
+        "sequence": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "hash": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        }
+      },
+      "required": [
+        "sequence",
+        "hash"
+      ],
+      "additionalProperties": false
+    },
+    "complete_uncalled_prefix": {
+      "type": "object",
+      "properties": {
+        "path": {
+          "type": "string",
+          "minLength": 1
+        },
+        "sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "media_type": {
+          "type": "string",
+          "minLength": 1
+        },
+        "origin": {
+          "const": "SYNTHETIC"
+        }
+      },
+      "required": [
+        "path",
+        "sha256",
+        "media_type",
+        "origin"
+      ],
+      "additionalProperties": false
+    },
+    "readonly_prepared_ref": {
+      "type": "object",
+      "properties": {
+        "path": {
+          "type": "string",
+          "minLength": 1
+        },
+        "sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "media_type": {
+          "type": "string",
+          "minLength": 1
+        },
+        "origin": {
+          "const": "SYNTHETIC"
+        }
+      },
+      "required": [
+        "path",
+        "sha256",
+        "media_type",
+        "origin"
+      ],
+      "additionalProperties": false
+    },
+    "observations": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "path": {
+            "type": "string",
+            "minLength": 1
+          },
+          "sha256": {
+            "type": "string",
+            "pattern": "^[0-9a-f]{64}$"
+          },
+          "media_type": {
+            "type": "string",
+            "minLength": 1
+          },
+          "origin": {
+            "const": "SYNTHETIC"
+          }
+        },
+        "required": [
+          "path",
+          "sha256",
+          "media_type",
+          "origin"
+        ],
+        "additionalProperties": false
+      }
+    },
+    "observer_calls": {
+      "const": 2
+    },
+    "total_read_calls": {
+      "const": 3
+    },
+    "used_count": {
+      "const": 3
+    },
+    "retries": {
+      "const": 0
+    },
+    "single_read_seconds": {
+      "const": 2
+    },
+    "entry_seconds": {
+      "const": 8
+    },
+    "parent_seconds": {
+      "const": 60
+    },
+    "busy_seconds": {
+      "const": 1
+    },
+    "gate_seconds": {
+      "const": 5
+    },
+    "lease_seconds": {
+      "const": 10
+    },
+    "renew_seconds": {
+      "const": 2
+    },
+    "parent_deadline": {
+      "type": "string",
+      "minLength": 1
+    },
+    "entry_deadline": {
+      "type": "string",
+      "minLength": 1
+    },
+    "fact_key": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "plan_status": {
+      "const": "INTERRUPTED"
+    },
+    "comparison": {
+      "const": "ABSENT"
+    }
+  },
+  "required": [
+    "format_version",
+    "binding",
+    "readonly_session_id",
+    "gate_binding",
+    "initial_event_head",
+    "expected_event_head",
+    "complete_uncalled_prefix",
+    "readonly_prepared_ref",
+    "observations",
+    "observer_calls",
+    "total_read_calls",
+    "used_count",
+    "retries",
+    "single_read_seconds",
+    "entry_seconds",
+    "parent_seconds",
+    "busy_seconds",
+    "gate_seconds",
+    "lease_seconds",
+    "renew_seconds",
+    "parent_deadline",
+    "entry_deadline",
+    "fact_key",
+    "plan_status",
+    "comparison"
+  ],
+  "additionalProperties": false
+}
