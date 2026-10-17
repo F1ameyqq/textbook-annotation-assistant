@@ -104,13 +104,28 @@ class PreservationR3Tests(unittest.TestCase):
             self.assertEqual(preservation.disk_changes(before,after)[0]["code"],"DISK_CHANGED_DURING_RUN")
 
     def test_fixed_baseline_has_only_explicit_twenty_five_variants(self):
-        ref=preservation.read_manifest(ROOT/"tests/fixtures/a01/R3/preservation-manifest.json")
+        manifest=ROOT/"tests/fixtures/a01/R3/preservation-manifest.json"
+        self.assertEqual(hashlib.sha256(manifest.read_bytes()).hexdigest(),
+                         "9ea7a71204c0417b16b232511010a781ad5a9c001287cc89c059b87a2b6ec795")
+        ref=preservation.read_manifest(manifest)
         self.assertEqual(ref["reference_commit"],"c3aff9598b6705ab4122062615a13ae3774698b2")
+        self.assertEqual(len(ref["files"]),971)
+        self.assertEqual(len({e["path"] for e in ref["files"]}),971)
         self.assertEqual(sum(len(e["representations"])>1 for e in ref["files"]),25)
         for e in ref["files"]:
             if e["path"].startswith(("docs/evidence/","技术证据/","原始资料/")) or "/bundles/" in e["path"]:
                 self.assertEqual(len(e["representations"]),1,e["path"])
-        self.assertTrue(preservation.audit(ROOT,ref)["passed"])
+        # A conventional regression runs in an evolving repository. Byte-audit
+        # fixed Git originals in their own fixture; R3 verify remains the
+        # explicit gate for its bound, immutable release snapshot.
+        fixture=ROOT/"tests/fixtures/a01/integration-R1"
+        selected=preservation.read_manifest(fixture/"reference.json")
+        self.assertEqual(selected["source_manifest_sha256"],hashlib.sha256(manifest.read_bytes()).hexdigest())
+        original={e["path"]:e for e in ref["files"]}
+        self.assertEqual(len(selected["files"]),4)
+        for entry in selected["files"]:
+            self.assertEqual(entry,original[entry["path"]])
+        self.assertTrue(preservation.audit(fixture/"frozen",selected)["passed"])
 
 
 if __name__ == "__main__":
