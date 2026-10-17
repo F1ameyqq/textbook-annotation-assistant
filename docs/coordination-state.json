@@ -2,7 +2,7 @@
   "schema_version": 1,
   "project": "D:\\1800",
   "coordinator_thread_id": "01a13f26-7567-75e1-99ee-c9d2194e78bb",
-  "updated_at": "2026-10-17T15:06:45.052077+08:00",
+  "updated_at": "2026-10-17T15:23:44.065566+08:00",
   "automation": {
     "id": "1800-a",
     "kind": "heartbeat",
@@ -1412,7 +1412,7 @@
       "review_task": "docs/tasks/A04-independent-review.md",
       "acceptance_scope": "Headless read-only book46007447 pages14/173 and one adjacent body page; coordinates after accepted A01.",
       "dispatch_status": "REVIEW_ACKNOWLEDGED",
-      "next_dependency": "Independent offline R3 review, then coordinator checks and explicitly scoped acceptance/integration if passed. Whole A04 remains blocked on live R01-R06.",
+      "next_dependency": "One bounded raw-Git-byte independent evidence supplement. Whole A04 live R01-R06/S01 remain blocked; no whole-branch integration or I01 release.",
       "geometry_dependency": {
         "task": "A01",
         "status": "ACCEPTED_INTEGRATED",
@@ -1473,20 +1473,20 @@
       "review": {
         "thread_id": "01a144cc-e93d-7841-a259-d6aac22c94f4",
         "host_id": "local",
-        "cursor": "33f1ce70-74e3-46de-b04f-ceafd8e7f74b:13",
-        "turn_status": "inProgress",
+        "cursor": "33f1ce70-74e3-46de-b04f-ceafd8e7f74b:14",
+        "turn_status": "completed",
         "phase": "COORDINATE_R3_OFFLINE_REVIEW_RUNNING",
         "target_commit": "6c8137a4fadddc01a47906d564ab3460277c8958",
         "task_document": "docs/tasks/A04-coordinate-R3-review-handoff.md",
         "task_sha256": "bd7bd756221a8d2642f611a45c37a690afb6496b1efb469c97994b8f19714de1",
         "expected_report": "docs/tasks/A04-coordinate-R3-review-report.md",
-        "decision": "PENDING",
+        "decision": "ACCEPTED_OFFLINE_REVIEWER_ONLY",
         "reasoning_effort": "xhigh",
-        "last_checked_at": "2026-10-17T15:06:45.052077+08:00",
+        "last_checked_at": "2026-10-17T15:23:44.065566+08:00",
         "turn_id": "01a148a4-3d07-7821-9596-a534a01dece0",
-        "observed_thread_status": "active",
+        "observed_thread_status": "idle",
         "workflow_commit": "d834bf531f95abac7ed30b89b3ca55105fa6f491",
-        "last_progress": "Reviewer interim commentary reports 26 independent checks passed and plans limited OFFLINE_R3 acceptance; review turn still active and final report absent. Coordinator has not accepted or integrated R3; whole A04 remains blocked on live evidence.",
+        "last_progress": "Independent review completed with limited ACCEPTED; coordinator found 59 EOL-only archive/blob mismatches, so exact-byte acceptance pending one bounded evidence supplement; no product defect found.",
         "latest_lightweight_observation": {
           "at": "2026-10-17T15:06:45.052077+08:00",
           "root_head": "f24bbf58ec011b9d2ee21d33c5821dde7203f779",
@@ -1495,7 +1495,13 @@
           "evidence_directory_present": true,
           "frozen_delivery_verified": false,
           "scope": "Expected-report existence and compact thread snapshot only; reviewer-owned in-progress evidence untouched."
-        }
+        },
+        "formal_decision": "ACCEPTED_OFFLINE_REVIEWER_ONLY",
+        "report": "docs/tasks/A04-coordinate-R3-review-report.md",
+        "report_sha256": "ce6bc599c0b1533e58095366c4f8b499248079aa6c571e8569e1b585d4a82e61",
+        "session_released": true,
+        "evidence_manifest": "docs/evidence/A04/review/coordinate-R3/sha256-manifest.json",
+        "evidence_manifest_sha256": "d756ab8d28d49350883fdf47289497451833818bfb76649568dbb8467e9f4002"
       },
       "dispatch_record_commit": "d6738cf239b203496c9e84cb87178eb82f2d4f89",
       "blocked_reason": "R2 missing pixel-row PNG accepted; independent review and exact-byte coordinator reproduction confirm REWORK. Live R01-R06 unverified.",
@@ -1647,7 +1653,7 @@
           "session_release_basis": "Frozen execution-authored process release and completed turn; no current profile/OS ownership probe."
         }
       ],
-      "phase": "COORDINATE_R3_OFFLINE_REVIEW_RUNNING",
+      "phase": "COORDINATE_R3_RAW_BYTE_SUPPLEMENT_PENDING",
       "coordinate_resume": {
         "stage": "coordinate-R1",
         "state": "ACKNOWLEDGED",
@@ -1747,7 +1753,7 @@
         "task": "A04",
         "stage": "coordinate-R3",
         "role": "review",
-        "state": "ACKNOWLEDGED",
+        "state": "COMPLETED_NEEDS_EVIDENCE_SUPPLEMENT",
         "created_at": "2026-10-17T14:53:55.977466+08:00",
         "document": "docs/tasks/A04-coordinate-R3-review-handoff.md",
         "document_sha256": "bd7bd756221a8d2642f611a45c37a690afb6496b1efb469c97994b8f19714de1",
@@ -1760,7 +1766,7 @@
         "acknowledged_at": "2026-10-17T14:56:48.588330+08:00",
         "workflow_commit": "d834bf531f95abac7ed30b89b3ca55105fa6f491",
         "turn_id": "01a148a4-3d07-7821-9596-a534a01dece0",
-        "cursor": "33f1ce70-74e3-46de-b04f-ceafd8e7f74b:11",
+        "cursor": "33f1ce70-74e3-46de-b04f-ceafd8e7f74b:14",
         "result": "Existing A-side chat active at xhigh; no duplicate chat, platform action or B message."
       },
       "coordinator_reproduction": {
@@ -1832,6 +1838,32 @@
         "scope": "R2 offline REWORK; live BLOCKED. Exact original review bytes preserved including tool failures.",
         "commit": "99bae146ee01525005f269dfde27f507d9e8124c",
         "raw_committed_manifest_entries": 333
+      },
+      "coordinator_reproduction_r3": {
+        "at": "2026-10-17T15:23:44.065566+08:00",
+        "checks": "docs/evidence/A04/coordinator/coordinate-R3-acceptance/checks.json",
+        "review_manifest_entries": 355,
+        "raw_git_export_files": 212,
+        "archive_eol_only_differences": 59,
+        "public_cli_exit": 2,
+        "output_created": false,
+        "acceptance": "PENDING_RAW_BYTE_SUPPLEMENT",
+        "product_changes": false
+      },
+      "raw_byte_supplement": {
+        "key": "A04:review:coordinate-R3-raw-bytes:6c8137a4fadddc01a47906d564ab3460277c8958",
+        "task": "A04",
+        "stage": "coordinate-R3-raw-bytes",
+        "role": "review",
+        "state": "INTENT_RECORDED",
+        "created_at": "2026-10-17T15:23:44.065566+08:00",
+        "target_commit": "6c8137a4fadddc01a47906d564ab3460277c8958",
+        "document": "docs/tasks/A04-coordinate-R3-raw-byte-supplement.md",
+        "document_sha256": "a4282b448c362280a76fe424fc7309125f6833a35aaf3e486d041f7458f941ac",
+        "thread_id": "01a144cc-e93d-7841-a259-d6aac22c94f4",
+        "host_id": "local",
+        "reasoning_effort": "xhigh",
+        "scope": "Evidence-only exact-byte correction; preserve original R3; no product rework, network, platform or B message."
       }
     },
     "A03": {
@@ -1856,7 +1888,7 @@
       "execution": {
         "thread_id": "01a145aa-2fea-7942-97f9-ad260acf4e30",
         "host_id": "local",
-        "cursor": "506fd3cf-091f-418b-b002-636f503b5e4b:12",
+        "cursor": "506fd3cf-091f-418b-b002-636f503b5e4b:13",
         "turn_status": "inProgress",
         "phase": "P2_R2_STATIC_REWORK_RUNNING",
         "base_commit": "7fdbde8f16569fd3bc399013115e13269d5d33fa",
@@ -1869,11 +1901,11 @@
         "report": null,
         "completed_turn_confirms_freeze": false,
         "session_released": false,
-        "last_checked_at": "2026-10-17T15:06:45.052077+08:00",
+        "last_checked_at": "2026-10-17T15:23:44.065566+08:00",
         "turn_id": "01a148a4-3e96-7dd2-9d40-400bd319f809",
         "observed_thread_status": "active",
         "workflow_commit": "d834bf531f95abac7ed30b89b3ca55105fa6f491",
-        "last_progress": "Executor confirms three static gaps: outer/frame scope closure, session/start-head chain binding, initial-kind schema/semantic consistency. Minimal two-scope package and INITIAL/POST_HOLD/conversion boundary revision active; not functional implementation.",
+        "last_progress": "Executor reports whole-package two-scope positives and bounded negatives passing; initial READ_TIME fixture failure preserved. No frozen report or new commit yet; static revision remains active.",
         "latest_lightweight_observation": {
           "at": "2026-10-17T15:06:45.052077+08:00",
           "head": "7fdbde8f16569fd3bc399013115e13269d5d33fa",
@@ -3710,12 +3742,27 @@
       "turn_id": "01a148a4-3d07-7821-9596-a534a01dece0",
       "cursor": "33f1ce70-74e3-46de-b04f-ceafd8e7f74b:11",
       "result": "Existing A-side chat active at xhigh; no duplicate chat, platform action or B message."
+    },
+    {
+      "key": "A04:review:coordinate-R3-raw-bytes:6c8137a4fadddc01a47906d564ab3460277c8958",
+      "task": "A04",
+      "stage": "coordinate-R3-raw-bytes",
+      "role": "review",
+      "state": "INTENT_RECORDED",
+      "created_at": "2026-10-17T15:23:44.065566+08:00",
+      "target_commit": "6c8137a4fadddc01a47906d564ab3460277c8958",
+      "document": "docs/tasks/A04-coordinate-R3-raw-byte-supplement.md",
+      "document_sha256": "a4282b448c362280a76fe424fc7309125f6833a35aaf3e486d041f7458f941ac",
+      "thread_id": "01a144cc-e93d-7841-a259-d6aac22c94f4",
+      "host_id": "local",
+      "reasoning_effort": "xhigh",
+      "scope": "Evidence-only exact-byte correction; preserve original R3; no product rework, network, platform or B message."
     }
   ],
   "last_action": {
-    "at": "2026-10-17T15:06:45.052077+08:00",
-    "task_id": "A03/A04",
-    "action": "Lightweight check saved current cursors and Git/report observations. Both active; no acceptance, integration, new dispatch or push.",
+    "at": "2026-10-17T15:23:44.065566+08:00",
+    "task_id": "A04",
+    "action": "Audit found 59 EOL-only archive/Git differences; preserved failure and reproduced fixed rejection using 212 raw blobs. Independent evidence supplement planned; no acceptance or integration.",
     "remote_push": false
   },
   "limitations": [
@@ -3724,9 +3771,9 @@
     "Platform test is single-book serial, no book submission, no unbudgeted paid models."
   ],
   "last_check": {
-    "at": "2026-10-17T15:06:45.052077+08:00",
-    "heartbeat_time": "2026-10-17T07:04:02.702Z",
-    "root_head": "f24bbf58ec011b9d2ee21d33c5821dde7203f779",
+    "at": "2026-10-17T15:23:44.065566+08:00",
+    "heartbeat_time": "2026-10-17T07:19:02.902Z",
+    "root_head": "0ecd5a29846e84e57c46ebbf16319e658a145952",
     "checked_task_ids": [
       "A03",
       "A04"
@@ -3734,9 +3781,9 @@
     "platform_actions": 0,
     "paid_model_calls": 0,
     "full_suite_rerun": false,
-    "notification": "DONT_NOTIFY",
-    "next_dependencies": "A03 static revision frozen delivery, then independent review; A04 frozen independent R3 review before coordinator reproduction and any limited acceptance. I01 remains blocked.",
-    "dispatch_result": "No new dispatch; existing A03 executor and A04 reviewer remain active.",
+    "notification": "NOTIFY",
+    "next_dependencies": "One bounded raw-Git-byte independent evidence supplement. Whole A04 live R01-R06/S01 remain blocked; no whole-branch integration or I01 release. A03 static delivery pending.",
+    "dispatch_result": "Evidence supplement intent recorded; not sent yet.",
     "no_duplicate_chat": true
   },
   "prepared_next_batch": {

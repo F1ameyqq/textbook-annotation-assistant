@@ -1,0 +1,93 @@
+{
+  "target_commit": "6c8137a4fadddc01a47906d564ab3460277c8958",
+  "implementation_commit": "81d62255b545b88f344849d08011a2a859c49c5e",
+  "review_workflow_commit": "d834bf531f95abac7ed30b89b3ca55105fa6f491",
+  "reasoning_effort_requested": "xhigh",
+  "OFFLINE_R3": "ACCEPTED",
+  "A04_OVERALL": "BLOCKED",
+  "findings": [],
+  "accepted_scope": "Fixed R3 PNG scanline completeness repair, public source/prepublication gates, representative static layouts, existing JPEG/PGM and bounded resource behavior only",
+  "exact_unchanged_reproducer": "Wrapper0 / public CLI2 / no output or source history / SHA-bound original 180byte case",
+  "independent_cases": 26,
+  "independent_failures": 0,
+  "independent_representative_layouts": 7,
+  "scoped_regression_tests": 70,
+  "public_positive_packages": 8,
+  "public_runtime_children": 20,
+  "not_run": [
+    "Node deadline",
+    "Windows junction",
+    "whole previous test matrix",
+    "full configured 64/128MiB resource stress",
+    "real R01-R06",
+    "D01 installation revalidation"
+  ],
+  "compatibility_tightening": [
+    "APNG explicitly unsupported",
+    "Trailing PNG content rejected",
+    "Unknown critical/chunk/stream/invalid palette states fail closed as documented"
+  ],
+  "non_assertions": [
+    "All PNG ancillary semantics",
+    "Universal decoder equivalence",
+    "Content correctness",
+    "Whole-book source completeness",
+    "Current real coordinates or counts",
+    "B confirmation",
+    "Save/OCR/recovery/cost acceptance"
+  ],
+  "handoff_clauses": [
+    {
+      "clause": 1,
+      "status": "PASS",
+      "evidence": [
+        "exact-replay/result.json",
+        "initial/process-results.json"
+      ]
+    },
+    {
+      "clause": 2,
+      "status": "PASS_WITH_DECLARED_LIMITS",
+      "evidence": [
+        "independent-cases/results.json",
+        "environment.json"
+      ]
+    },
+    {
+      "clause": 3,
+      "status": "PASS",
+      "evidence": [
+        "independent-cases/U-same-size-swap/result.json",
+        "independent-cases/U-public-copy-swap/result.json",
+        "independent-cases/results.json"
+      ]
+    },
+    {
+      "clause": 4,
+      "status": "PASS_WITH_EXCLUSIONS",
+      "evidence": [
+        "initial/regression-result.json",
+        "independent-cases/results.json"
+      ]
+    },
+    {
+      "clause": 5,
+      "status": "COMPLETE_BOUNDED_REVIEW",
+      "evidence": [
+        "review-verdict.json"
+      ]
+    }
+  ],
+  "real_scenarios": {
+    "R01": "BLOCKED_NOT_RUN",
+    "R02": "BLOCKED_NOT_RUN",
+    "R03": "BLOCKED_NOT_RUN",
+    "R04": "BLOCKED_NOT_RUN",
+    "R05": "BLOCKED_NOT_RUN",
+    "R06": "BLOCKED_NOT_RUN"
+  },
+  "release_downstream_or_integrate": false,
+  "all_prior_evidence_retained": true,
+  "paid_model_calls": 0,
+  "paid_model_cost": 0
+}

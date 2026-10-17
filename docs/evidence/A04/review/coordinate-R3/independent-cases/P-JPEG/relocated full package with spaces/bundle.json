@@ -1,0 +1,344 @@
+{
+  "format_version": "c01-exchange-1",
+  "evidence": [
+    {
+      "evidence_id": "proof-a04-source",
+      "resource": {
+        "path": "evidence/source-capture.json",
+        "sha256": "d67b081e808939cbbcd8cafd7f8133837fd95538b248645e57338a93dd9f57e7",
+        "media_type": "application/json"
+      },
+      "description": "Bounded original-image inventory and separate viewer/source identities; SYNTHETIC capture.",
+      "mode": "SYNTHETIC"
+    },
+    {
+      "evidence_id": "proof-a04-snapshot",
+      "resource": {
+        "path": "evidence/platform-summary.json",
+        "sha256": "7422e4ffeb5f1e504e026300864d3f4478d6bb3e51c17d7530583b82722295f0",
+        "media_type": "application/json"
+      },
+      "description": "A04 SYNTHETIC capture: full platform counts and state hash; acquired-original frame scope only.",
+      "mode": "SYNTHETIC"
+    }
+  ],
+  "policies": [
+    {
+      "policy_id": "usense-v1-proposal",
+      "revision": 1,
+      "content_hash": "e5658f6abde137fb1e4b355b119c2dbebded8417689f81493b48b20a3480646b",
+      "confirmation_status": "A_INTERNAL_PROPOSAL",
+      "option_grouping": "UNRESOLVED",
+      "role_mapping": {
+        "answer": "A",
+        "explanation": "E",
+        "option": "W",
+        "shared_material": "Q",
+        "stem": "Q"
+      },
+      "source_notes": [
+        "A-side v1 implementation proposal; no joint A/B confirmation is asserted.",
+        "DOCX separate option boxes and sampled video combined option box remain unresolved.",
+        "A05 observed only bounded frame-save/readback behavior; OCR was not accepted."
+      ],
+      "frame_save_status": "BOUNDED_A05_OBSERVED",
+      "ocr_status": "UNVERIFIED",
+      "applicability": "PROPOSAL_ONLY"
+    }
+  ],
+  "artifacts": [
+    {
+      "schema_version": "1.0.0-a-proposal",
+      "artifact_id": "source-a04",
+      "revision": 1,
+      "kind": "SourceBundle",
+      "run_id": "run-a04",
+      "book_id": "46007447",
+      "scope_id": "scope-a04-readonly",
+      "input_refs": [],
+      "producer": {
+        "module": "source.usense",
+        "implementation_version": "a04.1",
+        "config_version": "a04.readonly.v1",
+        "policy_versions": [],
+        "model_version": null,
+        "prompt_version": null,
+        "evidence_mode": "SYNTHETIC"
+      },
+      "content_hash": "b8ba60a38f5d3b7f46261cc5571f5bafd887286a26f9bcd762577adc098945c8",
+      "created_at": "2026-10-16T13:00:00+00:00",
+      "payload": {
+        "assets": [
+          {
+            "path": "assets/page-14.pgm",
+            "sha256": "2a2dd331636ced8d1ff16dcbd9a4b08ddaad9533e57735d7bf4a238505d4bbf6",
+            "media_type": "image/jpeg",
+            "asset_id": "asset-a04-book-46007447-viewer-14",
+            "width": 17,
+            "height": 9,
+            "source_label": "viewer page 14 / source index 13",
+            "provenance": "SYNTHETIC"
+          },
+          {
+            "path": "assets/page-15.pgm",
+            "sha256": "75ebce577a6facb31a9163b73d03fce1f6b01aae038391bcd6d32b85c1ce06f2",
+            "media_type": "image/x-portable-graymap",
+            "asset_id": "asset-a04-book-46007447-viewer-15",
+            "width": 4,
+            "height": 3,
+            "source_label": "viewer page 15 / source index 14",
+            "provenance": "SYNTHETIC"
+          },
+          {
+            "path": "assets/page-173.pgm",
+            "sha256": "947e2d810b2403f276f28c7a0ee82e49c267e254ed775a18259e4f0bb806a763",
+            "media_type": "image/x-portable-graymap",
+            "asset_id": "asset-a04-book-46007447-viewer-173",
+            "width": 4,
+            "height": 3,
+            "source_label": "viewer page 173 / source index 172",
+            "provenance": "SYNTHETIC"
+          }
+        ],
+        "directories": [
+          {
+            "directory_id": "directory-b5c04d0b796ddf729f2b67f0",
+            "parent_id": null,
+            "label": "Usense bounded original-resource scope (adapter container)"
+          },
+          {
+            "directory_id": "directory-4acdbee86c7cc9bf6f263d6e",
+            "parent_id": "directory-b5c04d0b796ddf729f2b67f0",
+            "label": "SYNTHETIC chapter one"
+          },
+          {
+            "directory_id": "directory-4a81eb06361c49e89cc7ca25",
+            "parent_id": "directory-b5c04d0b796ddf729f2b67f0",
+            "label": "SYNTHETIC chapter two"
+          }
+        ],
+        "pages_expected": [
+          "asset-a04-book-46007447-viewer-14",
+          "asset-a04-book-46007447-viewer-15",
+          "asset-a04-book-46007447-viewer-173"
+        ],
+        "pages_acquired": [
+          "asset-a04-book-46007447-viewer-14",
+          "asset-a04-book-46007447-viewer-15",
+          "asset-a04-book-46007447-viewer-173"
+        ],
+        "external_page_mappings": [
+          {
+            "asset_id": "asset-a04-book-46007447-viewer-14",
+            "directory_id": "directory-b5c04d0b796ddf729f2b67f0",
+            "external_page": "viewer:14;source_index:13",
+            "mapping_status": "CONFIRMED",
+            "evidence_refs": [
+              "proof-a04-source"
+            ]
+          },
+          {
+            "asset_id": "asset-a04-book-46007447-viewer-15",
+            "directory_id": "directory-b5c04d0b796ddf729f2b67f0",
+            "external_page": "viewer:15;source_index:14",
+            "mapping_status": "CONFIRMED",
+            "evidence_refs": [
+              "proof-a04-source"
+            ]
+          },
+          {
+            "asset_id": "asset-a04-book-46007447-viewer-173",
+            "directory_id": "directory-b5c04d0b796ddf729f2b67f0",
+            "external_page": "viewer:173;source_index:172",
+            "mapping_status": "CONFIRMED",
+            "evidence_refs": [
+              "proof-a04-source"
+            ]
+          }
+        ],
+        "history": [
+          {
+            "resource": {
+              "path": "evidence/source-capture.json",
+              "sha256": "d67b081e808939cbbcd8cafd7f8133837fd95538b248645e57338a93dd9f57e7",
+              "media_type": "application/json"
+            },
+            "quality": "UNVERIFIED",
+            "reason": "Bounded source capture and raw platform box evidence; no content or geometry acceptance."
+          }
+        ],
+        "scope_manifest": [
+          "question-8b3547111b60736d1a0d1673",
+          "question-f9b82523737d894a305c33f6"
+        ],
+        "scope_manifest_basis": "Observed directory question-node identities; full metadata tree only, not content coverage of unacquired pages.",
+        "metadata_page_count": 214
+      }
+    },
+    {
+      "schema_version": "1.0.0-a-proposal",
+      "artifact_id": "snapshot-a04-usense",
+      "revision": 1,
+      "kind": "PlatformSnapshot",
+      "run_id": "run-a04",
+      "book_id": "46007447",
+      "scope_id": "scope-a04-readonly",
+      "input_refs": [
+        {
+          "artifact_id": "source-a04",
+          "revision": 1,
+          "kind": "SourceBundle",
+          "content_hash": "b8ba60a38f5d3b7f46261cc5571f5bafd887286a26f9bcd762577adc098945c8"
+        }
+      ],
+      "producer": {
+        "module": "delivery.usense_readonly",
+        "implementation_version": "a04-v1",
+        "config_version": "a04-readonly-scope-v1",
+        "policy_versions": [],
+        "model_version": null,
+        "prompt_version": null,
+        "evidence_mode": "SYNTHETIC"
+      },
+      "content_hash": "a17bb97bffeb70dab0c2d6873d1736221379b0bf4dbb2f576d1cd0f5c371f9d8",
+      "created_at": "2026-10-16T13:00:00+00:00",
+      "payload": {
+        "target_id": "46007447",
+        "platform_version": "usense-annotateUnified-unversioned",
+        "observed_at": "2026-10-16T13:00:00+00:00",
+        "observed_version": "sha256:4f082cd6e6b775582fe3ca9905a2d5baacf2411160ee4c62ab10957ee603efcb",
+        "observed_hash": "4f082cd6e6b775582fe3ca9905a2d5baacf2411160ee4c62ab10957ee603efcb",
+        "authorized_scope_id": "scope-a04-readonly",
+        "directories": [
+          "chapter-one",
+          "chapter-two"
+        ],
+        "questions": [
+          {
+            "platform_question_id": "question-node-one",
+            "directory_id": "chapter-one",
+            "platform_order": 1
+          },
+          {
+            "platform_question_id": "question-node-two",
+            "directory_id": "chapter-two",
+            "platform_order": 1
+          }
+        ],
+        "frames": [
+          {
+            "platform_frame_id": "synthetic-frame-q",
+            "platform_question_id": "question-node-one",
+            "box": {
+              "image": {
+                "asset_id": "asset-a04-book-46007447-viewer-14",
+                "width": 17,
+                "height": 9,
+                "sha256": "2a2dd331636ced8d1ff16dcbd9a4b08ddaad9533e57735d7bf4a238505d4bbf6"
+              },
+              "bbox": [
+                0.0,
+                0.0,
+                3.0,
+                2.0
+              ]
+            },
+            "platform_role": "Q"
+          },
+          {
+            "platform_frame_id": "synthetic-frame-a",
+            "platform_question_id": "question-node-one",
+            "box": {
+              "image": {
+                "asset_id": "asset-a04-book-46007447-viewer-173",
+                "width": 4,
+                "height": 3,
+                "sha256": "947e2d810b2403f276f28c7a0ee82e49c267e254ed775a18259e4f0bb806a763"
+              },
+              "bbox": [
+                1.0,
+                1.0,
+                4.0,
+                3.0
+              ]
+            },
+            "platform_role": "A"
+          },
+          {
+            "platform_frame_id": "synthetic-frame-other",
+            "platform_question_id": "question-node-two",
+            "box": {
+              "image": {
+                "asset_id": "asset-a04-book-46007447-viewer-15",
+                "width": 4,
+                "height": 3,
+                "sha256": "75ebce577a6facb31a9163b73d03fce1f6b01aae038391bcd6d32b85c1ce06f2"
+              },
+              "bbox": [
+                0.0,
+                1.0,
+                2.0,
+                3.0
+              ]
+            },
+            "platform_role": "Q"
+          }
+        ],
+        "capabilities": [
+          {
+            "name": "persistent_draft",
+            "status": "UNKNOWN",
+            "platform_version": "usense-annotateUnified-unversioned",
+            "evidence_refs": []
+          },
+          {
+            "name": "frame_readback",
+            "status": "UNKNOWN",
+            "platform_version": "usense-annotateUnified-unversioned",
+            "evidence_refs": []
+          },
+          {
+            "name": "content_readback",
+            "status": "UNKNOWN",
+            "platform_version": "usense-annotateUnified-unversioned",
+            "evidence_refs": []
+          },
+          {
+            "name": "ocr_before_submit",
+            "status": "UNKNOWN",
+            "platform_version": "usense-annotateUnified-unversioned",
+            "evidence_refs": []
+          },
+          {
+            "name": "resume_after_restart",
+            "status": "UNKNOWN",
+            "platform_version": "usense-annotateUnified-unversioned",
+            "evidence_refs": []
+          },
+          {
+            "name": "multi_session",
+            "status": "UNKNOWN",
+            "platform_version": "usense-annotateUnified-unversioned",
+            "evidence_refs": []
+          },
+          {
+            "name": "same_session_handoff",
+            "status": "UNKNOWN",
+            "platform_version": "usense-annotateUnified-unversioned",
+            "evidence_refs": []
+          },
+          {
+            "name": "frame_update",
+            "status": "UNKNOWN",
+            "platform_version": "usense-annotateUnified-unversioned",
+            "evidence_refs": []
+          }
+        ],
+        "evidence_refs": [
+          "proof-a04-source",
+          "proof-a04-snapshot"
+        ]
+      }
+    }
+  ]
+}
