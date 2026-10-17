@@ -2,7 +2,7 @@
   "schema_version": 1,
   "project": "D:\\1800",
   "coordinator_thread_id": "01a13f26-7567-75e1-99ee-c9d2194e78bb",
-  "updated_at": "2026-10-18T07:05:01.711909+08:00",
+  "updated_at": "2026-10-18T07:06:08.178981+08:00",
   "automation": {
     "id": "1800-a",
     "kind": "heartbeat",
@@ -1936,8 +1936,8 @@
       }
     },
     "A03": {
-      "status": "READY",
-      "phase": "P2_R11_CRASH_CUT_VALIDATION_PENDING",
+      "status": "RUNNING",
+      "phase": "P2_R11_CRASH_CUT_VALIDATION_RUNNING",
       "depends_on": [
         "A02"
       ],
@@ -1946,7 +1946,7 @@
       "review_task": "docs/tasks/A03-P2-R10-owner-fencing-review-handoff.md",
       "acceptance_scope": "P1 and limited R2-R6 accepted; R7 readonly product locally INTEGRATED; R8-R2 projection/N1, R8-R3 POST_HOLD/local/N1-N5, R8-R4 N6/single runtime-init control limited ACCEPTED. Whole native A03 not accepted or integrated. R9-R1 owner lifecycle and D1/standalone/borrow/D2 fixed single-question demos limited ACCEPTED at bfd7fe896a7eee663ea8e0b6cf967548d8dd8f39. R10 two live-process owner/fencing cases limited ACCEPTED at 1c26b4a8eb378af33e57668472d2071e9ea6afff.",
       "next_dependency": "R11 four remaining original crash cuts -> independent review. Remaining original P2 scope and native product integration still required; B version mapping unconfirmed before real cross-side I01.",
-      "dispatch_status": "EXECUTION_INTENT_RECORDED",
+      "dispatch_status": "EXECUTION_STARTED",
       "B_confirmation": "NOT_CONFIRMED",
       "workflow_commit": "77d3e123ab7247eae6f81f7acd669e3a69c934a0",
       "worktree_name": "a03-runtime-recovery",
@@ -1957,10 +1957,10 @@
       "execution": {
         "thread_id": "01a145aa-2fea-7942-97f9-ad260acf4e30",
         "host_id": "local",
-        "cursor": "506fd3cf-091f-418b-b002-636f503b5e4b:58",
-        "turn_status": "awaiting_dispatch",
-        "observed_thread_status": "idle",
-        "phase": "P2_R11_CRASH_CUT_VALIDATION_PENDING",
+        "cursor": "506fd3cf-091f-418b-b002-636f503b5e4b:59",
+        "turn_status": "inProgress",
+        "observed_thread_status": "active",
+        "phase": "P2_R11_CRASH_CUT_VALIDATION_RUNNING",
         "base_commit": "1c26b4a8eb378af33e57668472d2071e9ea6afff",
         "prior_delivery_commit": "1c26b4a8eb378af33e57668472d2071e9ea6afff",
         "task_document": "docs/tasks/A03-P2-R11-crash-cut-validation.md",
@@ -1968,8 +1968,10 @@
         "expected_report": "docs/tasks/A03-P2-R11-crash-cuts-report.md",
         "reasoning_policy": "PRESERVE_USER_SETTING",
         "dispatch_key": "A03:execution:P2-R11-crash-cuts:1c26b4a8eb378af33e57668472d2071e9ea6afff",
-        "last_checked_at": "2026-10-18T07:05:01.711909+08:00",
-        "last_progress": "R10 two-case acceptance recorded; R11 original four-cut finite validation dispatch intent prepared."
+        "last_checked_at": "2026-10-18T07:06:08.178981+08:00",
+        "last_progress": "Original executor new R11 turn observed active after bounded dispatch; no completion or acceptance claimed.",
+        "workflow_commit": "bc0074bc8b852ef14012ee338bf3153ccb1f932b",
+        "turn_id": "01a14c1d-4b74-7a32-8592-8ab9415af56f"
       },
       "review": {
         "thread_id": "01a145aa-8d59-7c70-8d81-731712103a9a",
@@ -3168,7 +3170,7 @@
           "completed_at": "2026-10-18T00:09:56.399342+08:00"
         }
       ],
-      "operational_status": "R10_LIMITED_ACCEPTED_R11_ORIGINAL_COVERAGE_READY",
+      "operational_status": "R10_LIMITED_ACCEPTED_R11_ORIGINAL_COVERAGE_RUNNING",
       "last_resume_attempt_at": "2026-10-17T02:17:41.707122+00:00",
       "review_history": [
         {
@@ -4211,7 +4213,7 @@
         "task": "A03",
         "stage": "P2_R11_CRASH_CUT_VALIDATION",
         "role": "execution",
-        "state": "INTENT_RECORDED",
+        "state": "STARTED",
         "created_at": "2026-10-18T07:05:01.711909+08:00",
         "base_commit": "1c26b4a8eb378af33e57668472d2071e9ea6afff",
         "document": "docs/tasks/A03-P2-R11-crash-cut-validation.md",
@@ -4222,7 +4224,14 @@
         "send_message_thinking": "OMIT",
         "send_message_model": "OMIT",
         "scope": "Original V02/R03 four remaining crash cuts F1 BEFORE_INTENT_COMMIT/F2 AFTER_DISPATCH_STARTED/F3 AFTER_READBACK_CAPTURE/F4 AFTER_RECEIPT_COMMIT; fixed one-question frozen product; once each.",
-        "result": "Pending send to original executor after local review evidence archive."
+        "result": "Original executor R11 turn active; four original crash cuts only, model/thinking omitted.",
+        "sent_at": "2026-10-18T07:05:51.273861+08:00",
+        "workflow_commit": "bc0074bc8b852ef14012ee338bf3153ccb1f932b",
+        "returned_thread_id": "01a145aa-2fea-7942-97f9-ad260acf4e30",
+        "started_observed_at": "2026-10-18T07:06:08.178981+08:00",
+        "last_observed_at": "2026-10-18T07:06:08.178981+08:00",
+        "cursor": "506fd3cf-091f-418b-b002-636f503b5e4b:59",
+        "turn_id": "01a14c1d-4b74-7a32-8592-8ab9415af56f"
       },
       "review_archive_r4_bridge_registration": {
         "status": "ARCHIVED_LOCALLY",
@@ -4684,7 +4693,7 @@
         "task": "A03",
         "stage": "P2_R11_CRASH_CUT_VALIDATION",
         "role": "execution",
-        "state": "INTENT_RECORDED",
+        "state": "STARTED",
         "created_at": "2026-10-18T07:05:01.711909+08:00",
         "base_commit": "1c26b4a8eb378af33e57668472d2071e9ea6afff",
         "document": "docs/tasks/A03-P2-R11-crash-cut-validation.md",
@@ -4695,7 +4704,14 @@
         "send_message_thinking": "OMIT",
         "send_message_model": "OMIT",
         "scope": "Original V02/R03 four remaining crash cuts F1 BEFORE_INTENT_COMMIT/F2 AFTER_DISPATCH_STARTED/F3 AFTER_READBACK_CAPTURE/F4 AFTER_RECEIPT_COMMIT; fixed one-question frozen product; once each.",
-        "result": "Pending send to original executor after local review evidence archive."
+        "result": "Original executor R11 turn active; four original crash cuts only, model/thinking omitted.",
+        "sent_at": "2026-10-18T07:05:51.273861+08:00",
+        "workflow_commit": "bc0074bc8b852ef14012ee338bf3153ccb1f932b",
+        "returned_thread_id": "01a145aa-2fea-7942-97f9-ad260acf4e30",
+        "started_observed_at": "2026-10-18T07:06:08.178981+08:00",
+        "last_observed_at": "2026-10-18T07:06:08.178981+08:00",
+        "cursor": "506fd3cf-091f-418b-b002-636f503b5e4b:59",
+        "turn_id": "01a14c1d-4b74-7a32-8592-8ab9415af56f"
       },
       "review_r7_frozen_record": {
         "thread_id": "01a145aa-8d59-7c70-8d81-731712103a9a",
@@ -5504,7 +5520,7 @@
         "I01_released": false
       },
       "review_archive_r10": {
-        "status": "PREPARED_FOR_LOCAL_ARCHIVE",
+        "status": "ARCHIVED_LOCALLY",
         "report": "docs/tasks/A03-P2-R10-owner-fencing-review-report.md",
         "manifest": "docs/evidence/A03/review/P2-R10-owner-fencing/sha256-manifest.json",
         "manifest_entries": 568,
@@ -5515,7 +5531,10 @@
         "coordinator_audit": "docs/evidence/coordinator/heartbeat-20261018-0700/review-audit.json",
         "coordinator_audit_sha256": "1df1e3460a3ba7b9b6e5b65492a510c1029ef44d140c504cdb7685709936e5be",
         "scope": "R10 two-case finite evidence only; no candidate product integration",
-        "remote_push": false
+        "remote_push": false,
+        "commit": "bc0074bc8b852ef14012ee338bf3153ccb1f932b",
+        "staged_raw_paths_verified": 574,
+        "candidate_product_integrated": false
       }
     },
     "D01": {
@@ -7115,7 +7134,7 @@
       "task": "A03",
       "stage": "P2_R11_CRASH_CUT_VALIDATION",
       "role": "execution",
-      "state": "INTENT_RECORDED",
+      "state": "STARTED",
       "created_at": "2026-10-18T07:05:01.711909+08:00",
       "base_commit": "1c26b4a8eb378af33e57668472d2071e9ea6afff",
       "document": "docs/tasks/A03-P2-R11-crash-cut-validation.md",
@@ -7126,20 +7145,29 @@
       "send_message_thinking": "OMIT",
       "send_message_model": "OMIT",
       "scope": "Original V02/R03 four remaining crash cuts F1 BEFORE_INTENT_COMMIT/F2 AFTER_DISPATCH_STARTED/F3 AFTER_READBACK_CAPTURE/F4 AFTER_RECEIPT_COMMIT; fixed one-question frozen product; once each.",
-      "result": "Pending send to original executor after local review evidence archive."
+      "result": "Original executor R11 turn active; four original crash cuts only, model/thinking omitted.",
+      "sent_at": "2026-10-18T07:05:51.273861+08:00",
+      "workflow_commit": "bc0074bc8b852ef14012ee338bf3153ccb1f932b",
+      "returned_thread_id": "01a145aa-2fea-7942-97f9-ad260acf4e30",
+      "started_observed_at": "2026-10-18T07:06:08.178981+08:00",
+      "last_observed_at": "2026-10-18T07:06:08.178981+08:00",
+      "cursor": "506fd3cf-091f-418b-b002-636f503b5e4b:59",
+      "turn_id": "01a14c1d-4b74-7a32-8592-8ab9415af56f"
     }
   ],
   "last_action": {
-    "at": "2026-10-18T07:05:01.711909+08:00",
+    "at": "2026-10-18T07:06:08.178981+08:00",
     "task_id": "A03",
-    "type": "R10_LIMITED_ACCEPTED_R11_INTENT_RECORDED",
+    "type": "R10_LIMITED_ACCEPTED_R11_STARTED",
     "target_commit": "1c26b4a8eb378af33e57668472d2071e9ea6afff",
     "dispatch_key": "A03:execution:P2-R11-crash-cuts:1c26b4a8eb378af33e57668472d2071e9ea6afff",
     "execution_thread_id": "01a145aa-2fea-7942-97f9-ad260acf4e30",
-    "execution_cursor": "506fd3cf-091f-418b-b002-636f503b5e4b:58",
+    "execution_cursor": "506fd3cf-091f-418b-b002-636f503b5e4b:59",
     "review_thread_id": "01a145aa-8d59-7c70-8d81-731712103a9a",
     "review_cursor": "abdea222-4697-4046-86b1-a5dc48889fac:53",
-    "next_dependency": "R11 four remaining original crash cuts -> independent review. Remaining original P2 scope and native product integration still required; B version mapping unconfirmed before real cross-side I01."
+    "next_dependency": "R11 four remaining original crash cuts -> independent review. Remaining original P2 scope and native product integration still required; B version mapping unconfirmed before real cross-side I01.",
+    "workflow_commit": "bc0074bc8b852ef14012ee338bf3153ccb1f932b",
+    "execution_turn_id": "01a14c1d-4b74-7a32-8592-8ab9415af56f"
   },
   "limitations": [
     "Current route uses mock B artifacts until independently agreed interface/artifact versions exist.",
@@ -7147,25 +7175,25 @@
     "Platform test is single-book serial, no book submission, no unbudgeted paid models."
   ],
   "last_check": {
-    "at": "2026-10-18T07:05:01.711909+08:00",
+    "at": "2026-10-18T07:06:08.178981+08:00",
     "trigger": "2026-10-17T23:00:16.228Z",
     "task_id": "A03",
     "checked_task_ids": [
       "A03"
     ],
-    "root_head": "dd24de5558ecb41c3b1e203e7e4a3f1e69a6b79d",
+    "root_head": "bc0074bc8b852ef14012ee338bf3153ccb1f932b",
     "execution_target_observed": "1c26b4a8eb378af33e57668472d2071e9ea6afff",
     "execution_worktree_clean": true,
     "execution_thread_id": "01a145aa-2fea-7942-97f9-ad260acf4e30",
-    "execution_cursor": "506fd3cf-091f-418b-b002-636f503b5e4b:58",
+    "execution_cursor": "506fd3cf-091f-418b-b002-636f503b5e4b:59",
     "review_thread_id": "01a145aa-8d59-7c70-8d81-731712103a9a",
     "review_cursor": "abdea222-4697-4046-86b1-a5dc48889fac:53",
     "review_turn_id": "01a14c00-87a3-7170-9c5b-ce28b9126b44",
     "review_status": "completed",
-    "phase": "P2_R11_CRASH_CUT_VALIDATION_PENDING",
+    "phase": "P2_R11_CRASH_CUT_VALIDATION_RUNNING",
     "acceptance_scope": "P1 and limited R2-R6 accepted; R7 readonly product locally INTEGRATED; R8-R2 projection/N1, R8-R3 POST_HOLD/local/N1-N5, R8-R4 N6/single runtime-init control limited ACCEPTED. Whole native A03 not accepted or integrated. R9-R1 owner lifecycle and D1/standalone/borrow/D2 fixed single-question demos limited ACCEPTED at bfd7fe896a7eee663ea8e0b6cf967548d8dd8f39. R10 two live-process owner/fencing cases limited ACCEPTED at 1c26b4a8eb378af33e57668472d2071e9ea6afff.",
     "next_dependencies": "R11 four remaining original crash cuts -> independent review. Remaining original P2 scope and native product integration still required; B version mapping unconfirmed before real cross-side I01.",
-    "dispatch_result": "R11_EXECUTION_INTENT_RECORDED",
+    "dispatch_result": "R11_EXECUTION_STARTED",
     "coordinator_audit": "docs/evidence/coordinator/heartbeat-20261018-0700/review-audit.json",
     "coordinator_audit_sha256": "1df1e3460a3ba7b9b6e5b65492a510c1029ef44d140c504cdb7685709936e5be",
     "read_documents_sha256": {
@@ -7179,7 +7207,10 @@
     "full_suite_rerun": false,
     "settings_changed": false,
     "notification": "NOTIFY",
-    "reason": "R10 two owner/fencing cases accepted after independent review and coordinator corroboration; original four crash-cut scope prepared."
+    "reason": "R10 two owner/fencing cases accepted after independent review and coordinator corroboration; original four crash-cut scope prepared.",
+    "workflow_commit": "bc0074bc8b852ef14012ee338bf3153ccb1f932b",
+    "execution_status": "active",
+    "execution_turn_id": "01a14c1d-4b74-7a32-8592-8ab9415af56f"
   },
   "prepared_next_batch": {
     "status": "DISPATCHED",
@@ -7540,25 +7571,25 @@
     }
   ],
   "last_heartbeat": {
-    "at": "2026-10-18T07:05:01.711909+08:00",
+    "at": "2026-10-18T07:06:08.178981+08:00",
     "trigger": "2026-10-17T23:00:16.228Z",
     "task_id": "A03",
     "checked_task_ids": [
       "A03"
     ],
-    "root_head": "dd24de5558ecb41c3b1e203e7e4a3f1e69a6b79d",
+    "root_head": "bc0074bc8b852ef14012ee338bf3153ccb1f932b",
     "execution_target_observed": "1c26b4a8eb378af33e57668472d2071e9ea6afff",
     "execution_worktree_clean": true,
     "execution_thread_id": "01a145aa-2fea-7942-97f9-ad260acf4e30",
-    "execution_cursor": "506fd3cf-091f-418b-b002-636f503b5e4b:58",
+    "execution_cursor": "506fd3cf-091f-418b-b002-636f503b5e4b:59",
     "review_thread_id": "01a145aa-8d59-7c70-8d81-731712103a9a",
     "review_cursor": "abdea222-4697-4046-86b1-a5dc48889fac:53",
     "review_turn_id": "01a14c00-87a3-7170-9c5b-ce28b9126b44",
     "review_status": "completed",
-    "phase": "P2_R11_CRASH_CUT_VALIDATION_PENDING",
+    "phase": "P2_R11_CRASH_CUT_VALIDATION_RUNNING",
     "acceptance_scope": "P1 and limited R2-R6 accepted; R7 readonly product locally INTEGRATED; R8-R2 projection/N1, R8-R3 POST_HOLD/local/N1-N5, R8-R4 N6/single runtime-init control limited ACCEPTED. Whole native A03 not accepted or integrated. R9-R1 owner lifecycle and D1/standalone/borrow/D2 fixed single-question demos limited ACCEPTED at bfd7fe896a7eee663ea8e0b6cf967548d8dd8f39. R10 two live-process owner/fencing cases limited ACCEPTED at 1c26b4a8eb378af33e57668472d2071e9ea6afff.",
     "next_dependencies": "R11 four remaining original crash cuts -> independent review. Remaining original P2 scope and native product integration still required; B version mapping unconfirmed before real cross-side I01.",
-    "dispatch_result": "R11_EXECUTION_INTENT_RECORDED",
+    "dispatch_result": "R11_EXECUTION_STARTED",
     "coordinator_audit": "docs/evidence/coordinator/heartbeat-20261018-0700/review-audit.json",
     "coordinator_audit_sha256": "1df1e3460a3ba7b9b6e5b65492a510c1029ef44d140c504cdb7685709936e5be",
     "read_documents_sha256": {
@@ -7572,6 +7603,9 @@
     "full_suite_rerun": false,
     "settings_changed": false,
     "notification": "NOTIFY",
-    "reason": "R10 two owner/fencing cases accepted after independent review and coordinator corroboration; original four crash-cut scope prepared."
+    "reason": "R10 two owner/fencing cases accepted after independent review and coordinator corroboration; original four crash-cut scope prepared.",
+    "workflow_commit": "bc0074bc8b852ef14012ee338bf3153ccb1f932b",
+    "execution_status": "active",
+    "execution_turn_id": "01a14c1d-4b74-7a32-8592-8ab9415af56f"
   }
 }
