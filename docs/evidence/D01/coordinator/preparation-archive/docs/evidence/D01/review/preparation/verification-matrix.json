@@ -1,0 +1,39 @@
+{
+  "schema": "D01-review-preparation-matrix-v1",
+  "date": "2026-10-17",
+  "timezone": "Asia/Shanghai",
+  "status": "PREPARED_WAITING_EXECUTION",
+  "functional_result": "NOT_RUN",
+  "workflow_commit": "f15f7bc03fac8994ade1642fa7547cbd823c6d43",
+  "product_base_commit": "c6bebdf43eb93f7a6ae21e96ec07ed155686777d",
+  "frozen_delivery_commit": null,
+  "execution_report_sha256": null,
+  "execution_manifest_sha256": null,
+  "execution_session_release_evidence": null,
+  "formal_dispatch_received": false,
+  "input_index_sha256": "0ec3377b293c6ded8a7d339877e3842df5bd132e7a9a67d2dacde33f07b733e7",
+  "results": [
+    {"id":"G01","clause":"Frozen target and execution-session release gate","independent_verification":"Bind coordinator-provided commit/tree, report, manifest and release evidence before any functional work","required_evidence":["fixed target","raw handoff","report SHA256","manifest SHA256","session release"],"result":"NOT_RUN","evidence":[]},
+    {"id":"S01","clause":"Only product change is default Pillow==11.3.0 dependency","independent_verification":"Exact base-to-frozen diff; preserve Python requirement, Pydantic pin, distribution identity and other product bytes; separate allowed auxiliary files and inherited workflow documents","required_evidence":["complete diff","per-file OID and SHA256","pyproject before/after","scope audit"],"result":"NOT_RUN","evidence":[]},
+    {"id":"S02","clause":"Independent exact-blob source and preservation","independent_verification":"New fixed-blob source export, OID/length/SHA256 readback, preserved source/config/samples/historical evidence, explicit byte representations","required_evidence":["snapshot inventory","preservation audit","before/after hashes"],"result":"NOT_RUN","evidence":[]},
+    {"id":"E01","clause":"New exclusive CPython 3.9 venv","independent_verification":"Prove nonexisting target path, real interpreter, pyvenv.cfg and isolated site paths; no system-site-packages or host PYTHONPATH","required_evidence":["creation receipt","interpreter identity","pyvenv.cfg","prefix/site probe"],"result":"NOT_RUN","evidence":[]},
+    {"id":"E02","clause":"Noneditable build/install with environment-local python -I -m pip","independent_verification":"Build fixed source wheel, hash actual artifact, install that wheel and preserve install report; do not substitute editable or author environment","required_evidence":["source commit/tree","build receipt","wheel SHA256","install receipt/report"],"result":"NOT_RUN","evidence":[]},
+    {"id":"E03","clause":"Installed distribution bound to exact wheel/source","independent_verification":"Link install report archive hash/source, wheel metadata/content, installed METADATA/RECORD and direct_url when present; compare imported code bytes with wheel","required_evidence":["wheel content index","install provenance","distribution metadata","installed-code hashes"],"result":"NOT_RUN","evidence":[]},
+    {"id":"E04","clause":"Public dependency sources, versions and artifact digests","independent_verification":"Record credential-free sources and exact hashes for downloaded/cached runtime and required build artifacts; preserve existing global settings","required_evidence":["dependency artifact index","build/install raw receipts"],"result":"NOT_RUN","evidence":[]},
+    {"id":"E05","clause":"pip check and Requires-Dist","independent_verification":"Run python -I -m pip check in own environment; inspect installed distribution for exact Pillow pin and installed versions","required_evidence":["pip check argv/cwd/exit/stdout/stderr","METADATA","installed-version inventory"],"result":"NOT_RUN","evidence":[]},
+    {"id":"E06","clause":"Outside-repository -I imports resolve to own installed packages","independent_verification":"Import annotation.contracts, annotation.source.static, annotation.geometry and PIL outside repository/source/bundle directories; record actual __file__, sys.path and artifact binding","required_evidence":["isolated import probe","module path/hash records","distribution ownership"],"result":"NOT_RUN","evidence":[]},
+    {"id":"C01","clause":"Frozen consumer and two R3 packages survive relocation byte-for-byte","independent_verification":"Bind all consumer/package files to formal Git bytes and preparation base index; relocate to exclusive space-containing directory; hash before/after/run","required_evidence":["fixed input inventory","relocated paths","copy/run hash comparison"],"result":"NOT_RUN","evidence":[]},
+    {"id":"C02","clause":"Installed-code consumption, resource validation and full image decoding","independent_verification":"Run frozen consumer under -I with outside cwd; prove public/static load and full decode from installed code; preserve wrapper argv if observation uses a wrapper without source injection","required_evidence":["two raw consumer receipts","actual imports","8 image results","consumer outputs"],"result":"NOT_RUN","evidence":[]},
+    {"id":"C03","clause":"Finite separate-book scope is preserved","independent_verification":"Old book 6 assets/250 metadata/14 reference records; new book 2/214/1; REFERENCE_ONLY, coverage_eligible=false and denominator UNKNOWN remain explicit","required_evidence":["per-book assertions","limitations and source metadata"],"result":"NOT_RUN","evidence":[]},
+    {"id":"N01","clause":"Missing/corrupt resources rejected on controlled copies","independent_verification":"One missing-resource and one digest-damage copy, exact mutations, localized expected rejection; retain original nonzero consumer exits","required_evidence":["mutation inventory","before/after hashes","error code/location","raw failed receipts"],"result":"NOT_RUN","evidence":[]},
+    {"id":"N02","clause":"Decode rejection distinguished from checksum rejection","independent_verification":"Controlled truncated image with correct new digest and valid prior resource layer, or fixed existing A01 regression for that case, using installed implementation; prove IMAGE_DECODE at actual layer","required_evidence":["mutation/resealing record","resource-layer receipt","decode rejection and installed import evidence"],"result":"NOT_RUN","evidence":[]},
+    {"id":"R01","clause":"Minimum relevant contracts/source regression","independent_verification":"Use fixed tests/fixtures; collect actual imports/results/skips; classify source-injecting subprocesses separately and supplement with E06/C02","required_evidence":["fixed tests/fixtures","raw test receipts","actual import records","layer separation"],"result":"NOT_RUN","evidence":[]},
+    {"id":"F01","clause":"Complete evidence, independent conclusion and all own processes returned","independent_verification":"Hash report/scripts/inputs/outputs/ignored logs excluding manifest itself; verify links, scope and immutable inputs; prove synchronous processes returned and release own sessions","required_evidence":["SHA256 manifest","closeout audit","process receipts","fixed-target final report"],"result":"NOT_RUN","evidence":[]}
+  ],
+  "book_boundaries": [
+    {"book_id":"46006966","expected_assets":6,"metadata_pages":250,"reference_records":14,"scope_manifest_status":"REFERENCE_ONLY","coverage_eligible":false,"independent_denominator_status":"UNKNOWN","result":"NOT_RUN"},
+    {"book_id":"46007447","expected_assets":2,"metadata_pages":214,"reference_records":1,"scope_manifest_status":"REFERENCE_ONLY","coverage_eligible":false,"independent_denominator_status":"UNKNOWN","result":"NOT_RUN"}
+  ],
+  "not_run": ["venv creation","pip/build/install/check","runtime import","consumer","image decode","negative resource probe","test suite","platform/browser/model"],
+  "next_action": "End this preparation turn; await coordinator formal frozen-target dispatch without polling execution."
+}
