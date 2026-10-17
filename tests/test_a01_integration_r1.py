@@ -1,7 +1,5 @@
 """Conventional regression fixtures keep the frozen byte gate strict and local."""
-import copy
 import importlib.util
-import shutil
 import tempfile
 import unittest
 from pathlib import Path
@@ -9,6 +7,8 @@ from pathlib import Path
 ROOT=Path(__file__).resolve().parents[1]
 spec=importlib.util.spec_from_file_location("integration_r1_preservation",ROOT/"examples/a01/R3/preservation.py")
 preservation=importlib.util.module_from_spec(spec); spec.loader.exec_module(preservation)
+spec=importlib.util.spec_from_file_location("integration_r1_fixed_inputs",ROOT/"examples/a01/integration-R1/fixed_inputs.py")
+fixed_inputs=importlib.util.module_from_spec(spec); spec.loader.exec_module(fixed_inputs)
 FIXTURE=ROOT/"tests/fixtures/a01/integration-R1"
 
 
@@ -17,8 +17,7 @@ class IntegrationBoundaryTests(unittest.TestCase):
         self.temp=tempfile.TemporaryDirectory(prefix="a01-i1-fixture-")
         self.addCleanup(self.temp.cleanup)
         self.folder=Path(self.temp.name)/"fixed"
-        shutil.copytree(FIXTURE/"frozen",self.folder)
-        self.reference=preservation.read_manifest(FIXTURE/"reference.json")
+        self.reference=fixed_inputs.materialize(FIXTURE,self.folder)
 
     def test_fixed_original_accepts_only_its_explicit_text_representations(self):
         original=self.folder/"tests/test_contracts.py"

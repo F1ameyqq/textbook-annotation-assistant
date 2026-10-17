@@ -64,7 +64,7 @@ def main():
     # Git original afterwards; no expected manifest is rewritten or regenerated.
     for label,relative,damage in (
         ("damaged-source","src/annotation/source/static/importer.py",lambda b:b'raise RuntimeError("integration negative control")\n'+b),
-        ("damaged-fixed-input","tests/fixtures/a01/integration-R1/frozen/examples/a01/build.py",lambda b:b+b"\n# damaged content\n"),
+        ("damaged-fixed-input","tests/fixtures/a01/integration-R1/reference.json",lambda b:b.replace(b'9ea7a71204c0417b16b232511010a781ad5a9c001287cc89c059b87a2b6ec795',b'0ea7a71204c0417b16b232511010a781ad5a9c001287cc89c059b87a2b6ec795')),
     ):
         path=raw/relative; original=path.read_bytes(); modified=damage(original)
         path.write_bytes(modified)

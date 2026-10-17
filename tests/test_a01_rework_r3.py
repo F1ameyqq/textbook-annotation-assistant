@@ -22,6 +22,7 @@ def module(name,path):
 cases = module("r2_cases_for_tests_r3",ROOT/"examples/a01/R2/cases.py")
 preservation = module("preservation_for_tests_r3",ROOT/"examples/a01/R3/preservation.py")
 fixtures = module("fixtures_for_tests_r3",ROOT/"examples/a01/R3/fixtures.py")
+fixed_inputs = module("integration_fixed_inputs",ROOT/"examples/a01/integration-R1/fixed_inputs.py")
 
 
 class SourceR3Tests(unittest.TestCase):
@@ -119,13 +120,15 @@ class PreservationR3Tests(unittest.TestCase):
         # fixed Git originals in their own fixture; R3 verify remains the
         # explicit gate for its bound, immutable release snapshot.
         fixture=ROOT/"tests/fixtures/a01/integration-R1"
-        selected=preservation.read_manifest(fixture/"reference.json")
-        self.assertEqual(selected["source_manifest_sha256"],hashlib.sha256(manifest.read_bytes()).hexdigest())
-        original={e["path"]:e for e in ref["files"]}
-        self.assertEqual(len(selected["files"]),4)
-        for entry in selected["files"]:
-            self.assertEqual(entry,original[entry["path"]])
-        self.assertTrue(preservation.audit(fixture/"frozen",selected)["passed"])
+        with tempfile.TemporaryDirectory(prefix="a01-fixed-original-") as folder:
+            target=Path(folder)/"frozen"
+            selected=fixed_inputs.materialize(fixture,target)
+            self.assertEqual(selected["source_manifest_sha256"],hashlib.sha256(manifest.read_bytes()).hexdigest())
+            original={e["path"]:e for e in ref["files"]}
+            self.assertEqual(len(selected["files"]),4)
+            for entry in selected["files"]:
+                self.assertEqual(entry,original[entry["path"]])
+            self.assertTrue(preservation.audit(target,selected)["passed"])
 
 
 if __name__ == "__main__":
