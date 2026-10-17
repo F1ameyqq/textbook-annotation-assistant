@@ -1,0 +1,21 @@
+{
+  "product_defects": 0,
+  "incidents": [
+    {
+      "command": "python -B docs/evidence/A02/review-portability-R2/run_checks.py",
+      "outer_exit_code": 1,
+      "type": "UnicodeDecodeError",
+      "detail": "First baseline child actually failed as expected, but WinError Chinese text used platform stdout encoding; collector decoded UTF-8. Raw output retained in runtime/base-real-noGit; collector now requests UTF-8 only in own child environment. No source changed and no tests had run."
+    },
+    {
+      "command": "python -B docs/evidence/A02/review-portability-R2/run_checks.py --resume",
+      "outer_exit_code": 1,
+      "type": "KeyError:event",
+      "detail": "19 actual child receipts retained. noGit 62 tests had already passed; unrelated test stdout JSON lacks event key. Collector now uses .get; validates retained result, runs only not-yet-run withGit discovery. No successful functional case repeated."
+    }
+  ],
+  "final_command": "python -B docs/evidence/A02/review-portability-R2/run_checks.py --resume --finish",
+  "final_outer_exit_code": 0,
+  "final_child_receipts": "commands.json",
+  "author_failures_retained_in_exact_objects": "retained-author-failures.json"
+}

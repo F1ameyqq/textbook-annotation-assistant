@@ -1,0 +1,22 @@
+test_export_subdirectory_cannot_borrow_enclosing_git_head (test_a02_r1.A02R1Tests) ... ERROR
+
+======================================================================
+ERROR: test_export_subdirectory_cannot_borrow_enclosing_git_head (test_a02_r1.A02R1Tests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "D:\1800\.local\stages\A02-review-portability-R2\a1e5be00909172429d792b6c41bdaf384258694e\raw base no Git\tests\test_a02_r1.py", line 71, in test_export_subdirectory_cannot_borrow_enclosing_git_head
+    result = identity.git_identity(ROOT / "examples/a02/R1")
+  File "D:\1800\.local\stages\A02-review-portability-R2\a1e5be00909172429d792b6c41bdaf384258694e\raw base no Git\examples\a02\R1\identity.py", line 9, in git_identity
+    result = subprocess.run(["git", "rev-parse", "--show-toplevel"], cwd=root, capture_output=True, text=True)
+  File "C:\Users\ASUS\AppData\Local\Programs\Python\Python39\lib\subprocess.py", line 505, in run
+    with Popen(*popenargs, **kwargs) as process:
+  File "C:\Users\ASUS\AppData\Local\Programs\Python\Python39\lib\subprocess.py", line 951, in __init__
+    self._execute_child(args, executable, preexec_fn, close_fds,
+  File "C:\Users\ASUS\AppData\Local\Programs\Python\Python39\lib\subprocess.py", line 1420, in _execute_child
+    hp, ht, pid, tid = _winapi.CreateProcess(executable, args,
+FileNotFoundError: [WinError 2] 系统找不到指定的文件。
+
+----------------------------------------------------------------------
+Ran 1 test in 0.005s
+
+FAILED (errors=1)

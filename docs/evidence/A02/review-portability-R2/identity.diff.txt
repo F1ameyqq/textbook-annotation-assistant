@@ -1,0 +1,25 @@
+diff --git a/examples/a02/R1/identity.py b/examples/a02/R1/identity.py
+index 686ee65..db0ca76 100644
+--- a/examples/a02/R1/identity.py
++++ b/examples/a02/R1/identity.py
+@@ -6,10 +6,18 @@ import subprocess
+ 
+ def git_identity(source_root):
+     root = Path(source_root).resolve()
+-    result = subprocess.run(["git", "rev-parse", "--show-toplevel"], cwd=root, capture_output=True, text=True)
++    try:
++        result = subprocess.run(["git", "rev-parse", "--show-toplevel"], cwd=root, capture_output=True, text=True)
++    except OSError:
++        return {"checkout_commit": None, "status": "unknown; Git could not be started"}
+     if result.returncode or Path(result.stdout.strip()).resolve() != root:
+         return {"checkout_commit": None, "status": "unknown; source is not the Git top-level"}
+-    head = subprocess.check_output(["git", "rev-parse", "HEAD"], cwd=root, text=True).strip()
++    try:
++        head = subprocess.check_output(["git", "rev-parse", "HEAD"], cwd=root, text=True).strip()
++    except (OSError, subprocess.CalledProcessError):
++        return {"checkout_commit": None, "status": "unknown; Git HEAD lookup unavailable"}
++    if not head:
++        return {"checkout_commit": None, "status": "unknown; Git HEAD lookup was empty"}
+     return {"checkout_commit": head, "status": "source Git top-level verified"}
+ 
+ 

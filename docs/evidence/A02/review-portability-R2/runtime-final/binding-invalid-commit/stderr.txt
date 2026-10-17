@@ -1,0 +1,13 @@
+fatal: not a tree object
+Traceback (most recent call last):
+  File "D:\1800\docs\evidence\A02\review-portability-R2\probe.py", line 99, in <module>
+    try:sys.exit(execute())
+  File "D:\1800\docs\evidence\A02\review-portability-R2\probe.py", line 55, in execute
+    emit({'event':'result','result':identity.source_binding(root,args.commit,args.identity_repo)})
+  File "D:\1800\.local\stages\A02-review-portability-R2\a1e5be00909172429d792b6c41bdaf384258694e\raw candidate no Git\examples\a02\R1\identity.py", line 32, in source_binding
+    files = subprocess.check_output(["git", "ls-tree", "-r", "--name-only", declared_commit, "src/annotation"], cwd=repo, text=True).splitlines()
+  File "C:\Users\ASUS\AppData\Local\Programs\Python\Python39\lib\subprocess.py", line 424, in check_output
+    return run(*popenargs, stdout=PIPE, timeout=timeout, check=True,
+  File "C:\Users\ASUS\AppData\Local\Programs\Python\Python39\lib\subprocess.py", line 528, in run
+    raise CalledProcessError(retcode, process.args,
+subprocess.CalledProcessError: Command '['git', 'ls-tree', '-r', '--name-only', '0000000000000000000000000000000000000000', 'src/annotation']' returned non-zero exit status 128.
