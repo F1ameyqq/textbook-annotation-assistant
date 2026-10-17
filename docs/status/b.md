@@ -6,6 +6,13 @@
 - 公共 `contracts-v1.md` 仍为设计草案。原始证据0.2及恢复视图/图谱/检查0.3保留；数学/图像/组合标题为B trial0.1，附区域的续接证明为trial0.2、续接图谱0.4、呈现区域trial0.1；行内附件图谱/质检为trial0.5，单片段内容修订图谱/质检为trial0.6，新区域计划0.2生成图谱/质检trial0.7。均未宣称公共合同兼容或冻结。
 - 已读取定稿需求，继续 B 离线识别、配答、质量检查；平台规则不再重复请求确认。没有网站标注修改或提交。
 
+## 2026-10-17 第一章来源与门禁准备
+
+- 将 `46007447` 目录中的第一章“勾股定理”作为 G2 候选范围，目录 ID `dir-1792063578574-ug3232apl`；五张完整样本原图、相邻 `resource-173` 答页及目录快照已核对，见[章节记录](../b-chapter-46007447.md)。全书元数据 214 页、现有目录题节点及局部 34/66 候选均不提供整章分母。
+- 新增 B 内部 `tools/prepare_chapter_scope_b.py`，用冻结页/资产清单核对源图 SHA、尺寸、身份和缺口，输出多资产来源描述符；真实六资产观察清单运行 `PARTIAL/HOLD`，原因是整章分母未冻结，见 `evaluation/book-46007447-chapter-observed.json`。新增章节交付门禁，核对声明的页/题/答案/材料及当前检查；机器核对不代替人工内容验收。另由真实 G07/Check07 只读投影局部 34 题/66 答、127 项问题，页身份及章节分母仍 UNKNOWN，见[适配说明](../b-chapter-candidate-adapter.md)。三者均不修改公共合同或网站标注。
+- 当前 G2 为 `HOLD`：完整题页、答案页、可靠页码/资源映射、独立清点和逐项人工核对未到齐。当前 G07/Check07 候选及显式未完整清单已实际运行章节门禁，机器/G2 均为 `HOLD`，见 `evaluation/book-46007447-chapter-{candidate,manifest-incomplete,delivery-negative}.json`。A 侧请求已在[交接清单](../a-side-request.md)前置；收到材料的第一步是来源对账，不从局部样本推断整章已齐。A 接收仍为 `PENDING_A`。
+- 本轮 `python -m unittest tests.test_prepare_chapter_scope_b tests.test_chapter_delivery_b tests.test_adapt_chapter_candidate_b tests.test_source_coverage_report_b -v`：26 项通过（含本机真实 G07/Check07 负例；干净环境该本机专有测试会跳过）。`git diff --check`、四份新 JSON 的解析和新增/更新文档链接检查通过；本轮未运行完整测试套件、识别模型、平台标注操作或 A 消费者。推送 SHA 与 PR 见本次提交。
+
 ## 2026-10-17 三路并行准备：来源、消费者、独立核对
 
 - 在前述全项目框架下，B 新增[来源覆盖报告工具](../../tools/report_source_coverage_b.py)：交叉核对固定 source descriptor 与 continuation evaluation 的书/范围/五基础资产身份及 SHA，报告五张已观察整页和第六资产 `resource-173` 的前缀裁片；202 行来源账本为 154 已归属、29 排除、19 未归属。整章/整书应有页数和公共身份继续 `UNKNOWN`；证据冲突时撤销覆盖与账本结论，不外推完整性。
