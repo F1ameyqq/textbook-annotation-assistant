@@ -75,6 +75,26 @@ class ChapterCandidateAdapterTests(unittest.TestCase):
             with self.assertRaisesRegex(ValueError, "graph_ref"):
                 adapt(graph_path, check_path)
 
+    def test_geometry_version_stays_open_and_mixed_or_unknown_versions_reject(self):
+        with tempfile.TemporaryDirectory() as temp:
+            graph = self.synthetic_graph()
+            graph["schema_version"] = "b-graph-trial/0.8"
+            paths = self.write_pair(Path(temp), graph)
+            with self.assertRaisesRegex(ValueError, "schema"):
+                adapt(*paths)
+            check = json.loads(paths[1].read_text(encoding="utf-8"))
+            check["schema_version"] = "b-check-trial/0.8"
+            paths = self.write_pair(Path(temp), graph, check)
+            candidate = adapt(*paths)
+            self.assertEqual(candidate["candidate_state"], "PARTIAL")
+            self.assertEqual(candidate["checks"]["status"], "HOLD")
+            self.assertEqual(candidate["human_review"]["status"], "INCOMPLETE")
+            self.assertEqual(candidate["source_basis"]["graph_schema"], "b-graph-trial/0.8")
+            graph["schema_version"] = "b-graph-trial/0.9"
+            paths = self.write_pair(Path(temp), graph, check)
+            with self.assertRaisesRegex(ValueError, "unsupported graph schema"):
+                adapt(*paths)
+
     def test_acceptance_or_verified_flags_cannot_be_promoted(self):
         with tempfile.TemporaryDirectory() as temp:
             graph_path = Path(temp) / "graph.json"

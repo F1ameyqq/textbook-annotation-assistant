@@ -14,20 +14,25 @@ import hashlib
 from pathlib import Path
 import re
 
-from .baseline import code_digest, digest, valid_bbox
+from .baseline import code_digest, digest, file_digest, load_source, valid_bbox
 from .offline import scope_key, scalar_issues
 from .policy import classify
 from .question_quality import audit_questions
 
 PLAN_SCHEMA = "b-content-revision-plan-trial/0.1"
 REGION_PLAN_SCHEMA = "b-content-revision-plan-trial/0.2"
+GEOMETRY_PLAN_SCHEMA = "b-content-revision-plan-trial/0.3"
 APPLICATION_SCHEMA = "b-content-revision-application-trial/0.1"
 REGION_APPLICATION_SCHEMA = "b-content-revision-application-trial/0.2"
+GEOMETRY_APPLICATION_SCHEMA = "b-content-revision-application-trial/0.3"
 GRAPH_SCHEMA = "b-graph-trial/0.6"
 REGION_GRAPH_SCHEMA = "b-graph-trial/0.7"
+GEOMETRY_GRAPH_SCHEMA = "b-graph-trial/0.8"
 CHECK_SCHEMA = "b-check-trial/0.6"
 REGION_CHECK_SCHEMA = "b-check-trial/0.7"
+GEOMETRY_CHECK_SCHEMA = "b-check-trial/0.8"
 IDENTITY_POLICY = "CURRENT_REFS_WITH_EXECUTION_TIME_IN_JOURNAL/0.1"
+GEOMETRY_DARK_THRESHOLD = 170
 _HASH = re.compile(r"[0-9a-f]{64}\Z")
 
 
@@ -203,6 +208,58 @@ def _intersects(left, right):
     return max(left[0], right[0]) < min(left[2], right[2]) and max(left[1], right[1]) < min(left[3], right[3])
 
 
+def _geometry_syntax(operation):
+    revisions = operation.get("source_geometry_revisions")
+    if not isinstance(revisions, list) or not revisions:
+        raise ValueError("source geometry revisions must be a nonempty explicit list")
+    seen = set()
+    for value in revisions:
+        keys = {"revision_id", "fragment_id", "source_sha256", "original_bbox", "revised_bbox",
+                "trimmed_bbox", "trimmed_crop_rgb_sha256", "dark_threshold", "trimmed_dark_pixels",
+                "affected_fragment_overlaps", "affected_ocr_overlaps", "reason", "verification_status"}
+        if (not isinstance(value, dict) or set(value) != keys or not _text(value.get("revision_id"))
+                or value["revision_id"] in seen or not _text(value.get("fragment_id"))
+                or value.get("source_sha256") != operation["source_region"]["source_sha256"]
+                or not isinstance(value.get("trimmed_crop_rgb_sha256"), str)
+                or not _HASH.fullmatch(value["trimmed_crop_rgb_sha256"])
+                or type(value.get("dark_threshold")) is not int or value["dark_threshold"] != GEOMETRY_DARK_THRESHOLD
+                or type(value.get("trimmed_dark_pixels")) is not int or value["trimmed_dark_pixels"] != 0
+                or value.get("verification_status") != "UNVERIFIED" or not _text(value.get("reason"))):
+            raise ValueError("source geometry revision identity, fixed pixel policy or status is invalid")
+        seen.add(value["revision_id"])
+        original, revised, trimmed = value["original_bbox"], value["revised_bbox"], value["trimmed_bbox"]
+        if not all(_integer_box(box) for box in (original, revised, trimmed)):
+            raise ValueError("geometry revision may only remove one exact edge rectangle")
+        edge_trims = [
+            original[0] == revised[0] and original[2:] == revised[2:] and original[1] < revised[1] < original[3]
+            and trimmed == [original[0], original[1], original[2], revised[1]],
+            original[:3] == revised[:3] and original[1] == revised[1] and original[1] < revised[3] < original[3]
+            and trimmed == [original[0], revised[3], original[2], original[3]],
+            original[1:] == revised[1:] and original[0] < revised[0] < original[2]
+            and trimmed == [original[0], original[1], revised[0], original[3]],
+            original[:2] == revised[:2] and original[3] == revised[3] and original[0] < revised[2] < original[2]
+            and trimmed == [revised[2], original[1], original[2], original[3]],
+        ]
+        if sum(edge_trims) != 1 or _intersects(trimmed, revised):
+            raise ValueError("geometry revision may only remove one exact edge rectangle")
+        overlaps = value.get("affected_fragment_overlaps")
+        overlap_keys = {"owner_kind", "owner_id", "fragment_id", "original_bbox"}
+        ocr = value.get("affected_ocr_overlaps"); ocr_keys = {"asset_id", "line_id", "original_bbox", "coverage_status"}
+        if (not isinstance(overlaps, list)
+                or any(not isinstance(item, dict) or set(item) != overlap_keys
+                       or item.get("owner_kind") not in {"answer", "question"}
+                       or not _text(item.get("owner_id")) or not _text(item.get("fragment_id"))
+                       or not _integer_box(item.get("original_bbox")) for item in overlaps)
+                or len({(item["owner_kind"], item["owner_id"], item["fragment_id"]) for item in overlaps}) != len(overlaps)
+                or not isinstance(ocr, list) or any(not isinstance(item, dict) or set(item) != ocr_keys
+                    or not _text(item.get("asset_id")) or not _text(item.get("line_id"))
+                    or not _integer_box(item.get("original_bbox")) or item.get("coverage_status") not in {"CONSUMED", "EXCLUDED", "UNASSIGNED"} for item in ocr)
+                or len({(item["asset_id"], item["line_id"]) for item in ocr}) != len(ocr) or not overlaps and not ocr):
+            raise ValueError("geometry revision must enumerate unique affected source overlaps")
+    if len({value["fragment_id"] for value in revisions}) != len(revisions):
+        raise ValueError("a target fragment may have only one source geometry revision")
+
+
 def _region_syntax(operation):
     target, source, blocks = operation["target"], operation["source_region"], operation["blocks"]
     if (not isinstance(target, dict) or set(target) != {"answer_id", "role", "source_fragment_ids"}
@@ -241,6 +298,60 @@ def _region_syntax(operation):
             raise ValueError("block source IDs must retain their original relative order")
     if any(_intersects(left["bbox"], right["bbox"]) for i, left in enumerate(blocks) for right in blocks[i+1:]):
         raise ValueError("draft region blocks overlap")
+    if "source_geometry_revisions" in operation:
+        _geometry_syntax(operation)
+
+
+def _region_boxes(graph, answer, selected, operation):
+    """Return explicit effective boxes without mutating immutable fragments."""
+    revisions = operation.get("source_geometry_revisions", [])
+    by_id = {value[1]["fragment_id"]: value[1] for value in selected}
+    effective = {fid: copy.deepcopy(fragment["bbox"]) for fid, fragment in by_id.items()}
+    wanted = set(by_id)
+    actual_all = []
+    page = selected[0][2]; parents = {value[4] for value in selected}
+    for revision in revisions:
+        fid = revision["fragment_id"]
+        if fid not in by_id or revision["original_bbox"] != by_id[fid]["bbox"]:
+            raise ValueError("geometry revision original box differs from its immutable target fragment")
+        effective[fid] = copy.deepcopy(revision["revised_bbox"])
+        actual = []
+        for collection_name in ("answers", "questions"):
+            for owner in graph["payload"][collection_name]:
+                for fragment in owner.get("fragments", []):
+                    if (fragment.get("asset_id", owner.get("asset_id")) != operation["source_region"]["asset_id"]
+                            or not fragment.get("bbox") or collection_name == "answers"
+                            and owner.get("answer_id") == answer["answer_id"] and fragment.get("fragment_id") in wanted):
+                        continue
+                    if _intersects(revision["original_bbox"], fragment["bbox"]) and not _intersects(revision["revised_bbox"], fragment["bbox"]):
+                        actual.append({"owner_kind": "answer" if collection_name == "answers" else "question",
+                            "owner_id": owner["answer_id"] if collection_name == "answers" else owner["question_id"],
+                            "fragment_id": fragment["fragment_id"], "original_bbox": copy.deepcopy(fragment["bbox"])})
+        if sorted(actual, key=lambda item: (item["owner_kind"], item["owner_id"], item["fragment_id"])) != sorted(
+                revision["affected_fragment_overlaps"], key=lambda item: (item["owner_kind"], item["owner_id"], item["fragment_id"])):
+            raise ValueError("geometry revision affected overlaps are not the complete current conflict set")
+        actual_ocr = []
+        for line in page["ocr_lines"]:
+            if line["line_id"] in parents or not _intersects(revision["original_bbox"], line["bbox"]) or _intersects(revision["revised_bbox"], line["bbox"]):
+                continue
+            rows = [row for row in graph["payload"]["answer_coverage"] if row.get("asset_id") == page["asset_id"] and row.get("line_id") == line["line_id"]]
+            if len(rows) != 1:
+                raise ValueError("geometry revision conflicting OCR line has no exact coverage row")
+            actual_ocr.append({"asset_id": page["asset_id"], "line_id": line["line_id"],
+                "original_bbox": copy.deepcopy(line["bbox"]), "coverage_status": rows[0]["status"]})
+        if sorted(actual_ocr, key=lambda item: (item["asset_id"], item["line_id"])) != sorted(
+                revision["affected_ocr_overlaps"], key=lambda item: (item["asset_id"], item["line_id"])):
+            raise ValueError("geometry revision affected OCR overlaps are not the complete current conflict set")
+        actual_all.extend(actual); actual_all.extend(actual_ocr)
+    if revisions and not actual_all:
+        raise ValueError("geometry revision does not resolve an actual current source conflict")
+    if revisions:
+        boxes = list(effective.values())
+        union = [min(box[0] for box in boxes), min(box[1] for box in boxes),
+                 max(box[2] for box in boxes), max(box[3] for box in boxes)]
+        if operation["source_region"]["bbox"] != union:
+            raise ValueError("geometry-revised source region must be the exact effective target union")
+    return effective
 
 
 def _region(evidence, graph, operation):
@@ -251,10 +362,11 @@ def _region(evidence, graph, operation):
     if "render_regions" not in answer and any(v.get("content_type") == "image" or v.get("represented_by_image_region") is not None
             for v in answer["fragments"]+answer.get("regions", [])):
         raise ValueError("legacy image presentation needs a proven typed migration before region reconstruction")
+    effective = _region_boxes(graph, answer, selected, operation)
     if (any(v[2]["asset_id"] != source["asset_id"] for v in selected)
             or source["source_sha256"] != page["source"]["sha256"]
             or not _same(source["source_size"], [page["source"]["width"], page["source"]["height"]])
-            or any(not _contains(source["bbox"], v[1]["bbox"]) for v in selected)):
+            or any(not _contains(source["bbox"], effective[v[1]["fragment_id"]]) for v in selected)):
         raise ValueError("draft region does not exactly bind its current source page and fragments")
     locations = [v[3].get("location") for v in selected]
     loc = locations[0]
@@ -291,9 +403,8 @@ def _region(evidence, graph, operation):
         if (line["line_id"] not in parents or len(rows) != 1 or rows[0].get("status") != "CONSUMED"
                 or not rows[0].get("allocations") or any(a.get("fragment_id") not in wanted or a.get("answer_id") != answer["answer_id"] for a in rows[0]["allocations"])):
             raise ValueError("draft region swallows an untargeted, unassigned or excluded OCR line")
-    by_id = {v[1]["fragment_id"]: v[1] for v in selected}
     for block in operation["blocks"]:
-        if any(not _contains(block["bbox"], by_id[fid]["bbox"]) for fid in block["source_fragment_ids"]):
+        if any(not _contains(block["bbox"], effective[fid]) for fid in block["source_fragment_ids"]):
             raise ValueError("draft block clips an assigned original fragment")
     spans = [_source_span(v[1], v[3], v[4], [0, len(v[1]["text"])]) for v in selected]
     return answer, spans
@@ -390,7 +501,7 @@ def _syntax(plan, depth=0):
     keys = {"schema_version", "kind", "artifact_id", "revision", "book_id", "scope_id", "payload", "content_hash"}
     if set(plan) != keys:
         raise ValueError("revision plan has unrecognized envelope fields")
-    _checked(plan, {PLAN_SCHEMA, REGION_PLAN_SCHEMA}, "ContentRevisionPlanTrial")
+    _checked(plan, {PLAN_SCHEMA, REGION_PLAN_SCHEMA, GEOMETRY_PLAN_SCHEMA}, "ContentRevisionPlanTrial")
     body = {k: v for k, v in plan.items() if k not in {"artifact_id", "content_hash"}}
     if plan["artifact_id"] != "content-revision-plan-"+digest(body)[:24]:
         raise ValueError("revision plan deterministic identity changed")
@@ -413,11 +524,16 @@ def _syntax(plan, depth=0):
         kind = operation.get("kind")
         expected = {"EDIT_TEXT": {"target", "replacement", "format"}, "SELECT_INLINE": {"target", "candidate_id", "call_id", "unit_id"},
                     "JOIN_RAW_WRAP": {"proposal_id"}, "REBUILD_TEXT_REGION": {"target", "source_region", "blocks"}}
-        if kind not in expected or set(operation) != {"operation_id", "kind", "reason"}|expected[kind]:
+        fields = expected.get(kind)
+        if kind == "REBUILD_TEXT_REGION" and "source_geometry_revisions" in operation:
+            if plan["schema_version"] != GEOMETRY_PLAN_SCHEMA:
+                raise ValueError("source geometry revisions require revision plan 0.3")
+            fields = fields|{"source_geometry_revisions"}
+        if kind not in expected or set(operation) != {"operation_id", "kind", "reason"}|fields:
             raise ValueError("unknown revision operation or fields")
         if kind == "REBUILD_TEXT_REGION":
-            if plan["schema_version"] != REGION_PLAN_SCHEMA:
-                raise ValueError("region reconstruction requires revision plan 0.2")
+            if plan["schema_version"] not in {REGION_PLAN_SCHEMA, GEOMETRY_PLAN_SCHEMA}:
+                raise ValueError("region reconstruction requires revision plan 0.2 or 0.3")
             _region_syntax(operation)
             continue
         if kind != "JOIN_RAW_WRAP":
@@ -441,7 +557,9 @@ def _syntax(plan, depth=0):
         if (previous["revision"]+1 != plan["revision"] or any(previous[k] != plan[k] for k in ("book_id", "scope_id"))
                 or not _same(previous["payload"]["evidence_ref"], p["evidence_ref"])
                 or not _same(previous["payload"]["graph_ref"], p["graph_ref"])
-                or previous["schema_version"] == REGION_PLAN_SCHEMA and plan["schema_version"] != REGION_PLAN_SCHEMA):
+                or previous["schema_version"] in {REGION_PLAN_SCHEMA, GEOMETRY_PLAN_SCHEMA}
+                and plan["schema_version"] not in {REGION_PLAN_SCHEMA, GEOMETRY_PLAN_SCHEMA}
+                or previous["schema_version"] == GEOMETRY_PLAN_SCHEMA and plan["schema_version"] != GEOMETRY_PLAN_SCHEMA):
             raise ValueError("revision lineage must retain its original current E/G05")
 
 
@@ -500,12 +618,55 @@ def validate_revision_plan(plan, evidence, graph, check):
     _operations(plan, evidence, graph)
 
 
+def _validate_geometry_pixels(plan, evidence, source_path):
+    revisions = [(op, revision) for op in plan["payload"]["operations"]
+                 for revision in op.get("source_geometry_revisions", [])]
+    if not revisions:
+        return []
+    if source_path is None:
+        raise ValueError("source geometry revision requires the original source manifest at execution")
+    manifest, assets = load_source(Path(source_path))
+    if manifest["book_id"] != evidence["book_id"]:
+        raise ValueError("source geometry manifest belongs to a different book")
+    pages = {page["asset_id"]: page for page in evidence["payload"]["pages"]}
+    available = {asset["asset_id"]: (asset, path) for asset, path in assets}
+    receipts = []
+    from PIL import Image
+    for operation, revision in revisions:
+        aid = operation["source_region"]["asset_id"]
+        if aid not in available or aid not in pages:
+            raise ValueError("source geometry image is absent from current manifest/evidence")
+        asset, path = available[aid]; source = pages[aid]["source"]
+        if (revision["source_sha256"] != asset["sha256"] or source["sha256"] != asset["sha256"]
+                or operation["source_region"]["source_size"] != [asset["width"], asset["height"]]):
+            raise ValueError("source geometry image identity differs from current evidence")
+        with Image.open(path) as image:
+            crop = image.convert("RGB").crop(tuple(revision["trimmed_bbox"]))
+            raw = crop.tobytes()
+            dark = sum(1 for r, g, b in crop.get_flattened_data()
+                       if 299*r+587*g+114*b < GEOMETRY_DARK_THRESHOLD*1000)
+        crop_sha = hashlib.sha256(raw).hexdigest()
+        if (crop_sha != revision["trimmed_crop_rgb_sha256"] or type(revision["trimmed_dark_pixels"]) is not int
+                or dark != revision["trimmed_dark_pixels"] or type(revision["dark_threshold"]) is not int
+                or revision["dark_threshold"] != GEOMETRY_DARK_THRESHOLD or dark != 0):
+            raise ValueError("source geometry trimmed pixels differ from the fixed zero-dark receipt")
+        if file_digest(path) != asset["sha256"]:
+            raise ValueError("source geometry image changed during execution")
+        receipts.append({"revision_id": revision["revision_id"], "fragment_id": revision["fragment_id"],
+            "source_sha256": asset["sha256"], "trimmed_bbox": copy.deepcopy(revision["trimmed_bbox"]),
+            "trimmed_crop_rgb_sha256": crop_sha, "dark_threshold": GEOMETRY_DARK_THRESHOLD,
+            "trimmed_dark_pixels": dark})
+    return receipts
+
+
 def make_revision_plan(evidence, graph, check, operations, author, *, previous_plan=None):
     if previous_plan is not None: _syntax(previous_plan)
     payload = {"evidence_ref": reference(evidence), "graph_ref": reference(graph), "base_check_ref": reference(check),
                "previous_plan_archive": copy.deepcopy(previous_plan), "author": copy.deepcopy(author), "operations": copy.deepcopy(operations), **_flags()}
+    geometry_requested = isinstance(operations, list) and any(isinstance(o, dict) and o.get("source_geometry_revisions") for o in operations)
     region_requested = isinstance(operations, list) and any(isinstance(o, dict) and o.get("kind") == "REBUILD_TEXT_REGION" for o in operations)
-    version = REGION_PLAN_SCHEMA if region_requested or (previous_plan and previous_plan["schema_version"] == REGION_PLAN_SCHEMA) else PLAN_SCHEMA
+    version = (GEOMETRY_PLAN_SCHEMA if geometry_requested or previous_plan and previous_plan["schema_version"] == GEOMETRY_PLAN_SCHEMA
+               else REGION_PLAN_SCHEMA if region_requested or previous_plan and previous_plan["schema_version"] == REGION_PLAN_SCHEMA else PLAN_SCHEMA)
     body = {"schema_version": version, "kind": "ContentRevisionPlanTrial", "revision": previous_plan["revision"]+1 if previous_plan else 1,
             "book_id": evidence["book_id"], "scope_id": evidence["scope_id"], "payload": payload}
     result = {**body, "artifact_id": "content-revision-plan-"+digest(body)[:24], "content_hash": digest(payload)}
@@ -559,7 +720,9 @@ def _region_fragment(evidence, graph, plan, binding, block):
     value = {"kind": "REGION_DRAFT", "source_fragment_ids": copy.deepcopy(block["source_fragment_ids"]),
         "role": binding["role"], "asset_id": source["asset_id"], "bbox": copy.deepcopy(block["bbox"]),
         "source_region": copy.deepcopy(source), "block_id": block["block_id"], "text": "".join(run["text"] for run in block["runs"]),
-        "runs": copy.deepcopy(block["runs"]), "operation_id": binding["operation_id"], "verification_status": "UNVERIFIED",
+        "runs": copy.deepcopy(block["runs"]), "operation_id": binding["operation_id"],
+        **({"source_geometry_revisions": copy.deepcopy(binding["region_operation"]["source_geometry_revisions"])}
+           if binding["region_operation"].get("source_geometry_revisions") else {}), "verification_status": "UNVERIFIED",
         "complete": False, "transcription_verified": False, "business_acceptance": False}
     return {"content_fragment_id": "content-fragment-"+digest([reference(evidence), reference(graph), reference(plan), value])[:24], **value}
 
@@ -631,10 +794,11 @@ def _graph(evidence, graph, check, plan):
                 text += separator+right["text"]
             answer[field] = text
         _render_content(evidence, graph, plan, answer, content, region_bindings)
-        projection = {"schema_version": "b-content-projection-trial/0.2" if plan["schema_version"] == REGION_PLAN_SCHEMA else "b-content-projection-trial/0.1",
+        projection = {"schema_version": ("b-content-projection-trial/0.3" if plan["schema_version"] == GEOMETRY_PLAN_SCHEMA
+                      else "b-content-projection-trial/0.2" if plan["schema_version"] == REGION_PLAN_SCHEMA else "b-content-projection-trial/0.1"),
             "source_graph_ref": reference(graph), "plan_ref": reference(plan), "source_fragment_order": [f["fragment_id"] for f in visible],
             "separators": separators, "verification_status": "UNVERIFIED"}
-        if plan["schema_version"] == REGION_PLAN_SCHEMA: projection["region_operations"] = [b["operation_id"] for b in region_bindings]
+        if plan["schema_version"] in {REGION_PLAN_SCHEMA, GEOMETRY_PLAN_SCHEMA}: projection["region_operations"] = [b["operation_id"] for b in region_bindings]
         answer.update(content_fragments=content, content_projection=projection, explanation_present=any(c["role"] == "explanation" for c in content),
             complete=False, transcription_verified=False, verification_status="UNVERIFIED")
     affected_questions = []
@@ -652,7 +816,8 @@ def _graph(evidence, graph, check, plan):
     payload.update(_flags())
     proof = {"base_sha256": digest(_source_layer(graph)), "derived_sha256": digest(_source_layer({"payload": payload})), "equal": True}
     if proof["base_sha256"] != proof["derived_sha256"]: raise ValueError("content materialization changed a raw/image/source layer")
-    payload["content_revision"] = {"schema_version": "b-content-revision-state-trial/0.2" if plan["schema_version"] == REGION_PLAN_SCHEMA else "b-content-revision-state-trial/0.1", "evidence_ref": reference(evidence),
+    payload["content_revision"] = {"schema_version": ("b-content-revision-state-trial/0.3" if plan["schema_version"] == GEOMETRY_PLAN_SCHEMA
+        else "b-content-revision-state-trial/0.2" if plan["schema_version"] == REGION_PLAN_SCHEMA else "b-content-revision-state-trial/0.1"), "evidence_ref": reference(evidence),
         "base_graph_ref": reference(graph), "base_check_ref": reference(check), "plan_ref": reference(plan),
         "base_graph_archive": copy.deepcopy(graph), "base_check_archive": copy.deepcopy(check), "plan_archive": copy.deepcopy(plan),
         "operation_bindings": bindings, "affected_answer_ids": [a["answer_id"] for a in graph["payload"]["answers"] if a["answer_id"] in affected],
@@ -660,26 +825,31 @@ def _graph(evidence, graph, check, plan):
         "matching_derivation": {"rule": "book+section_path+printed_number; unique candidate only",
             "questions": [{k: copy.deepcopy(q[k]) for k in ("question_id", "candidate_answer_ids", "selected_answer_id", "type_candidate")} for q in payload["questions"]],
             "unmatched_answer_ids": copy.deepcopy(payload["unmatched_answer_ids"]), "policy_code_sha256": code_digest(Path(__file__).with_name("policy.py"))}, **_flags()}
-    return _artifact(REGION_GRAPH_SCHEMA if plan["schema_version"] == REGION_PLAN_SCHEMA else GRAPH_SCHEMA, "QuestionGraphTrial", "content-graph", evidence,
+    graph_schema = (GEOMETRY_GRAPH_SCHEMA if plan["schema_version"] == GEOMETRY_PLAN_SCHEMA
+                    else REGION_GRAPH_SCHEMA if plan["schema_version"] == REGION_PLAN_SCHEMA else GRAPH_SCHEMA)
+    return _artifact(graph_schema, "QuestionGraphTrial", "content-graph", evidence,
         [reference(v) for v in (evidence, graph, check, plan)], payload, "graph", revision=graph["revision"]+1)
 
 
-def apply_content_revision(evidence, graph, check, plan):
+def apply_content_revision(evidence, graph, check, plan, *, source_path=None):
     validate_revision_plan(plan, evidence, graph, check)
+    geometry_receipts = _validate_geometry_pixels(plan, evidence, source_path)
     derived = _graph(evidence, graph, check, plan)
-    return _artifact(REGION_APPLICATION_SCHEMA if plan["schema_version"] == REGION_PLAN_SCHEMA else APPLICATION_SCHEMA, "ContentRevisionApplicationTrial", "content-revision-application", evidence,
+    application_schema = (GEOMETRY_APPLICATION_SCHEMA if plan["schema_version"] == GEOMETRY_PLAN_SCHEMA
+                          else REGION_APPLICATION_SCHEMA if plan["schema_version"] == REGION_PLAN_SCHEMA else APPLICATION_SCHEMA)
+    return _artifact(application_schema, "ContentRevisionApplicationTrial", "content-revision-application", evidence,
         [reference(v) for v in (evidence, graph, check, plan)],
         {"evidence_ref": reference(evidence), "base_graph_ref": reference(graph), "base_check_ref": reference(check),
-         "plan_ref": reference(plan), "graph": derived, **_flags()}, "apply")
+         "plan_ref": reference(plan), "graph": derived, **({"source_geometry_receipts": geometry_receipts} if geometry_receipts else {}), **_flags()}, "apply")
 
 
-def rollback_content_revision(evidence, derived, *, expected_graph_ref):
-    _checked(derived, {GRAPH_SCHEMA, REGION_GRAPH_SCHEMA}, "QuestionGraphTrial")
+def rollback_content_revision(evidence, derived, *, expected_graph_ref, source_path=None):
+    _checked(derived, {GRAPH_SCHEMA, REGION_GRAPH_SCHEMA, GEOMETRY_GRAPH_SCHEMA}, "QuestionGraphTrial")
     if not _ref_valid(expected_graph_ref) or not _same(expected_graph_ref, reference(derived)):
         raise ValueError("rollback differs from the independently retained graph version")
     state = derived["payload"].get("content_revision", {})
     base, check, plan = [state[k] for k in ("base_graph_archive", "base_check_archive", "plan_archive")]
-    expected = apply_content_revision(evidence, base, check, plan)["payload"]["graph"]
+    expected = apply_content_revision(evidence, base, check, plan, source_path=source_path)["payload"]["graph"]
     if not _same(expected, derived):
         raise ValueError("rollback would discard later graph edits or changed archives")
     return copy.deepcopy(base)
@@ -716,8 +886,8 @@ def _issue(code, scope, refs, severity, detail, evidence, graph):
     return {"issue_id": "issue-"+digest(body)[:24], **body}
 
 
-def build_content_quality(evidence, graph, check, plan, application, review):
-    expected = apply_content_revision(evidence, graph, check, plan)
+def build_content_quality(evidence, graph, check, plan, application, review, *, source_path=None):
+    expected = apply_content_revision(evidence, graph, check, plan, source_path=source_path)
     if not _same(application, expected): raise ValueError("content application differs from actual current projection")
     derived = application["payload"]["graph"]
     selected_review, review_basis = _review(evidence, graph, check, review)
@@ -757,6 +927,11 @@ def build_content_quality(evidence, graph, check, plan, application, review):
             append("CONTENT_REGION_REBUILD_DRAFT_UNVERIFIED", refs, {"operation_id": op["operation_id"], "author": plan["payload"]["author"],
                 "source_region": op["source_region"], "block_ids": [b["block_id"] for b in op["blocks"]],
                 "source_fragment_ids": op["target"]["source_fragment_ids"], "unverified_runs": sum(len(b["runs"]) for b in op["blocks"])}, binding["answer_id"])
+            if op.get("source_geometry_revisions"):
+                append("CONTENT_REGION_SOURCE_GEOMETRY_DRAFT_UNVERIFIED", refs, {"operation_id": op["operation_id"],
+                    "source_geometry_revisions": copy.deepcopy(op["source_geometry_revisions"]),
+                    "zero_dark_policy": {"dark_threshold": GEOMETRY_DARK_THRESHOLD,
+                        "meaning": "trimmed crop has no pixels below the fixed darkness threshold; not human geometry or glyph approval"}}, binding["answer_id"])
         else:
             append("CONTENT_RAW_WRAP_DRAFT_UNVERIFIED", refs, {"operation_id": op["operation_id"], "proposal_id": op["proposal_id"], "source_spans": binding["source_spans"]}, binding["answer_id"])
     payload = {"stage": "content_quality", "evidence_ref": reference(evidence), "graph_ref": reference(derived), "plan_ref": reference(plan),
@@ -767,5 +942,7 @@ def build_content_quality(evidence, graph, check, plan, application, review):
             "unique_candidate_links": sum(q["selected_answer_id"] is not None for q in derived["payload"]["questions"]), "issues": len(issues),
             "affected_answers": len(state["affected_answer_ids"]), "affected_questions": len(state["affected_question_ids"]),
             "operations": len(plan["payload"]["operations"]), "source_assets": len(evidence["payload"]["pages"])}, **_flags()}
-    return _artifact(REGION_CHECK_SCHEMA if plan["schema_version"] == REGION_PLAN_SCHEMA else CHECK_SCHEMA, "CheckReportTrial", "content-check", evidence,
+    check_schema = (GEOMETRY_CHECK_SCHEMA if plan["schema_version"] == GEOMETRY_PLAN_SCHEMA
+                    else REGION_CHECK_SCHEMA if plan["schema_version"] == REGION_PLAN_SCHEMA else CHECK_SCHEMA)
+    return _artifact(check_schema, "CheckReportTrial", "content-check", evidence,
         [reference(evidence), reference(derived), reference(check), reference(plan), reference(application), _docref(review)], payload, "quality")

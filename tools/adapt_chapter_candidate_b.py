@@ -1,4 +1,4 @@
-"""Project observed G07/Check07 candidates into the provisional chapter gate shape.
+"""Project paired trial 0.7/0.8 candidates into the provisional chapter gate shape.
 
 This is a read-only adapter. It reports observed candidate rows only and keeps
 chapter/page/question-material denominators and content approval unknown.
@@ -12,8 +12,10 @@ from pathlib import Path
 from typing import Any
 
 
-GRAPH_SCHEMA = "b-graph-trial/0.7"
-CHECK_SCHEMA = "b-check-trial/0.7"
+SCHEMA_PAIRS = {
+    "b-graph-trial/0.7": "b-check-trial/0.7",
+    "b-graph-trial/0.8": "b-check-trial/0.8",
+}
 
 
 def _read_object(path: Path, label: str) -> dict[str, Any]:
@@ -46,10 +48,11 @@ def _ref(value: dict[str, Any]) -> dict[str, Any]:
 def adapt(graph_path: Path, check_path: Path) -> dict[str, Any]:
     graph = _read_object(graph_path, "G07 graph")
     check = _read_object(check_path, "Check07")
-    if graph.get("schema_version") != GRAPH_SCHEMA:
-        raise ValueError(f"G07 graph schema must be {GRAPH_SCHEMA}")
-    if check.get("schema_version") != CHECK_SCHEMA:
-        raise ValueError(f"Check07 schema must be {CHECK_SCHEMA}")
+    expected_check = SCHEMA_PAIRS.get(graph.get("schema_version"))
+    if expected_check is None:
+        raise ValueError("unsupported graph schema; expected B trial 0.7 or 0.8")
+    if check.get("schema_version") != expected_check:
+        raise ValueError("check schema must match the supplied graph schema version")
     if any(graph.get(k) != check.get(k) for k in ("book_id", "scope_id")):
         raise ValueError("G07 and Check07 book/scope identity differs")
     gp, cp = graph.get("payload"), check.get("payload")
@@ -174,8 +177,8 @@ def adapt(graph_path: Path, check_path: Path) -> dict[str, Any]:
 
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--graph", type=Path, required=True, help="fixed G07 b-graph-trial/0.7 JSON")
-    parser.add_argument("--check", type=Path, required=True, help="fixed Check07 b-check-trial/0.7 JSON")
+    parser.add_argument("--graph", type=Path, required=True, help="fixed b-graph-trial/0.7 or /0.8 JSON")
+    parser.add_argument("--check", type=Path, required=True, help="matching b-check-trial/0.7 or /0.8 JSON")
     parser.add_argument("--out", type=Path, required=True, help="candidate JSON output path")
     args = parser.parse_args(argv)
     try:

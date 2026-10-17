@@ -765,8 +765,8 @@ def _audit_pipeline(source_path,context_path,review_path,report,workdir,*,eviden
                 e=results["inline_prepare"]["payload"]["base_evidence_archive"]
                 g=results["inline_apply"]["payload"]["graph"]
                 c=results["inline_quality"]
-                checked=(audit_content_application(e,g,c,content_plan,result)if stage=="content_apply"else
-                    audit_content_quality(e,g,c,content_plan,results["content_apply"],results.get("active_review",review),result))
+                checked=(audit_content_application(e,g,c,content_plan,result,source_path=source_path)if stage=="content_apply"else
+                    audit_content_quality(e,g,c,content_plan,results["content_apply"],results.get("active_review",review),result,source_path=source_path))
                 cp=checked.get("payload",{})
                 flags=dict(decision="HOLD",complete=False,transcription_verified=False,business_acceptance=False,platform_actions=[],new_model_calls=0)
                 if (checked.get("schema_version")!="b-content-revision-check-trial/0.1"or checked.get("kind")!="ContentRevisionCheckTrial"

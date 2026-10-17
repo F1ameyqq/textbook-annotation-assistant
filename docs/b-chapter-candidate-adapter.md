@@ -1,6 +1,6 @@
 # G07/Check07 到章节候选的只读投影
 
-`tools/adapt_chapter_candidate_b.py` 将一个明确绑定的 B 内部 G07 (`b-graph-trial/0.7`) 与 Check07 (`b-check-trial/0.7`) 投影为 `chapter-candidate-b/1` 形状。适配器不消费 source descriptor；固定 fixture descriptor 与扩展后的 G07 scope 不同，不能安全地作为同一来源输入。示例复现使用：
+`tools/adapt_chapter_candidate_b.py` 将明确绑定、版本一致的 B 内部图谱与检查投影为 `chapter-candidate-b/1`。接受 `b-graph-trial/0.7` + `b-check-trial/0.7`，或带显式来源几何修订的0.8配对；混合版本和未知版本拒绝。0.8仅投影同样的候选身份、关系与风险字段，不把几何草稿当作已审核来源。适配器不消费 source descriptor；固定 fixture descriptor 与扩展后的图谱 scope 不同，不能安全地作为同一来源输入。历史0.7负例复现使用：
 
 ```powershell
 python tools/adapt_chapter_candidate_b.py `
@@ -9,7 +9,7 @@ python tools/adapt_chapter_candidate_b.py `
   --out work/46007447-chapter-candidate.json
 ```
 
-适配器只读输入。它校验 graph/check 的 book 与 scope，以及 Check07 对 G07 的精确 artifact 引用。当前真实对象可复现出 34 个内部题目候选、66 个内部答案候选；Check07 有 127 个问题。输出必须保持 `candidate_state=PARTIAL`、`chapter_id=null`、`source_pages=[]`、章节及各类分母 `UNKNOWN`、全部内容 `OPEN`、checks `HOLD`、人工复核不完整。
+适配器只读输入。它重算两个payload哈希，校验book、scope、精确artifact引用，并拒绝重复身份和悬空关系。上述历史对象为34题、66答、127项问题；后续修订使用其当前检查数，Q9 revision7为132项。输出必须保持 `candidate_state=PARTIAL`、`chapter_id=null`、`source_pages=[]`、章节及各类分母 `UNKNOWN`、全部内容 `OPEN`、checks `HOLD`、人工复核不完整。
 
 图谱中的内部题目/答案 ID 原样保留为候选身份；34 个唯一反向候选链接只作为 `CANDIDATE_OPEN` 关系投影，另 32 个未链接答案的 `question_id` 保持 null。题目和答案的 `page_ids` 都为空并带 `source_page_status=UNKNOWN`；内部 `asset_id` 仅在 `observed_asset_id` 中作为原始观察值保留，不将其转为页面身份。材料数组为空表示没有可安全投影的稳定材料 ID，另有 `material_inventory=UNKNOWN`，不声明章节没有共享材料。
 

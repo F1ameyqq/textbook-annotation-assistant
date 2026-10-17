@@ -101,11 +101,11 @@ def _content_inputs(results):
             results["inline_apply"]["payload"]["graph"], results["inline_quality"])
 
 
-def _audit_content_result(stage, result, results, plan):
+def _audit_content_result(stage, result, results, plan, source_path):
     from .content_revision_quality import audit_content_application, audit_content_quality
     evidence, graph, base_check = _content_inputs(results)
-    check = (audit_content_application(evidence, graph, base_check, plan, result) if stage == "content_apply"
-             else audit_content_quality(evidence, graph, base_check, plan, results["content_apply"], results["active_review"], result))
+    check = (audit_content_application(evidence, graph, base_check, plan, result, source_path=source_path) if stage == "content_apply"
+             else audit_content_quality(evidence, graph, base_check, plan, results["content_apply"], results["active_review"], result, source_path=source_path))
     p = check.get("payload", {})
     if (check.get("schema_version") != "b-content-revision-check-trial/0.1" or check.get("kind") != "ContentRevisionCheckTrial"
             or check.get("content_hash") != digest(p) or p.get("accepted") is not True
@@ -292,8 +292,8 @@ def _validate_evidence(value, source, context):
 
 def _validate_result(stage, value, source, context, review, dependencies, recognition_dir, current_evidence=None):
     if stage in CONTENT_STAGES:
-        schemas = ({"b-content-revision-application-trial/0.1", "b-content-revision-application-trial/0.2"}
-                   if stage == "content_apply" else {"b-check-trial/0.6", "b-check-trial/0.7"})
+        schemas = ({"b-content-revision-application-trial/0.1", "b-content-revision-application-trial/0.2", "b-content-revision-application-trial/0.3"}
+                   if stage == "content_apply" else {"b-check-trial/0.6", "b-check-trial/0.7", "b-check-trial/0.8"})
         kind = "ContentRevisionApplicationTrial" if stage == "content_apply" else "CheckReportTrial"
         offline.check_artifact(value, schemas)
         p = value["payload"]
@@ -307,8 +307,8 @@ def _validate_result(stage, value, source, context, review, dependencies, recogn
         if stage == "content_apply":
             if value.get("input_refs") != expected:
                 raise ValueError("content application is not bound to current E/G05/Check05/plan")
-            graph_schema = ("b-graph-trial/0.7" if value["schema_version"] == "b-content-revision-application-trial/0.2"
-                            else "b-graph-trial/0.6")
+            graph_schema = ("b-graph-trial/0.8" if value["schema_version"] == "b-content-revision-application-trial/0.3"
+                            else "b-graph-trial/0.7" if value["schema_version"] == "b-content-revision-application-trial/0.2" else "b-graph-trial/0.6")
             offline.check_artifact(p["graph"], {graph_schema})
         else:
             expected[1] = dependencies["application_graph_ref"]
@@ -635,7 +635,7 @@ def _run(source_path, context_path, review_path, evidence_path, workdir, source,
                         raise ValueError("stage cache row differs from the immutable origin")
                     current_evidence = _content_inputs(results)[0] if stage in CONTENT_STAGES else results.get("evidence")
                     _validate_result(stage, result, source, context, results["active_review"], dep, recognition_dir, current_evidence)
-                    if stage in CONTENT_STAGES: _audit_content_result(stage, result, results, content_plan)
+                    if stage in CONTENT_STAGES: _audit_content_result(stage, result, results, content_plan, source_path)
                     if stage == "recognition" and not audit_batch(source_path, recognition_dir, result)["payload"]["accepted"]:
                         raise ValueError("child recognition journal or source artifacts are invalid")
                 except (ValueError, OSError, KeyError, TypeError) as exc:
@@ -690,10 +690,10 @@ def _run(source_path, context_path, review_path, evidence_path, workdir, source,
                         from . import content_revision
                         if content_plan_error is not None: raise ValueError("content revision plan is unreadable: "+content_plan_error)
                         e, g, base_check = _content_inputs(results)
-                        if stage == "content_apply": result = content_revision.apply_content_revision(e, g, base_check, content_plan)
+                        if stage == "content_apply": result = content_revision.apply_content_revision(e, g, base_check, content_plan, source_path=source_path)
                         else:
                             result = content_revision.build_content_quality(e, g, base_check, content_plan,
-                                results["content_apply"], results["active_review"])
+                                results["content_apply"], results["active_review"], source_path=source_path)
                     else:
                         result = quality_check(results["evidence"], results["assemble"], results["active_review"])
                         if inline_path is not None:
@@ -702,7 +702,7 @@ def _run(source_path, context_path, review_path, evidence_path, workdir, source,
                             result.pop("created_at", None)
                     current_evidence = _content_inputs(results)[0] if stage in CONTENT_STAGES else results.get("evidence")
                     _validate_result(stage, result, source, context, results["active_review"], dep, recognition_dir, current_evidence)
-                    if stage in CONTENT_STAGES: _audit_content_result(stage, result, results, content_plan)
+                    if stage in CONTENT_STAGES: _audit_content_result(stage, result, results, content_plan, source_path)
                     if stage == "recognition" and not audit_batch(source_path, recognition_dir, result)["payload"]["accepted"]:
                         raise ValueError("child recognition run failed independent integrity audit")
                     state = "DONE"
