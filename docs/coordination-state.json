@@ -2,7 +2,7 @@
   "schema_version": 1,
   "project": "D:\\1800",
   "coordinator_thread_id": "01a13f26-7567-75e1-99ee-c9d2194e78bb",
-  "updated_at": "2026-10-17T02:55:14.166940+00:00",
+  "updated_at": "2026-10-17T02:56:34.906684+00:00",
   "automation": {
     "id": "1800-a",
     "kind": "heartbeat",
@@ -191,15 +191,15 @@
       "execution": {
         "thread_id": "01a144ca-ed53-7303-ace2-21a4ca42e13c",
         "host_id": "local",
-        "cursor": "3be4e697-e1c7-4b16-a265-da16cb48675b:4",
+        "cursor": "3be4e697-e1c7-4b16-a265-da16cb48675b:5",
         "turn_status": "inProgress",
         "phase": "INTEGRATION_R1_REWORK_IN_PROGRESS",
         "base_commit": "180bb1e86fb2a7eb1546be85af70f466f069daf5",
         "previous_delivery_commit": "c3aff9598b6705ab4122062615a13ae3774698b2",
         "report": "C:/Users/ASUS/.codex/worktrees/a01-source-geometry/1800/docs/tasks/A01-integration-R1-execution-report.md",
         "session_released": true,
-        "last_checked_at": "2026-10-17T02:55:14.166940+00:00",
-        "last_progress": "两种精确集成副本的常规入口都已退出 0：各自 A01 为 51 通过、1 权限跳过，C01 70、A02 52、离线登录测试 8 项通过，URL 反例和搬运消费也成功。真实源码破坏已使新入口失败；固定输入破坏和原冻结 R3 门禁的负对照正在完成。",
+        "last_checked_at": "2026-10-17T02:56:34.906684+00:00",
+        "last_progress": "负对照已完成：源码破坏和固定输入身份破坏都使新常规入口退出 1。原 R3 门禁在原冻结发行副本上仍通过，源码或 JPG 损坏则被拒绝；旧门禁、971 项清单和 25 个候选均未修改。正在补齐交付报告和摘要清单。",
         "turn_id": "01a147bf-e33e-7981-8d09-8a2d8cf99cbf",
         "observed_thread_status": "active",
         "commit": null,
@@ -1132,17 +1132,17 @@
       "execution": {
         "thread_id": "01a145aa-2fea-7942-97f9-ad260acf4e30",
         "host_id": "local",
-        "cursor": "fac7d5c6-e7af-446f-8771-c0299bbbcd7f:5",
+        "cursor": "fac7d5c6-e7af-446f-8771-c0299bbbcd7f:6",
         "turn_status": "inProgress",
         "turn_id": "01a147c8-4d18-70f1-a8f1-fa3240747813",
-        "last_checked_at": "2026-10-17T02:55:14.166940+00:00",
+        "last_checked_at": "2026-10-17T02:56:34.906684+00:00",
         "phase": "P1_R2_REPAIR_IN_PROGRESS",
         "base_commit": "ca4fba4f505467228a8164c3999e0cecc54ffc4e",
         "previous_delivery_commit": "ca4fba4f505467228a8164c3999e0cecc54ffc4e",
         "report": "C:/Users/ASUS/.codex/worktrees/a03-runtime-recovery/1800/docs/tasks/A03-P1-R2-execution-report.md",
         "completed_turn_confirms_freeze": false,
         "observed_thread_status": "active",
-        "last_progress": "P1-R1 已完成并干净冻结为 P1 REVIEW，P2 未启动。 设计提交：095ed4aa18a56100ce3aabc4a0d6885ad37ab520 最终交付：ca4fba4f505467228a8164c3999e0cecc54ffc4e 执行报告 · 修订提案 · 完整清单 69 例静态预期相符；独立审计的 8 个代表正例无引用遗漏；8,142 个原文件字节不变；781 个交付文件与 Git 字节一致。恢复功能未实施或实测，待释放自有会话为 0。 清单 SHA256：c882542e9aefe1f413533b1350f6b81d20202f0bc37dd44b829d1eeb39f946b5",
+        "last_progress": "我会先核对 P1-R2 任务单、指定基线和 PREFIX-01 反例，只修订事件前缀样例及必要的下游引用。旧 R1 交付保持原字节，本轮仍只做设计与静态检查，停在 P1 REVIEW。",
         "observed_worktree": {
           "observed_at": "2026-10-16T18:14:27.468837+00:00",
           "head": "2d5ae2a53945a7fa20ef60a6b61e7b31c91dbea9",
@@ -1252,7 +1252,7 @@
       },
       "rework_round": 2,
       "review_archive": {
-        "status": "READY_TO_ARCHIVE",
+        "status": "ARCHIVED_LOCALLY",
         "report": "docs/tasks/A03-P1-R1-review-report.md",
         "manifest": "docs/evidence/A03/review/P1-R1/sha256-manifest.json",
         "manifest_entries": 937,
@@ -1265,7 +1265,23 @@
         "preflight": "docs/evidence/A03/coordinator/P1-R2-preflight/archive-audit.json",
         "preflight_sha256": "bcdedd327bfd0e940184b60616228dfcb8a5af86f4fcd4668df8e41ed067d514",
         "remote_push": false,
-        "scope": "P1-R1 design REWORK evidence only; no functional acceptance, integration or P2 release."
+        "scope": "P1-R1 design REWORK evidence only; no functional acceptance, integration or P2 release.",
+        "commit": "3f20d905afd9ef0792c9d547faa8a728d58cab59",
+        "index_paths_verified": 945,
+        "committed_paths_verified": 945,
+        "checks": "docs/evidence/A03/coordinator/P1-R2-archive/checks.json",
+        "document_links": [
+          {
+            "path": "docs/tasks/A03-P1-rework-R2.md",
+            "links": 2,
+            "missing": []
+          },
+          {
+            "path": "docs/tasks/A03-P1-R1-review-report.md",
+            "links": 19,
+            "missing": []
+          }
+        ]
       },
       "coordinator_reproduction": {
         "at": "2026-10-17T02:54:16.380634+00:00",
@@ -1430,7 +1446,8 @@
           "sent_at": "2026-10-17T02:54:32.258548+00:00",
           "dispatch_result": "send_message_to_thread returned original A03 execution ID",
           "acknowledged_at": "2026-10-17T02:55:13.680134+00:00",
-          "turn_id": "01a147c8-4d18-70f1-a8f1-fa3240747813"
+          "turn_id": "01a147c8-4d18-70f1-a8f1-fa3240747813",
+          "record_commit": "3f20d905afd9ef0792c9d547faa8a728d58cab59"
         }
       ],
       "operational_status": "P1_R2_REPAIR_ACTIVE",
@@ -1802,13 +1819,15 @@
       "sent_at": "2026-10-17T02:54:32.258548+00:00",
       "result": "Original executor active; no duplicate conversation.",
       "acknowledged_at": "2026-10-17T02:55:13.680134+00:00",
-      "turn_id": "01a147c8-4d18-70f1-a8f1-fa3240747813"
+      "turn_id": "01a147c8-4d18-70f1-a8f1-fa3240747813",
+      "record_commit": "3f20d905afd9ef0792c9d547faa8a728d58cab59"
     }
   ],
   "last_action": {
-    "at": "2026-10-17T02:55:13.680134+00:00",
+    "at": "2026-10-17T02:56:34.906684+00:00",
     "task_id": "A03",
-    "action": "P1-R1 design REWORK confirmed from exact Git; bounded P1-R2 repair acknowledged in original executor; archive prepared.",
+    "action": "P1-R1 REWORK archived with exact committed bytes; P1-R2 bounded repair acknowledged. A01 integration repair still completing its delivery.",
+    "record_commit": "3f20d905afd9ef0792c9d547faa8a728d58cab59",
     "remote_push": false
   },
   "limitations": [
@@ -1817,20 +1836,20 @@
     "Platform test is single-book serial, no book submission, no unbudgeted paid models."
   ],
   "last_check": {
-    "at": "2026-10-17T02:54:16.380634+00:00",
+    "at": "2026-10-17T02:56:34.906684+00:00",
     "heartbeat_time": "2026-10-17T02:51:37.023Z",
-    "root_head": "d9a94c678981ee6d1b92c193aa8626e2ef35aa2e",
+    "root_head": "3f20d905afd9ef0792c9d547faa8a728d58cab59",
     "checked_task_ids": [
       "A01",
       "A02",
       "A03",
       "A04"
     ],
-    "thread_snapshots": 8,
+    "thread_snapshots": 12,
     "platform_actions": 0,
     "paid_model_calls": 0,
     "full_suite_rerun": false,
-    "dispatch_result": "Original A03 P1-R2 repair active; A01 integration repair still active; no new chats.",
+    "dispatch_result": "Original A03 P1-R2 execution acknowledged; original A01 integration repair active. No duplicate chats or dependency release.",
     "next_dependencies": "A01 exact repair freeze/review/integration before D01 and A04; A03 P1 design acceptance before P2; I01 withheld.",
     "notification": "NOTIFY"
   },
