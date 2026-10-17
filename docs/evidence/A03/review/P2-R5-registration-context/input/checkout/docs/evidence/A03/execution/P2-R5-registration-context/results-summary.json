@@ -1,0 +1,102 @@
+{
+  "status": "REVIEW_WITH_CONTROL_RESIDUAL",
+  "initial_cases": 7,
+  "package_calls": 8,
+  "local_repair_rounds": 1,
+  "affected_case_retests": 1,
+  "final_error_codes_matching": 7,
+  "qualified_scenarios": 6,
+  "mixed_cycle_control": "MIXED_CYCLE observed; internal initial_event_head mismatch remains",
+  "results": [
+    {
+      "id": "registration-positive",
+      "expected": "STATIC_ACCEPTED",
+      "actual": "STATIC_ACCEPTED",
+      "matched": true,
+      "error": null,
+      "full_entry_returned": true
+    },
+    {
+      "id": "source-binding-negative",
+      "expected": "FRAME_REGISTRATION_BINDING",
+      "actual": "FRAME_REGISTRATION_BINDING",
+      "matched": true,
+      "error": {
+        "code": "FRAME_REGISTRATION_BINDING",
+        "path": "r4-static/source-binding-negative/prefix.json"
+      },
+      "full_entry_returned": false
+    },
+    {
+      "id": "snapshot-binding-negative",
+      "expected": "FRAME_REGISTRATION_BINDING",
+      "actual": "FRAME_REGISTRATION_BINDING",
+      "matched": true,
+      "error": {
+        "code": "FRAME_REGISTRATION_BINDING",
+        "path": "r4-static/snapshot-binding-negative/prefix.json"
+      },
+      "full_entry_returned": false
+    },
+    {
+      "id": "target-tuple-negative",
+      "expected": "FRAME_REGISTRATION_TARGET",
+      "actual": "FRAME_REGISTRATION_TARGET",
+      "matched": true,
+      "error": {
+        "code": "FRAME_REGISTRATION_TARGET",
+        "path": "r4-static/target-tuple-negative/prefix.json/registration/target"
+      },
+      "full_entry_returned": false
+    },
+    {
+      "id": "r3-original-undeclared-evidence",
+      "expected": "UNDECLARED_REFERENCE",
+      "actual": "UNDECLARED_REFERENCE",
+      "matched": true,
+      "error": {
+        "code": "UNDECLARED_REFERENCE",
+        "path": "origin-a-SourceBundle"
+      },
+      "full_entry_returned": false
+    },
+    {
+      "id": "global-resource-hash-corruption",
+      "expected": "RESOURCE_HASH",
+      "actual": "RESOURCE_HASH",
+      "matched": true,
+      "error": {
+        "code": "RESOURCE_HASH",
+        "path": "r5-static/global-only-proof.txt"
+      },
+      "full_entry_returned": false
+    },
+    {
+      "id": "artifact-resource-frame-mixed-cycle",
+      "expected": "MIXED_CYCLE",
+      "actual": "MIXED_CYCLE",
+      "matched": true,
+      "error": {
+        "code": "MIXED_CYCLE",
+        "path": "A:760b541bec881e9d98abb75f38bc7e34a75d2ed047edbc8ac657091c70fdc320"
+      },
+      "full_entry_returned": false
+    },
+    {
+      "id": "artifact-resource-frame-mixed-cycle",
+      "expected": "MIXED_CYCLE",
+      "actual": "SHAPE_oneOf",
+      "matched": false,
+      "error": {
+        "code": "SHAPE_oneOf",
+        "path": "$/frames/2/event"
+      },
+      "full_entry_returned": false
+    }
+  ],
+  "overlay_sha256_unchanged": "3f0281c5cfc9aeec99b11fa2de30ba40e9984a19dd0e651b747d99ebe29772ba",
+  "old_36_matrix_runs": 0,
+  "product_calls": 0,
+  "native_qualification": false,
+  "field_reset_probe": "NOT_EXECUTED_NO_RERUN_VARIANT_OR_DELEGATION"
+}

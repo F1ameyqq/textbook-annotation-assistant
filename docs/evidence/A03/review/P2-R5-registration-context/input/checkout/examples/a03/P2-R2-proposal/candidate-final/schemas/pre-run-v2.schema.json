@@ -1,0 +1,305 @@
+{
+  "type": "object",
+  "properties": {
+    "format_version": {
+      "const": "a03-synthetic-pre-run-2"
+    },
+    "context": {
+      "oneOf": [
+        {
+          "type": "object",
+          "properties": {
+            "kind": {
+              "const": "INITIAL"
+            },
+            "hold_id": {
+              "type": "null"
+            },
+            "hold_head": {
+              "type": "null"
+            },
+            "hold_ref": {
+              "type": "null"
+            }
+          },
+          "required": [
+            "kind",
+            "hold_id",
+            "hold_head",
+            "hold_ref"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "kind": {
+              "const": "POST_HOLD"
+            },
+            "hold_id": {
+              "type": "string",
+              "minLength": 1
+            },
+            "hold_head": {
+              "type": "object",
+              "properties": {
+                "sequence": {
+                  "type": "integer",
+                  "minimum": 0
+                },
+                "hash": {
+                  "type": "string",
+                  "pattern": "^[0-9a-f]{64}$"
+                }
+              },
+              "required": [
+                "sequence",
+                "hash"
+              ],
+              "additionalProperties": false
+            },
+            "hold_ref": {
+              "type": "object",
+              "properties": {
+                "path": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "sha256": {
+                  "type": "string",
+                  "pattern": "^[0-9a-f]{64}$"
+                },
+                "media_type": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "origin": {
+                  "const": "SYNTHETIC"
+                }
+              },
+              "required": [
+                "path",
+                "sha256",
+                "media_type",
+                "origin"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "required": [
+            "kind",
+            "hold_id",
+            "hold_head",
+            "hold_ref"
+          ],
+          "additionalProperties": false
+        }
+      ]
+    },
+    "source_ref": {
+      "type": "object",
+      "properties": {
+        "artifact_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "revision": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "kind": {
+          "type": "string",
+          "minLength": 1
+        },
+        "content_hash": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        }
+      },
+      "required": [
+        "artifact_id",
+        "revision",
+        "kind",
+        "content_hash"
+      ],
+      "additionalProperties": false
+    },
+    "graph_ref": {
+      "type": "object",
+      "properties": {
+        "artifact_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "revision": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "kind": {
+          "type": "string",
+          "minLength": 1
+        },
+        "content_hash": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        }
+      },
+      "required": [
+        "artifact_id",
+        "revision",
+        "kind",
+        "content_hash"
+      ],
+      "additionalProperties": false
+    },
+    "snapshot_ref": {
+      "type": "object",
+      "properties": {
+        "artifact_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "revision": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "kind": {
+          "type": "string",
+          "minLength": 1
+        },
+        "content_hash": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        }
+      },
+      "required": [
+        "artifact_id",
+        "revision",
+        "kind",
+        "content_hash"
+      ],
+      "additionalProperties": false
+    },
+    "oracle": {
+      "type": "object",
+      "properties": {
+        "path": {
+          "type": "string",
+          "minLength": 1
+        },
+        "sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "media_type": {
+          "type": "string",
+          "minLength": 1
+        },
+        "origin": {
+          "const": "SYNTHETIC"
+        }
+      },
+      "required": [
+        "path",
+        "sha256",
+        "media_type",
+        "origin"
+      ],
+      "additionalProperties": false
+    },
+    "input_raw_sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "implementation_sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "actual_observation": {
+      "type": "object",
+      "properties": {
+        "path": {
+          "type": "string",
+          "minLength": 1
+        },
+        "sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "media_type": {
+          "type": "string",
+          "minLength": 1
+        },
+        "origin": {
+          "const": "SYNTHETIC"
+        }
+      },
+      "required": [
+        "path",
+        "sha256",
+        "media_type",
+        "origin"
+      ],
+      "additionalProperties": false
+    },
+    "observed_at": {
+      "type": "string",
+      "minLength": 1
+    },
+    "produced_at": {
+      "type": "string",
+      "minLength": 1
+    },
+    "checks": {
+      "type": "object",
+      "properties": {
+        "source_integrity": {
+          "const": "UNAVAILABLE"
+        },
+        "structure": {
+          "const": "UNAVAILABLE"
+        },
+        "answer_matching": {
+          "const": "UNAVAILABLE"
+        },
+        "coverage": {
+          "const": "UNAVAILABLE"
+        },
+        "policy": {
+          "const": "UNAVAILABLE"
+        }
+      },
+      "required": [
+        "source_integrity",
+        "structure",
+        "answer_matching",
+        "coverage",
+        "policy"
+      ],
+      "additionalProperties": false
+    },
+    "runtime_status": {
+      "const": "NOT_EXECUTED"
+    },
+    "admission": {
+      "const": "UNIMPLEMENTED_NO_NATIVE_RUN"
+    }
+  },
+  "required": [
+    "format_version",
+    "context",
+    "source_ref",
+    "graph_ref",
+    "snapshot_ref",
+    "oracle",
+    "input_raw_sha256",
+    "implementation_sha256",
+    "actual_observation",
+    "observed_at",
+    "produced_at",
+    "checks",
+    "runtime_status",
+    "admission"
+  ],
+  "additionalProperties": false
+}

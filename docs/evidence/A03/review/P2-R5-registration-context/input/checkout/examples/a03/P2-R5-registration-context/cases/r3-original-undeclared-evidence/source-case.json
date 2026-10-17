@@ -1,0 +1,34 @@
+{
+  "id": "R2-SCOPE-EVIDENCE-ID-01",
+  "base_bundle_sha256": "7a6bea1ee04f272913edbcf7f3af79b690843700317188f386ae168667e2003d",
+  "expected": "REJECT_UNDECLARED_NONFRAME_REFERENCE (and cross-scope if declared)",
+  "actual": "STATIC_ACCEPTED",
+  "error": null,
+  "resource_overrides": [
+    {
+      "logical": "review-static/inner.json",
+      "file": "counterexample/evidence-id-consumer/inner.json",
+      "sha256": "ebd3f42cc53726b05919f27e6ee7b3866cbff7c36454473fe8dfda85e10b33af"
+    },
+    {
+      "logical": "review-static/outer.json",
+      "file": "counterexample/evidence-id-consumer/outer.json",
+      "sha256": "e14cf14a7a585ad528f7f01807d26a205cfa227c94a23dd51ff537f079dc32f6"
+    }
+  ],
+  "bundle_file": "counterexample/evidence-id-consumer/bundle.json",
+  "consumer": "origin-a-SourceBundle",
+  "consumer_scope": "original-a",
+  "formal_evidence_path": "payload.external_page_mappings/0/evidence_refs[proof]",
+  "referenced_artifact": {
+    "artifact_id": "review-isolated-source-b",
+    "revision": 1,
+    "kind": "SourceBundle",
+    "content_hash": "ce154c73e6f2d5ef5a387073bd1315be2e941eb3cfd3b3e3d56f7306f6acfec5"
+  },
+  "reference_scope": "original-b",
+  "ordinary_ref_declared_by_consumer": false,
+  "all_artifact_hashes_recomputed_equal": true,
+  "native_qualification": false,
+  "limits": "new static JSON only; no product/native/DB. One extra isolated Source and two Resource values; no candidate source edit."
+}

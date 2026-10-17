@@ -1,0 +1,94 @@
+"""R5 static overlay: unbound graph walk and real registration consumers."""
+from load_static import r3,base
+need=r3.need;Rejected=r3.Rejected
+
+class Package(r3.Package):
+    def __init__(self,bundle,overrides=None):
+        super().__init__(bundle,overrides)
+        self.prefix_visits=[];self.registration_checks=[];self.global_frames=[];self.global_evidence_uses=[]
+        self.full_entry_returned=False
+
+    def registration_binding(self,prefix,event,book,path):
+        p=event['payload'];source=self.artifact(p['source_ref'],path+'/registration/source');snapshot=self.artifact(p['snapshot_ref'],path+'/registration/snapshot')
+        checks={'kinds':source['kind']=='SourceBundle'and snapshot['kind']=='PlatformSnapshot',
+                'book':source['book_id']==snapshot['book_id']==book,
+                'scope':source['scope_id']==snapshot['scope_id']==p['scope_id']}
+        row={'mode':'REAL_CONSUMER','path':path,'book_id':book,'source_ref':p['source_ref'],'snapshot_ref':p['snapshot_ref'],'source_scope':source['scope_id'],'snapshot_scope':snapshot['scope_id'],'payload_scope':p['scope_id'],'binding_checks':checks}
+        self.registration_checks.append(row)
+        need(all(checks.values()),'FRAME_REGISTRATION_BINDING',path)
+        # Canonical tuple is existing prefix.target_key. Snapshot has target_id,
+        # not an invented platform_namespace/target_key field.
+        key=prefix['target_key'];observed=self.read(p['observation'])
+        need(isinstance(observed,dict),'FRAME_REGISTRATION_OBSERVATION',path+'/registration/observation')
+        targets={'event_target_key':event['target_key']==key,'canonical_book':key['book_id']==book,
+                 'snapshot_target_id':snapshot['payload']['target_id']==key['target_id'],
+                 'snapshot_authorized_scope':snapshot['payload']['authorized_scope_id']==p['scope_id'],
+                 'observation_target_key':observed.get('target_key')==key,
+                 'observation_source':observed.get('source_ref')==p['source_ref'],
+                 'observation_snapshot':observed.get('snapshot_ref')==p['snapshot_ref'],
+                 'observation_scope':observed.get('scope_id')==p['scope_id']}
+        for field in('registration_id','target_store_id','target_session_id'):
+            targets['observation_'+field]=observed.get(field)==p[field]
+        business=observed.get('business_value')
+        if isinstance(business,dict):
+            if 'target_key'in business:targets['business_target_key']=business['target_key']==key
+            view=business.get('target_view')
+            if isinstance(view,dict)and'target_id'in view:targets['business_target_id']=view['target_id']==key['target_id']
+        baseline=self.read(p['baseline']['binding'])
+        if isinstance(baseline,dict)and'target_key'in baseline:targets['baseline_target_key']=baseline['target_key']==key
+        row.update(canonical_target_key=key,snapshot_target_id=snapshot['payload']['target_id'],target_checks=targets)
+        need(all(targets.values()),'FRAME_REGISTRATION_TARGET',path+'/registration/target')
+        return source['scope_id']
+
+    def scan_prefix(self,v,parent,book,scope,found,path,active,resource_root):
+        need(resource_root,'PREFIX_LOCATION',path);base.shape(v,'prefix-v2.schema.json');self.prefixes.append(v)
+        bound=bool(self.contexts)
+        if bound:need(book is not None,'CONSUMER_BOOK_REQUIRED',path)
+        else:need(book is None and scope is None,'UNBOUND_CONTEXT_REQUIRED',path)
+        self.prefix_visits.append({'mode':'REAL_CONSUMER'if bound else'GLOBAL_GRAPH','path':path,'book_id':book,'outer_scope_id':scope})
+        if bound:need(v['target_key']['book_id']==book,'PREFIX_TARGET_BOOK',path)
+        for k,x in v.items():
+            if k!='frames':self.scan(x,parent,book,scope,found,path+'/'+k,active,False)
+        for i,frame in enumerate(v['frames']):
+            event=frame['event'];frame_path=path+'/frames/'+str(i);expected_scope=None
+            if bound:need(event['target_key']==v['target_key'],'FRAME_TARGET_KEY',frame_path)
+            if event['plan_ref']is not None:
+                plan=self.artifact(event['plan_ref'],frame_path);need(plan['kind']=='ApplyPlan','FRAME_PLAN_KIND',path);expected_scope=plan['scope_id']
+            elif event['event']=='TARGET_DRIFT_HOLD'and event['payload'].get('registration_id')and event['payload'].get('source_ref'):
+                if bound:expected_scope=self.registration_binding(v,event,book,path)
+                else:
+                    source=self.artifact(event['payload']['source_ref'],path+'/registration/source');snapshot=self.artifact(event['payload']['snapshot_ref'],path+'/registration/snapshot')
+                    need(source['kind']=='SourceBundle'and snapshot['kind']=='PlatformSnapshot','FRAME_REGISTRATION_KIND',path)
+                    expected_scope=source['scope_id']
+            node=parent+'/F:'+str(i);self.edge(parent,node)
+            need(frame['consumer_scope_id']==expected_scope,'FRAME_SCOPE',frame_path)
+            if bound:
+                self.consumer(node,event,book,expected_scope,frame['input_refs'],frame_path)
+            else:
+                # No fictitious consumer with book=None. Still walk every event,
+                # formal EvidenceRecord and declared ref, and retain graph edges.
+                event_schema=r3.DOCS['prefix']['properties']['frames']['items']['properties']['event']
+                self.slots(event,event_schema,'prefix','/properties/frames/items/properties/event')
+                global_found={};self.scan(event,node,None,None,global_found,frame_path,active,False)
+                declared={base.h(r):r for r in frame['input_refs']}
+                need(set(global_found)<=set(declared),'UNDECLARED_REFERENCE',frame_path)
+                for r in declared.values():self.edge(node,'A:'+base.h(base.ref(self.artifact(r,frame_path+'/input_refs'))))
+                self.global_frames.append({'path':frame_path,'ordinary_refs':len(global_found),'declared_refs':len(declared)})
+
+    def scan(self,v,parent,book,scope,found,path,active,resource_root):
+        self.known_resource_type(v)
+        if isinstance(v,dict)and v.get('format_version')==base.PREFIX:
+            return self.scan_prefix(v,parent,book,scope,found,path,active,resource_root)
+        slot=self.typed_lists.get(id(v))if isinstance(v,list)else None
+        if not self.contexts and slot is not None and slot[0]is v:
+            for evidence_id in v:
+                need(evidence_id in self.evidence_index,'EVIDENCE_ID_MISSING',path+'['+evidence_id+']')
+                node='E:'+evidence_id;self.edge(parent,node);self.global_evidence_uses.append({'path':path,'evidence_id':evidence_id})
+                self.scan(self.evidence_index[evidence_id]['resource'],node,None,None,found,path+'['+evidence_id+']/EvidenceRecord.resource',active,False)
+            return
+        return super().scan(v,parent,book,scope,found,path,active,resource_root)
+
+    def validate(self):
+        result=super().validate() # fixed R3 index + R2 full closure/DAG/hash/PRE tail
+        self.full_entry_returned=True
+        return result

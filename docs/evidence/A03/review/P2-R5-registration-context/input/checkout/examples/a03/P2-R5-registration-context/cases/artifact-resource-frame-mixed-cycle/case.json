@@ -1,0 +1,80 @@
+{
+  "id": "artifact-resource-frame-mixed-cycle",
+  "bundle": "examples/a03/P2-R5-registration-context/cases/artifact-resource-frame-mixed-cycle/bundle.json",
+  "bundle_sha256": "140834a22df594c492912c006a5a042948dd2e891ca890113584ad47b28137b2",
+  "resources": [
+    {
+      "logical": "original/inventory-a.json",
+      "file": "examples/a03/P2-R5-registration-context/inputs/resources/be53cb65d0954e75d0e002c9ca6234fc2a6eba46a60fb829c4f0f4d623642d86.json",
+      "raw_sha256": "be53cb65d0954e75d0e002c9ca6234fc2a6eba46a60fb829c4f0f4d623642d86",
+      "bytes": 96
+    },
+    {
+      "logical": "original/inventory-b.json",
+      "file": "examples/a03/P2-R5-registration-context/inputs/resources/64725ae18d1583b6db07b51cf58d2f2ef972f1634e053a03b72fc79ee45b2d5c.json",
+      "raw_sha256": "64725ae18d1583b6db07b51cf58d2f2ef972f1634e053a03b72fc79ee45b2d5c",
+      "bytes": 96
+    },
+    {
+      "logical": "original/page-a.pgm",
+      "file": "examples/a03/P2-R5-registration-context/inputs/resources/9fc6a5f04ac863f5edb9e145b90b440aa5a5745326e4b44e1b83b61e784ef890.bin",
+      "raw_sha256": "9fc6a5f04ac863f5edb9e145b90b440aa5a5745326e4b44e1b83b61e784ef890",
+      "bytes": 3533
+    },
+    {
+      "logical": "original/page-b.pgm",
+      "file": "examples/a03/P2-R5-registration-context/inputs/resources/9fc6a5f04ac863f5edb9e145b90b440aa5a5745326e4b44e1b83b61e784ef890.bin",
+      "raw_sha256": "9fc6a5f04ac863f5edb9e145b90b440aa5a5745326e4b44e1b83b61e784ef890",
+      "bytes": 3533
+    },
+    {
+      "logical": "original/proof.txt",
+      "file": "examples/a03/P2-R5-registration-context/inputs/resources/54d183fc37c8a75e974ee1e7b53d7438b4ef00eaab0c7f637aa25984f66627ea.bin",
+      "raw_sha256": "54d183fc37c8a75e974ee1e7b53d7438b4ef00eaab0c7f637aa25984f66627ea",
+      "bytes": 75
+    },
+    {
+      "logical": "r4-static/registration-positive/baseline.json",
+      "file": "examples/a03/P2-R5-registration-context/inputs/resources/e4222d089961e44d5b27c396ef36db4aa970140a012a9ab92f7d57f574b6df46.json",
+      "raw_sha256": "e4222d089961e44d5b27c396ef36db4aa970140a012a9ab92f7d57f574b6df46",
+      "bytes": 481
+    },
+    {
+      "logical": "r4-static/registration-positive/observation.json",
+      "file": "examples/a03/P2-R5-registration-context/inputs/resources/2b368d0734b4ebc9308a0db43737ca90ea7d32cdfe5325725a6f9889e1b663bd.json",
+      "raw_sha256": "2b368d0734b4ebc9308a0db43737ca90ea7d32cdfe5325725a6f9889e1b663bd",
+      "bytes": 1557
+    },
+    {
+      "logical": "r4-static/registration-positive/prefix.json",
+      "file": "examples/a03/P2-R5-registration-context/inputs/resources/a6b0e04cbba2be18ccc8bc2853bffc745b2a0802cfff40eaefc48cf55b952154.json",
+      "raw_sha256": "a6b0e04cbba2be18ccc8bc2853bffc745b2a0802cfff40eaefc48cf55b952154",
+      "bytes": 8166
+    },
+    {
+      "logical": "r5-static/mixed-cycle-back-to-consumer.json",
+      "file": "examples/a03/P2-R5-registration-context/inputs/resources/1eec6a3c503bc9ec935e61a935b63b7da1406d469cfff016f217b35bdb4c3fb5.json",
+      "raw_sha256": "1eec6a3c503bc9ec935e61a935b63b7da1406d469cfff016f217b35bdb4c3fb5",
+      "bytes": 191
+    }
+  ],
+  "expected": "MIXED_CYCLE",
+  "expected_layer": "GLOBAL_MIXED_DAG",
+  "source": {
+    "base_case": "registration-positive"
+  },
+  "mutation": {
+    "only_semantic_change": "frame A PLAN_ACCEPTED consumes a new JSON Resource with exact ref back to outer Source A consumer; declare that ref and rechain event/prefix/Resource digests",
+    "cycle": [
+      "Source consumer A",
+      "formal EvidenceRecord",
+      "prefix Resource",
+      "frame A",
+      "new Resource",
+      "same Source consumer A"
+    ],
+    "all_artifact_hashes_unchanged": true,
+    "no_stale_hash_or_foreign_scope": true
+  },
+  "native_qualification": false
+}

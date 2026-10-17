@@ -1,0 +1,58 @@
+{
+  "base": "e608b54b973b14ff55dd2c4530153f5fe7c931f4",
+  "entry": "registration.Package.validate",
+  "cases": [
+    {
+      "id": "registration-positive",
+      "case": "examples/a03/P2-R5-registration-context/cases/registration-positive/case.json",
+      "case_sha256": "d6d4e5e47fa159c0f3f99bdc9433c65e34c9599a12c8da28b859c2e25a361b83",
+      "expected": "STATIC_ACCEPTED",
+      "expected_layer": "FULL_ENTRY_RETURN"
+    },
+    {
+      "id": "source-binding-negative",
+      "case": "examples/a03/P2-R5-registration-context/cases/source-binding-negative/case.json",
+      "case_sha256": "3f1e6653522c5f90230b51473ab8a08b490d34fe03573897b46e0537db4abf60",
+      "expected": "FRAME_REGISTRATION_BINDING",
+      "expected_layer": "REAL_REGISTRATION_SOURCE_SNAPSHOT"
+    },
+    {
+      "id": "snapshot-binding-negative",
+      "case": "examples/a03/P2-R5-registration-context/cases/snapshot-binding-negative/case.json",
+      "case_sha256": "548eda7529758ac34f76d25f109b77e01bb70f273cc347a46dd083b26d443d0a",
+      "expected": "FRAME_REGISTRATION_BINDING",
+      "expected_layer": "REAL_REGISTRATION_SOURCE_SNAPSHOT"
+    },
+    {
+      "id": "target-tuple-negative",
+      "case": "examples/a03/P2-R5-registration-context/cases/target-tuple-negative/case.json",
+      "case_sha256": "8252f55a32d0b7501bf7e5298e3ec1006e8abe8b0adbb221b1cda0e634e1fd2d",
+      "expected": "FRAME_REGISTRATION_TARGET",
+      "expected_layer": "REAL_REGISTRATION_TARGET"
+    },
+    {
+      "id": "r3-original-undeclared-evidence",
+      "case": "examples/a03/P2-R5-registration-context/cases/r3-original-undeclared-evidence/case.json",
+      "case_sha256": "9b527bea6a1186c9531f3132788b2787bcf4aef5a16488bdbf9f2e3df800051c",
+      "expected": "UNDECLARED_REFERENCE",
+      "expected_layer": "REAL_CONSUMER_FORMAL_EVIDENCE_CLOSURE"
+    },
+    {
+      "id": "global-resource-hash-corruption",
+      "case": "examples/a03/P2-R5-registration-context/cases/global-resource-hash-corruption/case.json",
+      "case_sha256": "de8af16d429e79d3740ff1f11071ca643debef73a550e46f78a636e66ecd22c4",
+      "expected": "RESOURCE_HASH",
+      "expected_layer": "UNBOUND_GLOBAL_RESOURCE_READ"
+    },
+    {
+      "id": "artifact-resource-frame-mixed-cycle",
+      "case": "examples/a03/P2-R5-registration-context/cases/artifact-resource-frame-mixed-cycle/case.json",
+      "case_sha256": "138e44d394653a4f34d6049fd99ddd937e3a0c5ce64c24fd72c875829943725e",
+      "expected": "MIXED_CYCLE",
+      "expected_layer": "GLOBAL_MIXED_DAG"
+    }
+  ],
+  "checker_calls_during_preparation": 0,
+  "old_36_matrix_runs": 0,
+  "additional_cases": 0
+}
