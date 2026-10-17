@@ -2,7 +2,7 @@
   "schema_version": 1,
   "project": "D:\\1800",
   "coordinator_thread_id": "01a13f26-7567-75e1-99ee-c9d2194e78bb",
-  "updated_at": "2026-10-18T02:07:33.250671+08:00",
+  "updated_at": "2026-10-18T02:09:17.200750+08:00",
   "automation": {
     "id": "1800-a",
     "kind": "heartbeat",
@@ -1937,7 +1937,7 @@
     },
     "A03": {
       "status": "REWORK",
-      "phase": "P2_R8_R3_POST_HOLD_REPAIR_READY",
+      "phase": "P2_R8_R3_POST_HOLD_REPAIR_RUNNING",
       "depends_on": [
         "A02"
       ],
@@ -1946,7 +1946,7 @@
       "review_task": "docs/tasks/A03-P2-R8-R2-projection-review-handoff.md",
       "acceptance_scope": "P1 and limited R2-R6 accepted; R7 readonly product locally INTEGRATED; exact R8-R2 projection and fixed synthetic N1 ACCEPTED. Native A03 overall not accepted or integrated.",
       "next_dependency": "R8-R3 bounded POST_HOLD lifecycle and remaining N3-N7 evidence; independent review and coordinator integration before native I01. B readonly/HOLD slice still awaits cross-side mapping confirmation.",
-      "dispatch_status": "EXECUTION_INTENT_RECORDED",
+      "dispatch_status": "EXECUTION_ACKNOWLEDGED",
       "B_confirmation": "NOT_CONFIRMED",
       "workflow_commit": "77d3e123ab7247eae6f81f7acd669e3a69c934a0",
       "worktree_name": "a03-runtime-recovery",
@@ -1957,18 +1957,18 @@
       "execution": {
         "thread_id": "01a145aa-2fea-7942-97f9-ad260acf4e30",
         "host_id": "local",
-        "cursor": "506fd3cf-091f-418b-b002-636f503b5e4b:45",
-        "turn_status": "completed",
-        "observed_thread_status": "idle",
-        "turn_id": "01a14ad1-35f6-7710-9d3d-e3e390a28aa2",
-        "phase": "P2_R8_R3_DISPATCH_INTENT",
+        "cursor": "506fd3cf-091f-418b-b002-636f503b5e4b:46",
+        "turn_status": "inProgress",
+        "observed_thread_status": "active",
+        "turn_id": "01a14b0d-325f-74f3-81ae-f72748ff3a84",
+        "phase": "P2_R8_R3_POST_HOLD_REPAIR_RUNNING",
         "base_commit": "58d8a64734271d15654bb00b03d760f0f3eccd10",
         "task_document": "docs/tasks/A03-P2-R8-R3-post-hold-rework.md",
         "task_sha256": "8bb76c2cd713ec9af5386f3dcd547f443bbef42d6d4d19fc603ef0fcf5bd6a29",
         "expected_report": "docs/tasks/A03-P2-R8-R3-post-hold-report.md",
         "reasoning_policy": "PRESERVE_USER_SETTING",
         "dispatch_key": "A03:execution:P2-R8-R3-post-hold:58d8a64734271d15654bb00b03d760f0f3eccd10",
-        "last_checked_at": "2026-10-18T02:07:33.250671+08:00",
+        "last_checked_at": "2026-10-18T02:09:17.200750+08:00",
         "previous_delivery": {
           "thread_id": "01a145aa-2fea-7942-97f9-ad260acf4e30",
           "host_id": "local",
@@ -2036,7 +2036,8 @@
             "functional_tests_run": false
           }
         },
-        "last_progress": "R8-R2 frozen and reviewed; R8-R3 bounded POST_HOLD repair intent recorded, not sent."
+        "last_progress": "R8-R3 repair dispatch acknowledged; task limits cover three same-flow lease/hold call sites. No new outcome yet.",
+        "workflow_commit": "b79b12fe6a82f9d88b6533b54aea016c4f67f60b"
       },
       "review": {
         "thread_id": "01a145aa-8d59-7c70-8d81-731712103a9a",
@@ -3844,7 +3845,7 @@
         "task": "A03",
         "stage": "P2_R8_R3_POST_HOLD_REWORK",
         "role": "execution",
-        "state": "INTENT_RECORDED",
+        "state": "ACKNOWLEDGED",
         "created_at": "2026-10-18T02:07:33.250671+08:00",
         "base_commit": "58d8a64734271d15654bb00b03d760f0f3eccd10",
         "document": "docs/tasks/A03-P2-R8-R3-post-hold-rework.md",
@@ -3855,7 +3856,14 @@
         "send_message_thinking": "OMIT",
         "send_message_model": "OMIT",
         "scope": "Bounded POST_HOLD readonly start/currentness/admission lease interface; three statically located guards; preserve ordinary write/pending/owner gates. Fresh N1 prerequisite then N2-N7 subject to dependencies.",
-        "result": "NOT_SENT"
+        "result": "Original executor active on R8-R3 bounded POST_HOLD repair; model/thinking omitted and user setting preserved.",
+        "workflow_commit": "b79b12fe6a82f9d88b6533b54aea016c4f67f60b",
+        "sent_at": "2026-10-18T02:09:17.200750+08:00",
+        "acknowledged_at": "2026-10-18T02:09:17.200750+08:00",
+        "turn_id": "01a14b0d-325f-74f3-81ae-f72748ff3a84",
+        "cursor": "506fd3cf-091f-418b-b002-636f503b5e4b:46",
+        "last_observed_at": "2026-10-18T02:09:17.200750+08:00",
+        "returned_thread_id": "01a145aa-2fea-7942-97f9-ad260acf4e30"
       },
       "review_archive_r4_bridge_registration": {
         "status": "ARCHIVED_LOCALLY",
@@ -4184,7 +4192,7 @@
         "task": "A03",
         "stage": "P2_R8_R3_POST_HOLD_REWORK",
         "role": "execution",
-        "state": "INTENT_RECORDED",
+        "state": "ACKNOWLEDGED",
         "created_at": "2026-10-18T02:07:33.250671+08:00",
         "base_commit": "58d8a64734271d15654bb00b03d760f0f3eccd10",
         "document": "docs/tasks/A03-P2-R8-R3-post-hold-rework.md",
@@ -4195,7 +4203,14 @@
         "send_message_thinking": "OMIT",
         "send_message_model": "OMIT",
         "scope": "Bounded POST_HOLD readonly start/currentness/admission lease interface; three statically located guards; preserve ordinary write/pending/owner gates. Fresh N1 prerequisite then N2-N7 subject to dependencies.",
-        "result": "NOT_SENT"
+        "result": "Original executor active on R8-R3 bounded POST_HOLD repair; model/thinking omitted and user setting preserved.",
+        "workflow_commit": "b79b12fe6a82f9d88b6533b54aea016c4f67f60b",
+        "sent_at": "2026-10-18T02:09:17.200750+08:00",
+        "acknowledged_at": "2026-10-18T02:09:17.200750+08:00",
+        "turn_id": "01a14b0d-325f-74f3-81ae-f72748ff3a84",
+        "cursor": "506fd3cf-091f-418b-b002-636f503b5e4b:46",
+        "last_observed_at": "2026-10-18T02:09:17.200750+08:00",
+        "returned_thread_id": "01a145aa-2fea-7942-97f9-ad260acf4e30"
       },
       "review_r7_frozen_record": {
         "thread_id": "01a145aa-8d59-7c70-8d81-731712103a9a",
@@ -4467,7 +4482,7 @@
         "I01_released": false
       },
       "review_archive_r8_r2": {
-        "status": "READY_FOR_LOCAL_ARCHIVE",
+        "status": "ARCHIVED_LOCALLY",
         "report": "docs/tasks/A03-P2-R8-R2-projection-review-report.md",
         "manifest": "docs/evidence/A03/review/P2-R8-R2-projection/sha256-manifest.json",
         "manifest_entries": 582,
@@ -4476,7 +4491,9 @@
         "check": "docs/evidence/coordinator/heartbeat-20261018-0157/review-audit.json",
         "check_sha256": "278a01095003711b87f433423b9d2e2af9b2d87f6caa9038e85b7aa7e3dbdd58",
         "remote_push": false,
-        "scope": "Evidence archive only; native product integration deferred until remaining functional gates pass."
+        "scope": "Evidence archive only; native product integration deferred until remaining functional gates pass.",
+        "commit": "b79b12fe6a82f9d88b6533b54aea016c4f67f60b",
+        "raw_commit_paths_verified": 583
       }
     },
     "D01": {
@@ -5800,7 +5817,7 @@
       "task": "A03",
       "stage": "P2_R8_R3_POST_HOLD_REWORK",
       "role": "execution",
-      "state": "INTENT_RECORDED",
+      "state": "ACKNOWLEDGED",
       "created_at": "2026-10-18T02:07:33.250671+08:00",
       "base_commit": "58d8a64734271d15654bb00b03d760f0f3eccd10",
       "document": "docs/tasks/A03-P2-R8-R3-post-hold-rework.md",
@@ -5811,33 +5828,42 @@
       "send_message_thinking": "OMIT",
       "send_message_model": "OMIT",
       "scope": "Bounded POST_HOLD readonly start/currentness/admission lease interface; three statically located guards; preserve ordinary write/pending/owner gates. Fresh N1 prerequisite then N2-N7 subject to dependencies.",
-      "result": "NOT_SENT"
+      "result": "Original executor active on R8-R3 bounded POST_HOLD repair; model/thinking omitted and user setting preserved.",
+      "workflow_commit": "b79b12fe6a82f9d88b6533b54aea016c4f67f60b",
+      "sent_at": "2026-10-18T02:09:17.200750+08:00",
+      "acknowledged_at": "2026-10-18T02:09:17.200750+08:00",
+      "turn_id": "01a14b0d-325f-74f3-81ae-f72748ff3a84",
+      "cursor": "506fd3cf-091f-418b-b002-636f503b5e4b:46",
+      "last_observed_at": "2026-10-18T02:09:17.200750+08:00",
+      "returned_thread_id": "01a145aa-2fea-7942-97f9-ad260acf4e30"
     }
   ],
   "last_action": {
-    "at": "2026-10-18T02:07:33.250671+08:00",
+    "at": "2026-10-18T02:09:17.200750+08:00",
     "trigger": "2026-10-17T17:57:42.905Z",
     "task_id": "A03",
-    "root_head": "b39d43da64d387700701ee36c286e12f6ad8379c",
+    "root_head": "b79b12fe6a82f9d88b6533b54aea016c4f67f60b",
     "execution_thread_id": "01a145aa-2fea-7942-97f9-ad260acf4e30",
-    "execution_cursor": "506fd3cf-091f-418b-b002-636f503b5e4b:45",
+    "execution_cursor": "506fd3cf-091f-418b-b002-636f503b5e4b:46",
     "execution_target_observed": "58d8a64734271d15654bb00b03d760f0f3eccd10",
     "review_thread_id": "01a145aa-8d59-7c70-8d81-731712103a9a",
     "review_turn_id": "01a14aeb-1f75-7f83-a98a-eeaddbcfd01e",
     "review_cursor": "abdea222-4697-4046-86b1-a5dc48889fac:37",
-    "phase": "P2_R8_R3_POST_HOLD_REPAIR_READY",
+    "phase": "P2_R8_R3_POST_HOLD_REPAIR_RUNNING",
     "acceptance_scope": "P1 and limited R2-R6 accepted; R7 readonly product locally INTEGRATED; exact R8-R2 projection and fixed synthetic N1 ACCEPTED. Native A03 overall not accepted or integrated.",
     "next_dependencies": "R8-R3 bounded POST_HOLD lifecycle and remaining N3-N7 evidence; independent review and coordinator integration before native I01. B readonly/HOLD slice still awaits cross-side mapping confirmation.",
-    "dispatch_result": "R8-R3 INTENT_RECORDED; original executor not yet sent",
+    "dispatch_result": "Original executor active on R8-R3 bounded POST_HOLD repair; model/thinking omitted and user setting preserved.",
     "coordinator_check": "docs/evidence/coordinator/heartbeat-20261018-0157/review-audit.json",
     "product_integration": false,
     "platform_actions": 0,
     "paid_model_calls": 0,
     "full_suite_rerun": false,
     "notification": "NOTIFY",
-    "reason": "Independent fixed synthetic N1 accepted; concrete N2 interface repair prepared.",
-    "action": "R8_R2_N1_ACCEPTED_R8_R3_REPAIR_INTENT_RECORDED",
-    "dispatch_key": "A03:execution:P2-R8-R3-post-hold:58d8a64734271d15654bb00b03d760f0f3eccd10"
+    "reason": "Fixed synthetic N1 independently accepted and coordinator verified; bounded POST_HOLD repair dispatched to original executor.",
+    "action": "R8_R2_N1_ACCEPTED_R8_R3_REPAIR_DISPATCH_ACKNOWLEDGED",
+    "dispatch_key": "A03:execution:P2-R8-R3-post-hold:58d8a64734271d15654bb00b03d760f0f3eccd10",
+    "execution_turn_id": "01a14b0d-325f-74f3-81ae-f72748ff3a84",
+    "workflow_commit": "b79b12fe6a82f9d88b6533b54aea016c4f67f60b"
   },
   "limitations": [
     "Current route uses mock B artifacts until independently agreed interface/artifact versions exist.",
@@ -5845,27 +5871,30 @@
     "Platform test is single-book serial, no book submission, no unbudgeted paid models."
   ],
   "last_check": {
-    "at": "2026-10-18T02:07:33.250671+08:00",
+    "at": "2026-10-18T02:09:17.200750+08:00",
     "trigger": "2026-10-17T17:57:42.905Z",
     "task_id": "A03",
-    "root_head": "b39d43da64d387700701ee36c286e12f6ad8379c",
+    "root_head": "b79b12fe6a82f9d88b6533b54aea016c4f67f60b",
     "execution_thread_id": "01a145aa-2fea-7942-97f9-ad260acf4e30",
-    "execution_cursor": "506fd3cf-091f-418b-b002-636f503b5e4b:45",
+    "execution_cursor": "506fd3cf-091f-418b-b002-636f503b5e4b:46",
     "execution_target_observed": "58d8a64734271d15654bb00b03d760f0f3eccd10",
     "review_thread_id": "01a145aa-8d59-7c70-8d81-731712103a9a",
     "review_turn_id": "01a14aeb-1f75-7f83-a98a-eeaddbcfd01e",
     "review_cursor": "abdea222-4697-4046-86b1-a5dc48889fac:37",
-    "phase": "P2_R8_R3_POST_HOLD_REPAIR_READY",
+    "phase": "P2_R8_R3_POST_HOLD_REPAIR_RUNNING",
     "acceptance_scope": "P1 and limited R2-R6 accepted; R7 readonly product locally INTEGRATED; exact R8-R2 projection and fixed synthetic N1 ACCEPTED. Native A03 overall not accepted or integrated.",
     "next_dependencies": "R8-R3 bounded POST_HOLD lifecycle and remaining N3-N7 evidence; independent review and coordinator integration before native I01. B readonly/HOLD slice still awaits cross-side mapping confirmation.",
-    "dispatch_result": "R8-R3 INTENT_RECORDED; original executor not yet sent",
+    "dispatch_result": "Original executor active on R8-R3 bounded POST_HOLD repair; model/thinking omitted and user setting preserved.",
     "coordinator_check": "docs/evidence/coordinator/heartbeat-20261018-0157/review-audit.json",
     "product_integration": false,
     "platform_actions": 0,
     "paid_model_calls": 0,
     "full_suite_rerun": false,
     "notification": "NOTIFY",
-    "reason": "Independent fixed synthetic N1 accepted; concrete N2 interface repair prepared."
+    "reason": "Fixed synthetic N1 independently accepted and coordinator verified; bounded POST_HOLD repair dispatched to original executor.",
+    "execution_turn_id": "01a14b0d-325f-74f3-81ae-f72748ff3a84",
+    "workflow_commit": "b79b12fe6a82f9d88b6533b54aea016c4f67f60b",
+    "dispatch_key": "A03:execution:P2-R8-R3-post-hold:58d8a64734271d15654bb00b03d760f0f3eccd10"
   },
   "prepared_next_batch": {
     "status": "DISPATCHED",
@@ -6226,26 +6255,29 @@
     }
   ],
   "last_heartbeat": {
-    "at": "2026-10-18T02:07:33.250671+08:00",
+    "at": "2026-10-18T02:09:17.200750+08:00",
     "trigger": "2026-10-17T17:57:42.905Z",
     "task_id": "A03",
-    "root_head": "b39d43da64d387700701ee36c286e12f6ad8379c",
+    "root_head": "b79b12fe6a82f9d88b6533b54aea016c4f67f60b",
     "execution_thread_id": "01a145aa-2fea-7942-97f9-ad260acf4e30",
-    "execution_cursor": "506fd3cf-091f-418b-b002-636f503b5e4b:45",
+    "execution_cursor": "506fd3cf-091f-418b-b002-636f503b5e4b:46",
     "execution_target_observed": "58d8a64734271d15654bb00b03d760f0f3eccd10",
     "review_thread_id": "01a145aa-8d59-7c70-8d81-731712103a9a",
     "review_turn_id": "01a14aeb-1f75-7f83-a98a-eeaddbcfd01e",
     "review_cursor": "abdea222-4697-4046-86b1-a5dc48889fac:37",
-    "phase": "P2_R8_R3_POST_HOLD_REPAIR_READY",
+    "phase": "P2_R8_R3_POST_HOLD_REPAIR_RUNNING",
     "acceptance_scope": "P1 and limited R2-R6 accepted; R7 readonly product locally INTEGRATED; exact R8-R2 projection and fixed synthetic N1 ACCEPTED. Native A03 overall not accepted or integrated.",
     "next_dependencies": "R8-R3 bounded POST_HOLD lifecycle and remaining N3-N7 evidence; independent review and coordinator integration before native I01. B readonly/HOLD slice still awaits cross-side mapping confirmation.",
-    "dispatch_result": "R8-R3 INTENT_RECORDED; original executor not yet sent",
+    "dispatch_result": "Original executor active on R8-R3 bounded POST_HOLD repair; model/thinking omitted and user setting preserved.",
     "coordinator_check": "docs/evidence/coordinator/heartbeat-20261018-0157/review-audit.json",
     "product_integration": false,
     "platform_actions": 0,
     "paid_model_calls": 0,
     "full_suite_rerun": false,
     "notification": "NOTIFY",
-    "reason": "Independent fixed synthetic N1 accepted; concrete N2 interface repair prepared."
+    "reason": "Fixed synthetic N1 independently accepted and coordinator verified; bounded POST_HOLD repair dispatched to original executor.",
+    "execution_turn_id": "01a14b0d-325f-74f3-81ae-f72748ff3a84",
+    "workflow_commit": "b79b12fe6a82f9d88b6533b54aea016c4f67f60b",
+    "dispatch_key": "A03:execution:P2-R8-R3-post-hold:58d8a64734271d15654bb00b03d760f0f3eccd10"
   }
 }
