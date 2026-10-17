@@ -2,7 +2,7 @@
   "schema_version": 1,
   "project": "D:\\1800",
   "coordinator_thread_id": "01a13f26-7567-75e1-99ee-c9d2194e78bb",
-  "updated_at": "2026-10-17T15:23:44.065566+08:00",
+  "updated_at": "2026-10-17T15:25:22.941316+08:00",
   "automation": {
     "id": "1800-a",
     "kind": "heartbeat",
@@ -1473,35 +1473,20 @@
       "review": {
         "thread_id": "01a144cc-e93d-7841-a259-d6aac22c94f4",
         "host_id": "local",
-        "cursor": "33f1ce70-74e3-46de-b04f-ceafd8e7f74b:14",
-        "turn_status": "completed",
-        "phase": "COORDINATE_R3_OFFLINE_REVIEW_RUNNING",
+        "cursor": "33f1ce70-74e3-46de-b04f-ceafd8e7f74b:15",
+        "turn_id": "01a148bf-af7d-7d61-b8ad-73c49b42ab02",
+        "turn_status": "inProgress",
+        "observed_thread_status": "active",
+        "phase": "COORDINATE_R3_RAW_BYTE_SUPPLEMENT_RUNNING",
         "target_commit": "6c8137a4fadddc01a47906d564ab3460277c8958",
-        "task_document": "docs/tasks/A04-coordinate-R3-review-handoff.md",
-        "task_sha256": "bd7bd756221a8d2642f611a45c37a690afb6496b1efb469c97994b8f19714de1",
-        "expected_report": "docs/tasks/A04-coordinate-R3-review-report.md",
-        "decision": "ACCEPTED_OFFLINE_REVIEWER_ONLY",
+        "task_document": "docs/tasks/A04-coordinate-R3-raw-byte-supplement.md",
+        "task_sha256": "a4282b448c362280a76fe424fc7309125f6833a35aaf3e486d041f7458f941ac",
+        "expected_report": "docs/tasks/A04-coordinate-R3-raw-bytes-review-report.md",
+        "decision": "PENDING",
         "reasoning_effort": "xhigh",
-        "last_checked_at": "2026-10-17T15:23:44.065566+08:00",
-        "turn_id": "01a148a4-3d07-7821-9596-a534a01dece0",
-        "observed_thread_status": "idle",
-        "workflow_commit": "d834bf531f95abac7ed30b89b3ca55105fa6f491",
-        "last_progress": "Independent review completed with limited ACCEPTED; coordinator found 59 EOL-only archive/blob mismatches, so exact-byte acceptance pending one bounded evidence supplement; no product defect found.",
-        "latest_lightweight_observation": {
-          "at": "2026-10-17T15:06:45.052077+08:00",
-          "root_head": "f24bbf58ec011b9d2ee21d33c5821dde7203f779",
-          "target_commit": "6c8137a4fadddc01a47906d564ab3460277c8958",
-          "report_present": false,
-          "evidence_directory_present": true,
-          "frozen_delivery_verified": false,
-          "scope": "Expected-report existence and compact thread snapshot only; reviewer-owned in-progress evidence untouched."
-        },
-        "formal_decision": "ACCEPTED_OFFLINE_REVIEWER_ONLY",
-        "report": "docs/tasks/A04-coordinate-R3-review-report.md",
-        "report_sha256": "ce6bc599c0b1533e58095366c4f8b499248079aa6c571e8569e1b585d4a82e61",
-        "session_released": true,
-        "evidence_manifest": "docs/evidence/A04/review/coordinate-R3/sha256-manifest.json",
-        "evidence_manifest_sha256": "d756ab8d28d49350883fdf47289497451833818bfb76649568dbb8467e9f4002"
+        "workflow_commit": "9317efcdb734b081075c56f6557838d591959e8f",
+        "last_checked_at": "2026-10-17T15:25:22.941316+08:00",
+        "last_progress": "Acknowledged one bounded evidence correction after 59 archive/blob EOL differences; product unchanged; raw exact defect reproduction passed by coordinator; whole A04 remains blocked."
       },
       "dispatch_record_commit": "d6738cf239b203496c9e84cb87178eb82f2d4f89",
       "blocked_reason": "R2 missing pixel-row PNG accepted; independent review and exact-byte coordinator reproduction confirm REWORK. Live R01-R06 unverified.",
@@ -1653,7 +1638,7 @@
           "session_release_basis": "Frozen execution-authored process release and completed turn; no current profile/OS ownership probe."
         }
       ],
-      "phase": "COORDINATE_R3_RAW_BYTE_SUPPLEMENT_PENDING",
+      "phase": "COORDINATE_R3_RAW_BYTE_SUPPLEMENT_RUNNING",
       "coordinate_resume": {
         "stage": "coordinate-R1",
         "state": "ACKNOWLEDGED",
@@ -1746,6 +1731,37 @@
           "evidence_manifest": "docs/evidence/A04/review/coordinate-R2/sha256-manifest.json",
           "evidence_manifest_sha256": "85dd149c08e055b3b8dcb4f380cd72cca1957a935edc219ee8da3b557f9a5567",
           "session_released": true
+        },
+        {
+          "thread_id": "01a144cc-e93d-7841-a259-d6aac22c94f4",
+          "host_id": "local",
+          "cursor": "33f1ce70-74e3-46de-b04f-ceafd8e7f74b:14",
+          "turn_status": "completed",
+          "phase": "COORDINATE_R3_OFFLINE_REVIEW_RUNNING",
+          "target_commit": "6c8137a4fadddc01a47906d564ab3460277c8958",
+          "task_document": "docs/tasks/A04-coordinate-R3-review-handoff.md",
+          "task_sha256": "bd7bd756221a8d2642f611a45c37a690afb6496b1efb469c97994b8f19714de1",
+          "expected_report": "docs/tasks/A04-coordinate-R3-review-report.md",
+          "decision": "ACCEPTED_OFFLINE_REVIEWER_ONLY",
+          "reasoning_effort": "xhigh",
+          "last_checked_at": "2026-10-17T15:23:44.065566+08:00",
+          "turn_id": "01a148a4-3d07-7821-9596-a534a01dece0",
+          "observed_thread_status": "idle",
+          "workflow_commit": "d834bf531f95abac7ed30b89b3ca55105fa6f491",
+          "last_progress": "Independent review completed with limited ACCEPTED; coordinator found 59 EOL-only archive/blob mismatches, so exact-byte acceptance pending one bounded evidence supplement; no product defect found.",
+          "latest_lightweight_observation": {
+            "at": "2026-10-17T15:25:22.941316+08:00",
+            "target_commit": "6c8137a4fadddc01a47906d564ab3460277c8958",
+            "report_present": true,
+            "frozen_delivery_verified": true,
+            "scope": "355 evidence entries plus manifest checked against committed raw Git; archive input EOL differences require evidence supplement."
+          },
+          "formal_decision": "ACCEPTED_OFFLINE_REVIEWER_ONLY",
+          "report": "docs/tasks/A04-coordinate-R3-review-report.md",
+          "report_sha256": "ce6bc599c0b1533e58095366c4f8b499248079aa6c571e8569e1b585d4a82e61",
+          "session_released": true,
+          "evidence_manifest": "docs/evidence/A04/review/coordinate-R3/sha256-manifest.json",
+          "evidence_manifest_sha256": "d756ab8d28d49350883fdf47289497451833818bfb76649568dbb8467e9f4002"
         }
       ],
       "review_handoff": {
@@ -1855,7 +1871,7 @@
         "task": "A04",
         "stage": "coordinate-R3-raw-bytes",
         "role": "review",
-        "state": "INTENT_RECORDED",
+        "state": "ACKNOWLEDGED",
         "created_at": "2026-10-17T15:23:44.065566+08:00",
         "target_commit": "6c8137a4fadddc01a47906d564ab3460277c8958",
         "document": "docs/tasks/A04-coordinate-R3-raw-byte-supplement.md",
@@ -1863,7 +1879,31 @@
         "thread_id": "01a144cc-e93d-7841-a259-d6aac22c94f4",
         "host_id": "local",
         "reasoning_effort": "xhigh",
-        "scope": "Evidence-only exact-byte correction; preserve original R3; no product rework, network, platform or B message."
+        "scope": "Evidence-only exact-byte correction; preserve original R3; no product rework, network, platform or B message.",
+        "sent_at": "2026-10-17T15:25:22.941316+08:00",
+        "acknowledged_at": "2026-10-17T15:25:22.941316+08:00",
+        "workflow_commit": "9317efcdb734b081075c56f6557838d591959e8f",
+        "turn_id": "01a148bf-af7d-7d61-b8ad-73c49b42ab02",
+        "cursor": "33f1ce70-74e3-46de-b04f-ceafd8e7f74b:15",
+        "result": "Original independent review chat active at xhigh; evidence supplement only; no execution rework, duplicate chat or platform/B action."
+      },
+      "review_archive_r3": {
+        "status": "ARCHIVED_LOCALLY",
+        "commit": "9317efcdb734b081075c56f6557838d591959e8f",
+        "report": "docs/tasks/A04-coordinate-R3-review-report.md",
+        "report_sha256": "ce6bc599c0b1533e58095366c4f8b499248079aa6c571e8569e1b585d4a82e61",
+        "manifest": "docs/evidence/A04/review/coordinate-R3/sha256-manifest.json",
+        "manifest_sha256": "d756ab8d28d49350883fdf47289497451833818bfb76649568dbb8467e9f4002",
+        "raw_committed_files": 356,
+        "coordinator_acceptance": "PENDING_RAW_BYTE_SUPPLEMENT",
+        "remote_push": false,
+        "scope": "Original reviewer limited ACCEPTED preserved; 59 EOL-only source archive mismatches recorded, original statements require additive correction."
+      },
+      "integration": {
+        "status": "NOT_INTEGRATED",
+        "reason": "Exact-byte supplement pending. Root has no source/usense; whole-branch merge would also include unaccepted browser/session/collector/live coordinate code. Do not release whole A04 or I01.",
+        "product_changes_this_check": false,
+        "remote_push": false
       }
     },
     "A03": {
@@ -3748,7 +3788,7 @@
       "task": "A04",
       "stage": "coordinate-R3-raw-bytes",
       "role": "review",
-      "state": "INTENT_RECORDED",
+      "state": "ACKNOWLEDGED",
       "created_at": "2026-10-17T15:23:44.065566+08:00",
       "target_commit": "6c8137a4fadddc01a47906d564ab3460277c8958",
       "document": "docs/tasks/A04-coordinate-R3-raw-byte-supplement.md",
@@ -3756,14 +3796,21 @@
       "thread_id": "01a144cc-e93d-7841-a259-d6aac22c94f4",
       "host_id": "local",
       "reasoning_effort": "xhigh",
-      "scope": "Evidence-only exact-byte correction; preserve original R3; no product rework, network, platform or B message."
+      "scope": "Evidence-only exact-byte correction; preserve original R3; no product rework, network, platform or B message.",
+      "sent_at": "2026-10-17T15:25:22.941316+08:00",
+      "acknowledged_at": "2026-10-17T15:25:22.941316+08:00",
+      "workflow_commit": "9317efcdb734b081075c56f6557838d591959e8f",
+      "turn_id": "01a148bf-af7d-7d61-b8ad-73c49b42ab02",
+      "cursor": "33f1ce70-74e3-46de-b04f-ceafd8e7f74b:15",
+      "result": "Original independent review chat active at xhigh; evidence supplement only; no execution rework, duplicate chat or platform/B action."
     }
   ],
   "last_action": {
-    "at": "2026-10-17T15:23:44.065566+08:00",
+    "at": "2026-10-17T15:25:22.941316+08:00",
     "task_id": "A04",
-    "action": "Audit found 59 EOL-only archive/Git differences; preserved failure and reproduced fixed rejection using 212 raw blobs. Independent evidence supplement planned; no acceptance or integration.",
-    "remote_push": false
+    "action": "Original R3 review archived byte-for-byte; raw-Git exact reproduction passed. One bounded independent evidence supplement acknowledged at xhigh. No product rework, integration, push, online action or I01 release.",
+    "remote_push": false,
+    "workflow_commit": "9317efcdb734b081075c56f6557838d591959e8f"
   },
   "limitations": [
     "Current route uses mock B artifacts until independently agreed interface/artifact versions exist.",
@@ -3783,8 +3830,9 @@
     "full_suite_rerun": false,
     "notification": "NOTIFY",
     "next_dependencies": "One bounded raw-Git-byte independent evidence supplement. Whole A04 live R01-R06/S01 remain blocked; no whole-branch integration or I01 release. A03 static delivery pending.",
-    "dispatch_result": "Evidence supplement intent recorded; not sent yet.",
-    "no_duplicate_chat": true
+    "dispatch_result": "Original independent review chat active at xhigh; evidence supplement only; no execution rework, duplicate chat or platform/B action.",
+    "no_duplicate_chat": true,
+    "completed_at": "2026-10-17T15:25:22.941316+08:00"
   },
   "prepared_next_batch": {
     "status": "DISPATCHED",
