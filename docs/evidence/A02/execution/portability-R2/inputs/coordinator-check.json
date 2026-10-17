@@ -1,0 +1,45 @@
+{
+  "result": "I1-GIT-01_REPRODUCED",
+  "integration_commit": "3bda6c2307e93601a574c9979c35fd1b25da3f58",
+  "input_sha256": {
+    "examples/a02/R1/identity.py": "5ea5be842a5326c28c86942f7d0859093a01d17fc12fd2dfeebfb46ba010772c",
+    "tests/test_a02_r1.py": "2245a9f880e1cffa565d55d1d81fe0322fe7c634c6a45ae6427b00c1fcddb33c"
+  },
+  "commands": [
+    {
+      "label": "without-git",
+      "argv": [
+        "C:\\Users\\ASUS\\AppData\\Local\\Programs\\Python\\Python39\\python.exe",
+        "-B",
+        "-m",
+        "unittest",
+        "test_a02_r1.A02R1Tests.test_export_subdirectory_cannot_borrow_enclosing_git_head",
+        "-v"
+      ],
+      "cwd": "D:\\1800\\.local\\stages\\A01-review-integration-R1\\raw integrated no Git\\tests",
+      "git_executable": null,
+      "exit_code": 1,
+      "stdout": "without-git-stdout.txt",
+      "stderr": "without-git-stderr.txt"
+    },
+    {
+      "label": "with-git",
+      "argv": [
+        "C:\\Users\\ASUS\\AppData\\Local\\Programs\\Python\\Python39\\python.exe",
+        "-B",
+        "-m",
+        "unittest",
+        "test_a02_r1.A02R1Tests.test_export_subdirectory_cannot_borrow_enclosing_git_head",
+        "-v"
+      ],
+      "cwd": "D:\\1800\\.local\\stages\\A01-review-integration-R1\\raw integrated no Git\\tests",
+      "git_executable": "C:\\Program Files\\Git\\cmd\\git.EXE",
+      "exit_code": 0,
+      "stdout": "with-git-stdout.txt",
+      "stderr": "with-git-stderr.txt"
+    }
+  ],
+  "scope": "One existing identity test under two PATHs; no functional or platform acceptance",
+  "production_files_changed": false,
+  "platform_model_calls": 0
+}
