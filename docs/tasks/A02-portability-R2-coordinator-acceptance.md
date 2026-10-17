@@ -13,3 +13,9 @@
 ## 集成安排
 
 本文件首次归档时仅记录ACCEPTED。主调度将明确合并上述最终提交，核对范围与原字节，并在实际集成版本运行受影响A02回归；成功后再追加INTEGRATED及确切合并提交，继而续派原A01独立验收对话。不得用本段计划提前释放依赖。
+
+## 实际本地集成结果
+
+INTEGRATED：接受归档 91e48498376bdafe606d8ac596da810abe3b5afd，实际两父合并 2d1dc8b97713ee06ec5bf35febe0b894ece584b2。188项合并净变更均与冻结Git原字节一致，零冲突；默认checkout的5个Python文件为精确LF→CRLF，其余183项磁盘相同，详见[逐文件双表示](../evidence/A02/coordinator/portability-R2-integration/merge-index-check.json)。初次前检误将默认checkout要求为raw字节全等，原脚本及断言失败保留；只补充双摘要核对，未改受验代码或Git属性。
+
+[实际集成回归](../evidence/A02/coordinator/portability-R2-integration/checks.json)为62项A02全部通过、零skip，实际导入指向当前集成checkout。执行前后188项磁盘摘要相同。未重复C01/登录/630几何矩阵。本轮只释放对原A01验收者开展新固定组合复验的前置条件，A01/A04/D01仍不记为完成；未推送或共享B。
