@@ -1,0 +1,119 @@
+{
+  "type": "object",
+  "properties": {
+    "format_version": {
+      "const": "a03-conversion-record-3"
+    },
+    "conversion_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "state": {
+      "enum": [
+        "CREATED",
+        "COPYING",
+        "VALIDATING",
+        "INCOMPLETE",
+        "FAILED",
+        "COMMITTED"
+      ]
+    },
+    "previous_record": {
+      "oneOf": [
+        {
+          "type": "null"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "path": {
+              "type": "string",
+              "minLength": 1
+            },
+            "sha256": {
+              "type": "string",
+              "pattern": "^[0-9a-f]{64}$"
+            },
+            "media_type": {
+              "type": "string",
+              "minLength": 1
+            },
+            "origin": {
+              "const": "SYNTHETIC"
+            }
+          },
+          "required": [
+            "path",
+            "sha256",
+            "media_type",
+            "origin"
+          ],
+          "additionalProperties": false
+        }
+      ]
+    },
+    "source_raw_sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "manifest": {
+      "oneOf": [
+        {
+          "type": "null"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "path": {
+              "type": "string",
+              "minLength": 1
+            },
+            "sha256": {
+              "type": "string",
+              "pattern": "^[0-9a-f]{64}$"
+            },
+            "media_type": {
+              "type": "string",
+              "minLength": 1
+            },
+            "origin": {
+              "const": "SYNTHETIC"
+            }
+          },
+          "required": [
+            "path",
+            "sha256",
+            "media_type",
+            "origin"
+          ],
+          "additionalProperties": false
+        }
+      ]
+    },
+    "failure": {
+      "oneOf": [
+        {
+          "type": "null"
+        },
+        {
+          "type": "string",
+          "minLength": 1
+        }
+      ]
+    },
+    "native_execution_eligible": {
+      "const": false
+    }
+  },
+  "required": [
+    "format_version",
+    "conversion_id",
+    "state",
+    "previous_record",
+    "source_raw_sha256",
+    "manifest",
+    "failure",
+    "native_execution_eligible"
+  ],
+  "additionalProperties": false
+}

@@ -1,0 +1,124 @@
+{
+  "POST_HOLD_runs": [
+    {
+      "created": 1792263334.5385816,
+      "generation": 4,
+      "hold_context": {
+        "hold_head": {
+          "hash": "20da4e63f166140bbb5f4c4abef694ef12829ab14e8594aa8ed623072739aab7",
+          "sequence": 19
+        },
+        "hold_id": "target-drift-hold-29845abd98f44e5492a869ce8aa92db8",
+        "hold_ref": {
+          "media_type": "application/json",
+          "origin": "SYNTHETIC",
+          "path": "assets/runtime/5673232817ea8c91e402e9f3831e00f1ceade26ab1a936ad99bf005f2b9d4e39.json",
+          "sha256": "5673232817ea8c91e402e9f3831e00f1ceade26ab1a936ad99bf005f2b9d4e39"
+        },
+        "kind": "POST_HOLD"
+      },
+      "observation_id": "native-observation-1c6a72d0e553442ca2678700a12b7603",
+      "owner_id": "process-0cfefc04588f4ed689b82135619ef33b",
+      "pre_ref": {
+        "artifact_id": "pre-r8-r3-post-hold-1",
+        "content_hash": "997f7b84d67b595a75540ef2b485469e72d8efcb978e6cbd820b1c1a430dfe3e",
+        "kind": "CheckReport",
+        "revision": 1
+      },
+      "read_sequence": 6,
+      "run_id": "native-pre-0faaee22fc8d465ca6faf97fd89aed8f",
+      "snapshot_ref": {
+        "artifact_id": "snapshot-a03-2dd1eb1b7f1015a972469c49",
+        "content_hash": "fbe5bb933970b7ff924778629554a7aa308ad3cf89df4fb53c68418648969b3c",
+        "kind": "PlatformSnapshot",
+        "revision": 1
+      }
+    },
+    {
+      "created": 1792263339.405663,
+      "generation": 5,
+      "hold_context": {
+        "hold_head": {
+          "hash": "4d688615dcdd2fa54b552e611f8a832aa91b296978eb55d2fcd46f26fcc4f2fc",
+          "sequence": 22
+        },
+        "hold_id": "target-drift-hold-29845abd98f44e5492a869ce8aa92db8",
+        "hold_ref": {
+          "media_type": "application/json",
+          "origin": "SYNTHETIC",
+          "path": "assets/runtime/5673232817ea8c91e402e9f3831e00f1ceade26ab1a936ad99bf005f2b9d4e39.json",
+          "sha256": "5673232817ea8c91e402e9f3831e00f1ceade26ab1a936ad99bf005f2b9d4e39"
+        },
+        "kind": "POST_HOLD"
+      },
+      "observation_id": "native-observation-d978c0b070a54e50ada9955b62c9fecf",
+      "owner_id": "process-0cfefc04588f4ed689b82135619ef33b",
+      "pre_ref": {
+        "artifact_id": "pre-r8-r3-post-hold-2",
+        "content_hash": "5bf19c81d70f3b801cd512c0408dcdd70197a1758aa9e43273c6f634de17f879",
+        "kind": "CheckReport",
+        "revision": 1
+      },
+      "read_sequence": 7,
+      "run_id": "native-pre-49d4c6f56f4c4c75a2caa316a7163d36",
+      "snapshot_ref": {
+        "artifact_id": "snapshot-a03-9b2020fd07ec72fb8f248718",
+        "content_hash": "3a2be5a49af26bc048aeeded23a9fd850d170dda306b2d26fef112dbecfc248e",
+        "kind": "PlatformSnapshot",
+        "revision": 1
+      }
+    }
+  ],
+  "clock_or_SQL_fabrication": false,
+  "hold_clear_calls": 0,
+  "old_hold_control": "same hold; old owner/generation and exact whole-book head after normal release/claim",
+  "permit_count": 1,
+  "real_expiry_wait": true,
+  "refusals": [
+    {
+      "actual_code": "NATIVE_ADMITTED_RUN_REQUIRED",
+      "control": "old_INITIAL_after_registry_reopen",
+      "exception_type": "RuntimeFailure",
+      "expected_code": "NATIVE_ADMITTED_RUN_REQUIRED",
+      "message": "PASS bytes or reopened registry cannot recreate process-private proof"
+    },
+    {
+      "actual_code": "TARGET_DRIFT_HOLD",
+      "control": "INITIAL_while_held",
+      "exception_type": "RuntimeFailure",
+      "expected_code": "TARGET_DRIFT_HOLD",
+      "message": "target-drift-hold-29845abd98f44e5492a869ce8aa92db8"
+    },
+    {
+      "actual_code": "TARGET_DRIFT_HOLD",
+      "control": "ordinary_plan_accept_while_held",
+      "exception_type": "RuntimeFailure",
+      "expected_code": "TARGET_DRIFT_HOLD",
+      "message": "target-drift-hold-29845abd98f44e5492a869ce8aa92db8"
+    },
+    {
+      "actual_code": "OWNER_GENERATION_STALE",
+      "control": "old_hold_run_after_normal_owner_head_progress",
+      "exception_type": "RuntimeFailure",
+      "expected_code": "OWNER_GENERATION_STALE",
+      "message": "current ACTIVE lease required"
+    },
+    {
+      "actual_code": "TARGET_DRIFT_HOLD",
+      "control": "ordinary_write_still_blocked_after_POST_HOLD_admission",
+      "exception_type": "RuntimeFailure",
+      "expected_code": "TARGET_DRIFT_HOLD",
+      "message": "target-drift-hold-29845abd98f44e5492a869ce8aa92db8"
+    },
+    {
+      "actual_code": "NATIVE_PRE_DEADLINE_EXCEEDED",
+      "control": "expired_current_hold_proof",
+      "exception_type": "RuntimeFailure",
+      "expected_code": "NATIVE_PRE_DEADLINE_EXCEEDED",
+      "message": "durable PRE window expired; reopen does not refresh it"
+    }
+  ],
+  "same_current_hold_preserved": "target-drift-hold-29845abd98f44e5492a869ce8aa92db8",
+  "status": "REVIEW",
+  "target_effect_count": 1
+}

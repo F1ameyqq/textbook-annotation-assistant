@@ -1,0 +1,56 @@
+{
+  "N7_original_status": "FAILED_EXACT_OUTER_CODE_ASSERTION",
+  "classification": "NEW_DRIVER_ASSERTION_MORE_SPECIFIC_THAN_EXISTING_WRITTEN_CONTRACT",
+  "actual_rejection": true,
+  "inner_code": "TARGET_STORE_VERSION_UNSUPPORTED",
+  "outer_code": "TARGET_STORE_CORRUPT",
+  "cause": "ContractError inherits ValueError; business version rejection occurs inside broad ValueError catch",
+  "source_and_trace_sha256": {
+    "persistent.py": "8af1f8de7a4ec08966dc10d7180060f89a47aad1eddce19c3c45bacd953d2487",
+    "ContractError_source": "0b77136a4294308313157302ba368d6f4a2dc74f670cac44642212b025fb4328",
+    "N7_stderr": "0c5670e4e345ad9c55020d83851ea971c0dbc4a865899b425c15241847706fc5"
+  },
+  "existing_requirement": "V08/R14 require fail-closed format rejection and locatable errors/history, not this exact outer symbol",
+  "existing_requirement_revision": "c728ce1587cb68a22a212cb48d71facf584ec426",
+  "reviewer_preparation_failure": "n7-readonly-review-01 looked for workflow-owned contract exports under target; only this file lookup was corrected, no candidate calls",
+  "existing_source_test_contract_search": {
+    "argv": [
+      "git",
+      "-c",
+      "core.longpaths=true",
+      "grep",
+      "-n",
+      "-E",
+      "TARGET_STORE_VERSION_UNSUPPORTED|TARGET_STORE_CORRUPT",
+      "d9ed692db9ab8e9277f8ffd09e040451e8b8f65f",
+      "--",
+      "src",
+      "tests",
+      "docs/contracts-v1.md",
+      "docs/architecture.md",
+      "docs/tasks/A03-runtime-recovery.md",
+      "docs/tasks/A03-independent-review.md",
+      "docs/tasks/A03-P2-R8-native-bridge-implementation.md"
+    ],
+    "matches": [
+      "d9ed692db9ab8e9277f8ffd09e040451e8b8f65f:src/annotation/delivery/mock/persistent.py:335:                    reject(\"TARGET_STORE_VERSION_UNSUPPORTED\", \"target application or user version differs\")",
+      "d9ed692db9ab8e9277f8ffd09e040451e8b8f65f:src/annotation/delivery/mock/persistent.py:337:                    reject(\"TARGET_STORE_CORRUPT\", \"target integrity check failed\")",
+      "d9ed692db9ab8e9277f8ffd09e040451e8b8f65f:src/annotation/delivery/mock/persistent.py:342:            reject(\"TARGET_STORE_CORRUPT\", str(exc))",
+      "d9ed692db9ab8e9277f8ffd09e040451e8b8f65f:src/annotation/delivery/mock/persistent.py:346:            reject(\"TARGET_STORE_VERSION_UNSUPPORTED\", \"target format differs\")",
+      "d9ed692db9ab8e9277f8ffd09e040451e8b8f65f:src/annotation/delivery/mock/persistent.py:369:                reject(\"TARGET_STORE_VERSION_UNSUPPORTED\", \"target version changed\")",
+      "d9ed692db9ab8e9277f8ffd09e040451e8b8f65f:src/annotation/delivery/mock/persistent.py:380:            reject(\"TARGET_STORE_CORRUPT\", str(exc))",
+      "d9ed692db9ab8e9277f8ffd09e040451e8b8f65f:tests/test_a03_r8_r3_post_hold.py:440:        refusal(self, 'TARGET_STORE_VERSION_UNSUPPORTED', lambda: PersistentMockSession.open(n1_reg['target_dir'],"
+    ]
+  },
+  "repository_caller_impact": "No branch on either symbol outside persistent.py or the new N7 test was found in the searched source/tests/contracts. Native normal observer uses the explicit native bridge.",
+  "observable_diagnostic_effect": "Outer classification is CORRUPT while inner VERSION_UNSUPPORTED remains in the message; this is not proof that native bytes are damaged.",
+  "state_effect_boundary": "Actual failure precedes session construction and every write statement in open; post-run DB identity must still be checked. No N7-specific before/after hash pair is claimed.",
+  "open_is_not_a_readonly_API": "It uses mode=rw; reviewer did not invoke it.",
+  "product_change_required_by_this_failed_assertion": false,
+  "driver_change_decision": "Coordinator should settle the diagnostic assertion against the contract; no product or test changed in this review.",
+  "strict_reopen_and_old_runtime_rejection": "Reached before the failed assertion in original test control flow",
+  "incomplete_initialization": "NOT_REACHED",
+  "N6": "NOT_RUN",
+  "N7_replays_or_variants": 0,
+  "field_reset": "NOT_EXECUTED_NO_RERUN_VARIANT_OR_DELEGATION"
+}

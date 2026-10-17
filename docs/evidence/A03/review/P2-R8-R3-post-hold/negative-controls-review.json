@@ -1,0 +1,565 @@
+{
+  "status": "FINITE_N3_N4_N5_AND_LOCAL_BOUNDARIES_VERIFIED",
+  "results": [
+    {
+      "label": "author",
+      "local": {
+        "SQL_fabrication": false,
+        "controls": [
+          {
+            "actual_code": "NATIVE_PRE_CONTEXT_INVALID",
+            "control": "POST_HOLD_without_hold",
+            "exception_type": "RuntimeFailure",
+            "expected_code": "NATIVE_PRE_CONTEXT_INVALID",
+            "message": "POST_HOLD needs the actual current hold"
+          },
+          {
+            "actual_code": "OWNER_GENERATION_STALE",
+            "control": "stale_generation",
+            "exception_type": "RuntimeFailure",
+            "expected_code": "OWNER_GENERATION_STALE",
+            "message": "current ACTIVE lease required"
+          },
+          {
+            "actual_code": "BOOK_WRITE_PAUSED",
+            "control": "real_pending_intent",
+            "exception_type": "RuntimeFailure",
+            "expected_code": "BOOK_WRITE_PAUSED",
+            "message": "POST_HOLD PRE cannot bypass unresolved book obligations"
+          }
+        ],
+        "intent_ref": {
+          "artifact_id": "writeintent-c6fc160cd5a44676817763d2f075f5a9",
+          "content_hash": "51b82b3857a015309c673d3fab274be7ed62776c65566f8781e2f46cc23e3d4a",
+          "kind": "WriteIntent",
+          "revision": 1
+        },
+        "pending": 1,
+        "permits": 0,
+        "target_effects": 0
+      },
+      "N3": [
+        {
+          "admitted": false,
+          "comparison": {
+            "answer_matching": "PASS",
+            "coverage": "PASS",
+            "policy": "PASS",
+            "source_integrity": "FAIL",
+            "structure": "PASS"
+          },
+          "control": "source_integrity",
+          "effects": 0
+        },
+        {
+          "admitted": false,
+          "comparison": {
+            "answer_matching": "PASS",
+            "coverage": "PASS",
+            "policy": "PASS",
+            "source_integrity": "PASS",
+            "structure": "FAIL"
+          },
+          "control": "structure",
+          "effects": 0
+        },
+        {
+          "admitted": false,
+          "comparison": {
+            "answer_matching": "FAIL",
+            "coverage": "PASS",
+            "policy": "PASS",
+            "source_integrity": "PASS",
+            "structure": "PASS"
+          },
+          "control": "answer_matching",
+          "effects": 0
+        },
+        {
+          "admitted": false,
+          "comparison": {
+            "answer_matching": "PASS",
+            "coverage": "FAIL",
+            "policy": "PASS",
+            "source_integrity": "PASS",
+            "structure": "PASS"
+          },
+          "control": "coverage",
+          "effects": 0
+        },
+        {
+          "admitted": false,
+          "comparison": {
+            "answer_matching": "PASS",
+            "coverage": "PASS",
+            "policy": "FAIL",
+            "source_integrity": "PASS",
+            "structure": "PASS"
+          },
+          "control": "policy",
+          "effects": 0
+        }
+      ],
+      "N4": {
+        "effect_count": 0,
+        "permit_count": 0,
+        "refusals": [
+          {
+            "actual_code": "NATIVE_RUN_HANDLE_REQUIRED",
+            "control": "missing_run",
+            "exception_type": "RuntimeFailure",
+            "expected_code": "NATIVE_RUN_HANDLE_REQUIRED",
+            "message": "serialized or foreign PRE run handle rejected"
+          },
+          {
+            "actual_code": "NATIVE_RUN_HANDLE_REQUIRED",
+            "control": "serialized_run",
+            "exception_type": "RuntimeFailure",
+            "expected_code": "NATIVE_RUN_HANDLE_REQUIRED",
+            "message": "serialized or foreign PRE run handle rejected"
+          },
+          {
+            "actual_code": "NATIVE_RUN_HANDLE_REQUIRED",
+            "control": "foreign_run",
+            "exception_type": "RuntimeFailure",
+            "expected_code": "NATIVE_RUN_HANDLE_REQUIRED",
+            "message": "serialized or foreign PRE run handle rejected"
+          },
+          {
+            "actual_code": "NATIVE_PRE_OBSERVATION_FOREIGN",
+            "control": "foreign_observation",
+            "exception_type": "RuntimeFailure",
+            "expected_code": "NATIVE_PRE_OBSERVATION_FOREIGN",
+            "message": "NATIVE_PRE_OBSERVATION_FOREIGN"
+          }
+        ]
+      },
+      "N5": {
+        "R7_static_validated": true,
+        "legacy_1_1_archive_validator_acceptance_claim": false,
+        "legacy_1_1_read_sha256": "5f4ab079d6b5eef146db4ad013aad29b42e5fe2d2edf330340113f03645558f1",
+        "refusals": [
+          {
+            "actual_code": "NATIVE_CONTEXT_REQUIRED",
+            "control": "native_without_context",
+            "exception_type": "StaticCodecError",
+            "expected_code": "NATIVE_CONTEXT_REQUIRED",
+            "message": "$context: [NATIVE_CONTEXT_REQUIRED] NATIVE_CONTEXT_REQUIRED"
+          },
+          {
+            "actual_code": "NATIVE_CONTEXT_REQUIRED",
+            "control": "unknown_pins_unissued_context",
+            "exception_type": "StaticCodecError",
+            "expected_code": "NATIVE_CONTEXT_REQUIRED",
+            "message": "$context: [NATIVE_CONTEXT_REQUIRED] NATIVE_CONTEXT_REQUIRED"
+          },
+          {
+            "actual_code": "NATIVE_CONTEXT_REQUIRED",
+            "control": "R7_selection_is_not_native_authority",
+            "exception_type": "StaticCodecError",
+            "expected_code": "NATIVE_CONTEXT_REQUIRED",
+            "message": "$context: [NATIVE_CONTEXT_REQUIRED] NATIVE_CONTEXT_REQUIRED"
+          },
+          {
+            "actual_code": "NATIVE_CONTEXT_REQUIRED",
+            "control": "R7_validated_static_object_is_not_native_authority",
+            "exception_type": "StaticCodecError",
+            "expected_code": "NATIVE_CONTEXT_REQUIRED",
+            "message": "$context: [NATIVE_CONTEXT_REQUIRED] NATIVE_CONTEXT_REQUIRED"
+          },
+          {
+            "actual_code": "NATIVE_CONTEXT_REQUIRED",
+            "control": "actual_1_1_historical_JSON_is_not_native_authority",
+            "exception_type": "StaticCodecError",
+            "expected_code": "NATIVE_CONTEXT_REQUIRED",
+            "message": "$context: [NATIVE_CONTEXT_REQUIRED] NATIVE_CONTEXT_REQUIRED"
+          },
+          {
+            "actual_code": "NATIVE_CONTEXT_REQUIRED",
+            "control": "old_role_descriptor_a03-exchange-1",
+            "exception_type": "StaticCodecError",
+            "expected_code": "NATIVE_CONTEXT_REQUIRED",
+            "message": "$context: [NATIVE_CONTEXT_REQUIRED] NATIVE_CONTEXT_REQUIRED"
+          },
+          {
+            "actual_code": "NATIVE_CONTEXT_REQUIRED",
+            "control": "old_role_descriptor_a03-exchange-3-proposal",
+            "exception_type": "StaticCodecError",
+            "expected_code": "NATIVE_CONTEXT_REQUIRED",
+            "message": "$context: [NATIVE_CONTEXT_REQUIRED] NATIVE_CONTEXT_REQUIRED"
+          }
+        ]
+      },
+      "N4_registered_bindings": [
+        {
+          "context": {
+            "hold_head": null,
+            "hold_id": null,
+            "hold_ref": null,
+            "kind": "INITIAL"
+          },
+          "generation": 1,
+          "owner_id": "process-5b9d50a0279147a2856750b6a69fb007",
+          "registration_id": "registration-r8-r3-N4-a",
+          "registry_id": "native-registry-73a636c1902e4392a5b4d5cd7aeffded",
+          "target_session_id": "target-session-r8-r3-N4-a",
+          "target_store_id": "target-store-r8-r3-N4-a"
+        },
+        {
+          "context": {
+            "hold_head": null,
+            "hold_id": null,
+            "hold_ref": null,
+            "kind": "INITIAL"
+          },
+          "generation": 1,
+          "owner_id": "process-fc5535349f054b0aa156c6413073d593",
+          "registration_id": "registration-r8-r3-N4-b",
+          "registry_id": "native-registry-294e1ccc126f484d96dcc339e9db1adb",
+          "target_session_id": "target-session-r8-r3-N4-b",
+          "target_store_id": "target-store-r8-r3-N4-b"
+        }
+      ],
+      "N3_scope": "direct five-check comparison; admission was not invoked; no N3 databases or target effects",
+      "N5_scope": "actual legacy JSON read and validated R7 static object; no 1.1 archive-validator acceptance"
+    },
+    {
+      "label": "independent",
+      "local": {
+        "SQL_fabrication": false,
+        "controls": [
+          {
+            "actual_code": "NATIVE_PRE_CONTEXT_INVALID",
+            "control": "POST_HOLD_without_hold",
+            "exception_type": "RuntimeFailure",
+            "expected_code": "NATIVE_PRE_CONTEXT_INVALID",
+            "message": "POST_HOLD needs the actual current hold"
+          },
+          {
+            "actual_code": "OWNER_GENERATION_STALE",
+            "control": "stale_generation",
+            "exception_type": "RuntimeFailure",
+            "expected_code": "OWNER_GENERATION_STALE",
+            "message": "current ACTIVE lease required"
+          },
+          {
+            "actual_code": "BOOK_WRITE_PAUSED",
+            "control": "real_pending_intent",
+            "exception_type": "RuntimeFailure",
+            "expected_code": "BOOK_WRITE_PAUSED",
+            "message": "POST_HOLD PRE cannot bypass unresolved book obligations"
+          }
+        ],
+        "intent_ref": {
+          "artifact_id": "writeintent-ce57efbd074d4f21a90a9c46d090bb72",
+          "content_hash": "0946d35704307405803fe003aebe8d4ad096b5f128cbbf79337a038b8f63ece1",
+          "kind": "WriteIntent",
+          "revision": 1
+        },
+        "pending": 1,
+        "permits": 0,
+        "target_effects": 0
+      },
+      "N3": [
+        {
+          "admitted": false,
+          "comparison": {
+            "answer_matching": "PASS",
+            "coverage": "PASS",
+            "policy": "PASS",
+            "source_integrity": "FAIL",
+            "structure": "PASS"
+          },
+          "control": "source_integrity",
+          "effects": 0
+        },
+        {
+          "admitted": false,
+          "comparison": {
+            "answer_matching": "PASS",
+            "coverage": "PASS",
+            "policy": "PASS",
+            "source_integrity": "PASS",
+            "structure": "FAIL"
+          },
+          "control": "structure",
+          "effects": 0
+        },
+        {
+          "admitted": false,
+          "comparison": {
+            "answer_matching": "FAIL",
+            "coverage": "PASS",
+            "policy": "PASS",
+            "source_integrity": "PASS",
+            "structure": "PASS"
+          },
+          "control": "answer_matching",
+          "effects": 0
+        },
+        {
+          "admitted": false,
+          "comparison": {
+            "answer_matching": "PASS",
+            "coverage": "FAIL",
+            "policy": "PASS",
+            "source_integrity": "PASS",
+            "structure": "PASS"
+          },
+          "control": "coverage",
+          "effects": 0
+        },
+        {
+          "admitted": false,
+          "comparison": {
+            "answer_matching": "PASS",
+            "coverage": "PASS",
+            "policy": "FAIL",
+            "source_integrity": "PASS",
+            "structure": "PASS"
+          },
+          "control": "policy",
+          "effects": 0
+        }
+      ],
+      "N4": {
+        "effect_count": 0,
+        "permit_count": 0,
+        "refusals": [
+          {
+            "actual_code": "NATIVE_RUN_HANDLE_REQUIRED",
+            "control": "missing_run",
+            "exception_type": "RuntimeFailure",
+            "expected_code": "NATIVE_RUN_HANDLE_REQUIRED",
+            "message": "serialized or foreign PRE run handle rejected"
+          },
+          {
+            "actual_code": "NATIVE_RUN_HANDLE_REQUIRED",
+            "control": "serialized_run",
+            "exception_type": "RuntimeFailure",
+            "expected_code": "NATIVE_RUN_HANDLE_REQUIRED",
+            "message": "serialized or foreign PRE run handle rejected"
+          },
+          {
+            "actual_code": "NATIVE_RUN_HANDLE_REQUIRED",
+            "control": "foreign_run",
+            "exception_type": "RuntimeFailure",
+            "expected_code": "NATIVE_RUN_HANDLE_REQUIRED",
+            "message": "serialized or foreign PRE run handle rejected"
+          },
+          {
+            "actual_code": "NATIVE_PRE_OBSERVATION_FOREIGN",
+            "control": "foreign_observation",
+            "exception_type": "RuntimeFailure",
+            "expected_code": "NATIVE_PRE_OBSERVATION_FOREIGN",
+            "message": "NATIVE_PRE_OBSERVATION_FOREIGN"
+          }
+        ]
+      },
+      "N5": {
+        "R7_static_validated": true,
+        "legacy_1_1_archive_validator_acceptance_claim": false,
+        "legacy_1_1_read_sha256": "5f4ab079d6b5eef146db4ad013aad29b42e5fe2d2edf330340113f03645558f1",
+        "refusals": [
+          {
+            "actual_code": "NATIVE_CONTEXT_REQUIRED",
+            "control": "native_without_context",
+            "exception_type": "StaticCodecError",
+            "expected_code": "NATIVE_CONTEXT_REQUIRED",
+            "message": "$context: [NATIVE_CONTEXT_REQUIRED] NATIVE_CONTEXT_REQUIRED"
+          },
+          {
+            "actual_code": "NATIVE_CONTEXT_REQUIRED",
+            "control": "unknown_pins_unissued_context",
+            "exception_type": "StaticCodecError",
+            "expected_code": "NATIVE_CONTEXT_REQUIRED",
+            "message": "$context: [NATIVE_CONTEXT_REQUIRED] NATIVE_CONTEXT_REQUIRED"
+          },
+          {
+            "actual_code": "NATIVE_CONTEXT_REQUIRED",
+            "control": "R7_selection_is_not_native_authority",
+            "exception_type": "StaticCodecError",
+            "expected_code": "NATIVE_CONTEXT_REQUIRED",
+            "message": "$context: [NATIVE_CONTEXT_REQUIRED] NATIVE_CONTEXT_REQUIRED"
+          },
+          {
+            "actual_code": "NATIVE_CONTEXT_REQUIRED",
+            "control": "R7_validated_static_object_is_not_native_authority",
+            "exception_type": "StaticCodecError",
+            "expected_code": "NATIVE_CONTEXT_REQUIRED",
+            "message": "$context: [NATIVE_CONTEXT_REQUIRED] NATIVE_CONTEXT_REQUIRED"
+          },
+          {
+            "actual_code": "NATIVE_CONTEXT_REQUIRED",
+            "control": "actual_1_1_historical_JSON_is_not_native_authority",
+            "exception_type": "StaticCodecError",
+            "expected_code": "NATIVE_CONTEXT_REQUIRED",
+            "message": "$context: [NATIVE_CONTEXT_REQUIRED] NATIVE_CONTEXT_REQUIRED"
+          },
+          {
+            "actual_code": "NATIVE_CONTEXT_REQUIRED",
+            "control": "old_role_descriptor_a03-exchange-1",
+            "exception_type": "StaticCodecError",
+            "expected_code": "NATIVE_CONTEXT_REQUIRED",
+            "message": "$context: [NATIVE_CONTEXT_REQUIRED] NATIVE_CONTEXT_REQUIRED"
+          },
+          {
+            "actual_code": "NATIVE_CONTEXT_REQUIRED",
+            "control": "old_role_descriptor_a03-exchange-3-proposal",
+            "exception_type": "StaticCodecError",
+            "expected_code": "NATIVE_CONTEXT_REQUIRED",
+            "message": "$context: [NATIVE_CONTEXT_REQUIRED] NATIVE_CONTEXT_REQUIRED"
+          }
+        ]
+      },
+      "N4_registered_bindings": [
+        {
+          "context": {
+            "hold_head": null,
+            "hold_id": null,
+            "hold_ref": null,
+            "kind": "INITIAL"
+          },
+          "generation": 1,
+          "owner_id": "process-7293a80a13fd4896a6a30edfa6b69627",
+          "registration_id": "registration-r8-r3-N4-a",
+          "registry_id": "native-registry-8e5ef7811ac149348e79cf181633e16c",
+          "target_session_id": "target-session-r8-r3-N4-a",
+          "target_store_id": "target-store-r8-r3-N4-a"
+        },
+        {
+          "context": {
+            "hold_head": null,
+            "hold_id": null,
+            "hold_ref": null,
+            "kind": "INITIAL"
+          },
+          "generation": 1,
+          "owner_id": "process-060a37fea9d64cfe983cced36e0fe202",
+          "registration_id": "registration-r8-r3-N4-b",
+          "registry_id": "native-registry-aa4f1189a40746329c4b8e84590a610d",
+          "target_session_id": "target-session-r8-r3-N4-b",
+          "target_store_id": "target-store-r8-r3-N4-b"
+        }
+      ],
+      "N3_scope": "direct five-check comparison; admission was not invoked; no N3 databases or target effects",
+      "N5_scope": "actual legacy JSON read and validated R7 static object; no 1.1 archive-validator acceptance"
+    }
+  ],
+  "actual_N3_inputs": [
+    {
+      "control": "source_integrity",
+      "actual_input": "traces/N3/source_integrity-actual-schema-input.json",
+      "canonical_sha256": "03a49e136b70aec404cfa3cdc9087af68e83f4f93b72d8e6e7121efa6dfbee2f",
+      "schema_completed_before_comparison": true,
+      "artifact_hashes_recomputed_and_verified": true,
+      "actual_assets": [
+        {
+          "path": "D:\\1800\\docs\\evidence\\A03\\review\\P2-R8-R3-post-hold\\isolation\\workspace\\docs\\evidence\\A03\\execution\\P2-R8-R3-post-hold\\validation\\review-r3-31803881c16a\\cases\\N3-source_integrity\\assets\\page.pgm",
+          "sha256": "13e63471df3850312416b4d02700df9584c34c0bee9f809dff1165eeab136601",
+          "bytes": 3579
+        }
+      ],
+      "comparison": {
+        "source_integrity": "FAIL",
+        "structure": "PASS",
+        "answer_matching": "PASS",
+        "coverage": "PASS",
+        "policy": "PASS"
+      },
+      "admission_attempted": false
+    },
+    {
+      "control": "structure",
+      "actual_input": "traces/N3/structure-actual-schema-input.json",
+      "canonical_sha256": "b99c35f7aeb97d9e201d592f29a8b2577bdccb6ee6a4fa62e774d484e5a7c148",
+      "schema_completed_before_comparison": true,
+      "artifact_hashes_recomputed_and_verified": true,
+      "actual_assets": [
+        {
+          "path": "D:\\1800\\docs\\evidence\\A03\\review\\P2-R8-R3-post-hold\\isolation\\workspace\\docs\\evidence\\A03\\execution\\P2-R8-R3-post-hold\\validation\\review-r3-31803881c16a\\cases\\N3-structure\\assets\\page.pgm",
+          "sha256": "1f82898615c67c676c532b17a8bd8e801c73eb6e7e2ba5a7f685bf1c3582cc7a",
+          "bytes": 3579
+        }
+      ],
+      "comparison": {
+        "source_integrity": "PASS",
+        "structure": "FAIL",
+        "answer_matching": "PASS",
+        "coverage": "PASS",
+        "policy": "PASS"
+      },
+      "admission_attempted": false
+    },
+    {
+      "control": "answer_matching",
+      "actual_input": "traces/N3/answer_matching-actual-schema-input.json",
+      "canonical_sha256": "264b977bad304dea60fb248a3a6344d486641f2b9641ea8d5eec082e601c8f48",
+      "schema_completed_before_comparison": true,
+      "artifact_hashes_recomputed_and_verified": true,
+      "actual_assets": [
+        {
+          "path": "D:\\1800\\docs\\evidence\\A03\\review\\P2-R8-R3-post-hold\\isolation\\workspace\\docs\\evidence\\A03\\execution\\P2-R8-R3-post-hold\\validation\\review-r3-31803881c16a\\cases\\N3-answer_matching\\assets\\page.pgm",
+          "sha256": "1f82898615c67c676c532b17a8bd8e801c73eb6e7e2ba5a7f685bf1c3582cc7a",
+          "bytes": 3579
+        }
+      ],
+      "comparison": {
+        "source_integrity": "PASS",
+        "structure": "PASS",
+        "answer_matching": "FAIL",
+        "coverage": "PASS",
+        "policy": "PASS"
+      },
+      "admission_attempted": false
+    },
+    {
+      "control": "coverage",
+      "actual_input": "traces/N3/coverage-actual-schema-input.json",
+      "canonical_sha256": "84871f4e042166ca063d9218e532f50f6550920336a5ed1a5580acae862e6758",
+      "schema_completed_before_comparison": true,
+      "artifact_hashes_recomputed_and_verified": true,
+      "actual_assets": [
+        {
+          "path": "D:\\1800\\docs\\evidence\\A03\\review\\P2-R8-R3-post-hold\\isolation\\workspace\\docs\\evidence\\A03\\execution\\P2-R8-R3-post-hold\\validation\\review-r3-31803881c16a\\cases\\N3-coverage\\assets\\page.pgm",
+          "sha256": "1f82898615c67c676c532b17a8bd8e801c73eb6e7e2ba5a7f685bf1c3582cc7a",
+          "bytes": 3579
+        }
+      ],
+      "comparison": {
+        "source_integrity": "PASS",
+        "structure": "PASS",
+        "answer_matching": "PASS",
+        "coverage": "FAIL",
+        "policy": "PASS"
+      },
+      "admission_attempted": false
+    },
+    {
+      "control": "policy",
+      "actual_input": "traces/N3/policy-actual-schema-input.json",
+      "canonical_sha256": "89fa81bc5494862b5252356f9f97b16c2becf8ec6c71d6b8fe7fd2460398f734",
+      "schema_completed_before_comparison": true,
+      "artifact_hashes_recomputed_and_verified": true,
+      "actual_assets": [
+        {
+          "path": "D:\\1800\\docs\\evidence\\A03\\review\\P2-R8-R3-post-hold\\isolation\\workspace\\docs\\evidence\\A03\\execution\\P2-R8-R3-post-hold\\validation\\review-r3-31803881c16a\\cases\\N3-policy\\assets\\page.pgm",
+          "sha256": "1f82898615c67c676c532b17a8bd8e801c73eb6e7e2ba5a7f685bf1c3582cc7a",
+          "bytes": 3579
+        }
+      ],
+      "comparison": {
+        "source_integrity": "PASS",
+        "structure": "PASS",
+        "answer_matching": "PASS",
+        "coverage": "PASS",
+        "policy": "FAIL"
+      },
+      "admission_attempted": false
+    }
+  ],
+  "native_product_reexecutions_by_auditor": 0,
+  "N6_N7_run": false,
+  "reviewer_preparation_failure": "negative-review-01 used slash-only matching on Windows control source paths; v2 checks the already-saved SQL rows with normalized path identity, no DB or product rerun",
+  "field_reset": "NOT_EXECUTED_NO_RERUN_VARIANT_OR_DELEGATION"
+}

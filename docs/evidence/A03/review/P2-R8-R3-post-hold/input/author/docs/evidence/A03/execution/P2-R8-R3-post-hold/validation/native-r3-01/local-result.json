@@ -1,0 +1,35 @@
+{
+  "SQL_fabrication": false,
+  "controls": [
+    {
+      "actual_code": "NATIVE_PRE_CONTEXT_INVALID",
+      "control": "POST_HOLD_without_hold",
+      "exception_type": "RuntimeFailure",
+      "expected_code": "NATIVE_PRE_CONTEXT_INVALID",
+      "message": "POST_HOLD needs the actual current hold"
+    },
+    {
+      "actual_code": "OWNER_GENERATION_STALE",
+      "control": "stale_generation",
+      "exception_type": "RuntimeFailure",
+      "expected_code": "OWNER_GENERATION_STALE",
+      "message": "current ACTIVE lease required"
+    },
+    {
+      "actual_code": "BOOK_WRITE_PAUSED",
+      "control": "real_pending_intent",
+      "exception_type": "RuntimeFailure",
+      "expected_code": "BOOK_WRITE_PAUSED",
+      "message": "POST_HOLD PRE cannot bypass unresolved book obligations"
+    }
+  ],
+  "intent_ref": {
+    "artifact_id": "writeintent-c6fc160cd5a44676817763d2f075f5a9",
+    "content_hash": "51b82b3857a015309c673d3fab274be7ed62776c65566f8781e2f46cc23e3d4a",
+    "kind": "WriteIntent",
+    "revision": 1
+  },
+  "pending": 1,
+  "permits": 0,
+  "target_effects": 0
+}
