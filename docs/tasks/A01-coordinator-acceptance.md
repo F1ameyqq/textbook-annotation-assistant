@@ -18,3 +18,9 @@
 S01 公共来源完整性资格、D01 根 Pillow 依赖/清洁安装、N15 非认证 precision 标签和 Windows symlink 权限跳过保持明示。直接 HTTP(S) JPEG URL 的 query/fragment 严格拒绝；没有主机真实性或签名 URL 承诺。历史题内容不是金标准，全书独立分母、OCR/配答、CSS/DPR、真实保存恢复及成本仍未通过本任务验收。
 
 下一步正常合并此确切提交，保留他人文件并运行 A01/C01/A02/登录受影响检查；通过后才记 INTEGRATED。D01 由调度在合并后补最小依赖并验证独立非 editable 安装。A04 待正式发布可用基线后继续，不能仅凭本文 ACCEPTED 开启会话。实际合并、命令及结果将在下方追加；本地归档不表示推送或共享给 B。
+
+## 集成尝试：未通过，已撤回
+
+从 `4946b8ab307f88bdc25c14ace5ead774e3119fc5` 正常合并上述目标到未提交状态，414 个暂存路径与目标 Git blob 一致。[实际回归](../evidence/A01/coordinator/integration/checks.json)：A01 47 通过、1 跳过、1 失败；C01 70、A02 52、登录 8 通过。唯一失败是测试把当前整个工作目录当作历史 971 项不可变快照，受到两份已更新调度文档及 18 个 checkout 换行表示影响；没有改写历史参照来放行。
+
+[失败分类](../evidence/A01/coordinator/integration/mismatch-classification.json)与[撤回回执](../evidence/A01/coordinator/integration/merge-abort.json)保留。原 R3 有界离线 ACCEPTED 不等于集成通过；A01 未记 INTEGRATED，A04 未释放。已准备[集成修订 R1](A01-integration-rework-R1.md)，在原执行/验收对话按限定范围修复测试适用边界后重新集成。D01 尚未开始。
