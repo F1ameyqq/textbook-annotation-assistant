@@ -2,6 +2,8 @@
 
 更新：2026-10-17（Asia/Shanghai）。本对话只负责 A 侧开发调度与验收，B 侧独立管理开发。技术语义以 [架构](architecture.md)、[合同](contracts-v1.md) 和 [开发计划](development-plan.md) 为准；提供给 B 的信息集中在 [B 侧协作交接](b-side-handoff.md)。
 
+阶段发布入口：[A 侧第一阶段交接](a-stage1-handoff.md)。用户已要求将已接受的 C01/A01/A02 推送到独立的 `codex/a-stage1-handoff` 分支；发布结果及确切远端提交以 [调度状态](coordination-state.json) 的 `publication` 记录为准。下文和冻结验收报告中的“未推送”是其记录时点的事实，不代表后续发布回执。发布不改变 B 的接口确认状态，也不自动合并远端架构分支的新改动。
+
 ## 1. 谁做什么
 
 | 角色 | 职责 |
