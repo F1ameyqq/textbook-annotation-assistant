@@ -18,6 +18,8 @@ A 侧调度中心可以分派本地子代理，但不向 B 侧派单、催排期
 
 每次检查完成产物后再决定验收、返修和后续派单；执行 completed 不等于验收通过，验收通过不等于已集成。新阶段执行/验收分别新建对话；同一任务已有对话时在原对话补证据或修复，避免重复派发。既有 A 侧任务派发授权包含必要的定向跟进，不延伸到 B 或外部联系人。没有新进展时不重复通知；只有阶段结果、重要派发、失败或需要用户决定时简短汇报。
 
+用户于2026-10-17要求后续子智能体使用“极高”，不使用 ultra。之后新建子智能体、执行/验收对话及必要的继续消息明确设置 `xhigh`；现有运行任务不为调整强度而中断，后续消息再应用。此为项目派发约定，不修改账号全局模型设置。
+
 任务去重键为“任务号 + 阶段 + 基线版本”，保存对话 ID、产物版本、cursor 和下一依赖；创建前落盘意图、创建后落盘 ID，结果不明先查现有对话。以 C01 → A01/A02/A04 → A03 → I01 A 侧集成为当前开发主线，后续真实平台/难例阶段仍须具体任务单及有界范围。全部约定路线完成后停止扩张并暂停调度；未决业务政策、B 的接口确认或费用授权不假装已解决。运行需本机与桌面应用可用，见 [OpenAI Docs：定时任务](https://learn.chatgpt.com/docs/automations?surface=app)。
 
 2026-10-16 用户进一步要求：“新的阶段性任务你新建对话做任务派发和验收”。从 A05 起，阶段执行和独立验收使用各自的新对话，本对话维护范围、依赖、结果与集成决定。先给执行对话具体任务单，再给验收对话独立标准；验收等待执行交付并释放线上会话，不能与执行者并行占用同一书籍/profile。任务对话创建成功仅表示已派发，不能记成开发完成。
@@ -59,16 +61,16 @@ A 侧调度中心可以分派本地子代理，但不向 B 侧派单、催排期
 | A05 独立验收 | `01a14454-a318-72d1-ad1d-62243d475888` | completed；独立验收 ACCEPTED，主调度复现34+33项通过；[收口记录](tasks/A05-coordinator-acceptance.md) |
 | C01 合同实现 | `01a14481-79b3-7ed3-a29e-fdbeb11e0da9` | R1 completed；交付 `4e42668ab28eda37a37285285d2f6c595d3bba12`；已本地集成，原工作树保留冻结 |
 | C01 独立验收 | `01a14481-d20d-7e21-898a-a650d52f9a9e` | [R1 ACCEPTED](tasks/C01-review-R1-report.md)，主调度已复现并集成；[首轮 REWORK](tasks/C01-review-report.md) 保留 |
-| A01 来源与公共几何 | `01a144ca-ed53-7303-ace2-21a4ca42e13c` | `5f872150`继续冻结；A02修复已集成，等待新组合入口独立复验 |
-| A01 独立验收 | `01a144cb-69e8-7981-a8d5-8832eae61829` | 续派[集成R2组合复验](tasks/A01-integration-R2-review-handoff.md)；原R1 REWORK和R3接受保留 |
+| A01 来源与公共几何 | `01a144ca-ed53-7303-ace2-21a4ca42e13c` | `5f872150`已接受并合入`c6bebdf4`；[集成收口](tasks/A01-integration-R2-coordinator-acceptance.md) |
+| A01 独立验收 | `01a144cb-69e8-7981-a8d5-8832eae61829` | [集成R2接受](tasks/A01-integration-R2-review-report.md)，主调度复现和实际集成通过；旧失败保留 |
 | A02 计划与模拟执行 | `01a144cc-23e9-7c80-9a90-02162ef99b64` | portability-R2 `a1e5be00`已接受，合并于`2d1dc8b9`；仅身份工具修复，原R1业务范围保留 |
 | A02 独立验收 | `01a144cc-2eae-7a23-b299-03f533e30951` | [R2接受](tasks/A02-portability-R2-review-report.md)，[主调度复现及集成](tasks/A02-portability-R2-coordinator-acceptance.md)完成；实际集成62项通过 |
-| A04 无头只读适配 | `01a144cc-dde4-73a1-9e83-be485380ea25` | BLOCKED（geometry依赖）；只读部分冻结 `3e4dba5676c2dc4a71d7826827a76df11017a68b`，最后会话释放记录已核对；坐标联调等待A01 R3接受/集成 |
+| A04 无头只读适配 | `01a144cc-dde4-73a1-9e83-be485380ea25` | A01依赖释放，原对话续派[坐标R1](tasks/A04-coordinate-R1-dispatch.md)；实际状态见调度JSON，新会话需独占检查 |
 | A04 独立验收 | `01a144cc-e93d-7841-a259-d6aac22c94f4` | 已登记；只准备场景，正式复验等待交付、geometry 依赖及执行会话释放 |
 | A03 恢复合同与运行状态 | `01a145aa-2fea-7942-97f9-ad260acf4e30` | P1-R2 `940a5de3`设计接受；主调度批准[P2离线实现](tasks/A03-P2-dispatch.md)，功能未验收 |
 | A03 独立验收 | `01a145aa-8d59-7c70-8d81-731712103a9a` | [P1设计通过](tasks/A03-P1-R2-review-report.md)及[调度收口](tasks/A03-P1-coordinator-acceptance.md)；P2先准备，待冻结实现 |
 
-上述任务属于 A 侧，不向 B 派单。A05仅证明题22的Q/A框保存与重开，不能重放，内容PENDING、NOT_SUBMITTED。C01和A02 R1已本地集成；A02无Git身份工具R2修复也已独立接受、调度复现并本地集成。A01 R3静态来源/几何接受保留；集成R1原REWORK仍保留，现以固定新主父`2d1dc8b9`与冻结A01交付做组合复验。A01继续冻结，A04/D01等待其实际集成。A03 P1-R2设计独立接受并经调度复现，已批准原对话进行P2全合成持久化/恢复实现；P1通过不代表功能完成，I01仍阻断。S01完整性、Pillow根依赖、B确认、真实平台恢复及质量/成本未解决。所有记录仅本地，未推送或共享B；实际派发回执与cursor见[调度状态](coordination-state.json)。
+上述任务属于 A 侧，不向 B 派单。A05仅证明题22的Q/A框保存与重开，不能重放，内容PENDING、NOT_SUBMITTED。C01、A02 R1及无Git身份工具修复已本地集成。A01组合复验已接受，并实际合入`c6bebdf43eb93f7a6ae21e96ec07ed155686777d`，合并后的11个常规子入口全通过；旧R3接受、原REWORK和受限表示保留。A04恢复原只读坐标联调；D01由指定独立执行对话实现根Pillow依赖与清洁安装验证，主调度整合，见[执行任务](tasks/D01-dependency-implementation.md)和[独立验收](tasks/D01-independent-review.md)。A03 P2曾因使用额度中断，已原对话有界续接；功能尚未验收，I01仍阻断。S01、D01安装、B确认、真实平台恢复及质量/成本未解决。所有记录仅本地，未推送或共享B；实际派发回执与cursor见[调度状态](coordination-state.json)。
 
 A 侧派发前记录实际 `base_commit` 和包含调度规则的 `workflow_commit`。上述架构提交不包含本轮新增规则，执行者必须获得实际采用的规则版本。向 B 分享信息时另外标明资料所在提交及“草案/已共同确认/已实现”状态；本地草拟不算已发布。A 侧分支名默认 `codex/<任务号>-<简短描述>`，每个任务有自己的工作目录或 worktree；B 自定开发流程。不得覆盖当前未提交文件，也不把本机登录文件/profile 传给另一开发侧。
 
@@ -93,9 +95,10 @@ A 负责维护共享合同实现、geometry 公共接口、根依赖文件、公
 | 任务 | 建议执行方 | 当前状态 | 依赖/产物 | 验收重点 |
 |---|---|---|---|---|
 | C01 | A | INTEGRATED（本地） | R1 被接受，合同实现及固定样例已集成 | 原失败证据保留；独立80项矩阵/22映射场景通过；B 确认仍未取得 |
-| A01 | A | REVIEW（集成R2） | [新固定组合交接](tasks/A01-integration-R2-review-handoff.md) | A02修复已接受/集成；组合入口复验和实际A01集成前不释放A04 |
+| A01 | A | INTEGRATED（本地） | [集成R2收口](tasks/A01-integration-R2-coordinator-acceptance.md) | 独立接受、调度复现和实际常规入口通过；来源完整性仍有限 |
 | A02 | A | R1、portability-R2均已本地集成 | [R2收口](tasks/A02-portability-R2-coordinator-acceptance.md) | R2仅无Git身份工具；原规划/模拟功能与A03依赖保持 |
-| A04 | A | BLOCKED | [无头只读适配](tasks/A04-headless-readonly.md)；[独立验收](tasks/A04-independent-review.md) | 只读部分冻结；坐标联调等待A01 R3接受和集成；新会话仍需独占检查 |
+| A04 | A | 坐标R1续派 | [续派任务](tasks/A04-coordinate-R1-dispatch.md)；[独立验收](tasks/A04-independent-review.md) | A01依赖释放；当前profile实际独占和最终释放需新证据 |
+| D01 | A | 清洁安装任务派发中 | [执行任务](tasks/D01-dependency-implementation.md)；[验收](tasks/D01-independent-review.md) | 只补Pillow根依赖和独立安装消费验证，未验收 |
 | A03 | A | P1设计接受；P2实现中 | [主调度收口](tasks/A03-P1-coordinator-acceptance.md)；[P2任务](tasks/A03-P2-dispatch.md) | SQLite/恢复/并发仍待实现和独立功能验收；I01不释放 |
 | I01（A 侧部分） | A | BACKLOG | A01/A02/A03；先使用合同桩，真实联调使用双方约定版本 | 验证 A 的模拟消费、异常和恢复；真实算法接入后另记联合联调结果；A04 不阻塞离线集成 |
 
