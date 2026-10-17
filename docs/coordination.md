@@ -61,7 +61,7 @@ A 侧调度中心可以分派本地子代理，但不向 B 侧派单、催排期
 | C01 独立验收 | `01a14481-d20d-7e21-898a-a650d52f9a9e` | [R1 ACCEPTED](tasks/C01-review-R1-report.md)，主调度已复现并集成；[首轮 REWORK](tasks/C01-review-report.md) 保留 |
 | A01 来源与公共几何 | `01a144ca-ed53-7303-ace2-21a4ca42e13c` | `5f872150`继续冻结；集成R1验收REWORK，等待A02身份工具有界修复 |
 | A01 独立验收 | `01a144cb-69e8-7981-a8d5-8832eae61829` | [集成R1 REWORK](tasks/A01-integration-R1-review-report.md)：无Git程序完整入口失败；原R3接受与失败证据保留 |
-| A02 计划与模拟执行 | `01a144cc-23e9-7c80-9a90-02162ef99b64` | 原R1本地集成保留；准备续派[portability-R2](tasks/A02-portability-R2-dispatch.md)，仅修身份示例工具 |
+| A02 计划与模拟执行 | `01a144cc-23e9-7c80-9a90-02162ef99b64` | 原R1本地集成保留；已续派[portability-R2](tasks/A02-portability-R2-dispatch.md)，仅修身份示例工具 |
 | A02 独立验收 | `01a144cc-2eae-7a23-b299-03f533e30951` | 原[R1接受](tasks/A02-review-R1-report.md)保留；R2先准备，冻结交付后正式复验 |
 | A04 无头只读适配 | `01a144cc-dde4-73a1-9e83-be485380ea25` | BLOCKED（geometry依赖）；只读部分冻结 `3e4dba5676c2dc4a71d7826827a76df11017a68b`，最后会话释放记录已核对；坐标联调等待A01 R3接受/集成 |
 | A04 独立验收 | `01a144cc-e93d-7841-a259-d6aac22c94f4` | 已登记；只准备场景，正式复验等待交付、geometry 依赖及执行会话释放 |
@@ -94,9 +94,9 @@ A 负责维护共享合同实现、geometry 公共接口、根依赖文件、公
 |---|---|---|---|---|
 | C01 | A | INTEGRATED（本地） | R1 被接受，合同实现及固定样例已集成 | 原失败证据保留；独立80项矩阵/22映射场景通过；B 确认仍未取得 |
 | A01 | A | REWORK（集成R1） | [复验报告](tasks/A01-integration-R1-review-report.md) | I1-GIT-01已复现；A02工具修复及新固定集成入口复验前不释放A04 |
-| A02 | A | R1已集成；R2待派 | [R2限定修复](tasks/A02-portability-R2-dispatch.md) | 仅无Git身份工具；原规划/模拟功能与A03依赖保持 |
+| A02 | A | R1已集成；R2运行中 | [R2限定修复](tasks/A02-portability-R2-dispatch.md) | 仅无Git身份工具；原规划/模拟功能与A03依赖保持 |
 | A04 | A | BLOCKED | [无头只读适配](tasks/A04-headless-readonly.md)；[独立验收](tasks/A04-independent-review.md) | 只读部分冻结；坐标联调等待A01 R3接受和集成；新会话仍需独占检查 |
-| A03 | A | P1设计接受；P2批准待派 | [主调度收口](tasks/A03-P1-coordinator-acceptance.md)；[P2任务](tasks/A03-P2-dispatch.md) | SQLite/恢复/并发仍待实现和独立功能验收；I01不释放 |
+| A03 | A | P1设计接受；P2实现中 | [主调度收口](tasks/A03-P1-coordinator-acceptance.md)；[P2任务](tasks/A03-P2-dispatch.md) | SQLite/恢复/并发仍待实现和独立功能验收；I01不释放 |
 | I01（A 侧部分） | A | BACKLOG | A01/A02/A03；先使用合同桩，真实联调使用双方约定版本 | 验证 A 的模拟消费、异常和恢复；真实算法接入后另记联合联调结果；A04 不阻塞离线集成 |
 
 除上述规划目录外，现有 `tools/` 和历史证据不做并发大改。迁移可通过新模块适配旧实现，后续单独安排清理。
