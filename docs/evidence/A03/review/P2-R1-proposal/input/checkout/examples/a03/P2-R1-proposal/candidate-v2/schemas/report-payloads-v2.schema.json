@@ -1,0 +1,1532 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:a03:p2-r1:proposal:reports-2",
+  "$defs": {
+    "ActionBinding": {
+      "type": "object",
+      "properties": {
+        "action_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "action_digest": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "intent_ref": {
+          "oneOf": [
+            {
+              "type": "null"
+            },
+            {
+              "type": "object",
+              "properties": {
+                "artifact_id": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "revision": {
+                  "type": "integer",
+                  "minimum": 1
+                },
+                "kind": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "content_hash": {
+                  "type": "string",
+                  "pattern": "^[0-9a-f]{64}$"
+                }
+              },
+              "required": [
+                "artifact_id",
+                "revision",
+                "kind",
+                "content_hash"
+              ],
+              "additionalProperties": false
+            }
+          ]
+        },
+        "fact_ref": {
+          "type": "object",
+          "properties": {
+            "path": {
+              "type": "string",
+              "minLength": 1
+            },
+            "sha256": {
+              "type": "string",
+              "pattern": "^[0-9a-f]{64}$"
+            },
+            "media_type": {
+              "type": "string",
+              "minLength": 1
+            },
+            "origin": {
+              "const": "SYNTHETIC"
+            }
+          },
+          "required": [
+            "path",
+            "sha256",
+            "media_type",
+            "origin"
+          ],
+          "additionalProperties": false
+        },
+        "resolution_head_ref": {
+          "oneOf": [
+            {
+              "type": "null"
+            },
+            {
+              "type": "object",
+              "properties": {
+                "artifact_id": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "revision": {
+                  "type": "integer",
+                  "minimum": 1
+                },
+                "kind": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "content_hash": {
+                  "type": "string",
+                  "pattern": "^[0-9a-f]{64}$"
+                }
+              },
+              "required": [
+                "artifact_id",
+                "revision",
+                "kind",
+                "content_hash"
+              ],
+              "additionalProperties": false
+            }
+          ]
+        },
+        "head_original_receipt_ref": {
+          "oneOf": [
+            {
+              "type": "null"
+            },
+            {
+              "type": "object",
+              "properties": {
+                "artifact_id": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "revision": {
+                  "type": "integer",
+                  "minimum": 1
+                },
+                "kind": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "content_hash": {
+                  "type": "string",
+                  "pattern": "^[0-9a-f]{64}$"
+                }
+              },
+              "required": [
+                "artifact_id",
+                "revision",
+                "kind",
+                "content_hash"
+              ],
+              "additionalProperties": false
+            }
+          ]
+        },
+        "observed_snapshot_ref": {
+          "oneOf": [
+            {
+              "type": "null"
+            },
+            {
+              "type": "object",
+              "properties": {
+                "artifact_id": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "revision": {
+                  "type": "integer",
+                  "minimum": 1
+                },
+                "kind": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "content_hash": {
+                  "type": "string",
+                  "pattern": "^[0-9a-f]{64}$"
+                }
+              },
+              "required": [
+                "artifact_id",
+                "revision",
+                "kind",
+                "content_hash"
+              ],
+              "additionalProperties": false
+            }
+          ]
+        },
+        "effective_outcome": {
+          "enum": [
+            "APPLIED",
+            "NOT_APPLIED",
+            "UNKNOWN"
+          ]
+        }
+      },
+      "required": [
+        "action_id",
+        "action_digest",
+        "intent_ref",
+        "fact_ref",
+        "resolution_head_ref",
+        "head_original_receipt_ref",
+        "observed_snapshot_ref",
+        "effective_outcome"
+      ],
+      "additionalProperties": false
+    },
+    "Post": {
+      "type": "object",
+      "properties": {
+        "stage": {
+          "const": "POST_APPLY"
+        },
+        "subject": {
+          "type": "object",
+          "properties": {
+            "artifact_id": {
+              "type": "string",
+              "minLength": 1
+            },
+            "revision": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "kind": {
+              "type": "string",
+              "minLength": 1
+            },
+            "content_hash": {
+              "type": "string",
+              "pattern": "^[0-9a-f]{64}$"
+            }
+          },
+          "required": [
+            "artifact_id",
+            "revision",
+            "kind",
+            "content_hash"
+          ],
+          "additionalProperties": false
+        },
+        "graph": {
+          "type": "object",
+          "properties": {
+            "artifact_id": {
+              "type": "string",
+              "minLength": 1
+            },
+            "revision": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "kind": {
+              "type": "string",
+              "minLength": 1
+            },
+            "content_hash": {
+              "type": "string",
+              "pattern": "^[0-9a-f]{64}$"
+            }
+          },
+          "required": [
+            "artifact_id",
+            "revision",
+            "kind",
+            "content_hash"
+          ],
+          "additionalProperties": false
+        },
+        "policy": {
+          "type": "object",
+          "properties": {
+            "policy_id": {
+              "type": "string",
+              "minLength": 1
+            },
+            "revision": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "content_hash": {
+              "type": "string",
+              "pattern": "^[0-9a-f]{64}$"
+            }
+          },
+          "required": [
+            "policy_id",
+            "revision",
+            "content_hash"
+          ],
+          "additionalProperties": false
+        },
+        "receipt": {
+          "type": "object",
+          "properties": {
+            "artifact_id": {
+              "type": "string",
+              "minLength": 1
+            },
+            "revision": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "kind": {
+              "type": "string",
+              "minLength": 1
+            },
+            "content_hash": {
+              "type": "string",
+              "pattern": "^[0-9a-f]{64}$"
+            }
+          },
+          "required": [
+            "artifact_id",
+            "revision",
+            "kind",
+            "content_hash"
+          ],
+          "additionalProperties": false
+        },
+        "report_snapshot_ref": {
+          "type": "object",
+          "properties": {
+            "artifact_id": {
+              "type": "string",
+              "minLength": 1
+            },
+            "revision": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "kind": {
+              "type": "string",
+              "minLength": 1
+            },
+            "content_hash": {
+              "type": "string",
+              "pattern": "^[0-9a-f]{64}$"
+            }
+          },
+          "required": [
+            "artifact_id",
+            "revision",
+            "kind",
+            "content_hash"
+          ],
+          "additionalProperties": false
+        },
+        "action_bindings": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "action_id": {
+                "type": "string",
+                "minLength": 1
+              },
+              "action_digest": {
+                "type": "string",
+                "pattern": "^[0-9a-f]{64}$"
+              },
+              "intent_ref": {
+                "oneOf": [
+                  {
+                    "type": "null"
+                  },
+                  {
+                    "type": "object",
+                    "properties": {
+                      "artifact_id": {
+                        "type": "string",
+                        "minLength": 1
+                      },
+                      "revision": {
+                        "type": "integer",
+                        "minimum": 1
+                      },
+                      "kind": {
+                        "type": "string",
+                        "minLength": 1
+                      },
+                      "content_hash": {
+                        "type": "string",
+                        "pattern": "^[0-9a-f]{64}$"
+                      }
+                    },
+                    "required": [
+                      "artifact_id",
+                      "revision",
+                      "kind",
+                      "content_hash"
+                    ],
+                    "additionalProperties": false
+                  }
+                ]
+              },
+              "fact_ref": {
+                "type": "object",
+                "properties": {
+                  "path": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "sha256": {
+                    "type": "string",
+                    "pattern": "^[0-9a-f]{64}$"
+                  },
+                  "media_type": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "origin": {
+                    "const": "SYNTHETIC"
+                  }
+                },
+                "required": [
+                  "path",
+                  "sha256",
+                  "media_type",
+                  "origin"
+                ],
+                "additionalProperties": false
+              },
+              "resolution_head_ref": {
+                "oneOf": [
+                  {
+                    "type": "null"
+                  },
+                  {
+                    "type": "object",
+                    "properties": {
+                      "artifact_id": {
+                        "type": "string",
+                        "minLength": 1
+                      },
+                      "revision": {
+                        "type": "integer",
+                        "minimum": 1
+                      },
+                      "kind": {
+                        "type": "string",
+                        "minLength": 1
+                      },
+                      "content_hash": {
+                        "type": "string",
+                        "pattern": "^[0-9a-f]{64}$"
+                      }
+                    },
+                    "required": [
+                      "artifact_id",
+                      "revision",
+                      "kind",
+                      "content_hash"
+                    ],
+                    "additionalProperties": false
+                  }
+                ]
+              },
+              "head_original_receipt_ref": {
+                "oneOf": [
+                  {
+                    "type": "null"
+                  },
+                  {
+                    "type": "object",
+                    "properties": {
+                      "artifact_id": {
+                        "type": "string",
+                        "minLength": 1
+                      },
+                      "revision": {
+                        "type": "integer",
+                        "minimum": 1
+                      },
+                      "kind": {
+                        "type": "string",
+                        "minLength": 1
+                      },
+                      "content_hash": {
+                        "type": "string",
+                        "pattern": "^[0-9a-f]{64}$"
+                      }
+                    },
+                    "required": [
+                      "artifact_id",
+                      "revision",
+                      "kind",
+                      "content_hash"
+                    ],
+                    "additionalProperties": false
+                  }
+                ]
+              },
+              "observed_snapshot_ref": {
+                "oneOf": [
+                  {
+                    "type": "null"
+                  },
+                  {
+                    "type": "object",
+                    "properties": {
+                      "artifact_id": {
+                        "type": "string",
+                        "minLength": 1
+                      },
+                      "revision": {
+                        "type": "integer",
+                        "minimum": 1
+                      },
+                      "kind": {
+                        "type": "string",
+                        "minLength": 1
+                      },
+                      "content_hash": {
+                        "type": "string",
+                        "pattern": "^[0-9a-f]{64}$"
+                      }
+                    },
+                    "required": [
+                      "artifact_id",
+                      "revision",
+                      "kind",
+                      "content_hash"
+                    ],
+                    "additionalProperties": false
+                  }
+                ]
+              },
+              "effective_outcome": {
+                "enum": [
+                  "APPLIED",
+                  "NOT_APPLIED",
+                  "UNKNOWN"
+                ]
+              }
+            },
+            "required": [
+              "action_id",
+              "action_digest",
+              "intent_ref",
+              "fact_ref",
+              "resolution_head_ref",
+              "head_original_receipt_ref",
+              "observed_snapshot_ref",
+              "effective_outcome"
+            ],
+            "additionalProperties": false
+          },
+          "minItems": 1
+        },
+        "recovery_refs": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "artifact_id": {
+                "type": "string",
+                "minLength": 1
+              },
+              "revision": {
+                "type": "integer",
+                "minimum": 1
+              },
+              "kind": {
+                "type": "string",
+                "minLength": 1
+              },
+              "content_hash": {
+                "type": "string",
+                "pattern": "^[0-9a-f]{64}$"
+              }
+            },
+            "required": [
+              "artifact_id",
+              "revision",
+              "kind",
+              "content_hash"
+            ],
+            "additionalProperties": false
+          },
+          "minItems": 0
+        },
+        "frame_structure": {
+          "enum": [
+            "PASS",
+            "FAIL",
+            "UNAVAILABLE"
+          ]
+        },
+        "content_check_status": {
+          "const": "PENDING"
+        },
+        "submission_status": {
+          "const": "NOT_SUBMITTED"
+        },
+        "decision": {
+          "enum": [
+            "HOLD",
+            "EXCEPTION"
+          ]
+        },
+        "issues": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "minItems": 1
+        }
+      },
+      "required": [
+        "stage",
+        "subject",
+        "graph",
+        "policy",
+        "receipt",
+        "report_snapshot_ref",
+        "action_bindings",
+        "recovery_refs",
+        "frame_structure",
+        "content_check_status",
+        "submission_status",
+        "decision",
+        "issues"
+      ],
+      "additionalProperties": false
+    },
+    "Batch": {
+      "type": "object",
+      "properties": {
+        "source": {
+          "type": "object",
+          "properties": {
+            "artifact_id": {
+              "type": "string",
+              "minLength": 1
+            },
+            "revision": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "kind": {
+              "type": "string",
+              "minLength": 1
+            },
+            "content_hash": {
+              "type": "string",
+              "pattern": "^[0-9a-f]{64}$"
+            }
+          },
+          "required": [
+            "artifact_id",
+            "revision",
+            "kind",
+            "content_hash"
+          ],
+          "additionalProperties": false
+        },
+        "graph": {
+          "type": "object",
+          "properties": {
+            "artifact_id": {
+              "type": "string",
+              "minLength": 1
+            },
+            "revision": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "kind": {
+              "type": "string",
+              "minLength": 1
+            },
+            "content_hash": {
+              "type": "string",
+              "pattern": "^[0-9a-f]{64}$"
+            }
+          },
+          "required": [
+            "artifact_id",
+            "revision",
+            "kind",
+            "content_hash"
+          ],
+          "additionalProperties": false
+        },
+        "receipt": {
+          "type": "object",
+          "properties": {
+            "artifact_id": {
+              "type": "string",
+              "minLength": 1
+            },
+            "revision": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "kind": {
+              "type": "string",
+              "minLength": 1
+            },
+            "content_hash": {
+              "type": "string",
+              "pattern": "^[0-9a-f]{64}$"
+            }
+          },
+          "required": [
+            "artifact_id",
+            "revision",
+            "kind",
+            "content_hash"
+          ],
+          "additionalProperties": false
+        },
+        "postcheck": {
+          "type": "object",
+          "properties": {
+            "artifact_id": {
+              "type": "string",
+              "minLength": 1
+            },
+            "revision": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "kind": {
+              "type": "string",
+              "minLength": 1
+            },
+            "content_hash": {
+              "type": "string",
+              "pattern": "^[0-9a-f]{64}$"
+            }
+          },
+          "required": [
+            "artifact_id",
+            "revision",
+            "kind",
+            "content_hash"
+          ],
+          "additionalProperties": false
+        },
+        "report_snapshot_ref": {
+          "type": "object",
+          "properties": {
+            "artifact_id": {
+              "type": "string",
+              "minLength": 1
+            },
+            "revision": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "kind": {
+              "type": "string",
+              "minLength": 1
+            },
+            "content_hash": {
+              "type": "string",
+              "pattern": "^[0-9a-f]{64}$"
+            }
+          },
+          "required": [
+            "artifact_id",
+            "revision",
+            "kind",
+            "content_hash"
+          ],
+          "additionalProperties": false
+        },
+        "recovery_refs": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "artifact_id": {
+                "type": "string",
+                "minLength": 1
+              },
+              "revision": {
+                "type": "integer",
+                "minimum": 1
+              },
+              "kind": {
+                "type": "string",
+                "minLength": 1
+              },
+              "content_hash": {
+                "type": "string",
+                "pattern": "^[0-9a-f]{64}$"
+              }
+            },
+            "required": [
+              "artifact_id",
+              "revision",
+              "kind",
+              "content_hash"
+            ],
+            "additionalProperties": false
+          },
+          "minItems": 0
+        },
+        "scope_manifest": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "minItems": 0
+        },
+        "total_expected": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "questions": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "question_id": {
+                "type": "string",
+                "minLength": 1
+              },
+              "state": {
+                "enum": [
+                  "PENDING",
+                  "UNKNOWN",
+                  "EXCEPTION",
+                  "SKIPPED"
+                ]
+              }
+            },
+            "required": [
+              "question_id",
+              "state"
+            ],
+            "additionalProperties": false
+          },
+          "minItems": 0
+        },
+        "state": {
+          "enum": [
+            "CONTENT_PENDING",
+            "NEEDS_REVIEW",
+            "NEEDS_RECONCILIATION"
+          ]
+        },
+        "content_check_status": {
+          "const": "PENDING"
+        },
+        "submission_status": {
+          "const": "NOT_SUBMITTED"
+        }
+      },
+      "required": [
+        "source",
+        "graph",
+        "receipt",
+        "postcheck",
+        "report_snapshot_ref",
+        "recovery_refs",
+        "scope_manifest",
+        "total_expected",
+        "questions",
+        "state",
+        "content_check_status",
+        "submission_status"
+      ],
+      "additionalProperties": false
+    }
+  },
+  "oneOf": [
+    {
+      "type": "object",
+      "properties": {
+        "stage": {
+          "const": "POST_APPLY"
+        },
+        "subject": {
+          "type": "object",
+          "properties": {
+            "artifact_id": {
+              "type": "string",
+              "minLength": 1
+            },
+            "revision": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "kind": {
+              "type": "string",
+              "minLength": 1
+            },
+            "content_hash": {
+              "type": "string",
+              "pattern": "^[0-9a-f]{64}$"
+            }
+          },
+          "required": [
+            "artifact_id",
+            "revision",
+            "kind",
+            "content_hash"
+          ],
+          "additionalProperties": false
+        },
+        "graph": {
+          "type": "object",
+          "properties": {
+            "artifact_id": {
+              "type": "string",
+              "minLength": 1
+            },
+            "revision": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "kind": {
+              "type": "string",
+              "minLength": 1
+            },
+            "content_hash": {
+              "type": "string",
+              "pattern": "^[0-9a-f]{64}$"
+            }
+          },
+          "required": [
+            "artifact_id",
+            "revision",
+            "kind",
+            "content_hash"
+          ],
+          "additionalProperties": false
+        },
+        "policy": {
+          "type": "object",
+          "properties": {
+            "policy_id": {
+              "type": "string",
+              "minLength": 1
+            },
+            "revision": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "content_hash": {
+              "type": "string",
+              "pattern": "^[0-9a-f]{64}$"
+            }
+          },
+          "required": [
+            "policy_id",
+            "revision",
+            "content_hash"
+          ],
+          "additionalProperties": false
+        },
+        "receipt": {
+          "type": "object",
+          "properties": {
+            "artifact_id": {
+              "type": "string",
+              "minLength": 1
+            },
+            "revision": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "kind": {
+              "type": "string",
+              "minLength": 1
+            },
+            "content_hash": {
+              "type": "string",
+              "pattern": "^[0-9a-f]{64}$"
+            }
+          },
+          "required": [
+            "artifact_id",
+            "revision",
+            "kind",
+            "content_hash"
+          ],
+          "additionalProperties": false
+        },
+        "report_snapshot_ref": {
+          "type": "object",
+          "properties": {
+            "artifact_id": {
+              "type": "string",
+              "minLength": 1
+            },
+            "revision": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "kind": {
+              "type": "string",
+              "minLength": 1
+            },
+            "content_hash": {
+              "type": "string",
+              "pattern": "^[0-9a-f]{64}$"
+            }
+          },
+          "required": [
+            "artifact_id",
+            "revision",
+            "kind",
+            "content_hash"
+          ],
+          "additionalProperties": false
+        },
+        "action_bindings": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "action_id": {
+                "type": "string",
+                "minLength": 1
+              },
+              "action_digest": {
+                "type": "string",
+                "pattern": "^[0-9a-f]{64}$"
+              },
+              "intent_ref": {
+                "oneOf": [
+                  {
+                    "type": "null"
+                  },
+                  {
+                    "type": "object",
+                    "properties": {
+                      "artifact_id": {
+                        "type": "string",
+                        "minLength": 1
+                      },
+                      "revision": {
+                        "type": "integer",
+                        "minimum": 1
+                      },
+                      "kind": {
+                        "type": "string",
+                        "minLength": 1
+                      },
+                      "content_hash": {
+                        "type": "string",
+                        "pattern": "^[0-9a-f]{64}$"
+                      }
+                    },
+                    "required": [
+                      "artifact_id",
+                      "revision",
+                      "kind",
+                      "content_hash"
+                    ],
+                    "additionalProperties": false
+                  }
+                ]
+              },
+              "fact_ref": {
+                "type": "object",
+                "properties": {
+                  "path": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "sha256": {
+                    "type": "string",
+                    "pattern": "^[0-9a-f]{64}$"
+                  },
+                  "media_type": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "origin": {
+                    "const": "SYNTHETIC"
+                  }
+                },
+                "required": [
+                  "path",
+                  "sha256",
+                  "media_type",
+                  "origin"
+                ],
+                "additionalProperties": false
+              },
+              "resolution_head_ref": {
+                "oneOf": [
+                  {
+                    "type": "null"
+                  },
+                  {
+                    "type": "object",
+                    "properties": {
+                      "artifact_id": {
+                        "type": "string",
+                        "minLength": 1
+                      },
+                      "revision": {
+                        "type": "integer",
+                        "minimum": 1
+                      },
+                      "kind": {
+                        "type": "string",
+                        "minLength": 1
+                      },
+                      "content_hash": {
+                        "type": "string",
+                        "pattern": "^[0-9a-f]{64}$"
+                      }
+                    },
+                    "required": [
+                      "artifact_id",
+                      "revision",
+                      "kind",
+                      "content_hash"
+                    ],
+                    "additionalProperties": false
+                  }
+                ]
+              },
+              "head_original_receipt_ref": {
+                "oneOf": [
+                  {
+                    "type": "null"
+                  },
+                  {
+                    "type": "object",
+                    "properties": {
+                      "artifact_id": {
+                        "type": "string",
+                        "minLength": 1
+                      },
+                      "revision": {
+                        "type": "integer",
+                        "minimum": 1
+                      },
+                      "kind": {
+                        "type": "string",
+                        "minLength": 1
+                      },
+                      "content_hash": {
+                        "type": "string",
+                        "pattern": "^[0-9a-f]{64}$"
+                      }
+                    },
+                    "required": [
+                      "artifact_id",
+                      "revision",
+                      "kind",
+                      "content_hash"
+                    ],
+                    "additionalProperties": false
+                  }
+                ]
+              },
+              "observed_snapshot_ref": {
+                "oneOf": [
+                  {
+                    "type": "null"
+                  },
+                  {
+                    "type": "object",
+                    "properties": {
+                      "artifact_id": {
+                        "type": "string",
+                        "minLength": 1
+                      },
+                      "revision": {
+                        "type": "integer",
+                        "minimum": 1
+                      },
+                      "kind": {
+                        "type": "string",
+                        "minLength": 1
+                      },
+                      "content_hash": {
+                        "type": "string",
+                        "pattern": "^[0-9a-f]{64}$"
+                      }
+                    },
+                    "required": [
+                      "artifact_id",
+                      "revision",
+                      "kind",
+                      "content_hash"
+                    ],
+                    "additionalProperties": false
+                  }
+                ]
+              },
+              "effective_outcome": {
+                "enum": [
+                  "APPLIED",
+                  "NOT_APPLIED",
+                  "UNKNOWN"
+                ]
+              }
+            },
+            "required": [
+              "action_id",
+              "action_digest",
+              "intent_ref",
+              "fact_ref",
+              "resolution_head_ref",
+              "head_original_receipt_ref",
+              "observed_snapshot_ref",
+              "effective_outcome"
+            ],
+            "additionalProperties": false
+          },
+          "minItems": 1
+        },
+        "recovery_refs": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "artifact_id": {
+                "type": "string",
+                "minLength": 1
+              },
+              "revision": {
+                "type": "integer",
+                "minimum": 1
+              },
+              "kind": {
+                "type": "string",
+                "minLength": 1
+              },
+              "content_hash": {
+                "type": "string",
+                "pattern": "^[0-9a-f]{64}$"
+              }
+            },
+            "required": [
+              "artifact_id",
+              "revision",
+              "kind",
+              "content_hash"
+            ],
+            "additionalProperties": false
+          },
+          "minItems": 0
+        },
+        "frame_structure": {
+          "enum": [
+            "PASS",
+            "FAIL",
+            "UNAVAILABLE"
+          ]
+        },
+        "content_check_status": {
+          "const": "PENDING"
+        },
+        "submission_status": {
+          "const": "NOT_SUBMITTED"
+        },
+        "decision": {
+          "enum": [
+            "HOLD",
+            "EXCEPTION"
+          ]
+        },
+        "issues": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "minItems": 1
+        }
+      },
+      "required": [
+        "stage",
+        "subject",
+        "graph",
+        "policy",
+        "receipt",
+        "report_snapshot_ref",
+        "action_bindings",
+        "recovery_refs",
+        "frame_structure",
+        "content_check_status",
+        "submission_status",
+        "decision",
+        "issues"
+      ],
+      "additionalProperties": false
+    },
+    {
+      "type": "object",
+      "properties": {
+        "source": {
+          "type": "object",
+          "properties": {
+            "artifact_id": {
+              "type": "string",
+              "minLength": 1
+            },
+            "revision": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "kind": {
+              "type": "string",
+              "minLength": 1
+            },
+            "content_hash": {
+              "type": "string",
+              "pattern": "^[0-9a-f]{64}$"
+            }
+          },
+          "required": [
+            "artifact_id",
+            "revision",
+            "kind",
+            "content_hash"
+          ],
+          "additionalProperties": false
+        },
+        "graph": {
+          "type": "object",
+          "properties": {
+            "artifact_id": {
+              "type": "string",
+              "minLength": 1
+            },
+            "revision": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "kind": {
+              "type": "string",
+              "minLength": 1
+            },
+            "content_hash": {
+              "type": "string",
+              "pattern": "^[0-9a-f]{64}$"
+            }
+          },
+          "required": [
+            "artifact_id",
+            "revision",
+            "kind",
+            "content_hash"
+          ],
+          "additionalProperties": false
+        },
+        "receipt": {
+          "type": "object",
+          "properties": {
+            "artifact_id": {
+              "type": "string",
+              "minLength": 1
+            },
+            "revision": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "kind": {
+              "type": "string",
+              "minLength": 1
+            },
+            "content_hash": {
+              "type": "string",
+              "pattern": "^[0-9a-f]{64}$"
+            }
+          },
+          "required": [
+            "artifact_id",
+            "revision",
+            "kind",
+            "content_hash"
+          ],
+          "additionalProperties": false
+        },
+        "postcheck": {
+          "type": "object",
+          "properties": {
+            "artifact_id": {
+              "type": "string",
+              "minLength": 1
+            },
+            "revision": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "kind": {
+              "type": "string",
+              "minLength": 1
+            },
+            "content_hash": {
+              "type": "string",
+              "pattern": "^[0-9a-f]{64}$"
+            }
+          },
+          "required": [
+            "artifact_id",
+            "revision",
+            "kind",
+            "content_hash"
+          ],
+          "additionalProperties": false
+        },
+        "report_snapshot_ref": {
+          "type": "object",
+          "properties": {
+            "artifact_id": {
+              "type": "string",
+              "minLength": 1
+            },
+            "revision": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "kind": {
+              "type": "string",
+              "minLength": 1
+            },
+            "content_hash": {
+              "type": "string",
+              "pattern": "^[0-9a-f]{64}$"
+            }
+          },
+          "required": [
+            "artifact_id",
+            "revision",
+            "kind",
+            "content_hash"
+          ],
+          "additionalProperties": false
+        },
+        "recovery_refs": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "artifact_id": {
+                "type": "string",
+                "minLength": 1
+              },
+              "revision": {
+                "type": "integer",
+                "minimum": 1
+              },
+              "kind": {
+                "type": "string",
+                "minLength": 1
+              },
+              "content_hash": {
+                "type": "string",
+                "pattern": "^[0-9a-f]{64}$"
+              }
+            },
+            "required": [
+              "artifact_id",
+              "revision",
+              "kind",
+              "content_hash"
+            ],
+            "additionalProperties": false
+          },
+          "minItems": 0
+        },
+        "scope_manifest": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "minItems": 0
+        },
+        "total_expected": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "questions": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "question_id": {
+                "type": "string",
+                "minLength": 1
+              },
+              "state": {
+                "enum": [
+                  "PENDING",
+                  "UNKNOWN",
+                  "EXCEPTION",
+                  "SKIPPED"
+                ]
+              }
+            },
+            "required": [
+              "question_id",
+              "state"
+            ],
+            "additionalProperties": false
+          },
+          "minItems": 0
+        },
+        "state": {
+          "enum": [
+            "CONTENT_PENDING",
+            "NEEDS_REVIEW",
+            "NEEDS_RECONCILIATION"
+          ]
+        },
+        "content_check_status": {
+          "const": "PENDING"
+        },
+        "submission_status": {
+          "const": "NOT_SUBMITTED"
+        }
+      },
+      "required": [
+        "source",
+        "graph",
+        "receipt",
+        "postcheck",
+        "report_snapshot_ref",
+        "recovery_refs",
+        "scope_manifest",
+        "total_expected",
+        "questions",
+        "state",
+        "content_check_status",
+        "submission_status"
+      ],
+      "additionalProperties": false
+    }
+  ]
+}

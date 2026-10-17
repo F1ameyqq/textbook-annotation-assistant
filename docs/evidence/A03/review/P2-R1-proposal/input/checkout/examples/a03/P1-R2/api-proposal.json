@@ -1,0 +1,1468 @@
+{
+  "api_version": "a03-public-api-1-proposal",
+  "status": "PROPOSAL_UNIMPLEMENTED",
+  "phase": "A03-P1-R1",
+  "implementation_authorized": false,
+  "schema_version": "1.1.0-a-recovery-proposal",
+  "exchange_version": "a03-exchange-1",
+  "provenance": "SYNTHETIC",
+  "execution_mode": "SIMULATED",
+  "baselines": {
+    "a02_accepted_delivery": "38aca9dcc8d027409b95193e9cc142c2336b76d3",
+    "a02_accepted_implementation": "13ddf83083224ffafc17a4f57cf2c1a1a1ae02b2",
+    "code_base": "ec1b4defbfa3ec0f181d291106fb53313983e493",
+    "workflow_commit": "a354f95f1d0b40a8f0847b57fa3978cac999e7a2",
+    "branch": "codex/a03-runtime-recovery",
+    "authority": "P1 design delivery only; no implementation, functional acceptance, integration, push or I01 release"
+  },
+  "design_constants": {
+    "runtime_store": {
+      "file": "runtime.sqlite3",
+      "format": "a03-runtime-db-1",
+      "user_version": 1,
+      "application_id_hex": "0x41303352"
+    },
+    "target_store": {
+      "file": "target.sqlite3",
+      "format": "a03-mock-state-1",
+      "user_version": 1,
+      "application_id_hex": "0x41303354"
+    },
+    "comparator_version": "a02-facts-1",
+    "effect_gate": "A controlled per-book cross-process mutex. Runtime claim/takeover and the mock effect path use the same gate. The effect path holds it through owner/generation validation and the independent target transaction commit.",
+    "target_transaction_boundary": "The target uses a separate SQLite file, connection and transaction from the runtime intent/receipt transactions. No combined atomic commit is claimed.",
+    "book_key": {
+      "canonical_fields": [
+        "platform_namespace",
+        "target_id",
+        "book_id"
+      ],
+      "excluded_fields": [
+        "run_id",
+        "scope_id",
+        "question_id",
+        "action_id",
+        "target_session_id"
+      ],
+      "rule": "Owner/generation/mutex/pending/import/external-ID isolation uses this exact canonical target_key; book_id alone is not the runtime persistence key."
+    },
+    "observations": "An actual successful target read allocates a new persisted monotonic read_sequence and uses the observer actual UTC clock for observed_at. Failed reads without actual target read record null read_sequence/target_state_version/target_state_hash. Caller timestamps are forbidden. Failed attempts still count toward the per-intent recovery-call limit.",
+    "state_location": "A pre-established host-local anchor plus expected ledger_id/store_id determines the state directory. Reopening is never initialization, and an alternate empty directory is not a valid recovery continuation.",
+    "recovery_attempt_limit": 3,
+    "recovery_attempt_unit": "Per intent per recovery invocation; read-only observation attempts only. Exhaustion pauses and exits; no dispatch, save retry, or automatic reset.",
+    "claim_protocol": "Under the same book effect gate: runtime reserves a new monotonic generation with owner state CLAIMING; target.activate_fence persists that generation in its own independent transaction; runtime marks that exact owner/generation ACTIVE. Any interrupted step remains paused/CLAIMING and forbids dispatch. Recovery/takeover completes or supersedes the protocol only while holding the same gate.",
+    "target_fence_rule": "The target effect transaction itself compares the active fence generation and target/session binding before mutation; the shared effect gate prevents takeover between runtime permit verification and target commit.",
+    "target_state_hash_formula": "H({target_key,source_ref,scope_id,platform_version,capabilities,directories,questions,frames,internal_bindings,frame_projections})",
+    "target_state_hash_view": "view={target:SnapshotPayload,internal_bindings:{question_id:platform_question_id},frame_projections:{platform_frame_id:full accepted A02 projection}}",
+    "target_state_hash_exclusions": [
+      "observed_at",
+      "observed_version",
+      "observed_hash",
+      "read_sequence",
+      "owner",
+      "generation",
+      "fence",
+      "logs",
+      "transport_response",
+      "runtime_receipt"
+    ],
+    "target_state_hash_compatibility": "H uses the existing canonical content_digest authority on the exactly named business-state object. No observation or runtime metadata enters it. Legacy A02 snapshot hashes remain unchanged; explicit new fixture conversion creates new snapshots/hashes.",
+    "reconcile_storage_effect": "Read-only business reconcile may commit observation metadata/read_sequence to target.sqlite3 in its separate observation transaction, but must produce zero target business effects and zero dispatches.",
+    "obligation_id_formula": "obl- + H({journal_id,target_key,intent_ref,journal_sequence,journal_head_hash})",
+    "obligation_rule": "Runtime derives one obligation_id from the current committed intent event; a new UNKNOWN requires a new intent/new obligation. A terminal resolution discharges only that exact obligation. Old terminal evidence cannot discharge any new item.",
+    "ledger_identity_alias": "API ledger_id and contract journal_id name the same immutable runtime ledger identity, not independent selectable stores."
+  },
+  "groups": [
+    {
+      "id": "G1",
+      "name": "Session initialization, persistent target reopening and fixed SourceBundle/scope",
+      "current": [
+        {
+          "file": "src/annotation/delivery/mock/__init__.py",
+          "line_start": 30,
+          "line_end": 37,
+          "signature": "MockSession()",
+          "behavior": "All target/history/pending/used IDs and serial state are process-local."
+        },
+        {
+          "file": "src/annotation/delivery/mock/__init__.py",
+          "line_start": 53,
+          "line_end": 70,
+          "signature": "MockSession.register_target(bundle, snapshot_ref, *, asset_root, source_ref=None)",
+          "behavior": "Validates the bundle, requires a SYNTHETIC snapshot, rejects replacing the same book target. An explicit source_ref is resolved but the method does not itself freeze a persistent store/session identity."
+        },
+        {
+          "file": "src/annotation/delivery/mock/__init__.py",
+          "line_start": 77,
+          "line_end": 96,
+          "signature": "MockSession.read_target(book_id); MockSession.read_snapshot(book_id)",
+          "behavior": "Defensive copies; source binding survives epoch snapshots only inside the same instance. read_snapshot does not generate a fresh observation timestamp on every call."
+        }
+      ],
+      "proposed": [
+        {
+          "signature": "PersistentMockSession.create(target_dir, bundle, snapshot_ref, *, platform_namespace, source_ref, asset_root, expected_store_id, target_session_id) -> PersistentMockSession",
+          "owner": "delivery.mock",
+          "responsibility": "Explicit one-time creation of a new all-synthetic target store and immutable initial session binding. Refuse an existing store rather than re-registering/resetting it.",
+          "inputs": [
+            "Exact validated SourceBundle and PlatformSnapshot refs with matching book_id/scope_id/target_id and asset bytes",
+            "Expected target store ID and new target_session_id",
+            "Host-local target_dir supplied through the already-fixed runtime anchor"
+          ],
+          "outputs": [
+            "Session handle",
+            "TargetStoreDescriptor containing store_id, target_session_id, book_id, fixed_scope_id, fixed_source_ref, format/version, initial state digest"
+          ],
+          "failure_codes": [
+            "SYNTHETIC_ONLY",
+            "SOURCE_BINDING",
+            "TARGET_ALREADY_REGISTERED",
+            "TARGET_STORE_EXISTS",
+            "TARGET_IDENTITY_MISMATCH",
+            "RESOURCE_HASH_MISMATCH",
+            "TARGET_STORE_IO"
+          ],
+          "compatibility": "Additive API; existing MockSession/register_target stays available for legacy in-memory A02 tests. No new recovery eligibility is conferred on old fixtures."
+        },
+        {
+          "signature": "PersistentMockSession.open(target_dir, *, expected_store_id, expected_target_session_id, expected_target_key, expected_scope_id, expected_source_ref) -> PersistentMockSession",
+          "owner": "delivery.mock",
+          "responsibility": "Open an existing target store and recover target facts, effect log and external ID maps independently of any runtime receipt. Check every fixed identity/version; never create, truncate or reconstruct initial target state.",
+          "inputs": [
+            "Expected IDs and exact SourceBundle ref from the fixed runtime anchor/session binding",
+            "Existing target.sqlite3"
+          ],
+          "outputs": [
+            "Session handle",
+            "Verified TargetStoreDescriptor; existing effects and mappings remain visible"
+          ],
+          "failure_codes": [
+            "TARGET_STORE_MISSING",
+            "STATE_DIRECTORY_IDENTITY_MISMATCH",
+            "TARGET_STORE_CORRUPT",
+            "TARGET_STORE_VERSION_UNSUPPORTED",
+            "TARGET_IDENTITY_MISMATCH",
+            "BOOK_PENDING_SCOPE_SWITCH_UNSUPPORTED",
+            "SOURCE_BINDING",
+            "TARGET_STORE_IO",
+            "TARGET_SCOPE_SWITCH_UNSUPPORTED",
+            "TARGET_SESSION_BINDING_MISMATCH"
+          ],
+          "compatibility": "Different source revision/hash or scope is an explicit unsupported session switch. A new register/create cannot bypass same-book unresolved history."
+        },
+        {
+          "signature": "runtime.storage.open_state(anchor_path, *, expected_ledger_id, expected_target_store_id) -> RuntimeStore",
+          "owner": "runtime.storage",
+          "responsibility": "Reopen the unique controlled ledger selected by the fixed anchor; validate application_id, user_version, format, ledger/store IDs and required immutable resources before allowing any recovery/dispatch.",
+          "inputs": [
+            "Existing host-local anchor",
+            "Expected ledger_id and target store_id"
+          ],
+          "outputs": [
+            "RuntimeStore handle with verified stable identities"
+          ],
+          "failure_codes": [
+            "STATE_DIRECTORY_IDENTITY_MISMATCH",
+            "LEDGER_MISSING",
+            "LEDGER_CORRUPT",
+            "LEDGER_VERSION_UNSUPPORTED",
+            "RESOURCE_MISSING",
+            "RESOURCE_HASH_MISMATCH"
+          ],
+          "compatibility": "A separate explicit initialization command may create a new run, but open/reconcile cannot silently initialize a missing or alternate state directory."
+        },
+        {
+          "signature": "PersistentMockSession.activate_fence(target_key, *, target_session_id, owner_id, generation, authority) -> FenceActivation",
+          "owner": "delivery.mock with runtime.storage claim authority",
+          "responsibility": "Under the shared book effect gate verify the runtime CLAIMING reservation, then persist the monotonic target fence in an independent target transaction. Runtime marks ACTIVE only after verifying this activation. Target effect transactions require that same fence generation.",
+          "inputs": [
+            "Current runtime CLAIMING reservation validated by authority",
+            "Exact book/target session/owner/generation",
+            "Held shared effect gate"
+          ],
+          "outputs": [
+            "FenceActivation with store/session/book/owner/generation and target commit reference"
+          ],
+          "failure_codes": [
+            "OWNER_GENERATION_STALE",
+            "CLAIM_NOT_RESERVED",
+            "TARGET_IDENTITY_MISMATCH",
+            "TARGET_STORE_IO"
+          ],
+          "compatibility": "No implicit owner takeover, reset or ACTIVE permit on partial claim. Interrupted claims remain paused; claim/takeover and dispatch coordinate through the same gate."
+        }
+      ],
+      "fixed_binding_rule": "Within one persistent target_session_id, book_id, target_id, SourceBundle exact ref and scope_id are fixed. The book ledger may contain immutable historical runs/scopes; scanning all of them is mandatory even when the active target session supports only its fixed scope. Actual scope/source switching is rejected, not simulated by registering a fresh target.",
+      "target_storage_fields": [
+        "store_id",
+        "target_session_id",
+        "book_id",
+        "fixed_scope_id",
+        "fixed_source_ref",
+        "base_snapshot_ref",
+        "platform_target_payload",
+        "effect_epoch",
+        "read_sequence",
+        "internal_question_to_platform_question_bindings",
+        "platform_frame_projection_bindings",
+        "append_only_effect_log",
+        "maximum_accepted_generation",
+        "platform_namespace",
+        "target_id",
+        "fence_owner_id",
+        "fence_generation",
+        "fence_activation_commit_ref"
+      ]
+    },
+    {
+      "id": "G2",
+      "name": "Single-action dispatch, durable intent prerequisite and bounded fault seams",
+      "current": [
+        {
+          "file": "src/annotation/delivery/mock/__init__.py",
+          "line_start": 176,
+          "line_end": 215,
+          "signature": "MockSession.execute(bundle, plan_ref, config, *, asset_root, receipt_id, created_at, faults=None)",
+          "behavior": "Whole-plan call. Checks pause/replay and recomputes the A02 plan; all plan action IDs enter used_actions before the action loop."
+        },
+        {
+          "file": "src/annotation/delivery/mock/__init__.py",
+          "line_start": 247,
+          "line_end": 271,
+          "signature": "Private action loop: _facts(action, before), _write(book, action), _compare(action, before, readback)",
+          "behavior": "The intent is only appended to the in-memory log immediately before the effect. There is no public durable intent/owner/generation gate or single-action return boundary."
+        },
+        {
+          "file": "src/annotation/delivery/planner/__init__.py",
+          "line_start": 100,
+          "line_end": 122,
+          "signature": "verify_generated_plan(bundle, plan, current_ref, config)",
+          "behavior": "Recomputes accepted A02 projection/facts and rejects changed authorization or an edited/resealed plan."
+        }
+      ],
+      "proposed": [
+        {
+          "signature": "PersistentMockSession.prepare_action(bundle, plan_ref, action_id, config, *, current_snapshot_ref, asset_root) -> PreparedAction",
+          "owner": "delivery.mock, using delivery.planner and public contracts eligibility",
+          "responsibility": "Resolve the exact plan/action and source, run new recovery-contract eligibility plus accepted A02 plan verification, and capture the relevant before-state without effects. Reuse the accepted planner/facts logic rather than copying it into runtime. Expose prepared_before through the public API; later actions must use their actual relevant before-state after legitimate predecessor effects, not private _facts access or the plan-initial snapshot alone. Use only the public PlanObservationBinding bridge for fresh observation refs; runtime does not strip snapshot metadata or duplicate facts rules.",
+          "inputs": [
+            "All-synthetic recovery bundle",
+            "Exact plan_ref and one action_id",
+            "Current snapshot_ref and SimulationConfig",
+            "Validated effective same-scope resolution chain; runtime independently checks the complete book ledger"
+          ],
+          "outputs": [
+            "PreparedAction: plan_ref, action_id, action_digest, expected_effect_digest, canonical target_key, target_session_id, source_ref, scope_id, comparator_version, PlanObservationBinding",
+            "before_snapshot_ref: unchanged exact plan-initial PlatformSnapshot ref",
+            "prepared_before: Resource {path,sha256,media_type,origin} containing the actual per-action relevant facts, fixed identity, actual observation/read_sequence and valid applied-prefix refs; never a relabeled initial snapshot"
+          ],
+          "failure_codes": [
+            "MISSING_REFERENCE",
+            "PLAN_BLOCKED",
+            "BOOK_WRITE_PAUSED",
+            "PLAN_CHANGED",
+            "TARGET_CHANGED",
+            "AUTHORIZATION_CHANGED",
+            "REPLAY_FORBIDDEN",
+            "DEPENDENCY_UNRESOLVED",
+            "SYNTHETIC_ONLY",
+            "RECOVERY_CHAIN_INVALID",
+            "TARGET_IDENTITY_MISMATCH"
+          ],
+          "compatibility": "No change to accepted projection, expected_before/after, unsupported UPDATE or content rules. Preparation is read-only and does not mark every planned action dispatched."
+        },
+        {
+          "signature": "runtime.storage.commit_intent(prepared_action, *, owner_id, generation) -> CommittedIntent",
+          "owner": "runtime.storage",
+          "responsibility": "Commit a genuinely new local WriteIntent and append-only event/index references before any effect. Bind current ledger, owner/generation, book, target session, exact plan/action/content and before evidence. A migration/imported JSON cannot manufacture this prerequisite.",
+          "inputs": [
+            "PreparedAction",
+            "Current verified owner_id/generation",
+            "Current complete same-book unresolved scan and action uniqueness check",
+            "PreparedAction.target_session_id/source_ref/prepared_before Resource and the unchanged plan before_snapshot_ref",
+            "PreparedAction.target_key,target_session_id,source_ref,prepared_before Resource and unchanged plan before_snapshot_ref"
+          ],
+          "outputs": [
+            "CommittedIntent handle plus immutable WriteIntent ref/digest tied to the committed current ledger row",
+            "obligation_id derived from this committed journal event using the fixed formula"
+          ],
+          "failure_codes": [
+            "OWNER_GENERATION_STALE",
+            "BOOK_WRITE_PAUSED",
+            "INTENT_CONFLICT",
+            "ACTION_ID_CONFLICT",
+            "RESOURCE_MISSING",
+            "RESOURCE_HASH_MISMATCH",
+            "INTENT_COMMIT_FAILED"
+          ],
+          "compatibility": "Legacy unknown receipts without such a committed intent are LEGACY_UNRECORDED and remain blocked. Intent or DISPATCH_STARTED alone is not proof an effect occurred or did not occur."
+        },
+        {
+          "signature": "PersistentMockSession.dispatch_action(prepared_action, *, committed_intent, dispatch_permit, authority, effect_fault=None) -> DispatchResponse",
+          "owner": "delivery.mock; permit authority is runtime.storage",
+          "responsibility": "Dispatch at most one action. While holding the controlled same-book cross-process effect gate, invoke the runtime authority's current-transaction owner/generation/intent verification, reject stale target fence generations, verify relevant target facts, then commit the independent target effect transaction before releasing the gate.",
+          "inputs": [
+            "PreparedAction and exact CommittedIntent",
+            "Non-self-authorizing DispatchPermit from the current runtime transaction",
+            "Public authority verifier, not caller-provided complete/resolved booleans or raw ledger JSON",
+            "An allowlisted synthetic effect fault only"
+          ],
+          "outputs": [
+            "DispatchResponse with transport response/status and target effect-log reference when available; no claim of APPLIED from response alone"
+          ],
+          "failure_codes": [
+            "LOCAL_INTENT_COMMIT_REQUIRED",
+            "INTENT_BINDING_MISMATCH",
+            "OWNER_GENERATION_STALE",
+            "DISPATCH_PERMIT_INVALID",
+            "BOOK_WRITE_PAUSED",
+            "REPLAY_FORBIDDEN",
+            "TARGET_CHANGED",
+            "TARGET_IDENTITY_MISMATCH",
+            "TARGET_STORE_IO",
+            "INVALID_FAULT"
+          ],
+          "compatibility": "Existing execute remains the legacy whole-plan wrapper. The recovery runner uses the new action boundary and independently observes/computes outcomes; no whole-plan receipt is fabricated for a partial execution."
+        },
+        {
+          "signature": "runtime.storage.commit_action_result(committed_intent, prepared_action, observation, comparison, *, owner_id, generation) -> ActionResultRecord",
+          "owner": "runtime.storage",
+          "responsibility": "During the original ACTIVE owner and RUNNING plan only: persist immutable a03-action-fact-1 resource first, then append ACTION_RESULT_COMMITTED with exact intent/obligation/action/readback/comparator binding. APPLIED/NOT_APPLIED can close only that current obligation; UNKNOWN stays pending. An interrupted/restarted intent must reconcile and cannot be finalized through this normal-run entry.",
+          "inputs": [
+            "Current original committed intent and plan cursor",
+            "Actual independent per-action observation/readback and public A02 comparison",
+            "Current owner/generation; complete current book scan and event-head CAS"
+          ],
+          "outputs": [
+            "Immutable fact Resource with plan/intent/obligation/action digest, prepared_before, observed_snapshot_ref/readback, comparator_version, complete ActionResult and journal sequence/predecessor hash",
+            "Committed ActionResultRecord and progress projection; no new Artifact kind"
+          ],
+          "failure_codes": [
+            "OWNER_GENERATION_STALE",
+            "INTENT_BINDING_MISMATCH",
+            "PLAN_INTERRUPTED",
+            "OBSERVATION_NOT_FRESH",
+            "RESOURCE_HASH_MISMATCH",
+            "ACTION_RESULT_COMMIT_FAILED"
+          ],
+          "compatibility": "Normal multi-action runs can advance after an APPLIED committed per-action fact before a whole-plan receipt exists. Progress is a projection, never caller authority; NOT_APPLIED/UNKNOWN interrupts the old plan and the tail cannot resume."
+        },
+        {
+          "signature": "runtime.storage.commit_unattempted_absence(bundle, request, *, owner_id, generation, asset_root, observer) -> UnattemptedAbsenceRecord",
+          "owner": "runtime.storage; delivery.planner owns the shared pure A02 action_facts/compare_action_effect; controlled delivery.mock observer owns actual independent reads",
+          "responsibility": "Produce and commit one immutable UNATTEMPTED_ABSENCE fact for a reserved but never-called tail action of an INTERRUPTED plan. This dedicated read-only branch is permitted while another action in that book remains UNKNOWN/BOOK_WRITE_PAUSED. It confers no effect permission, creates no intent/obligation/resolution, and neither resumes the old plan nor clears another pending item.",
+          "inputs": [
+            "bundle: exact A03-P1-R1 all-synthetic candidate inputs and resources; fixed accepted plan/source/scope/session bindings. Immutable initial acceptance evidence is validated independently of current write readiness.",
+            "request: {registration_id,plan_ref,action_id,action_digest,expected_event_head:{sequence,hash}}. It contains locators/CAS expectations only, not supplied facts, complete/resolved booleans, observation payloads, or a dispatch permit.",
+            "owner_id,generation: current ACTIVE runtime owner for the canonical book key, checked against the controlled current ledger and target fence under the shared book effect gate.",
+            "asset_root: fixed package resource root; validate safe paths, exact bytes/hash, all-synthetic provenance and each consumer recursive input_refs declaration before any runtime/target activity.",
+            "observer: controlled, runtime-registered PersistentMockSession observer bound to registration_id, fixed store/session/SourceBundle/scope and canonical target key; serialized or arbitrary caller-supplied readbacks never substitute."
+          ],
+          "outputs": [
+            "UnattemptedAbsenceRecord: committed journal_id/target_key/registration_id/plan_ref/action_id/action_digest, immutable action_fact Resource, unattempted_basis Resource, owner_id/generation and committed event sequence/hash. This is a runtime record, not a fourth Artifact kind.",
+            "ActionFact.origin_phase=UNATTEMPTED_ABSENCE; fact.intent_ref,obligation_id,resolution_ref and fact.result.intent_ref all null; result.attempt_fact=NOT_ATTEMPTED,outcome=NOT_APPLIED,effect_match=ABSENT,next_step=RECHECK_TARGET,replay_allowed=false. prepared_before is from the first new actual read and readback/snapshot from the independent second new actual read.",
+            "Progress projection with the exact new fact, preserving all previous original facts/UNKNOWN and the INTERRUPTED plan state. A complete receipt is allowed only if every planned action has one sufficient immutable fact; unknown action B keeps receipt.write_disposition=PAUSE_RECONCILE and the batch state NEEDS_RECONCILIATION."
+          ],
+          "failure_codes": [
+            "JSON_INPUT",
+            "SCHEMA",
+            "RECOVERY_VERSION_UNSUPPORTED",
+            "SYNTHETIC_ONLY",
+            "MISSING_REFERENCE",
+            "RESOURCE_MISSING",
+            "RESOURCE_HASH_MISMATCH",
+            "UNDECLARED_RESOURCE_REFERENCE",
+            "REFERENCE_SCOPE_MISMATCH",
+            "CROSS_VERSION_REFERENCE",
+            "RESOURCE_REFERENCE_CYCLE",
+            "REFERENCE_CYCLE",
+            "STATE_DIRECTORY_IDENTITY_MISMATCH",
+            "LEDGER_CORRUPT",
+            "LEDGER_INCOMPLETE",
+            "BOOK_CONTEXT_UNVERIFIED",
+            "REGISTRATION_BINDING_MISMATCH",
+            "TARGET_IDENTITY_MISMATCH",
+            "TARGET_SESSION_BINDING_MISMATCH",
+            "SOURCE_BINDING",
+            "OWNER_GENERATION_STALE",
+            "EFFECT_GATE_REQUIRED",
+            "EFFECT_GATE_TIMEOUT",
+            "PLAN_STATE_INVALID",
+            "PLAN_ACTION_MISMATCH",
+            "ACTION_DIGEST_MISMATCH",
+            "EVENT_HEAD_CAS_MISMATCH",
+            "EVENT_PREFIX_INCOMPLETE",
+            "ACTION_ALREADY_ATTEMPTED",
+            "UNATTEMPTED_FACT_DUPLICATE",
+            "UNATTEMPTED_FACT_CONFLICT",
+            "OBSERVATION_NOT_FRESH",
+            "OBSERVATION_BINDING_MISMATCH",
+            "READBACK_INCOMPLETE",
+            "CONCLUSIVE_READBACK_REQUIRED",
+            "TARGET_CHANGED",
+            "UNATTEMPTED_READ_TIMEOUT",
+            "UNATTEMPTED_COMMIT_TIMEOUT",
+            "UNATTEMPTED_FACT_COMMIT_FAILED",
+            "PREPARED_BEFORE_MISMATCH",
+            "REFERENCE_HASH_MISMATCH"
+          ],
+          "compatibility": "Additive strict read-only fact entry only. commit_action_result retains its original committed-intent/RUNNING requirement; commit_reconciliation retains its exact original intent/obligation/resolution requirement. Do not call prepare_action, bind_plan_observation, assert_recovery_plan_ready or issue_first_dispatch for this INTERRUPTED/BOOK_WRITE_PAUSED branch. Shared pure A02 facts/comparator, all accepted expected_before/after/next_order/completeness/identity rules and all dispatch gates remain unchanged.",
+          "protocol": "unattempted_absence_protocol"
+        }
+      ],
+      "execution_fact_rule": "At first plan acceptance permanently consume its plan key and reserve every (canonical target_key,action_id) identity plus content digest, including the tail. Keep PLANNED/NOT_ATTEMPTED separate from actual INTENT_COMMITTED/DISPATCH_STARTED/response/readback/receipt facts. Reservation never proves a call. An interrupted plan is INTERRUPTED and its old tail never resumes; after resolution obtain a new actual snapshot, PRE_APPLY/TARGET checks and new plan/new action identities. Tail action IDs cannot be cloned or reused. Sufficient no-intent NOT_ATTEMPTED facts use only commit_unattempted_absence / UNATTEMPTED_ABSENCE_COMMITTED with its dedicated fresh two-read and current-ledger proof; they never use normal result or intent reconciliation entries.",
+      "race_rule": "Runtime claim/takeover acquires the same per-book effect gate as dispatch. The effect holder retains it until the target transaction commits/rolls back. Old owner/generation cannot pass the current runtime check or the target fence after takeover. Holding the gate does not merge runtime and target database transactions or erase crash windows. Claim protocol: runtime CLAIMING reservation, independent target activate_fence, then runtime ACTIVE, all under that gate; an interrupted reservation/activation cannot yield a dispatch permit. Claim/takeover under that gate follows runtime CLAIMING reservation -> independent target activate_fence commit -> runtime ACTIVE. Interrupted steps stay paused; target effect transaction itself verifies the active fence generation."
+    },
+    {
+      "id": "G3",
+      "name": "Independent fresh observation, snapshot and effect comparison",
+      "current": [
+        {
+          "file": "src/annotation/delivery/mock/__init__.py",
+          "line_start": 77,
+          "line_end": 96,
+          "signature": "MockSession.read_target(book_id); MockSession.read_snapshot(book_id)",
+          "behavior": "Read facts independently of execute responses, but read_snapshot can return the original snapshot unchanged and does not allocate fresh observation IDs/times on every read."
+        },
+        {
+          "file": "src/annotation/delivery/mock/__init__.py",
+          "line_start": 106,
+          "line_end": 122,
+          "signature": "MockSession._facts(action, view)",
+          "behavior": "Private relevant-action baseline facts."
+        },
+        {
+          "file": "src/annotation/delivery/mock/__init__.py",
+          "line_start": 153,
+          "line_end": 174,
+          "signature": "MockSession._compare(action, before, readback)",
+          "behavior": "Private frozen comparison: complete matching projection supports APPLIED; unchanged relevant target plus zero relevant frames supports NOT_APPLIED; otherwise UNKNOWN. Transport response is not an input."
+        },
+        {
+          "file": "src/annotation/delivery/planner/__init__.py",
+          "line_start": 13,
+          "line_end": 18,
+          "signature": "encoded(value); frame_facts(frames)",
+          "behavior": "Accepted canonical comparison helpers."
+        }
+      ],
+      "proposed": [
+        {
+          "signature": "PersistentMockSession.observe_target(target_key, *, observation_id, read_fault=None) -> TargetObservation",
+          "owner": "delivery.mock",
+          "responsibility": "Actually read the independently persisted target in a fresh observation transaction. An actual complete target read gets a new persisted read_sequence and actual observer clock; a failure before target read gets null sequence/state version/hash and a failure resource. Observation metadata writes are allowed but business effect count stays zero.",
+          "inputs": [
+            "book_id and a unique observation identity",
+            "Allowlisted synthetic read fault"
+          ],
+          "outputs": [
+            "TargetObservation: observation_id,store_id,target_session_id,target_key,scope_id,source_ref,read_sequence(nullable),observed_at(actual clock),target_state_version(nullable),target_state_hash(nullable),read_status,relevant_scope_completeness,state/readback Resource or failure Resource",
+            "Actual repeated complete reads increase read_sequence even if target_state_version/hash are unchanged. No actual target read means no fabricated sequence/version/hash."
+          ],
+          "failure_codes": [
+            "TARGET_NOT_REGISTERED",
+            "TARGET_STORE_MISSING",
+            "STATE_DIRECTORY_IDENTITY_MISMATCH",
+            "TARGET_STORE_CORRUPT",
+            "TARGET_IDENTITY_MISMATCH",
+            "OBSERVATION_ID_CONFLICT",
+            "INVALID_FAULT",
+            "TARGET_STORE_IO"
+          ],
+          "compatibility": "No caller observed_at parameter. Complete reads produce a fresh sequence; failure without actual target read has null state fields and still consumes one attempt. UNAVAILABLE/CONTRADICTORY/truncated observations cannot prove MATCH/ABSENT."
+        },
+        {
+          "signature": "PersistentMockSession.snapshot_from_observation(observation) -> PlatformSnapshot",
+          "owner": "delivery.mock",
+          "responsibility": "Expose a new sealed snapshot only from an actual persisted observation with exact target/source/scope binding; carry the observation's clock/version/evidence and preserve actual capabilities/platform version.",
+          "inputs": [
+            "Verified TargetObservation with complete required view"
+          ],
+          "outputs": [
+            "PlatformSnapshot with new immutable artifact identity/revision and actual observation binding"
+          ],
+          "failure_codes": [
+            "OBSERVATION_MISSING",
+            "RESOURCE_HASH_MISMATCH",
+            "OBSERVATION_NOT_FRESH",
+            "READBACK_INCOMPLETE",
+            "TARGET_IDENTITY_MISMATCH",
+            "SOURCE_BINDING"
+          ],
+          "compatibility": "Do not rewrite an old snapshot's time to make it fresh; do not mutate old snapshot bytes. Old read_snapshot remains archive/A02 behavior."
+        },
+        {
+          "signature": "delivery.mock.compare_action(action, before_observation, after_observation, *, comparator_version='a02-facts-1') -> EffectComparison",
+          "owner": "delivery.mock; delivery.reconciler consumes this public pure comparator",
+          "responsibility": "Public alias to the one shared planner.compare_action_effect authority extracted from accepted A02 _facts/_compare logic. Preserve relevant completeness, exact identities, expected/actual digests, platform IDs and reasons; no runtime/storage I/O or duplicated rules.",
+          "inputs": [
+            "Exact plan action",
+            "Actual relevant before observation",
+            "New actual after observation bound to the same book/source/scope/session",
+            "Supported comparator version"
+          ],
+          "outputs": [
+            "EffectComparison: MATCH/ABSENT/CONFLICT/INDETERMINATE, comparator_version, action identity/digest, observation refs/sequences, relevant_scope_completeness, identity_checks, platform_ids, expected/actual digests, reasons"
+          ],
+          "failure_codes": [
+            "COMPARATOR_VERSION_UNSUPPORTED",
+            "ACTION_DIGEST_MISMATCH",
+            "OBSERVATION_BINDING_MISMATCH",
+            "OBSERVATION_NOT_FRESH",
+            "RESOURCE_HASH_MISMATCH"
+          ],
+          "compatibility": "MATCH requires the full expected question/frame projection and unique identities; ABSENT requires complete independent evidence and unchanged relevant baseline. Partial/duplicate/changed views yield CONFLICT; unavailable/truncated/insufficient views yield INDETERMINATE. Both keep STILL_UNKNOWN. The distinction only refines UNKNOWN diagnostics and does not widen successful outcomes."
+        },
+        {
+          "signature": "delivery.planner.snapshot_state_equivalent(planned_snapshot, observed_snapshot, *, planned_target_state, observed_target_state) -> StateEquivalence",
+          "owner": "delivery.planner",
+          "responsibility": "Pure explicit new-version bridge compares canonical target key, exact fixed source/scope/session, platform/capabilities and genuine state version/hash using the frozen business-state formula. Different actual observation identities/times/sequences do not imply changed business state. No caller equivalent=true and no runtime metadata stripping.",
+          "inputs": [
+            "Exact snapshots and independently captured business-state Resources",
+            "Fixed identity/source/scope/session and actual version/hash"
+          ],
+          "outputs": [
+            "StateEquivalence with exact compared refs, fixed-identity checks, actual version/hash comparisons and evidence/reasons"
+          ],
+          "failure_codes": [
+            "RECOVERY_VERSION_UNSUPPORTED",
+            "TARGET_IDENTITY_MISMATCH",
+            "OBSERVATION_BINDING_MISMATCH",
+            "OBSERVATION_NOT_FRESH",
+            "RESOURCE_HASH_MISMATCH"
+          ],
+          "compatibility": "Only recovery version. Plan construction still requires exact same fresh snapshot/current refs. Before first dispatch actual business-state equivalence is required; this is not blanket permission for later changes."
+        },
+        {
+          "signature": "delivery.planner.bind_plan_observation(bundle, plan_ref, action_id, fresh_observation, config, *, prepared_before, progress_refs=()) -> PlanObservationBinding",
+          "owner": "delivery.planner using shared pure A02 facts/comparator and public contracts validation",
+          "responsibility": "Require actual fresh complete observation with exact canonical target/source/scope/session binding. Before first dispatch require state equivalence. For legal predecessors within the same active uninterrupted plan invocation, validate the complete APPLIED prefix with shared accepted A02 facts/comparator against current independent state, current action expected_before and the independent target effect-log delta containing only that exact prefix. Reject unexplained changes. An INTERRUPTED old plan cannot use this bridge to resume its tail.",
+          "inputs": [
+            "Exact recovery bundle/plan/action/config",
+            "Fresh actual observation and actual business-state Resource",
+            "Current action prepared_before Resource",
+            "Exact immutable progress/intent/receipt/resolution refs for the complete already-applied prefix",
+            "Independent target effect-log delta Resource from baseline through fresh observation"
+          ],
+          "outputs": [
+            "PlanObservationBinding: plan_ref,action_id,action_digest,before_snapshot_ref,observed_snapshot_ref,actual observation identity/read_sequence,target_key,source_ref,target_session_id,scope_id,baseline/current state versions/hashes,prepared_before Resource,complete applied_prefix refs/digests/comparisons,effect-log delta Resource,comparator_version and reasons"
+          ],
+          "failure_codes": [
+            "RECOVERY_VERSION_UNSUPPORTED",
+            "LOCAL_INTENT_COMMIT_REQUIRED",
+            "ACTION_DIGEST_MISMATCH",
+            "TARGET_IDENTITY_MISMATCH",
+            "OBSERVATION_BINDING_MISMATCH",
+            "OBSERVATION_NOT_FRESH",
+            "CONCLUSIVE_READBACK_REQUIRED",
+            "DEPENDENCY_UNRESOLVED",
+            "TARGET_CHANGED",
+            "PLAN_CHANGED",
+            "AUTHORIZATION_CHANGED",
+            "RECOVERY_CHAIN_INVALID",
+            "RESOURCE_HASH_MISMATCH",
+            "PLAN_INTERRUPTED"
+          ],
+          "compatibility": "At plan construction both check reports and plan snapshot/current use the same exact fresh ref. Only dispatch verification accepts a distinct fresh observation ref through this bridge. Legitimate in-invocation predecessor effects use the existing A02 comparison authority; restart recovery interrupts rather than resumes the old plan."
+        },
+        {
+          "signature": "delivery.planner.action_facts(action, observed_target_view) -> RelevantActionFacts; delivery.planner.compare_action_effect(action, before_observation, after_observation, *, comparator_version='a02-facts-1') -> EffectComparison",
+          "owner": "delivery.planner; delivery.mock.compare_action reexports the same comparator",
+          "responsibility": "Extract existing A02 _facts/_compare once into public pure helpers; preparation, prefix checks, legacy private wrappers and reconciler share that authority without circular imports. The dedicated unattempted-absence readonly branch also reuses these public helpers directly; it never routes an interrupted plan through dispatch-only preparation/observation-binding gates.",
+          "inputs": [
+            "Exact action and independent complete target observations"
+          ],
+          "outputs": [
+            "Accepted relevant-action facts and frozen MATCH/ABSENT/CONFLICT/INDETERMINATE comparison with completeness/identity/reasons"
+          ],
+          "failure_codes": [
+            "COMPARATOR_VERSION_UNSUPPORTED",
+            "ACTION_DIGEST_MISMATCH",
+            "OBSERVATION_BINDING_MISMATCH",
+            "OBSERVATION_NOT_FRESH"
+          ],
+          "compatibility": "Extraction only; no rule rewrite/outcome widening or I/O."
+        }
+      ],
+      "partial_plan_rule": "Use each action's actual relevant before baseline, including legal predecessor effects, through the existing A02 facts authority. NOT_ATTEMPTED is an execution fact, not an empty-list inference. An INTERRUPTED old tail with no intent/obligation may obtain NOT_APPLIED/ABSENT only via commit_unattempted_absence, whose first new actual read builds a dedicated readonly prepared_before and whose second actual independent complete read proves unchanged relevant state plus full ABSENT. Missing C-relevant completeness, changed next_order or unknown relevant predecessor effects prevents a conclusive fact; preserve progress only. An unrelated original UNKNOWN may remain pending. No dependency bypass, old-tail dispatch or old-plan resumption is permitted.",
+      "recovery_rule": "The reconciler emits a new ReconciliationResult tied to the exact locally committed intent, plan/action, optional existing receipt, fresh observations and comparator. MATCH maps to RESOLVED_APPLIED, ABSENT to RESOLVED_NOT_APPLIED, all other comparisons to STILL_UNKNOWN. Neither resolution automatically resends the old action. Each result carries the exact runtime-derived obligation_id. A terminal result cannot have a resolving successor. Target change after a terminal resolution yields TARGET_DRIFT_HOLD, not a successor to the old intent; clearing it requires new actual snapshot/PRE_APPLY/TARGET/new plan plus the current owner transaction."
+    },
+    {
+      "id": "G4",
+      "name": "Complete history, pending, pauses and external ID import/export",
+      "current": [
+        {
+          "file": "src/annotation/delivery/mock/__init__.py",
+          "line_start": 39,
+          "line_end": 51,
+          "signature": "MockSession.action_log; MockSession.receipt_history(book_id); MockSession.is_paused(book_id)",
+          "behavior": "Defensive-copy log and complete immutable-by-copy ExchangeBundles; pause is own-book pending or own-book UNKNOWN in retained history. The A02 R1 book_id filter must remain."
+        },
+        {
+          "file": "src/annotation/delivery/mock/__init__.py",
+          "line_start": 30,
+          "line_end": 37,
+          "signature": "Private _history/_pending/_used_plans/_used_actions/_serial",
+          "behavior": "No public full import/export or current-ledger completeness proof."
+        },
+        {
+          "file": "src/annotation/delivery/mock/__init__.py",
+          "line_start": 77,
+          "line_end": 83,
+          "signature": "MockSession.read_target(book_id)",
+          "behavior": "Exposes defensive copies of internal question bindings and frame projections, but no persistent restore transaction."
+        },
+        {
+          "file": "src/annotation/delivery/mock/__init__.py",
+          "line_start": 322,
+          "line_end": 327,
+          "signature": "End of MockSession.execute",
+          "behavior": "Full output bundles append to book history; pending can clear only when the calculated disposition is not PAUSE_RECONCILE."
+        }
+      ],
+      "proposed": [
+        {
+          "signature": "runtime.storage.load_book_context(target_key, *, owner_id, generation) -> VerifiedBookContext",
+          "owner": "runtime.storage",
+          "responsibility": "Within the current verified ledger transaction enumerate all runs/scopes/intents/receipts/progress/resolution chains and pause reasons for the stable book key. Verify resources and expected anchor/ledger identity; produce a non-self-authorizing context for public session restoration.",
+          "inputs": [
+            "Current controlled RuntimeStore",
+            "Canonical target_key={platform_namespace,target_id,book_id} and current owner/generation"
+          ],
+          "outputs": [
+            "VerifiedBookContext with complete history refs and immutable resource refs, all pending intent refs, attempted plan/action keys and digests, all progress/resolution refs, sequence/serial state, pause reasons, owner/generation and target binding",
+            "All unresolved obligation_ids, interrupted plan reservations and TARGET_DRIFT_HOLD records"
+          ],
+          "failure_codes": [
+            "STATE_DIRECTORY_IDENTITY_MISMATCH",
+            "LEDGER_CORRUPT",
+            "LEDGER_VERSION_UNSUPPORTED",
+            "RESOURCE_MISSING",
+            "RESOURCE_HASH_MISMATCH",
+            "OWNER_GENERATION_STALE",
+            "RECOVERY_CHAIN_INVALID"
+          ],
+          "compatibility": "No caller-supplied complete=true, resolved=true, empty pending list or old exported JSON substitutes for this current scan. Ordinary ArtifactRef validation remains same scope."
+        },
+        {
+          "signature": "PersistentMockSession.import_book_context(verified_context, *, authority) -> RestoreReport",
+          "owner": "delivery.mock with runtime.storage authority",
+          "responsibility": "Restore derived execution history/pending/replay/serial context through a public interface. Revalidate the current context with runtime authority; never replace target effects or clear historical UNKNOWN. Retain full mixed-book bundles while applying pause decisions only to the requested book.",
+          "inputs": [
+            "VerifiedBookContext obtained from the current runtime transaction",
+            "Runtime authority that checks ledger identity, complete scan and owner/generation"
+          ],
+          "outputs": [
+            "RestoreReport listing imported immutable refs, pending/action counts, pause reasons, source/target binding and rejected conflicts"
+          ],
+          "failure_codes": [
+            "BOOK_CONTEXT_UNVERIFIED",
+            "STATE_DIRECTORY_IDENTITY_MISMATCH",
+            "HISTORY_INCOMPLETE",
+            "HISTORY_ID_CONFLICT",
+            "INTENT_CONFLICT",
+            "OWNER_GENERATION_STALE",
+            "TARGET_IDENTITY_MISMATCH"
+          ],
+          "compatibility": "Import is append/verify, not overwrite/reset. Derivative session context does not grant dispatch authority; every effect still passes the current runtime transaction and shared effect gate."
+        },
+        {
+          "signature": "PersistentMockSession.export_book_context(target_key) -> MockBookContext",
+          "owner": "delivery.mock",
+          "responsibility": "Export the full public context without private-attribute access or history filtering. Include all history/pending/replay/serial state and stable external IDs with precise refs/digests.",
+          "inputs": [
+            "book_id"
+          ],
+          "outputs": [
+            "MockBookContext: complete original ExchangeBundle refs/resources, pending intent refs, plan/action identity-content pairs, pause reasons, resolution refs, serial, target store/session IDs, question/platform ID bindings and frame projection bindings"
+          ],
+          "failure_codes": [
+            "TARGET_NOT_REGISTERED",
+            "TARGET_STORE_CORRUPT",
+            "RESOURCE_MISSING",
+            "RESOURCE_HASH_MISMATCH"
+          ],
+          "compatibility": "Exported context is an audit/transfer artifact, not proof of current ledger completeness and not a standalone unlock permit. The original full mixed-book bundles remain intact."
+        },
+        {
+          "signature": "runtime.storage.import_history_archive(package_path, *, expected_ledger_id, target_key) -> ImportReport",
+          "owner": "runtime.storage",
+          "responsibility": "Validate and append immutable historical references/bytes without inventing local intent rows or replacing target state. Same identity/same digest is idempotent; same identity/different digest rejects. Missing historical intents remain LEGACY_UNRECORDED. Here same identity means the explicit namespace/schema_version+exchange_version and book/scope/id/revision key with immutable kind/hash bindings in migration_identity_protocol; a cross-version ID string match is not authority or an overwrite license.",
+          "inputs": [
+            "Archive package and resources",
+            "Expected current ledger identity",
+            "Requested book context; full mixed-book artifacts retained as archive provenance"
+          ],
+          "outputs": [
+            "ImportReport with added/identical/rejected refs and explicit legacy/unresolved classification"
+          ],
+          "failure_codes": [
+            "STATE_DIRECTORY_IDENTITY_MISMATCH",
+            "HISTORY_ID_CONFLICT",
+            "RESOURCE_MISSING",
+            "RESOURCE_HASH_MISMATCH",
+            "LEGACY_UNRECORDED",
+            "RECOVERY_VERSION_UNSUPPORTED"
+          ],
+          "compatibility": "Import completeness is established by the controlled store's current scan, not a package flag. Import cannot turn an archived synthetic example into a newly executed local intent."
+        }
+      ],
+      "preservation": "UNKNOWN receipts, before/after observations, failures, pending intents and prior resolutions are append-only. Preserve exact original bytes/resource digests. A resolution adds effective facts; it never edits/deletes the old UNKNOWN. The runtime book scan must include historical scopes omitted by the current exchange package. Canonical target keys control ownership/import/pause; full mixed-book bundles remain intact while UNKNOWN for another key never pauses this one.",
+      "external_ids": "Question internal-to-platform bindings and frame IDs/projections belong to the independent target store and are read/exported publicly. Runtime may index their observed references, but cannot reconstruct target facts from a receipt or allocate substitute IDs during reopen."
+    }
+  ],
+  "contracts_api": [
+    {
+      "signature": "load_archive_bundle(path, verify_assets=True) -> ArchiveBundle",
+      "owner": "contracts",
+      "responsibility": "Read exact old/new supported archive bytes and verify declared resources for audit/reproduction. Return explicit archive-only eligibility; preserve the old load_bundle path for unchanged C01/A02 behavior.",
+      "failure_codes": [
+        "JSON_INPUT",
+        "SCHEMA",
+        "RESOURCE_MISSING",
+        "RESOURCE_HASH_MISMATCH",
+        "RECOVERY_VERSION_UNSUPPORTED"
+      ],
+      "does_not_prove": [
+        "New local WriteIntent existence",
+        "Current runtime ledger completeness",
+        "Synthetic execution eligibility"
+      ]
+    },
+    {
+      "signature": "load_recovery_bundle(path, *, asset_root=None) -> RecoveryExchangeBundle",
+      "owner": "contracts",
+      "responsibility": "Require schema 1.1.0-a-recovery-proposal and exchange a03-exchange-1, validate exact refs/digests/identities and recovery chains, and apply the all-synthetic gate recursively to every artifact, source record, evidence record and referenced resource declaration. ORIGINAL/OBSERVED/REAL sources or evidence are rejected even when the enclosing producer says SYNTHETIC. For the frozen A03-P1-R2 profile (retaining the R1 closure rule), enforce resource_reference_closure_protocol for each consumer through all nested JSON Resources, and reject cycles and undeclared refs; pin the exact new candidate schema bytes rather than the shared candidate version strings alone.",
+      "failure_codes": [
+        "JSON_INPUT",
+        "SCHEMA",
+        "RECOVERY_VERSION_UNSUPPORTED",
+        "MISSING_REFERENCE",
+        "RESOURCE_MISSING",
+        "RESOURCE_HASH_MISMATCH",
+        "RECOVERY_CHAIN_INVALID",
+        "SYNTHETIC_ONLY",
+        "LEGACY_UNRECORDED",
+        "SYNTHETIC_COMPLETE_REQUIRED",
+        "ACTION_DIGEST_MISMATCH",
+        "TARGET_IDENTITY_MISMATCH",
+        "OBSERVATION_BINDING_MISMATCH",
+        "RESOLUTION_FORK",
+        "RESOLUTION_TERMINAL",
+        "CROSS_VERSION_REFERENCE",
+        "UNDECLARED_RESOURCE_REFERENCE",
+        "REFERENCE_HASH_MISMATCH",
+        "REFERENCE_SCOPE_MISMATCH",
+        "RESOURCE_REFERENCE_CYCLE",
+        "REFERENCE_CYCLE"
+      ],
+      "does_not_prove": [
+        "Actual target effect",
+        "Current runtime ledger completeness",
+        "Owner/generation authority",
+        "S01 real-source integrity"
+      ]
+    },
+    {
+      "signature": "convert_synthetic_fixture(source_path, output_dir, *, conversion_id, expected_input_sha256) -> ConversionManifest",
+      "owner": "contracts",
+      "responsibility": "Explicitly create new all-synthetic fixture files with new canonical digests and old-to-new mappings. Persisted artifact identity includes the explicit version namespace plus book/scope/artifact_id/revision, with kind and content_hash as unique immutable bindings. A fixture mapping may keep a local ID/revision across different namespaces; it is still a different persisted identity and never historical execution evidence. Within one namespace the same persisted identity cannot acquire a different kind or digest. Preserve source bytes; never rewrite/reseal old files in place, invent historical intents, migrate historical outcomes or resolve old UNKNOWN.",
+      "failure_codes": [
+        "SYNTHETIC_ONLY",
+        "LEGACY_UNRECORDED",
+        "CONVERSION_TARGET_EXISTS",
+        "RESOURCE_MISSING",
+        "RESOURCE_HASH_MISMATCH",
+        "CONVERSION_INPUT_UNSUPPORTED",
+        "CONVERSION_INPUT_HASH_MISMATCH"
+      ],
+      "does_not_prove": [
+        "A local durable intent",
+        "A performed dispatch/effect",
+        "Recovery acceptance"
+      ],
+      "compatibility": "Only genuinely new current local committed intents qualify for new recovery. Archived old UNKNOWN remains LEGACY_UNRECORDED and blocked, even where old/new local IDs match across namespaces. See migration_identity_protocol.",
+      "inputs": [
+        "Exact original archive path and required expected_input_sha256; mismatch fails before conversion",
+        "New output directory and explicit conversion_id"
+      ]
+    },
+    {
+      "signature": "assert_recovery_plan_ready(bundle, plan_ref, current_snapshot_ref) -> ApplyPlan",
+      "owner": "contracts",
+      "responsibility": "Pure same-scope contract/eligibility gate: resolve exact versions and references, two required check stages, policy/capabilities/authorization/current snapshot, and valid effective recovery outcomes while retaining original UNKNOWN history. Reject legacy unrecorded UNKNOWN, invalid/forked/cyclic/stale chains and unresolved local items.",
+      "failure_codes": [
+        "PLAN_BLOCKED",
+        "MISSING_REFERENCE",
+        "TARGET_CHANGED",
+        "BOOK_WRITE_PAUSED",
+        "LEGACY_UNRECORDED",
+        "RECOVERY_CHAIN_INVALID",
+        "OBSERVATION_NOT_FRESH",
+        "SYNTHETIC_ONLY",
+        "RESOLUTION_FORK",
+        "RESOLUTION_TERMINAL",
+        "ACTION_DIGEST_MISMATCH",
+        "TARGET_IDENTITY_MISMATCH",
+        "NOT_ATTEMPTED_WITHOUT_ABSENT"
+      ],
+      "does_not_prove": [
+        "Complete cross-scope book ledger",
+        "Current owner/generation",
+        "Dispatch permit",
+        "Target effect",
+        "S01 real-source integrity"
+      ],
+      "compatibility": "Pure same-scope candidate eligibility can run during runtime TARGET_DRIFT_HOLD. Only runtime effect permits are blocked by that hold; clearing it requires new evidence and current transaction, avoiding a plan/hold cycle."
+    },
+    {
+      "signature": "effective_recovery_outcomes(bundle, *, target_key, scope_id) -> EffectiveOutcomeView",
+      "owner": "contracts",
+      "responsibility": "Shared pure interpretation of exact valid same-scope WriteIntent/Progress/Receipt/Resolution chains. targetcheck/planner/mock consume this authority rather than each deleting UNKNOWN or implementing private unlock logic.",
+      "failure_codes": [
+        "RECOVERY_VERSION_UNSUPPORTED",
+        "RECOVERY_CHAIN_INVALID",
+        "LEGACY_UNRECORDED",
+        "OBSERVATION_NOT_FRESH"
+      ],
+      "compatibility": "On legacy 1.0.0 inputs, original UNKNOWN remains unresolved. A03 adds a separate approved new-version path; legacy assert_plan_ready semantics remain intact."
+    }
+  ],
+  "a02_eligibility_consumers": [
+    {
+      "file": "src/annotation/quality/targetcheck/__init__.py",
+      "line_start": 118,
+      "line_end": 167,
+      "current_signature": "analyze_target(bundle, graph_ref, snapshot_ref, current_snapshot_ref, policy_reference, config)",
+      "proposed_signature": "analyze_target(bundle, graph_ref, snapshot_ref, current_snapshot_ref, policy_reference, config)",
+      "change": "Dispatch by explicit bundle version to public contracts effective outcomes. Retain original legacy UNKNOWN gate and all accepted target/policy/coverage checks."
+    },
+    {
+      "file": "src/annotation/quality/targetcheck/__init__.py",
+      "line_start": 228,
+      "line_end": 237,
+      "current_signature": "check_target(bundle, graph_ref, snapshot_ref, current_snapshot_ref, policy_reference, config, *, artifact_id, created_at, run_id=None)",
+      "proposed_signature": "check_target(bundle, graph_ref, snapshot_ref, current_snapshot_ref, policy_reference, config, *, artifact_id, created_at, run_id=None)",
+      "change": "Use the matching new-version public validation/sealing authority. No caller ledger-complete boolean and no I/O."
+    },
+    {
+      "file": "src/annotation/delivery/planner/__init__.py",
+      "line_start": 21,
+      "line_end": 97,
+      "current_signature": "create_plan(bundle, graph_ref, precheck_ref, targetcheck_ref, snapshot_ref, current_snapshot_ref, policy_reference, config, *, artifact_id, created_at, run_id=None, operation='CREATE_FRAMES', previous_receipt=None)",
+      "proposed_signature": "create_plan(bundle, graph_ref, precheck_ref, targetcheck_ref, snapshot_ref, current_snapshot_ref, policy_reference, config, *, artifact_id, created_at, run_id=None, operation='CREATE_FRAMES', previous_receipt=None)",
+      "change": "Preserve accepted planning/projection rules and signature; use the explicit new-version contracts eligibility path. Do not remove old unknown receipts to generate a plan."
+    },
+    {
+      "file": "src/annotation/delivery/planner/__init__.py",
+      "line_start": 100,
+      "line_end": 122,
+      "current_signature": "verify_generated_plan(bundle, plan, current_ref, config)",
+      "proposed_signature": "verify_generated_plan(bundle, plan, current_ref, config, *, observation_binding=None)",
+      "change": "Legacy keeps original exact-ref checks. New recovery dispatch first verifies public PlanObservationBinding against the actual fresh observation; historical plan-shape regeneration then uses original plan inputs only as derivation, never proof of a current read. Preserve all accepted projection/comparison rules."
+    },
+    {
+      "file": "src/annotation/contracts/validation.py",
+      "line_start": 698,
+      "line_end": 717,
+      "current_signature": "assert_plan_ready(bundle, plan_ref, current_snapshot_ref)",
+      "proposed_signature": "assert_recovery_plan_ready(bundle, plan_ref, current_snapshot_ref)",
+      "change": "Existing raw UNKNOWN rejection stays intact on the legacy entry; new recovery entry interprets legal new-version resolution chains. Runtime current book scan remains a distinct mandatory gate."
+    }
+  ],
+  "two_stage_gate": {
+    "contract_gate": "Public contracts/targetcheck/planner validate the declared same-scope graph, exact evidence, legal effective resolution chain and current target/policy/capability/authorization bindings. Passing returns an eligible plan only.",
+    "runtime_gate": "Under the fixed state anchor and same-book effect mutex, the current runtime SQLite transaction scans the entire book across all runs/scopes, validates current owner/generation, pending/new/legacy UNKNOWN and immutable resources, then grants a bounded dispatch permit tied to exact intent/action/store.",
+    "effect_gate": "The mock verifies that permit with runtime authority immediately before the independent target effect, rejects stale generation and retains the mutex through target commit.",
+    "prohibition": "Neither a sealed JSON, caller pending=[], exported complete=true, old resolution result, changed run/action/scope ID nor a public contract PASS proves current book-wide clearance."
+  },
+  "fault_points": [
+    {
+      "id": "BEFORE_INTENT_COMMIT",
+      "owner": "runtime.storage",
+      "durable_fact": "No committed new intent if commit fails; target dispatch count must remain zero.",
+      "expected_recovery": "Query state and stop/reprepare; no automatic dispatch from an uncommitted intent."
+    },
+    {
+      "id": "AFTER_INTENT_COMMIT",
+      "owner": "runtime.storage",
+      "durable_fact": "Intent exists; the marker alone does not establish whether a target call was possible.",
+      "expected_recovery": "Treat as unresolved and perform a new independent read-only observation."
+    },
+    {
+      "id": "AFTER_DISPATCH_STARTED",
+      "owner": "runtime.storage/recovery",
+      "durable_fact": "Dispatch boundary event exists; it does not prove effect/absence.",
+      "expected_recovery": "Observe first; never resend the old action."
+    },
+    {
+      "id": "AFTER_TARGET_EFFECT_COMMIT",
+      "owner": "delivery.mock",
+      "durable_fact": "Independent target effect/log survive even without response/receipt.",
+      "expected_recovery": "New-process observation and MATCH resolution; effect count remains one."
+    },
+    {
+      "id": "AFTER_READBACK_CAPTURE",
+      "owner": "delivery.mock and runtime immutable evidence writer",
+      "durable_fact": "An observation may exist without a committed receipt; it is historical evidence, not the next recovery call's fresh observation.",
+      "expected_recovery": "New recovery observation with new sequence/time; preserve old bytes."
+    },
+    {
+      "id": "AFTER_RECEIPT_COMMIT",
+      "owner": "runtime.storage",
+      "durable_fact": "Exact receipt is committed; reopening retains receipt and complete history.",
+      "expected_recovery": "No replay; query/reconcile according to effective unresolved state."
+    }
+  ],
+  "p2_a02_exact_file_whitelist": [
+    {
+      "file": "src/annotation/delivery/mock/__init__.py",
+      "exists_at_base": true,
+      "allowed": [
+        "Add public prepare/dispatch/observation/comparison/context interfaces or reexports",
+        "Delegate persistence to the one listed new module",
+        "Preserve legacy in-memory entry signatures and R1 own-book history filter",
+        "Factor accepted relevant-facts comparator once without widening APPLIED/NOT_APPLIED",
+        "Reexport shared comparator; preserve old private compatibility delegate wrappers",
+        "prepare_action uses public observation bridge and returns prepared_before Resource"
+      ],
+      "forbidden": [
+        "Rewrite projection/type rules",
+        "Reset target/history/pending to unlock",
+        "Read runtime private tables directly",
+        "Browser/network/platform support"
+      ]
+    },
+    {
+      "file": "src/annotation/delivery/planner/__init__.py",
+      "exists_at_base": true,
+      "allowed": [
+        "Explicit version-aware public contracts validation/eligibility adaptation",
+        "Keep recomputation on the same accepted planning authority",
+        "Add public PlanObservationBinding/snapshot_state_equivalent/bind_plan_observation and new-version observation_binding keyword on verify_generated_plan",
+        "Extract accepted _facts/_compare once as public pure action_facts/compare_action_effect; old mock wrappers delegate",
+        "Verify legitimate same-invocation prefix and independent target effect-log delta through those shared helpers"
+      ],
+      "forbidden": [
+        "Change supported operations/types",
+        "Copy recovery/book ownership rules",
+        "Drop original UNKNOWN history",
+        "Add I/O or effect dispatch"
+      ]
+    },
+    {
+      "file": "src/annotation/quality/targetcheck/__init__.py",
+      "exists_at_base": true,
+      "allowed": [
+        "Use shared public effective recovery outcomes and new-version validator/sealer",
+        "Keep target/policy/capability/authorization/coverage checks and pure behavior"
+      ],
+      "forbidden": [
+        "Grant runtime clearance",
+        "Read/write runtime/target storage",
+        "Implement recovery chain rules privately",
+        "Treat caller complete=true as a current ledger scan"
+      ]
+    },
+    {
+      "file": "src/annotation/delivery/mock/persistent.py",
+      "exists_at_base": false,
+      "allowed": [
+        "PersistentMockSession and target.sqlite3 storage/observation/effect log/context adapter",
+        "Public target/session DTOs and generation fencing",
+        "Controlled per-book effect gate interface with runtime authority"
+      ],
+      "forbidden": [
+        "Runtime receipt/intent transactions in target database",
+        "Initial-state reconstruction on open",
+        "Duplicate planner or business-rule comparator",
+        "Other unlisted new A02 files"
+      ]
+    }
+  ],
+  "other_p2_ownership": {
+    "contracts": "Only the approved D02-D06 implementation under src/annotation/contracts; listed public APIs and a single shared recovery-chain interpreter. Separate contract commit and no complete S01 implementation.",
+    "runtime": "src/annotation/runtime/storage and src/annotation/runtime/recovery own fixed anchor, runtime DB, complete cross-scope ledger scan, owner/generation, durable intent, progress, pause and permit authority.",
+    "reconciler": "src/annotation/delivery/reconciler consumes public observation/comparator APIs; it does not mutate runtime DB, dispatch effects or duplicate planner/target rules.",
+    "tests_and_docs": "Only the A03 task's approved P2 paths; existing C01/A02 fixtures and historical evidence remain byte-preserved."
+  },
+  "refusal_boundaries": [
+    "All values here are design proposals and expected semantics, not executed recovery tests.",
+    "No P2 implementation starts before independent P1 design review and explicit coordinator continuation.",
+    "All-synthetic mode rejects real/ORIGINAL/OBSERVED sources and evidence recursively; recovery success does not satisfy S01 or release I01.",
+    "Legacy no-intent UNKNOWN remains LEGACY_UNRECORDED and cannot be unblocked by conversion/import/reseal.",
+    "MATCH and ABSENT resolve only the precise referenced intent; neither automatically retries the old action or clears other book-wide unresolved items.",
+    "No claim of real-platform persistence, distributed exactly-once, arbitrary external-writer coordination, final-content verification or submission.",
+    "A-internal proposal/approval does not represent B acceptance.",
+    "A03-P1-R1 repairs only the two independently confirmed design gaps. All new API calls, actual observations, deadline/refusal behavior, transactions, fences and receipt aggregation remain EXPECTED_NOT_EXECUTED; no P2, platform, S01, D01/B confirmation or I01 release is established."
+  ],
+  "plan_observation_binding_protocol": {
+    "plan_construction": "One actual fresh snapshot; both PRE_APPLY/TARGET reports and plan snapshot/current use its exact same ref.",
+    "first_dispatch": "Observe actually again; public bridge verifies fixed identities plus real state version/hash equivalence and current action facts, allowing the distinct new observation ref only in the explicit recovery version.",
+    "later_dispatch": "Only within one active uninterrupted invocation, observe after predecessors; verify complete accepted APPLIED prefix using shared comparator, immutable evidence and independent effect-log delta. Current action facts include legal predecessor effects. Unexplained changes reject.",
+    "restart": "Old plan becomes INTERRUPTED; resolve obligations read-only and then take new actual snapshot/PRE_APPLY/TARGET/new plan. No old tail continuation or reuse of reserved action IDs.",
+    "historical_regeneration": "verify_generated_plan may regenerate original plan shape from original inputs only after the fresh observation bridge passed. Original snapshot is never relabeled/recorded as the current observation.",
+    "runtime": "Supplies immutable refs and enforces current book/owner gates; never implements snapshot equivalence/facts rules.",
+    "legacy": "Original exact-ref rules and A02 business-state hashes stay unchanged."
+  },
+  "shared_case_failure_codes": {
+    "case_manifest": "case-manifest.json",
+    "codes": [
+      "RECOVERY_VERSION_UNSUPPORTED",
+      "SYNTHETIC_ONLY",
+      "SYNTHETIC_COMPLETE_REQUIRED",
+      "BOOK_WRITE_PAUSED",
+      "BOOK_PENDING_SCOPE_SWITCH_UNSUPPORTED",
+      "LEGACY_UNRECORDED",
+      "LOCAL_INTENT_COMMIT_REQUIRED",
+      "ACTION_DIGEST_MISMATCH",
+      "TARGET_IDENTITY_MISMATCH",
+      "OBSERVATION_BINDING_MISMATCH",
+      "OBSERVATION_NOT_FRESH",
+      "OWNER_GENERATION_STALE",
+      "STATE_DIRECTORY_IDENTITY_MISMATCH",
+      "RECONCILE_ATTEMPT_LIMIT",
+      "RESOLUTION_FORK",
+      "RESOLUTION_TERMINAL",
+      "RESOURCE_HASH_MISMATCH",
+      "CONCLUSIVE_READBACK_REQUIRED",
+      "NOT_ATTEMPTED_WITHOUT_ABSENT"
+    ],
+    "rule": "Shared semantic expectations only, not functional observations; more specific operational IO/format codes are additional proposed errors."
+  },
+  "terminal_and_drift_protocol": {
+    "obligation": "Runtime derives mandatory obligation_id from the committed WriteIntent journal event; all resolutions bind it exactly. New UNKNOWN means new intent/new obligation.",
+    "terminal": "RESOLVED_APPLIED/RESOLVED_NOT_APPLIED are terminal for that intent and cannot gain a successor; reuse for a new obligation rejects.",
+    "drift": "After terminal resolution, target drift is a runtime TARGET_DRIFT_HOLD. Read-only snapshot/checks and candidate planning remain allowed; RuntimeAuthority.clear_target_drift_hold validates their fresh evidence transactionally. Effect permits remain forbidden until exact hold clearance.",
+    "no_replay": "MATCH and ABSENT both prohibit old action replay. Interrupted tails never resume; planned identity reservation does not assert dispatch."
+  },
+  "initial_dispatch_authority": {
+    "normal_first_dispatch": "Only the designated newly committed intent at the current RUNNING plan cursor and current ACTIVE owner/generation may get a first-dispatch permit; the complete current book scan must have no other unresolved obligation or hold. The current intent is not a general unresolved-history exemption.",
+    "single_use": "Inside the common effect gate runtime atomically consumes the exact permit and appends DISPATCH_STARTED, then authorizes that one independent target transaction. Repeated calls/consumed permits/restart/takeover/interrupted plans never dispatch that intent again.",
+    "recovery": "Even an intent committed before the call boundary becomes read-only reconciliation work after a restart; a log marker does not prove whether the target effect happened."
+  },
+  "normal_action_result_protocol": {
+    "resource_format": "a03-action-fact-1",
+    "event": "ACTION_RESULT_COMMITTED",
+    "progress_field": "actions[].result_fact nullable Resource",
+    "successful_fact": "Actual readback plus public comparator, exact binding and current original-run transaction are all required to discharge the intent obligation. In-memory result or a progress effective_outcome alone cannot do so.",
+    "receipt": "New ReceiptPayload.action_fact_refs is required and exactly aggregates one immutable fact per result; each fact.result equals the receipt result. NOT_EXECUTED empty results may use an empty fact list. Existing UNKNOWN receipt/fact bytes remain unchanged.",
+    "restart": "Normal commit_action_result refuses INTERRUPTED/restarted/taken-over intent; explicit read-only reconcile is required.",
+    "not_attempted": "For an INTERRUPTED reserved tail with no original intent/obligation, only the new strict commit_unattempted_absence entry may produce a sufficient NOT_ATTEMPTED/NOT_APPLIED/ABSENT fact. It requires a current complete uncalled event prefix and two controlled actual fresh independent reads. Missing sufficient evidence retains progress only. Never synthesize an intent, obligation or resolution.",
+    "fact_origin": "Required origin_phase=EXECUTION, RECOVERY or UNATTEMPTED_ABSENCE and nullable resolution_ref plus nullable unattempted_basis Resource. EXECUTION requires null resolution_ref/unattempted_basis and the existing ACTION_RESULT_COMMITTED route. RECOVERY requires exact committed resolution_ref, null unattempted_basis and the existing RECONCILIATION_COMMITTED route while retaining original attempt_fact. UNATTEMPTED_ABSENCE requires null intent_ref/obligation_id/resolution_ref/result.intent_ref, nonnull unattempted_basis, exact NOT_ATTEMPTED/NOT_APPLIED/ABSENT and the dedicated UNATTEMPTED_ABSENCE_COMMITTED route. Every resource nested ordinary ref remains same-book/scope and must be declared by each consuming Artifact input_refs."
+  },
+  "runtime_authority_protocol": {
+    "status": "PROPOSAL_UNIMPLEMENTED",
+    "owner": "runtime.storage; target calls public protocol only",
+    "trust_boundary": "Opaque handles are issued/verified only by the supported runtime instance and current controlled store. Serialized JSON or caller booleans are diagnostic and never authority. No protection against malicious in-process replacement is claimed.",
+    "methods": [
+      {
+        "signature": "verify_claim(reservation, *, effect_gate) -> VerifiedClaim",
+        "responsibility": "Check current CLAIMING reservation from the controlled runtime transaction and the held canonical-book gate before target fence activation.",
+        "inputs": [
+          "ClaimReservation: ledger_id,target_key,owner_id,generation,predecessor_event_head,target_store_id,target_session_id"
+        ],
+        "outputs": "VerifiedClaim: process-local opaque handle plus exact checked reservation identity",
+        "failure_codes": [
+          "OWNER_GENERATION_STALE",
+          "CLAIM_RESERVATION_INVALID",
+          "EFFECT_GATE_REQUIRED"
+        ]
+      },
+      {
+        "signature": "issue_first_dispatch(intent_ref, *, owner_id, generation, plan_ref, action_id, observation_binding) -> DispatchPermit",
+        "responsibility": "Verify actual current local committed intent, active owner, RUNNING cursor, valid fresh observation binding and no other unresolved/hold; reserve one first-dispatch permit without target mutation.",
+        "inputs": [
+          "Exact intent/plan/action and PlanObservationBinding; current owner/generation"
+        ],
+        "outputs": "DispatchPermit: opaque runtime-issued token with ledger_id,target_key,owner_id,generation,intent_ref,obligation_id,action_digest,event-head CAS and process instance binding",
+        "failure_codes": [
+          "LOCAL_INTENT_COMMIT_REQUIRED",
+          "OWNER_GENERATION_STALE",
+          "BOOK_WRITE_PAUSED",
+          "TARGET_DRIFT_HOLD",
+          "PLAN_INTERRUPTED",
+          "REPLAY_FORBIDDEN"
+        ]
+      },
+      {
+        "signature": "consume_first_dispatch(permit, *, effect_gate, prepared_action, target_store_id, target_session_id) -> DispatchAuthorization",
+        "responsibility": "Under the held book gate atomically revalidate current runtime state, consume the single-use permit and append DISPATCH_STARTED. Authorize only one independent target transaction.",
+        "inputs": [
+          "Runtime-issued DispatchPermit; held BookGateLease; exact PreparedAction and target identity"
+        ],
+        "outputs": "DispatchAuthorization: opaque one-call handle with committed dispatch-event ref and exact target/owner/generation/action/fence bindings",
+        "failure_codes": [
+          "DISPATCH_PERMIT_INVALID",
+          "REPLAY_FORBIDDEN",
+          "OWNER_GENERATION_STALE",
+          "BOOK_WRITE_PAUSED",
+          "EFFECT_GATE_REQUIRED",
+          "INTENT_BINDING_MISMATCH"
+        ]
+      },
+      {
+        "signature": "verify_target_authorization(authorization, *, effect_gate, target_key, target_store_id, target_session_id, generation, action_digest) -> VerifiedDispatch",
+        "responsibility": "Called by controlled target immediately before its effect transaction; verify the runtime-issued authorization and current owner while the common gate stays held. Target separately checks its persisted active fence in its own transaction.",
+        "inputs": [
+          "Opaque DispatchAuthorization and exact target/fence/action identity"
+        ],
+        "outputs": "VerifiedDispatch: one authorized transaction descriptor; no caller boolean can substitute",
+        "failure_codes": [
+          "DISPATCH_PERMIT_INVALID",
+          "OWNER_GENERATION_STALE",
+          "TARGET_SESSION_BINDING_MISMATCH",
+          "TARGET_IDENTITY_MISMATCH",
+          "EFFECT_GATE_REQUIRED"
+        ]
+      },
+      {
+        "signature": "verify_context(context, *, target_key, expected_ledger_id, effect_gate) -> VerifiedBookContext",
+        "responsibility": "Verify context against a fresh complete current runtime scan and immutable file/index evidence, not the supplied JSON completeness claims. Retain all old/foreign-book history while projecting only this target_key.",
+        "inputs": [
+          "Diagnostic context plus fixed anchor/ledger identity and held gate"
+        ],
+        "outputs": "VerifiedBookContext: opaque runtime-produced snapshot with complete event head, history, pending, pause, reservations and external IDs",
+        "failure_codes": [
+          "BOOK_CONTEXT_UNVERIFIED",
+          "LEDGER_INCOMPLETE",
+          "STATE_DIRECTORY_IDENTITY_MISMATCH",
+          "OWNER_GENERATION_STALE"
+        ]
+      },
+      {
+        "signature": "clear_target_drift_hold(hold_id, snapshot_ref, precheck_ref, targetcheck_ref, candidate_plan_ref, *, owner_id, generation) -> ClearHoldResult",
+        "responsibility": "Read-only checks and candidate planning are allowed while TARGET_DRIFT_HOLD blocks effects. Under current transaction/gate verify new actual evidence, current target state and no unresolved save obligation, then append exact HOLD_CLEARED. This does not dispatch or reuse old resolutions.",
+        "inputs": [
+          "Fresh actual snapshot, new PRE_APPLY/TARGET and candidate plan, exact hold event, current owner/generation"
+        ],
+        "outputs": "ClearHoldResult: new event head and cleared exact hold_id or unchanged hold with reason",
+        "failure_codes": [
+          "TARGET_CHANGED",
+          "BOOK_WRITE_PAUSED",
+          "OWNER_GENERATION_STALE",
+          "OBSERVATION_NOT_FRESH",
+          "HOLD_EVIDENCE_INVALID"
+        ]
+      },
+      {
+        "signature": "runtime.storage.commit_reconciliation(result, *, owner_id, generation) -> ReconciliationRecord",
+        "responsibility": "Append RECONCILIATION_COMMITTED after verifying the exact original obligation, valid single chain head, actual fresh observation and current owner/event-head CAS. May write an explicit RECOVERY fact resource tied to resolution_ref; never use normal commit_action_result for a restarted intent or edit original UNKNOWN facts.",
+        "inputs": [
+          "Validated ReconciliationResult and current owner/generation",
+          "Current complete book unresolved set and original committed intent evidence"
+        ],
+        "outputs": [
+          "Committed resolution record, unchanged original history and new effective progress",
+          "Optional RECOVERY fact with original attempt_fact and exact resolution_ref; complete receipt only if every action has sufficient facts"
+        ],
+        "failure_codes": [
+          "OWNER_GENERATION_STALE",
+          "INTENT_BINDING_MISMATCH",
+          "OBSERVATION_NOT_FRESH",
+          "RESOLUTION_FORK",
+          "RESOLUTION_TERMINAL",
+          "RECONCILIATION_COMMIT_FAILED"
+        ]
+      },
+      {
+        "signature": "runtime.storage.commit_unattempted_absence(bundle, request, *, owner_id, generation, asset_root, observer) -> UnattemptedAbsenceRecord",
+        "responsibility": "Dedicated read-only current-store fact route, fully specified by groups.G2 and unattempted_absence_protocol. It performs its own current ACTIVE owner/generation/canonical gate/prefix/head CAS and two controlled reads; caller JSON never supplies authority. It does not issue or consume any dispatch permit.",
+        "inputs": [
+          "bundle: exact A03-P1-R1 all-synthetic candidate inputs and resources; fixed accepted plan/source/scope/session bindings. Immutable initial acceptance evidence is validated independently of current write readiness.",
+          "request: {registration_id,plan_ref,action_id,action_digest,expected_event_head:{sequence,hash}}. It contains locators/CAS expectations only, not supplied facts, complete/resolved booleans, observation payloads, or a dispatch permit.",
+          "owner_id,generation: current ACTIVE runtime owner for the canonical book key, checked against the controlled current ledger and target fence under the shared book effect gate.",
+          "asset_root: fixed package resource root; validate safe paths, exact bytes/hash, all-synthetic provenance and each consumer recursive input_refs declaration before any runtime/target activity.",
+          "observer: controlled, runtime-registered PersistentMockSession observer bound to registration_id, fixed store/session/SourceBundle/scope and canonical target key; serialized or arbitrary caller-supplied readbacks never substitute."
+        ],
+        "outputs": [
+          "UnattemptedAbsenceRecord: committed journal_id/target_key/registration_id/plan_ref/action_id/action_digest, immutable action_fact Resource, unattempted_basis Resource, owner_id/generation and committed event sequence/hash. This is a runtime record, not a fourth Artifact kind.",
+          "ActionFact.origin_phase=UNATTEMPTED_ABSENCE; fact.intent_ref,obligation_id,resolution_ref and fact.result.intent_ref all null; result.attempt_fact=NOT_ATTEMPTED,outcome=NOT_APPLIED,effect_match=ABSENT,next_step=RECHECK_TARGET,replay_allowed=false. prepared_before is from the first new actual read and readback/snapshot from the independent second new actual read.",
+          "Progress projection with the exact new fact, preserving all previous original facts/UNKNOWN and the INTERRUPTED plan state. A complete receipt is allowed only if every planned action has one sufficient immutable fact; unknown action B keeps receipt.write_disposition=PAUSE_RECONCILE and the batch state NEEDS_RECONCILIATION."
+        ],
+        "failure_codes": [
+          "JSON_INPUT",
+          "SCHEMA",
+          "RECOVERY_VERSION_UNSUPPORTED",
+          "SYNTHETIC_ONLY",
+          "MISSING_REFERENCE",
+          "RESOURCE_MISSING",
+          "RESOURCE_HASH_MISMATCH",
+          "UNDECLARED_RESOURCE_REFERENCE",
+          "REFERENCE_SCOPE_MISMATCH",
+          "CROSS_VERSION_REFERENCE",
+          "RESOURCE_REFERENCE_CYCLE",
+          "REFERENCE_CYCLE",
+          "STATE_DIRECTORY_IDENTITY_MISMATCH",
+          "LEDGER_CORRUPT",
+          "LEDGER_INCOMPLETE",
+          "BOOK_CONTEXT_UNVERIFIED",
+          "REGISTRATION_BINDING_MISMATCH",
+          "TARGET_IDENTITY_MISMATCH",
+          "TARGET_SESSION_BINDING_MISMATCH",
+          "SOURCE_BINDING",
+          "OWNER_GENERATION_STALE",
+          "EFFECT_GATE_REQUIRED",
+          "EFFECT_GATE_TIMEOUT",
+          "PLAN_STATE_INVALID",
+          "PLAN_ACTION_MISMATCH",
+          "ACTION_DIGEST_MISMATCH",
+          "EVENT_HEAD_CAS_MISMATCH",
+          "EVENT_PREFIX_INCOMPLETE",
+          "ACTION_ALREADY_ATTEMPTED",
+          "UNATTEMPTED_FACT_DUPLICATE",
+          "UNATTEMPTED_FACT_CONFLICT",
+          "OBSERVATION_NOT_FRESH",
+          "OBSERVATION_BINDING_MISMATCH",
+          "READBACK_INCOMPLETE",
+          "CONCLUSIVE_READBACK_REQUIRED",
+          "TARGET_CHANGED",
+          "UNATTEMPTED_READ_TIMEOUT",
+          "UNATTEMPTED_COMMIT_TIMEOUT",
+          "UNATTEMPTED_FACT_COMMIT_FAILED",
+          "PREPARED_BEFORE_MISMATCH",
+          "REFERENCE_HASH_MISMATCH"
+        ]
+      }
+    ]
+  },
+  "proposal_revision": "A03-P1-R2",
+  "rework_baseline_commit": "ca4fba4f505467228a8164c3999e0cecc54ffc4e",
+  "revision_scope": "PREFIX-01 only: complete event/hash prefix fixtures, derived references and three static neighbors; original API/REF rules retained.",
+  "candidate_profile": {
+    "proposal_revision": "A03-P1-R2",
+    "schema_version": "1.1.0-a-recovery-proposal",
+    "exchange_version": "a03-exchange-1",
+    "selection": "Select exact A03-P1-R2 package by its design/final Git commits in execution evidence and complete SHA256 manifest; source_git_commit pins frozen R1 inputs and is not this package self identity. Pin every schema SHA below; never infer latest from unchanged candidate version strings.",
+    "profile_is_not_artifact_authority": "proposal_revision is package/profile metadata. It does not turn serialized fixtures, schema conformance or migration output into current runtime authority.",
+    "ordinary_contract_compatibility": "No public contracts implementation, old schema, old fixtures, accepted A02 rules or root dependencies changed. Cross-side confirmation remains unresolved.",
+    "schema_root": "data",
+    "schema_files": {
+      "action-fact.schema.json": {
+        "path": "data/action-fact.schema.json",
+        "sha256": "808f81ea42bcc7fb28cd2d9635dbb869c491bf9cbc4fb3b53a9db7d502eaff96"
+      },
+      "archive-v1.schema.json": {
+        "path": "data/archive-v1.schema.json",
+        "sha256": "18c9dac25a44edf48bc3ea9d9c4ee37c405d9b7ce1efddca760f15806dbfadef"
+      },
+      "case-file.schema.json": {
+        "path": "data/case-file.schema.json",
+        "sha256": "a615d717deeb8b09ab3e330aa0d6754ee98c5b2edb3ddda91499b4350e079e6b"
+      },
+      "ledger-export.schema.json": {
+        "path": "data/ledger-export.schema.json",
+        "sha256": "64ed1f0641943125c81cc3627d5bf82a6dc288595a385dd5ba3a3d7f0c1dc19c"
+      },
+      "recovery-exchange.schema.json": {
+        "path": "data/recovery-exchange.schema.json",
+        "sha256": "cb0366a1349b04ca1560077747e3862a01af16815404f208ce92429e93cf2a6d"
+      },
+      "unattempted-basis.schema.json": {
+        "path": "data/unattempted-basis.schema.json",
+        "sha256": "a2faf79099e1c09221ac8e050204994b4d974b6758545b0a760599a75c926fe2"
+      },
+      "event-prefix.schema.json": {
+        "path": "event-prefix.schema.json",
+        "sha256": "784c94ca63188ccb4a84de3b679128498fe029abf7cff69d5f892e4de3d0e2d7"
+      }
+    },
+    "source_git_commit": "ca4fba4f505467228a8164c3999e0cecc54ffc4e"
+  },
+  "unattempted_absence_protocol": {
+    "status": "PROPOSAL_UNIMPLEMENTED / EXPECTED_NOT_EXECUTED",
+    "entry": "runtime.storage.commit_unattempted_absence(bundle, request, *, owner_id, generation, asset_root, observer) -> UnattemptedAbsenceRecord",
+    "allowed_plan_state": "Exactly INTERRUPTED in the current runtime store, following a genuine immutable PLAN_ACCEPTED event that reserved this exact plan/action. A caller fixture, archived plan, migration map, imported history or PLANNED/unused-looking slot cannot establish acceptance/never-called authority.",
+    "request_shape": {
+      "required": [
+        "registration_id",
+        "plan_ref",
+        "action_id",
+        "action_digest",
+        "expected_event_head"
+      ],
+      "expected_event_head_fields": [
+        "sequence",
+        "hash"
+      ],
+      "additional_properties": false,
+      "authority": "All fields are locators or expected CAS values; the controlled runtime reconstructs and verifies the underlying facts."
+    },
+    "permission": "The current ACTIVE owner/generation may perform readonly fact collection while same-book UNKNOWN or BOOK_WRITE_PAUSED persists. registration_id must name the fixed current runtime/target binding. Hold the same canonical-book effect gate used by dispatch and takeover through current-state checking, both observations, and fact commit; current target fence must agree. It is not a normal dispatch readiness waiver.",
+    "uncalled_prefix": "From the immutable PLAN_ACCEPTED event through the exact requested current event head, inspect the complete contiguous committed ledger event/hash prefix from the controlled unique store, including all reservations, intent commits, permit issuances/consumptions, DISPATCH_STARTED, action results, resolutions and imports. Verify integrity and every exact current plan/action binding, not a filtered caller export. The named action has its unchanged reservation but no committed intent, obligation, issued/consumed dispatch authority, dispatch record or existing result fact anywhere in the complete current ledger. A missing segment, undecodable event, conflicting index or evidence that the action may have been called rejects; absence of an effect-log row alone is insufficient.",
+    "readonly_facts_branch": "Use public delivery.planner.action_facts and compare_action_effect (same authority reexported by delivery.mock.compare_action). Validate immutable accepted plan shape/identity and genuine prior APPLIED facts, but do not use prepare_action/bind_plan_observation/assert_recovery_plan_ready: their RUNNING/unpaused/write-readiness conditions correctly reject this plan. Capture current actual action-relevant state after legitimate predecessors. Permit unrelated B UNKNOWN to remain; if B can affect any C-relevant fact/identity/order/completeness and that relevant effect is not established, return CONCLUSIVE_READBACK_REQUIRED and leave C progress without a conclusive fact. Keep all A02 next_order, expected before/after and identity/completeness rules.",
+    "two_new_reads": [
+      "After acquiring the canonical-book gate and initial current-ledger proof, call the fixed controlled observer for actual read one. It must persist a new observation_id/read_sequence/actual observer clock and exact fixed target/store/session/source/scope binding. Derive and persist a dedicated readonly prepared_before from that first independent complete view via public action_facts; it is not a dispatch PreparedAction or permission.",
+      "While retaining the same gate, perform actual independent read two in a separate target observation transaction with another new observation_id and strictly greater read_sequence. Build its snapshot/readback from that actual read. The business-state hash/version may be unchanged, but observation identity/sequence/time cannot be borrowed from older evidence.",
+      "Run the one shared accepted A02 comparison on read-one relevant before and read-two relevant after. Require complete unchanged relevant state and full ABSENT with exact C identities/digest; MATCH/CONFLICT/INDETERMINATE, incomplete/truncated/failed/stale data or identity drift never produce this fact. The second read cannot be relabeled as historical before evidence; the first read cannot be treated as a historical action preparation.",
+      "The observer may persist observation metadata in its separate target transaction. Business effect count and dispatch count stay zero; no target business transaction, save, replay or new dispatch authorization is invoked."
+    ],
+    "bounds": {
+      "per_actual_read_seconds": 2,
+      "actual_reads_per_entry": 2,
+      "automatic_read_retries": 0,
+      "whole_entry_seconds": 8,
+      "parent_recovery_invocation_seconds": 60,
+      "clock": "Monotonic absolute deadline; the whole-entry 8s includes gate acquisition, both reads, immutable-file IO and final transaction. Each step uses the lesser remaining entry/parent deadline and its existing step bound; never stack a new 8s budget after a timeout. Existing gate limit is at most 5s and SQLite busy limit at most 1s, both truncated by remaining deadline.",
+      "on_timeout": "No fact/event/index commit; preserve progress and all pending state. Existing independently committed observation metadata and unindexed immutable files may remain as diagnostic evidence.",
+      "intent_budget": "This action has no intent, so do not invent an obligation/intent or consume/reset another intent budget. Existing reconciliation stays at most 3 readonly attempts per intent per recovery invocation; this separate entrance performs only the fixed two reads with no automatic retry."
+    },
+    "unattempted_basis": {
+      "resource": "Required nonnull hash-bound SYNTHETIC application/json Resource on this fact; nullable and null for EXECUTION/RECOVERY origins. Not a new Artifact, intent, obligation, resolution or permit.",
+      "bindings": [
+        "runtime registration/journal identity and canonical target key",
+        "fixed target store/session, exact source_ref and scope",
+        "exact plan_ref, action_id and action_digest",
+        "current ACTIVE owner_id/generation",
+        "complete accepted-plan-to-requested-head event-prefix evidence, count/bounds and hash head",
+        "first and second actual observation Resources, new identities and increasing read sequences",
+        "prepared_before Resource derived from read one and readback/snapshot from read two",
+        "a02-facts-1 comparison and sufficient full ABSENT verdict",
+        "expected predecessor event head used by final CAS"
+      ],
+      "authority": "Runtime constructs the basis from the controlled current store and actual observer results. JSON claims or basis shape alone are never permission. Complete cross-scope book authority remains a current runtime scan; this resource cannot create a cross-scope ordinary-reference exception. Any ordinary ref present in this resource is still exact same book/scope and declared by each consumer.",
+      "format_version": "a03-unattempted-basis-1",
+      "schema": "data/unattempted-basis.schema.json",
+      "required_fields": {
+        "format_version": "a03-unattempted-basis-1",
+        "origin": "SYNTHETIC",
+        "registration_id": "Fixed current registration identity",
+        "journal_id": "Controlled current immutable ledger identity",
+        "target_key": "Exact canonical {platform_namespace,target_id,book_id}",
+        "target_store_id": "Fixed registered independent target store identity",
+        "target_session_id": "Fixed registered independent target session identity",
+        "source_ref": "Exact fixed same-scope SourceBundle ordinary ArtifactRef",
+        "scope_id": "Fixed registered scope, exact same scope as plan/consumer",
+        "plan_ref": "Exact same-scope accepted ApplyPlan ArtifactRef",
+        "action_id": "Exactly reserved never-called tail action identity",
+        "action_digest": "Canonical digest of the exact complete accepted Action",
+        "plan_status": "INTERRUPTED",
+        "owner_id": "Current ACTIVE owner verified under canonical-book gate",
+        "generation": "Current verified ACTIVE owner/fence generation",
+        "expected_event_head": "{sequence,hash}: complete current prefix head for CAS",
+        "complete_uncalled_prefix": "SYNTHETIC JSON Resource binding complete contiguous accepted-plan-to-head evidence; the runtime verifies its current store, not a serialized completeness flag",
+        "first_observation_ref": "SYNTHETIC JSON Resource from the first new controlled actual independent read",
+        "readonly_prepared_ref": "SYNTHETIC JSON Resource derived from first read with public action_facts; exactly equal to ActionFact.prepared_before",
+        "second_observation_ref": "SYNTHETIC JSON Resource from the second new controlled actual independent read; exactly equal to ActionFact.readback and result.readback",
+        "gate_held": "Claim only in hand-authored static fixtures; actual gate ownership is proved by runtime controlled lease, never by this boolean",
+        "comparison": "ABSENT from unchanged accepted A02 comparator on the two actual complete reads",
+        "observer_calls": "2",
+        "retries": "0",
+        "single_read_seconds": "2",
+        "entry_seconds": "8",
+        "parent_call_seconds": "60"
+      },
+      "event_link": "ActionFact.journal_sequence=expected_event_head.sequence+1 and ActionFact.predecessor_hash=expected_event_head.hash. Basis never points back to its containing fact; no self/mixed digest cycle is permitted.",
+      "static_example_metadata": {
+        "design_only": "true in constructed static examples only; no marker confers actual runtime authority",
+        "actual": "NOT_EXECUTED in constructed static examples; runtime verification never trusts this claim"
+      },
+      "static_example_metadata_rule": "These optional hand-authored annotations mark constructed static inputs only. They are not required production schema values and neither they nor gate_held/complete booleans establish actual gate/read/transaction authority."
+    },
+    "storage_sequence": [
+      "Before gate acquisition, validate candidate/profile, bundle shape, every ordinary ref/declaration, safe resource path, exact bytes/hash and all-synthetic closure. Reject archival/legacy input admission; do not change old files.",
+      "Acquire canonical-book effect gate within the absolute deadline. Open a current runtime transaction to verify anchor/store/registration, ACTIVE owner/generation, target fence, INTERRUPTED status, complete cross-scope book history and exact PLAN_ACCEPTED-to-head integrity/uncalled action. Reconstruct authoritative state; expected_event_head must equal current head. Check permanent result uniqueness. Close this read transaction while retaining the gate.",
+      "Perform the two controlled new reads and pure comparison as defined above. Persist/fsync the new immutable observations, prepared_before, basis and action-fact files under safe content-addressed paths; verify their bytes. There is no combined target/runtime atomic transaction.",
+      "While retaining the same gate and before deadline, open one final runtime transaction and recheck registration/store identity, ACTIVE owner/generation/fence, INTERRUPTED status, whole-book state, complete prefix/uncalled action, exact immutable resource bytes and permanent fact uniqueness. CAS the runtime event head against the original requested sequence/hash. Any drift aborts; no retry with a refreshed head.",
+      "Atomically append UNATTEMPTED_ABSENCE_COMMITTED and its unique action-fact/event/resource indexes in that same runtime transaction, referencing already-durable immutable resources. Event binds registration/journal/target/plan/action/digest, fact/basis Resources, owner/generation and predecessor head. Commit all indexes and event together, or none; no dangling committed index is allowed. Prewritten orphan files after abort confer no fact authority.",
+      "Only after commit derive immutable progress and optional complete receipt from the committed facts. Do not mutate old facts/receipts or clear unrelated pauses. Release the gate in all terminal paths. Failure/timeout preserves existing pending state and never invokes target effects."
+    ],
+    "uniqueness": {
+      "key": [
+        "journal_id",
+        "canonical_target_key",
+        "action_id"
+      ],
+      "stored_binding": [
+        "exact plan_ref including content_hash",
+        "action_digest",
+        "committed immutable fact Resource and basis Resource",
+        "committed event sequence/hash"
+      ],
+      "excluded": [
+        "owner_id",
+        "generation",
+        "registration_id",
+        "run_id"
+      ],
+      "duplicate": "A preexisting permanent action-fact key with the same exact plan/action binding rejects UNATTEMPTED_FACT_DUPLICATE, even for a repeat after takeover or unknown result. It never returns an idempotent success or emits another event.",
+      "conflict": "The same permanent key with changed plan/action identity/digest or contradictory fact/index binding rejects UNATTEMPTED_FACT_CONFLICT. Never overwrite or rebind.",
+      "readback_only": "After unknown commit outcome, query the current store by that permanent key through the public full book context query. Verify the committed event plus exact immutable file hashes. Do not resubmit to discover whether it committed."
+    },
+    "aggregation": "Use exactly one immutable sufficient fact per planned action in original action order; fact.result must equal the corresponding receipt result. For A APPLIED/B UNKNOWN/C NOT_ATTEMPTED+ABSENT, a complete receipt may include all three facts with write_disposition=PAUSE_RECONCILE; the batch remains NEEDS_RECONCILIATION and preserves B UNKNOWN/pending/BOOK_WRITE_PAUSED and old INTERRUPTED status. Without a sufficient C fact emit progress only, never fill C from assumptions. The new event only establishes C never-called+current ABSENT; it discharges no obligation and does not authorize a new/old action.",
+    "refusals_do_not_expand_authority": "No legacy no-intent UNKNOWN is convertible or resolvable by this branch; its attempt classification is LEGACY_UNRECORDED, not runtime-proven NOT_ATTEMPTED. No new recovery identity may be manufactured by migration or an empty replacement ledger. Old tail reservations remain consumed permanently."
+  },
+  "resource_reference_closure_protocol": {
+    "status": "PROPOSAL_UNIMPLEMENTED; P1-R1 checker performs only static shape/reference expectations, not admission or actual reads.",
+    "ordinary_ref": "The existing exact ArtifactRef four-tuple {artifact_id,revision,kind,content_hash}; an enclosing Artifact is an envelope, not a reference to itself.",
+    "consumer": "For each consuming Artifact separately, inspect its own fields except top-level content_hash, its directly embedded Resources, and only its formal evidence_refs resolved through the owning EvidenceRecord table to Resources. Recursively traverse the JSON bodies of those Resources and their nested Resources. Validate each encountered ordinary ArtifactRef and add its graph edge, but do not walk that referenced Artifact payload as part of the current consumer declaration closure: that other Artifact is checked separately as its own consumer. Binary/text Resources require exact bytes/hash/origin without JSON traversal. observation, prepared_before, action-fact, basis, scope-proof and evidence JSON Resources receive the same treatment.",
+    "declaration": "Every ordinary ref found directly or at any Resource nesting depth consumed by an Artifact must appear as that exact four-tuple in that consumer input_refs. Resolve it to an exact same-book/same-scope artifact and verify content hash and matching namespace. Existence or declaration by another Artifact never substitutes. Resource declarations themselves are Resources, not ArtifactRefs, so validate their path/SHA/media/origin and traverse JSON content.",
+    "graph_walk": "For each consumer maintain a visited Resource set keyed by normalized safe path/SHA256/media_type and an exact ordinary-ref set; deduplicate identical four-tuples only after validation. Resolve ordinary refs into the separate complete artifact/Resource dependency graph for identity and DAG checks without inheriting the referenced Artifact's own input_refs/payload as this consumer's dependencies. Decoded bytes may be cached, but every consumer repeats its own declaration/book/scope tests; global caching cannot skip them.",
+    "cycle": "Build the complete dependency graph from every individually inspected Artifact, Resource nesting edge and encountered ordinary-ref edge. Track active recursion stacks to reject direct/indirect Artifact cycles, Resource cycles and mixed Artifact/Resource cycles. Cycle analysis may follow the complete graph, but it never extends a consumer declaration requirement into another Artifact's separately checked payload. Repeated fully checked DAG nodes are allowed; a self-reference is not excused by resealing/hash lookup.",
+    "hash_closure": "When a new repaired declaration or nested resource changes, write a new resource path/byte SHA as needed, reseal the affected Artifact canonical content hash, propagate every exact downstream ref and repeat until the dependency DAG is closed. Update mapping and final SHA256 manifest. Never alter the original P1 graph/resources/evidence or delete facts to remove dependencies.",
+    "failure_codes": {
+      "missing_declaration": "UNDECLARED_RESOURCE_REFERENCE",
+      "wrong_resource_bytes": "RESOURCE_HASH_MISMATCH",
+      "wrong_artifact_hash": "REFERENCE_HASH_MISMATCH",
+      "foreign_book_or_scope": "REFERENCE_SCOPE_MISMATCH",
+      "mixed_version": "CROSS_VERSION_REFERENCE",
+      "resource_or_mixed_cycle": "RESOURCE_REFERENCE_CYCLE",
+      "artifact_cycle": "REFERENCE_CYCLE"
+    },
+    "static_negative_cases": [
+      "Missing consumer input_refs declaration for fact embedded snapshot ref",
+      "Missing declaration through observation/prepared nested JSON Resource",
+      "Wrong ordinary ref content_hash",
+      "Wrong Resource byte SHA256",
+      "Cross-book ordinary ref inside consumed Resource",
+      "Cross-scope ordinary ref inside consumed Resource",
+      "Direct/indirect Resource cycle and mixed artifact/Resource cycle"
+    ],
+    "no_scope_exception": "A ledger diagnostic export is not an ordinary cross-scope bridge. Runtime scans all historical book scopes internally. Any ordinary ArtifactRef actually embedded in a consumed JSON Resource remains subject to exact same-book/scope declaration checks.",
+    "evidence_ref_resolution": "Resolve only formally named evidence_refs IDs through the unique EvidenceRecord table of the owning bundle, with exact evidence_id lookup and existing mode/resource checks. EvidenceRecord retains its existing evidence_id/resource/description/mode shape; no new book/scope/schema fields are required. Recursively inspect each resolved JSON Resource and validate embedded ordinary ArtifactRefs against the consuming Artifact's existing book/scope/namespace and its own input_refs. Missing/duplicate IDs reject under existing evidence rules. Arbitrary matching strings never become implicit evidence refs."
+  },
+  "migration_identity_protocol": {
+    "scope": "Bounded clarification of existing fixture conversion identity wording; not a third independently proven functional defect.",
+    "namespace": [
+      "schema_version",
+      "exchange_version"
+    ],
+    "persisted_identity": [
+      "namespace(schema_version,exchange_version)",
+      "book_id",
+      "scope_id",
+      "artifact_id",
+      "revision"
+    ],
+    "future_database_key": [
+      "namespace(schema_version,exchange_version)",
+      "book_id",
+      "scope_id",
+      "artifact_id",
+      "revision"
+    ],
+    "unique_digest": "Exactly one immutable kind and canonical content_hash bind each (namespace,book_id,scope_id,artifact_id,revision). A same-key kind/hash difference rejects, never overwrites. Namespace is the explicit pair (schema_version,exchange_version); it is not schema_version alone.",
+    "local_mapping": "Old and new mapping rows may share artifact_id/revision/kind while their namespace and digest differ. They are different persisted identities; new means new namespace identity/files/digest, not necessarily a changed local string ID. The new migration map explicitly names old/new namespace and exact refs.",
+    "ordinary_refs": "ArtifactRef remains the unchanged four-tuple and is interpreted within its owning bundle namespace. Ordinary resolution across old/new namespaces or mixed P1/P1-R1/P1-R2 shape profiles rejects. The conversion map is diagnostic mapping, not an ordinary input_refs dependency bridge.",
+    "profiles": "P1, P1-R1 and P1-R2 are revisions of an unaccepted candidate profile under unchanged candidate schema/exchange strings, not two simultaneously admitted runtime schemas. Select one exact frozen Git/schema-SHA profile; no same-namespace data overwrite or relaxed mixed-profile acceptance follows.",
+    "history": "Old input/archive/result bytes remain unchanged. Conversion does not copy old receipt/UNKNOWN into new executed history, create local intent authority, or clear LEGACY_UNRECORDED.",
+    "immutable_identity_bindings": [
+      "kind",
+      "content_hash"
+    ]
+  },
+  "event_prefix_resource_profile": {
+    "format_version": "a03-event-prefix-1",
+    "schema_path": "event-prefix.schema.json",
+    "static_validator": "prefix_rules.validate_prefix(prefix, plan, expected_head=None, subject_action_id=None)",
+    "scope": "Exact existing strict unattempted_absence_protocol serialization; no API, permission, transaction, CAS, origin, aggregation or reference waiver changes.",
+    "hash_encoding": "UTF-8 JSON; ensure_ascii=false; sort_keys=true; separators=(comma,colon); allow_nan=false. SHA256 event over every member except its top-level event_hash. Genesis is 64 zero hex digits. Duplicate/nonfinite JSON rejected by the checker.",
+    "acceptance_reservation": "PLAN_ACCEPTED.payload.actions binds every exact plan action ID and canonical digest in the same acceptance transaction that permanently reserves them. PLAN_ACTIONS_RESERVED is the index event projection of those same atomic reservations; it does not introduce an unlocked post-acceptance reservation window.",
+    "complete_chain": "Sequence starts at 1 PLAN_ACCEPTED, then reservation projection and PLAN_STARTED. Every attempted result follows WRITE_INTENT_COMMITTED, DISPATCH_PERMIT_ISSUED, DISPATCH_PERMIT_CONSUMED, DISPATCH_STARTED. Each event has exact plan/target/owner/generation, predecessor hash and self hash. Prefix head exactly equals basis precommit CAS.",
+    "acyclic_boundary": "Intent binds predecessor before its commit event; result fact binds its result event sequence and predecessor, never a resource that contains its own result event. C fact/basis prefix ends before C fact commit. Receipt/progress independently declare all ordinary refs recursively consumed through fact/basis/prefix/prepared/observation resources.",
+    "subject_no_attempt": "No subject intent/obligation/permit/dispatch/result in precommit prefix. C remains intent=null, obligation=null, resolution=null, result.intent_ref=null. B UNKNOWN remains pending/pause; no tail dispatch.",
+    "post_prefix_suffix": "In original-unknown-preserved and recovered-report-binding only: runtime_claim.post_prefix_events points to diagnostic a03-post-prefix-events-1 [C absence10, existing RECONCILIATION_COMMITTED11]. The suffix explains final ledger/progress head11 after the existing A resolution; it is not part of C precommit prefix or accepted by event-prefix.schema as a tenth event kind.",
+    "neighbor_input_role": "New three neighbors use runtime_claim.candidate_prefix_role=PRE_ADMISSION_INPUT and supply the actually tested candidate_uncalled_prefix Resource. The valid basis graph remains context to isolate the missing acceptance, missing dispatch or broken hash. Future runtime refusal NOT_EXECUTED.",
+    "authority": "All serialized data and hashes are synthetic static design only; current runtime/SQLite authority, observation freshness, actual dispatch and recovery remain NOT_EXECUTED."
+  }
+}

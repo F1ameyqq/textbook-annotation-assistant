@@ -1,0 +1,564 @@
+{
+  "consumers": [
+    {
+      "consumer": {
+        "artifact_id": "a02-source",
+        "revision": 1,
+        "kind": "SourceBundle",
+        "content_hash": "7b761b95ea822931077cac9353be0e61be60654e7b71a4b35eae8a3fe61af5a4"
+      },
+      "input_refs": []
+    },
+    {
+      "consumer": {
+        "artifact_id": "a02-evidence",
+        "revision": 1,
+        "kind": "EvidenceBundle",
+        "content_hash": "672d0eeb877125b0d6d9abd273c29392a1022121a43c3a8230d7597dbf15ccd2"
+      },
+      "input_refs": [
+        {
+          "artifact_id": "a02-source",
+          "revision": 1,
+          "kind": "SourceBundle",
+          "content_hash": "7b761b95ea822931077cac9353be0e61be60654e7b71a4b35eae8a3fe61af5a4"
+        }
+      ]
+    },
+    {
+      "consumer": {
+        "artifact_id": "a02-graph",
+        "revision": 1,
+        "kind": "QuestionGraph",
+        "content_hash": "823bf8915cf77eeaec54362efa557028170268bb85d8e376b9300f96be9511db"
+      },
+      "input_refs": [
+        {
+          "artifact_id": "a02-source",
+          "revision": 1,
+          "kind": "SourceBundle",
+          "content_hash": "7b761b95ea822931077cac9353be0e61be60654e7b71a4b35eae8a3fe61af5a4"
+        },
+        {
+          "artifact_id": "a02-evidence",
+          "revision": 1,
+          "kind": "EvidenceBundle",
+          "content_hash": "672d0eeb877125b0d6d9abd273c29392a1022121a43c3a8230d7597dbf15ccd2"
+        }
+      ]
+    },
+    {
+      "consumer": {
+        "artifact_id": "a02-snapshot",
+        "revision": 1,
+        "kind": "PlatformSnapshot",
+        "content_hash": "038f8876bfff4e958cbf15279e56b3858d6d599c24a22410a5f34f22bb60b503"
+      },
+      "input_refs": [
+        {
+          "artifact_id": "a02-source",
+          "revision": 1,
+          "kind": "SourceBundle",
+          "content_hash": "7b761b95ea822931077cac9353be0e61be60654e7b71a4b35eae8a3fe61af5a4"
+        }
+      ]
+    },
+    {
+      "consumer": {
+        "artifact_id": "a02-precheck-stub",
+        "revision": 1,
+        "kind": "CheckReport",
+        "content_hash": "fab09d44042fd82d18a8795e27ebb69693039bc0df04a998035bcc438d6ab490"
+      },
+      "input_refs": [
+        {
+          "artifact_id": "a02-graph",
+          "revision": 1,
+          "kind": "QuestionGraph",
+          "content_hash": "823bf8915cf77eeaec54362efa557028170268bb85d8e376b9300f96be9511db"
+        }
+      ]
+    },
+    {
+      "consumer": {
+        "artifact_id": "a02-targetcheck",
+        "revision": 1,
+        "kind": "CheckReport",
+        "content_hash": "9ccfb6b360ddf27d22cb1de976da6c2770402f6b2ae901797e02a058042b498e"
+      },
+      "input_refs": [
+        {
+          "artifact_id": "a02-graph",
+          "revision": 1,
+          "kind": "QuestionGraph",
+          "content_hash": "823bf8915cf77eeaec54362efa557028170268bb85d8e376b9300f96be9511db"
+        },
+        {
+          "artifact_id": "a02-snapshot",
+          "revision": 1,
+          "kind": "PlatformSnapshot",
+          "content_hash": "038f8876bfff4e958cbf15279e56b3858d6d599c24a22410a5f34f22bb60b503"
+        }
+      ]
+    },
+    {
+      "consumer": {
+        "artifact_id": "a02-plan",
+        "revision": 1,
+        "kind": "ApplyPlan",
+        "content_hash": "6ecfa6b0f1f372534de8036b41b31ca8b937e624f16dc7157277e7a51a75aa30"
+      },
+      "input_refs": [
+        {
+          "artifact_id": "a02-graph",
+          "revision": 1,
+          "kind": "QuestionGraph",
+          "content_hash": "823bf8915cf77eeaec54362efa557028170268bb85d8e376b9300f96be9511db"
+        },
+        {
+          "artifact_id": "a02-precheck-stub",
+          "revision": 1,
+          "kind": "CheckReport",
+          "content_hash": "fab09d44042fd82d18a8795e27ebb69693039bc0df04a998035bcc438d6ab490"
+        },
+        {
+          "artifact_id": "a02-targetcheck",
+          "revision": 1,
+          "kind": "CheckReport",
+          "content_hash": "9ccfb6b360ddf27d22cb1de976da6c2770402f6b2ae901797e02a058042b498e"
+        },
+        {
+          "artifact_id": "a02-snapshot",
+          "revision": 1,
+          "kind": "PlatformSnapshot",
+          "content_hash": "038f8876bfff4e958cbf15279e56b3858d6d599c24a22410a5f34f22bb60b503"
+        }
+      ]
+    },
+    {
+      "consumer": {
+        "artifact_id": "intent-design-1",
+        "revision": 1,
+        "kind": "WriteIntent",
+        "content_hash": "32fbe723909f879c51334019259fc89aee6e379d5b8a0cb10a27e1ff97fdc7b8"
+      },
+      "input_refs": [
+        {
+          "artifact_id": "a02-plan",
+          "revision": 1,
+          "kind": "ApplyPlan",
+          "content_hash": "6ecfa6b0f1f372534de8036b41b31ca8b937e624f16dc7157277e7a51a75aa30"
+        },
+        {
+          "artifact_id": "a02-snapshot",
+          "revision": 1,
+          "kind": "PlatformSnapshot",
+          "content_hash": "038f8876bfff4e958cbf15279e56b3858d6d599c24a22410a5f34f22bb60b503"
+        },
+        {
+          "artifact_id": "a02-source",
+          "revision": 1,
+          "kind": "SourceBundle",
+          "content_hash": "7b761b95ea822931077cac9353be0e61be60654e7b71a4b35eae8a3fe61af5a4"
+        }
+      ]
+    },
+    {
+      "consumer": {
+        "artifact_id": "snapshot-match",
+        "revision": 1,
+        "kind": "PlatformSnapshot",
+        "content_hash": "da2cd99bb00b9b2c47e78a3b3449429437c83b7e7cffbf5973cdb8ecf65729a9"
+      },
+      "input_refs": [
+        {
+          "artifact_id": "a02-source",
+          "revision": 1,
+          "kind": "SourceBundle",
+          "content_hash": "7b761b95ea822931077cac9353be0e61be60654e7b71a4b35eae8a3fe61af5a4"
+        }
+      ]
+    },
+    {
+      "consumer": {
+        "artifact_id": "resolution-design",
+        "revision": 1,
+        "kind": "ReconciliationResult",
+        "content_hash": "561857210570cac9db67dfba6399612697f65297fbf315a25ff44a9f60fd7478"
+      },
+      "input_refs": [
+        {
+          "artifact_id": "a02-plan",
+          "revision": 1,
+          "kind": "ApplyPlan",
+          "content_hash": "6ecfa6b0f1f372534de8036b41b31ca8b937e624f16dc7157277e7a51a75aa30"
+        },
+        {
+          "artifact_id": "intent-design-1",
+          "revision": 1,
+          "kind": "WriteIntent",
+          "content_hash": "32fbe723909f879c51334019259fc89aee6e379d5b8a0cb10a27e1ff97fdc7b8"
+        },
+        {
+          "artifact_id": "snapshot-match",
+          "revision": 1,
+          "kind": "PlatformSnapshot",
+          "content_hash": "da2cd99bb00b9b2c47e78a3b3449429437c83b7e7cffbf5973cdb8ecf65729a9"
+        },
+        {
+          "artifact_id": "a02-source",
+          "revision": 1,
+          "kind": "SourceBundle",
+          "content_hash": "7b761b95ea822931077cac9353be0e61be60654e7b71a4b35eae8a3fe61af5a4"
+        }
+      ]
+    },
+    {
+      "consumer": {
+        "artifact_id": "progress-design",
+        "revision": 1,
+        "kind": "ExecutionProgress",
+        "content_hash": "6f036eb1b01ae7d944a102ad5edfa7177ccf854c10c443b9b4f83ed85cd01d64"
+      },
+      "input_refs": [
+        {
+          "artifact_id": "a02-plan",
+          "revision": 1,
+          "kind": "ApplyPlan",
+          "content_hash": "6ecfa6b0f1f372534de8036b41b31ca8b937e624f16dc7157277e7a51a75aa30"
+        },
+        {
+          "artifact_id": "intent-design-1",
+          "revision": 1,
+          "kind": "WriteIntent",
+          "content_hash": "32fbe723909f879c51334019259fc89aee6e379d5b8a0cb10a27e1ff97fdc7b8"
+        },
+        {
+          "artifact_id": "resolution-design",
+          "revision": 1,
+          "kind": "ReconciliationResult",
+          "content_hash": "561857210570cac9db67dfba6399612697f65297fbf315a25ff44a9f60fd7478"
+        }
+      ]
+    },
+    {
+      "consumer": {
+        "artifact_id": "static-second-intent",
+        "revision": 1,
+        "kind": "WriteIntent",
+        "content_hash": "537cce3221059c2c6cab884f2a8805b9a19b29d95ea2dc8eedf398151869b907"
+      },
+      "input_refs": [
+        {
+          "artifact_id": "a02-plan",
+          "content_hash": "6ecfa6b0f1f372534de8036b41b31ca8b937e624f16dc7157277e7a51a75aa30",
+          "kind": "ApplyPlan",
+          "revision": 1
+        },
+        {
+          "artifact_id": "a02-snapshot",
+          "content_hash": "038f8876bfff4e958cbf15279e56b3858d6d599c24a22410a5f34f22bb60b503",
+          "kind": "PlatformSnapshot",
+          "revision": 1
+        },
+        {
+          "artifact_id": "a02-source",
+          "content_hash": "7b761b95ea822931077cac9353be0e61be60654e7b71a4b35eae8a3fe61af5a4",
+          "kind": "SourceBundle",
+          "revision": 1
+        }
+      ]
+    },
+    {
+      "consumer": {
+        "artifact_id": "static-second-snapshot",
+        "revision": 1,
+        "kind": "PlatformSnapshot",
+        "content_hash": "11c69f54a0b0f114b7477542a0ba336b621de6b3feb06d8e17fe983f8d0ec522"
+      },
+      "input_refs": [
+        {
+          "artifact_id": "a02-source",
+          "revision": 1,
+          "kind": "SourceBundle",
+          "content_hash": "7b761b95ea822931077cac9353be0e61be60654e7b71a4b35eae8a3fe61af5a4"
+        }
+      ]
+    },
+    {
+      "consumer": {
+        "artifact_id": "static-second-head",
+        "revision": 1,
+        "kind": "ReconciliationResult",
+        "content_hash": "a5d0250a1667991fb5d845d8c7988cb364c8d0d10dd73cfd82d7da7d0cbed2b7"
+      },
+      "input_refs": [
+        {
+          "artifact_id": "a02-plan",
+          "content_hash": "6ecfa6b0f1f372534de8036b41b31ca8b937e624f16dc7157277e7a51a75aa30",
+          "kind": "ApplyPlan",
+          "revision": 1
+        },
+        {
+          "artifact_id": "static-second-intent",
+          "content_hash": "537cce3221059c2c6cab884f2a8805b9a19b29d95ea2dc8eedf398151869b907",
+          "kind": "WriteIntent",
+          "revision": 1
+        },
+        {
+          "artifact_id": "static-second-snapshot",
+          "content_hash": "11c69f54a0b0f114b7477542a0ba336b621de6b3feb06d8e17fe983f8d0ec522",
+          "kind": "PlatformSnapshot",
+          "revision": 1
+        }
+      ]
+    },
+    {
+      "consumer": {
+        "artifact_id": "static-absence-snapshot-different-snapshots-2",
+        "revision": 1,
+        "kind": "PlatformSnapshot",
+        "content_hash": "78bf6d71cbc8c3b19d2e8eb67ec5d96ad4f18263a264954e3cc02f9ab28cdb95"
+      },
+      "input_refs": [
+        {
+          "artifact_id": "a02-source",
+          "revision": 1,
+          "kind": "SourceBundle",
+          "content_hash": "7b761b95ea822931077cac9353be0e61be60654e7b71a4b35eae8a3fe61af5a4"
+        }
+      ]
+    },
+    {
+      "consumer": {
+        "artifact_id": "static-later-complete-receipt",
+        "revision": 1,
+        "kind": "ExecutionReceipt",
+        "content_hash": "7cbd57c9739d7fd5da2ca58c536315a50e689f396d7bde8df36a911e740764aa"
+      },
+      "input_refs": [
+        {
+          "artifact_id": "a02-plan",
+          "content_hash": "6ecfa6b0f1f372534de8036b41b31ca8b937e624f16dc7157277e7a51a75aa30",
+          "kind": "ApplyPlan",
+          "revision": 1
+        },
+        {
+          "artifact_id": "intent-design-1",
+          "content_hash": "32fbe723909f879c51334019259fc89aee6e379d5b8a0cb10a27e1ff97fdc7b8",
+          "kind": "WriteIntent",
+          "revision": 1
+        },
+        {
+          "artifact_id": "a02-source",
+          "content_hash": "7b761b95ea822931077cac9353be0e61be60654e7b71a4b35eae8a3fe61af5a4",
+          "kind": "SourceBundle",
+          "revision": 1
+        },
+        {
+          "artifact_id": "static-second-intent",
+          "content_hash": "537cce3221059c2c6cab884f2a8805b9a19b29d95ea2dc8eedf398151869b907",
+          "kind": "WriteIntent",
+          "revision": 1
+        },
+        {
+          "artifact_id": "static-second-snapshot",
+          "content_hash": "11c69f54a0b0f114b7477542a0ba336b621de6b3feb06d8e17fe983f8d0ec522",
+          "kind": "PlatformSnapshot",
+          "revision": 1
+        },
+        {
+          "artifact_id": "snapshot-match",
+          "content_hash": "da2cd99bb00b9b2c47e78a3b3449429437c83b7e7cffbf5973cdb8ecf65729a9",
+          "kind": "PlatformSnapshot",
+          "revision": 1
+        },
+        {
+          "artifact_id": "resolution-design",
+          "content_hash": "561857210570cac9db67dfba6399612697f65297fbf315a25ff44a9f60fd7478",
+          "kind": "ReconciliationResult",
+          "revision": 1
+        },
+        {
+          "artifact_id": "a02-snapshot",
+          "content_hash": "038f8876bfff4e958cbf15279e56b3858d6d599c24a22410a5f34f22bb60b503",
+          "kind": "PlatformSnapshot",
+          "revision": 1
+        },
+        {
+          "artifact_id": "static-second-head",
+          "content_hash": "a5d0250a1667991fb5d845d8c7988cb364c8d0d10dd73cfd82d7da7d0cbed2b7",
+          "kind": "ReconciliationResult",
+          "revision": 1
+        },
+        {
+          "artifact_id": "static-absence-snapshot-different-snapshots-2",
+          "content_hash": "78bf6d71cbc8c3b19d2e8eb67ec5d96ad4f18263a264954e3cc02f9ab28cdb95",
+          "kind": "PlatformSnapshot",
+          "revision": 1
+        }
+      ]
+    },
+    {
+      "consumer": {
+        "artifact_id": "static-report-current-snapshot",
+        "revision": 1,
+        "kind": "PlatformSnapshot",
+        "content_hash": "8a73ec5171cbd993495360cebf0c34007741f5c944668cc3aac23e510e7b3cbf"
+      },
+      "input_refs": [
+        {
+          "artifact_id": "a02-source",
+          "revision": 1,
+          "kind": "SourceBundle",
+          "content_hash": "7b761b95ea822931077cac9353be0e61be60654e7b71a4b35eae8a3fe61af5a4"
+        }
+      ]
+    },
+    {
+      "consumer": {
+        "artifact_id": "static-new-post",
+        "revision": 1,
+        "kind": "CheckReport",
+        "content_hash": "e07107843ee2909c308941c2f2f12de00d77f47cd36c22e8811c479e25ca78ab"
+      },
+      "input_refs": [
+        {
+          "artifact_id": "static-later-complete-receipt",
+          "revision": 1,
+          "kind": "ExecutionReceipt",
+          "content_hash": "7cbd57c9739d7fd5da2ca58c536315a50e689f396d7bde8df36a911e740764aa"
+        },
+        {
+          "artifact_id": "a02-graph",
+          "revision": 1,
+          "kind": "QuestionGraph",
+          "content_hash": "823bf8915cf77eeaec54362efa557028170268bb85d8e376b9300f96be9511db"
+        },
+        {
+          "artifact_id": "static-report-current-snapshot",
+          "revision": 1,
+          "kind": "PlatformSnapshot",
+          "content_hash": "8a73ec5171cbd993495360cebf0c34007741f5c944668cc3aac23e510e7b3cbf"
+        },
+        {
+          "artifact_id": "intent-design-1",
+          "content_hash": "32fbe723909f879c51334019259fc89aee6e379d5b8a0cb10a27e1ff97fdc7b8",
+          "kind": "WriteIntent",
+          "revision": 1
+        },
+        {
+          "artifact_id": "snapshot-match",
+          "revision": 1,
+          "kind": "PlatformSnapshot",
+          "content_hash": "da2cd99bb00b9b2c47e78a3b3449429437c83b7e7cffbf5973cdb8ecf65729a9"
+        },
+        {
+          "artifact_id": "a02-plan",
+          "content_hash": "6ecfa6b0f1f372534de8036b41b31ca8b937e624f16dc7157277e7a51a75aa30",
+          "kind": "ApplyPlan",
+          "revision": 1
+        },
+        {
+          "artifact_id": "a02-source",
+          "content_hash": "7b761b95ea822931077cac9353be0e61be60654e7b71a4b35eae8a3fe61af5a4",
+          "kind": "SourceBundle",
+          "revision": 1
+        },
+        {
+          "artifact_id": "resolution-design",
+          "revision": 1,
+          "kind": "ReconciliationResult",
+          "content_hash": "561857210570cac9db67dfba6399612697f65297fbf315a25ff44a9f60fd7478"
+        },
+        {
+          "artifact_id": "static-second-intent",
+          "content_hash": "537cce3221059c2c6cab884f2a8805b9a19b29d95ea2dc8eedf398151869b907",
+          "kind": "WriteIntent",
+          "revision": 1
+        },
+        {
+          "artifact_id": "static-second-snapshot",
+          "revision": 1,
+          "kind": "PlatformSnapshot",
+          "content_hash": "11c69f54a0b0f114b7477542a0ba336b621de6b3feb06d8e17fe983f8d0ec522"
+        },
+        {
+          "artifact_id": "a02-snapshot",
+          "content_hash": "038f8876bfff4e958cbf15279e56b3858d6d599c24a22410a5f34f22bb60b503",
+          "kind": "PlatformSnapshot",
+          "revision": 1
+        },
+        {
+          "artifact_id": "static-second-head",
+          "revision": 1,
+          "kind": "ReconciliationResult",
+          "content_hash": "a5d0250a1667991fb5d845d8c7988cb364c8d0d10dd73cfd82d7da7d0cbed2b7"
+        },
+        {
+          "artifact_id": "static-absence-snapshot-different-snapshots-2",
+          "content_hash": "78bf6d71cbc8c3b19d2e8eb67ec5d96ad4f18263a264954e3cc02f9ab28cdb95",
+          "kind": "PlatformSnapshot",
+          "revision": 1
+        }
+      ]
+    },
+    {
+      "consumer": {
+        "artifact_id": "static-new-batch",
+        "revision": 1,
+        "kind": "BatchReport",
+        "content_hash": "3d92caa8624217e54e2b21b1319c6643bb1e21261dbe07a5a0cc8c94ef8e3315"
+      },
+      "input_refs": [
+        {
+          "artifact_id": "a02-source",
+          "revision": 1,
+          "kind": "SourceBundle",
+          "content_hash": "7b761b95ea822931077cac9353be0e61be60654e7b71a4b35eae8a3fe61af5a4"
+        },
+        {
+          "artifact_id": "a02-graph",
+          "revision": 1,
+          "kind": "QuestionGraph",
+          "content_hash": "823bf8915cf77eeaec54362efa557028170268bb85d8e376b9300f96be9511db"
+        },
+        {
+          "artifact_id": "static-later-complete-receipt",
+          "revision": 1,
+          "kind": "ExecutionReceipt",
+          "content_hash": "7cbd57c9739d7fd5da2ca58c536315a50e689f396d7bde8df36a911e740764aa"
+        },
+        {
+          "artifact_id": "static-new-post",
+          "revision": 1,
+          "kind": "CheckReport",
+          "content_hash": "e07107843ee2909c308941c2f2f12de00d77f47cd36c22e8811c479e25ca78ab"
+        },
+        {
+          "artifact_id": "static-report-current-snapshot",
+          "revision": 1,
+          "kind": "PlatformSnapshot",
+          "content_hash": "8a73ec5171cbd993495360cebf0c34007741f5c944668cc3aac23e510e7b3cbf"
+        },
+        {
+          "artifact_id": "resolution-design",
+          "revision": 1,
+          "kind": "ReconciliationResult",
+          "content_hash": "561857210570cac9db67dfba6399612697f65297fbf315a25ff44a9f60fd7478"
+        },
+        {
+          "artifact_id": "static-second-head",
+          "revision": 1,
+          "kind": "ReconciliationResult",
+          "content_hash": "a5d0250a1667991fb5d845d8c7988cb364c8d0d10dd73cfd82d7da7d0cbed2b7"
+        }
+      ]
+    }
+  ],
+  "immutability": {
+    "head_before_sha256": "396c3b4755a14c4604042727cb644025aff14213f747e9006b46d9da594f80b6",
+    "head_after_sha256": "396c3b4755a14c4604042727cb644025aff14213f747e9006b46d9da594f80b6"
+  },
+  "layer": "STATIC_REFERENCE_DESIGN_NOT_PRODUCT_VALIDATION"
+}

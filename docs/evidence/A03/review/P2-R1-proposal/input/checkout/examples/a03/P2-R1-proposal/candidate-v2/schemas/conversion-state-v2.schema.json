@@ -1,0 +1,170 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:a03:p2-r1:proposal:conversion-state-2",
+  "type": "object",
+  "properties": {
+    "format_version": {
+      "const": "a03-explicit-conversion-state-2"
+    },
+    "conversion_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "source_sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "source_profile_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "target_profile_id": {
+      "const": "a03-p2-r1-amendment-1-PROPOSAL"
+    },
+    "state": {
+      "enum": [
+        "CREATED",
+        "COPYING",
+        "VALIDATING",
+        "COMMITTED",
+        "FAILED",
+        "INCOMPLETE"
+      ]
+    },
+    "previous_record_sha256": {
+      "oneOf": [
+        {
+          "type": "null"
+        },
+        {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        }
+      ]
+    },
+    "written_files": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "path": {
+            "type": "string",
+            "minLength": 1
+          },
+          "sha256": {
+            "type": "string",
+            "pattern": "^[0-9a-f]{64}$"
+          },
+          "bytes": {
+            "type": "integer",
+            "minimum": 0
+          }
+        },
+        "required": [
+          "path",
+          "sha256",
+          "bytes"
+        ],
+        "additionalProperties": false
+      },
+      "minItems": 0
+    },
+    "mapping": {
+      "oneOf": [
+        {
+          "type": "null"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "path": {
+              "type": "string",
+              "minLength": 1
+            },
+            "sha256": {
+              "type": "string",
+              "pattern": "^[0-9a-f]{64}$"
+            },
+            "media_type": {
+              "type": "string",
+              "minLength": 1
+            },
+            "origin": {
+              "const": "SYNTHETIC"
+            }
+          },
+          "required": [
+            "path",
+            "sha256",
+            "media_type",
+            "origin"
+          ],
+          "additionalProperties": false
+        }
+      ]
+    },
+    "completion_manifest": {
+      "oneOf": [
+        {
+          "type": "null"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "path": {
+              "type": "string",
+              "minLength": 1
+            },
+            "sha256": {
+              "type": "string",
+              "pattern": "^[0-9a-f]{64}$"
+            },
+            "media_type": {
+              "type": "string",
+              "minLength": 1
+            },
+            "origin": {
+              "const": "SYNTHETIC"
+            }
+          },
+          "required": [
+            "path",
+            "sha256",
+            "media_type",
+            "origin"
+          ],
+          "additionalProperties": false
+        }
+      ]
+    },
+    "failure": {
+      "oneOf": [
+        {
+          "type": "null"
+        },
+        {
+          "type": "string",
+          "minLength": 1
+        }
+      ]
+    },
+    "history_migrated": {
+      "const": false
+    }
+  },
+  "required": [
+    "format_version",
+    "conversion_id",
+    "source_sha256",
+    "source_profile_id",
+    "target_profile_id",
+    "state",
+    "previous_record_sha256",
+    "written_files",
+    "mapping",
+    "completion_manifest",
+    "failure",
+    "history_migrated"
+  ],
+  "additionalProperties": false
+}

@@ -1,0 +1,117 @@
+{
+  "profile_pins": 16,
+  "api_supplement_sha256": "91bc8a911b8e72906c0b9e941d90ec2f46698cdb8e63fc3e9521f4555b7b0239",
+  "product_imports": 0,
+  "database_queries": 0,
+  "prefixes": [
+    {
+      "case": "first-unattempted-prefix",
+      "events": 16,
+      "accepted_sequence": 3,
+      "artifact_scopes": [
+        "synthetic-scope"
+      ],
+      "non_null_frame_scopes": [
+        "synthetic-scope"
+      ],
+      "current_event_hashes_recomputed": true,
+      "native_completeness": "NOT_EXECUTED"
+    },
+    {
+      "case": "later-plan-prefix",
+      "events": 21,
+      "accepted_sequence": 8,
+      "artifact_scopes": [
+        "synthetic-scope"
+      ],
+      "non_null_frame_scopes": [
+        "synthetic-scope"
+      ],
+      "current_event_hashes_recomputed": true,
+      "native_completeness": "NOT_EXECUTED"
+    }
+  ],
+  "reports": [
+    {
+      "case": "late-receipt",
+      "heads": 1,
+      "null_original_receipts": 1,
+      "distinct_action_snapshots": 1,
+      "immutable_head_bytes_equal": true,
+      "reachability": "SINGLE_HEAD_ROUTE_PROPOSED_NOT_RUN",
+      "journal_consistency": null,
+      "post_decision": "HOLD",
+      "frame_structure": "UNAVAILABLE",
+      "runtime_registration": "NOT_EXECUTED; static packet is not native-admissible history"
+    },
+    {
+      "case": "different-snapshots",
+      "heads": 2,
+      "null_original_receipts": 2,
+      "distinct_action_snapshots": 2,
+      "immutable_head_bytes_equal": true,
+      "reachability": "NOT_PRODUCED_BY_CURRENT_STOP_ON_FIRST_UNKNOWN_RUNTIME",
+      "journal_consistency": null,
+      "post_decision": "HOLD",
+      "frame_structure": "UNAVAILABLE",
+      "runtime_registration": "NOT_EXECUTED; static packet is not native-admissible history"
+    }
+  ],
+  "diagnostics": [
+    {
+      "id": "readonly-session-does-not-match-gate-binding",
+      "kind": "STATIC_DIAGNOSTIC_VALUE_ONLY",
+      "required_result": "REJECT_CONTRADICTORY_VALUE",
+      "independent_reason": "basis.readonly_session_id must equal gate_binding.session_id and STARTED/READ records",
+      "author_static_actual": "ACCEPTED",
+      "diagnostic": null,
+      "whole_native_admissible_history": false,
+      "no_product_or_authority_execution": true
+    },
+    {
+      "id": "initial-head-not-in-canonical-prefix",
+      "kind": "STATIC_DIAGNOSTIC_VALUE_ONLY",
+      "required_result": "REJECT_CONTRADICTORY_VALUE",
+      "independent_reason": "initial entry CAS must name the actual prefix head before this readonly session, not an unrelated digest",
+      "author_static_actual": "ACCEPTED",
+      "diagnostic": null,
+      "whole_native_admissible_history": false,
+      "no_product_or_authority_execution": true
+    },
+    {
+      "id": "amended-source-kind-coverage",
+      "kind": "STATIC_DIAGNOSTIC_VALUE_ONLY",
+      "exchange_schema_actual": "PASS",
+      "static_semantic_actual": "unregistered new kind",
+      "scope": "isolated permitted envelope kind, not complete converted fixture or execution qualification",
+      "independent_reason": "conversion target 1.2 Source is admitted by AmendedSourceBundle schema but checker artifacts() has no handling branch for it"
+    }
+  ],
+  "pre": {
+    "decision": "HOLD",
+    "checks": {
+      "answer_matching": "UNAVAILABLE",
+      "coverage": "UNAVAILABLE",
+      "policy": "UNAVAILABLE",
+      "source_integrity": "UNAVAILABLE",
+      "structure": "UNAVAILABLE"
+    },
+    "native_admission": "NOT_EXECUTED"
+  },
+  "conversion": {
+    "states": [
+      "CREATED",
+      "COPYING",
+      "VALIDATING",
+      "INCOMPLETE"
+    ],
+    "completion_manifest": [
+      null,
+      null,
+      null,
+      null
+    ],
+    "mapping_status": "UNIMPLEMENTED_MAPPING_PLAN",
+    "committed_bundle": "NOT_PROVIDED/NOT_EXECUTED"
+  }
+}

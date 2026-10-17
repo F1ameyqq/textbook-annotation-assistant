@@ -1,0 +1,279 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:a03:p2-r1:proposal:receipt-2",
+  "$defs": {
+    "Resource": {
+      "type": "object",
+      "properties": {
+        "path": {
+          "type": "string",
+          "minLength": 1
+        },
+        "sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "media_type": {
+          "type": "string",
+          "minLength": 1
+        },
+        "origin": {
+          "const": "SYNTHETIC"
+        }
+      },
+      "required": [
+        "path",
+        "sha256",
+        "media_type",
+        "origin"
+      ],
+      "additionalProperties": false
+    }
+  },
+  "type": "object",
+  "properties": {
+    "plan": {
+      "type": "object",
+      "properties": {
+        "artifact_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "revision": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "kind": {
+          "type": "string",
+          "minLength": 1
+        },
+        "content_hash": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        }
+      },
+      "required": [
+        "artifact_id",
+        "revision",
+        "kind",
+        "content_hash"
+      ],
+      "additionalProperties": false
+    },
+    "execution_mode": {
+      "const": "SIMULATED"
+    },
+    "results": {
+      "type": "array",
+      "items": {
+        "additionalProperties": false,
+        "properties": {
+          "action_id": {
+            "pattern": "^[A-Za-z][A-Za-z0-9_.:-]{0,127}$",
+            "title": "Action Id",
+            "type": "string"
+          },
+          "outcome": {
+            "enum": [
+              "APPLIED",
+              "NOT_APPLIED",
+              "UNKNOWN"
+            ],
+            "title": "Outcome",
+            "type": "string"
+          },
+          "platform_ids": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Platform Ids",
+            "type": "array"
+          },
+          "before_evidence_refs": {
+            "items": {
+              "pattern": "^[A-Za-z][A-Za-z0-9_.:-]{0,127}$",
+              "type": "string"
+            },
+            "minItems": 1,
+            "title": "Before Evidence Refs",
+            "type": "array"
+          },
+          "after_evidence_refs": {
+            "items": {
+              "pattern": "^[A-Za-z][A-Za-z0-9_.:-]{0,127}$",
+              "type": "string"
+            },
+            "title": "After Evidence Refs",
+            "type": "array"
+          },
+          "readback": {
+            "anyOf": [
+              {
+                "$ref": "#/$defs/Resource"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "effect_match": {
+            "enum": [
+              "MATCH",
+              "ABSENT",
+              "INDETERMINATE"
+            ],
+            "title": "Effect Match",
+            "type": "string"
+          },
+          "next_step": {
+            "enum": [
+              "POSTCHECK",
+              "RECHECK_TARGET",
+              "RECONCILE"
+            ],
+            "title": "Next Step",
+            "type": "string"
+          },
+          "replay_allowed": {
+            "const": false,
+            "title": "Replay Allowed",
+            "type": "boolean"
+          },
+          "reason": {
+            "minLength": 1,
+            "title": "Reason",
+            "type": "string"
+          },
+          "attempt_fact": {
+            "type": "string",
+            "enum": [
+              "NOT_ATTEMPTED",
+              "MAY_HAVE_BEEN_ATTEMPTED",
+              "ATTEMPTED",
+              "LEGACY_UNRECORDED"
+            ]
+          },
+          "attempt_evidence_refs": {
+            "type": "array",
+            "items": {
+              "$ref": "#/$defs/Resource"
+            },
+            "minItems": 0
+          },
+          "intent_ref": {
+            "anyOf": [
+              {
+                "additionalProperties": false,
+                "properties": {
+                  "artifact_id": {
+                    "pattern": "^[A-Za-z][A-Za-z0-9_.:-]{0,127}$",
+                    "title": "Artifact Id",
+                    "type": "string"
+                  },
+                  "revision": {
+                    "exclusiveMinimum": 0,
+                    "title": "Revision",
+                    "type": "integer"
+                  },
+                  "kind": {
+                    "const": "WriteIntent",
+                    "type": "string"
+                  },
+                  "content_hash": {
+                    "pattern": "^[0-9a-f]{64}$",
+                    "title": "Content Hash",
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "artifact_id",
+                  "revision",
+                  "kind",
+                  "content_hash"
+                ],
+                "title": "ArtifactRef",
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "required": [
+          "action_id",
+          "outcome",
+          "platform_ids",
+          "before_evidence_refs",
+          "after_evidence_refs",
+          "readback",
+          "effect_match",
+          "next_step",
+          "replay_allowed",
+          "reason",
+          "attempt_fact",
+          "attempt_evidence_refs",
+          "intent_ref"
+        ],
+        "title": "ActionResult",
+        "type": "object"
+      },
+      "minItems": 1
+    },
+    "action_fact_refs": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "path": {
+            "type": "string",
+            "minLength": 1
+          },
+          "sha256": {
+            "type": "string",
+            "pattern": "^[0-9a-f]{64}$"
+          },
+          "media_type": {
+            "type": "string",
+            "minLength": 1
+          },
+          "origin": {
+            "const": "SYNTHETIC"
+          }
+        },
+        "required": [
+          "path",
+          "sha256",
+          "media_type",
+          "origin"
+        ],
+        "additionalProperties": false
+      },
+      "minItems": 1
+    },
+    "unresolved_issue_ids": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      },
+      "minItems": 0
+    },
+    "write_disposition": {
+      "enum": [
+        "RECHECK_TARGET",
+        "PAUSE_RECONCILE",
+        "POSTCHECK"
+      ]
+    }
+  },
+  "required": [
+    "plan",
+    "execution_mode",
+    "results",
+    "action_fact_refs",
+    "unresolved_issue_ids",
+    "write_disposition"
+  ],
+  "additionalProperties": false
+}

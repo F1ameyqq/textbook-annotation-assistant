@@ -1,0 +1,79 @@
+{
+  "conclusion": "REWORK",
+  "rows": [
+    {
+      "id": "VERSION",
+      "adoptable": "显式exchange2/Artifact1.2/profile+16pins+API SHA；旧七Schema/API原字节保留，旧节点只读输入。",
+      "decision": "新提案仍须明确批准；新版本类型的Schema/语义检查覆盖一致后才可采用。不得按latest或重复版本字符串混选旧草稿。",
+      "future": "新旧入口/profile选择/历史原件与显式转换实测。",
+      "blocks": "不阻单独决定保全/选型原则；当前不授权实现。",
+      "cross_side": "若进入共享Exchange/公共消费者，需跨侧确认；A内部提案不代表B同意。"
+    },
+    {
+      "id": "SCOPE-01",
+      "adoptable": "全书genesis到真实head、accepted_anchor与真实前驱、逐事件保留old body/hash、全账本原生等值证明。",
+      "decision": "必须补齐typed journal frame如何终止外层递归消费、frame自己声明/推导scope和DAG规则。当前artifacts()平铺Resource refs到外层scope，prefix_check()另按frame scope验；全包跨scope正例缺失。最小为同书两scope完整静态包及错误frame/漏声明反例，非frame仍严格同scope，planless事件无scope依据时用null。",
+      "future": "原生全书扫描、漏scope/删事件/CAS变化、固定session不能切scope清历史。",
+      "blocks": "阻止声称完整全书前缀/跨scope消费者已可实现；不能把同scope样例当完成。",
+      "cross_side": "新嵌套消费者边界影响共享引用语义，须明确跨侧影响，未获B确认。"
+    },
+    {
+      "id": "SESSION-02",
+      "adoptable": "只读能力与dispatch分离、真实已接受/永久预留、无intent/permit、保留UNKNOWN与原INTERRUPTED。",
+      "decision": "两个新诊断值（会话不一致、初始头不在链）仍被basis_check接受。须显式核对initial H为STARTED前真实头、H到final只允许本session记账、session/owner/generation/registration/target/read记录一致及唯一fact key；补最小静态拒绝。",
+      "future": "真实三读、持久计数、崩溃/接管/UNKNOWN提交查询、fact/event/index原子性与资源保全。",
+      "blocks": "阻止只读事务实现范围直接放行，静态语义仍有缺口。",
+      "cross_side": "原生会话/事务是A内部；basis/引用字段是合同影响。"
+    },
+    {
+      "id": "BUDGET-03",
+      "adoptable": "第三次读明列total_read_calls=3、每读2s/入口8s/父60s/retries0，不伪装免费校验。",
+      "decision": "这是从旧专用固定2读且全程持闸到3读+逻辑session的新决定，须明批。推荐读前持久计数、同entry/call重启不重置、独立无intent计数、最早绝对期限截短每步；第三读在最终短gate内，随后校验和CAS，不暗加第四次业务读。session需由所有受控目标写入口和takeover共同执行。",
+      "future": "lease/续租/其他writer/死亡session/超时边界，未访问项与当前全书暂停。",
+      "blocks": "预算与锁协议未裁定前不能默认采用；普通intent每call最多3读不变。",
+      "cross_side": "A受控本机运行协议；若暴露公共预算字段需合同批准。"
+    },
+    {
+      "id": "ADOPTION-04",
+      "adoptable": "只接纳已知DB1、追加profile事件、旧行/hash不改、未知库失败关闭。",
+      "decision": "只追加新事件不能充分定义旧writer拒绝的持久门。基线verify_integrity按精确四键meta和user_version1核对，并只验证事件hash/head。推荐明确adoption事务增加profile判别meta键+事件（或显式新格式），新open核对两者；旧严格meta比较将拒绝。崩溃时fail-closed、target fence/owner需一致；此为静态建议未实测。",
+      "future": "接纳前后中断、旧writer重新open、fence不一致、profile与索引不一致。",
+      "blocks": "阻止在不明版本门的情况下启用新逻辑session/事件生产。",
+      "cross_side": "A内部持久存储格式，不等于共享合同批准。"
+    },
+    {
+      "id": "R17-05",
+      "adoptable": "分开原receipt和后到聚合receipt、per-action snapshot/head/fact、独立report级新读，旧头字节不改。",
+      "decision": "两个包是孤立fact值见证，不是原生合法全书历史；同计划首UNKNOWN即停，不能自然有两行动恢复头。推荐先提出由原A02 planner真实生成的最小一动作或其他可达单头晚到receipt路径；多头仍为无原生资格的值模型。调度必须明确这与完整R17的关系；若要求真实多头，另批可达历史模型及正例，不能自行删R17、续旧尾或扩跨计划/scope聚合。",
+      "future": "合法原生晚到receipt、独立report读、历史头/当前头区分及后续漂移；多头按裁定角色验收。",
+      "blocks": "阻止宣称R17功能闭合；可单独决定表达模型，当前不授权原生注册。",
+      "cross_side": "POST/Batch/Receipt公共消费语义，跨侧确认未取得。"
+    },
+    {
+      "id": "PRE-06",
+      "adoptable": "注册的A侧合成fixture verifier、五项实际比较、私有run接纳、HOLD/UNAVAILABLE诚实保留，不冒充B质量。",
+      "decision": "需批准exact oracle/实现digest及独立来源。当前唯一新producer与run Schema强制post-hold hold_id/head，但转换后的初始执行也要求fresh PRE，未定义无hold bootstrap。推荐显式INITIAL/POST_HOLD上下文或另列已批准initial producer，不能制造hold或复制旧PRE stub。",
+      "future": "实际五检查/接纳、新PRE/新TARGET/新plan清hold及最终第二次变化，均NOT_EXECUTED。",
+      "blocks": "阻止启用新初始fixture执行；post-hold框架可被单独裁定，不要求本轮产运行PASS。",
+      "cross_side": "只用于固定合成fixture；真实OCR/题意/答案质量仍属B/S01未完成边界。"
+    },
+    {
+      "id": "CONVERSION-07",
+      "adoptable": "仅已知全合成初始输入、原字节保全、新namespace和完整映射、追加状态链、未知DB不自动迁移。",
+      "decision": "新1.2 Source通过exchange Schema但静态语义检查报unregistered new kind；mapping仍null且无完整目标包。须补一致的初始类型覆盖、完整静态目标/双向映射。另选定completion manifest rename与COMMITTED谁是唯一接纳点、rename后未COMMITTED时只读重开如何判定，避免记录/manifest自引用。",
+      "future": "真实完整转换及各中断点/重开只读/新目录重做，当前未运行。",
+      "blocks": "阻止转换器/新初始输入准入直接实现放行；不把未运行本身当设计错误。",
+      "cross_side": "新Exchange/身份映射会影响公共消费者，需列兼容矩阵。"
+    },
+    {
+      "id": "RETENTION",
+      "adoptable": "历史NOT_RETAINED继续保留；新持久root/流式原始stdout stderr/预登记/失败finally/不可覆盖run id与完整清单。",
+      "decision": "历史丢失不能重建；当前探索性原输出缺失也不改称齐备。是否接收历史限制需调度明确。新运行的保全计划可采用，不要求静态阶段证明运行harness已实现。",
+      "future": "故障/timeout/断言后原件、完成回执与进程释放，统一原字节清单。",
+      "blocks": "本身不阻单独设计采用；运行验收前必须落实，历史限制不能静默消除。",
+      "cross_side": "A侧审计与验收，不代表B验收。"
+    }
+  ],
+  "implementation_authorized": false,
+  "I01_released": false
+}

@@ -1,0 +1,99 @@
+{
+  "type": "STATIC_PROTOCOL_REVIEW_ONLY",
+  "report_packet_disclosures": {
+    "late-receipt": [
+      {
+        "path": "/validation_layers/global_fact_journal_consistency",
+        "value": "NOT_ASSERTED_ISOLATED_FACT_WITNESSES"
+      }
+    ],
+    "different-snapshots": [
+      {
+        "path": "/validation_layers/global_fact_journal_consistency",
+        "value": "NOT_ASSERTED_ISOLATED_FACT_WITNESSES"
+      }
+    ]
+  },
+  "cross_scope": {
+    "candidate_prefix_artifact_scopes": [
+      "synthetic-scope"
+    ],
+    "positive_cross_scope_packet": "MISSING",
+    "outer_consumer_rule": "check_static.artifacts lines212-219 recursively flattens all Resource refs into outer artifact scope",
+    "nested_frame_rule": "prefix_check lines252-267 introduces frame-scoped declaration and scope for each event",
+    "impact": "a foreign-scope frame nested in an outer same-scope Artifact cannot simultaneously satisfy both validation rules unless a typed boundary is explicitly defined and implemented in the static checker",
+    "minimum": "type recognized journal frame ownership; infer planless/control scope or require null; specify outer vs frame declarations/DAG; add full same-book two-scope static package and false-frame/undeclared controls"
+  },
+  "readonly": {
+    "author_value_diagnostics": "two contradictory values accepted by static basis_check; no runtime conclusion",
+    "decisions": [
+      "approve third total actual read instead of silently retaining old two-read budget",
+      "decide logical session vs old gate-held route",
+      "persistent call/action/session counters across crash and owner handoff",
+      "third real read under final gate then local checks and CAS, no hidden fourth target read",
+      "match initial head before STARTED and final head after own session records; equality for owner/generation/session/target/read records"
+    ],
+    "limits": "no native session, clock, lease, target effect or CAS executed"
+  },
+  "initial_pre_bootstrap": {
+    "pre_run_required_fields": [
+      "format_version",
+      "producer_kind",
+      "oracle",
+      "source_ref",
+      "graph_ref",
+      "policy_ref",
+      "hold_id",
+      "hold_event_head",
+      "actual_snapshot_ref",
+      "actual_observation",
+      "run_id",
+      "started_at",
+      "finished_at",
+      "implementation_digest",
+      "input_hashes",
+      "checks",
+      "decision",
+      "authority"
+    ],
+    "hold_id_schema": {
+      "type": "string",
+      "minLength": 1
+    },
+    "hold_event_head_schema": {
+      "type": "object",
+      "properties": {
+        "sequence": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "hash": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        }
+      },
+      "required": [
+        "sequence",
+        "hash"
+      ],
+      "additionalProperties": false
+    },
+    "candidate_producer_scope": "fresh post-hold snapshot/observation; hold id/head required",
+    "conversion_requirement": "old PRE stub/plan archive only; fresh qualified PRE required for new execution",
+    "gap": "no initial-without-hold producer context specified; without another approved source, the proposed converter cannot obtain its fresh initial PRE through this API",
+    "minimum": "explicit INITIAL vs POST_HOLD run context with separately checked inputs, or name/approve a separate initial PRE producer; never fabricate a hold or relabel the old stub",
+    "classification": "scope/contract decision before enabling converted initial execution, not evidence of any product bug"
+  },
+  "conversion_commit_point": {
+    "present": "INCOMPLETE, null mapping hashes, no committed bundle; honest unimplemented state",
+    "must_decide": "completion-manifest rename vs appended COMMITTED authority; exact reopen read-only behavior after rename before COMMITTED; manifest-record references must be acyclic",
+    "minimum": "complete static success bundle and total old/new mappings in new namespace, with valid source/graph/snapshot/PRE schemas, plus per-crash diagnostic states before implementation",
+    "runtime_interruption": "NOT_EXECUTED"
+  },
+  "r17_minimum_recommended_for_coordinator": {
+    "current_reachable_candidate": "new genuine minimal plan produced by unchanged A02 planner; one UNKNOWN -> fresh terminal head with original_receipt_ref null -> complete later receipt -> new separate report read. Reachability and all facts still need proof.",
+    "multihead": "keep same-plan/same-scope two-head value model as non-native diagnostic until coordinator specifies its R17 acceptance role; do not resume old tail or aggregate plans/scopes by implication",
+    "approval_needed": "coordinator must explicitly preserve/interpret the complete R17 obligation; review does not waive or narrow it"
+  },
+  "scope": "no product import/run/DB/network/model; prohibited authorization field reset NOT_EXECUTED"
+}

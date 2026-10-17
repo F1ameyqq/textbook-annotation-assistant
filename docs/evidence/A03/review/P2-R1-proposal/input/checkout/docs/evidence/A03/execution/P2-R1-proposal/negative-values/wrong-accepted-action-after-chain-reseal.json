@@ -1,0 +1,773 @@
+{
+  "case": "wrong-accepted-action-after-chain-reseal",
+  "value": {
+    "accepted_anchor": {
+      "sequence": 3,
+      "hash": "34165df73b31d1e6dcfcb3402bb4f5b8c85e96900ddacc13e4538c2515fed7f3"
+    },
+    "accepted_predecessor": {
+      "sequence": 2,
+      "hash": "95318da9920b466d94f5151092d81cfd1f4a38eed7ceed4559af22131a9100b3"
+    },
+    "expected_book_head": {
+      "sequence": 16,
+      "hash": "5e97fa4af6870f397a106cb3ae26fabb5095943bd08d967bad1e79fd47eacb29"
+    },
+    "format_version": "a03-runtime-event-prefix-1",
+    "frames": [
+      {
+        "consumer_scope_id": null,
+        "event": {
+          "event": "OWNER_CLAIM_RESERVED",
+          "event_hash": "0039b8bbc15df1fc613e9d7dda1ce78a5dd06ec78f8eb9ba80c600a9b4df6153",
+          "generation": 1,
+          "journal_id": "static-journal-first-unattempted-prefix",
+          "owner_id": "static-owner-1",
+          "payload": {},
+          "plan_ref": null,
+          "previous_hash": "0000000000000000000000000000000000000000000000000000000000000000",
+          "recorded_at": "2026-10-17T00:00:00.000Z",
+          "sequence": 1,
+          "target_key": {
+            "book_id": "synthetic-book",
+            "platform_namespace": "a02-mock",
+            "target_id": "synthetic-target"
+          }
+        },
+        "frame_version": "a03-journal-consumer-frame-1",
+        "input_refs": [],
+        "representation": "FROZEN_EVENT_1"
+      },
+      {
+        "consumer_scope_id": null,
+        "event": {
+          "event": "OWNER_ACTIVE",
+          "event_hash": "95318da9920b466d94f5151092d81cfd1f4a38eed7ceed4559af22131a9100b3",
+          "generation": 1,
+          "journal_id": "static-journal-first-unattempted-prefix",
+          "owner_id": "static-owner-1",
+          "payload": {},
+          "plan_ref": null,
+          "previous_hash": "0039b8bbc15df1fc613e9d7dda1ce78a5dd06ec78f8eb9ba80c600a9b4df6153",
+          "recorded_at": "2026-10-17T00:00:00.100Z",
+          "sequence": 2,
+          "target_key": {
+            "book_id": "synthetic-book",
+            "platform_namespace": "a02-mock",
+            "target_id": "synthetic-target"
+          }
+        },
+        "frame_version": "a03-journal-consumer-frame-1",
+        "input_refs": [],
+        "representation": "FROZEN_EVENT_1"
+      },
+      {
+        "consumer_scope_id": "synthetic-scope",
+        "event": {
+          "event": "PLAN_ACCEPTED",
+          "event_hash": "34165df73b31d1e6dcfcb3402bb4f5b8c85e96900ddacc13e4538c2515fed7f3",
+          "generation": 1,
+          "journal_id": "static-journal-first-unattempted-prefix",
+          "owner_id": "static-owner-1",
+          "payload": {
+            "actions": [
+              {
+                "action_digest": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+                "action_id": "action-a02-a80e543226fa0df5fcdcb8c585e1c125"
+              },
+              {
+                "action_digest": "66689db3b1cf58bfe0ec5e42b97a36edae6311695e0c7385a9751f4751083438",
+                "action_id": "action-a02-bb4ce2935b7f9cc278385b35e2ac3562"
+              },
+              {
+                "action_digest": "cd4aec0a1f47ce5ded97b2c2c17eea8f663525ed818ca8ab7855a8f7f84bd069",
+                "action_id": "action-a02-dec0905217fd2d98a7c02bd44beb3f5c"
+              }
+            ],
+            "plan_ref": {
+              "artifact_id": "a02-plan",
+              "content_hash": "6ecfa6b0f1f372534de8036b41b31ca8b937e624f16dc7157277e7a51a75aa30",
+              "kind": "ApplyPlan",
+              "revision": 1
+            }
+          },
+          "plan_ref": {
+            "artifact_id": "a02-plan",
+            "content_hash": "6ecfa6b0f1f372534de8036b41b31ca8b937e624f16dc7157277e7a51a75aa30",
+            "kind": "ApplyPlan",
+            "revision": 1
+          },
+          "previous_hash": "95318da9920b466d94f5151092d81cfd1f4a38eed7ceed4559af22131a9100b3",
+          "recorded_at": "2026-10-17T00:00:00.200Z",
+          "sequence": 3,
+          "target_key": {
+            "book_id": "synthetic-book",
+            "platform_namespace": "a02-mock",
+            "target_id": "synthetic-target"
+          }
+        },
+        "frame_version": "a03-journal-consumer-frame-1",
+        "input_refs": [
+          {
+            "artifact_id": "a02-plan",
+            "content_hash": "6ecfa6b0f1f372534de8036b41b31ca8b937e624f16dc7157277e7a51a75aa30",
+            "kind": "ApplyPlan",
+            "revision": 1
+          }
+        ],
+        "representation": "FROZEN_EVENT_1"
+      },
+      {
+        "consumer_scope_id": "synthetic-scope",
+        "event": {
+          "event": "PLAN_ACTIONS_RESERVED",
+          "event_hash": "26605277d8fc97c29ae12e0f4ce6b6f29ca0c818836be2d997f5e1cdb60de1ac",
+          "generation": 1,
+          "journal_id": "static-journal-first-unattempted-prefix",
+          "owner_id": "static-owner-1",
+          "payload": {
+            "plan_ref": {
+              "artifact_id": "a02-plan",
+              "content_hash": "6ecfa6b0f1f372534de8036b41b31ca8b937e624f16dc7157277e7a51a75aa30",
+              "kind": "ApplyPlan",
+              "revision": 1
+            },
+            "reservations": [
+              {
+                "action_digest": "720d94fb6630bf8f47ec73a3c23282aa6e5a7413b0dc10bcd736b6fd1533eba2",
+                "action_id": "action-a02-a80e543226fa0df5fcdcb8c585e1c125"
+              },
+              {
+                "action_digest": "66689db3b1cf58bfe0ec5e42b97a36edae6311695e0c7385a9751f4751083438",
+                "action_id": "action-a02-bb4ce2935b7f9cc278385b35e2ac3562"
+              },
+              {
+                "action_digest": "cd4aec0a1f47ce5ded97b2c2c17eea8f663525ed818ca8ab7855a8f7f84bd069",
+                "action_id": "action-a02-dec0905217fd2d98a7c02bd44beb3f5c"
+              }
+            ]
+          },
+          "plan_ref": {
+            "artifact_id": "a02-plan",
+            "content_hash": "6ecfa6b0f1f372534de8036b41b31ca8b937e624f16dc7157277e7a51a75aa30",
+            "kind": "ApplyPlan",
+            "revision": 1
+          },
+          "previous_hash": "34165df73b31d1e6dcfcb3402bb4f5b8c85e96900ddacc13e4538c2515fed7f3",
+          "recorded_at": "2026-10-17T00:00:00.300Z",
+          "sequence": 4,
+          "target_key": {
+            "book_id": "synthetic-book",
+            "platform_namespace": "a02-mock",
+            "target_id": "synthetic-target"
+          }
+        },
+        "frame_version": "a03-journal-consumer-frame-1",
+        "input_refs": [
+          {
+            "artifact_id": "a02-plan",
+            "content_hash": "6ecfa6b0f1f372534de8036b41b31ca8b937e624f16dc7157277e7a51a75aa30",
+            "kind": "ApplyPlan",
+            "revision": 1
+          }
+        ],
+        "representation": "FROZEN_EVENT_1"
+      },
+      {
+        "consumer_scope_id": "synthetic-scope",
+        "event": {
+          "event": "PLAN_STARTED",
+          "event_hash": "7e1febd19a8f9625014b3379539b4bc9f099d3077dff9a464cd62fddec7a5a27",
+          "generation": 1,
+          "journal_id": "static-journal-first-unattempted-prefix",
+          "owner_id": "static-owner-1",
+          "payload": {
+            "plan_ref": {
+              "artifact_id": "a02-plan",
+              "content_hash": "6ecfa6b0f1f372534de8036b41b31ca8b937e624f16dc7157277e7a51a75aa30",
+              "kind": "ApplyPlan",
+              "revision": 1
+            },
+            "plan_state": "RUNNING"
+          },
+          "plan_ref": {
+            "artifact_id": "a02-plan",
+            "content_hash": "6ecfa6b0f1f372534de8036b41b31ca8b937e624f16dc7157277e7a51a75aa30",
+            "kind": "ApplyPlan",
+            "revision": 1
+          },
+          "previous_hash": "26605277d8fc97c29ae12e0f4ce6b6f29ca0c818836be2d997f5e1cdb60de1ac",
+          "recorded_at": "2026-10-17T00:00:00.400Z",
+          "sequence": 5,
+          "target_key": {
+            "book_id": "synthetic-book",
+            "platform_namespace": "a02-mock",
+            "target_id": "synthetic-target"
+          }
+        },
+        "frame_version": "a03-journal-consumer-frame-1",
+        "input_refs": [
+          {
+            "artifact_id": "a02-plan",
+            "content_hash": "6ecfa6b0f1f372534de8036b41b31ca8b937e624f16dc7157277e7a51a75aa30",
+            "kind": "ApplyPlan",
+            "revision": 1
+          }
+        ],
+        "representation": "FROZEN_EVENT_1"
+      },
+      {
+        "consumer_scope_id": null,
+        "event": {
+          "event": "OWNER_CLAIM_RESERVED",
+          "event_hash": "c447d3f68628c864350e3623aa57d5aad53e6dbe6bfd2227cdc611f1014924c9",
+          "generation": 2,
+          "journal_id": "static-journal-first-unattempted-prefix",
+          "owner_id": "static-current-owner",
+          "payload": {},
+          "plan_ref": null,
+          "previous_hash": "7e1febd19a8f9625014b3379539b4bc9f099d3077dff9a464cd62fddec7a5a27",
+          "recorded_at": "2026-10-17T00:00:00.500Z",
+          "sequence": 6,
+          "target_key": {
+            "book_id": "synthetic-book",
+            "platform_namespace": "a02-mock",
+            "target_id": "synthetic-target"
+          }
+        },
+        "frame_version": "a03-journal-consumer-frame-1",
+        "input_refs": [],
+        "representation": "FROZEN_EVENT_1"
+      },
+      {
+        "consumer_scope_id": null,
+        "event": {
+          "event": "OWNER_ACTIVE",
+          "event_hash": "c8b32053e55568328fa8f2e7cb8c9dd481278ae107a1ef3c9e905c70b5768e5d",
+          "generation": 2,
+          "journal_id": "static-journal-first-unattempted-prefix",
+          "owner_id": "static-current-owner",
+          "payload": {},
+          "plan_ref": null,
+          "previous_hash": "c447d3f68628c864350e3623aa57d5aad53e6dbe6bfd2227cdc611f1014924c9",
+          "recorded_at": "2026-10-17T00:00:00.600Z",
+          "sequence": 7,
+          "target_key": {
+            "book_id": "synthetic-book",
+            "platform_namespace": "a02-mock",
+            "target_id": "synthetic-target"
+          }
+        },
+        "frame_version": "a03-journal-consumer-frame-1",
+        "input_refs": [],
+        "representation": "FROZEN_EVENT_1"
+      },
+      {
+        "consumer_scope_id": null,
+        "event": {
+          "event": "RUNTIME_PROFILE_ADOPTED",
+          "event_hash": "a2b96932c6911ed09c083b668642735b6d3e4cc17184fc15953bcff9cc4d9eb5",
+          "event_version": "a03-runtime-event-2",
+          "generation": 2,
+          "journal_id": "static-journal-first-unattempted-prefix",
+          "owner_id": "static-current-owner",
+          "payload": {
+            "known_db_version": "a03-runtime-db-1",
+            "native_index_snapshot": {
+              "media_type": "application/json",
+              "origin": "SYNTHETIC",
+              "path": "assets/new/ecffcb9cc2464dd0d07be76eb5aef17cfebbea8c6c75a92febae3d0fc440190d.json",
+              "sha256": "ecffcb9cc2464dd0d07be76eb5aef17cfebbea8c6c75a92febae3d0fc440190d"
+            },
+            "new_profile_id": "a03-p2-r1-amendment-1-PROPOSAL",
+            "previous_head": {
+              "hash": "1aed403b80837624e4dbd5ca32788cfd604e48199f1f78cb2ef77ac0a6248c09",
+              "sequence": 7
+            },
+            "previous_profile_id": "FROZEN_RUNTIME_EVENT_1"
+          },
+          "plan_ref": null,
+          "previous_hash": "c8b32053e55568328fa8f2e7cb8c9dd481278ae107a1ef3c9e905c70b5768e5d",
+          "recorded_at": "2026-10-17T00:00:00.700Z",
+          "sequence": 8,
+          "target_key": {
+            "book_id": "synthetic-book",
+            "platform_namespace": "a02-mock",
+            "target_id": "synthetic-target"
+          }
+        },
+        "frame_version": "a03-journal-consumer-frame-1",
+        "input_refs": [],
+        "representation": "RUNTIME_EVENT_2"
+      },
+      {
+        "consumer_scope_id": "synthetic-scope",
+        "event": {
+          "event": "PLAN_STATE_AT_ADOPTION",
+          "event_hash": "5f815f07cf1ed9af9a7c0f192b0be9d83a4e1dea86aa22c6966f25bf637a58b0",
+          "event_version": "a03-runtime-event-2",
+          "generation": 2,
+          "journal_id": "static-journal-first-unattempted-prefix",
+          "owner_id": "static-current-owner",
+          "payload": {
+            "native_index_snapshot": {
+              "media_type": "application/json",
+              "origin": "SYNTHETIC",
+              "path": "assets/new/ecffcb9cc2464dd0d07be76eb5aef17cfebbea8c6c75a92febae3d0fc440190d.json",
+              "sha256": "ecffcb9cc2464dd0d07be76eb5aef17cfebbea8c6c75a92febae3d0fc440190d"
+            },
+            "plan_ref": {
+              "artifact_id": "a02-plan",
+              "content_hash": "6ecfa6b0f1f372534de8036b41b31ca8b937e624f16dc7157277e7a51a75aa30",
+              "kind": "ApplyPlan",
+              "revision": 1
+            },
+            "plan_state": "INTERRUPTED"
+          },
+          "plan_ref": {
+            "artifact_id": "a02-plan",
+            "content_hash": "6ecfa6b0f1f372534de8036b41b31ca8b937e624f16dc7157277e7a51a75aa30",
+            "kind": "ApplyPlan",
+            "revision": 1
+          },
+          "previous_hash": "a2b96932c6911ed09c083b668642735b6d3e4cc17184fc15953bcff9cc4d9eb5",
+          "recorded_at": "2026-10-17T00:00:00.800Z",
+          "sequence": 9,
+          "target_key": {
+            "book_id": "synthetic-book",
+            "platform_namespace": "a02-mock",
+            "target_id": "synthetic-target"
+          }
+        },
+        "frame_version": "a03-journal-consumer-frame-1",
+        "input_refs": [
+          {
+            "artifact_id": "a02-plan",
+            "content_hash": "6ecfa6b0f1f372534de8036b41b31ca8b937e624f16dc7157277e7a51a75aa30",
+            "kind": "ApplyPlan",
+            "revision": 1
+          }
+        ],
+        "representation": "RUNTIME_EVENT_2"
+      },
+      {
+        "consumer_scope_id": "synthetic-scope",
+        "event": {
+          "event": "READONLY_ABSENCE_STARTED",
+          "event_hash": "313673f7298bc56aec256227f3d8e12e3ad9f066a1e9f278be84e2b53548652f",
+          "event_version": "a03-runtime-event-2",
+          "generation": 2,
+          "journal_id": "static-journal-first-unattempted-prefix",
+          "owner_id": "static-current-owner",
+          "payload": {
+            "action_digest": "720d94fb6630bf8f47ec73a3c23282aa6e5a7413b0dc10bcd736b6fd1533eba2",
+            "action_id": "action-a02-a80e543226fa0df5fcdcb8c585e1c125",
+            "call_id": "readonly-call-first-unattempted-prefix",
+            "initial_expected_head": {
+              "hash": "4aebd10edb14d3b9beb75abcd8a722f5782fb2974f60bd5e88a96c24e67e4124",
+              "sequence": 9
+            },
+            "plan_ref": {
+              "artifact_id": "a02-plan",
+              "content_hash": "6ecfa6b0f1f372534de8036b41b31ca8b937e624f16dc7157277e7a51a75aa30",
+              "kind": "ApplyPlan",
+              "revision": 1
+            },
+            "readonly_session_id": "readonly-session-first-unattempted-prefix"
+          },
+          "plan_ref": {
+            "artifact_id": "a02-plan",
+            "content_hash": "6ecfa6b0f1f372534de8036b41b31ca8b937e624f16dc7157277e7a51a75aa30",
+            "kind": "ApplyPlan",
+            "revision": 1
+          },
+          "previous_hash": "5f815f07cf1ed9af9a7c0f192b0be9d83a4e1dea86aa22c6966f25bf637a58b0",
+          "recorded_at": "2026-10-17T00:00:00.900Z",
+          "sequence": 10,
+          "target_key": {
+            "book_id": "synthetic-book",
+            "platform_namespace": "a02-mock",
+            "target_id": "synthetic-target"
+          }
+        },
+        "frame_version": "a03-journal-consumer-frame-1",
+        "input_refs": [
+          {
+            "artifact_id": "a02-plan",
+            "content_hash": "6ecfa6b0f1f372534de8036b41b31ca8b937e624f16dc7157277e7a51a75aa30",
+            "kind": "ApplyPlan",
+            "revision": 1
+          }
+        ],
+        "representation": "RUNTIME_EVENT_2"
+      },
+      {
+        "consumer_scope_id": "synthetic-scope",
+        "event": {
+          "event": "READONLY_ABSENCE_READ_STARTED",
+          "event_hash": "27843be444a40df22695962e21b58c9cebeb759833132732b452d0d7ea84c2c4",
+          "event_version": "a03-runtime-event-2",
+          "generation": 2,
+          "journal_id": "static-journal-first-unattempted-prefix",
+          "owner_id": "static-current-owner",
+          "payload": {
+            "action_digest": "720d94fb6630bf8f47ec73a3c23282aa6e5a7413b0dc10bcd736b6fd1533eba2",
+            "action_id": "action-a02-a80e543226fa0df5fcdcb8c585e1c125",
+            "attempt_record": {
+              "media_type": "application/json",
+              "origin": "SYNTHETIC",
+              "path": "assets/new/eb9f5bd647fde328c9c012e47558c588b317a27fb7cd3fcff80ce6a01947ecee.json",
+              "sha256": "eb9f5bd647fde328c9c012e47558c588b317a27fb7cd3fcff80ce6a01947ecee"
+            },
+            "call_id": "readonly-call-first-unattempted-prefix",
+            "plan_ref": {
+              "artifact_id": "a02-plan",
+              "content_hash": "6ecfa6b0f1f372534de8036b41b31ca8b937e624f16dc7157277e7a51a75aa30",
+              "kind": "ApplyPlan",
+              "revision": 1
+            },
+            "read_index": 1,
+            "readonly_session_id": "readonly-session-first-unattempted-prefix"
+          },
+          "plan_ref": {
+            "artifact_id": "a02-plan",
+            "content_hash": "6ecfa6b0f1f372534de8036b41b31ca8b937e624f16dc7157277e7a51a75aa30",
+            "kind": "ApplyPlan",
+            "revision": 1
+          },
+          "previous_hash": "313673f7298bc56aec256227f3d8e12e3ad9f066a1e9f278be84e2b53548652f",
+          "recorded_at": "2026-10-17T00:00:01.000Z",
+          "sequence": 11,
+          "target_key": {
+            "book_id": "synthetic-book",
+            "platform_namespace": "a02-mock",
+            "target_id": "synthetic-target"
+          }
+        },
+        "frame_version": "a03-journal-consumer-frame-1",
+        "input_refs": [
+          {
+            "artifact_id": "a02-plan",
+            "content_hash": "6ecfa6b0f1f372534de8036b41b31ca8b937e624f16dc7157277e7a51a75aa30",
+            "kind": "ApplyPlan",
+            "revision": 1
+          }
+        ],
+        "representation": "RUNTIME_EVENT_2"
+      },
+      {
+        "consumer_scope_id": "synthetic-scope",
+        "event": {
+          "event": "READONLY_ABSENCE_READ_FINISHED",
+          "event_hash": "3bfd20c776cc6a053149a8a4372880021a109d7faa37cae8a77afb7f719296c7",
+          "event_version": "a03-runtime-event-2",
+          "generation": 2,
+          "journal_id": "static-journal-first-unattempted-prefix",
+          "owner_id": "static-current-owner",
+          "payload": {
+            "action_digest": "720d94fb6630bf8f47ec73a3c23282aa6e5a7413b0dc10bcd736b6fd1533eba2",
+            "action_id": "action-a02-a80e543226fa0df5fcdcb8c585e1c125",
+            "call_id": "readonly-call-first-unattempted-prefix",
+            "observation": {
+              "media_type": "application/json",
+              "origin": "SYNTHETIC",
+              "path": "assets/new/4088cc8c596453d48ca520429de2ac5e3ad4e23facae3d7027656627f2028c4a.json",
+              "sha256": "4088cc8c596453d48ca520429de2ac5e3ad4e23facae3d7027656627f2028c4a"
+            },
+            "observation_id": "first-unattempted-prefix-read-1",
+            "plan_ref": {
+              "artifact_id": "a02-plan",
+              "content_hash": "6ecfa6b0f1f372534de8036b41b31ca8b937e624f16dc7157277e7a51a75aa30",
+              "kind": "ApplyPlan",
+              "revision": 1
+            },
+            "read_index": 1,
+            "read_sequence": 1,
+            "readonly_session_id": "readonly-session-first-unattempted-prefix"
+          },
+          "plan_ref": {
+            "artifact_id": "a02-plan",
+            "content_hash": "6ecfa6b0f1f372534de8036b41b31ca8b937e624f16dc7157277e7a51a75aa30",
+            "kind": "ApplyPlan",
+            "revision": 1
+          },
+          "previous_hash": "27843be444a40df22695962e21b58c9cebeb759833132732b452d0d7ea84c2c4",
+          "recorded_at": "2026-10-17T00:00:01.100Z",
+          "sequence": 12,
+          "target_key": {
+            "book_id": "synthetic-book",
+            "platform_namespace": "a02-mock",
+            "target_id": "synthetic-target"
+          }
+        },
+        "frame_version": "a03-journal-consumer-frame-1",
+        "input_refs": [
+          {
+            "artifact_id": "a02-plan",
+            "content_hash": "6ecfa6b0f1f372534de8036b41b31ca8b937e624f16dc7157277e7a51a75aa30",
+            "kind": "ApplyPlan",
+            "revision": 1
+          },
+          {
+            "artifact_id": "a02-source",
+            "content_hash": "7b761b95ea822931077cac9353be0e61be60654e7b71a4b35eae8a3fe61af5a4",
+            "kind": "SourceBundle",
+            "revision": 1
+          }
+        ],
+        "representation": "RUNTIME_EVENT_2"
+      },
+      {
+        "consumer_scope_id": "synthetic-scope",
+        "event": {
+          "event": "READONLY_ABSENCE_READ_STARTED",
+          "event_hash": "c6ede141bb35f1aa3aa60a5328e215b6144a48d8197f1f767fb69c29b5a8e5e8",
+          "event_version": "a03-runtime-event-2",
+          "generation": 2,
+          "journal_id": "static-journal-first-unattempted-prefix",
+          "owner_id": "static-current-owner",
+          "payload": {
+            "action_digest": "720d94fb6630bf8f47ec73a3c23282aa6e5a7413b0dc10bcd736b6fd1533eba2",
+            "action_id": "action-a02-a80e543226fa0df5fcdcb8c585e1c125",
+            "attempt_record": {
+              "media_type": "application/json",
+              "origin": "SYNTHETIC",
+              "path": "assets/new/0e92bd1fe40a0aa50c5387e07e66517934d7072f1a79e634b32ba90dfeffa2b3.json",
+              "sha256": "0e92bd1fe40a0aa50c5387e07e66517934d7072f1a79e634b32ba90dfeffa2b3"
+            },
+            "call_id": "readonly-call-first-unattempted-prefix",
+            "plan_ref": {
+              "artifact_id": "a02-plan",
+              "content_hash": "6ecfa6b0f1f372534de8036b41b31ca8b937e624f16dc7157277e7a51a75aa30",
+              "kind": "ApplyPlan",
+              "revision": 1
+            },
+            "read_index": 2,
+            "readonly_session_id": "readonly-session-first-unattempted-prefix"
+          },
+          "plan_ref": {
+            "artifact_id": "a02-plan",
+            "content_hash": "6ecfa6b0f1f372534de8036b41b31ca8b937e624f16dc7157277e7a51a75aa30",
+            "kind": "ApplyPlan",
+            "revision": 1
+          },
+          "previous_hash": "3bfd20c776cc6a053149a8a4372880021a109d7faa37cae8a77afb7f719296c7",
+          "recorded_at": "2026-10-17T00:00:01.200Z",
+          "sequence": 13,
+          "target_key": {
+            "book_id": "synthetic-book",
+            "platform_namespace": "a02-mock",
+            "target_id": "synthetic-target"
+          }
+        },
+        "frame_version": "a03-journal-consumer-frame-1",
+        "input_refs": [
+          {
+            "artifact_id": "a02-plan",
+            "content_hash": "6ecfa6b0f1f372534de8036b41b31ca8b937e624f16dc7157277e7a51a75aa30",
+            "kind": "ApplyPlan",
+            "revision": 1
+          }
+        ],
+        "representation": "RUNTIME_EVENT_2"
+      },
+      {
+        "consumer_scope_id": "synthetic-scope",
+        "event": {
+          "event": "READONLY_ABSENCE_READ_FINISHED",
+          "event_hash": "b80733c72db2c1f1c1f8dffec5b069a39c451b413b2297cb8dff9bdf3a57d00f",
+          "event_version": "a03-runtime-event-2",
+          "generation": 2,
+          "journal_id": "static-journal-first-unattempted-prefix",
+          "owner_id": "static-current-owner",
+          "payload": {
+            "action_digest": "720d94fb6630bf8f47ec73a3c23282aa6e5a7413b0dc10bcd736b6fd1533eba2",
+            "action_id": "action-a02-a80e543226fa0df5fcdcb8c585e1c125",
+            "call_id": "readonly-call-first-unattempted-prefix",
+            "observation": {
+              "media_type": "application/json",
+              "origin": "SYNTHETIC",
+              "path": "assets/new/99e12810bdcd687cf52dafa28bcd13943613395b1c7a198662828c3112a6a6e2.json",
+              "sha256": "99e12810bdcd687cf52dafa28bcd13943613395b1c7a198662828c3112a6a6e2"
+            },
+            "observation_id": "first-unattempted-prefix-read-2",
+            "plan_ref": {
+              "artifact_id": "a02-plan",
+              "content_hash": "6ecfa6b0f1f372534de8036b41b31ca8b937e624f16dc7157277e7a51a75aa30",
+              "kind": "ApplyPlan",
+              "revision": 1
+            },
+            "read_index": 2,
+            "read_sequence": 2,
+            "readonly_session_id": "readonly-session-first-unattempted-prefix"
+          },
+          "plan_ref": {
+            "artifact_id": "a02-plan",
+            "content_hash": "6ecfa6b0f1f372534de8036b41b31ca8b937e624f16dc7157277e7a51a75aa30",
+            "kind": "ApplyPlan",
+            "revision": 1
+          },
+          "previous_hash": "c6ede141bb35f1aa3aa60a5328e215b6144a48d8197f1f767fb69c29b5a8e5e8",
+          "recorded_at": "2026-10-17T00:00:01.300Z",
+          "sequence": 14,
+          "target_key": {
+            "book_id": "synthetic-book",
+            "platform_namespace": "a02-mock",
+            "target_id": "synthetic-target"
+          }
+        },
+        "frame_version": "a03-journal-consumer-frame-1",
+        "input_refs": [
+          {
+            "artifact_id": "a02-plan",
+            "content_hash": "6ecfa6b0f1f372534de8036b41b31ca8b937e624f16dc7157277e7a51a75aa30",
+            "kind": "ApplyPlan",
+            "revision": 1
+          },
+          {
+            "artifact_id": "a02-source",
+            "content_hash": "7b761b95ea822931077cac9353be0e61be60654e7b71a4b35eae8a3fe61af5a4",
+            "kind": "SourceBundle",
+            "revision": 1
+          }
+        ],
+        "representation": "RUNTIME_EVENT_2"
+      },
+      {
+        "consumer_scope_id": "synthetic-scope",
+        "event": {
+          "event": "READONLY_ABSENCE_READ_STARTED",
+          "event_hash": "2c4b4a75af3fbb710bbc95219653cc40d8375f0e48753f8ba81b744256eb8bab",
+          "event_version": "a03-runtime-event-2",
+          "generation": 2,
+          "journal_id": "static-journal-first-unattempted-prefix",
+          "owner_id": "static-current-owner",
+          "payload": {
+            "action_digest": "720d94fb6630bf8f47ec73a3c23282aa6e5a7413b0dc10bcd736b6fd1533eba2",
+            "action_id": "action-a02-a80e543226fa0df5fcdcb8c585e1c125",
+            "attempt_record": {
+              "media_type": "application/json",
+              "origin": "SYNTHETIC",
+              "path": "assets/new/91f807641b95350bf70f06b9bbf2f4f54b2f8d30d917e37a764ba37a78c84392.json",
+              "sha256": "91f807641b95350bf70f06b9bbf2f4f54b2f8d30d917e37a764ba37a78c84392"
+            },
+            "call_id": "readonly-call-first-unattempted-prefix",
+            "plan_ref": {
+              "artifact_id": "a02-plan",
+              "content_hash": "6ecfa6b0f1f372534de8036b41b31ca8b937e624f16dc7157277e7a51a75aa30",
+              "kind": "ApplyPlan",
+              "revision": 1
+            },
+            "read_index": 3,
+            "readonly_session_id": "readonly-session-first-unattempted-prefix"
+          },
+          "plan_ref": {
+            "artifact_id": "a02-plan",
+            "content_hash": "6ecfa6b0f1f372534de8036b41b31ca8b937e624f16dc7157277e7a51a75aa30",
+            "kind": "ApplyPlan",
+            "revision": 1
+          },
+          "previous_hash": "b80733c72db2c1f1c1f8dffec5b069a39c451b413b2297cb8dff9bdf3a57d00f",
+          "recorded_at": "2026-10-17T00:00:01.400Z",
+          "sequence": 15,
+          "target_key": {
+            "book_id": "synthetic-book",
+            "platform_namespace": "a02-mock",
+            "target_id": "synthetic-target"
+          }
+        },
+        "frame_version": "a03-journal-consumer-frame-1",
+        "input_refs": [
+          {
+            "artifact_id": "a02-plan",
+            "content_hash": "6ecfa6b0f1f372534de8036b41b31ca8b937e624f16dc7157277e7a51a75aa30",
+            "kind": "ApplyPlan",
+            "revision": 1
+          }
+        ],
+        "representation": "RUNTIME_EVENT_2"
+      },
+      {
+        "consumer_scope_id": "synthetic-scope",
+        "event": {
+          "event": "READONLY_ABSENCE_READ_FINISHED",
+          "event_hash": "5e97fa4af6870f397a106cb3ae26fabb5095943bd08d967bad1e79fd47eacb29",
+          "event_version": "a03-runtime-event-2",
+          "generation": 2,
+          "journal_id": "static-journal-first-unattempted-prefix",
+          "owner_id": "static-current-owner",
+          "payload": {
+            "action_digest": "720d94fb6630bf8f47ec73a3c23282aa6e5a7413b0dc10bcd736b6fd1533eba2",
+            "action_id": "action-a02-a80e543226fa0df5fcdcb8c585e1c125",
+            "call_id": "readonly-call-first-unattempted-prefix",
+            "observation": {
+              "media_type": "application/json",
+              "origin": "SYNTHETIC",
+              "path": "assets/new/0ab8900fb68c08e8c077c9f61c72973cdea0809e00f6841242727442a087259c.json",
+              "sha256": "0ab8900fb68c08e8c077c9f61c72973cdea0809e00f6841242727442a087259c"
+            },
+            "observation_id": "first-unattempted-prefix-read-3",
+            "plan_ref": {
+              "artifact_id": "a02-plan",
+              "content_hash": "6ecfa6b0f1f372534de8036b41b31ca8b937e624f16dc7157277e7a51a75aa30",
+              "kind": "ApplyPlan",
+              "revision": 1
+            },
+            "read_index": 3,
+            "read_sequence": 3,
+            "readonly_session_id": "readonly-session-first-unattempted-prefix"
+          },
+          "plan_ref": {
+            "artifact_id": "a02-plan",
+            "content_hash": "6ecfa6b0f1f372534de8036b41b31ca8b937e624f16dc7157277e7a51a75aa30",
+            "kind": "ApplyPlan",
+            "revision": 1
+          },
+          "previous_hash": "2c4b4a75af3fbb710bbc95219653cc40d8375f0e48753f8ba81b744256eb8bab",
+          "recorded_at": "2026-10-17T00:00:01.500Z",
+          "sequence": 16,
+          "target_key": {
+            "book_id": "synthetic-book",
+            "platform_namespace": "a02-mock",
+            "target_id": "synthetic-target"
+          }
+        },
+        "frame_version": "a03-journal-consumer-frame-1",
+        "input_refs": [
+          {
+            "artifact_id": "a02-plan",
+            "content_hash": "6ecfa6b0f1f372534de8036b41b31ca8b937e624f16dc7157277e7a51a75aa30",
+            "kind": "ApplyPlan",
+            "revision": 1
+          },
+          {
+            "artifact_id": "a02-source",
+            "content_hash": "7b761b95ea822931077cac9353be0e61be60654e7b71a4b35eae8a3fe61af5a4",
+            "kind": "SourceBundle",
+            "revision": 1
+          }
+        ],
+        "representation": "RUNTIME_EVENT_2"
+      }
+    ],
+    "from_sequence": 1,
+    "journal_id": "static-journal-first-unattempted-prefix",
+    "predecessor": {
+      "hash": "0000000000000000000000000000000000000000000000000000000000000000",
+      "sequence": 0
+    },
+    "profile_id": "a03-p2-r1-amendment-1-PROPOSAL",
+    "subject_plan_ref": {
+      "artifact_id": "a02-plan",
+      "content_hash": "6ecfa6b0f1f372534de8036b41b31ca8b937e624f16dc7157277e7a51a75aa30",
+      "kind": "ApplyPlan",
+      "revision": 1
+    },
+    "target_key": {
+      "book_id": "synthetic-book",
+      "platform_namespace": "a02-mock",
+      "target_id": "synthetic-target"
+    }
+  },
+  "rejected_by_static_check": "event plan action bindings"
+}

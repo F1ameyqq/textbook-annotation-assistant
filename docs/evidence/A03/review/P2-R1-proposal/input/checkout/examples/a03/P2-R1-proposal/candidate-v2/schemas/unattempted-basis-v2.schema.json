@@ -1,0 +1,343 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:a03:p2-r1:proposal:unattempted-basis-v2.schema.json",
+  "title": "P1-R1 DESIGN_ONLY non-Artifact basis Resource",
+  "$comment": "Field/byte equality only. This JSON never establishes current gate/owner/ledger authority, actual new reads or committed facts.",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "format_version": {
+      "const": "a03-unattempted-basis-2"
+    },
+    "design_only": {
+      "type": "boolean"
+    },
+    "origin": {
+      "const": "SYNTHETIC"
+    },
+    "actual": {
+      "type": "string"
+    },
+    "plan_ref": {
+      "additionalProperties": false,
+      "properties": {
+        "artifact_id": {
+          "pattern": "^[A-Za-z][A-Za-z0-9_.:-]{0,127}$",
+          "title": "Artifact Id",
+          "type": "string"
+        },
+        "revision": {
+          "exclusiveMinimum": 0,
+          "title": "Revision",
+          "type": "integer"
+        },
+        "kind": {
+          "const": "ApplyPlan",
+          "type": "string"
+        },
+        "content_hash": {
+          "pattern": "^[0-9a-f]{64}$",
+          "title": "Content Hash",
+          "type": "string"
+        }
+      },
+      "required": [
+        "artifact_id",
+        "revision",
+        "kind",
+        "content_hash"
+      ],
+      "title": "ArtifactRef",
+      "type": "object"
+    },
+    "source_ref": {
+      "additionalProperties": false,
+      "properties": {
+        "artifact_id": {
+          "pattern": "^[A-Za-z][A-Za-z0-9_.:-]{0,127}$",
+          "title": "Artifact Id",
+          "type": "string"
+        },
+        "revision": {
+          "exclusiveMinimum": 0,
+          "title": "Revision",
+          "type": "integer"
+        },
+        "kind": {
+          "const": "SourceBundle"
+        },
+        "content_hash": {
+          "pattern": "^[0-9a-f]{64}$",
+          "title": "Content Hash",
+          "type": "string"
+        }
+      },
+      "required": [
+        "artifact_id",
+        "revision",
+        "kind",
+        "content_hash"
+      ],
+      "title": "ArtifactRef",
+      "type": "object"
+    },
+    "target_key": {
+      "type": "object",
+      "properties": {
+        "platform_namespace": {
+          "type": "string",
+          "minLength": 1
+        },
+        "target_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "book_id": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "required": [
+        "platform_namespace",
+        "target_id",
+        "book_id"
+      ],
+      "additionalProperties": false
+    },
+    "plan_status": {
+      "const": "INTERRUPTED"
+    },
+    "generation": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "action_digest": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "expected_event_head": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "sequence": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "hash": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        }
+      },
+      "required": [
+        "sequence",
+        "hash"
+      ]
+    },
+    "comparison": {
+      "const": "ABSENT"
+    },
+    "observer_calls": {
+      "const": 2
+    },
+    "retries": {
+      "const": 0
+    },
+    "single_read_seconds": {
+      "const": 2
+    },
+    "entry_seconds": {
+      "const": 8
+    },
+    "parent_call_seconds": {
+      "const": 60
+    },
+    "journal_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "registration_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "action_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "owner_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "target_store_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "target_session_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "scope_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "complete_uncalled_prefix": {
+      "$ref": "#/$defs/JsonResource"
+    },
+    "first_observation_ref": {
+      "$ref": "#/$defs/JsonResource"
+    },
+    "readonly_prepared_ref": {
+      "$ref": "#/$defs/JsonResource"
+    },
+    "second_observation_ref": {
+      "$ref": "#/$defs/JsonResource"
+    },
+    "initial_event_head": {
+      "type": "object",
+      "properties": {
+        "sequence": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "hash": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        }
+      },
+      "required": [
+        "sequence",
+        "hash"
+      ],
+      "additionalProperties": false
+    },
+    "readonly_session_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "gate_binding": {
+      "type": "object",
+      "properties": {
+        "ledger_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "owner_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "generation": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "session_id": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "required": [
+        "ledger_id",
+        "owner_id",
+        "generation",
+        "session_id"
+      ],
+      "additionalProperties": false
+    },
+    "currentness_assertion_ref": {
+      "type": "object",
+      "properties": {
+        "path": {
+          "type": "string",
+          "minLength": 1
+        },
+        "sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "media_type": {
+          "type": "string",
+          "minLength": 1
+        },
+        "origin": {
+          "const": "SYNTHETIC"
+        }
+      },
+      "required": [
+        "path",
+        "sha256",
+        "media_type",
+        "origin"
+      ],
+      "additionalProperties": false
+    },
+    "total_read_calls": {
+      "const": 3
+    }
+  },
+  "required": [
+    "format_version",
+    "origin",
+    "plan_ref",
+    "source_ref",
+    "target_key",
+    "plan_status",
+    "generation",
+    "action_digest",
+    "expected_event_head",
+    "comparison",
+    "observer_calls",
+    "retries",
+    "single_read_seconds",
+    "entry_seconds",
+    "parent_call_seconds",
+    "journal_id",
+    "registration_id",
+    "action_id",
+    "owner_id",
+    "target_store_id",
+    "target_session_id",
+    "scope_id",
+    "complete_uncalled_prefix",
+    "first_observation_ref",
+    "readonly_prepared_ref",
+    "second_observation_ref",
+    "initial_event_head",
+    "readonly_session_id",
+    "gate_binding",
+    "currentness_assertion_ref",
+    "total_read_calls"
+  ],
+  "$defs": {
+    "JsonResource": {
+      "additionalProperties": false,
+      "properties": {
+        "path": {
+          "title": "Path",
+          "type": "string"
+        },
+        "sha256": {
+          "pattern": "^[0-9a-f]{64}$",
+          "title": "Sha256",
+          "type": "string"
+        },
+        "media_type": {
+          "const": "application/json"
+        },
+        "origin": {
+          "type": "string",
+          "enum": [
+            "SYNTHETIC",
+            "ORIGINAL",
+            "OBSERVED"
+          ]
+        }
+      },
+      "required": [
+        "path",
+        "sha256",
+        "media_type",
+        "origin"
+      ],
+      "title": "Resource",
+      "type": "object"
+    }
+  }
+}
