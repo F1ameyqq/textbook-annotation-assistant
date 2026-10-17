@@ -1,0 +1,63 @@
+{
+  "syntax_checked": true,
+  "drivers": [
+    {
+      "path": "tests/test_a03_p2_r11_crash_cuts.py",
+      "bytes": 15589,
+      "sha256": "0b58c6d589acfe6c81664e1d3940c7eb08e2b0ab77beab5b2a85194b0bae4abc"
+    },
+    {
+      "path": "examples/a03/P2-R11-crash-cuts/audit_a03_p2_r11.py",
+      "bytes": 4101,
+      "sha256": "6f2a7817727b60e214bd92477102a352c2e6acfef21968b5b99b11d848ceb216"
+    },
+    {
+      "path": "examples/a03/P2-R11-crash-cuts/prepare_a03_p2_r11.py",
+      "bytes": 2911,
+      "sha256": "5028e5dd3e61fa9ec523ad5288817f05171fd5e536b382f63286e2235476dc59"
+    }
+  ],
+  "expectations": {
+    "F1": {
+      "point": "BEFORE_INTENT_COMMIT",
+      "effect_count": 0,
+      "intents": 0,
+      "permits": 0,
+      "query_only": true,
+      "reconcile_calls": 0
+    },
+    "F2": {
+      "point": "AFTER_DISPATCH_STARTED",
+      "effect_count_before_after": 0,
+      "permit": "CONSUMED",
+      "reconcile_calls": 1,
+      "max_attempts": 1,
+      "terminal": "ABSENT/RESOLVED_NOT_APPLIED"
+    },
+    "F3": {
+      "point": "AFTER_READBACK_CAPTURE",
+      "effect_count_before_after": 1,
+      "reconcile_calls": 1,
+      "max_attempts": 1,
+      "terminal": "fresh MATCH/RESOLVED_APPLIED"
+    },
+    "F4": {
+      "point": "AFTER_RECEIPT_COMMIT",
+      "effect_count": 1,
+      "formal_receipt_fact": "APPLIED/bound exact action and intent",
+      "query_only": true,
+      "reconcile_calls": 0
+    }
+  },
+  "plan_status_and_attempt_fact": "Record actual product values; do not guess or change them.",
+  "crash_exit": 90,
+  "query_exit": 0,
+  "parent_watchdog": 90,
+  "child_watchdog": 45,
+  "product_limits_unchanged": {
+    "observation": 2,
+    "barrier": 5,
+    "lease": 10
+  },
+  "product_calls": 0
+}

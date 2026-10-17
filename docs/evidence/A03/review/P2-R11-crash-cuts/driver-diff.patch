@@ -1,0 +1,92 @@
+--- frozen-R11-driver
++++ review-driver-with-stage-capture
+@@ -7,14 +7,47 @@
+ import sys
+ import time
+ 
++sys.path.insert(0, 'D:\\1800\\docs\\evidence\\A03\\review\\P2-R11-crash-cuts\\isolation\\workspace\\tests')
+ import test_a03_p2_r10_owner_fencing as files
+ 
+-ROOT = Path(__file__).resolve().parents[1]
++ROOT = Path('D:\\1800\\docs\\evidence\\A03\\review\\P2-R11-crash-cuts\\isolation\\workspace')
+ SCRIPT = Path(__file__).resolve()
+ OUT = ROOT / 'docs/evidence/A03/execution/P2-R11-crash-cuts'
+ POINTS = {'F1': 'BEFORE_INTENT_COMMIT', 'F2': 'AFTER_DISPATCH_STARTED',
+     'F3': 'AFTER_READBACK_CAPTURE', 'F4': 'AFTER_RECEIPT_COMMIT'}
+ write, sha = files.write, files.sha
++
++
++def capture_stage(case, stage, *, own_writer_keeper):
++    """Retain actual sequential raw bytes, then SQL from retained immutable copies."""
++    d = case / 'stages' / stage
++    d.mkdir(parents=True, exist_ok=False)
++    started = time.time_ns()
++    result = {'stage': stage, 'pid': os.getpid(), 'started_at_ns': started,
++        'own_writer_keeper_active': own_writer_keeper,
++        'limit': 'Sequential raw files, not an atomic cross-database snapshot; no SQLite reconstruction.', 'databases': {}}
++    for name in ('runtime', 'target'):
++        source = case / name / (name + '.sqlite3')
++        read_start = time.time_ns()
++        body = source.read_bytes()
++        read_end = time.time_ns()
++        dest = d / (name + '.sqlite3')
++        write(dest, body)
++        sql = files.read_db(dest, True)
++        assert sql['quick_check'] == 'ok' and sql['raw_sha256_before'] == sha(body) == sql['raw_sha256_after']
++        sidecars = []
++        for suffix in ('-journal', '-wal', '-shm'):
++            p = Path(str(source) + suffix)
++            if p.is_file():
++                value = p.read_bytes()
++                write(d / (name + '.sqlite3' + suffix + '.captured'), value)
++                sidecars.append({'suffix': suffix, 'bytes': len(value), 'sha256': sha(value)})
++        result['databases'][name] = {'source': str(source), 'copy': str(dest), 'bytes': len(body),
++            'sha256': sha(body), 'read_started_at_ns': read_start, 'read_ended_at_ns': read_end,
++            'source_sha256_after_copy': sha(source.read_bytes()), 'sidecars': sidecars, 'SQL': sql}
++    result['ended_at_ns'] = time.time_ns()
++    write(d / 'capture.json', result)
++    return result
+ 
+ 
+ def imports():
+@@ -51,6 +84,7 @@
+         # own keeper exists, not a cross-database transactional backup.
+         write(case / 'before-run-runtime.sqlite3', store.database.read_bytes())
+         write(case / 'before-run-target.sqlite3', (case / 'target/target.sqlite3').read_bytes())
++        capture_stage(case, 'pre-fault', own_writer_keeper=True)
+         return store, claim, keeper, config
+     except BaseException:
+         keeper.stop()
+@@ -89,6 +123,8 @@
+     from annotation.runtime.recovery import reconcile
+     store = files.helper.open_case(case)
+     reg = store.registration()
++    if group in ('F2', 'F3'):
++        capture_stage(case, 'pending-before-projection', own_writer_keeper=False)
+     before_status = store.status(reg['id'])
+     before = bundle_boundary(store, case)
+     write(case / 'reopened-before.json', {'pid': os.getpid(), 'instance': store.instance, 'status': before_status, **before, 'imports': imports()})
+@@ -128,6 +164,7 @@
+         projection = store.project_plan(reg['id'])
+         assert projection['receipt_ref'] is None and projection['actions'][0]['effective_outcome'] == 'UNKNOWN'
+         write(case / 'pre-reconcile-UNKNOWN.json', {'projection': projection, **bundle_boundary(store, case)})
++        capture_stage(case, 'UNKNOWN-before-reconcile', own_writer_keeper=False)
+         read_sequences = [json.loads(row['body'])['read_sequence'] for row in before['state']['target']['tables']['observations']]
+         max_read_sequence = max(x for x in read_sequences if x is not None)
+         reconciled = reconcile(store, reg['id'], call_id='call-r11-' + group, max_attempts=1)
+@@ -224,6 +261,7 @@
+             pid = run_phase(root, args.group, 'crash')
+             marker = json.loads((case / 'crash.marker.json').read_bytes())
+             assert marker['pid'] == pid and marker['point'] == POINTS[args.group]
++            capture_stage(case, 'cut-after-wait', own_writer_keeper=False)
+             frozen = files.state(case, True)
+             write(root / (args.group + '-after-exit90-before-reopen.json'), frozen)
+             assert frozen['target']['counts']['effects'] == (1 if args.group in ('F3', 'F4') else 0)
+@@ -232,6 +270,7 @@
+                 events = [json.loads(row['body'])['event'] for row in frozen['runtime']['tables']['events']]
+                 assert 'DISPATCH_STARTED' in events and 'ACTION_RESULT_COMMITTED' not in events
+             run_phase(root, args.group, 'query')
++            capture_stage(case, 'after-query-or-recovery', own_writer_keeper=False)
+             write(root / (args.group + '-final-SQL.json'), files.state(case, True))
+         except BaseException:
+             write(root / (args.group + '-first-failure-SQL.json'), files.state(case, True))

@@ -1,0 +1,76 @@
+{
+  "target": "cc5966dc58c62017a27266c40ca0cedc5c68485c",
+  "base": "1c26b4a8eb378af33e57668472d2071e9ea6afff",
+  "original_driver_sha256": "0b58c6d589acfe6c81664e1d3940c7eb08e2b0ab77beab5b2a85194b0bae4abc",
+  "driver_sha256": "e16bd6621f468b4714c6a810f7e9bb3870ee57a81befed38e171d5bcfa37d4af",
+  "scripts": {
+    "crash_driver.py": "e16bd6621f468b4714c6a810f7e9bb3870ee57a81befed38e171d5bcfa37d4af",
+    "evidence.py": "be675e1b414843ee0e6c188cf2c687c0f834b82794f5b6cd13439925876b59d0",
+    "freeze.py": "c3dc16dcf74acd4eabd1be20237161a98445932f5966dfb4a4ce430521d9b238",
+    "prepare_review.py": "59fc88aa008cd795e65b6a58fa8e77c406ad66e51325fdfbeb544a217aa3ca24",
+    "run_group.py": "87d333d7c7747d75236b7858a753f97ac76f7b39e4e49482893eaa26e22e539a",
+    "run_recorded.py": "bc3ef2c7fb75b779ea0fe73214c6044762435bc89a644fdc2e86db36ad4b1a6e"
+  },
+  "expected": {
+    "F1": {
+      "point": "BEFORE_INTENT_COMMIT",
+      "effect_at_cut": 0,
+      "reconcile_calls": 0,
+      "max_attempts": null
+    },
+    "F2": {
+      "point": "AFTER_DISPATCH_STARTED",
+      "effect_at_cut": 0,
+      "reconcile_calls": 1,
+      "max_attempts": 1
+    },
+    "F3": {
+      "point": "AFTER_READBACK_CAPTURE",
+      "effect_at_cut": 1,
+      "reconcile_calls": 1,
+      "max_attempts": 1
+    },
+    "F4": {
+      "point": "AFTER_RECEIPT_COMMIT",
+      "effect_at_cut": 1,
+      "reconcile_calls": 0,
+      "max_attempts": null
+    }
+  },
+  "fault_locations": {
+    "BEFORE_INTENT_COMMIT": {
+      "line": 615,
+      "source": "storage"
+    },
+    "AFTER_DISPATCH_STARTED": {
+      "line": 1101,
+      "source": "storage"
+    },
+    "AFTER_READBACK_CAPTURE": {
+      "line": 116,
+      "source": "recovery"
+    },
+    "AFTER_RECEIPT_COMMIT": {
+      "line": 739,
+      "source": "storage"
+    }
+  },
+  "parent_watchdog_seconds": 90,
+  "worker_watchdog_seconds": 45,
+  "lease_seconds": 10,
+  "observation_seconds": 2,
+  "barrier_seconds": 5,
+  "product_recovery_deadline_unchanged": true,
+  "frozen_before_functional_execution": true,
+  "product_calls_in_preparation": 0,
+  "product_changes": 0,
+  "seed_database_files": 0,
+  "capture_stages": [
+    "pre-fault",
+    "cut-after-wait",
+    "pending-before-projection (F2/F3)",
+    "UNKNOWN-before-reconcile (F2/F3)",
+    "after-query-or-recovery"
+  ],
+  "field_reset": "NOT_EXECUTED_NO_RERUN_VARIANT_OR_DELEGATION"
+}
