@@ -1,0 +1,2005 @@
+{
+  "input_commit": "ca4fba4f505467228a8164c3999e0cecc54ffc4e",
+  "design_only": true,
+  "semantic_or_recovery_execution": "NOT_RUN",
+  "case_markers": [
+    {
+      "case_id": "normal",
+      "old_core_trigger": {
+        "receipt_results": [
+          [
+            {
+              "attempt_fact": "ATTEMPTED",
+              "outcome": "APPLIED",
+              "effect_match": "MATCH",
+              "next_step": "POSTCHECK",
+              "replay_allowed": false
+            },
+            {
+              "attempt_fact": "ATTEMPTED",
+              "outcome": "APPLIED",
+              "effect_match": "MATCH",
+              "next_step": "POSTCHECK",
+              "replay_allowed": false
+            },
+            {
+              "attempt_fact": "ATTEMPTED",
+              "outcome": "APPLIED",
+              "effect_match": "MATCH",
+              "next_step": "POSTCHECK",
+              "replay_allowed": false
+            }
+          ]
+        ],
+        "progress": [
+          [
+            {
+              "attempt_fact": "ATTEMPTED",
+              "effective_outcome": "APPLIED",
+              "dependency_status": "SATISFIED"
+            },
+            {
+              "attempt_fact": "ATTEMPTED",
+              "effective_outcome": "APPLIED",
+              "dependency_status": "SATISFIED"
+            },
+            {
+              "attempt_fact": "ATTEMPTED",
+              "effective_outcome": "APPLIED",
+              "dependency_status": "SATISFIED"
+            }
+          ]
+        ],
+        "batch": {
+          "state": "CONTENT_PENDING",
+          "frame_check_status": "PASS",
+          "content_check_status": "PENDING",
+          "submission_status": "NOT_SUBMITTED"
+        }
+      },
+      "new_core_trigger": {
+        "receipt_results": [
+          [
+            {
+              "attempt_fact": "ATTEMPTED",
+              "outcome": "APPLIED",
+              "effect_match": "MATCH",
+              "next_step": "POSTCHECK",
+              "replay_allowed": false
+            },
+            {
+              "attempt_fact": "ATTEMPTED",
+              "outcome": "APPLIED",
+              "effect_match": "MATCH",
+              "next_step": "POSTCHECK",
+              "replay_allowed": false
+            },
+            {
+              "attempt_fact": "ATTEMPTED",
+              "outcome": "APPLIED",
+              "effect_match": "MATCH",
+              "next_step": "POSTCHECK",
+              "replay_allowed": false
+            }
+          ]
+        ],
+        "progress": [
+          [
+            {
+              "attempt_fact": "ATTEMPTED",
+              "effective_outcome": "APPLIED",
+              "dependency_status": "SATISFIED"
+            },
+            {
+              "attempt_fact": "ATTEMPTED",
+              "effective_outcome": "APPLIED",
+              "dependency_status": "SATISFIED"
+            },
+            {
+              "attempt_fact": "ATTEMPTED",
+              "effective_outcome": "APPLIED",
+              "dependency_status": "SATISFIED"
+            }
+          ]
+        ],
+        "batch": {
+          "state": "CONTENT_PENDING",
+          "frame_check_status": "PASS",
+          "content_check_status": "PENDING",
+          "submission_status": "NOT_SUBMITTED"
+        }
+      },
+      "retained": true
+    },
+    {
+      "case_id": "intent-no-receipt-match",
+      "old_core_trigger": {
+        "resolutions": [
+          {
+            "observation": "MATCH",
+            "resolution": "RESOLVED_APPLIED",
+            "replay_allowed": false,
+            "attempt_index": 1,
+            "observation_id": "observation-match",
+            "read_sequence": 10,
+            "observed_at": "2026-10-17T00:00:10Z",
+            "target_state_version": "design-effects-1"
+          }
+        ],
+        "has_receipt": false,
+        "progress": [
+          [
+            {
+              "attempt_fact": "MAY_HAVE_BEEN_ATTEMPTED",
+              "effective_outcome": "APPLIED",
+              "dependency_status": "SATISFIED"
+            },
+            {
+              "attempt_fact": "NOT_ATTEMPTED",
+              "effective_outcome": "UNDETERMINED",
+              "dependency_status": "BLOCKED"
+            },
+            {
+              "attempt_fact": "NOT_ATTEMPTED",
+              "effective_outcome": "UNDETERMINED",
+              "dependency_status": "BLOCKED"
+            }
+          ]
+        ]
+      },
+      "new_core_trigger": {
+        "resolutions": [
+          {
+            "observation": "MATCH",
+            "resolution": "RESOLVED_APPLIED",
+            "replay_allowed": false,
+            "attempt_index": 1,
+            "observation_id": "observation-match",
+            "read_sequence": 10,
+            "observed_at": "2026-10-17T00:00:10Z",
+            "target_state_version": "design-effects-1"
+          }
+        ],
+        "has_receipt": false,
+        "progress": [
+          [
+            {
+              "attempt_fact": "MAY_HAVE_BEEN_ATTEMPTED",
+              "effective_outcome": "APPLIED",
+              "dependency_status": "SATISFIED"
+            },
+            {
+              "attempt_fact": "NOT_ATTEMPTED",
+              "effective_outcome": "UNDETERMINED",
+              "dependency_status": "BLOCKED"
+            },
+            {
+              "attempt_fact": "NOT_ATTEMPTED",
+              "effective_outcome": "UNDETERMINED",
+              "dependency_status": "BLOCKED"
+            }
+          ]
+        ]
+      },
+      "retained": true
+    },
+    {
+      "case_id": "intent-no-receipt-absent",
+      "old_core_trigger": {
+        "resolutions": [
+          {
+            "observation": "ABSENT",
+            "resolution": "RESOLVED_NOT_APPLIED",
+            "replay_allowed": false,
+            "attempt_index": 1,
+            "observation_id": "observation-absent",
+            "read_sequence": 10,
+            "observed_at": "2026-10-17T00:00:10Z",
+            "target_state_version": "design-effects-0"
+          }
+        ],
+        "has_receipt": false,
+        "progress": []
+      },
+      "new_core_trigger": {
+        "resolutions": [
+          {
+            "observation": "ABSENT",
+            "resolution": "RESOLVED_NOT_APPLIED",
+            "replay_allowed": false,
+            "attempt_index": 1,
+            "observation_id": "observation-absent",
+            "read_sequence": 10,
+            "observed_at": "2026-10-17T00:00:10Z",
+            "target_state_version": "design-effects-0"
+          }
+        ],
+        "has_receipt": false,
+        "progress": []
+      },
+      "retained": true
+    },
+    {
+      "case_id": "partial-without-absent",
+      "old_core_trigger": {
+        "receipt_results": [],
+        "progress": [
+          [
+            {
+              "attempt_fact": "ATTEMPTED",
+              "effective_outcome": "APPLIED",
+              "dependency_status": "SATISFIED"
+            },
+            {
+              "attempt_fact": "MAY_HAVE_BEEN_ATTEMPTED",
+              "effective_outcome": "UNKNOWN",
+              "dependency_status": "BLOCKED"
+            },
+            {
+              "attempt_fact": "NOT_ATTEMPTED",
+              "effective_outcome": "UNDETERMINED",
+              "dependency_status": "BLOCKED"
+            }
+          ]
+        ],
+        "intent_count": 2,
+        "tail_intent_ref": null
+      },
+      "new_core_trigger": {
+        "receipt_results": [],
+        "progress": [
+          [
+            {
+              "attempt_fact": "ATTEMPTED",
+              "effective_outcome": "APPLIED",
+              "dependency_status": "SATISFIED"
+            },
+            {
+              "attempt_fact": "MAY_HAVE_BEEN_ATTEMPTED",
+              "effective_outcome": "UNKNOWN",
+              "dependency_status": "BLOCKED"
+            },
+            {
+              "attempt_fact": "NOT_ATTEMPTED",
+              "effective_outcome": "UNDETERMINED",
+              "dependency_status": "BLOCKED"
+            }
+          ]
+        ],
+        "intent_count": 2,
+        "tail_intent_ref": null
+      },
+      "retained": true
+    },
+    {
+      "case_id": "partial-with-complete-absent",
+      "old_core_trigger": {
+        "receipt_results": [
+          [
+            {
+              "attempt_fact": "ATTEMPTED",
+              "outcome": "APPLIED",
+              "effect_match": "MATCH",
+              "next_step": "POSTCHECK",
+              "replay_allowed": false
+            },
+            {
+              "attempt_fact": "MAY_HAVE_BEEN_ATTEMPTED",
+              "outcome": "UNKNOWN",
+              "effect_match": "INDETERMINATE",
+              "next_step": "RECONCILE",
+              "replay_allowed": false
+            },
+            {
+              "attempt_fact": "NOT_ATTEMPTED",
+              "outcome": "NOT_APPLIED",
+              "effect_match": "ABSENT",
+              "next_step": "RECHECK_TARGET",
+              "replay_allowed": false
+            }
+          ]
+        ],
+        "progress": [
+          [
+            {
+              "attempt_fact": "ATTEMPTED",
+              "effective_outcome": "APPLIED",
+              "dependency_status": "SATISFIED"
+            },
+            {
+              "attempt_fact": "MAY_HAVE_BEEN_ATTEMPTED",
+              "effective_outcome": "UNKNOWN",
+              "dependency_status": "BLOCKED"
+            },
+            {
+              "attempt_fact": "NOT_ATTEMPTED",
+              "effective_outcome": "NOT_APPLIED",
+              "dependency_status": "BLOCKED"
+            }
+          ]
+        ],
+        "intent_count": 2,
+        "tail_intent_ref": null
+      },
+      "new_core_trigger": {
+        "receipt_results": [
+          [
+            {
+              "attempt_fact": "ATTEMPTED",
+              "outcome": "APPLIED",
+              "effect_match": "MATCH",
+              "next_step": "POSTCHECK",
+              "replay_allowed": false
+            },
+            {
+              "attempt_fact": "MAY_HAVE_BEEN_ATTEMPTED",
+              "outcome": "UNKNOWN",
+              "effect_match": "INDETERMINATE",
+              "next_step": "RECONCILE",
+              "replay_allowed": false
+            },
+            {
+              "attempt_fact": "NOT_ATTEMPTED",
+              "outcome": "NOT_APPLIED",
+              "effect_match": "ABSENT",
+              "next_step": "RECHECK_TARGET",
+              "replay_allowed": false
+            }
+          ]
+        ],
+        "progress": [
+          [
+            {
+              "attempt_fact": "ATTEMPTED",
+              "effective_outcome": "APPLIED",
+              "dependency_status": "SATISFIED"
+            },
+            {
+              "attempt_fact": "MAY_HAVE_BEEN_ATTEMPTED",
+              "effective_outcome": "UNKNOWN",
+              "dependency_status": "BLOCKED"
+            },
+            {
+              "attempt_fact": "NOT_ATTEMPTED",
+              "effective_outcome": "NOT_APPLIED",
+              "dependency_status": "BLOCKED"
+            }
+          ]
+        ],
+        "intent_count": 2,
+        "tail_intent_ref": null
+      },
+      "retained": true
+    },
+    {
+      "case_id": "partial-fabricated-receipt",
+      "old_core_trigger": {
+        "receipt_results": [
+          [
+            {
+              "attempt_fact": "ATTEMPTED",
+              "outcome": "APPLIED",
+              "effect_match": "MATCH",
+              "next_step": "POSTCHECK",
+              "replay_allowed": false
+            },
+            {
+              "attempt_fact": "MAY_HAVE_BEEN_ATTEMPTED",
+              "outcome": "UNKNOWN",
+              "effect_match": "INDETERMINATE",
+              "next_step": "RECONCILE",
+              "replay_allowed": false
+            },
+            {
+              "attempt_fact": "NOT_ATTEMPTED",
+              "outcome": "NOT_APPLIED",
+              "effect_match": "ABSENT",
+              "next_step": "RECHECK_TARGET",
+              "replay_allowed": false
+            }
+          ]
+        ],
+        "tail_receipt_readback_null": true,
+        "tail_fact_readback_present": true
+      },
+      "new_core_trigger": {
+        "receipt_results": [
+          [
+            {
+              "attempt_fact": "ATTEMPTED",
+              "outcome": "APPLIED",
+              "effect_match": "MATCH",
+              "next_step": "POSTCHECK",
+              "replay_allowed": false
+            },
+            {
+              "attempt_fact": "MAY_HAVE_BEEN_ATTEMPTED",
+              "outcome": "UNKNOWN",
+              "effect_match": "INDETERMINATE",
+              "next_step": "RECONCILE",
+              "replay_allowed": false
+            },
+            {
+              "attempt_fact": "NOT_ATTEMPTED",
+              "outcome": "NOT_APPLIED",
+              "effect_match": "ABSENT",
+              "next_step": "RECHECK_TARGET",
+              "replay_allowed": false
+            }
+          ]
+        ],
+        "tail_receipt_readback_null": true,
+        "tail_fact_readback_present": true
+      },
+      "retained": true
+    },
+    {
+      "case_id": "conflict",
+      "old_core_trigger": {
+        "resolutions": [
+          {
+            "observation": "CONFLICT",
+            "resolution": "STILL_UNKNOWN",
+            "replay_allowed": false,
+            "attempt_index": 1,
+            "observation_id": "observation-match",
+            "read_sequence": 10,
+            "observed_at": "2026-10-17T00:00:10Z",
+            "target_state_version": "design-effects-1"
+          }
+        ],
+        "has_receipt": false,
+        "progress": []
+      },
+      "new_core_trigger": {
+        "resolutions": [
+          {
+            "observation": "CONFLICT",
+            "resolution": "STILL_UNKNOWN",
+            "replay_allowed": false,
+            "attempt_index": 1,
+            "observation_id": "observation-match",
+            "read_sequence": 10,
+            "observed_at": "2026-10-17T00:00:10Z",
+            "target_state_version": "design-effects-1"
+          }
+        ],
+        "has_receipt": false,
+        "progress": []
+      },
+      "retained": true
+    },
+    {
+      "case_id": "indeterminate",
+      "old_core_trigger": {
+        "resolutions": [
+          {
+            "observation": "INDETERMINATE",
+            "resolution": "STILL_UNKNOWN",
+            "replay_allowed": false,
+            "attempt_index": 1,
+            "observation_id": "observation-resolution-design",
+            "read_sequence": null,
+            "observed_at": "2026-10-17T00:00:09Z",
+            "target_state_version": null
+          }
+        ],
+        "has_receipt": false,
+        "progress": []
+      },
+      "new_core_trigger": {
+        "resolutions": [
+          {
+            "observation": "INDETERMINATE",
+            "resolution": "STILL_UNKNOWN",
+            "replay_allowed": false,
+            "attempt_index": 1,
+            "observation_id": "observation-resolution-design",
+            "read_sequence": null,
+            "observed_at": "2026-10-17T00:00:09Z",
+            "target_state_version": null
+          }
+        ],
+        "has_receipt": false,
+        "progress": []
+      },
+      "retained": true
+    },
+    {
+      "case_id": "original-unknown-preserved",
+      "old_core_trigger": {
+        "raw_receipt_results": [
+          [
+            {
+              "attempt_fact": "MAY_HAVE_BEEN_ATTEMPTED",
+              "outcome": "UNKNOWN",
+              "effect_match": "INDETERMINATE",
+              "next_step": "RECONCILE",
+              "replay_allowed": false
+            },
+            {
+              "attempt_fact": "NOT_ATTEMPTED",
+              "outcome": "NOT_APPLIED",
+              "effect_match": "ABSENT",
+              "next_step": "RECHECK_TARGET",
+              "replay_allowed": false
+            },
+            {
+              "attempt_fact": "NOT_ATTEMPTED",
+              "outcome": "NOT_APPLIED",
+              "effect_match": "ABSENT",
+              "next_step": "RECHECK_TARGET",
+              "replay_allowed": false
+            }
+          ]
+        ],
+        "resolutions": [
+          {
+            "observation": "MATCH",
+            "resolution": "RESOLVED_APPLIED",
+            "replay_allowed": false,
+            "attempt_index": 1,
+            "observation_id": "observation-match",
+            "read_sequence": 10,
+            "observed_at": "2026-10-17T00:00:10Z",
+            "target_state_version": "design-effects-1"
+          }
+        ],
+        "progress": [],
+        "intent_count": 1
+      },
+      "new_core_trigger": {
+        "raw_receipt_results": [
+          [
+            {
+              "attempt_fact": "MAY_HAVE_BEEN_ATTEMPTED",
+              "outcome": "UNKNOWN",
+              "effect_match": "INDETERMINATE",
+              "next_step": "RECONCILE",
+              "replay_allowed": false
+            },
+            {
+              "attempt_fact": "NOT_ATTEMPTED",
+              "outcome": "NOT_APPLIED",
+              "effect_match": "ABSENT",
+              "next_step": "RECHECK_TARGET",
+              "replay_allowed": false
+            },
+            {
+              "attempt_fact": "NOT_ATTEMPTED",
+              "outcome": "NOT_APPLIED",
+              "effect_match": "ABSENT",
+              "next_step": "RECHECK_TARGET",
+              "replay_allowed": false
+            }
+          ]
+        ],
+        "resolutions": [
+          {
+            "observation": "MATCH",
+            "resolution": "RESOLVED_APPLIED",
+            "replay_allowed": false,
+            "attempt_index": 1,
+            "observation_id": "observation-match",
+            "read_sequence": 10,
+            "observed_at": "2026-10-17T00:00:10Z",
+            "target_state_version": "design-effects-1"
+          }
+        ],
+        "progress": [],
+        "intent_count": 1
+      },
+      "retained": true
+    },
+    {
+      "case_id": "recovered-report-binding",
+      "old_core_trigger": {
+        "raw_receipt_results": [
+          [
+            {
+              "attempt_fact": "MAY_HAVE_BEEN_ATTEMPTED",
+              "outcome": "UNKNOWN",
+              "effect_match": "INDETERMINATE",
+              "next_step": "RECONCILE",
+              "replay_allowed": false
+            },
+            {
+              "attempt_fact": "NOT_ATTEMPTED",
+              "outcome": "NOT_APPLIED",
+              "effect_match": "ABSENT",
+              "next_step": "RECHECK_TARGET",
+              "replay_allowed": false
+            },
+            {
+              "attempt_fact": "NOT_ATTEMPTED",
+              "outcome": "NOT_APPLIED",
+              "effect_match": "ABSENT",
+              "next_step": "RECHECK_TARGET",
+              "replay_allowed": false
+            }
+          ]
+        ],
+        "resolutions": [
+          {
+            "observation": "MATCH",
+            "resolution": "RESOLVED_APPLIED",
+            "replay_allowed": false,
+            "attempt_index": 1,
+            "observation_id": "observation-match",
+            "read_sequence": 10,
+            "observed_at": "2026-10-17T00:00:10Z",
+            "target_state_version": "design-effects-1"
+          }
+        ],
+        "progress": [
+          [
+            {
+              "attempt_fact": "MAY_HAVE_BEEN_ATTEMPTED",
+              "effective_outcome": "APPLIED",
+              "dependency_status": "SATISFIED"
+            },
+            {
+              "attempt_fact": "NOT_ATTEMPTED",
+              "effective_outcome": "NOT_APPLIED",
+              "dependency_status": "BLOCKED"
+            },
+            {
+              "attempt_fact": "NOT_ATTEMPTED",
+              "effective_outcome": "NOT_APPLIED",
+              "dependency_status": "BLOCKED"
+            }
+          ]
+        ],
+        "intent_count": 1,
+        "batch": {
+          "state": "NEEDS_REVIEW",
+          "frame_check_status": "FAIL",
+          "content_check_status": "PENDING",
+          "submission_status": "NOT_SUBMITTED",
+          "unresolved_issue_ids": [
+            "issue-tail-not-applied"
+          ]
+        },
+        "post_decision": "HOLD"
+      },
+      "new_core_trigger": {
+        "raw_receipt_results": [
+          [
+            {
+              "attempt_fact": "MAY_HAVE_BEEN_ATTEMPTED",
+              "outcome": "UNKNOWN",
+              "effect_match": "INDETERMINATE",
+              "next_step": "RECONCILE",
+              "replay_allowed": false
+            },
+            {
+              "attempt_fact": "NOT_ATTEMPTED",
+              "outcome": "NOT_APPLIED",
+              "effect_match": "ABSENT",
+              "next_step": "RECHECK_TARGET",
+              "replay_allowed": false
+            },
+            {
+              "attempt_fact": "NOT_ATTEMPTED",
+              "outcome": "NOT_APPLIED",
+              "effect_match": "ABSENT",
+              "next_step": "RECHECK_TARGET",
+              "replay_allowed": false
+            }
+          ]
+        ],
+        "resolutions": [
+          {
+            "observation": "MATCH",
+            "resolution": "RESOLVED_APPLIED",
+            "replay_allowed": false,
+            "attempt_index": 1,
+            "observation_id": "observation-match",
+            "read_sequence": 10,
+            "observed_at": "2026-10-17T00:00:10Z",
+            "target_state_version": "design-effects-1"
+          }
+        ],
+        "progress": [
+          [
+            {
+              "attempt_fact": "MAY_HAVE_BEEN_ATTEMPTED",
+              "effective_outcome": "APPLIED",
+              "dependency_status": "SATISFIED"
+            },
+            {
+              "attempt_fact": "NOT_ATTEMPTED",
+              "effective_outcome": "NOT_APPLIED",
+              "dependency_status": "BLOCKED"
+            },
+            {
+              "attempt_fact": "NOT_ATTEMPTED",
+              "effective_outcome": "NOT_APPLIED",
+              "dependency_status": "BLOCKED"
+            }
+          ]
+        ],
+        "intent_count": 1,
+        "batch": {
+          "state": "NEEDS_REVIEW",
+          "frame_check_status": "FAIL",
+          "content_check_status": "PENDING",
+          "submission_status": "NOT_SUBMITTED",
+          "unresolved_issue_ids": [
+            "issue-tail-not-applied"
+          ]
+        },
+        "post_decision": "HOLD"
+      },
+      "retained": true
+    },
+    {
+      "case_id": "new-read-unchanged-state-version",
+      "old_core_trigger": {
+        "resolutions": [
+          {
+            "observation": "INDETERMINATE",
+            "resolution": "STILL_UNKNOWN",
+            "replay_allowed": false,
+            "attempt_index": 1,
+            "observation_id": "observation-resolution-first",
+            "read_sequence": null,
+            "observed_at": "2026-10-17T00:00:09Z",
+            "target_state_version": null
+          },
+          {
+            "observation": "ABSENT",
+            "resolution": "RESOLVED_NOT_APPLIED",
+            "replay_allowed": false,
+            "attempt_index": 2,
+            "observation_id": "observation-new-read-unchanged",
+            "read_sequence": 11,
+            "observed_at": "2026-10-17T00:00:11Z",
+            "target_state_version": "design-effects-0"
+          }
+        ],
+        "snapshot_observations": [
+          {
+            "observed_at": "2026-10-17T00:00:00Z",
+            "observed_version": "design-effects-0"
+          },
+          {
+            "observed_at": "2026-10-17T00:00:11Z",
+            "observed_version": "design-effects-0"
+          }
+        ],
+        "claims": {
+          "design_only": true,
+          "local_commit_evidence": "NOT_EXECUTED"
+        }
+      },
+      "new_core_trigger": {
+        "resolutions": [
+          {
+            "observation": "INDETERMINATE",
+            "resolution": "STILL_UNKNOWN",
+            "replay_allowed": false,
+            "attempt_index": 1,
+            "observation_id": "observation-resolution-first",
+            "read_sequence": null,
+            "observed_at": "2026-10-17T00:00:09Z",
+            "target_state_version": null
+          },
+          {
+            "observation": "ABSENT",
+            "resolution": "RESOLVED_NOT_APPLIED",
+            "replay_allowed": false,
+            "attempt_index": 2,
+            "observation_id": "observation-new-read-unchanged",
+            "read_sequence": 11,
+            "observed_at": "2026-10-17T00:00:11Z",
+            "target_state_version": "design-effects-0"
+          }
+        ],
+        "snapshot_observations": [
+          {
+            "observed_at": "2026-10-17T00:00:00Z",
+            "observed_version": "design-effects-0"
+          },
+          {
+            "observed_at": "2026-10-17T00:00:11Z",
+            "observed_version": "design-effects-0"
+          }
+        ],
+        "claims": {
+          "design_only": true,
+          "local_commit_evidence": "NOT_EXECUTED"
+        }
+      },
+      "retained": true
+    },
+    {
+      "case_id": "cross-scope-only-one-resolved",
+      "old_core_trigger": {
+        "unresolved": [
+          {
+            "event_id": "event-first-scope",
+            "scope_id": "synthetic-scope",
+            "classification": "UNKNOWN"
+          },
+          {
+            "event_id": "event-other-scope",
+            "scope_id": "other-design-scope",
+            "classification": "UNKNOWN"
+          }
+        ],
+        "scope_ids": [
+          "synthetic-scope",
+          "other-design-scope"
+        ],
+        "claims": {
+          "design_only": true,
+          "first_scope_has_terminal_resolution": true,
+          "expected_remaining_after_transaction": [
+            "event-other-scope"
+          ],
+          "other_scope_read_supported": false,
+          "requested_scope_switch": "other-design-scope",
+          "expected_pause": true,
+          "historical_other_session_is_not_current_authority": true
+        }
+      },
+      "new_core_trigger": {
+        "unresolved": [
+          {
+            "event_id": "event-first-scope",
+            "scope_id": "synthetic-scope",
+            "classification": "UNKNOWN"
+          },
+          {
+            "event_id": "event-other-scope",
+            "scope_id": "other-design-scope",
+            "classification": "UNKNOWN"
+          }
+        ],
+        "scope_ids": [
+          "synthetic-scope",
+          "other-design-scope"
+        ],
+        "claims": {
+          "design_only": true,
+          "first_scope_has_terminal_resolution": true,
+          "expected_remaining_after_transaction": [
+            "event-other-scope"
+          ],
+          "other_scope_read_supported": false,
+          "requested_scope_switch": "other-design-scope",
+          "expected_pause": true,
+          "historical_other_session_is_not_current_authority": true
+        }
+      },
+      "retained": true
+    },
+    {
+      "case_id": "legacy-unrecorded-no-intent",
+      "old_core_trigger": {
+        "unresolved": [
+          {
+            "classification": "LEGACY_UNRECORDED",
+            "intent_ref": null
+          }
+        ],
+        "intent_count": 0
+      },
+      "new_core_trigger": {
+        "unresolved": [
+          {
+            "classification": "LEGACY_UNRECORDED",
+            "intent_ref": null
+          }
+        ],
+        "intent_count": 0
+      },
+      "retained": true
+    },
+    {
+      "case_id": "wrong-schema-version",
+      "old_core_trigger": {
+        "intent_schema": "1.0.0-a-proposal"
+      },
+      "new_core_trigger": {
+        "intent_schema": "1.0.0-a-proposal"
+      },
+      "retained": true
+    },
+    {
+      "case_id": "wrong-exchange-version",
+      "old_core_trigger": {
+        "exchange": "c01-exchange-1"
+      },
+      "new_core_trigger": {
+        "exchange": "c01-exchange-1"
+      },
+      "retained": true
+    },
+    {
+      "case_id": "wrong-action-digest",
+      "old_core_trigger": {
+        "action_digest": "0000000000000000000000000000000000000000000000000000000000000000"
+      },
+      "new_core_trigger": {
+        "action_digest": "0000000000000000000000000000000000000000000000000000000000000000"
+      },
+      "retained": true
+    },
+    {
+      "case_id": "wrong-target-identity",
+      "old_core_trigger": {
+        "target_key": {
+          "platform_namespace": "a02-mock",
+          "target_id": "wrong-target",
+          "book_id": "synthetic-book"
+        }
+      },
+      "new_core_trigger": {
+        "target_key": {
+          "platform_namespace": "a02-mock",
+          "target_id": "wrong-target",
+          "book_id": "synthetic-book"
+        }
+      },
+      "retained": true
+    },
+    {
+      "case_id": "wrong-book-identity",
+      "old_core_trigger": {
+        "intent_book": "other-book"
+      },
+      "new_core_trigger": {
+        "intent_book": "other-book"
+      },
+      "retained": true
+    },
+    {
+      "case_id": "wrong-scope-reference",
+      "old_core_trigger": {
+        "intent_scope": "other-scope"
+      },
+      "new_core_trigger": {
+        "intent_scope": "other-scope"
+      },
+      "retained": true
+    },
+    {
+      "case_id": "missing-plan-reference",
+      "old_core_trigger": {
+        "plan_count": 0,
+        "intent_plan_ref_id": "a02-plan"
+      },
+      "new_core_trigger": {
+        "plan_count": 0,
+        "intent_plan_ref_id": "a02-plan"
+      },
+      "retained": true
+    },
+    {
+      "case_id": "wrong-resource-hash",
+      "old_core_trigger": {
+        "resource_declared_sha": "0000000000000000000000000000000000000000000000000000000000000000",
+        "actual_bytes_mismatch": true
+      },
+      "new_core_trigger": {
+        "resource_declared_sha": "0000000000000000000000000000000000000000000000000000000000000000",
+        "actual_bytes_mismatch": true
+      },
+      "retained": true
+    },
+    {
+      "case_id": "missing-readback",
+      "old_core_trigger": {
+        "readback": null,
+        "observation": "MATCH"
+      },
+      "new_core_trigger": {
+        "readback": null,
+        "observation": "MATCH"
+      },
+      "retained": true
+    },
+    {
+      "case_id": "wrong-observed-state-hash",
+      "old_core_trigger": {
+        "target_state_hash": "0000000000000000000000000000000000000000000000000000000000000000"
+      },
+      "new_core_trigger": {
+        "target_state_hash": "0000000000000000000000000000000000000000000000000000000000000000"
+      },
+      "retained": true
+    },
+    {
+      "case_id": "wrong-obligation-identity",
+      "old_core_trigger": {
+        "obligation_id": "obl-0000000000000000000000000000000000000000000000000000000000000000"
+      },
+      "new_core_trigger": {
+        "obligation_id": "obl-0000000000000000000000000000000000000000000000000000000000000000"
+      },
+      "retained": true
+    },
+    {
+      "case_id": "real-original-rejected",
+      "old_core_trigger": {
+        "provenance": "ORIGINAL",
+        "origin": "ORIGINAL"
+      },
+      "new_core_trigger": {
+        "provenance": "ORIGINAL",
+        "origin": "ORIGINAL"
+      },
+      "retained": true
+    },
+    {
+      "case_id": "observed-producer-rejected",
+      "old_core_trigger": {
+        "evidence_mode": "OBSERVED"
+      },
+      "new_core_trigger": {
+        "evidence_mode": "OBSERVED"
+      },
+      "retained": true
+    },
+    {
+      "case_id": "observed-resource-rejected",
+      "old_core_trigger": {
+        "readback_origin": "OBSERVED"
+      },
+      "new_core_trigger": {
+        "readback_origin": "OBSERVED"
+      },
+      "retained": true
+    },
+    {
+      "case_id": "observed-evidence-rejected",
+      "old_core_trigger": {
+        "evidence_mode": "OBSERVED"
+      },
+      "new_core_trigger": {
+        "evidence_mode": "OBSERVED"
+      },
+      "retained": true
+    },
+    {
+      "case_id": "real-policy-rejected",
+      "old_core_trigger": {
+        "applicability": "JOINT_CONFIRMED"
+      },
+      "new_core_trigger": {
+        "applicability": "JOINT_CONFIRMED"
+      },
+      "retained": true
+    },
+    {
+      "case_id": "platform-mode-rejected",
+      "old_core_trigger": {
+        "execution_mode": "PLATFORM"
+      },
+      "new_core_trigger": {
+        "execution_mode": "PLATFORM"
+      },
+      "retained": true
+    },
+    {
+      "case_id": "unknown-scope-integrity",
+      "old_core_trigger": {
+        "scope_manifest": null,
+        "scope_integrity": {
+          "status": "UNKNOWN",
+          "basis": "METADATA",
+          "proof": null
+        }
+      },
+      "new_core_trigger": {
+        "scope_manifest": null,
+        "scope_integrity": {
+          "status": "UNKNOWN",
+          "basis": "METADATA",
+          "proof": null
+        }
+      },
+      "retained": true
+    },
+    {
+      "case_id": "stale-owner-generation",
+      "old_core_trigger": {
+        "runtime_claim": {
+          "design_only": true,
+          "local_commit_evidence": "NOT_EXECUTED",
+          "current_owner_id": "new-owner",
+          "current_generation": 2,
+          "supplied_owner_id": "owner-design",
+          "supplied_generation": 1
+        },
+        "resolutions": [
+          {
+            "observation": "MATCH",
+            "resolution": "RESOLVED_APPLIED",
+            "replay_allowed": false,
+            "attempt_index": 1,
+            "observation_id": "observation-match",
+            "read_sequence": 10,
+            "observed_at": "2026-10-17T00:00:10Z",
+            "target_state_version": "design-effects-1"
+          }
+        ]
+      },
+      "new_core_trigger": {
+        "runtime_claim": {
+          "design_only": true,
+          "local_commit_evidence": "NOT_EXECUTED",
+          "current_owner_id": "new-owner",
+          "current_generation": 2,
+          "supplied_owner_id": "owner-design",
+          "supplied_generation": 1
+        },
+        "resolutions": [
+          {
+            "observation": "MATCH",
+            "resolution": "RESOLVED_APPLIED",
+            "replay_allowed": false,
+            "attempt_index": 1,
+            "observation_id": "observation-match",
+            "read_sequence": 10,
+            "observed_at": "2026-10-17T00:00:10Z",
+            "target_state_version": "design-effects-1"
+          }
+        ]
+      },
+      "retained": true
+    },
+    {
+      "case_id": "wrong-state-directory",
+      "old_core_trigger": {
+        "runtime_claim": {
+          "design_only": true,
+          "local_commit_evidence": "NOT_EXECUTED",
+          "expected_state_directory_identity": "state-directory-design",
+          "supplied_state_directory_identity": "different-empty-directory",
+          "create_if_missing": false
+        },
+        "resolutions": [
+          {
+            "observation": "MATCH",
+            "resolution": "RESOLVED_APPLIED",
+            "replay_allowed": false,
+            "attempt_index": 1,
+            "observation_id": "observation-match",
+            "read_sequence": 10,
+            "observed_at": "2026-10-17T00:00:10Z",
+            "target_state_version": "design-effects-1"
+          }
+        ]
+      },
+      "new_core_trigger": {
+        "runtime_claim": {
+          "design_only": true,
+          "local_commit_evidence": "NOT_EXECUTED",
+          "expected_state_directory_identity": "state-directory-design",
+          "supplied_state_directory_identity": "different-empty-directory",
+          "create_if_missing": false
+        },
+        "resolutions": [
+          {
+            "observation": "MATCH",
+            "resolution": "RESOLVED_APPLIED",
+            "replay_allowed": false,
+            "attempt_index": 1,
+            "observation_id": "observation-match",
+            "read_sequence": 10,
+            "observed_at": "2026-10-17T00:00:10Z",
+            "target_state_version": "design-effects-1"
+          }
+        ]
+      },
+      "retained": true
+    },
+    {
+      "case_id": "fake-empty-ledger",
+      "old_core_trigger": {
+        "runtime_claim": {
+          "design_only": true,
+          "local_commit_evidence": "NOT_EXECUTED",
+          "caller_unresolved": [],
+          "actual_current_db_unresolved": [
+            "event-hidden"
+          ],
+          "caller_export_is_authority": false
+        },
+        "resolutions": [
+          {
+            "observation": "MATCH",
+            "resolution": "RESOLVED_APPLIED",
+            "replay_allowed": false,
+            "attempt_index": 1,
+            "observation_id": "observation-match",
+            "read_sequence": 10,
+            "observed_at": "2026-10-17T00:00:10Z",
+            "target_state_version": "design-effects-1"
+          }
+        ]
+      },
+      "new_core_trigger": {
+        "runtime_claim": {
+          "design_only": true,
+          "local_commit_evidence": "NOT_EXECUTED",
+          "caller_unresolved": [],
+          "actual_current_db_unresolved": [
+            "event-hidden"
+          ],
+          "caller_export_is_authority": false
+        },
+        "resolutions": [
+          {
+            "observation": "MATCH",
+            "resolution": "RESOLVED_APPLIED",
+            "replay_allowed": false,
+            "attempt_index": 1,
+            "observation_id": "observation-match",
+            "read_sequence": 10,
+            "observed_at": "2026-10-17T00:00:10Z",
+            "target_state_version": "design-effects-1"
+          }
+        ]
+      },
+      "retained": true
+    },
+    {
+      "case_id": "intent-not-locally-committed",
+      "old_core_trigger": {
+        "runtime_claim": {
+          "design_only": true,
+          "local_commit_evidence": "NOT_EXECUTED",
+          "current_library_intent_commit_exists": false,
+          "caller_supplied_intent_json": true
+        },
+        "resolutions": [
+          {
+            "observation": "MATCH",
+            "resolution": "RESOLVED_APPLIED",
+            "replay_allowed": false,
+            "attempt_index": 1,
+            "observation_id": "observation-match",
+            "read_sequence": 10,
+            "observed_at": "2026-10-17T00:00:10Z",
+            "target_state_version": "design-effects-1"
+          }
+        ]
+      },
+      "new_core_trigger": {
+        "runtime_claim": {
+          "design_only": true,
+          "local_commit_evidence": "NOT_EXECUTED",
+          "current_library_intent_commit_exists": false,
+          "caller_supplied_intent_json": true
+        },
+        "resolutions": [
+          {
+            "observation": "MATCH",
+            "resolution": "RESOLVED_APPLIED",
+            "replay_allowed": false,
+            "attempt_index": 1,
+            "observation_id": "observation-match",
+            "read_sequence": 10,
+            "observed_at": "2026-10-17T00:00:10Z",
+            "target_state_version": "design-effects-1"
+          }
+        ]
+      },
+      "retained": true
+    },
+    {
+      "case_id": "attempt-limit-four",
+      "old_core_trigger": {
+        "attempt_index": 4
+      },
+      "new_core_trigger": {
+        "attempt_index": 4
+      },
+      "retained": true
+    },
+    {
+      "case_id": "old-observation-reuse",
+      "old_core_trigger": {
+        "runtime_claim": {
+          "design_only": true,
+          "local_commit_evidence": "NOT_EXECUTED",
+          "previous_observation_id": "observation-match",
+          "previous_read_sequence": 10,
+          "actual_new_read": false,
+          "caller_only_changes_timestamp": true
+        },
+        "resolutions": [
+          {
+            "observation": "INDETERMINATE",
+            "resolution": "STILL_UNKNOWN",
+            "replay_allowed": false,
+            "attempt_index": 1,
+            "observation_id": "observation-match",
+            "read_sequence": 10,
+            "observed_at": "2026-10-17T00:00:10Z",
+            "target_state_version": "design-effects-1"
+          },
+          {
+            "observation": "MATCH",
+            "resolution": "RESOLVED_APPLIED",
+            "replay_allowed": false,
+            "attempt_index": 2,
+            "observation_id": "observation-match",
+            "read_sequence": 10,
+            "observed_at": "2026-10-17T00:00:11Z",
+            "target_state_version": "design-effects-1"
+          }
+        ]
+      },
+      "new_core_trigger": {
+        "runtime_claim": {
+          "design_only": true,
+          "local_commit_evidence": "NOT_EXECUTED",
+          "previous_observation_id": "observation-match",
+          "previous_read_sequence": 10,
+          "actual_new_read": false,
+          "caller_only_changes_timestamp": true
+        },
+        "resolutions": [
+          {
+            "observation": "INDETERMINATE",
+            "resolution": "STILL_UNKNOWN",
+            "replay_allowed": false,
+            "attempt_index": 1,
+            "observation_id": "observation-match",
+            "read_sequence": 10,
+            "observed_at": "2026-10-17T00:00:10Z",
+            "target_state_version": "design-effects-1"
+          },
+          {
+            "observation": "MATCH",
+            "resolution": "RESOLVED_APPLIED",
+            "replay_allowed": false,
+            "attempt_index": 2,
+            "observation_id": "observation-match",
+            "read_sequence": 10,
+            "observed_at": "2026-10-17T00:00:11Z",
+            "target_state_version": "design-effects-1"
+          }
+        ]
+      },
+      "retained": true
+    },
+    {
+      "case_id": "resolved-chain-successor",
+      "old_core_trigger": {
+        "resolutions": [
+          {
+            "observation": "MATCH",
+            "resolution": "RESOLVED_APPLIED",
+            "replay_allowed": false,
+            "attempt_index": 1,
+            "observation_id": "observation-match",
+            "read_sequence": 10,
+            "observed_at": "2026-10-17T00:00:10Z",
+            "target_state_version": "design-effects-1"
+          },
+          {
+            "observation": "ABSENT",
+            "resolution": "RESOLVED_NOT_APPLIED",
+            "replay_allowed": false,
+            "attempt_index": 2,
+            "observation_id": "observation-new-read-unchanged",
+            "read_sequence": 11,
+            "observed_at": "2026-10-17T00:00:11Z",
+            "target_state_version": "design-effects-0"
+          }
+        ],
+        "chain": [
+          {
+            "id": "resolution-design",
+            "previous_id": null,
+            "intent_id": "intent-design-1"
+          },
+          {
+            "id": "resolution-terminal-successor",
+            "previous_id": "resolution-design",
+            "intent_id": "intent-design-1"
+          }
+        ]
+      },
+      "new_core_trigger": {
+        "resolutions": [
+          {
+            "observation": "MATCH",
+            "resolution": "RESOLVED_APPLIED",
+            "replay_allowed": false,
+            "attempt_index": 1,
+            "observation_id": "observation-match",
+            "read_sequence": 10,
+            "observed_at": "2026-10-17T00:00:10Z",
+            "target_state_version": "design-effects-1"
+          },
+          {
+            "observation": "ABSENT",
+            "resolution": "RESOLVED_NOT_APPLIED",
+            "replay_allowed": false,
+            "attempt_index": 2,
+            "observation_id": "observation-new-read-unchanged",
+            "read_sequence": 11,
+            "observed_at": "2026-10-17T00:00:11Z",
+            "target_state_version": "design-effects-0"
+          }
+        ],
+        "chain": [
+          {
+            "id": "resolution-design",
+            "previous_id": null,
+            "intent_id": "intent-design-1"
+          },
+          {
+            "id": "resolution-terminal-successor",
+            "previous_id": "resolution-design",
+            "intent_id": "intent-design-1"
+          }
+        ]
+      },
+      "retained": true
+    },
+    {
+      "case_id": "resolution-fork",
+      "old_core_trigger": {
+        "resolutions": [
+          {
+            "observation": "MATCH",
+            "resolution": "RESOLVED_APPLIED",
+            "replay_allowed": false,
+            "attempt_index": 1,
+            "observation_id": "observation-match",
+            "read_sequence": 10,
+            "observed_at": "2026-10-17T00:00:10Z",
+            "target_state_version": "design-effects-1"
+          },
+          {
+            "observation": "MATCH",
+            "resolution": "RESOLVED_APPLIED",
+            "replay_allowed": false,
+            "attempt_index": 1,
+            "observation_id": "observation-match",
+            "read_sequence": 10,
+            "observed_at": "2026-10-17T00:00:10Z",
+            "target_state_version": "design-effects-1"
+          }
+        ],
+        "chain": [
+          {
+            "id": "resolution-design",
+            "previous_id": null,
+            "intent_id": "intent-design-1"
+          },
+          {
+            "id": "resolution-fork-second",
+            "previous_id": null,
+            "intent_id": "intent-design-1"
+          }
+        ]
+      },
+      "new_core_trigger": {
+        "resolutions": [
+          {
+            "observation": "MATCH",
+            "resolution": "RESOLVED_APPLIED",
+            "replay_allowed": false,
+            "attempt_index": 1,
+            "observation_id": "observation-match",
+            "read_sequence": 10,
+            "observed_at": "2026-10-17T00:00:10Z",
+            "target_state_version": "design-effects-1"
+          },
+          {
+            "observation": "MATCH",
+            "resolution": "RESOLVED_APPLIED",
+            "replay_allowed": false,
+            "attempt_index": 1,
+            "observation_id": "observation-match",
+            "read_sequence": 10,
+            "observed_at": "2026-10-17T00:00:10Z",
+            "target_state_version": "design-effects-1"
+          }
+        ],
+        "chain": [
+          {
+            "id": "resolution-design",
+            "previous_id": null,
+            "intent_id": "intent-design-1"
+          },
+          {
+            "id": "resolution-fork-second",
+            "previous_id": null,
+            "intent_id": "intent-design-1"
+          }
+        ]
+      },
+      "retained": true
+    },
+    {
+      "case_id": "resolution-cycle",
+      "old_core_trigger": {
+        "resolutions": [
+          {
+            "observation": "MATCH",
+            "resolution": "RESOLVED_APPLIED",
+            "replay_allowed": false,
+            "attempt_index": 1,
+            "observation_id": "observation-match",
+            "read_sequence": 10,
+            "observed_at": "2026-10-17T00:00:10Z",
+            "target_state_version": "design-effects-1"
+          }
+        ],
+        "chain": [
+          {
+            "id": "resolution-design",
+            "previous_id": "resolution-design",
+            "intent_id": "intent-design-1"
+          }
+        ]
+      },
+      "new_core_trigger": {
+        "resolutions": [
+          {
+            "observation": "MATCH",
+            "resolution": "RESOLVED_APPLIED",
+            "replay_allowed": false,
+            "attempt_index": 1,
+            "observation_id": "observation-match",
+            "read_sequence": 10,
+            "observed_at": "2026-10-17T00:00:10Z",
+            "target_state_version": "design-effects-1"
+          }
+        ],
+        "chain": [
+          {
+            "id": "resolution-design",
+            "previous_id": "resolution-design",
+            "intent_id": "intent-design-1"
+          }
+        ]
+      },
+      "retained": true
+    },
+    {
+      "case_id": "source-only-unknown-denominator",
+      "old_core_trigger": {
+        "source_coverage": {
+          "scope_manifest": null,
+          "scope_integrity": {
+            "status": "UNKNOWN",
+            "basis": "METADATA",
+            "proof": null
+          }
+        },
+        "plan_action_counts": [],
+        "runtime_claim": {
+          "design_only": true,
+          "local_commit_evidence": "NOT_EXECUTED"
+        }
+      },
+      "new_core_trigger": {
+        "source_coverage": {
+          "scope_manifest": null,
+          "scope_integrity": {
+            "status": "UNKNOWN",
+            "basis": "METADATA",
+            "proof": null
+          }
+        },
+        "plan_action_counts": [],
+        "runtime_claim": {
+          "design_only": true,
+          "local_commit_evidence": "NOT_EXECUTED"
+        }
+      },
+      "retained": true
+    },
+    {
+      "case_id": "source-only-zero-actions",
+      "old_core_trigger": {
+        "source_coverage": {
+          "scope_manifest": [],
+          "scope_integrity": {
+            "status": "SYNTHETIC_COMPLETE",
+            "basis": "FIXTURE",
+            "proof": {
+              "sha256": "0b3fb61dd7ae1f276a43d91ec10972bb3d40cbd275e9645ea986553f7f2589b4",
+              "media_type": "application/json",
+              "origin": "SYNTHETIC",
+              "actual_sha256": "0b3fb61dd7ae1f276a43d91ec10972bb3d40cbd275e9645ea986553f7f2589b4"
+            }
+          }
+        },
+        "plan_action_counts": [],
+        "runtime_claim": {
+          "design_only": true,
+          "local_commit_evidence": "NOT_EXECUTED"
+        }
+      },
+      "new_core_trigger": {
+        "source_coverage": {
+          "scope_manifest": [],
+          "scope_integrity": {
+            "status": "SYNTHETIC_COMPLETE",
+            "basis": "FIXTURE",
+            "proof": {
+              "sha256": "0b3fb61dd7ae1f276a43d91ec10972bb3d40cbd275e9645ea986553f7f2589b4",
+              "media_type": "application/json",
+              "origin": "SYNTHETIC",
+              "actual_sha256": "0b3fb61dd7ae1f276a43d91ec10972bb3d40cbd275e9645ea986553f7f2589b4"
+            }
+          }
+        },
+        "plan_action_counts": [],
+        "runtime_claim": {
+          "design_only": true,
+          "local_commit_evidence": "NOT_EXECUTED"
+        }
+      },
+      "retained": true
+    }
+  ],
+  "projection_classification": [
+    {
+      "case_id": "normal",
+      "change_count": 62,
+      "categories": {
+        "DERIVED_DIGEST_OR_OBLIGATION_RESEAL": 62
+      },
+      "unclassified_changes": []
+    },
+    {
+      "case_id": "intent-no-receipt-match",
+      "change_count": 11,
+      "categories": {
+        "DERIVED_DIGEST_OR_OBLIGATION_RESEAL": 11
+      },
+      "unclassified_changes": []
+    },
+    {
+      "case_id": "intent-no-receipt-absent",
+      "change_count": 11,
+      "categories": {
+        "DERIVED_DIGEST_OR_OBLIGATION_RESEAL": 11
+      },
+      "unclassified_changes": []
+    },
+    {
+      "case_id": "partial-without-absent",
+      "change_count": 30,
+      "categories": {
+        "DERIVED_DIGEST_OR_OBLIGATION_RESEAL": 18,
+        "PARTIAL_B_UNKNOWN_BOOK_PAUSE_RETAINED_EXPLICITLY": 5,
+        "R1_EXPLICIT_INTERRUPTED_READONLY_BRANCH_METADATA": 7
+      },
+      "unclassified_changes": []
+    },
+    {
+      "case_id": "partial-with-complete-absent",
+      "change_count": 127,
+      "categories": {
+        "DERIVED_DIGEST_OR_OBLIGATION_RESEAL": 45,
+        "UNATTEMPTED_FACT_ORIGIN_DEDICATED_PREPARED_TWO_DESIGN_READS": 51,
+        "NEW_UNATTEMPTED_ABSENCE_DESIGN_OBSERVATION": 1,
+        "PARTIAL_B_UNKNOWN_BOOK_PAUSE_RETAINED_EXPLICITLY": 5,
+        "R1_EXPLICIT_INTERRUPTED_READONLY_BRANCH_METADATA": 25
+      },
+      "unclassified_changes": []
+    },
+    {
+      "case_id": "partial-fabricated-receipt",
+      "change_count": 83,
+      "categories": {
+        "DERIVED_DIGEST_OR_OBLIGATION_RESEAL": 27,
+        "UNATTEMPTED_FACT_ORIGIN_DEDICATED_PREPARED_TWO_DESIGN_READS": 25,
+        "NEW_UNATTEMPTED_ABSENCE_DESIGN_OBSERVATION": 1,
+        "PARTIAL_B_UNKNOWN_BOOK_PAUSE_RETAINED_EXPLICITLY": 5,
+        "R1_EXPLICIT_INTERRUPTED_READONLY_BRANCH_METADATA": 25
+      },
+      "unclassified_changes": []
+    },
+    {
+      "case_id": "conflict",
+      "change_count": 11,
+      "categories": {
+        "DERIVED_DIGEST_OR_OBLIGATION_RESEAL": 11
+      },
+      "unclassified_changes": []
+    },
+    {
+      "case_id": "indeterminate",
+      "change_count": 5,
+      "categories": {
+        "DERIVED_DIGEST_OR_OBLIGATION_RESEAL": 5
+      },
+      "unclassified_changes": []
+    },
+    {
+      "case_id": "original-unknown-preserved",
+      "change_count": 108,
+      "categories": {
+        "DERIVED_DIGEST_OR_OBLIGATION_RESEAL": 31,
+        "UNATTEMPTED_FACT_ORIGIN_DEDICATED_PREPARED_TWO_DESIGN_READS": 70,
+        "NEW_UNATTEMPTED_ABSENCE_DESIGN_OBSERVATION": 2,
+        "R1_EXPLICIT_INTERRUPTED_READONLY_BRANCH_METADATA": 5
+      },
+      "unclassified_changes": []
+    },
+    {
+      "case_id": "recovered-report-binding",
+      "change_count": 185,
+      "categories": {
+        "DERIVED_DIGEST_OR_OBLIGATION_RESEAL": 46,
+        "UNATTEMPTED_FACT_ORIGIN_DEDICATED_PREPARED_TWO_DESIGN_READS": 132,
+        "NEW_UNATTEMPTED_ABSENCE_DESIGN_OBSERVATION": 2,
+        "R1_EXPLICIT_INTERRUPTED_READONLY_BRANCH_METADATA": 5
+      },
+      "unclassified_changes": []
+    },
+    {
+      "case_id": "new-read-unchanged-state-version",
+      "change_count": 12,
+      "categories": {
+        "DERIVED_DIGEST_OR_OBLIGATION_RESEAL": 12
+      },
+      "unclassified_changes": []
+    },
+    {
+      "case_id": "cross-scope-only-one-resolved",
+      "change_count": 17,
+      "categories": {
+        "DERIVED_DIGEST_OR_OBLIGATION_RESEAL": 17
+      },
+      "unclassified_changes": []
+    },
+    {
+      "case_id": "legacy-unrecorded-no-intent",
+      "change_count": 1,
+      "categories": {
+        "DERIVED_DIGEST_OR_OBLIGATION_RESEAL": 1
+      },
+      "unclassified_changes": []
+    },
+    {
+      "case_id": "wrong-schema-version",
+      "change_count": 11,
+      "categories": {
+        "DERIVED_DIGEST_OR_OBLIGATION_RESEAL": 11
+      },
+      "unclassified_changes": []
+    },
+    {
+      "case_id": "wrong-exchange-version",
+      "change_count": 11,
+      "categories": {
+        "DERIVED_DIGEST_OR_OBLIGATION_RESEAL": 11
+      },
+      "unclassified_changes": []
+    },
+    {
+      "case_id": "wrong-action-digest",
+      "change_count": 11,
+      "categories": {
+        "DERIVED_DIGEST_OR_OBLIGATION_RESEAL": 11
+      },
+      "unclassified_changes": []
+    },
+    {
+      "case_id": "wrong-target-identity",
+      "change_count": 11,
+      "categories": {
+        "DERIVED_DIGEST_OR_OBLIGATION_RESEAL": 11
+      },
+      "unclassified_changes": []
+    },
+    {
+      "case_id": "wrong-book-identity",
+      "change_count": 11,
+      "categories": {
+        "DERIVED_DIGEST_OR_OBLIGATION_RESEAL": 11
+      },
+      "unclassified_changes": []
+    },
+    {
+      "case_id": "wrong-scope-reference",
+      "change_count": 11,
+      "categories": {
+        "DERIVED_DIGEST_OR_OBLIGATION_RESEAL": 11
+      },
+      "unclassified_changes": []
+    },
+    {
+      "case_id": "missing-plan-reference",
+      "change_count": 10,
+      "categories": {
+        "DERIVED_DIGEST_OR_OBLIGATION_RESEAL": 10
+      },
+      "unclassified_changes": []
+    },
+    {
+      "case_id": "wrong-resource-hash",
+      "change_count": 11,
+      "categories": {
+        "DERIVED_DIGEST_OR_OBLIGATION_RESEAL": 11
+      },
+      "unclassified_changes": []
+    },
+    {
+      "case_id": "missing-readback",
+      "change_count": 9,
+      "categories": {
+        "DERIVED_DIGEST_OR_OBLIGATION_RESEAL": 9
+      },
+      "unclassified_changes": []
+    },
+    {
+      "case_id": "wrong-observed-state-hash",
+      "change_count": 10,
+      "categories": {
+        "DERIVED_DIGEST_OR_OBLIGATION_RESEAL": 10
+      },
+      "unclassified_changes": []
+    },
+    {
+      "case_id": "wrong-obligation-identity",
+      "change_count": 10,
+      "categories": {
+        "DERIVED_DIGEST_OR_OBLIGATION_RESEAL": 10
+      },
+      "unclassified_changes": []
+    },
+    {
+      "case_id": "real-original-rejected",
+      "change_count": 11,
+      "categories": {
+        "DERIVED_DIGEST_OR_OBLIGATION_RESEAL": 11
+      },
+      "unclassified_changes": []
+    },
+    {
+      "case_id": "observed-producer-rejected",
+      "change_count": 11,
+      "categories": {
+        "DERIVED_DIGEST_OR_OBLIGATION_RESEAL": 11
+      },
+      "unclassified_changes": []
+    },
+    {
+      "case_id": "observed-resource-rejected",
+      "change_count": 11,
+      "categories": {
+        "DERIVED_DIGEST_OR_OBLIGATION_RESEAL": 11
+      },
+      "unclassified_changes": []
+    },
+    {
+      "case_id": "observed-evidence-rejected",
+      "change_count": 11,
+      "categories": {
+        "DERIVED_DIGEST_OR_OBLIGATION_RESEAL": 11
+      },
+      "unclassified_changes": []
+    },
+    {
+      "case_id": "real-policy-rejected",
+      "change_count": 11,
+      "categories": {
+        "DERIVED_DIGEST_OR_OBLIGATION_RESEAL": 11
+      },
+      "unclassified_changes": []
+    },
+    {
+      "case_id": "platform-mode-rejected",
+      "change_count": 11,
+      "categories": {
+        "DERIVED_DIGEST_OR_OBLIGATION_RESEAL": 11
+      },
+      "unclassified_changes": []
+    },
+    {
+      "case_id": "unknown-scope-integrity",
+      "change_count": 11,
+      "categories": {
+        "DERIVED_DIGEST_OR_OBLIGATION_RESEAL": 11
+      },
+      "unclassified_changes": []
+    },
+    {
+      "case_id": "stale-owner-generation",
+      "change_count": 11,
+      "categories": {
+        "DERIVED_DIGEST_OR_OBLIGATION_RESEAL": 11
+      },
+      "unclassified_changes": []
+    },
+    {
+      "case_id": "wrong-state-directory",
+      "change_count": 11,
+      "categories": {
+        "DERIVED_DIGEST_OR_OBLIGATION_RESEAL": 11
+      },
+      "unclassified_changes": []
+    },
+    {
+      "case_id": "fake-empty-ledger",
+      "change_count": 11,
+      "categories": {
+        "DERIVED_DIGEST_OR_OBLIGATION_RESEAL": 11
+      },
+      "unclassified_changes": []
+    },
+    {
+      "case_id": "intent-not-locally-committed",
+      "change_count": 11,
+      "categories": {
+        "DERIVED_DIGEST_OR_OBLIGATION_RESEAL": 11
+      },
+      "unclassified_changes": []
+    },
+    {
+      "case_id": "attempt-limit-four",
+      "change_count": 11,
+      "categories": {
+        "DERIVED_DIGEST_OR_OBLIGATION_RESEAL": 11
+      },
+      "unclassified_changes": []
+    },
+    {
+      "case_id": "old-observation-reuse",
+      "change_count": 17,
+      "categories": {
+        "DERIVED_DIGEST_OR_OBLIGATION_RESEAL": 17
+      },
+      "unclassified_changes": []
+    },
+    {
+      "case_id": "resolved-chain-successor",
+      "change_count": 18,
+      "categories": {
+        "DERIVED_DIGEST_OR_OBLIGATION_RESEAL": 18
+      },
+      "unclassified_changes": []
+    },
+    {
+      "case_id": "resolution-fork",
+      "change_count": 17,
+      "categories": {
+        "DERIVED_DIGEST_OR_OBLIGATION_RESEAL": 17
+      },
+      "unclassified_changes": []
+    },
+    {
+      "case_id": "resolution-cycle",
+      "change_count": 11,
+      "categories": {
+        "DERIVED_DIGEST_OR_OBLIGATION_RESEAL": 11
+      },
+      "unclassified_changes": []
+    },
+    {
+      "case_id": "source-only-unknown-denominator",
+      "change_count": 0,
+      "categories": {},
+      "unclassified_changes": []
+    },
+    {
+      "case_id": "source-only-zero-actions",
+      "change_count": 0,
+      "categories": {},
+      "unclassified_changes": []
+    }
+  ],
+  "summary": {
+    "core_trigger_cases": 42,
+    "core_triggers_retained": 42,
+    "projection_cases_reviewed": 42,
+    "unclassified_changes": 0
+  }
+}

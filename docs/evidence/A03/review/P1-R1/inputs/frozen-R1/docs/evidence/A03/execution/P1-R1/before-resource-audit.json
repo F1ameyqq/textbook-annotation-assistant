@@ -1,0 +1,1886 @@
+{
+  "audit": "a03-p1-r1-independent-resource-closure-1",
+  "scope": "STATIC_ONLY_NO_RECOVERY_OR_BUSINESS_IMPORTS",
+  "root": "C:\\Users\\ASUS\\.codex\\worktrees\\a03-runtime-recovery\\1800\\docs\\evidence\\A03\\execution\\P1-R1\\before\\P1",
+  "case_count": 2,
+  "consumer_rule": "Each consumer independently declares all ordinary refs in its payload and Resource/evidence-ID closure.",
+  "dedup_rule": "Per consumer after byte verification; active resource expansion and combined artifact DAG cycles reject.",
+  "evidence_id_fields": [
+    "after_evidence_refs",
+    "before_evidence_refs",
+    "evidence_refs",
+    "submission_evidence_refs"
+  ],
+  "limitations": [
+    "Not a full JSON Schema validator, admission/authorization proof, or runtime/API implementation.",
+    "Only exact formal EvidenceRecord-ID fields are followed; arbitrary strings are not references.",
+    "No target reads, intent commits, fact commits, functional tests, network, or database actions.",
+    "Evidence records not consumed by any artifact are outside this consumer-closure audit."
+  ],
+  "results": [
+    {
+      "case_id": "normal",
+      "case_path": "C:\\Users\\ASUS\\.codex\\worktrees\\a03-runtime-recovery\\1800\\docs\\evidence\\A03\\execution\\P1-R1\\before\\P1\\cases\\normal.json",
+      "case_sha256": "820320f522521f249795534dd4f50cd33e6d43cc52e6fc1d954b0483ddb4b12a",
+      "artifact_count": 18,
+      "artifact_dependency_edges": 49,
+      "consumer_stats": [
+        {
+          "consumer": {
+            "artifact_id": "a02-source",
+            "revision": 1,
+            "kind": "SourceBundle"
+          },
+          "book_id": "synthetic-book",
+          "scope_id": "synthetic-scope",
+          "declared_ref_count": 0,
+          "ordinary_ref_occurrences": 0,
+          "referenced_artifacts": [],
+          "resource_occurrences": 8,
+          "resources_expanded": 6,
+          "resource_paths": [
+            "assets/asset-page-a1.pgm",
+            "assets/asset-page-a2.pgm",
+            "assets/asset-page-b1.pgm",
+            "assets/fixture-scope-proof.json",
+            "assets/history.json",
+            "assets/proof-source.txt"
+          ],
+          "resource_reuses": 2,
+          "resource_bytes_verified": 25856,
+          "json_resources": 2,
+          "non_json_resources": 4,
+          "evidence_id_occurrences": 3,
+          "evidence_ids": [
+            "proof-source"
+          ],
+          "violation_count": 0
+        },
+        {
+          "consumer": {
+            "artifact_id": "a02-evidence",
+            "revision": 1,
+            "kind": "EvidenceBundle"
+          },
+          "book_id": "synthetic-book",
+          "scope_id": "synthetic-scope",
+          "declared_ref_count": 1,
+          "ordinary_ref_occurrences": 2,
+          "referenced_artifacts": [
+            {
+              "artifact_id": "a02-source",
+              "revision": 1,
+              "kind": "SourceBundle"
+            }
+          ],
+          "resource_occurrences": 16,
+          "resources_expanded": 1,
+          "resource_paths": [
+            "assets/proof-geometry.txt"
+          ],
+          "resource_reuses": 15,
+          "resource_bytes_verified": 86,
+          "json_resources": 0,
+          "non_json_resources": 1,
+          "evidence_id_occurrences": 16,
+          "evidence_ids": [
+            "proof-geometry"
+          ],
+          "violation_count": 0
+        },
+        {
+          "consumer": {
+            "artifact_id": "a02-graph",
+            "revision": 1,
+            "kind": "QuestionGraph"
+          },
+          "book_id": "synthetic-book",
+          "scope_id": "synthetic-scope",
+          "declared_ref_count": 2,
+          "ordinary_ref_occurrences": 4,
+          "referenced_artifacts": [
+            {
+              "artifact_id": "a02-evidence",
+              "revision": 1,
+              "kind": "EvidenceBundle"
+            },
+            {
+              "artifact_id": "a02-source",
+              "revision": 1,
+              "kind": "SourceBundle"
+            }
+          ],
+          "resource_occurrences": 3,
+          "resources_expanded": 1,
+          "resource_paths": [
+            "assets/proof-checks.txt"
+          ],
+          "resource_reuses": 2,
+          "resource_bytes_verified": 59,
+          "json_resources": 0,
+          "non_json_resources": 1,
+          "evidence_id_occurrences": 3,
+          "evidence_ids": [
+            "proof-checks"
+          ],
+          "violation_count": 0
+        },
+        {
+          "consumer": {
+            "artifact_id": "a02-snapshot",
+            "revision": 1,
+            "kind": "PlatformSnapshot"
+          },
+          "book_id": "synthetic-book",
+          "scope_id": "synthetic-scope",
+          "declared_ref_count": 1,
+          "ordinary_ref_occurrences": 1,
+          "referenced_artifacts": [
+            {
+              "artifact_id": "a02-source",
+              "revision": 1,
+              "kind": "SourceBundle"
+            }
+          ],
+          "resource_occurrences": 3,
+          "resources_expanded": 1,
+          "resource_paths": [
+            "assets/proof-target.txt"
+          ],
+          "resource_reuses": 2,
+          "resource_bytes_verified": 53,
+          "json_resources": 0,
+          "non_json_resources": 1,
+          "evidence_id_occurrences": 3,
+          "evidence_ids": [
+            "proof-target"
+          ],
+          "violation_count": 0
+        },
+        {
+          "consumer": {
+            "artifact_id": "a02-precheck-stub",
+            "revision": 1,
+            "kind": "CheckReport"
+          },
+          "book_id": "synthetic-book",
+          "scope_id": "synthetic-scope",
+          "declared_ref_count": 1,
+          "ordinary_ref_occurrences": 3,
+          "referenced_artifacts": [
+            {
+              "artifact_id": "a02-graph",
+              "revision": 1,
+              "kind": "QuestionGraph"
+            }
+          ],
+          "resource_occurrences": 5,
+          "resources_expanded": 1,
+          "resource_paths": [
+            "assets/proof-checks.txt"
+          ],
+          "resource_reuses": 4,
+          "resource_bytes_verified": 59,
+          "json_resources": 0,
+          "non_json_resources": 1,
+          "evidence_id_occurrences": 5,
+          "evidence_ids": [
+            "proof-checks"
+          ],
+          "violation_count": 0
+        },
+        {
+          "consumer": {
+            "artifact_id": "a02-targetcheck",
+            "revision": 1,
+            "kind": "CheckReport"
+          },
+          "book_id": "synthetic-book",
+          "scope_id": "synthetic-scope",
+          "declared_ref_count": 2,
+          "ordinary_ref_occurrences": 5,
+          "referenced_artifacts": [
+            {
+              "artifact_id": "a02-graph",
+              "revision": 1,
+              "kind": "QuestionGraph"
+            },
+            {
+              "artifact_id": "a02-snapshot",
+              "revision": 1,
+              "kind": "PlatformSnapshot"
+            }
+          ],
+          "resource_occurrences": 5,
+          "resources_expanded": 1,
+          "resource_paths": [
+            "assets/proof-target.txt"
+          ],
+          "resource_reuses": 4,
+          "resource_bytes_verified": 53,
+          "json_resources": 0,
+          "non_json_resources": 1,
+          "evidence_id_occurrences": 5,
+          "evidence_ids": [
+            "proof-target"
+          ],
+          "violation_count": 0
+        },
+        {
+          "consumer": {
+            "artifact_id": "a02-plan",
+            "revision": 1,
+            "kind": "ApplyPlan"
+          },
+          "book_id": "synthetic-book",
+          "scope_id": "synthetic-scope",
+          "declared_ref_count": 4,
+          "ordinary_ref_occurrences": 8,
+          "referenced_artifacts": [
+            {
+              "artifact_id": "a02-graph",
+              "revision": 1,
+              "kind": "QuestionGraph"
+            },
+            {
+              "artifact_id": "a02-precheck-stub",
+              "revision": 1,
+              "kind": "CheckReport"
+            },
+            {
+              "artifact_id": "a02-snapshot",
+              "revision": 1,
+              "kind": "PlatformSnapshot"
+            },
+            {
+              "artifact_id": "a02-targetcheck",
+              "revision": 1,
+              "kind": "CheckReport"
+            }
+          ],
+          "resource_occurrences": 0,
+          "resources_expanded": 0,
+          "resource_paths": [],
+          "resource_reuses": 0,
+          "resource_bytes_verified": 0,
+          "json_resources": 0,
+          "non_json_resources": 0,
+          "evidence_id_occurrences": 0,
+          "evidence_ids": [],
+          "violation_count": 0
+        },
+        {
+          "consumer": {
+            "artifact_id": "intent-design-1",
+            "revision": 1,
+            "kind": "WriteIntent"
+          },
+          "book_id": "synthetic-book",
+          "scope_id": "synthetic-scope",
+          "declared_ref_count": 3,
+          "ordinary_ref_occurrences": 7,
+          "referenced_artifacts": [
+            {
+              "artifact_id": "a02-plan",
+              "revision": 1,
+              "kind": "ApplyPlan"
+            },
+            {
+              "artifact_id": "a02-snapshot",
+              "revision": 1,
+              "kind": "PlatformSnapshot"
+            },
+            {
+              "artifact_id": "a02-source",
+              "revision": 1,
+              "kind": "SourceBundle"
+            }
+          ],
+          "resource_occurrences": 4,
+          "resources_expanded": 2,
+          "resource_paths": [
+            "assets/prepared-before-1.json",
+            "assets/proof-target.txt"
+          ],
+          "resource_reuses": 2,
+          "resource_bytes_verified": 3034,
+          "json_resources": 1,
+          "non_json_resources": 1,
+          "evidence_id_occurrences": 3,
+          "evidence_ids": [
+            "proof-target"
+          ],
+          "violation_count": 0
+        },
+        {
+          "consumer": {
+            "artifact_id": "intent-design-2",
+            "revision": 1,
+            "kind": "WriteIntent"
+          },
+          "book_id": "synthetic-book",
+          "scope_id": "synthetic-scope",
+          "declared_ref_count": 3,
+          "ordinary_ref_occurrences": 7,
+          "referenced_artifacts": [
+            {
+              "artifact_id": "a02-plan",
+              "revision": 1,
+              "kind": "ApplyPlan"
+            },
+            {
+              "artifact_id": "a02-snapshot",
+              "revision": 1,
+              "kind": "PlatformSnapshot"
+            },
+            {
+              "artifact_id": "a02-source",
+              "revision": 1,
+              "kind": "SourceBundle"
+            }
+          ],
+          "resource_occurrences": 4,
+          "resources_expanded": 2,
+          "resource_paths": [
+            "assets/prepared-before-2.json",
+            "assets/proof-target.txt"
+          ],
+          "resource_reuses": 2,
+          "resource_bytes_verified": 7765,
+          "json_resources": 1,
+          "non_json_resources": 1,
+          "evidence_id_occurrences": 3,
+          "evidence_ids": [
+            "proof-target"
+          ],
+          "violation_count": 0
+        },
+        {
+          "consumer": {
+            "artifact_id": "intent-design-3",
+            "revision": 1,
+            "kind": "WriteIntent"
+          },
+          "book_id": "synthetic-book",
+          "scope_id": "synthetic-scope",
+          "declared_ref_count": 3,
+          "ordinary_ref_occurrences": 7,
+          "referenced_artifacts": [
+            {
+              "artifact_id": "a02-plan",
+              "revision": 1,
+              "kind": "ApplyPlan"
+            },
+            {
+              "artifact_id": "a02-snapshot",
+              "revision": 1,
+              "kind": "PlatformSnapshot"
+            },
+            {
+              "artifact_id": "a02-source",
+              "revision": 1,
+              "kind": "SourceBundle"
+            }
+          ],
+          "resource_occurrences": 4,
+          "resources_expanded": 2,
+          "resource_paths": [
+            "assets/prepared-before-3.json",
+            "assets/proof-target.txt"
+          ],
+          "resource_reuses": 2,
+          "resource_bytes_verified": 11404,
+          "json_resources": 1,
+          "non_json_resources": 1,
+          "evidence_id_occurrences": 3,
+          "evidence_ids": [
+            "proof-target"
+          ],
+          "violation_count": 0
+        },
+        {
+          "consumer": {
+            "artifact_id": "snapshot-action-result-1",
+            "revision": 1,
+            "kind": "PlatformSnapshot"
+          },
+          "book_id": "synthetic-book",
+          "scope_id": "synthetic-scope",
+          "declared_ref_count": 1,
+          "ordinary_ref_occurrences": 1,
+          "referenced_artifacts": [
+            {
+              "artifact_id": "a02-source",
+              "revision": 1,
+              "kind": "SourceBundle"
+            }
+          ],
+          "resource_occurrences": 3,
+          "resources_expanded": 1,
+          "resource_paths": [
+            "assets/proof-target.txt"
+          ],
+          "resource_reuses": 2,
+          "resource_bytes_verified": 53,
+          "json_resources": 0,
+          "non_json_resources": 1,
+          "evidence_id_occurrences": 3,
+          "evidence_ids": [
+            "proof-target"
+          ],
+          "violation_count": 0
+        },
+        {
+          "consumer": {
+            "artifact_id": "snapshot-action-result-2",
+            "revision": 1,
+            "kind": "PlatformSnapshot"
+          },
+          "book_id": "synthetic-book",
+          "scope_id": "synthetic-scope",
+          "declared_ref_count": 1,
+          "ordinary_ref_occurrences": 1,
+          "referenced_artifacts": [
+            {
+              "artifact_id": "a02-source",
+              "revision": 1,
+              "kind": "SourceBundle"
+            }
+          ],
+          "resource_occurrences": 3,
+          "resources_expanded": 1,
+          "resource_paths": [
+            "assets/proof-target.txt"
+          ],
+          "resource_reuses": 2,
+          "resource_bytes_verified": 53,
+          "json_resources": 0,
+          "non_json_resources": 1,
+          "evidence_id_occurrences": 3,
+          "evidence_ids": [
+            "proof-target"
+          ],
+          "violation_count": 0
+        },
+        {
+          "consumer": {
+            "artifact_id": "snapshot-action-result-3",
+            "revision": 1,
+            "kind": "PlatformSnapshot"
+          },
+          "book_id": "synthetic-book",
+          "scope_id": "synthetic-scope",
+          "declared_ref_count": 1,
+          "ordinary_ref_occurrences": 1,
+          "referenced_artifacts": [
+            {
+              "artifact_id": "a02-source",
+              "revision": 1,
+              "kind": "SourceBundle"
+            }
+          ],
+          "resource_occurrences": 3,
+          "resources_expanded": 1,
+          "resource_paths": [
+            "assets/proof-target.txt"
+          ],
+          "resource_reuses": 2,
+          "resource_bytes_verified": 53,
+          "json_resources": 0,
+          "non_json_resources": 1,
+          "evidence_id_occurrences": 3,
+          "evidence_ids": [
+            "proof-target"
+          ],
+          "violation_count": 0
+        },
+        {
+          "consumer": {
+            "artifact_id": "snapshot-normal",
+            "revision": 1,
+            "kind": "PlatformSnapshot"
+          },
+          "book_id": "synthetic-book",
+          "scope_id": "synthetic-scope",
+          "declared_ref_count": 1,
+          "ordinary_ref_occurrences": 1,
+          "referenced_artifacts": [
+            {
+              "artifact_id": "a02-source",
+              "revision": 1,
+              "kind": "SourceBundle"
+            }
+          ],
+          "resource_occurrences": 3,
+          "resources_expanded": 1,
+          "resource_paths": [
+            "assets/proof-target.txt"
+          ],
+          "resource_reuses": 2,
+          "resource_bytes_verified": 53,
+          "json_resources": 0,
+          "non_json_resources": 1,
+          "evidence_id_occurrences": 3,
+          "evidence_ids": [
+            "proof-target"
+          ],
+          "violation_count": 0
+        },
+        {
+          "consumer": {
+            "artifact_id": "receipt-design",
+            "revision": 1,
+            "kind": "ExecutionReceipt"
+          },
+          "book_id": "synthetic-book",
+          "scope_id": "synthetic-scope",
+          "declared_ref_count": 4,
+          "ordinary_ref_occurrences": 26,
+          "referenced_artifacts": [
+            {
+              "artifact_id": "a02-plan",
+              "revision": 1,
+              "kind": "ApplyPlan"
+            },
+            {
+              "artifact_id": "a02-source",
+              "revision": 1,
+              "kind": "SourceBundle"
+            },
+            {
+              "artifact_id": "intent-design-1",
+              "revision": 1,
+              "kind": "WriteIntent"
+            },
+            {
+              "artifact_id": "intent-design-2",
+              "revision": 1,
+              "kind": "WriteIntent"
+            },
+            {
+              "artifact_id": "intent-design-3",
+              "revision": 1,
+              "kind": "WriteIntent"
+            },
+            {
+              "artifact_id": "snapshot-action-result-1",
+              "revision": 1,
+              "kind": "PlatformSnapshot"
+            },
+            {
+              "artifact_id": "snapshot-action-result-2",
+              "revision": 1,
+              "kind": "PlatformSnapshot"
+            },
+            {
+              "artifact_id": "snapshot-action-result-3",
+              "revision": 1,
+              "kind": "PlatformSnapshot"
+            }
+          ],
+          "resource_occurrences": 51,
+          "resources_expanded": 13,
+          "resource_paths": [
+            "assets/action-fact-normal-1.json",
+            "assets/action-fact-normal-2.json",
+            "assets/action-fact-normal-3.json",
+            "assets/design-facts.json",
+            "assets/observation-action-result-1.json",
+            "assets/observation-action-result-2.json",
+            "assets/observation-action-result-3.json",
+            "assets/prepared-before-1.json",
+            "assets/prepared-before-2.json",
+            "assets/prepared-before-3.json",
+            "assets/proof-after.txt",
+            "assets/proof-before.txt",
+            "assets/proof-target.txt"
+          ],
+          "resource_reuses": 38,
+          "resource_bytes_verified": 79727,
+          "json_resources": 10,
+          "non_json_resources": 3,
+          "evidence_id_occurrences": 30,
+          "evidence_ids": [
+            "proof-after",
+            "proof-before",
+            "proof-target"
+          ],
+          "violation_count": 9
+        },
+        {
+          "consumer": {
+            "artifact_id": "progress-design",
+            "revision": 1,
+            "kind": "ExecutionProgress"
+          },
+          "book_id": "synthetic-book",
+          "scope_id": "synthetic-scope",
+          "declared_ref_count": 5,
+          "ordinary_ref_occurrences": 30,
+          "referenced_artifacts": [
+            {
+              "artifact_id": "a02-plan",
+              "revision": 1,
+              "kind": "ApplyPlan"
+            },
+            {
+              "artifact_id": "a02-source",
+              "revision": 1,
+              "kind": "SourceBundle"
+            },
+            {
+              "artifact_id": "intent-design-1",
+              "revision": 1,
+              "kind": "WriteIntent"
+            },
+            {
+              "artifact_id": "intent-design-2",
+              "revision": 1,
+              "kind": "WriteIntent"
+            },
+            {
+              "artifact_id": "intent-design-3",
+              "revision": 1,
+              "kind": "WriteIntent"
+            },
+            {
+              "artifact_id": "receipt-design",
+              "revision": 1,
+              "kind": "ExecutionReceipt"
+            },
+            {
+              "artifact_id": "snapshot-action-result-1",
+              "revision": 1,
+              "kind": "PlatformSnapshot"
+            },
+            {
+              "artifact_id": "snapshot-action-result-2",
+              "revision": 1,
+              "kind": "PlatformSnapshot"
+            },
+            {
+              "artifact_id": "snapshot-action-result-3",
+              "revision": 1,
+              "kind": "PlatformSnapshot"
+            }
+          ],
+          "resource_occurrences": 42,
+          "resources_expanded": 13,
+          "resource_paths": [
+            "assets/action-fact-normal-1.json",
+            "assets/action-fact-normal-2.json",
+            "assets/action-fact-normal-3.json",
+            "assets/design-facts.json",
+            "assets/observation-action-result-1.json",
+            "assets/observation-action-result-2.json",
+            "assets/observation-action-result-3.json",
+            "assets/prepared-before-1.json",
+            "assets/prepared-before-2.json",
+            "assets/prepared-before-3.json",
+            "assets/proof-after.txt",
+            "assets/proof-before.txt",
+            "assets/proof-target.txt"
+          ],
+          "resource_reuses": 29,
+          "resource_bytes_verified": 79727,
+          "json_resources": 10,
+          "non_json_resources": 3,
+          "evidence_id_occurrences": 24,
+          "evidence_ids": [
+            "proof-after",
+            "proof-before",
+            "proof-target"
+          ],
+          "violation_count": 9
+        },
+        {
+          "consumer": {
+            "artifact_id": "postcheck-design",
+            "revision": 1,
+            "kind": "CheckReport"
+          },
+          "book_id": "synthetic-book",
+          "scope_id": "synthetic-scope",
+          "declared_ref_count": 3,
+          "ordinary_ref_occurrences": 7,
+          "referenced_artifacts": [
+            {
+              "artifact_id": "a02-graph",
+              "revision": 1,
+              "kind": "QuestionGraph"
+            },
+            {
+              "artifact_id": "receipt-design",
+              "revision": 1,
+              "kind": "ExecutionReceipt"
+            },
+            {
+              "artifact_id": "snapshot-normal",
+              "revision": 1,
+              "kind": "PlatformSnapshot"
+            }
+          ],
+          "resource_occurrences": 6,
+          "resources_expanded": 2,
+          "resource_paths": [
+            "assets/a02-795e3119ea05a3851cabb525ce300e0eff86c6d74aab85eb6528f3af7ab4055e.json",
+            "assets/proof-target.txt"
+          ],
+          "resource_reuses": 4,
+          "resource_bytes_verified": 12298,
+          "json_resources": 1,
+          "non_json_resources": 1,
+          "evidence_id_occurrences": 6,
+          "evidence_ids": [
+            "proof-a02-1-2-readback",
+            "proof-target"
+          ],
+          "violation_count": 0
+        },
+        {
+          "consumer": {
+            "artifact_id": "batch-design",
+            "revision": 1,
+            "kind": "BatchReport"
+          },
+          "book_id": "synthetic-book",
+          "scope_id": "synthetic-scope",
+          "declared_ref_count": 5,
+          "ordinary_ref_occurrences": 10,
+          "referenced_artifacts": [
+            {
+              "artifact_id": "a02-graph",
+              "revision": 1,
+              "kind": "QuestionGraph"
+            },
+            {
+              "artifact_id": "a02-source",
+              "revision": 1,
+              "kind": "SourceBundle"
+            },
+            {
+              "artifact_id": "postcheck-design",
+              "revision": 1,
+              "kind": "CheckReport"
+            },
+            {
+              "artifact_id": "progress-design",
+              "revision": 1,
+              "kind": "ExecutionProgress"
+            },
+            {
+              "artifact_id": "receipt-design",
+              "revision": 1,
+              "kind": "ExecutionReceipt"
+            }
+          ],
+          "resource_occurrences": 0,
+          "resources_expanded": 0,
+          "resource_paths": [],
+          "resource_reuses": 0,
+          "resource_bytes_verified": 0,
+          "json_resources": 0,
+          "non_json_resources": 0,
+          "evidence_id_occurrences": 0,
+          "evidence_ids": [],
+          "violation_count": 0
+        }
+      ],
+      "violations": [
+        {
+          "case_id": "normal",
+          "consumer": {
+            "artifact_id": "receipt-design",
+            "revision": 1,
+            "kind": "ExecutionReceipt"
+          },
+          "location": "payload/results/0/readback -> assets/observation-action-result-1.json#/source_ref",
+          "resource": "assets/observation-action-result-1.json",
+          "code": "UNDECLARED_REFERENCE",
+          "expected": "exact four-tuple in this consumer.input_refs",
+          "actual": {
+            "artifact_id": "a02-source",
+            "revision": 1,
+            "kind": "SourceBundle",
+            "content_hash": "f72b761eb850b5917c12e891f5e9da6fe2c9fceecf2122fa9c6c64ea173adaef"
+          }
+        },
+        {
+          "case_id": "normal",
+          "consumer": {
+            "artifact_id": "receipt-design",
+            "revision": 1,
+            "kind": "ExecutionReceipt"
+          },
+          "location": "payload/results/1/readback -> assets/observation-action-result-2.json#/source_ref",
+          "resource": "assets/observation-action-result-2.json",
+          "code": "UNDECLARED_REFERENCE",
+          "expected": "exact four-tuple in this consumer.input_refs",
+          "actual": {
+            "artifact_id": "a02-source",
+            "revision": 1,
+            "kind": "SourceBundle",
+            "content_hash": "f72b761eb850b5917c12e891f5e9da6fe2c9fceecf2122fa9c6c64ea173adaef"
+          }
+        },
+        {
+          "case_id": "normal",
+          "consumer": {
+            "artifact_id": "receipt-design",
+            "revision": 1,
+            "kind": "ExecutionReceipt"
+          },
+          "location": "payload/results/2/readback -> assets/observation-action-result-3.json#/source_ref",
+          "resource": "assets/observation-action-result-3.json",
+          "code": "UNDECLARED_REFERENCE",
+          "expected": "exact four-tuple in this consumer.input_refs",
+          "actual": {
+            "artifact_id": "a02-source",
+            "revision": 1,
+            "kind": "SourceBundle",
+            "content_hash": "f72b761eb850b5917c12e891f5e9da6fe2c9fceecf2122fa9c6c64ea173adaef"
+          }
+        },
+        {
+          "case_id": "normal",
+          "consumer": {
+            "artifact_id": "receipt-design",
+            "revision": 1,
+            "kind": "ExecutionReceipt"
+          },
+          "location": "payload/action_fact_refs/0 -> assets/action-fact-normal-1.json#/prepared_before -> assets/prepared-before-1.json#/source_ref",
+          "resource": "assets/prepared-before-1.json",
+          "code": "UNDECLARED_REFERENCE",
+          "expected": "exact four-tuple in this consumer.input_refs",
+          "actual": {
+            "artifact_id": "a02-source",
+            "revision": 1,
+            "kind": "SourceBundle",
+            "content_hash": "f72b761eb850b5917c12e891f5e9da6fe2c9fceecf2122fa9c6c64ea173adaef"
+          }
+        },
+        {
+          "case_id": "normal",
+          "consumer": {
+            "artifact_id": "receipt-design",
+            "revision": 1,
+            "kind": "ExecutionReceipt"
+          },
+          "location": "payload/action_fact_refs/0 -> assets/action-fact-normal-1.json#/observed_snapshot_ref",
+          "resource": "assets/action-fact-normal-1.json",
+          "code": "UNDECLARED_REFERENCE",
+          "expected": "exact four-tuple in this consumer.input_refs",
+          "actual": {
+            "artifact_id": "snapshot-action-result-1",
+            "revision": 1,
+            "kind": "PlatformSnapshot",
+            "content_hash": "7a8a8391b35eb1aecd7528bc4bfcc739f41f4720b9becae9f9937ffe421fe251"
+          }
+        },
+        {
+          "case_id": "normal",
+          "consumer": {
+            "artifact_id": "receipt-design",
+            "revision": 1,
+            "kind": "ExecutionReceipt"
+          },
+          "location": "payload/action_fact_refs/1 -> assets/action-fact-normal-2.json#/prepared_before -> assets/prepared-before-2.json#/source_ref",
+          "resource": "assets/prepared-before-2.json",
+          "code": "UNDECLARED_REFERENCE",
+          "expected": "exact four-tuple in this consumer.input_refs",
+          "actual": {
+            "artifact_id": "a02-source",
+            "revision": 1,
+            "kind": "SourceBundle",
+            "content_hash": "f72b761eb850b5917c12e891f5e9da6fe2c9fceecf2122fa9c6c64ea173adaef"
+          }
+        },
+        {
+          "case_id": "normal",
+          "consumer": {
+            "artifact_id": "receipt-design",
+            "revision": 1,
+            "kind": "ExecutionReceipt"
+          },
+          "location": "payload/action_fact_refs/1 -> assets/action-fact-normal-2.json#/observed_snapshot_ref",
+          "resource": "assets/action-fact-normal-2.json",
+          "code": "UNDECLARED_REFERENCE",
+          "expected": "exact four-tuple in this consumer.input_refs",
+          "actual": {
+            "artifact_id": "snapshot-action-result-2",
+            "revision": 1,
+            "kind": "PlatformSnapshot",
+            "content_hash": "eab5ca57e202eb3f6695d5765035eb3653a52a8e447b2c37ba6c7736e9e987b3"
+          }
+        },
+        {
+          "case_id": "normal",
+          "consumer": {
+            "artifact_id": "receipt-design",
+            "revision": 1,
+            "kind": "ExecutionReceipt"
+          },
+          "location": "payload/action_fact_refs/2 -> assets/action-fact-normal-3.json#/prepared_before -> assets/prepared-before-3.json#/source_ref",
+          "resource": "assets/prepared-before-3.json",
+          "code": "UNDECLARED_REFERENCE",
+          "expected": "exact four-tuple in this consumer.input_refs",
+          "actual": {
+            "artifact_id": "a02-source",
+            "revision": 1,
+            "kind": "SourceBundle",
+            "content_hash": "f72b761eb850b5917c12e891f5e9da6fe2c9fceecf2122fa9c6c64ea173adaef"
+          }
+        },
+        {
+          "case_id": "normal",
+          "consumer": {
+            "artifact_id": "receipt-design",
+            "revision": 1,
+            "kind": "ExecutionReceipt"
+          },
+          "location": "payload/action_fact_refs/2 -> assets/action-fact-normal-3.json#/observed_snapshot_ref",
+          "resource": "assets/action-fact-normal-3.json",
+          "code": "UNDECLARED_REFERENCE",
+          "expected": "exact four-tuple in this consumer.input_refs",
+          "actual": {
+            "artifact_id": "snapshot-action-result-3",
+            "revision": 1,
+            "kind": "PlatformSnapshot",
+            "content_hash": "8777442ceab990f456514e90de829ec160d38e5376d3bf1d7e7edf09fed9a629"
+          }
+        },
+        {
+          "case_id": "normal",
+          "consumer": {
+            "artifact_id": "progress-design",
+            "revision": 1,
+            "kind": "ExecutionProgress"
+          },
+          "location": "payload/actions/0/result_fact -> assets/action-fact-normal-1.json#/prepared_before -> assets/prepared-before-1.json#/source_ref",
+          "resource": "assets/prepared-before-1.json",
+          "code": "UNDECLARED_REFERENCE",
+          "expected": "exact four-tuple in this consumer.input_refs",
+          "actual": {
+            "artifact_id": "a02-source",
+            "revision": 1,
+            "kind": "SourceBundle",
+            "content_hash": "f72b761eb850b5917c12e891f5e9da6fe2c9fceecf2122fa9c6c64ea173adaef"
+          }
+        },
+        {
+          "case_id": "normal",
+          "consumer": {
+            "artifact_id": "progress-design",
+            "revision": 1,
+            "kind": "ExecutionProgress"
+          },
+          "location": "payload/actions/0/result_fact -> assets/action-fact-normal-1.json#/observed_snapshot_ref",
+          "resource": "assets/action-fact-normal-1.json",
+          "code": "UNDECLARED_REFERENCE",
+          "expected": "exact four-tuple in this consumer.input_refs",
+          "actual": {
+            "artifact_id": "snapshot-action-result-1",
+            "revision": 1,
+            "kind": "PlatformSnapshot",
+            "content_hash": "7a8a8391b35eb1aecd7528bc4bfcc739f41f4720b9becae9f9937ffe421fe251"
+          }
+        },
+        {
+          "case_id": "normal",
+          "consumer": {
+            "artifact_id": "progress-design",
+            "revision": 1,
+            "kind": "ExecutionProgress"
+          },
+          "location": "payload/actions/0/result_fact -> assets/action-fact-normal-1.json#/readback -> assets/observation-action-result-1.json#/source_ref",
+          "resource": "assets/observation-action-result-1.json",
+          "code": "UNDECLARED_REFERENCE",
+          "expected": "exact four-tuple in this consumer.input_refs",
+          "actual": {
+            "artifact_id": "a02-source",
+            "revision": 1,
+            "kind": "SourceBundle",
+            "content_hash": "f72b761eb850b5917c12e891f5e9da6fe2c9fceecf2122fa9c6c64ea173adaef"
+          }
+        },
+        {
+          "case_id": "normal",
+          "consumer": {
+            "artifact_id": "progress-design",
+            "revision": 1,
+            "kind": "ExecutionProgress"
+          },
+          "location": "payload/actions/1/result_fact -> assets/action-fact-normal-2.json#/prepared_before -> assets/prepared-before-2.json#/source_ref",
+          "resource": "assets/prepared-before-2.json",
+          "code": "UNDECLARED_REFERENCE",
+          "expected": "exact four-tuple in this consumer.input_refs",
+          "actual": {
+            "artifact_id": "a02-source",
+            "revision": 1,
+            "kind": "SourceBundle",
+            "content_hash": "f72b761eb850b5917c12e891f5e9da6fe2c9fceecf2122fa9c6c64ea173adaef"
+          }
+        },
+        {
+          "case_id": "normal",
+          "consumer": {
+            "artifact_id": "progress-design",
+            "revision": 1,
+            "kind": "ExecutionProgress"
+          },
+          "location": "payload/actions/1/result_fact -> assets/action-fact-normal-2.json#/observed_snapshot_ref",
+          "resource": "assets/action-fact-normal-2.json",
+          "code": "UNDECLARED_REFERENCE",
+          "expected": "exact four-tuple in this consumer.input_refs",
+          "actual": {
+            "artifact_id": "snapshot-action-result-2",
+            "revision": 1,
+            "kind": "PlatformSnapshot",
+            "content_hash": "eab5ca57e202eb3f6695d5765035eb3653a52a8e447b2c37ba6c7736e9e987b3"
+          }
+        },
+        {
+          "case_id": "normal",
+          "consumer": {
+            "artifact_id": "progress-design",
+            "revision": 1,
+            "kind": "ExecutionProgress"
+          },
+          "location": "payload/actions/1/result_fact -> assets/action-fact-normal-2.json#/readback -> assets/observation-action-result-2.json#/source_ref",
+          "resource": "assets/observation-action-result-2.json",
+          "code": "UNDECLARED_REFERENCE",
+          "expected": "exact four-tuple in this consumer.input_refs",
+          "actual": {
+            "artifact_id": "a02-source",
+            "revision": 1,
+            "kind": "SourceBundle",
+            "content_hash": "f72b761eb850b5917c12e891f5e9da6fe2c9fceecf2122fa9c6c64ea173adaef"
+          }
+        },
+        {
+          "case_id": "normal",
+          "consumer": {
+            "artifact_id": "progress-design",
+            "revision": 1,
+            "kind": "ExecutionProgress"
+          },
+          "location": "payload/actions/2/result_fact -> assets/action-fact-normal-3.json#/prepared_before -> assets/prepared-before-3.json#/source_ref",
+          "resource": "assets/prepared-before-3.json",
+          "code": "UNDECLARED_REFERENCE",
+          "expected": "exact four-tuple in this consumer.input_refs",
+          "actual": {
+            "artifact_id": "a02-source",
+            "revision": 1,
+            "kind": "SourceBundle",
+            "content_hash": "f72b761eb850b5917c12e891f5e9da6fe2c9fceecf2122fa9c6c64ea173adaef"
+          }
+        },
+        {
+          "case_id": "normal",
+          "consumer": {
+            "artifact_id": "progress-design",
+            "revision": 1,
+            "kind": "ExecutionProgress"
+          },
+          "location": "payload/actions/2/result_fact -> assets/action-fact-normal-3.json#/observed_snapshot_ref",
+          "resource": "assets/action-fact-normal-3.json",
+          "code": "UNDECLARED_REFERENCE",
+          "expected": "exact four-tuple in this consumer.input_refs",
+          "actual": {
+            "artifact_id": "snapshot-action-result-3",
+            "revision": 1,
+            "kind": "PlatformSnapshot",
+            "content_hash": "8777442ceab990f456514e90de829ec160d38e5376d3bf1d7e7edf09fed9a629"
+          }
+        },
+        {
+          "case_id": "normal",
+          "consumer": {
+            "artifact_id": "progress-design",
+            "revision": 1,
+            "kind": "ExecutionProgress"
+          },
+          "location": "payload/actions/2/result_fact -> assets/action-fact-normal-3.json#/readback -> assets/observation-action-result-3.json#/source_ref",
+          "resource": "assets/observation-action-result-3.json",
+          "code": "UNDECLARED_REFERENCE",
+          "expected": "exact four-tuple in this consumer.input_refs",
+          "actual": {
+            "artifact_id": "a02-source",
+            "revision": 1,
+            "kind": "SourceBundle",
+            "content_hash": "f72b761eb850b5917c12e891f5e9da6fe2c9fceecf2122fa9c6c64ea173adaef"
+          }
+        }
+      ],
+      "static_result": "VIOLATIONS",
+      "future_behavior": "EXPECTED_NOT_EXECUTED"
+    },
+    {
+      "case_id": "partial-with-complete-absent",
+      "case_path": "C:\\Users\\ASUS\\.codex\\worktrees\\a03-runtime-recovery\\1800\\docs\\evidence\\A03\\execution\\P1-R1\\before\\P1\\cases\\partial-with-complete-absent.json",
+      "case_sha256": "e70149b7e628d747154832f956cc9e3d4b808ad9b455f65d963ab79fd6c657f3",
+      "artifact_count": 13,
+      "artifact_dependency_edges": 32,
+      "consumer_stats": [
+        {
+          "consumer": {
+            "artifact_id": "a02-source",
+            "revision": 1,
+            "kind": "SourceBundle"
+          },
+          "book_id": "synthetic-book",
+          "scope_id": "synthetic-scope",
+          "declared_ref_count": 0,
+          "ordinary_ref_occurrences": 0,
+          "referenced_artifacts": [],
+          "resource_occurrences": 8,
+          "resources_expanded": 6,
+          "resource_paths": [
+            "assets/asset-page-a1.pgm",
+            "assets/asset-page-a2.pgm",
+            "assets/asset-page-b1.pgm",
+            "assets/fixture-scope-proof.json",
+            "assets/history.json",
+            "assets/proof-source.txt"
+          ],
+          "resource_reuses": 2,
+          "resource_bytes_verified": 25856,
+          "json_resources": 2,
+          "non_json_resources": 4,
+          "evidence_id_occurrences": 3,
+          "evidence_ids": [
+            "proof-source"
+          ],
+          "violation_count": 0
+        },
+        {
+          "consumer": {
+            "artifact_id": "a02-evidence",
+            "revision": 1,
+            "kind": "EvidenceBundle"
+          },
+          "book_id": "synthetic-book",
+          "scope_id": "synthetic-scope",
+          "declared_ref_count": 1,
+          "ordinary_ref_occurrences": 2,
+          "referenced_artifacts": [
+            {
+              "artifact_id": "a02-source",
+              "revision": 1,
+              "kind": "SourceBundle"
+            }
+          ],
+          "resource_occurrences": 16,
+          "resources_expanded": 1,
+          "resource_paths": [
+            "assets/proof-geometry.txt"
+          ],
+          "resource_reuses": 15,
+          "resource_bytes_verified": 86,
+          "json_resources": 0,
+          "non_json_resources": 1,
+          "evidence_id_occurrences": 16,
+          "evidence_ids": [
+            "proof-geometry"
+          ],
+          "violation_count": 0
+        },
+        {
+          "consumer": {
+            "artifact_id": "a02-graph",
+            "revision": 1,
+            "kind": "QuestionGraph"
+          },
+          "book_id": "synthetic-book",
+          "scope_id": "synthetic-scope",
+          "declared_ref_count": 2,
+          "ordinary_ref_occurrences": 4,
+          "referenced_artifacts": [
+            {
+              "artifact_id": "a02-evidence",
+              "revision": 1,
+              "kind": "EvidenceBundle"
+            },
+            {
+              "artifact_id": "a02-source",
+              "revision": 1,
+              "kind": "SourceBundle"
+            }
+          ],
+          "resource_occurrences": 3,
+          "resources_expanded": 1,
+          "resource_paths": [
+            "assets/proof-checks.txt"
+          ],
+          "resource_reuses": 2,
+          "resource_bytes_verified": 59,
+          "json_resources": 0,
+          "non_json_resources": 1,
+          "evidence_id_occurrences": 3,
+          "evidence_ids": [
+            "proof-checks"
+          ],
+          "violation_count": 0
+        },
+        {
+          "consumer": {
+            "artifact_id": "a02-snapshot",
+            "revision": 1,
+            "kind": "PlatformSnapshot"
+          },
+          "book_id": "synthetic-book",
+          "scope_id": "synthetic-scope",
+          "declared_ref_count": 1,
+          "ordinary_ref_occurrences": 1,
+          "referenced_artifacts": [
+            {
+              "artifact_id": "a02-source",
+              "revision": 1,
+              "kind": "SourceBundle"
+            }
+          ],
+          "resource_occurrences": 3,
+          "resources_expanded": 1,
+          "resource_paths": [
+            "assets/proof-target.txt"
+          ],
+          "resource_reuses": 2,
+          "resource_bytes_verified": 53,
+          "json_resources": 0,
+          "non_json_resources": 1,
+          "evidence_id_occurrences": 3,
+          "evidence_ids": [
+            "proof-target"
+          ],
+          "violation_count": 0
+        },
+        {
+          "consumer": {
+            "artifact_id": "a02-precheck-stub",
+            "revision": 1,
+            "kind": "CheckReport"
+          },
+          "book_id": "synthetic-book",
+          "scope_id": "synthetic-scope",
+          "declared_ref_count": 1,
+          "ordinary_ref_occurrences": 3,
+          "referenced_artifacts": [
+            {
+              "artifact_id": "a02-graph",
+              "revision": 1,
+              "kind": "QuestionGraph"
+            }
+          ],
+          "resource_occurrences": 5,
+          "resources_expanded": 1,
+          "resource_paths": [
+            "assets/proof-checks.txt"
+          ],
+          "resource_reuses": 4,
+          "resource_bytes_verified": 59,
+          "json_resources": 0,
+          "non_json_resources": 1,
+          "evidence_id_occurrences": 5,
+          "evidence_ids": [
+            "proof-checks"
+          ],
+          "violation_count": 0
+        },
+        {
+          "consumer": {
+            "artifact_id": "a02-targetcheck",
+            "revision": 1,
+            "kind": "CheckReport"
+          },
+          "book_id": "synthetic-book",
+          "scope_id": "synthetic-scope",
+          "declared_ref_count": 2,
+          "ordinary_ref_occurrences": 5,
+          "referenced_artifacts": [
+            {
+              "artifact_id": "a02-graph",
+              "revision": 1,
+              "kind": "QuestionGraph"
+            },
+            {
+              "artifact_id": "a02-snapshot",
+              "revision": 1,
+              "kind": "PlatformSnapshot"
+            }
+          ],
+          "resource_occurrences": 5,
+          "resources_expanded": 1,
+          "resource_paths": [
+            "assets/proof-target.txt"
+          ],
+          "resource_reuses": 4,
+          "resource_bytes_verified": 53,
+          "json_resources": 0,
+          "non_json_resources": 1,
+          "evidence_id_occurrences": 5,
+          "evidence_ids": [
+            "proof-target"
+          ],
+          "violation_count": 0
+        },
+        {
+          "consumer": {
+            "artifact_id": "a02-plan",
+            "revision": 1,
+            "kind": "ApplyPlan"
+          },
+          "book_id": "synthetic-book",
+          "scope_id": "synthetic-scope",
+          "declared_ref_count": 4,
+          "ordinary_ref_occurrences": 8,
+          "referenced_artifacts": [
+            {
+              "artifact_id": "a02-graph",
+              "revision": 1,
+              "kind": "QuestionGraph"
+            },
+            {
+              "artifact_id": "a02-precheck-stub",
+              "revision": 1,
+              "kind": "CheckReport"
+            },
+            {
+              "artifact_id": "a02-snapshot",
+              "revision": 1,
+              "kind": "PlatformSnapshot"
+            },
+            {
+              "artifact_id": "a02-targetcheck",
+              "revision": 1,
+              "kind": "CheckReport"
+            }
+          ],
+          "resource_occurrences": 0,
+          "resources_expanded": 0,
+          "resource_paths": [],
+          "resource_reuses": 0,
+          "resource_bytes_verified": 0,
+          "json_resources": 0,
+          "non_json_resources": 0,
+          "evidence_id_occurrences": 0,
+          "evidence_ids": [],
+          "violation_count": 0
+        },
+        {
+          "consumer": {
+            "artifact_id": "intent-design-1",
+            "revision": 1,
+            "kind": "WriteIntent"
+          },
+          "book_id": "synthetic-book",
+          "scope_id": "synthetic-scope",
+          "declared_ref_count": 3,
+          "ordinary_ref_occurrences": 7,
+          "referenced_artifacts": [
+            {
+              "artifact_id": "a02-plan",
+              "revision": 1,
+              "kind": "ApplyPlan"
+            },
+            {
+              "artifact_id": "a02-snapshot",
+              "revision": 1,
+              "kind": "PlatformSnapshot"
+            },
+            {
+              "artifact_id": "a02-source",
+              "revision": 1,
+              "kind": "SourceBundle"
+            }
+          ],
+          "resource_occurrences": 4,
+          "resources_expanded": 2,
+          "resource_paths": [
+            "assets/prepared-before-1.json",
+            "assets/proof-target.txt"
+          ],
+          "resource_reuses": 2,
+          "resource_bytes_verified": 3034,
+          "json_resources": 1,
+          "non_json_resources": 1,
+          "evidence_id_occurrences": 3,
+          "evidence_ids": [
+            "proof-target"
+          ],
+          "violation_count": 0
+        },
+        {
+          "consumer": {
+            "artifact_id": "intent-design-2",
+            "revision": 1,
+            "kind": "WriteIntent"
+          },
+          "book_id": "synthetic-book",
+          "scope_id": "synthetic-scope",
+          "declared_ref_count": 3,
+          "ordinary_ref_occurrences": 7,
+          "referenced_artifacts": [
+            {
+              "artifact_id": "a02-plan",
+              "revision": 1,
+              "kind": "ApplyPlan"
+            },
+            {
+              "artifact_id": "a02-snapshot",
+              "revision": 1,
+              "kind": "PlatformSnapshot"
+            },
+            {
+              "artifact_id": "a02-source",
+              "revision": 1,
+              "kind": "SourceBundle"
+            }
+          ],
+          "resource_occurrences": 4,
+          "resources_expanded": 2,
+          "resource_paths": [
+            "assets/prepared-before-2.json",
+            "assets/proof-target.txt"
+          ],
+          "resource_reuses": 2,
+          "resource_bytes_verified": 7765,
+          "json_resources": 1,
+          "non_json_resources": 1,
+          "evidence_id_occurrences": 3,
+          "evidence_ids": [
+            "proof-target"
+          ],
+          "violation_count": 0
+        },
+        {
+          "consumer": {
+            "artifact_id": "snapshot-action-result-1",
+            "revision": 1,
+            "kind": "PlatformSnapshot"
+          },
+          "book_id": "synthetic-book",
+          "scope_id": "synthetic-scope",
+          "declared_ref_count": 1,
+          "ordinary_ref_occurrences": 1,
+          "referenced_artifacts": [
+            {
+              "artifact_id": "a02-source",
+              "revision": 1,
+              "kind": "SourceBundle"
+            }
+          ],
+          "resource_occurrences": 3,
+          "resources_expanded": 1,
+          "resource_paths": [
+            "assets/proof-target.txt"
+          ],
+          "resource_reuses": 2,
+          "resource_bytes_verified": 53,
+          "json_resources": 0,
+          "non_json_resources": 1,
+          "evidence_id_occurrences": 3,
+          "evidence_ids": [
+            "proof-target"
+          ],
+          "violation_count": 0
+        },
+        {
+          "consumer": {
+            "artifact_id": "snapshot-partial",
+            "revision": 1,
+            "kind": "PlatformSnapshot"
+          },
+          "book_id": "synthetic-book",
+          "scope_id": "synthetic-scope",
+          "declared_ref_count": 1,
+          "ordinary_ref_occurrences": 1,
+          "referenced_artifacts": [
+            {
+              "artifact_id": "a02-source",
+              "revision": 1,
+              "kind": "SourceBundle"
+            }
+          ],
+          "resource_occurrences": 3,
+          "resources_expanded": 1,
+          "resource_paths": [
+            "assets/proof-target.txt"
+          ],
+          "resource_reuses": 2,
+          "resource_bytes_verified": 53,
+          "json_resources": 0,
+          "non_json_resources": 1,
+          "evidence_id_occurrences": 3,
+          "evidence_ids": [
+            "proof-target"
+          ],
+          "violation_count": 0
+        },
+        {
+          "consumer": {
+            "artifact_id": "receipt-design",
+            "revision": 1,
+            "kind": "ExecutionReceipt"
+          },
+          "book_id": "synthetic-book",
+          "scope_id": "synthetic-scope",
+          "declared_ref_count": 3,
+          "ordinary_ref_occurrences": 19,
+          "referenced_artifacts": [
+            {
+              "artifact_id": "a02-plan",
+              "revision": 1,
+              "kind": "ApplyPlan"
+            },
+            {
+              "artifact_id": "a02-source",
+              "revision": 1,
+              "kind": "SourceBundle"
+            },
+            {
+              "artifact_id": "intent-design-1",
+              "revision": 1,
+              "kind": "WriteIntent"
+            },
+            {
+              "artifact_id": "intent-design-2",
+              "revision": 1,
+              "kind": "WriteIntent"
+            },
+            {
+              "artifact_id": "snapshot-action-result-1",
+              "revision": 1,
+              "kind": "PlatformSnapshot"
+            },
+            {
+              "artifact_id": "snapshot-partial",
+              "revision": 1,
+              "kind": "PlatformSnapshot"
+            }
+          ],
+          "resource_occurrences": 40,
+          "resources_expanded": 11,
+          "resource_paths": [
+            "assets/action-fact-normal-1.json",
+            "assets/action-fact-partial-not-attempted-absent.json",
+            "assets/action-fact-partial-unknown.json",
+            "assets/design-facts.json",
+            "assets/observation-action-result-1.json",
+            "assets/observation-partial.json",
+            "assets/prepared-before-1.json",
+            "assets/prepared-before-2.json",
+            "assets/proof-after.txt",
+            "assets/proof-before.txt",
+            "assets/proof-target.txt"
+          ],
+          "resource_reuses": 29,
+          "resource_bytes_verified": 41762,
+          "json_resources": 8,
+          "non_json_resources": 3,
+          "evidence_id_occurrences": 22,
+          "evidence_ids": [
+            "proof-after",
+            "proof-before",
+            "proof-target"
+          ],
+          "violation_count": 6
+        },
+        {
+          "consumer": {
+            "artifact_id": "progress-design",
+            "revision": 1,
+            "kind": "ExecutionProgress"
+          },
+          "book_id": "synthetic-book",
+          "scope_id": "synthetic-scope",
+          "declared_ref_count": 4,
+          "ordinary_ref_occurrences": 23,
+          "referenced_artifacts": [
+            {
+              "artifact_id": "a02-plan",
+              "revision": 1,
+              "kind": "ApplyPlan"
+            },
+            {
+              "artifact_id": "a02-source",
+              "revision": 1,
+              "kind": "SourceBundle"
+            },
+            {
+              "artifact_id": "intent-design-1",
+              "revision": 1,
+              "kind": "WriteIntent"
+            },
+            {
+              "artifact_id": "intent-design-2",
+              "revision": 1,
+              "kind": "WriteIntent"
+            },
+            {
+              "artifact_id": "receipt-design",
+              "revision": 1,
+              "kind": "ExecutionReceipt"
+            },
+            {
+              "artifact_id": "snapshot-action-result-1",
+              "revision": 1,
+              "kind": "PlatformSnapshot"
+            },
+            {
+              "artifact_id": "snapshot-partial",
+              "revision": 1,
+              "kind": "PlatformSnapshot"
+            }
+          ],
+          "resource_occurrences": 33,
+          "resources_expanded": 11,
+          "resource_paths": [
+            "assets/action-fact-normal-1.json",
+            "assets/action-fact-partial-not-attempted-absent.json",
+            "assets/action-fact-partial-unknown.json",
+            "assets/design-facts.json",
+            "assets/observation-action-result-1.json",
+            "assets/observation-partial.json",
+            "assets/prepared-before-1.json",
+            "assets/prepared-before-2.json",
+            "assets/proof-after.txt",
+            "assets/proof-before.txt",
+            "assets/proof-target.txt"
+          ],
+          "resource_reuses": 22,
+          "resource_bytes_verified": 41762,
+          "json_resources": 8,
+          "non_json_resources": 3,
+          "evidence_id_occurrences": 17,
+          "evidence_ids": [
+            "proof-after",
+            "proof-before",
+            "proof-target"
+          ],
+          "violation_count": 6
+        }
+      ],
+      "violations": [
+        {
+          "case_id": "partial-with-complete-absent",
+          "consumer": {
+            "artifact_id": "receipt-design",
+            "revision": 1,
+            "kind": "ExecutionReceipt"
+          },
+          "location": "payload/results/0/readback -> assets/observation-action-result-1.json#/source_ref",
+          "resource": "assets/observation-action-result-1.json",
+          "code": "UNDECLARED_REFERENCE",
+          "expected": "exact four-tuple in this consumer.input_refs",
+          "actual": {
+            "artifact_id": "a02-source",
+            "revision": 1,
+            "kind": "SourceBundle",
+            "content_hash": "f72b761eb850b5917c12e891f5e9da6fe2c9fceecf2122fa9c6c64ea173adaef"
+          }
+        },
+        {
+          "case_id": "partial-with-complete-absent",
+          "consumer": {
+            "artifact_id": "receipt-design",
+            "revision": 1,
+            "kind": "ExecutionReceipt"
+          },
+          "location": "payload/results/2/readback -> assets/observation-partial.json#/source_ref",
+          "resource": "assets/observation-partial.json",
+          "code": "UNDECLARED_REFERENCE",
+          "expected": "exact four-tuple in this consumer.input_refs",
+          "actual": {
+            "artifact_id": "a02-source",
+            "revision": 1,
+            "kind": "SourceBundle",
+            "content_hash": "f72b761eb850b5917c12e891f5e9da6fe2c9fceecf2122fa9c6c64ea173adaef"
+          }
+        },
+        {
+          "case_id": "partial-with-complete-absent",
+          "consumer": {
+            "artifact_id": "receipt-design",
+            "revision": 1,
+            "kind": "ExecutionReceipt"
+          },
+          "location": "payload/action_fact_refs/0 -> assets/action-fact-normal-1.json#/prepared_before -> assets/prepared-before-1.json#/source_ref",
+          "resource": "assets/prepared-before-1.json",
+          "code": "UNDECLARED_REFERENCE",
+          "expected": "exact four-tuple in this consumer.input_refs",
+          "actual": {
+            "artifact_id": "a02-source",
+            "revision": 1,
+            "kind": "SourceBundle",
+            "content_hash": "f72b761eb850b5917c12e891f5e9da6fe2c9fceecf2122fa9c6c64ea173adaef"
+          }
+        },
+        {
+          "case_id": "partial-with-complete-absent",
+          "consumer": {
+            "artifact_id": "receipt-design",
+            "revision": 1,
+            "kind": "ExecutionReceipt"
+          },
+          "location": "payload/action_fact_refs/0 -> assets/action-fact-normal-1.json#/observed_snapshot_ref",
+          "resource": "assets/action-fact-normal-1.json",
+          "code": "UNDECLARED_REFERENCE",
+          "expected": "exact four-tuple in this consumer.input_refs",
+          "actual": {
+            "artifact_id": "snapshot-action-result-1",
+            "revision": 1,
+            "kind": "PlatformSnapshot",
+            "content_hash": "7a8a8391b35eb1aecd7528bc4bfcc739f41f4720b9becae9f9937ffe421fe251"
+          }
+        },
+        {
+          "case_id": "partial-with-complete-absent",
+          "consumer": {
+            "artifact_id": "receipt-design",
+            "revision": 1,
+            "kind": "ExecutionReceipt"
+          },
+          "location": "payload/action_fact_refs/1 -> assets/action-fact-partial-unknown.json#/prepared_before -> assets/prepared-before-2.json#/source_ref",
+          "resource": "assets/prepared-before-2.json",
+          "code": "UNDECLARED_REFERENCE",
+          "expected": "exact four-tuple in this consumer.input_refs",
+          "actual": {
+            "artifact_id": "a02-source",
+            "revision": 1,
+            "kind": "SourceBundle",
+            "content_hash": "f72b761eb850b5917c12e891f5e9da6fe2c9fceecf2122fa9c6c64ea173adaef"
+          }
+        },
+        {
+          "case_id": "partial-with-complete-absent",
+          "consumer": {
+            "artifact_id": "receipt-design",
+            "revision": 1,
+            "kind": "ExecutionReceipt"
+          },
+          "location": "payload/action_fact_refs/2 -> assets/action-fact-partial-not-attempted-absent.json#/observed_snapshot_ref",
+          "resource": "assets/action-fact-partial-not-attempted-absent.json",
+          "code": "UNDECLARED_REFERENCE",
+          "expected": "exact four-tuple in this consumer.input_refs",
+          "actual": {
+            "artifact_id": "snapshot-partial",
+            "revision": 1,
+            "kind": "PlatformSnapshot",
+            "content_hash": "282172d337d40e28f5b3a9e81d7f84e9e5f473bede07be598682598332dfa880"
+          }
+        },
+        {
+          "case_id": "partial-with-complete-absent",
+          "consumer": {
+            "artifact_id": "progress-design",
+            "revision": 1,
+            "kind": "ExecutionProgress"
+          },
+          "location": "payload/actions/0/result_fact -> assets/action-fact-normal-1.json#/prepared_before -> assets/prepared-before-1.json#/source_ref",
+          "resource": "assets/prepared-before-1.json",
+          "code": "UNDECLARED_REFERENCE",
+          "expected": "exact four-tuple in this consumer.input_refs",
+          "actual": {
+            "artifact_id": "a02-source",
+            "revision": 1,
+            "kind": "SourceBundle",
+            "content_hash": "f72b761eb850b5917c12e891f5e9da6fe2c9fceecf2122fa9c6c64ea173adaef"
+          }
+        },
+        {
+          "case_id": "partial-with-complete-absent",
+          "consumer": {
+            "artifact_id": "progress-design",
+            "revision": 1,
+            "kind": "ExecutionProgress"
+          },
+          "location": "payload/actions/0/result_fact -> assets/action-fact-normal-1.json#/observed_snapshot_ref",
+          "resource": "assets/action-fact-normal-1.json",
+          "code": "UNDECLARED_REFERENCE",
+          "expected": "exact four-tuple in this consumer.input_refs",
+          "actual": {
+            "artifact_id": "snapshot-action-result-1",
+            "revision": 1,
+            "kind": "PlatformSnapshot",
+            "content_hash": "7a8a8391b35eb1aecd7528bc4bfcc739f41f4720b9becae9f9937ffe421fe251"
+          }
+        },
+        {
+          "case_id": "partial-with-complete-absent",
+          "consumer": {
+            "artifact_id": "progress-design",
+            "revision": 1,
+            "kind": "ExecutionProgress"
+          },
+          "location": "payload/actions/0/result_fact -> assets/action-fact-normal-1.json#/readback -> assets/observation-action-result-1.json#/source_ref",
+          "resource": "assets/observation-action-result-1.json",
+          "code": "UNDECLARED_REFERENCE",
+          "expected": "exact four-tuple in this consumer.input_refs",
+          "actual": {
+            "artifact_id": "a02-source",
+            "revision": 1,
+            "kind": "SourceBundle",
+            "content_hash": "f72b761eb850b5917c12e891f5e9da6fe2c9fceecf2122fa9c6c64ea173adaef"
+          }
+        },
+        {
+          "case_id": "partial-with-complete-absent",
+          "consumer": {
+            "artifact_id": "progress-design",
+            "revision": 1,
+            "kind": "ExecutionProgress"
+          },
+          "location": "payload/actions/1/result_fact -> assets/action-fact-partial-unknown.json#/prepared_before -> assets/prepared-before-2.json#/source_ref",
+          "resource": "assets/prepared-before-2.json",
+          "code": "UNDECLARED_REFERENCE",
+          "expected": "exact four-tuple in this consumer.input_refs",
+          "actual": {
+            "artifact_id": "a02-source",
+            "revision": 1,
+            "kind": "SourceBundle",
+            "content_hash": "f72b761eb850b5917c12e891f5e9da6fe2c9fceecf2122fa9c6c64ea173adaef"
+          }
+        },
+        {
+          "case_id": "partial-with-complete-absent",
+          "consumer": {
+            "artifact_id": "progress-design",
+            "revision": 1,
+            "kind": "ExecutionProgress"
+          },
+          "location": "payload/actions/2/result_fact -> assets/action-fact-partial-not-attempted-absent.json#/prepared_before -> assets/observation-partial.json#/source_ref",
+          "resource": "assets/observation-partial.json",
+          "code": "UNDECLARED_REFERENCE",
+          "expected": "exact four-tuple in this consumer.input_refs",
+          "actual": {
+            "artifact_id": "a02-source",
+            "revision": 1,
+            "kind": "SourceBundle",
+            "content_hash": "f72b761eb850b5917c12e891f5e9da6fe2c9fceecf2122fa9c6c64ea173adaef"
+          }
+        },
+        {
+          "case_id": "partial-with-complete-absent",
+          "consumer": {
+            "artifact_id": "progress-design",
+            "revision": 1,
+            "kind": "ExecutionProgress"
+          },
+          "location": "payload/actions/2/result_fact -> assets/action-fact-partial-not-attempted-absent.json#/observed_snapshot_ref",
+          "resource": "assets/action-fact-partial-not-attempted-absent.json",
+          "code": "UNDECLARED_REFERENCE",
+          "expected": "exact four-tuple in this consumer.input_refs",
+          "actual": {
+            "artifact_id": "snapshot-partial",
+            "revision": 1,
+            "kind": "PlatformSnapshot",
+            "content_hash": "282172d337d40e28f5b3a9e81d7f84e9e5f473bede07be598682598332dfa880"
+          }
+        }
+      ],
+      "static_result": "VIOLATIONS",
+      "future_behavior": "EXPECTED_NOT_EXECUTED"
+    }
+  ],
+  "violation_count": 30
+}

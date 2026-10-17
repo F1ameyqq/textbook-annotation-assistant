@@ -1,0 +1,820 @@
+{
+  "python": "3.9.13 (tags/v3.9.13:6de2ca5, May 17 2022, 16:36:42) [MSC v.1929 64 bit (AMD64)]",
+  "executable": "C:\\Users\\ASUS\\AppData\\Local\\Programs\\Python\\Python39\\python.exe",
+  "commands": [
+    {
+      "argv": [
+        "C:\\Users\\ASUS\\AppData\\Local\\Programs\\Python\\Python39\\python.exe",
+        "-B",
+        "D:\\1800\\.local\\stages\\A03-review-P1-R1\\ca4fba4f505467228a8164c3999e0cecc54ffc4e\\examples\\a03\\P1-R1\\check_design.py",
+        "--root",
+        "examples/a03/P1-R1/data"
+      ],
+      "cwd": "D:\\1800\\.local\\stages\\A03-review-P1-R1\\ca4fba4f505467228a8164c3999e0cecc54ffc4e",
+      "timeout_seconds": 60,
+      "returncode": 0,
+      "PYTHONPATH": "D:\\1800\\.local\\stages\\A03-review-P1-R1\\ca4fba4f505467228a8164c3999e0cecc54ffc4e\\src",
+      "script_resolved_path": "D:\\1800\\.local\\stages\\A03-review-P1-R1\\ca4fba4f505467228a8164c3999e0cecc54ffc4e\\examples\\a03\\P1-R1\\check_design.py",
+      "script_sha256": "e05fd63b7ad9b0e843328dde3d7a614eff1427a4e6d8e14b014d659d773c69ed",
+      "parsed": {
+        "design_only": true,
+        "static_checks_only": true,
+        "runtime_intent_commits": 0,
+        "runtime_or_recovery_executed": false,
+        "synthetic_admission_executed": false,
+        "semantic_cases_executed": 0,
+        "cases": [
+          {
+            "case_id": "normal",
+            "expected_static": "PASS",
+            "actual_static": "PASS",
+            "static_expectation_matches": true,
+            "detail": null,
+            "expected_layer": "SEMANTIC",
+            "expected_code": "PENDING_NOT_SUBMITTED",
+            "semantic_actual": "NOT_EXECUTED"
+          },
+          {
+            "case_id": "intent-no-receipt-match",
+            "expected_static": "PASS",
+            "actual_static": "PASS",
+            "static_expectation_matches": true,
+            "detail": null,
+            "expected_layer": "SEMANTIC",
+            "expected_code": "RESOLVED_APPLIED_NO_REPLAY",
+            "semantic_actual": "NOT_EXECUTED"
+          },
+          {
+            "case_id": "intent-no-receipt-absent",
+            "expected_static": "PASS",
+            "actual_static": "PASS",
+            "static_expectation_matches": true,
+            "detail": null,
+            "expected_layer": "SEMANTIC",
+            "expected_code": "RESOLVED_NOT_APPLIED_REPLAN_REQUIRED",
+            "semantic_actual": "NOT_EXECUTED"
+          },
+          {
+            "case_id": "partial-without-absent",
+            "expected_static": "PASS",
+            "actual_static": "PASS",
+            "static_expectation_matches": true,
+            "detail": null,
+            "expected_layer": "SEMANTIC",
+            "expected_code": "PROGRESS_ONLY_BOOK_PENDING",
+            "semantic_actual": "NOT_EXECUTED"
+          },
+          {
+            "case_id": "partial-with-complete-absent",
+            "expected_static": "PASS",
+            "actual_static": "PASS",
+            "static_expectation_matches": true,
+            "detail": null,
+            "expected_layer": "SEMANTIC",
+            "expected_code": "NOT_ATTEMPTED_NOT_APPLIED_BOOK_PENDING",
+            "semantic_actual": "NOT_EXECUTED"
+          },
+          {
+            "case_id": "partial-fabricated-receipt",
+            "expected_static": "DESIGN_FIELD_FAIL",
+            "actual_static": "DESIGN_FIELD_FAIL",
+            "static_expectation_matches": true,
+            "detail": {
+              "path": "receipt-design",
+              "detail": "ACTION_FACT_RESULT_MISMATCH"
+            },
+            "expected_layer": "REFERENCE",
+            "expected_code": "ACTION_FACT_RESULT_MISMATCH",
+            "semantic_actual": "NOT_EXECUTED"
+          },
+          {
+            "case_id": "conflict",
+            "expected_static": "PASS",
+            "actual_static": "PASS",
+            "static_expectation_matches": true,
+            "detail": null,
+            "expected_layer": "SEMANTIC",
+            "expected_code": "STILL_UNKNOWN",
+            "semantic_actual": "NOT_EXECUTED"
+          },
+          {
+            "case_id": "indeterminate",
+            "expected_static": "PASS",
+            "actual_static": "PASS",
+            "static_expectation_matches": true,
+            "detail": null,
+            "expected_layer": "SEMANTIC",
+            "expected_code": "STILL_UNKNOWN",
+            "semantic_actual": "NOT_EXECUTED"
+          },
+          {
+            "case_id": "original-unknown-preserved",
+            "expected_static": "PASS",
+            "actual_static": "PASS",
+            "static_expectation_matches": true,
+            "detail": null,
+            "expected_layer": "SEMANTIC",
+            "expected_code": "RESOLVED_APPLIED_ORIGINAL_UNKNOWN_RETAINED",
+            "semantic_actual": "NOT_EXECUTED"
+          },
+          {
+            "case_id": "recovered-report-binding",
+            "expected_static": "PASS",
+            "actual_static": "PASS",
+            "static_expectation_matches": true,
+            "detail": null,
+            "expected_layer": "SEMANTIC",
+            "expected_code": "RECOVERY_REPORT_PENDING_NOT_SUBMITTED",
+            "semantic_actual": "NOT_EXECUTED"
+          },
+          {
+            "case_id": "new-read-unchanged-state-version",
+            "expected_static": "PASS",
+            "actual_static": "PASS",
+            "static_expectation_matches": true,
+            "detail": null,
+            "expected_layer": "SEMANTIC",
+            "expected_code": "FRESH_READ_SAME_EFFECT_VERSION",
+            "semantic_actual": "NOT_EXECUTED"
+          },
+          {
+            "case_id": "cross-scope-only-one-resolved",
+            "expected_static": "PASS",
+            "actual_static": "PASS",
+            "static_expectation_matches": true,
+            "detail": null,
+            "expected_layer": "RUNTIME_TRANSACTION",
+            "expected_code": "BOOK_PENDING_SCOPE_SWITCH_UNSUPPORTED",
+            "semantic_actual": "NOT_EXECUTED"
+          },
+          {
+            "case_id": "legacy-unrecorded-no-intent",
+            "expected_static": "PASS",
+            "actual_static": "PASS",
+            "static_expectation_matches": true,
+            "detail": null,
+            "expected_layer": "RUNTIME_TRANSACTION",
+            "expected_code": "LEGACY_UNRECORDED",
+            "semantic_actual": "NOT_EXECUTED"
+          },
+          {
+            "case_id": "wrong-schema-version",
+            "expected_static": "STRUCTURE_FAIL",
+            "actual_static": "STRUCTURE_FAIL",
+            "static_expectation_matches": true,
+            "detail": {
+              "path": "$.bundle.artifacts[7]",
+              "detail": "oneOf branches accepted=0"
+            },
+            "expected_layer": "STRUCTURE",
+            "expected_code": "RECOVERY_VERSION_UNSUPPORTED",
+            "semantic_actual": "NOT_EXECUTED"
+          },
+          {
+            "case_id": "wrong-exchange-version",
+            "expected_static": "STRUCTURE_FAIL",
+            "actual_static": "STRUCTURE_FAIL",
+            "static_expectation_matches": true,
+            "detail": {
+              "path": "$.bundle.format_version",
+              "detail": "const mismatch"
+            },
+            "expected_layer": "STRUCTURE",
+            "expected_code": "RECOVERY_VERSION_UNSUPPORTED",
+            "semantic_actual": "NOT_EXECUTED"
+          },
+          {
+            "case_id": "wrong-action-digest",
+            "expected_static": "PASS",
+            "actual_static": "PASS",
+            "static_expectation_matches": true,
+            "detail": null,
+            "expected_layer": "SEMANTIC",
+            "expected_code": "ACTION_DIGEST_MISMATCH",
+            "semantic_actual": "NOT_EXECUTED"
+          },
+          {
+            "case_id": "wrong-target-identity",
+            "expected_static": "PASS",
+            "actual_static": "PASS",
+            "static_expectation_matches": true,
+            "detail": null,
+            "expected_layer": "SEMANTIC",
+            "expected_code": "TARGET_IDENTITY_MISMATCH",
+            "semantic_actual": "NOT_EXECUTED"
+          },
+          {
+            "case_id": "wrong-book-identity",
+            "expected_static": "REFERENCE_FAIL",
+            "actual_static": "REFERENCE_FAIL",
+            "static_expectation_matches": true,
+            "detail": {
+              "path": "intent-design-1.payload.plan_ref",
+              "detail": "REFERENCE_SCOPE_MISMATCH book"
+            },
+            "expected_layer": "REFERENCE",
+            "expected_code": "CROSS_BOOK_REFERENCE",
+            "semantic_actual": "NOT_EXECUTED"
+          },
+          {
+            "case_id": "wrong-scope-reference",
+            "expected_static": "REFERENCE_FAIL",
+            "actual_static": "REFERENCE_FAIL",
+            "static_expectation_matches": true,
+            "detail": {
+              "path": "intent-design-1.payload.plan_ref",
+              "detail": "REFERENCE_SCOPE_MISMATCH scope"
+            },
+            "expected_layer": "REFERENCE",
+            "expected_code": "CROSS_SCOPE_REFERENCE",
+            "semantic_actual": "NOT_EXECUTED"
+          },
+          {
+            "case_id": "missing-plan-reference",
+            "expected_static": "REFERENCE_FAIL",
+            "actual_static": "REFERENCE_FAIL",
+            "static_expectation_matches": true,
+            "detail": {
+              "path": "intent-design-1.payload.plan_ref",
+              "detail": "MISSING_REFERENCE a02-plan"
+            },
+            "expected_layer": "REFERENCE",
+            "expected_code": "MISSING_REFERENCE",
+            "semantic_actual": "NOT_EXECUTED"
+          },
+          {
+            "case_id": "wrong-resource-hash",
+            "expected_static": "RESOURCE_FAIL",
+            "actual_static": "RESOURCE_FAIL",
+            "static_expectation_matches": true,
+            "detail": {
+              "path": "assets/r1/31ce1a4b479644a050c42392ae3c28e81012839272c5963fffd13238e2fa9ecd.json",
+              "detail": "RESOURCE_HASH_MISMATCH"
+            },
+            "expected_layer": "RESOURCE",
+            "expected_code": "RESOURCE_HASH_MISMATCH",
+            "semantic_actual": "NOT_EXECUTED"
+          },
+          {
+            "case_id": "missing-readback",
+            "expected_static": "PASS",
+            "actual_static": "PASS",
+            "static_expectation_matches": true,
+            "detail": null,
+            "expected_layer": "SEMANTIC",
+            "expected_code": "CONCLUSIVE_READBACK_REQUIRED",
+            "semantic_actual": "NOT_EXECUTED"
+          },
+          {
+            "case_id": "wrong-observed-state-hash",
+            "expected_static": "PASS",
+            "actual_static": "PASS",
+            "static_expectation_matches": true,
+            "detail": null,
+            "expected_layer": "SEMANTIC",
+            "expected_code": "OBSERVATION_BINDING_MISMATCH",
+            "semantic_actual": "NOT_EXECUTED"
+          },
+          {
+            "case_id": "wrong-obligation-identity",
+            "expected_static": "PASS",
+            "actual_static": "PASS",
+            "static_expectation_matches": true,
+            "detail": null,
+            "expected_layer": "SEMANTIC",
+            "expected_code": "OBLIGATION_MISMATCH",
+            "semantic_actual": "NOT_EXECUTED"
+          },
+          {
+            "case_id": "real-original-rejected",
+            "expected_static": "PASS",
+            "actual_static": "PASS",
+            "static_expectation_matches": true,
+            "detail": null,
+            "expected_layer": "SYNTHETIC_ADMISSION",
+            "expected_code": "SYNTHETIC_ONLY",
+            "semantic_actual": "NOT_EXECUTED"
+          },
+          {
+            "case_id": "observed-producer-rejected",
+            "expected_static": "PASS",
+            "actual_static": "PASS",
+            "static_expectation_matches": true,
+            "detail": null,
+            "expected_layer": "SYNTHETIC_ADMISSION",
+            "expected_code": "SYNTHETIC_ONLY",
+            "semantic_actual": "NOT_EXECUTED"
+          },
+          {
+            "case_id": "observed-resource-rejected",
+            "expected_static": "PASS",
+            "actual_static": "PASS",
+            "static_expectation_matches": true,
+            "detail": null,
+            "expected_layer": "SYNTHETIC_ADMISSION",
+            "expected_code": "SYNTHETIC_ONLY",
+            "semantic_actual": "NOT_EXECUTED"
+          },
+          {
+            "case_id": "observed-evidence-rejected",
+            "expected_static": "PASS",
+            "actual_static": "PASS",
+            "static_expectation_matches": true,
+            "detail": null,
+            "expected_layer": "SYNTHETIC_ADMISSION",
+            "expected_code": "SYNTHETIC_ONLY",
+            "semantic_actual": "NOT_EXECUTED"
+          },
+          {
+            "case_id": "real-policy-rejected",
+            "expected_static": "PASS",
+            "actual_static": "PASS",
+            "static_expectation_matches": true,
+            "detail": null,
+            "expected_layer": "SYNTHETIC_ADMISSION",
+            "expected_code": "SYNTHETIC_ONLY",
+            "semantic_actual": "NOT_EXECUTED"
+          },
+          {
+            "case_id": "platform-mode-rejected",
+            "expected_static": "PASS",
+            "actual_static": "PASS",
+            "static_expectation_matches": true,
+            "detail": null,
+            "expected_layer": "SYNTHETIC_ADMISSION",
+            "expected_code": "SYNTHETIC_ONLY",
+            "semantic_actual": "NOT_EXECUTED"
+          },
+          {
+            "case_id": "unknown-scope-integrity",
+            "expected_static": "PASS",
+            "actual_static": "PASS",
+            "static_expectation_matches": true,
+            "detail": null,
+            "expected_layer": "SYNTHETIC_ADMISSION",
+            "expected_code": "SYNTHETIC_COMPLETE_REQUIRED",
+            "semantic_actual": "NOT_EXECUTED"
+          },
+          {
+            "case_id": "stale-owner-generation",
+            "expected_static": "PASS",
+            "actual_static": "PASS",
+            "static_expectation_matches": true,
+            "detail": null,
+            "expected_layer": "RUNTIME_TRANSACTION",
+            "expected_code": "OWNER_GENERATION_STALE",
+            "semantic_actual": "NOT_EXECUTED"
+          },
+          {
+            "case_id": "wrong-state-directory",
+            "expected_static": "PASS",
+            "actual_static": "PASS",
+            "static_expectation_matches": true,
+            "detail": null,
+            "expected_layer": "RUNTIME_TRANSACTION",
+            "expected_code": "STATE_DIRECTORY_IDENTITY_MISMATCH",
+            "semantic_actual": "NOT_EXECUTED"
+          },
+          {
+            "case_id": "fake-empty-ledger",
+            "expected_static": "PASS",
+            "actual_static": "PASS",
+            "static_expectation_matches": true,
+            "detail": null,
+            "expected_layer": "RUNTIME_TRANSACTION",
+            "expected_code": "BOOK_WRITE_PAUSED",
+            "semantic_actual": "NOT_EXECUTED"
+          },
+          {
+            "case_id": "intent-not-locally-committed",
+            "expected_static": "PASS",
+            "actual_static": "PASS",
+            "static_expectation_matches": true,
+            "detail": null,
+            "expected_layer": "RUNTIME_TRANSACTION",
+            "expected_code": "LOCAL_INTENT_COMMIT_REQUIRED",
+            "semantic_actual": "NOT_EXECUTED"
+          },
+          {
+            "case_id": "attempt-limit-four",
+            "expected_static": "STRUCTURE_FAIL",
+            "actual_static": "STRUCTURE_FAIL",
+            "static_expectation_matches": true,
+            "detail": {
+              "path": "$.bundle.artifacts[9]",
+              "detail": "oneOf branches accepted=0"
+            },
+            "expected_layer": "STRUCTURE",
+            "expected_code": "RECONCILE_ATTEMPT_LIMIT",
+            "semantic_actual": "NOT_EXECUTED"
+          },
+          {
+            "case_id": "old-observation-reuse",
+            "expected_static": "PASS",
+            "actual_static": "PASS",
+            "static_expectation_matches": true,
+            "detail": null,
+            "expected_layer": "RUNTIME_TRANSACTION",
+            "expected_code": "OBSERVATION_NOT_FRESH",
+            "semantic_actual": "NOT_EXECUTED"
+          },
+          {
+            "case_id": "resolved-chain-successor",
+            "expected_static": "PASS",
+            "actual_static": "PASS",
+            "static_expectation_matches": true,
+            "detail": null,
+            "expected_layer": "SEMANTIC",
+            "expected_code": "RESOLUTION_TERMINAL",
+            "semantic_actual": "NOT_EXECUTED"
+          },
+          {
+            "case_id": "resolution-fork",
+            "expected_static": "PASS",
+            "actual_static": "PASS",
+            "static_expectation_matches": true,
+            "detail": null,
+            "expected_layer": "SEMANTIC",
+            "expected_code": "RESOLUTION_FORK",
+            "semantic_actual": "NOT_EXECUTED"
+          },
+          {
+            "case_id": "resolution-cycle",
+            "expected_static": "REFERENCE_FAIL",
+            "actual_static": "REFERENCE_FAIL",
+            "static_expectation_matches": true,
+            "detail": {
+              "path": "('artifact', 'resolution-design', 1)",
+              "detail": "REFERENCE_CYCLE"
+            },
+            "expected_layer": "REFERENCE",
+            "expected_code": "DEPENDENCY_CYCLE",
+            "semantic_actual": "NOT_EXECUTED"
+          },
+          {
+            "case_id": "source-only-unknown-denominator",
+            "expected_static": "PASS",
+            "actual_static": "PASS",
+            "static_expectation_matches": true,
+            "detail": null,
+            "expected_layer": "SYNTHETIC_ADMISSION",
+            "expected_code": "SYNTHETIC_COMPLETE_REQUIRED",
+            "semantic_actual": "NOT_EXECUTED"
+          },
+          {
+            "case_id": "source-only-zero-actions",
+            "expected_static": "PASS",
+            "actual_static": "PASS",
+            "static_expectation_matches": true,
+            "detail": null,
+            "expected_layer": "SEMANTIC",
+            "expected_code": "NO_ACTIONS",
+            "semantic_actual": "NOT_EXECUTED"
+          },
+          {
+            "case_id": "unattempted-absence-commit",
+            "expected_static": "PASS",
+            "actual_static": "PASS",
+            "static_expectation_matches": true,
+            "detail": null,
+            "expected_layer": "RUNTIME_TRANSACTION",
+            "expected_code": "UNATTEMPTED_ABSENCE_COMMITTED",
+            "semantic_actual": "NOT_EXECUTED"
+          },
+          {
+            "case_id": "unattempted-missing-absent",
+            "expected_static": "PASS",
+            "actual_static": "PASS",
+            "static_expectation_matches": true,
+            "detail": null,
+            "expected_layer": "RUNTIME_TRANSACTION",
+            "expected_code": "CONCLUSIVE_READBACK_REQUIRED",
+            "semantic_actual": "NOT_EXECUTED"
+          },
+          {
+            "case_id": "unattempted-stale-observation",
+            "expected_static": "PASS",
+            "actual_static": "PASS",
+            "static_expectation_matches": true,
+            "detail": null,
+            "expected_layer": "RUNTIME_TRANSACTION",
+            "expected_code": "OBSERVATION_NOT_FRESH",
+            "semantic_actual": "NOT_EXECUTED"
+          },
+          {
+            "case_id": "unattempted-incomplete-prefix",
+            "expected_static": "PASS",
+            "actual_static": "PASS",
+            "static_expectation_matches": true,
+            "detail": null,
+            "expected_layer": "RUNTIME_TRANSACTION",
+            "expected_code": "EVENT_PREFIX_INCOMPLETE",
+            "semantic_actual": "NOT_EXECUTED"
+          },
+          {
+            "case_id": "unattempted-wrong-plan-action",
+            "expected_static": "PASS",
+            "actual_static": "PASS",
+            "static_expectation_matches": true,
+            "detail": null,
+            "expected_layer": "RUNTIME_TRANSACTION",
+            "expected_code": "PLAN_ACTION_MISMATCH",
+            "semantic_actual": "NOT_EXECUTED"
+          },
+          {
+            "case_id": "unattempted-stale-generation",
+            "expected_static": "PASS",
+            "actual_static": "PASS",
+            "static_expectation_matches": true,
+            "detail": null,
+            "expected_layer": "RUNTIME_TRANSACTION",
+            "expected_code": "OWNER_GENERATION_STALE",
+            "semantic_actual": "NOT_EXECUTED"
+          },
+          {
+            "case_id": "unattempted-duplicate-fact",
+            "expected_static": "PASS",
+            "actual_static": "PASS",
+            "static_expectation_matches": true,
+            "detail": null,
+            "expected_layer": "RUNTIME_TRANSACTION",
+            "expected_code": "UNATTEMPTED_FACT_DUPLICATE",
+            "semantic_actual": "NOT_EXECUTED"
+          },
+          {
+            "case_id": "unattempted-conflicting-fact",
+            "expected_static": "PASS",
+            "actual_static": "PASS",
+            "static_expectation_matches": true,
+            "detail": null,
+            "expected_layer": "RUNTIME_TRANSACTION",
+            "expected_code": "UNATTEMPTED_FACT_CONFLICT",
+            "semantic_actual": "NOT_EXECUTED"
+          },
+          {
+            "case_id": "unattempted-wrong-plan-state",
+            "expected_static": "PASS",
+            "actual_static": "PASS",
+            "static_expectation_matches": true,
+            "detail": null,
+            "expected_layer": "RUNTIME_TRANSACTION",
+            "expected_code": "PLAN_STATE_INVALID",
+            "semantic_actual": "NOT_EXECUTED"
+          },
+          {
+            "case_id": "unattempted-already-called",
+            "expected_static": "PASS",
+            "actual_static": "PASS",
+            "static_expectation_matches": true,
+            "detail": null,
+            "expected_layer": "RUNTIME_TRANSACTION",
+            "expected_code": "ACTION_ALREADY_ATTEMPTED",
+            "semantic_actual": "NOT_EXECUTED"
+          },
+          {
+            "case_id": "unattempted-event-head-stale",
+            "expected_static": "PASS",
+            "actual_static": "PASS",
+            "static_expectation_matches": true,
+            "detail": null,
+            "expected_layer": "RUNTIME_TRANSACTION",
+            "expected_code": "EVENT_HEAD_CAS_MISMATCH",
+            "semantic_actual": "NOT_EXECUTED"
+          },
+          {
+            "case_id": "unattempted-prepared-mismatch",
+            "expected_static": "PASS",
+            "actual_static": "PASS",
+            "static_expectation_matches": true,
+            "detail": null,
+            "expected_layer": "RUNTIME_TRANSACTION",
+            "expected_code": "PREPARED_BEFORE_MISMATCH",
+            "semantic_actual": "NOT_EXECUTED"
+          },
+          {
+            "case_id": "resource-fact-missing-declaration",
+            "expected_static": "REFERENCE_FAIL",
+            "actual_static": "REFERENCE_FAIL",
+            "static_expectation_matches": true,
+            "detail": {
+              "path": "receipt-design.payload.action_fact_refs[0]->assets/r1/c6ce9ed3b02cc2488856b47a482a96f67344fb03feaf511510ca16030881da68.json.observed_snapshot_ref",
+              "detail": "UNDECLARED_RESOURCE_REFERENCE"
+            },
+            "expected_layer": "REFERENCE",
+            "expected_code": "UNDECLARED_RESOURCE_REFERENCE",
+            "semantic_actual": "NOT_EXECUTED"
+          },
+          {
+            "case_id": "shared-resource-second-consumer-missing",
+            "expected_static": "REFERENCE_FAIL",
+            "actual_static": "REFERENCE_FAIL",
+            "static_expectation_matches": true,
+            "detail": {
+              "path": "progress-design.payload.actions[0].result_fact->assets/r1/c6ce9ed3b02cc2488856b47a482a96f67344fb03feaf511510ca16030881da68.json.observed_snapshot_ref",
+              "detail": "UNDECLARED_RESOURCE_REFERENCE"
+            },
+            "expected_layer": "REFERENCE",
+            "expected_code": "UNDECLARED_RESOURCE_REFERENCE",
+            "semantic_actual": "NOT_EXECUTED"
+          },
+          {
+            "case_id": "nested-prepared-missing-declaration",
+            "expected_static": "REFERENCE_FAIL",
+            "actual_static": "REFERENCE_FAIL",
+            "static_expectation_matches": true,
+            "detail": {
+              "path": "receipt-design.payload.results[0].readback->assets/r1/437fb344b3de17ff3a8c9ff0fbdbbd725f5080122e341d8c46e41e8382491a61.json.source_ref",
+              "detail": "UNDECLARED_RESOURCE_REFERENCE"
+            },
+            "expected_layer": "REFERENCE",
+            "expected_code": "UNDECLARED_RESOURCE_REFERENCE",
+            "semantic_actual": "NOT_EXECUTED"
+          },
+          {
+            "case_id": "nested-prepared-positive",
+            "expected_static": "PASS",
+            "actual_static": "PASS",
+            "static_expectation_matches": true,
+            "detail": null,
+            "expected_layer": "STATIC_REFERENCE_CLOSURE",
+            "expected_code": "RECURSIVE_DECLARATION_CLOSED",
+            "semantic_actual": "NOT_EXECUTED"
+          },
+          {
+            "case_id": "nested-prepared-wrong-ref-hash",
+            "expected_static": "REFERENCE_FAIL",
+            "actual_static": "REFERENCE_FAIL",
+            "static_expectation_matches": true,
+            "detail": {
+              "path": "receipt-design.payload.action_fact_refs[0]->assets/r1/5f7aef600f1be976bab3c49f968d75b8d9df4ba6577f54b9f94c25330692bb9d.json.prepared_before->assets/r1/fbce21df21720b391d39a23ba89f588925d14e564d435e3e7d94cb0fc4b6d0ed.json.source_ref",
+              "detail": "REFERENCE_HASH_MISMATCH exact_four_tuple"
+            },
+            "expected_layer": "REFERENCE",
+            "expected_code": "REFERENCE_HASH_MISMATCH",
+            "semantic_actual": "NOT_EXECUTED"
+          },
+          {
+            "case_id": "nested-prepared-cross-book",
+            "expected_static": "REFERENCE_FAIL",
+            "actual_static": "REFERENCE_FAIL",
+            "static_expectation_matches": true,
+            "detail": {
+              "path": "receipt-design.payload.action_fact_refs[0]->assets/r1/ba6222b5c958fbfe82ff3766d368d716eef059e8978e2d22ebd490fa7076a503.json.prepared_before->assets/r1/e71f8ce3b53ea23537dd6ffaf8533157080c5c3668b78345f5742f2a81916730.json.source_ref",
+              "detail": "REFERENCE_SCOPE_MISMATCH book"
+            },
+            "expected_layer": "REFERENCE",
+            "expected_code": "REFERENCE_SCOPE_MISMATCH",
+            "semantic_actual": "NOT_EXECUTED"
+          },
+          {
+            "case_id": "nested-prepared-cross-scope",
+            "expected_static": "REFERENCE_FAIL",
+            "actual_static": "REFERENCE_FAIL",
+            "static_expectation_matches": true,
+            "detail": {
+              "path": "receipt-design.payload.action_fact_refs[0]->assets/r1/f0900a5865817f79995f454a17d1ae78a88895cb4238051054733bca045382ce.json.prepared_before->assets/r1/3c28d43f5c4484efa9cbf4174df7896584f474a9a51133c057c17b2021b56dac.json.source_ref",
+              "detail": "REFERENCE_SCOPE_MISMATCH scope"
+            },
+            "expected_layer": "REFERENCE",
+            "expected_code": "REFERENCE_SCOPE_MISMATCH",
+            "semantic_actual": "NOT_EXECUTED"
+          },
+          {
+            "case_id": "nested-prepared-wrong-resource-hash",
+            "expected_static": "RESOURCE_FAIL",
+            "actual_static": "RESOURCE_FAIL",
+            "static_expectation_matches": true,
+            "detail": {
+              "path": "assets/r1/93a4de84b1aa9b814a1fe0a3cff9c638dcfaac41ab9830e88c117f530a3d5f30.json",
+              "detail": "RESOURCE_HASH_MISMATCH"
+            },
+            "expected_layer": "REFERENCE",
+            "expected_code": "RESOURCE_HASH_MISMATCH",
+            "semantic_actual": "NOT_EXECUTED"
+          },
+          {
+            "case_id": "mixed-artifact-resource-cycle",
+            "expected_static": "REFERENCE_FAIL",
+            "actual_static": "REFERENCE_FAIL",
+            "static_expectation_matches": true,
+            "detail": {
+              "path": "('artifact', 'receipt-design', 1)",
+              "detail": "REFERENCE_CYCLE"
+            },
+            "expected_layer": "REFERENCE",
+            "expected_code": "REFERENCE_CYCLE",
+            "semantic_actual": "NOT_EXECUTED"
+          },
+          {
+            "case_id": "nested-resource-cycle",
+            "expected_static": "RESOURCE_FAIL",
+            "actual_static": "RESOURCE_FAIL",
+            "static_expectation_matches": true,
+            "detail": {
+              "path": "assets/resource-cycle-a.json",
+              "detail": "RESOURCE_HASH_MISMATCH"
+            },
+            "expected_layer": "REFERENCE",
+            "expected_code": "RESOURCE_HASH_MISMATCH",
+            "semantic_actual": "NOT_EXECUTED"
+          },
+          {
+            "case_id": "nested-resource-nonportable-path",
+            "expected_static": "RESOURCE_FAIL",
+            "actual_static": "RESOURCE_FAIL",
+            "static_expectation_matches": true,
+            "detail": {
+              "path": "../P1/assets/prepared-before-1.json",
+              "detail": "NONPORTABLE_RESOURCE_PATH"
+            },
+            "expected_layer": "REFERENCE",
+            "expected_code": "NONPORTABLE_RESOURCE_PATH",
+            "semantic_actual": "NOT_EXECUTED"
+          },
+          {
+            "case_id": "evidence-id-resource-closed",
+            "expected_static": "PASS",
+            "actual_static": "PASS",
+            "static_expectation_matches": true,
+            "detail": null,
+            "expected_layer": "STATIC_REFERENCE_CLOSURE",
+            "expected_code": "RECURSIVE_DECLARATION_CLOSED",
+            "semantic_actual": "NOT_EXECUTED"
+          },
+          {
+            "case_id": "evidence-id-resource-missing-declaration",
+            "expected_static": "REFERENCE_FAIL",
+            "actual_static": "REFERENCE_FAIL",
+            "static_expectation_matches": true,
+            "detail": {
+              "path": "receipt-design.payload.results[0].before_evidence_refs[EvidenceRecord]->assets/r1/635c593bede2bee21bd3fa189fddce568458e34dc8a9536abc687ad3d41ff92e.json.ordinary_ref",
+              "detail": "UNDECLARED_RESOURCE_REFERENCE"
+            },
+            "expected_layer": "REFERENCE",
+            "expected_code": "UNDECLARED_RESOURCE_REFERENCE",
+            "semantic_actual": "NOT_EXECUTED"
+          },
+          {
+            "case_id": "unattempted-schema-tail-missing-basis",
+            "expected_static": "STRUCTURE_FAIL",
+            "actual_static": "STRUCTURE_FAIL",
+            "static_expectation_matches": true,
+            "detail": {
+              "path": "$",
+              "detail": "oneOf branches accepted=0"
+            },
+            "expected_layer": "STRUCTURE",
+            "expected_code": "UNATTEMPTED_BASIS_ORIGIN_MISMATCH",
+            "semantic_actual": "NOT_EXECUTED"
+          },
+          {
+            "case_id": "unattempted-schema-execution-with-basis",
+            "expected_static": "STRUCTURE_FAIL",
+            "actual_static": "STRUCTURE_FAIL",
+            "static_expectation_matches": true,
+            "detail": {
+              "path": "$",
+              "detail": "oneOf branches accepted=0"
+            },
+            "expected_layer": "STRUCTURE",
+            "expected_code": "UNATTEMPTED_BASIS_ORIGIN_MISMATCH",
+            "semantic_actual": "NOT_EXECUTED"
+          }
+        ],
+        "archive_original_bytes_match": true,
+        "old_archives_structure_resources_hashes": true,
+        "static_expectations_match": true,
+        "case_count": 69
+      }
+    },
+    {
+      "argv": [
+        "C:\\Users\\ASUS\\AppData\\Local\\Programs\\Python\\Python39\\python.exe",
+        "-B",
+        "D:\\1800\\.local\\stages\\A03-review-P1-R1\\ca4fba4f505467228a8164c3999e0cecc54ffc4e\\docs\\evidence\\A03\\execution\\P1-R1\\check_r1_design.py"
+      ],
+      "cwd": "D:\\1800\\.local\\stages\\A03-review-P1-R1\\ca4fba4f505467228a8164c3999e0cecc54ffc4e",
+      "timeout_seconds": 60,
+      "returncode": 0,
+      "PYTHONPATH": "D:\\1800\\.local\\stages\\A03-review-P1-R1\\ca4fba4f505467228a8164c3999e0cecc54ffc4e\\src",
+      "script_resolved_path": "D:\\1800\\.local\\stages\\A03-review-P1-R1\\ca4fba4f505467228a8164c3999e0cecc54ffc4e\\docs\\evidence\\A03\\execution\\P1-R1\\check_r1_design.py",
+      "script_sha256": "bc1589670bb66f24eb90fe32b584e078f8fbc7fcfebff03b011cf01c107c52b9",
+      "parsed": {
+        "check_kind": "P1_R1_STATIC_API_SCHEMA_MAPPING_ONLY",
+        "four_groups_retained": true,
+        "mapped_original_cases": 42,
+        "case_count": 69,
+        "candidate_json_files_parsed": 165,
+        "failed_attempt_outputs_excluded_from_candidate_parse": true,
+        "errors": [],
+        "passed": true,
+        "candidate_api_calls": 0,
+        "runtime_or_recovery_executed": false
+      }
+    }
+  ],
+  "business_imports": 0,
+  "recovery_or_database_or_effect_execution": false,
+  "all_commands_exited": true,
+  "remaining_owned_background_processes": 0
+}

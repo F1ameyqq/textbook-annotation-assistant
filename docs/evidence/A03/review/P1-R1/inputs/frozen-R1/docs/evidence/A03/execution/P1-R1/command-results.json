@@ -1,0 +1,38 @@
+{
+  "phase": "P1-R1_STATIC_ONLY",
+  "cwd": "C:/Users/ASUS/.codex/worktrees/a03-runtime-recovery/1800",
+  "baseline_commit": "2d5ae2a53945a7fa20ef60a6b61e7b31c91dbea9",
+  "design_commit": "095ed4aa18a56100ce3aabc4a0d6885ad37ab520",
+  "commands": [
+    {"argv": ["git", "rev-parse", "HEAD"], "result_at_resume": "2d5ae2a53945a7fa20ef60a6b61e7b31c91dbea9", "exit_code": 0},
+    {"argv": ["python", "-B", "docs/evidence/A03/execution/P1/verify_delivery.py", "verify-manifest"], "exit_code": 0, "result": "148 original P1 entries matched; original manifest sha256=4988c1ce490ef62d0c1a019ac8f746166eb4dc0b595c3b29036bde38a6315950"},
+    {"argv": ["python", "-B", "docs/evidence/A03/execution/P1-R1/package_r1.py", "baseline"], "exit_code": 0, "output": "baseline-preservation.json", "result": "8142 original tracked file paths, sizes and byte SHA256 recorded with clean tracked baseline"},
+    {"argv": ["python", "-B", "docs/evidence/A03/execution/P1-R1/preserve_before.py"], "attempt": 1, "exit_code": 1, "output": "preserve-before-attempt-01.txt", "result": "Resource predicate mistook schema descriptors for resource values; existing copies retained"},
+    {"argv": ["python", "-B", "docs/evidence/A03/execution/P1-R1/preserve_before.py"], "attempt": 2, "exit_code": 0, "result": "36 exact-byte original counterexample/API/Schema/resource files preserved; existing byte-identical copies reverified"},
+    {"argv": ["python", "-B", "docs/evidence/A03/execution/P1-R1/audit_resource_closure.py", "--root", "docs/evidence/A03/execution/P1-R1/before/P1", "--case", "cases/normal.json", "--case", "cases/partial-with-complete-absent.json"], "exit_code": 1, "expected_exit": 1, "output": "before-resource-audit.json", "result": "30 original undeclared-reference occurrences; static counterexample reproduced"},
+    {"argv": ["python", "-B", "examples/a03/P1-R1/check_design.py", "--root", "examples/a03/P1-R1/data"], "exit_code": 0, "output": "static-check.json", "result": "69 static expectations match; archive original bytes match; all semantic actuals NOT_EXECUTED"},
+    {"argv": ["python", "-B", "docs/evidence/A03/execution/P1-R1/check_r1_design.py"], "exit_code": 0, "output": "design-check.json", "result": "165 candidate JSON parsed, 42 SHA-bound original mappings, API/Schema/basis fields consistent, errors=[]"},
+    {"argv": ["python", "-B", "docs/evidence/A03/execution/P1-R1/audit_resource_closure.py", "--root", "examples/a03/P1-R1/data", "--case", "cases/normal.json", "--case", "cases/partial-without-absent.json", "--case", "cases/partial-with-complete-absent.json", "--case", "cases/original-unknown-preserved.json", "--case", "cases/recovered-report-binding.json", "--case", "cases/new-read-unchanged-state-version.json", "--case", "cases/cross-scope-only-one-resolved.json", "--case", "cases/unattempted-absence-commit.json"], "exit_code": 0, "output": "after-resource-audit.json", "result": "8 representative cases, 0 recursive resource-reference violations; imports no author checker/business code"},
+    {"command": "python -B -c (candidate-profile schema SHA comparison and jsonschema availability probe)", "exit_code": 0, "output": "profile-check.json", "result": "6 schema profile hashes matched; jsonschema absent; no installation/network"},
+    {"argv": ["python", "-B", "docs/evidence/A03/execution/P1-R1/verify_git_bytes.py", "index"], "exit_code": 0, "result": "721 new design files exactly equal to Git index raw blobs; no mismatches"},
+    {"argv": ["git", "diff", "--cached", "--check"], "exit_code": 0, "result": "No whitespace errors in design commit"},
+    {"argv": ["git", "commit", "-m", "docs(a03): revise P1 unattempted facts and resource closure"], "exit_code": 0, "result": "095ed4aa18a56100ce3aabc4a0d6885ad37ab520"}
+  ],
+  "schema_example_creation_attempts": "examples/a03/P1-R1/commands.json; all draft snapshots/stdout/stderr preserved in that directory's attempts/",
+  "final_packaging_commands": [
+    "python -B docs/evidence/A03/execution/P1-R1/package_r1.py audit --output docs/evidence/A03/execution/P1-R1/preservation-audit.json",
+    "python -B docs/evidence/A03/execution/P1-R1/package_r1.py manifest",
+    "python -B docs/evidence/A03/execution/P1-R1/package_r1.py verify",
+    "git diff --cached --check",
+    "python -B docs/evidence/A03/execution/P1-R1/verify_git_bytes.py HEAD",
+    "git status --porcelain=v1"
+  ],
+  "final_result_location": "preservation-audit.json, unified sha256-manifest.json and final tool results returned in chat; own manifest SHA and final commit are returned outside the self-bound files",
+  "ignored_item_note": "No new ignored outputs expected in R1 paths; actual list is captured by preservation audit. Old import caches are not modified/deleted.",
+  "candidate_api_calls": 0,
+  "target_observations_performed": 0,
+  "runtime_sqlite_or_recovery_function_executed": false,
+  "model_api_calls": 0,
+  "browser_network_platform_credentials_profile_ocr_operations": 0,
+  "pending_owned_sessions": 0
+}

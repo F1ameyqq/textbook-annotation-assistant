@@ -1,0 +1,7 @@
+Command: python -B docs/evidence/A03/execution/P1-R1/preserve_before.py
+Attempt: 1
+Exit: 1
+TypeError: unsupported operand type(s) for /: 'WindowsPath' and 'dict'
+Cause: schema property descriptors were mistaken for Resource instances while preserving the source schema; partial copies retained unchanged.
+Correction: require string path/sha256/media_type before recursively copying; re-run verifies existing copied bytes and never overwrites differing inputs.
+Recovery/business API executed: false

@@ -1,0 +1,134 @@
+{
+  "design_only": true,
+  "input_commit": "2d5ae2a53945a7fa20ef60a6b61e7b31c91dbea9",
+  "source_case": "cases/normal.json",
+  "consumer": {
+    "artifact_id": "receipt-design",
+    "kind": "ExecutionReceipt",
+    "input_refs": [
+      {
+        "artifact_id": "a02-plan",
+        "revision": 1,
+        "kind": "ApplyPlan",
+        "content_hash": "8d8b17b0220f6939481adcf13a56aa52bc8f1f98176e215c4b6a554533ed799e"
+      },
+      {
+        "artifact_id": "intent-design-1",
+        "revision": 1,
+        "kind": "WriteIntent",
+        "content_hash": "5ac2b2a48fb7bd45d25f9a5accb4244ae219f2b060741c8071545d023f68b922"
+      },
+      {
+        "artifact_id": "intent-design-2",
+        "revision": 1,
+        "kind": "WriteIntent",
+        "content_hash": "02c3c113325014d0c901411acce7b9e5276967361b37722730c276d814096c00"
+      },
+      {
+        "artifact_id": "intent-design-3",
+        "revision": 1,
+        "kind": "WriteIntent",
+        "content_hash": "54e1dd8ef43cd08fd87c7ddfed962008188801e24267440cc3d9faeaffe304de"
+      }
+    ]
+  },
+  "fact_resource": {
+    "path": "assets/action-fact-normal-1.json",
+    "sha256": "5380be48968ff50c9156af45bf2755a5469969cbef1ed8d52458b65b4c37dfba",
+    "media_type": "application/json",
+    "origin": "SYNTHETIC"
+  },
+  "fact": {
+    "format_version": "a03-action-fact-1",
+    "design_only": true,
+    "origin_phase": "EXECUTION",
+    "resolution_ref": null,
+    "plan_ref": {
+      "artifact_id": "a02-plan",
+      "revision": 1,
+      "kind": "ApplyPlan",
+      "content_hash": "8d8b17b0220f6939481adcf13a56aa52bc8f1f98176e215c4b6a554533ed799e"
+    },
+    "intent_ref": {
+      "artifact_id": "intent-design-1",
+      "revision": 1,
+      "kind": "WriteIntent",
+      "content_hash": "5ac2b2a48fb7bd45d25f9a5accb4244ae219f2b060741c8071545d023f68b922"
+    },
+    "obligation_id": "obl-19a15d2f6d8b1ff2bd88a0d06a50491bdc4ed4054fc1d873715593d4c3482e7b",
+    "action_id": "action-a02-a80e543226fa0df5fcdcb8c585e1c125",
+    "action_digest": "720d94fb6630bf8f47ec73a3c23282aa6e5a7413b0dc10bcd736b6fd1533eba2",
+    "prepared_before": {
+      "path": "assets/prepared-before-1.json",
+      "sha256": "214ca0c17620d910b539f4b7788d9268867dc0141f362cc1f6c2221ceccc4e3a",
+      "media_type": "application/json",
+      "origin": "SYNTHETIC"
+    },
+    "observed_snapshot_ref": {
+      "artifact_id": "snapshot-action-result-1",
+      "revision": 1,
+      "kind": "PlatformSnapshot",
+      "content_hash": "7a8a8391b35eb1aecd7528bc4bfcc739f41f4720b9becae9f9937ffe421fe251"
+    },
+    "readback": {
+      "path": "assets/observation-action-result-1.json",
+      "sha256": "834f3c3453dbfdc060994af1f1d840462a6e0f52d7b758b978d759c0e3fc71f1",
+      "media_type": "application/json",
+      "origin": "SYNTHETIC"
+    },
+    "comparator_version": "a02-facts-1",
+    "result": {
+      "action_id": "action-a02-a80e543226fa0df5fcdcb8c585e1c125",
+      "outcome": "APPLIED",
+      "platform_ids": [
+        "design-platform-question-1"
+      ],
+      "before_evidence_refs": [
+        "proof-before"
+      ],
+      "after_evidence_refs": [
+        "proof-after"
+      ],
+      "readback": {
+        "path": "assets/observation-action-result-1.json",
+        "sha256": "834f3c3453dbfdc060994af1f1d840462a6e0f52d7b758b978d759c0e3fc71f1",
+        "media_type": "application/json",
+        "origin": "SYNTHETIC"
+      },
+      "effect_match": "MATCH",
+      "next_step": "POSTCHECK",
+      "replay_allowed": false,
+      "reason": "DESIGN_ONLY invented result, not an execution receipt",
+      "attempt_fact": "ATTEMPTED",
+      "attempt_evidence_refs": [
+        {
+          "path": "assets/design-facts.json",
+          "sha256": "d7dd650b2bd81bc8504f95db319d55f6b311a309c6c0785c2f4f1e4f30b72d73",
+          "media_type": "application/json",
+          "origin": "SYNTHETIC"
+        }
+      ],
+      "intent_ref": {
+        "artifact_id": "intent-design-1",
+        "revision": 1,
+        "kind": "WriteIntent",
+        "content_hash": "5ac2b2a48fb7bd45d25f9a5accb4244ae219f2b060741c8071545d023f68b922"
+      }
+    },
+    "journal_sequence": 3,
+    "predecessor_hash": "4063a92611e6b43d8f0eebe60639afeea21e22d5647815937a706bcee2de190e"
+  },
+  "undeclared_ref": {
+    "artifact_id": "snapshot-action-result-1",
+    "revision": 1,
+    "kind": "PlatformSnapshot",
+    "content_hash": "7a8a8391b35eb1aecd7528bc4bfcc739f41f4720b9becae9f9937ffe421fe251"
+  },
+  "authority": [
+    "docs/a03-recovery-contract-v1-proposal.md:106",
+    "examples/a03/P1/api-proposal.json:984"
+  ],
+  "author_static_actual": "PASS",
+  "independent_declaration_actual": "UNDECLARED_INPUT",
+  "functional_recovery_result": "NOT_RUN"
+}
