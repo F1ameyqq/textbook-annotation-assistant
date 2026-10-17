@@ -66,5 +66,18 @@
   "reason": "Only additive publication documentation and state; exact accepted code/tests/fixtures unchanged. Previous integration checks linked in handoff.",
   "remote_branches_mutated": false,
   "platform_actions": 0,
-  "model_calls": 0
+  "model_calls": 0,
+  "publication_preflight_history": [
+    {
+      "step": "first staged byte audit",
+      "result": "FAILED",
+      "reason": "Three newly generated publication JSON files were CRLF on disk while the existing Git attributes staged LF; the checker stopped on checks.json. No product code or historical evidence differed.",
+      "remote_push": false
+    },
+    {
+      "step": "normalize newly generated publication JSON only",
+      "result": "PASS",
+      "reason": "Explicit LF writes now exactly match the committed Git blobs; full publication checks are rerun before push."
+    }
+  ]
 }
