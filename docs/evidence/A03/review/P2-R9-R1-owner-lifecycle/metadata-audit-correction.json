@@ -1,0 +1,12 @@
+{
+  "status": "ONE_POST_FUNCTIONAL_METADATA_CORRECTION",
+  "first_run": "case-boundaries-review-01",
+  "first_pid": 41640,
+  "first_exit_code": 1,
+  "cause": "Reviewer applied the normal APPLIED plan FINISHED assertion to D2. The original D2 interrupted plan correctly remains INTERRUPTED/cursor0 after NOT_APPLIED reconciliation; its action and intent have terminal NOT_APPLIED resolution.",
+  "fixed_assertion": "Require FINISHED for D1/standalone/borrow; require INTERRUPTED for D2 and retain the observed status/cursor explicitly.",
+  "basis": "Unchanged storage.claim marks the old RUNNING plan INTERRUPTED on generation takeover; a NOT_APPLIED action requires recheck/new plan rather than resuming the old plan.",
+  "retained": "First entry snapshot, registration, PID, raw streams and completion remain unchanged.",
+  "extra_product_calls_or_reruns": 0,
+  "correction_scope": "Reviewer standard-library immutable-copy/byte audit only; no functional driver or candidate change."
+}

@@ -1,0 +1,27 @@
+Traceback (most recent call last):
+  File "C:\Users\ASUS\.codex\worktrees\a03-runtime-recovery\1800\src\annotation\runtime\storage\__init__.py", line 158, in transaction
+    yield connection
+  File "C:\Users\ASUS\.codex\worktrees\a03-runtime-recovery\1800\src\annotation\runtime\recovery\native_quality.py", line 33, in publish_native_quality
+    connection.execute('INSERT INTO native_report_reads VALUES(?,?,1)', (digest(reference(plan)), time.time()))
+sqlite3.IntegrityError: UNIQUE constraint failed: native_report_reads.plan_id
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\ASUS\.codex\worktrees\a03-runtime-recovery\1800\tests\test_a03_p2_r9_r1_owner_lifecycle.py", line 206, in <module>
+    child(case, args.group, args.child_mode)
+  File "C:\Users\ASUS\.codex\worktrees\a03-runtime-recovery\1800\tests\test_a03_p2_r9_r1_owner_lifecycle.py", line 168, in child
+    report(case, group == 'borrow')
+  File "C:\Users\ASUS\.codex\worktrees\a03-runtime-recovery\1800\tests\test_a03_p2_r9_r1_owner_lifecycle.py", line 141, in report
+    publish_quality(store, reg['id'], projection, owner_id=claim.owner_id, generation=claim.generation)
+  File "C:\Users\ASUS\.codex\worktrees\a03-runtime-recovery\1800\src\annotation\runtime\recovery\__init__.py", line 30, in publish_quality
+    return publish_native_quality(store, registration_id, projection,
+  File "C:\Users\ASUS\.codex\worktrees\a03-runtime-recovery\1800\src\annotation\runtime\recovery\native_quality.py", line 33, in publish_native_quality
+    connection.execute('INSERT INTO native_report_reads VALUES(?,?,1)', (digest(reference(plan)), time.time()))
+  File "C:\Users\ASUS\AppData\Local\Programs\Python\Python39\lib\contextlib.py", line 137, in __exit__
+    self.gen.throw(typ, value, traceback)
+  File "C:\Users\ASUS\.codex\worktrees\a03-runtime-recovery\1800\src\annotation\runtime\storage\__init__.py", line 162, in transaction
+    fail("STORAGE_TRANSACTION_FAILED", str(error), 5)
+  File "C:\Users\ASUS\.codex\worktrees\a03-runtime-recovery\1800\src\annotation\runtime\storage\common.py", line 68, in fail
+    raise RuntimeFailure(code, message, exit_code)
+annotation.runtime.storage.common.RuntimeFailure: UNIQUE constraint failed: native_report_reads.plan_id

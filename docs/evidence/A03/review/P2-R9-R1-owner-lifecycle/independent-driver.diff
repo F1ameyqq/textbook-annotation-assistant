@@ -1,0 +1,101 @@
+--- frozen/tests\test_a03_p2_r9_r1_owner_lifecycle.py
++++ reviewer/tests/review_a03_p2_r9_r1_owner_lifecycle.py
+@@ -7,6 +7,7 @@
+ import subprocess
+ import sys
+ import time
++import traceback
+ 
+ import test_a03_p2_r9_minimal_demos as original
+ 
+@@ -21,6 +22,16 @@
+     result['modules']['test_a03_p2_r9_minimal_demos'] = {
+         'path': original.__file__, 'sha256': sha(Path(original.__file__).read_bytes())}
+     return result
++
++
++def target_read_counts(case):
++    path = case / 'target/target.sqlite3'
++    raw = path.read_bytes()
++    with sqlite3.connect(path.as_uri() + '?mode=ro&immutable=1', uri=True) as db:
++        counts = {name: db.execute('SELECT count(*) FROM ' + name).fetchone()[0]
++            for name in ('effects', 'observations')}
++    assert path.read_bytes() == raw
++    return {'sha256': sha(raw), 'counts': counts}
+ 
+ 
+ def state(store, case):
+@@ -30,8 +41,11 @@
+         counts = {name: db.execute('SELECT count(*) FROM ' + name).fetchone()[0]
+             for name in ('plans', 'intents', 'permits', 'artifacts', 'native_report_reads')}
+         events = [json.loads(r[0])['event'] for r in db.execute('SELECT body FROM events ORDER BY sequence')]
++    bundle = store.bundle(reg['id'])
+     return {'book': book, 'counts': counts, 'events': events,
+-        'effect_count': original.effect_count(case), 'bundle': store.bundle(reg['id'])}
++        'effect_count': original.effect_count(case), 'bundle': bundle, 'target': target_read_counts(case),
++        'report_artifact_counts': {'POST': sum(a['kind'] == 'CheckReport' and a['payload']['stage'] == 'POST_APPLY' for a in bundle['artifacts']),
++            'Batch': sum(a['kind'] == 'BatchReport' for a in bundle['artifacts'])}}
+ 
+ 
+ def receipt_without_report(case):
+@@ -93,7 +107,7 @@
+ 
+ def report(case, borrowed):
+     from annotation.runtime.recovery import publish_quality
+-    from annotation.runtime.storage.common import plain
++    from annotation.runtime.storage.common import plain, RuntimeFailure
+     store, claim, keeper, projection = receipt_without_report(case)
+     reg = store.registration()
+     try:
+@@ -119,7 +133,7 @@
+                 start = state(store, case)
+                 try:
+                     publish_quality(store, reg['id'], projection, **kwargs)
+-                except Exception as error:
++                except RuntimeFailure as error:
+                     record = {'control': name, 'type': type(error).__name__, 'code': getattr(error, 'code', None), 'message': str(error)}
+                     controls.append(record)
+                     print(json.dumps(record), flush=True)
+@@ -128,6 +142,7 @@
+                     raise AssertionError('invalid borrowed ownership unexpectedly allowed: ' + name)
+                 end = state(store, case)
+                 assert start['counts'] == end['counts'] and start['events'] == end['events']
++                assert start['target'] == end['target'] and start['bundle'] == end['bundle']
+                 assert (end['book']['owner'], end['book']['generation'], end['book']['phase']) == (claim.owner_id, claim.generation, 'ACTIVE')
+                 assert keeper.thread.is_alive()
+                 write(case / ('control-' + name + '.json'), {'record': record, 'before': start, 'after': end})
+@@ -136,19 +151,31 @@
+             assert (after['book']['owner'], after['book']['generation'], after['book']['phase']) == (claim.owner_id, claim.generation, 'ACTIVE')
+             assert before['events'] == after['events'] and keeper.thread.is_alive()
+             keeper.check()
++            assert after['counts']['native_report_reads'] == 1 and after['report_artifact_counts'] == {'POST': 1, 'Batch': 1}
++            write(case / 'borrowed-owner-proof.json', {'before': before, 'after': after, 'controls': controls,
++                'quality': plain(quality), 'outer_keeper_alive': True, 'saved_before_read_limit_control': True})
+             # Existing durable single-read fence must fail before another read.
+             try:
+                 publish_quality(store, reg['id'], projection, owner_id=claim.owner_id, generation=claim.generation)
+-            except sqlite3.IntegrityError as error:
+-                limit = {'type': type(error).__name__, 'message': str(error)}
++            except RuntimeFailure as error:
++                assert error.code == 'STORAGE_TRANSACTION_FAILED'
++                assert str(error) == 'UNIQUE constraint failed: native_report_reads.plan_id'
++                assert isinstance(error.__context__, sqlite3.IntegrityError)
++                assert str(error.__context__) == 'UNIQUE constraint failed: native_report_reads.plan_id'
++                limit = {'type': type(error).__name__, 'code': error.code, 'message': str(error),
++                    'context_type': type(error.__context__).__name__, 'context_message': str(error.__context__),
++                    'traceback': traceback.format_exc()}
+                 print(json.dumps(limit), flush=True)
+             else:
+                 raise AssertionError('durable report read reused')
+             limited = state(store, case)
+             assert limited['counts'] == after['counts'] and limited['events'] == after['events']
++            assert limited['target'] == after['target'] and limited['bundle'] == after['bundle']
++            assert limited['report_artifact_counts'] == after['report_artifact_counts'] == {'POST': 1, 'Batch': 1}
++            keeper.check()
+             assert (limited['book']['owner'], limited['book']['generation'], limited['book']['phase']) == (claim.owner_id, claim.generation, 'ACTIVE')
+             assert keeper.thread.is_alive()
+-            write(case / 'borrowed-owner-proof.json', {'before': before, 'after': after, 'after_read_limit_refusal': limited,
++            write(case / 'single-read-refusal-proof.json', {'before': before, 'after': after, 'after_read_limit_refusal': limited,
+                 'controls': controls, 'read_limit_refusal': limit, 'quality': plain(quality), 'outer_keeper_alive': True})
+         assert quality['content_check_status'] == 'PENDING' and quality['submission_status'] == 'NOT_SUBMITTED'
+         assert after['counts']['native_report_reads'] == 1 and original.effect_count(case) == 1
