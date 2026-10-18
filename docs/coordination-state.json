@@ -2,7 +2,7 @@
   "schema_version": 1,
   "project": "D:\\1800",
   "coordinator_thread_id": "01a13f26-7567-75e1-99ee-c9d2194e78bb",
-  "updated_at": "2026-10-18T12:02:26.870664+08:00",
+  "updated_at": "2026-10-18T12:04:01.690551+08:00",
   "automation": {
     "id": "1800-a",
     "kind": "heartbeat",
@@ -7321,13 +7321,14 @@
         "decision": "ACCEPTED_FIXED_C12_H1_AND_NEW_ARCHIVE_INVENTORY_ONLY",
         "report": "docs/tasks/A03-T2-coordinator-acceptance.md",
         "checks": "docs/evidence/coordinator/heartbeat-20261018-0352/T2-checks.json",
-        "product_integration": false
+        "product_integration": false,
+        "workflow_commit": "4fa7237d1114ed2c89f65cbb28579a8956812062"
       }
     },
     "A03-T3": {
       "status": "IN_PROGRESS",
       "parent_task": "A03",
-      "phase": "M_IMPLEMENTATION_DISPATCH_PREPARED",
+      "phase": "M_IMPLEMENTATION_RUNNING",
       "base_commit": "1330047dd29890dea0e433ff01b991f615bf78f4",
       "handoff_commit": "6b61ac9d623e76cbe6311f64d012fd04e2e03c21",
       "execution_task": "docs/tasks/A03-T3-closure-and-integration.md",
@@ -7337,7 +7338,7 @@
       "next_dependency": "Existing T3 executor frozen M candidate/evidence and release, then existing independent T3 review; L/G/F remain future bounded packages.",
       "branch": "codex/a03-t3-closure",
       "worktree": "D:/1800-worktrees/a03-t3",
-      "worktree_status": "CLEAN_RELEASED",
+      "worktree_status": "HANDED_BACK_TO_EXISTING_EXECUTOR",
       "worktree_method": "CLI fallback after app long-path failure; explicit per-command core.longpaths=true",
       "failed_app_worktree": {
         "name": "a03-t3-closure",
@@ -7345,28 +7346,28 @@
         "reason": "Filename too long; failed paths absent and worktree list clean before fallback"
       },
       "reasoning_policy": "xhigh for new chats; model default",
-      "dispatch_status": "INTENT_RECORDED",
+      "dispatch_status": "EXECUTION_CONTINUATION_ACKNOWLEDGED",
       "execution": {
         "thread_id": "01a14ccf-afa4-7260-a2a2-a47633772ae5",
         "host_id": "local",
-        "cursor": "625b3403-1db6-4b33-af44-f0b84067ab61:6",
-        "phase": "M_DISPATCH_PREPARED",
+        "cursor": "625b3403-1db6-4b33-af44-f0b84067ab61:7",
+        "phase": "M_IMPLEMENTATION_RUNNING",
         "dispatch_key": "A03-T3:execution:M:62a023a",
         "thinking": "xhigh",
         "model": "USER_DEFAULT",
         "task_document": "docs/tasks/A03-T3-M-implementation-handoff.md",
         "expected_report": "docs/tasks/A03-T3-M-execution-report.md",
         "created_at": "2026-10-18T10:20:43.837153+08:00",
-        "workflow_commit": "b6e00eb3d0512b4ad838676d72c28e8036125301",
-        "turn_status": "completed",
-        "observed_thread_status": "idle",
-        "turn_id": "01a14cf5-9725-7001-9933-e594ac4a5770",
-        "last_progress": "Frozen delivery completed; coordinator raw-byte/scope/release admission passed; no functional acceptance yet.",
-        "last_checked_at": "2026-10-18T12:02:26.870664+08:00",
+        "workflow_commit": "4fa7237d1114ed2c89f65cbb28579a8956812062",
+        "turn_status": "inProgress",
+        "observed_thread_status": "active",
+        "turn_id": "01a14d2d-c4cd-7303-8182-244100c1bcc8",
+        "last_progress": "Executor acknowledged fixed K and D-M scope; prepares static checks, inputs, raw execution bytes, pins and process recording before first business run.",
+        "last_checked_at": "2026-10-18T12:04:01.690551+08:00",
         "last_completed_turn_id": "01a14cf5-9725-7001-9933-e594ac4a5770",
         "target_commit": "765aef597a93fe36060fce65e17b22fe1c3408b8",
         "working_tree_clean": true,
-        "session_released": true,
+        "session_released": null,
         "delivery_preflight": {
           "path": "docs/evidence/coordinator/heartbeat-20261018-0322/checks.json",
           "target_commit": "765aef597a93fe36060fce65e17b22fe1c3408b8",
@@ -7538,7 +7539,7 @@
         "key": "A03-T3:execution:M:62a023a",
         "task": "A03-T3",
         "role": "execution",
-        "state": "INTENT_RECORDED",
+        "state": "STARTED",
         "created_at": "2026-10-18T12:02:26.870664+08:00",
         "document": "docs/tasks/A03-T3-M-implementation-handoff.md",
         "document_sha256": "19ce538a5c3d693c1a15656c4f2a0716c7f9b8916dfb4f63ae375e84a6b5211e",
@@ -7546,7 +7547,13 @@
         "thread_id": "01a14ccf-afa4-7260-a2a2-a47633772ae5",
         "host_id": "local",
         "thinking": "xhigh",
-        "scope": "Adopted D-M implementation and M1-M3 only: at most 5 native targets, 11 dispatch; fixed whitelist; no L/G/F or whole A03 acceptance."
+        "scope": "Adopted D-M implementation and M1-M3 only: at most 5 native targets, 11 dispatch; fixed whitelist; no L/G/F or whole A03 acceptance.",
+        "sent_at": "2026-10-18T12:03:45.201854+08:00",
+        "workflow_commit": "4fa7237d1114ed2c89f65cbb28579a8956812062",
+        "result": "send_message_to_thread returned registered T3 execution thread id; thinking=xhigh, model omitted",
+        "cursor": "625b3403-1db6-4b33-af44-f0b84067ab61:7",
+        "turn_id": "01a14d2d-c4cd-7303-8182-244100c1bcc8",
+        "started_observed_at": "2026-10-18T12:04:01.690551+08:00"
       },
       "review_dispatch_history": [
         {
@@ -9571,7 +9578,7 @@
       "key": "A03-T3:execution:M:62a023a",
       "task": "A03-T3",
       "role": "execution",
-      "state": "INTENT_RECORDED",
+      "state": "STARTED",
       "created_at": "2026-10-18T12:02:26.870664+08:00",
       "document": "docs/tasks/A03-T3-M-implementation-handoff.md",
       "document_sha256": "19ce538a5c3d693c1a15656c4f2a0716c7f9b8916dfb4f63ae375e84a6b5211e",
@@ -9579,14 +9586,23 @@
       "thread_id": "01a14ccf-afa4-7260-a2a2-a47633772ae5",
       "host_id": "local",
       "thinking": "xhigh",
-      "scope": "Adopted D-M implementation and M1-M3 only: at most 5 native targets, 11 dispatch; fixed whitelist; no L/G/F or whole A03 acceptance."
+      "scope": "Adopted D-M implementation and M1-M3 only: at most 5 native targets, 11 dispatch; fixed whitelist; no L/G/F or whole A03 acceptance.",
+      "sent_at": "2026-10-18T12:03:45.201854+08:00",
+      "workflow_commit": "4fa7237d1114ed2c89f65cbb28579a8956812062",
+      "result": "send_message_to_thread returned registered T3 execution thread id; thinking=xhigh, model omitted",
+      "cursor": "625b3403-1db6-4b33-af44-f0b84067ab61:7",
+      "turn_id": "01a14d2d-c4cd-7303-8182-244100c1bcc8",
+      "started_observed_at": "2026-10-18T12:04:01.690551+08:00"
     }
   ],
   "last_action": {
-    "at": "2026-10-18T12:02:26.870664+08:00",
-    "action": "T2_ACCEPTED_K_INTEGRATED_M_DISPATCH_INTENT",
-    "task_id": "A03-T2/A03-T3",
-    "dispatch_result": "INTENT_RECORDED_BEFORE_SEND"
+    "at": "2026-10-18T12:04:01.690551+08:00",
+    "action": "T3_M_EXECUTION_ACKNOWLEDGED",
+    "task_id": "A03-T3",
+    "thread_id": "01a14ccf-afa4-7260-a2a2-a47633772ae5",
+    "dispatch_result": "EXISTING_EXECUTOR_ACTIVE_WITH_SAVED_CURSOR",
+    "workflow_commit": "4fa7237d1114ed2c89f65cbb28579a8956812062",
+    "K": "62a023a1c88c20d884a61f38d1ad995b0908b74c"
   },
   "limitations": [
     "Current route uses mock B artifacts until independently agreed interface/artifact versions exist.",
@@ -9594,12 +9610,13 @@
     "Platform test is single-book serial, no book submission, no unbudgeted paid models."
   ],
   "last_check": {
-    "at": "2026-10-18T12:02:26.870664+08:00",
-    "coordinator_head": "6a01cf7a2d532f628ffc3a151ddac96fb9c05083",
-    "scope": "T2 limited acceptance plus five-stage immutable DB spot checks; exact T3 K helper-only integration",
+    "at": "2026-10-18T12:04:01.690551+08:00",
+    "coordinator_head": "4fa7237d1114ed2c89f65cbb28579a8956812062",
+    "scope": "T2 accepted; exact K helper-only integration complete; existing T3 executor acknowledged bounded M implementation; independent review awaits fixed delivery",
     "business_reruns": 0,
     "product_imports": 0,
-    "root_product_integrated": false
+    "root_product_integrated": false,
+    "thread_cursor": "625b3403-1db6-4b33-af44-f0b84067ab61:7"
   },
   "prepared_next_batch": {
     "status": "DISPATCHED",
@@ -9969,11 +9986,11 @@
     }
   ],
   "last_heartbeat": {
-    "at": "2026-10-18T11:45:23.046236+08:00",
-    "trigger": "2026-10-18T03:37:51.267Z",
+    "at": "2026-10-18T12:03:45.201854+08:00",
+    "trigger": "2026-10-18T03:52:51.486Z",
     "automation_id": "1800-a",
     "decision": "NOTIFY",
-    "reason": "T3 plan accepted; T2 independent business passed but archival-only REWORK retained. Frozen coordinator inventory sent for one static closure; no business replay."
+    "reason": "T2 limited acceptance completed; fixed K helper dependency integrated and bounded adopted M implementation dispatched to existing T3 executor."
   },
   "interactive_progress_history": [
     {
