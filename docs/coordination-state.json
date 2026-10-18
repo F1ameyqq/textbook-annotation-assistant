@@ -8019,7 +8019,7 @@
     },
     "A03-R1": {
       "status": "REWORK",
-      "phase": "FIXED_REWORK_INDEPENDENT_REVIEW_RUNNING",
+      "phase": "FINAL_BOUNDED_CORRECTION_DISPATCH_INTENT",
       "parent_task": "A03",
       "user_authorization": "2026-10-18 user: 开始执行; same-function replacement described immediately before.",
       "base_commit": "d5f777590e72eb070af0497afdb144d60c61b95d",
@@ -8030,14 +8030,14 @@
       "worktree": "D:/1800-worktrees/a03-r1",
       "execution": {
         "thread_id": "01a14da3-8798-75c0-af50-ca8fec19b48c",
-        "status": "COMPLETED_REWORK",
+        "status": "DISPATCH_INTENT_FINAL_CORRECTION",
         "thinking": "xhigh",
-        "dispatch_key": "A03-R1:execution:d5f77759",
+        "dispatch_key": "A03-R1:execution:final-correction:54e86adf",
         "host_id": "local",
         "created_at": "2026-10-18T06:12:29.602456+00:00",
         "workflow_commit": "0476257d",
-        "task_document": "docs/tasks/A03-R1-equivalent-runtime.md",
-        "expected_report": "docs/tasks/A03-R1-execution-report.md",
+        "task_document": "docs/tasks/A03-R1-final-bounded-correction.md",
+        "expected_report": "docs/tasks/A03-R1-final-correction-report.md",
         "cursor": "b1048ea3-80d3-4361-bed1-9b4e3a39f600:6",
         "turn_status": "completed",
         "observed_thread_status": "idle",
@@ -8053,11 +8053,23 @@
         "session_released": true,
         "report": "docs/tasks/A03-R1-execution-report.md",
         "report_sha256": "f0a8f282194b9a3b8ea84ce2eeaa3472be99c1c1119e0579b24574f2a3d76f6c",
-        "delivery_preflight": "docs/evidence/coordinator/heartbeat-20261018-0629/delivery-preflight.json"
+        "delivery_preflight": "docs/evidence/coordinator/heartbeat-20261018-0629/delivery-preflight.json",
+        "delivery_history": [
+          {
+            "target_commit": "54e86adfaf144093a688b62fe0dad5190ceb2fa6",
+            "candidate_commit": "6097a06de937fee8876feccedf46920510850b83",
+            "report": "docs/tasks/A03-R1-execution-report.md",
+            "report_sha256": "f0a8f282194b9a3b8ea84ce2eeaa3472be99c1c1119e0579b24574f2a3d76f6c",
+            "delivery_preflight": "docs/evidence/coordinator/heartbeat-20261018-0629/delivery-preflight.json",
+            "session_released": true,
+            "cursor": "b1048ea3-80d3-4361-bed1-9b4e3a39f600:6"
+          }
+        ],
+        "next_dependency": "Freeze final correction with unchanged product source, run only bounded remaining L/G/F and release; no retry after frozen failure."
       },
       "review": {
         "thread_id": "01a14da3-e8f3-7991-9b05-4a3fc38e2362",
-        "status": "RUNNING",
+        "status": "COMPLETED_REWORK_WITH_FINITE_ACCEPTANCE",
         "thinking": "xhigh",
         "dispatch_key": "A03-R1:review:54e86adf",
         "host_id": "local",
@@ -8065,12 +8077,12 @@
         "workflow_commit": "07708f34",
         "task_document": "docs/tasks/A03-R1-independent-review.md",
         "expected_report": "docs/tasks/A03-R1-review-report.md",
-        "cursor": "9f41c9c7-380d-4189-b49b-805a2b10a792:3",
-        "turn_status": "inProgress",
-        "observed_thread_status": "active",
+        "cursor": "9f41c9c7-380d-4189-b49b-805a2b10a792:4",
+        "turn_status": "completed",
+        "observed_thread_status": "idle",
         "turn_id": "01a14db7-86ce-7643-9ba7-aca57c3cf695",
-        "last_checked_at": "2026-10-18T06:45:41.203848+00:00",
-        "last_progress": "Reviewer reports independent L1 pending 1->2->3->2 with two legacy obligations keeping the book paused and no additional effects from reconcile/report. M/L1 may support finite conclusions; remaining L/G/F incomplete. Final fixed review report and release still pending.",
+        "last_checked_at": "2026-10-18T07:03:18.408381+00:00",
+        "last_progress": "Independent M five and L1 finite ACCEPTED; no semantic defect in tested paths. Whole package REWORK for L2 raw-input failure and remaining L/G/F. Five starts/10 dispatch, own resources released.",
         "phase": "FIXED_CANDIDATE_INDEPENDENT_REVIEW",
         "pending_target_commit": null,
         "handoff_document": "docs/tasks/A03-R1-review-dispatch-2026-10-18.md",
@@ -8080,9 +8092,16 @@
         "dispatched_at": "2026-10-18T06:34:26.197250+00:00",
         "target_commit": "54e86adfaf144093a688b62fe0dad5190ceb2fa6",
         "candidate_commit": "6097a06de937fee8876feccedf46920510850b83",
-        "observed_report_present": false
+        "observed_report_present": true,
+        "last_completed_turn_id": "01a14db7-86ce-7643-9ba7-aca57c3cf695",
+        "session_released": true,
+        "decision": "REWORK_WITH_FINITE_M_L1_ACCEPTANCE",
+        "report": "docs/tasks/A03-R1-review-report.md",
+        "report_sha256": "752dac77082ab1f60a6e69cda1b0c2db70bd6c8f7c2ab0fb222ef79255db10b4",
+        "evidence_manifest": "docs/evidence/A03/R1/review/manifest.json",
+        "evidence_manifest_sha256": "8fce2dac7e30db072bb83c5f96fc0d06e54de31a20cbca26024c124ff524381f"
       },
-      "next_dependency": "Existing independent reviewer fixed-delivery judgment; then one bounded consolidated correction decision within A03-R1 scope, not automatic retries or I01 release.",
+      "next_dependency": "Final consolidated author correction within allocated second-package budget; freeze/release then existing independent delta review, coordinator accept/integrate, then I01-A.",
       "created_at": "2026-10-18T06:08:48.379704+00:00",
       "managed_worktree_attempt": {
         "operation_id": "1caa7fff-6d91-4e03-894c-e41553f60074",
@@ -8127,7 +8146,41 @@
           "456740b4360c408efdc3165e6e98b136770613ab"
         ],
         "automatic_third_driver_run_authorized": false,
-        "next_step": "Independent reviewer checks run identities and remaining coverage; coordinator decides bounded consolidated correction without resetting consumed driver budget."
+        "next_step": "Independent reviewer checks run identities and remaining coverage; coordinator decides bounded consolidated correction without resetting consumed driver budget.",
+        "resolved_by": "candidate_budget_decision"
+      },
+      "finite_acceptance": {
+        "at": "2026-10-18T07:03:18.408381+00:00",
+        "status": "ACCEPTED",
+        "candidate_commit": "6097a06de937fee8876feccedf46920510850b83",
+        "delivery_commit": "54e86adfaf144093a688b62fe0dad5190ceb2fa6",
+        "scope": "M five, L1 and dependency rejection checks exactly listed by independent report; old finite T1/T2 evidence preserved at original versions.",
+        "coordinator_report": "docs/tasks/A03-R1-coordinator-acceptance.md",
+        "coordinator_checks": "docs/evidence/coordinator/heartbeat-20261018-0659/coordinator-checks.json",
+        "independent_native_starts": 5,
+        "independent_dispatch": 10,
+        "coordinator_retained_assertions_passed": 5,
+        "coordinator_business_runs": 0,
+        "integrated": false
+      },
+      "candidate_budget_decision": {
+        "at": "2026-10-18T07:05:41.914886+00:00",
+        "authority": "User authorized equivalent replacement implementation and necessary bounded A-side repair; coordinator now allocates the final consolidated correction after independent review. This is not inferred from src commit count.",
+        "first_package_delivery": "54e86adfaf144093a688b62fe0dad5190ceb2fa6",
+        "second_package": "FINAL_CONSOLIDATED_CORRECTION",
+        "max_packages": 2,
+        "L_driver_attempts_retained": [
+          "d0438c998c9e161ae7d919e2ac83ce9075a56751",
+          "456740b4360c408efdc3165e6e98b136770613ab"
+        ],
+        "L_driver_budget_reset": false,
+        "third_full_L_rerun": false,
+        "M_L1_new_business_runs": 0,
+        "new_native_targets_max": 3,
+        "new_dispatch_max": 4,
+        "post_freeze_failure_retry_allowance": 0,
+        "third_package_authorized": false,
+        "decision_document": "docs/tasks/A03-R1-final-bounded-correction.md"
       }
     }
   },
@@ -10227,15 +10280,27 @@
       "sent_at": "2026-10-18T06:34:26.197250+00:00",
       "returned_thread_id": "01a14da3-e8f3-7991-9b05-4a3fc38e2362",
       "workflow_commit": "07708f34"
+    },
+    {
+      "at": "2026-10-18T07:05:41.914886+00:00",
+      "task_id": "A03-R1",
+      "role": "execution",
+      "action": "send_message_to_thread",
+      "host_id": "local",
+      "thread_id": "01a14da3-8798-75c0-af50-ca8fec19b48c",
+      "dispatch_key": "A03-R1:execution:final-correction:54e86adf",
+      "base_commit": "54e86adfaf144093a688b62fe0dad5190ceb2fa6",
+      "task_document": "docs/tasks/A03-R1-final-bounded-correction.md",
+      "status": "INTENT_RECORDED"
     }
   ],
   "last_action": {
-    "at": "2026-10-18T06:45:41.203848+00:00",
+    "at": "2026-10-18T07:05:41.914886+00:00",
     "task_id": "A03-R1",
-    "action": "Lightweight progress check only; independent reviewer active, final report pending. No repeat dispatch or tests.",
-    "product_acceptance": false,
+    "action": "Accepted finite M/L1 and reviewed dependency checks; allocated one final bounded remaining-work package and recorded continuation intent.",
+    "product_acceptance": "FINITE_ONLY",
     "integration": false,
-    "next_dependency": "Existing independent reviewer fixed-delivery judgment; then one bounded consolidated correction decision within A03-R1 scope, not automatic retries or I01 release."
+    "next_dependency": "Final consolidated author correction within allocated second-package budget; freeze/release then existing independent delta review, coordinator accept/integrate, then I01-A."
   },
   "limitations": [
     "Current route uses mock B artifacts until independently agreed interface/artifact versions exist.",

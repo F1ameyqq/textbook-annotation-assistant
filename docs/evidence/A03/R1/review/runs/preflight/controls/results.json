@@ -1,0 +1,124 @@
+{
+  "controls": [
+    {
+      "actual": {
+        "code": "EXACT_REF",
+        "message": "EXACT_REF",
+        "path": "assets/inner.json/nested_ref"
+      },
+      "assertion": "new_private_nested_closure",
+      "control": "test_01_missing_nested_formal_reference",
+      "expected": "EXACT_REF"
+    },
+    {
+      "actual": {
+        "code": "UNDECLARED_REFERENCE",
+        "message": "UNDECLARED_REFERENCE",
+        "path": "second-consumer-r1"
+      },
+      "assertion": "new_private_each_consumer",
+      "control": "test_02_second_consumer_cannot_borrow_declaration",
+      "expected": "UNDECLARED_REFERENCE"
+    },
+    {
+      "actual": {
+        "code": "FOREIGN_BOOK",
+        "message": "FOREIGN_BOOK",
+        "path": "input-M-single-PlatformSnapshot"
+      },
+      "assertion": "new_private_book",
+      "control": "test_03_wrong_book",
+      "expected": "FOREIGN_BOOK"
+    },
+    {
+      "actual": {
+        "code": "ORDINARY_SCOPE",
+        "message": "ORDINARY_SCOPE",
+        "path": "input-M-single-PlatformSnapshot"
+      },
+      "assertion": "new_private_scope",
+      "control": "test_04_wrong_scope",
+      "expected": "ORDINARY_SCOPE"
+    },
+    {
+      "actual": {
+        "code": "RESOURCE_HASH",
+        "message": "RESOURCE_HASH",
+        "path": "assets/inner.json"
+      },
+      "assertion": "new_private_rereads_bytes",
+      "control": "test_05_resource_bytes_change_after_success",
+      "expected": "RESOURCE_HASH"
+    },
+    {
+      "actual": {
+        "code": "RESOURCE_HASH",
+        "message": "RESOURCE_HASH",
+        "path": "assets/inner.json"
+      },
+      "assertion": "old_context_public_rereads_bytes",
+      "control": "test_05_resource_bytes_change_after_success",
+      "expected": "RESOURCE_HASH"
+    },
+    {
+      "actual": {
+        "code": "NATIVE_IMPLEMENTATION_PIN",
+        "message": "NATIVE_IMPLEMENTATION_PIN",
+        "path": "__init__.py"
+      },
+      "assertion": "new_private_current_pins",
+      "control": "test_06_implementation_bytes_change_after_success",
+      "expected": "NATIVE_IMPLEMENTATION_PIN"
+    },
+    {
+      "actual": {
+        "code": "NATIVE_IMPLEMENTATION_PIN",
+        "message": "NATIVE_IMPLEMENTATION_PIN",
+        "path": "__init__.py"
+      },
+      "assertion": "old_context_public_current_pins",
+      "control": "test_06_implementation_bytes_change_after_success",
+      "expected": "NATIVE_IMPLEMENTATION_PIN"
+    },
+    {
+      "actual": {
+        "code": "RESOURCE_READ",
+        "message": "[WinError 3] 系统找不到指定的路径。: 'D:\\\\1800-worktrees\\\\a03-r1-review-54e86adf\\\\docs\\\\evidence\\\\A03\\\\R1\\\\review\\\\preflight\\\\controls\\\\test_07_wrong_root\\\\empty-root\\\\assets\\\\page-1.pgm'",
+        "path": "assets/page-1.pgm"
+      },
+      "assertion": "new_private_actual_root_resources",
+      "control": "test_07_wrong_root",
+      "expected": "RESOURCE_READ"
+    },
+    {
+      "actual": {
+        "code": "NATIVE_REGISTRY_REQUIRED",
+        "message": "NATIVE_REGISTRY_REQUIRED",
+        "path": "$registry"
+      },
+      "assertion": "new_private_unregistered_registry",
+      "control": "test_08_unregistered_registry_and_context",
+      "expected": "NATIVE_REGISTRY_REQUIRED"
+    },
+    {
+      "actual": {
+        "code": "NATIVE_CONTEXT_REQUIRED",
+        "message": "NATIVE_CONTEXT_REQUIRED",
+        "path": "$context"
+      },
+      "assertion": "public_unregistered_context",
+      "control": "test_08_unregistered_registry_and_context",
+      "expected": "NATIVE_CONTEXT_REQUIRED"
+    }
+  ],
+  "dispatch": 0,
+  "positive": {
+    "data_manifest_digest_root_registry": "MATCH_OLD_STRICT_ENTRY",
+    "new_context_is_fresh": true,
+    "root_registered": true
+  },
+  "product_module": "D:\\1800-worktrees\\a03-r1-review-54e86adf\\docs\\evidence\\A03\\R1\\review\\preflight\\runtime-view\\src\\annotation\\contracts\\a03_native\\__init__.py",
+  "product_sha256": "d5147752f1bcacd66de71a7d282a370e3f381d4eee323d03d04b389c1918f0f7",
+  "sqlite_connections": 0,
+  "target_starts": 0
+}
