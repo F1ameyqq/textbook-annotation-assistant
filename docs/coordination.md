@@ -1,5 +1,7 @@
 # A 侧开发调度与验收
 
+2026-10-18 当前固定交付：A03-R1 最终候选 `19ab03c849bfab3dcde2dc86be37c59f3add1ebe`，运行冻结 `9992cd8aba10987d25dd0dc0d0874abec02b27ef`，产品 `6097a06d` 原字节不变。作者报告本轮2目标/3dispatch及释放；经调度交付预检后按[最终差量独立验收](tasks/A03-R1-final-delta-review-dispatch.md)续派现有验收对话，确切状态/cursor见JSON。M/L1有限接受保留，整体仍REWORK、未集成、I01未释放。作者不再修后重跑、无第三整包；最终验收仍缺证则固定收口向用户报告，不自动另派额度。
+
 2026-10-18 最新收口：[A03-R1 首包 M/L1 及实测依赖拒绝有限接受](tasks/A03-R1-coordinator-acceptance.md)，整体 REWORK、未集成、I01 未释放。现按[最终整合纠正](tasks/A03-R1-final-bounded-correction.md)向同一作者一次续派第二次且最终整包；保留原产品 bytes，补 L2 输入及原 L/G/F 余量，不重跑 M/L1、不重置旧驱动次数。新候选冻结后失败不改后重跑，无第三整包。验收只在固定交付释放后审本次差量；此段和调度 JSON 优先于下方历史时点。
 
 2026-10-18 最新用户决定：已批准[A03-R1等价内部替代](tasks/A03-R1-equivalent-runtime.md)直接实施及[独立验收](tasks/A03-R1-independent-review.md)。保留SQLite账本、delivery和公共业务合同，重构内部验证与状态转换。起点 `d5f777590e72eb070af0497afdb144d60c61b95d`，T3已冻结释放；其旧验收仅只读收口，不再派产品补丁。新执行/验收对话及隔离目录见调度JSON。原28项及M/L/G/F有限映射保持，45秒是旧单题看门狗而非业务SLA，新任务分开验证功能与耗时，内层守卫不放宽。A03整体仍REWORK，完成独立验收及调度集成后才释放I01-A。下段为此前时点记录，本段优先。

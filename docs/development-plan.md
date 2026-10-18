@@ -1,5 +1,7 @@
 # 模块化开发计划与两人分工
 
+2026-10-18 当前步骤：A03-R1 最终固定交付 `19ab03c849bfab3dcde2dc86be37c59f3add1ebe` 已完成作者交接，进入[同一验收对话的差量收口](tasks/A03-R1-final-delta-review-dispatch.md)。保留已接受M/L1，产品原字节不变；本次独立最多2目标/3dispatch，不另开修复候选。整体接受及本地集成后才释放I01-A，若仍有原要求缺证则明确交接，不自动第三包。
+
 2026-10-18 最新推进：[A03-R1 首包](tasks/A03-R1-coordinator-acceptance.md)已有限接受 M/L1 及实测依赖拒绝，整包仍 REWORK。按[第二次且最终整合纠正](tasks/A03-R1-final-bounded-correction.md)补剩余原 L/G/F；产品保持原 bytes、成功 M/L1 不再运行、旧失败和次数保留。冻结后无再次纠正或第三整包，未完成则交接。I01 仍等待整体接受与本地集成。
 
 2026-10-18 最新路线：用户已授权[A03-R1等价内部替代](tasks/A03-R1-equivalent-runtime.md)。在保留原持久化/恢复/UNKNOWN暂停对账/防重复/完整报告能力的前提下，统一内部校验与事务编排，直接交可运行候选并按[独立验收](tasks/A03-R1-independent-review.md)收口原有限矩阵。T1/T2既有接受按确切范围沿用，T3不再滚动补丁；旧失败和未决库保留。此路线替代下段旧M修复推进点，不扩展DB迁移、真实平台、B合同或I01验收结论。
