@@ -7328,7 +7328,7 @@
     "A03-T3": {
       "status": "REWORK",
       "parent_task": "A03",
-      "phase": "M_VALIDATION_R1_FROZEN_REWORK_REVIEW_PENDING",
+      "phase": "M_VALIDATION_R1_STATIC_REVIEW_RUNNING",
       "base_commit": "1330047dd29890dea0e433ff01b991f615bf78f4",
       "handoff_commit": "6b61ac9d623e76cbe6311f64d012fd04e2e03c21",
       "execution_task": "docs/tasks/A03-T3-closure-and-integration.md",
@@ -7548,20 +7548,20 @@
       "review": {
         "thread_id": "01a14ccf-b8c3-7941-a80f-73594e7859a5",
         "host_id": "local",
-        "cursor": "6edfea69-590d-4e04-b191-563639b4a645:10",
-        "phase": "M1_DIAGNOSTIC_ACCEPTED_REPAIR_HANDOFF",
-        "dispatch_key": "A03-T3:review:M1-diagnostic:7b9245ea",
+        "cursor": "6edfea69-590d-4e04-b191-563639b4a645:11",
+        "phase": "M_VALIDATION_R1_STATIC_REVIEW_DISPATCHED",
+        "dispatch_key": "A03-T3:review:M-validation-R1:d5f77759",
         "thinking": "xhigh",
         "model": "USER_DEFAULT",
-        "task_document": "docs/tasks/A03-T3-M1-diagnostic-review-handoff.md",
-        "expected_report": "docs/tasks/A03-T3-M1-diagnostic-review-report.md",
+        "task_document": "docs/tasks/A03-T3-M-validation-R1-review-handoff.md",
+        "expected_report": "docs/tasks/A03-T3-M-validation-R1-review-report.md",
         "created_at": "2026-10-18T10:20:45.956512+08:00",
-        "workflow_commit": "d6357927b004ca6287e169d3efb208859ad731c9",
-        "turn_status": "completed",
-        "observed_thread_status": "idle",
-        "turn_id": "01a14d7a-7af2-7593-aa8b-79b6f0084aae",
-        "last_progress": "Static diagnostic accepted; exact private same-call duplicate validation confirmed. No new business; repair adopted, await fixed author candidate before functional review.",
-        "last_checked_at": "2026-10-18T13:46:13.212583+08:00",
+        "workflow_commit": "f82ae616",
+        "turn_status": "inProgress",
+        "observed_thread_status": "active",
+        "turn_id": "01a14d9d-2772-7c61-85ba-ae7d041afd7b",
+        "last_progress": "Dispatched bounded static review of fixed R1 failure; zero business reruns; functional status remains REWORK.",
+        "last_checked_at": "2026-10-18T06:06:06.811521+00:00",
         "last_completed_turn_id": "01a14d7a-7af2-7593-aa8b-79b6f0084aae",
         "preparation": {
           "task": "A03-T3",
@@ -7574,7 +7574,7 @@
           "scope": "preparation only; functional review NOT_RUN"
         },
         "functional_review": "NOT_RUN_STATIC_DIAGNOSTIC_ONLY",
-        "session_released": true,
+        "session_released": null,
         "target_commit": "7b9245eaa55bad1699ee40baf71be09dd6df8371",
         "handoff_document": "docs/tasks/A03-T3-M1-diagnostic-review-handoff.md",
         "decision": "ACCEPTED_DIAGNOSTIC_ONLY",
@@ -7582,7 +7582,7 @@
         "report_sha256": "94d7295563993163e4a705a3f97d58ee4c36f95c7647e917cff355d7091b7244",
         "evidence_manifest": null,
         "evidence_manifest_sha256": null,
-        "pending_target_commit": null,
+        "pending_target_commit": "d5f777590e72eb070af0497afdb144d60c61b95d",
         "review_history": [
           {
             "decision": "ACCEPTED_MATRIX_PLAN_REWORK",
@@ -7632,11 +7632,12 @@
         "stage": "M-validation-R1-readonly-review",
         "dispatch_key": "A03-T3:review:M-validation-R1:d5f77759",
         "thread_id": "01a14ccf-b8c3-7941-a80f-73594e7859a5",
-        "status": "INTENT_RECORDED",
+        "status": "DISPATCHED",
         "at": "2026-10-18T06:04:39.247241+00:00",
         "target_commit": "d5f777590e72eb070af0497afdb144d60c61b95d",
         "task_document": "docs/tasks/A03-T3-M-validation-R1-review-handoff.md",
-        "scope": "Static changed code/control evidence and failed-run/release only; zero business reruns; no functional acceptance."
+        "scope": "Static changed code/control evidence and failed-run/release only; zero business reruns; no functional acceptance.",
+        "workflow_commit": "f82ae616"
       },
       "coordinator_acceptance": {
         "at": "2026-10-18T11:40:25.362728+08:00",
@@ -10038,11 +10039,16 @@
       "stage": "M-validation-R1-readonly-review",
       "dispatch_key": "A03-T3:review:M-validation-R1:d5f77759",
       "thread_id": "01a14ccf-b8c3-7941-a80f-73594e7859a5",
-      "status": "INTENT_RECORDED",
+      "status": "DISPATCHED",
       "at": "2026-10-18T06:04:39.247241+00:00",
       "target_commit": "d5f777590e72eb070af0497afdb144d60c61b95d",
       "task_document": "docs/tasks/A03-T3-M-validation-R1-review-handoff.md",
-      "scope": "Static changed code/control evidence and failed-run/release only; zero business reruns; no functional acceptance."
+      "scope": "Static changed code/control evidence and failed-run/release only; zero business reruns; no functional acceptance.",
+      "dispatch_result": {
+        "threadId": "01a14ccf-b8c3-7941-a80f-73594e7859a5"
+      },
+      "dispatched_at": "2026-10-18T06:05:38.225053+00:00",
+      "workflow_commit": "f82ae616"
     }
   ],
   "last_action": {
@@ -10387,7 +10393,24 @@
     "scope": "Read-only architecture assessment and frozen delivery preflight; no scope reduction, new product run or wholesale rewrite adopted.",
     "advisory_agent": "/root/a03_equivalent_alternative",
     "tests_run": false,
-    "next_dependency": "Bounded read-only failure-delivery review; equivalent-function alternative under user discussion. No automatic further repair/run."
+    "next_dependency": "Bounded read-only failure-delivery review; equivalent-function alternative under user discussion. No automatic further repair/run.",
+    "alternative_assessment": {
+      "status": "PROPOSAL_ONLY_NOT_IMPLEMENTED_OR_ACCEPTED",
+      "recommendation": "Preserve SQLite ledger/delivery/public contracts; replace repeated bundle/context validation and tangled execution orchestration with explicit transition handlers separating input validation from fresh execution authority.",
+      "same_functions": [
+        "Durable intent before dispatch and actual readback receipts",
+        "Restart pending reconciliation and UNKNOWN whole-book pause",
+        "Local action dedup and live owner/generation/head/target checks",
+        "Unattempted action accounting, fresh planning after hold clear, complete truthful reports"
+      ],
+      "reuse_limits": "T1/T2 evidence remains accepted only for exact unchanged scope; replacement must verify impacted semantics using existing V01-V10/R01-R18 mapped M/L/G/F, not assume old acceptance transfers.",
+      "validation_boundary": "Same-call repeated parse/schema/closure work may be consolidated. Cross-call reuse or incremental append validation requires equivalence proof including real byte/pin/root/registry changes; no cached PASS bypass.",
+      "cutover": "Frozen old evidence and pending ledgers untouched; independent fresh offline candidate first, no automatic live-ledger migration or dual writer.",
+      "watchdog": "45s is not business SLA; functional requirements and measured performance assessed separately with bounded, explicitly scoped future watchdog.",
+      "current_action": "Existing reviewer receives only static fixed-delivery closure. No further repair, benchmark, extended business rerun, platform action or replacement implementation dispatched in this interactive turn.",
+      "advisory_agent": "/root/a03_equivalent_alternative"
+    },
+    "dispatch_result": "EXISTING_REVIEWER_STARTED_STATIC_ONLY_CURSOR11; NO_REPLACEMENT_IMPLEMENTATION_DISPATCH"
   },
   "external_handoff_history": [
     {
@@ -10508,6 +10531,35 @@
       "scope": "Clarify watchdog provenance and distinguish incomplete test from functional defect; current run not changed.",
       "dispatch_result": "NO_NEW_DISPATCH_OR_RERUN",
       "next_dependency": "Frozen repaired candidate, finite guard results and M functional evidence with release; then existing independent reviewer."
+    },
+    {
+      "at": "2026-10-18T06:04:39.247241+00:00",
+      "question": "Equivalent-function alternative to repeatedly failing A03 implementation",
+      "task_id": "A03-T3",
+      "thread_id": "01a14ccf-afa4-7260-a2a2-a47633772ae5",
+      "cursor": "625b3403-1db6-4b33-af44-f0b84067ab61:17",
+      "observed_head": "d5f777590e72eb070af0497afdb144d60c61b95d",
+      "state": "FROZEN_REWORK_RELEASED",
+      "scope": "Read-only architecture assessment and frozen delivery preflight; no scope reduction, new product run or wholesale rewrite adopted.",
+      "advisory_agent": "/root/a03_equivalent_alternative",
+      "tests_run": false,
+      "next_dependency": "Bounded read-only failure-delivery review; equivalent-function alternative under user discussion. No automatic further repair/run.",
+      "alternative_assessment": {
+        "status": "PROPOSAL_ONLY_NOT_IMPLEMENTED_OR_ACCEPTED",
+        "recommendation": "Preserve SQLite ledger/delivery/public contracts; replace repeated bundle/context validation and tangled execution orchestration with explicit transition handlers separating input validation from fresh execution authority.",
+        "same_functions": [
+          "Durable intent before dispatch and actual readback receipts",
+          "Restart pending reconciliation and UNKNOWN whole-book pause",
+          "Local action dedup and live owner/generation/head/target checks",
+          "Unattempted action accounting, fresh planning after hold clear, complete truthful reports"
+        ],
+        "reuse_limits": "T1/T2 evidence remains accepted only for exact unchanged scope; replacement must verify impacted semantics using existing V01-V10/R01-R18 mapped M/L/G/F, not assume old acceptance transfers.",
+        "validation_boundary": "Same-call repeated parse/schema/closure work may be consolidated. Cross-call reuse or incremental append validation requires equivalence proof including real byte/pin/root/registry changes; no cached PASS bypass.",
+        "cutover": "Frozen old evidence and pending ledgers untouched; independent fresh offline candidate first, no automatic live-ledger migration or dual writer.",
+        "watchdog": "45s is not business SLA; functional requirements and measured performance assessed separately with bounded, explicitly scoped future watchdog.",
+        "current_action": "Existing reviewer receives only static fixed-delivery closure. No further repair, benchmark, extended business rerun, platform action or replacement implementation dispatched in this interactive turn.",
+        "advisory_agent": "/root/a03_equivalent_alternative"
+      }
     }
   ],
   "last_user_followup": {
