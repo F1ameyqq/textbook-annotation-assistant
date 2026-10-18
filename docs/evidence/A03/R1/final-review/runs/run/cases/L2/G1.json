@@ -1,0 +1,327 @@
+[
+  {
+    "key": "plan-reference",
+    "result": {
+      "issues": [
+        {
+          "code": "MISSING_REFERENCE",
+          "message": "exact artifact reference not found: {'artifact_id': 'plan-R1-final-B', 'revision': 1, 'kind': 'ApplyPlan', 'content_hash': '0000000000000000000000000000000000000000000000000000000000000000'}",
+          "path": "$.a02"
+        }
+      ],
+      "layer": "CONTRACT"
+    }
+  },
+  {
+    "key": "action-identity",
+    "result": {
+      "issues": [
+        {
+          "code": "ACTION_DIGEST_MISMATCH",
+          "message": "action is absent from exact plan",
+          "path": "$.a02"
+        }
+      ],
+      "layer": "CONTRACT"
+    }
+  },
+  {
+    "key": "missing-registration",
+    "result": {
+      "code": "REGISTRATION_BINDING_MISMATCH",
+      "layer": "RUNTIME",
+      "message": "explicit registration required"
+    }
+  },
+  {
+    "key": "question",
+    "result": {
+      "issues": [
+        {
+          "code": "MISSING_REFERENCE",
+          "message": "unknown reference missing-question",
+          "path": "$.artifacts[7].payload.actions[0].target.question_id[0]"
+        }
+      ],
+      "layer": "CONTRACT"
+    }
+  },
+  {
+    "key": "run",
+    "result": {
+      "code": "NATIVE_PLAN_HISTORY_CHANGED",
+      "layer": "RUNTIME",
+      "message": "NATIVE_PLAN_HISTORY_CHANGED"
+    }
+  },
+  {
+    "key": "graph-revision",
+    "result": {
+      "issues": [
+        {
+          "code": "EXACT_REF",
+          "message": "EXACT_REF",
+          "path": "plan-R1-final-B/graph"
+        }
+      ],
+      "layer": "CONTRACT"
+    }
+  },
+  {
+    "key": "snapshot-revision",
+    "result": {
+      "issues": [
+        {
+          "code": "EXACT_REF",
+          "message": "EXACT_REF",
+          "path": "plan-R1-final-B/snapshot"
+        }
+      ],
+      "layer": "CONTRACT"
+    }
+  },
+  {
+    "key": "policy-revision",
+    "result": {
+      "issues": [
+        {
+          "code": "POLICY_CONFLICT",
+          "message": "missing policy or revision/hash mismatch",
+          "path": "$.artifacts[7].payload.policy"
+        }
+      ],
+      "layer": "CONTRACT"
+    }
+  },
+  {
+    "key": "missing-precheck",
+    "result": {
+      "issues": [
+        {
+          "code": "SHAPE_oneOf",
+          "message": "SHAPE_oneOf",
+          "path": "$/artifacts/7"
+        }
+      ],
+      "layer": "CONTRACT"
+    }
+  },
+  {
+    "key": "missing-targetcheck",
+    "result": {
+      "issues": [
+        {
+          "code": "SHAPE_oneOf",
+          "message": "SHAPE_oneOf",
+          "path": "$/artifacts/7"
+        }
+      ],
+      "layer": "CONTRACT"
+    }
+  },
+  {
+    "key": "missing-snapshot",
+    "result": {
+      "issues": [
+        {
+          "code": "SHAPE_oneOf",
+          "message": "SHAPE_oneOf",
+          "path": "$/artifacts/7"
+        }
+      ],
+      "layer": "CONTRACT"
+    }
+  },
+  {
+    "key": "missing-policy",
+    "result": {
+      "issues": [
+        {
+          "code": "SHAPE_oneOf",
+          "message": "SHAPE_oneOf",
+          "path": "$/artifacts/7"
+        }
+      ],
+      "layer": "CONTRACT"
+    }
+  },
+  {
+    "key": "missing-capability",
+    "result": {
+      "issues": [
+        {
+          "code": "SHAPE_oneOf",
+          "message": "SHAPE_oneOf",
+          "path": "$/artifacts/7"
+        }
+      ],
+      "layer": "CONTRACT"
+    }
+  },
+  {
+    "key": "authorization",
+    "result": {
+      "code": "NATIVE_CREATION_CONFIG_CHANGED",
+      "layer": "RUNTIME",
+      "message": "NATIVE_CREATION_CONFIG_CHANGED"
+    }
+  },
+  {
+    "key": "capability-version",
+    "layer": "QUALITY_VALUE",
+    "report": {
+      "artifact_id": "final-negative-capability-target",
+      "book_id": "book-M-single",
+      "content_hash": "efc80504ac0f890ddd197617630b676f32a01ea8762bef5f63105aca9812067f",
+      "created_at": "2026-10-18T07:39:35.877058Z",
+      "input_refs": [
+        {
+          "artifact_id": "input-M-single-QuestionGraph",
+          "content_hash": "498da9da903c64c2d995724aa508a06d7791ebcb4479526f1ccfa574d83af30a",
+          "kind": "QuestionGraph",
+          "revision": 1
+        },
+        {
+          "artifact_id": "snapshot-a03-5806864e5583043d1f61d9eb",
+          "content_hash": "ca496904c9ba904995c47f01bc7f6ef2deb12681eb95f2e93636c3e9582ea5d2",
+          "kind": "PlatformSnapshot",
+          "revision": 1
+        },
+        {
+          "artifact_id": "final-negative-capability-snapshot",
+          "content_hash": "4406b2dd182d2f10d91320f6e18c4b946d02e3069c624686474400be19f8e5d8",
+          "kind": "PlatformSnapshot",
+          "revision": 1
+        }
+      ],
+      "kind": "CheckReport",
+      "payload": {
+        "checks": [
+          {
+            "check_id": "target_version",
+            "evidence_refs": [
+              "proof-M-single"
+            ],
+            "outcome": "FAIL",
+            "reason": "current snapshot revision/hash differs from checked snapshot"
+          },
+          {
+            "check_id": "authorized_scope",
+            "evidence_refs": [
+              "proof-M-single"
+            ],
+            "outcome": "PASS",
+            "reason": "SYNTHETIC facts checked by A02: authorized_scope"
+          },
+          {
+            "check_id": "capabilities",
+            "evidence_refs": [
+              "proof-M-single"
+            ],
+            "outcome": "PASS",
+            "reason": "SYNTHETIC facts checked by A02: capabilities"
+          },
+          {
+            "check_id": "policy",
+            "evidence_refs": [
+              "proof-M-single"
+            ],
+            "outcome": "PASS",
+            "reason": "SYNTHETIC facts checked by A02: policy"
+          },
+          {
+            "check_id": "coverage",
+            "evidence_refs": [
+              "proof-M-single"
+            ],
+            "outcome": "PASS",
+            "reason": "SYNTHETIC facts checked by A02: coverage"
+          }
+        ],
+        "coverage": {
+          "clue_ids": [
+            "clue-M-single-1-stem",
+            "clue-M-single-1-answer"
+          ],
+          "pages_checked": [
+            "page-M-single-1"
+          ],
+          "pages_expected": [
+            "page-M-single-1"
+          ],
+          "scope_id": "scope-M-single",
+          "unassigned_region_ids": []
+        },
+        "decision": "HOLD",
+        "graph": {
+          "artifact_id": "input-M-single-QuestionGraph",
+          "content_hash": "498da9da903c64c2d995724aa508a06d7791ebcb4479526f1ccfa574d83af30a",
+          "kind": "QuestionGraph",
+          "revision": 1
+        },
+        "issues": [
+          {
+            "blocks": [
+              "PLAN",
+              "APPLY"
+            ],
+            "code": "TARGET_CHANGED",
+            "evidence_refs": [
+              "proof-M-single"
+            ],
+            "issue_id": "issue-a02-6c5b97000da491a45fda-target_version",
+            "reason": "current snapshot revision/hash differs from checked snapshot",
+            "scope_id": "scope-M-single",
+            "scope_type": "scope",
+            "severity": "blocking",
+            "suggested_strategy": {
+              "max_attempts": 0,
+              "max_cost": 0.0,
+              "strategy_id": "RECHECK_TARGET"
+            }
+          }
+        ],
+        "policy": {
+          "content_hash": "5a878dfb8497522084291941c9a4ad6dbb3d69453bdcd025e74792ac16e7eecd",
+          "policy_id": "policy-r8-r3",
+          "revision": 1
+        },
+        "reason": "SYNTHETIC target conditions computed by A02; no algorithm or platform acceptance",
+        "receipt": null,
+        "recovery_refs": [],
+        "snapshot": {
+          "artifact_id": "snapshot-a03-5806864e5583043d1f61d9eb",
+          "content_hash": "ca496904c9ba904995c47f01bc7f6ef2deb12681eb95f2e93636c3e9582ea5d2",
+          "kind": "PlatformSnapshot",
+          "revision": 1
+        },
+        "stage": "TARGET",
+        "subject": {
+          "artifact_id": "snapshot-a03-5806864e5583043d1f61d9eb",
+          "content_hash": "ca496904c9ba904995c47f01bc7f6ef2deb12681eb95f2e93636c3e9582ea5d2",
+          "kind": "PlatformSnapshot",
+          "revision": 1
+        }
+      },
+      "producer": {
+        "config_version": "a02-config-b6e225cc7151e49ba397aaf30b013b640e8fbb411529d50a2301dc623468b158",
+        "evidence_mode": "SYNTHETIC",
+        "implementation_version": "a02-1",
+        "model_version": null,
+        "module": "a02-targetcheck",
+        "policy_versions": [
+          {
+            "content_hash": "5a878dfb8497522084291941c9a4ad6dbb3d69453bdcd025e74792ac16e7eecd",
+            "policy_id": "policy-r8-r3",
+            "revision": 1
+          }
+        ],
+        "prompt_version": null
+      },
+      "revision": 1,
+      "run_id": "input-M-single",
+      "schema_version": "1.4.0-a03-native-proposal",
+      "scope_id": "scope-M-single"
+    }
+  }
+]

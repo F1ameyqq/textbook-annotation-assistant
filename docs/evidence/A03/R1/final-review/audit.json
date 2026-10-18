@@ -1,0 +1,2529 @@
+{
+  "groups": {
+    "author": {
+      "matrix": [
+        {
+          "phase": "L2",
+          "process": {
+            "alive": false,
+            "elapsed_seconds": 10.65700000000652,
+            "exit_code": 0,
+            "pid": 64436,
+            "timeout": false,
+            "waited": true
+          },
+          "status": "ENDED"
+        },
+        {
+          "phase": "L3-execute",
+          "process": {
+            "alive": false,
+            "elapsed_seconds": 6.342999999993481,
+            "exit_code": 0,
+            "pid": 69556,
+            "timeout": false,
+            "waited": true
+          },
+          "status": "ENDED"
+        },
+        {
+          "phase": "L3-reconcile",
+          "process": {
+            "alive": false,
+            "elapsed_seconds": 3.813000000009197,
+            "exit_code": 0,
+            "pid": 62752,
+            "timeout": false,
+            "waited": true
+          },
+          "status": "ENDED"
+        },
+        {
+          "phase": "L3-second",
+          "process": {
+            "alive": false,
+            "elapsed_seconds": 14.796999999991385,
+            "exit_code": 0,
+            "pid": 50212,
+            "timeout": false,
+            "waited": true
+          },
+          "status": "ENDED"
+        },
+        {
+          "phase": "G6-first",
+          "process": {
+            "alive": false,
+            "elapsed_seconds": 8.0,
+            "exit_code": 0,
+            "pid": 76592,
+            "timeout": false,
+            "waited": true
+          },
+          "status": "ENDED"
+        },
+        {
+          "phase": "G6-reopen",
+          "process": {
+            "alive": false,
+            "elapsed_seconds": 1.735000000000582,
+            "exit_code": 0,
+            "pid": 33972,
+            "timeout": false,
+            "waited": true
+          },
+          "status": "ENDED"
+        },
+        {
+          "phase": "L4",
+          "process": {
+            "alive": false,
+            "elapsed_seconds": 1.312000000005355,
+            "exit_code": 0,
+            "pid": 67912,
+            "timeout": false,
+            "waited": true
+          },
+          "status": "ENDED"
+        },
+        {
+          "phase": "G2-G3",
+          "process": {
+            "alive": false,
+            "elapsed_seconds": 0.9060000000026776,
+            "exit_code": 0,
+            "pid": 56888,
+            "timeout": false,
+            "waited": true
+          },
+          "status": "ENDED"
+        },
+        {
+          "phase": "G5",
+          "process": {
+            "alive": false,
+            "elapsed_seconds": 0.8600000000005821,
+            "exit_code": 0,
+            "pid": 71800,
+            "timeout": false,
+            "waited": true
+          },
+          "status": "ENDED"
+        },
+        {
+          "phase": "F",
+          "process": {
+            "alive": false,
+            "elapsed_seconds": 4.4539999999979045,
+            "exit_code": 0,
+            "pid": 17240,
+            "timeout": false,
+            "waited": true
+          },
+          "status": "ENDED"
+        }
+      ],
+      "bounded": {
+        "new_targets": 2,
+        "dispatch": 3,
+        "legacy_generation": 0,
+        "M_L1_G4_new_business": 0,
+        "A_pending": 2,
+        "B_pending": 0,
+        "L3_pending": 1,
+        "L3_distinct_actions": true,
+        "G6_first_attempts": 3,
+        "G6_reopen_attempts": 0,
+        "L4": {
+          "controls": [
+            {
+              "key": "fork",
+              "layer": "FULL_NATIVE",
+              "result": {
+                "issues": [
+                  {
+                    "code": "RESOLUTION_FORK",
+                    "message": "one unique successor required",
+                    "path": "$.previous_resolution_ref"
+                  }
+                ],
+                "layer": "CONTRACT"
+              }
+            },
+            {
+              "key": "cycle",
+              "layer": "FULL_NATIVE_EXACT_REFERENCE",
+              "result": {
+                "issues": [
+                  {
+                    "code": "EXACT_REF",
+                    "message": "EXACT_REF",
+                    "path": "resolution-0affbf450d5d42968a45e162fe050030/previous_resolution_ref"
+                  }
+                ],
+                "layer": "CONTRACT"
+              }
+            },
+            {
+              "key": "wrong-original-receipt-full",
+              "layer": "FULL_NATIVE",
+              "result": {
+                "issues": [
+                  {
+                    "code": "EXACT_REF",
+                    "message": "EXACT_REF",
+                    "path": "resolution-0affbf450d5d42968a45e162fe050030/original_receipt_ref"
+                  }
+                ],
+                "layer": "CONTRACT"
+              }
+            },
+            {
+              "key": "wrong-original-receipt-semantic",
+              "layer": "VALUE_RESOLUTION_GUARD",
+              "result": {
+                "issues": [
+                  {
+                    "code": "REFERENCE_HASH_MISMATCH",
+                    "message": "artifact kind/digest differs",
+                    "path": "$.reference"
+                  }
+                ],
+                "layer": "CONTRACT"
+              }
+            }
+          ],
+          "dispatch": 0,
+          "new_targets": 0
+        },
+        "G2_G3": {
+          "G2_calls": 7,
+          "G3_calls": 4,
+          "controls": [
+            {
+              "key": "G2-runtime-directory-binding",
+              "result": {
+                "code": "LEDGER_VERSION_UNSUPPORTED",
+                "layer": "RUNTIME",
+                "message": "metadata mismatch"
+              }
+            },
+            {
+              "key": "G2-unknown-runtime-format",
+              "result": {
+                "code": "STATE_DIRECTORY_IDENTITY_MISMATCH",
+                "layer": "RUNTIME",
+                "message": "anchor/config identities differ"
+              }
+            },
+            {
+              "key": "G2-target-unknown",
+              "result": {
+                "issues": [
+                  {
+                    "code": "TARGET_STORE_CORRUPT",
+                    "message": "$.a02: [TARGET_STORE_VERSION_UNSUPPORTED] target application or user version differs",
+                    "path": "$.a02"
+                  }
+                ],
+                "layer": "CONTRACT"
+              }
+            },
+            {
+              "key": "G2-target-directory",
+              "result": {
+                "issues": [
+                  {
+                    "code": "STATE_DIRECTORY_IDENTITY_MISMATCH",
+                    "message": "target directory differs from established identity",
+                    "path": "$.a02"
+                  }
+                ],
+                "layer": "CONTRACT"
+              }
+            },
+            {
+              "key": "G2-unknown-exchange",
+              "result": {
+                "issues": [
+                  {
+                    "code": "NATIVE_VERSION_REQUIRED",
+                    "message": "NATIVE_VERSION_REQUIRED",
+                    "path": "$"
+                  }
+                ],
+                "layer": "CONTRACT"
+              }
+            },
+            {
+              "key": "G2-file-write-IO",
+              "result": {
+                "errno": 17,
+                "error": "FileExistsError",
+                "layer": "FILESYSTEM_IO",
+                "message": "[WinError 183] \u5f53\u6587\u4ef6\u5df2\u5b58\u5728\u65f6\uff0c\u65e0\u6cd5\u521b\u5efa\u8be5\u6587\u4ef6\u3002: 'D:\\\\1800-worktrees\\\\a03-r1\\\\docs\\\\evidence\\\\A03\\\\R1\\\\final-correction\\\\run\\\\cases\\\\G2-G3\\\\write-blocker'"
+              }
+            },
+            {
+              "key": "G2-SQL-rollback-wrapper",
+              "result": {
+                "code": "STORAGE_TRANSACTION_FAILED",
+                "layer": "RUNTIME",
+                "message": "no such column: final_deliberately_absent_column"
+              }
+            },
+            {
+              "key": "G3-1.1-archive-read",
+              "native_authority": false,
+              "version": "a03-exchange-1"
+            },
+            {
+              "key": "G3-1.1-as-native",
+              "result": {
+                "issues": [
+                  {
+                    "code": "NATIVE_VERSION_REQUIRED",
+                    "message": "NATIVE_VERSION_REQUIRED",
+                    "path": "$"
+                  }
+                ],
+                "layer": "CONTRACT"
+              }
+            },
+            {
+              "key": "G3-post-marker-conversion-IO",
+              "result": {
+                "errno": 17,
+                "error": "FileExistsError",
+                "layer": "FILESYSTEM_IO",
+                "message": "[WinError 183] \u5f53\u6587\u4ef6\u5df2\u5b58\u5728\u65f6\uff0c\u65e0\u6cd5\u521b\u5efa\u8be5\u6587\u4ef6\u3002: 'D:\\\\1800-worktrees\\\\a03-r1\\\\docs\\\\evidence\\\\A03\\\\R1\\\\final-correction\\\\run\\\\cases\\\\G2-G3\\\\interrupted-conversion\\\\conversion-incomplete.json'"
+              }
+            },
+            {
+              "key": "G3-reopen-incomplete",
+              "result": {
+                "issues": [
+                  {
+                    "code": "JSON_INPUT",
+                    "message": "[Errno 2] No such file or directory: 'D:\\\\1800-worktrees\\\\a03-r1\\\\docs\\\\evidence\\\\A03\\\\R1\\\\final-correction\\\\run\\\\cases\\\\G2-G3\\\\interrupted-conversion\\\\bundle.json'",
+                    "path": "$"
+                  }
+                ],
+                "layer": "CONTRACT"
+              }
+            }
+          ],
+          "conversion_marker": {
+            "conversion_id": "final-interrupted",
+            "source_sha256": "ba9794ea7ba4cd53decaecbac41bb3dadfda938e070dfe7eae6eac81bb89c5a0",
+            "status": "INCOMPLETE"
+          },
+          "dispatch": 0,
+          "negative_database_copies": 5,
+          "new_business_targets": 0,
+          "note": "transaction wrapper uses a deliberate invalid SELECT on its own stationary negative copy; no positive authority inferred",
+          "transaction_bytes_unchanged": true
+        },
+        "G5": {
+          "G5_calls": 2,
+          "dispatch": 0,
+          "foreign_head_different_snapshot": {
+            "issues": [
+              {
+                "code": "RECOVERY_CHAIN_INVALID",
+                "message": "selected head is not in the unique valid intent chain",
+                "path": "$.recovery_refs"
+              }
+            ],
+            "layer": "CONTRACT"
+          },
+          "layer": "PURE_VALUE_GUARDS; no new POST/Batch, mixed-native qualification or runtime effects",
+          "new_targets": 0,
+          "old_report_read": {
+            "issues": [
+              {
+                "code": "NATIVE_REPORT_READ_NOT_FRESH",
+                "message": "NATIVE_REPORT_READ_NOT_FRESH",
+                "path": "native-post-e3762a49310d4bf09e9ec000d74ee563"
+              }
+            ],
+            "layer": "CONTRACT"
+          },
+          "real_heads": [
+            {
+              "artifact_id": "resolution-052d06d4017b43799a38ce3e8222a96e",
+              "content_hash": "ca1c54b1c289da5f4d5f7125a36e395cd90222387e98db36c129eefc79a01ccb",
+              "kind": "ReconciliationResult",
+              "revision": 1
+            },
+            {
+              "artifact_id": "resolution-0affbf450d5d42968a45e162fe050030",
+              "content_hash": "ea5dba407f34bf3670cc1f0cd67e796439750cedfe9bd40c90aeb6c050d32abe",
+              "kind": "ReconciliationResult",
+              "revision": 1
+            }
+          ],
+          "snapshots": [
+            {
+              "artifact_id": "snapshot-a03-c0c4e73b2c2cd8f81fe45686",
+              "content_hash": "03ce5122a1c1dfa53274d17e27b6b177c00302318ba6626ed1da90862a88abcd",
+              "kind": "PlatformSnapshot",
+              "revision": 1
+            },
+            {
+              "artifact_id": "snapshot-a03-92760364de4475fd84cb073f",
+              "content_hash": "d5a127a34d5478fa3b77dd4c94549dcd7c3d01eb7730a546fea58f83c1475382",
+              "kind": "PlatformSnapshot",
+              "revision": 1
+            }
+          ]
+        },
+        "F": {
+          "after": [
+            "fd4c00628ba2ecd0157fa71ab157bdceb8ca78ddc50aeb71fc89b2a6b57c6d43",
+            "cd86307d422dc88a139adec6238ec949ed691dce74fdda54fe3a0d1942f925af"
+          ],
+          "before": [
+            "fd4c00628ba2ecd0157fa71ab157bdceb8ca78ddc50aeb71fc89b2a6b57c6d43",
+            "cd86307d422dc88a139adec6238ec949ed691dce74fdda54fe3a0d1942f925af"
+          ],
+          "claim": 0,
+          "dispatch": 0,
+          "inherited_F": {
+            "new_plan": "accepted M3-new-plan",
+            "normal": "accepted M1",
+            "unknown": "accepted L1"
+          },
+          "publisher": 0,
+          "reconcile": 0
+        }
+      },
+      "capture_pairs": [
+        {
+          "phase": "G6-first",
+          "hashes": {
+            "runtime": "c6595290a252bc8b86b722b836f4e2fa913a0f9e361866a5120a46b19eba94bb",
+            "target": "31e296df30f0226932ab5f81421a76070dfa5b7b9b04a805b79459066b4ce504"
+          },
+          "SQL_matches": true,
+          "dispatch": 2,
+          "mutations": 1,
+          "questions": 1,
+          "frames": 2,
+          "intents": [
+            {
+              "id": "intent-b4825604682744c7838532e9903e9c5e",
+              "state": "RESOLVED_NOT_APPLIED",
+              "receipt": "{\"artifact_id\":\"executionreceipt-b892747a76dc43e7b1cb53200cc29775\",\"content_hash\":\"c0aca976eb99346bc60837d450b1742b5685e17b3671f168ffe3d1f778f5ea4b\",\"kind\":\"ExecutionReceipt\",\"revision\":1}"
+            },
+            {
+              "id": "intent-cb54e1fd93f14400a14e47d9405bc767",
+              "state": "PENDING",
+              "receipt": "{\"artifact_id\":\"executionreceipt-e7be0a20d6bf46e0a7871e7083527c24\",\"content_hash\":\"81f7e1bdb2076ab50a8a9e278a33b89e6fe2d0ed1a237ea156bf7358d1835707\",\"kind\":\"ExecutionReceipt\",\"revision\":1}"
+            }
+          ],
+          "permits": 2,
+          "legacy": 0,
+          "report_reads": 0,
+          "released": true,
+          "events": 29,
+          "native_readonly_entries": 0
+        },
+        {
+          "phase": "G6-reopen",
+          "hashes": {
+            "runtime": "e598de32fc8b4fbb0019e6a54721c55a66843b06fbaae0ced2b1c82dd8f2f51a",
+            "target": "c26484cffa39e8ee7c37cb3a60a292db5d896c430053e65c5b3a21ac37a4f06e"
+          },
+          "SQL_matches": true,
+          "dispatch": 2,
+          "mutations": 1,
+          "questions": 1,
+          "frames": 2,
+          "intents": [
+            {
+              "id": "intent-b4825604682744c7838532e9903e9c5e",
+              "state": "RESOLVED_NOT_APPLIED",
+              "receipt": "{\"artifact_id\":\"executionreceipt-b892747a76dc43e7b1cb53200cc29775\",\"content_hash\":\"c0aca976eb99346bc60837d450b1742b5685e17b3671f168ffe3d1f778f5ea4b\",\"kind\":\"ExecutionReceipt\",\"revision\":1}"
+            },
+            {
+              "id": "intent-cb54e1fd93f14400a14e47d9405bc767",
+              "state": "PENDING",
+              "receipt": "{\"artifact_id\":\"executionreceipt-e7be0a20d6bf46e0a7871e7083527c24\",\"content_hash\":\"81f7e1bdb2076ab50a8a9e278a33b89e6fe2d0ed1a237ea156bf7358d1835707\",\"kind\":\"ExecutionReceipt\",\"revision\":1}"
+            }
+          ],
+          "permits": 2,
+          "legacy": 0,
+          "report_reads": 0,
+          "released": true,
+          "events": 32,
+          "native_readonly_entries": 0
+        },
+        {
+          "phase": "L2",
+          "hashes": {
+            "runtime": "fd4c00628ba2ecd0157fa71ab157bdceb8ca78ddc50aeb71fc89b2a6b57c6d43",
+            "target": "ee6de8a155585830116db3a01015e2a99ff44c0c2038dfb7c1980b9fa74aa264"
+          },
+          "SQL_matches": true,
+          "dispatch": 1,
+          "mutations": 1,
+          "questions": 1,
+          "frames": 2,
+          "intents": [
+            {
+              "id": "intent-3564ebec2c8c4055a33b1686db8bd691",
+              "state": "APPLIED",
+              "receipt": "{\"artifact_id\":\"executionreceipt-9bb4439cd91740b885992e407ec8f6e4\",\"content_hash\":\"7e4383c7636c1ea252e0f1d50f48a622fccdd5c55515604697e93773fa97ecbf\",\"kind\":\"ExecutionReceipt\",\"revision\":1}"
+            },
+            {
+              "id": "intent-6951e2d22b874ce6b3d1a41d9874a8e6",
+              "state": "RESOLVED_APPLIED",
+              "receipt": "{\"artifact_id\":\"executionreceipt-9bb4439cd91740b885992e407ec8f6e4\",\"content_hash\":\"7e4383c7636c1ea252e0f1d50f48a622fccdd5c55515604697e93773fa97ecbf\",\"kind\":\"ExecutionReceipt\",\"revision\":1}"
+            },
+            {
+              "id": "intent-bcf17ceb08244c188ad39ab25cdf2c20",
+              "state": "APPLIED",
+              "receipt": "{\"artifact_id\":\"executionreceipt-ac9342e7150f4937a46a3dfd94ff9ed0\",\"content_hash\":\"6d14b04ad201597062093321e0e8d3b699781a4d80320f2f17fcf4e570456273\",\"kind\":\"ExecutionReceipt\",\"revision\":1}"
+            }
+          ],
+          "permits": 3,
+          "legacy": 2,
+          "report_reads": 2,
+          "released": true,
+          "events": 47,
+          "native_readonly_entries": 1
+        },
+        {
+          "phase": "L3-execute",
+          "hashes": {
+            "runtime": "d40bf1a8958bef2a135074a6b681a19ca803ff4ac175da16349e40ed958a0d09",
+            "target": "ae2f8a07da0bdb85f07ac651e1b28d88f91c092d8c69472a577884527bb31d76"
+          },
+          "SQL_matches": true,
+          "dispatch": 1,
+          "mutations": 0,
+          "questions": 0,
+          "frames": 0,
+          "intents": [
+            {
+              "id": "intent-b4825604682744c7838532e9903e9c5e",
+              "state": "PENDING",
+              "receipt": "{\"artifact_id\":\"executionreceipt-b892747a76dc43e7b1cb53200cc29775\",\"content_hash\":\"c0aca976eb99346bc60837d450b1742b5685e17b3671f168ffe3d1f778f5ea4b\",\"kind\":\"ExecutionReceipt\",\"revision\":1}"
+            }
+          ],
+          "permits": 1,
+          "legacy": 0,
+          "report_reads": 0,
+          "released": true,
+          "events": 11,
+          "native_readonly_entries": 0
+        },
+        {
+          "phase": "L3-reconcile",
+          "hashes": {
+            "runtime": "ef1ea355efa049da97b8306b158160bf871c0780166a0f3c628584821ddc8a73",
+            "target": "f96a7ce22f58f983358e8bebf1b99e3639a5b661eb96cd79f3a8849d435ea55f"
+          },
+          "SQL_matches": true,
+          "dispatch": 1,
+          "mutations": 0,
+          "questions": 0,
+          "frames": 0,
+          "intents": [
+            {
+              "id": "intent-b4825604682744c7838532e9903e9c5e",
+              "state": "RESOLVED_NOT_APPLIED",
+              "receipt": "{\"artifact_id\":\"executionreceipt-b892747a76dc43e7b1cb53200cc29775\",\"content_hash\":\"c0aca976eb99346bc60837d450b1742b5685e17b3671f168ffe3d1f778f5ea4b\",\"kind\":\"ExecutionReceipt\",\"revision\":1}"
+            }
+          ],
+          "permits": 1,
+          "legacy": 0,
+          "report_reads": 0,
+          "released": true,
+          "events": 15,
+          "native_readonly_entries": 0
+        },
+        {
+          "phase": "L3-second",
+          "hashes": {
+            "runtime": "0c18946a2eb5c61a661e5e2931bd164e6b871b693359f618dfe88dcde7c0fa58",
+            "target": "f47adcd6f286870f6261869b958bd7bd8699286976e815161be148de0a604fb6"
+          },
+          "SQL_matches": true,
+          "dispatch": 2,
+          "mutations": 1,
+          "questions": 1,
+          "frames": 2,
+          "intents": [
+            {
+              "id": "intent-b4825604682744c7838532e9903e9c5e",
+              "state": "RESOLVED_NOT_APPLIED",
+              "receipt": "{\"artifact_id\":\"executionreceipt-b892747a76dc43e7b1cb53200cc29775\",\"content_hash\":\"c0aca976eb99346bc60837d450b1742b5685e17b3671f168ffe3d1f778f5ea4b\",\"kind\":\"ExecutionReceipt\",\"revision\":1}"
+            },
+            {
+              "id": "intent-cb54e1fd93f14400a14e47d9405bc767",
+              "state": "PENDING",
+              "receipt": "{\"artifact_id\":\"executionreceipt-e7be0a20d6bf46e0a7871e7083527c24\",\"content_hash\":\"81f7e1bdb2076ab50a8a9e278a33b89e6fe2d0ed1a237ea156bf7358d1835707\",\"kind\":\"ExecutionReceipt\",\"revision\":1}"
+            }
+          ],
+          "permits": 2,
+          "legacy": 0,
+          "report_reads": 0,
+          "released": true,
+          "events": 26,
+          "native_readonly_entries": 0
+        }
+      ],
+      "imports": [
+        {
+          "phase": "L2",
+          "modules": 30,
+          "hashes_match": true
+        },
+        {
+          "phase": "L3-execute",
+          "modules": 29,
+          "hashes_match": true
+        },
+        {
+          "phase": "L3-reconcile",
+          "modules": 29,
+          "hashes_match": true
+        },
+        {
+          "phase": "L3-second",
+          "modules": 29,
+          "hashes_match": true
+        },
+        {
+          "phase": "G6-first",
+          "modules": 29,
+          "hashes_match": true
+        },
+        {
+          "phase": "G6-reopen",
+          "modules": 28,
+          "hashes_match": true
+        },
+        {
+          "phase": "L4",
+          "modules": 19,
+          "hashes_match": true
+        },
+        {
+          "phase": "G2-G3",
+          "modules": 24,
+          "hashes_match": true
+        },
+        {
+          "phase": "G5",
+          "modules": 20,
+          "hashes_match": true
+        },
+        {
+          "phase": "F",
+          "modules": 25,
+          "hashes_match": true
+        }
+      ],
+      "metrics": [
+        {
+          "phase": "L2",
+          "wall_seconds": 10.218999999997322,
+          "cpu_seconds": 8.5,
+          "pid": 35628
+        },
+        {
+          "phase": "L3-execute",
+          "wall_seconds": 5.9060000000026776,
+          "cpu_seconds": 4.796875,
+          "pid": 22816
+        },
+        {
+          "phase": "L3-reconcile",
+          "wall_seconds": 3.4070000000065193,
+          "cpu_seconds": 2.734375,
+          "pid": 15040
+        },
+        {
+          "phase": "L3-second",
+          "wall_seconds": 14.39100000000326,
+          "cpu_seconds": 11.109375,
+          "pid": 49648
+        },
+        {
+          "phase": "G6-first",
+          "wall_seconds": 7.562000000005355,
+          "cpu_seconds": 1.5,
+          "pid": 69052
+        },
+        {
+          "phase": "G6-reopen",
+          "wall_seconds": 1.2970000000059372,
+          "cpu_seconds": 1.21875,
+          "pid": 5092
+        },
+        {
+          "phase": "L4",
+          "wall_seconds": 0.875,
+          "cpu_seconds": 0.890625,
+          "pid": 64988
+        },
+        {
+          "phase": "G2-G3",
+          "wall_seconds": 0.4850000000005821,
+          "cpu_seconds": 0.5,
+          "pid": 69200
+        },
+        {
+          "phase": "G5",
+          "wall_seconds": 0.4379999999946449,
+          "cpu_seconds": 0.4375,
+          "pid": 16980
+        },
+        {
+          "phase": "F",
+          "wall_seconds": 4.046999999991385,
+          "cpu_seconds": 3.984375,
+          "pid": 48880
+        }
+      ],
+      "completions": [
+        {
+          "path": "D:\\1800-worktrees\\a03-r1-final-review-19ab03c8\\docs\\evidence\\A03\\R1\\final-correction\\preparation\\watch-noop\\process\\completed.json",
+          "wait_basis": "EXPLICIT_WAITED",
+          "alive": false,
+          "elapsed_seconds": 0.17199999999138527,
+          "exit_code": 0,
+          "pid": 39584,
+          "timeout": false,
+          "waited": true
+        },
+        {
+          "path": "D:\\1800-worktrees\\a03-r1-final-review-19ab03c8\\docs\\evidence\\A03\\R1\\final-correction\\run\\cases\\F\\process\\completed.json",
+          "wait_basis": "EXPLICIT_WAITED",
+          "alive": false,
+          "elapsed_seconds": 4.26600000000326,
+          "exit_code": 0,
+          "pid": 48880,
+          "timeout": false,
+          "waited": true
+        },
+        {
+          "path": "D:\\1800-worktrees\\a03-r1-final-review-19ab03c8\\docs\\evidence\\A03\\R1\\final-correction\\run\\cases\\G2-G3\\process\\completed.json",
+          "wait_basis": "EXPLICIT_WAITED",
+          "alive": false,
+          "elapsed_seconds": 0.7030000000086147,
+          "exit_code": 0,
+          "pid": 69200,
+          "timeout": false,
+          "waited": true
+        },
+        {
+          "path": "D:\\1800-worktrees\\a03-r1-final-review-19ab03c8\\docs\\evidence\\A03\\R1\\final-correction\\run\\cases\\G5\\process\\completed.json",
+          "wait_basis": "EXPLICIT_WAITED",
+          "alive": false,
+          "elapsed_seconds": 0.6720000000059372,
+          "exit_code": 0,
+          "pid": 16980,
+          "timeout": false,
+          "waited": true
+        },
+        {
+          "path": "D:\\1800-worktrees\\a03-r1-final-review-19ab03c8\\docs\\evidence\\A03\\R1\\final-correction\\run\\cases\\G6-first\\process\\completed.json",
+          "wait_basis": "EXPLICIT_WAITED",
+          "alive": false,
+          "elapsed_seconds": 7.781999999991967,
+          "exit_code": 0,
+          "pid": 69052,
+          "timeout": false,
+          "waited": true
+        },
+        {
+          "path": "D:\\1800-worktrees\\a03-r1-final-review-19ab03c8\\docs\\evidence\\A03\\R1\\final-correction\\run\\cases\\G6-reopen\\process\\completed.json",
+          "wait_basis": "EXPLICIT_WAITED",
+          "alive": false,
+          "elapsed_seconds": 1.5310000000026776,
+          "exit_code": 0,
+          "pid": 5092,
+          "timeout": false,
+          "waited": true
+        },
+        {
+          "path": "D:\\1800-worktrees\\a03-r1-final-review-19ab03c8\\docs\\evidence\\A03\\R1\\final-correction\\run\\cases\\L2\\process\\completed.json",
+          "wait_basis": "EXPLICIT_WAITED",
+          "alive": false,
+          "elapsed_seconds": 10.437999999994645,
+          "exit_code": 0,
+          "pid": 35628,
+          "timeout": false,
+          "waited": true
+        },
+        {
+          "path": "D:\\1800-worktrees\\a03-r1-final-review-19ab03c8\\docs\\evidence\\A03\\R1\\final-correction\\run\\cases\\L2\\target\\process-audit\\read-97d53e9e3b5d45fe831244126f88522e\\completed.json",
+          "wait_basis": "PINNED_NATIVE_WAIT_THEN_POLL",
+          "alive": false,
+          "elapsed_seconds": 0.5780000000086147,
+          "exit_code": 0,
+          "pid": 77984,
+          "timeout": false
+        },
+        {
+          "path": "D:\\1800-worktrees\\a03-r1-final-review-19ab03c8\\docs\\evidence\\A03\\R1\\final-correction\\run\\cases\\L2\\target\\process-audit\\read-c3e511280233461081b13c0a4b6e1dcc\\completed.json",
+          "wait_basis": "PINNED_NATIVE_WAIT_THEN_POLL",
+          "alive": false,
+          "elapsed_seconds": 0.5460000000020955,
+          "exit_code": 0,
+          "pid": 47572,
+          "timeout": false
+        },
+        {
+          "path": "D:\\1800-worktrees\\a03-r1-final-review-19ab03c8\\docs\\evidence\\A03\\R1\\final-correction\\run\\cases\\L3-execute\\process\\completed.json",
+          "wait_basis": "EXPLICIT_WAITED",
+          "alive": false,
+          "elapsed_seconds": 6.140999999988708,
+          "exit_code": 0,
+          "pid": 22816,
+          "timeout": false,
+          "waited": true
+        },
+        {
+          "path": "D:\\1800-worktrees\\a03-r1-final-review-19ab03c8\\docs\\evidence\\A03\\R1\\final-correction\\run\\cases\\L3-execute\\target\\process-audit\\read-0c0afa62cd2640249ff03da49bdd52b9\\completed.json",
+          "wait_basis": "PINNED_NATIVE_WAIT_THEN_POLL",
+          "alive": false,
+          "elapsed_seconds": 0.625,
+          "exit_code": 0,
+          "pid": 68332,
+          "timeout": false
+        },
+        {
+          "path": "D:\\1800-worktrees\\a03-r1-final-review-19ab03c8\\docs\\evidence\\A03\\R1\\final-correction\\run\\cases\\L3-execute\\target\\process-audit\\read-2a12bea8f112401aaa0ea4a61d76f0d4\\completed.json",
+          "wait_basis": "PINNED_NATIVE_WAIT_THEN_POLL",
+          "alive": false,
+          "elapsed_seconds": 2.014999999999418,
+          "exit_code": 1,
+          "pid": 44096,
+          "timeout": true
+        },
+        {
+          "path": "D:\\1800-worktrees\\a03-r1-final-review-19ab03c8\\docs\\evidence\\A03\\R1\\final-correction\\run\\cases\\L3-execute\\target\\process-audit\\read-4fe95c33dded41d98200b00c2698fbaa\\completed.json",
+          "wait_basis": "PINNED_NATIVE_WAIT_THEN_POLL",
+          "alive": false,
+          "elapsed_seconds": 2.0160000000032596,
+          "exit_code": 1,
+          "pid": 41172,
+          "timeout": true
+        },
+        {
+          "path": "D:\\1800-worktrees\\a03-r1-final-review-19ab03c8\\docs\\evidence\\A03\\R1\\final-correction\\run\\cases\\L3-execute\\target\\process-audit\\read-5fac93b8285f4506a4fb6e0d054152e5\\completed.json",
+          "wait_basis": "PINNED_NATIVE_WAIT_THEN_POLL",
+          "alive": false,
+          "elapsed_seconds": 0.5939999999973224,
+          "exit_code": 0,
+          "pid": 51700,
+          "timeout": false
+        },
+        {
+          "path": "D:\\1800-worktrees\\a03-r1-final-review-19ab03c8\\docs\\evidence\\A03\\R1\\final-correction\\run\\cases\\L3-execute\\target\\process-audit\\read-877a47e48411452eb54c1ca2556a0391\\completed.json",
+          "wait_basis": "PINNED_NATIVE_WAIT_THEN_POLL",
+          "alive": false,
+          "elapsed_seconds": 0.5779999999940628,
+          "exit_code": 0,
+          "pid": 75432,
+          "timeout": false
+        },
+        {
+          "path": "D:\\1800-worktrees\\a03-r1-final-review-19ab03c8\\docs\\evidence\\A03\\R1\\final-correction\\run\\cases\\L3-execute\\target\\process-audit\\read-bc1c4839ea104d1ca40be774de0891cd\\completed.json",
+          "wait_basis": "PINNED_NATIVE_WAIT_THEN_POLL",
+          "alive": false,
+          "elapsed_seconds": 0.5780000000086147,
+          "exit_code": 0,
+          "pid": 76512,
+          "timeout": false
+        },
+        {
+          "path": "D:\\1800-worktrees\\a03-r1-final-review-19ab03c8\\docs\\evidence\\A03\\R1\\final-correction\\run\\cases\\L3-execute\\target\\process-audit\\read-c25d4f140e254c59a567b903d7e6c8c4\\completed.json",
+          "wait_basis": "PINNED_NATIVE_WAIT_THEN_POLL",
+          "alive": false,
+          "elapsed_seconds": 2.0,
+          "exit_code": 1,
+          "pid": 72040,
+          "timeout": true
+        },
+        {
+          "path": "D:\\1800-worktrees\\a03-r1-final-review-19ab03c8\\docs\\evidence\\A03\\R1\\final-correction\\run\\cases\\L3-execute\\target\\process-audit\\read-cc6987c9891943c9ab8d173eedc86bb5\\completed.json",
+          "wait_basis": "PINNED_NATIVE_WAIT_THEN_POLL",
+          "alive": false,
+          "elapsed_seconds": 0.6089999999967404,
+          "exit_code": 0,
+          "pid": 32812,
+          "timeout": false
+        },
+        {
+          "path": "D:\\1800-worktrees\\a03-r1-final-review-19ab03c8\\docs\\evidence\\A03\\R1\\final-correction\\run\\cases\\L3-execute\\target\\process-audit\\read-f0d43ca3aa8241dbacf573bf6c7fde57\\completed.json",
+          "wait_basis": "PINNED_NATIVE_WAIT_THEN_POLL",
+          "alive": false,
+          "elapsed_seconds": 0.5470000000059372,
+          "exit_code": 0,
+          "pid": 41520,
+          "timeout": false
+        },
+        {
+          "path": "D:\\1800-worktrees\\a03-r1-final-review-19ab03c8\\docs\\evidence\\A03\\R1\\final-correction\\run\\cases\\L3-execute\\target\\process-audit\\read-f2f0f1cb37ff4d06b147fce93b711fc9\\completed.json",
+          "wait_basis": "PINNED_NATIVE_WAIT_THEN_POLL",
+          "alive": false,
+          "elapsed_seconds": 0.625,
+          "exit_code": 0,
+          "pid": 42500,
+          "timeout": false
+        },
+        {
+          "path": "D:\\1800-worktrees\\a03-r1-final-review-19ab03c8\\docs\\evidence\\A03\\R1\\final-correction\\run\\cases\\L3-reconcile\\process\\completed.json",
+          "wait_basis": "EXPLICIT_WAITED",
+          "alive": false,
+          "elapsed_seconds": 3.625,
+          "exit_code": 0,
+          "pid": 15040,
+          "timeout": false,
+          "waited": true
+        },
+        {
+          "path": "D:\\1800-worktrees\\a03-r1-final-review-19ab03c8\\docs\\evidence\\A03\\R1\\final-correction\\run\\cases\\L3-second\\process\\completed.json",
+          "wait_basis": "EXPLICIT_WAITED",
+          "alive": false,
+          "elapsed_seconds": 14.60899999999674,
+          "exit_code": 0,
+          "pid": 49648,
+          "timeout": false,
+          "waited": true
+        },
+        {
+          "path": "D:\\1800-worktrees\\a03-r1-final-review-19ab03c8\\docs\\evidence\\A03\\R1\\final-correction\\run\\cases\\L4\\process\\completed.json",
+          "wait_basis": "EXPLICIT_WAITED",
+          "alive": false,
+          "elapsed_seconds": 1.0939999999973224,
+          "exit_code": 0,
+          "pid": 64988,
+          "timeout": false,
+          "waited": true
+        },
+        {
+          "path": "D:\\1800-worktrees\\a03-r1-final-review-19ab03c8\\docs\\evidence\\A03\\R1\\final-correction\\run\\processes\\F\\completed.json",
+          "wait_basis": "EXPLICIT_WAITED",
+          "alive": false,
+          "elapsed_seconds": 4.4539999999979045,
+          "exit_code": 0,
+          "pid": 17240,
+          "timeout": false,
+          "waited": true
+        },
+        {
+          "path": "D:\\1800-worktrees\\a03-r1-final-review-19ab03c8\\docs\\evidence\\A03\\R1\\final-correction\\run\\processes\\G2-G3\\completed.json",
+          "wait_basis": "EXPLICIT_WAITED",
+          "alive": false,
+          "elapsed_seconds": 0.9060000000026776,
+          "exit_code": 0,
+          "pid": 56888,
+          "timeout": false,
+          "waited": true
+        },
+        {
+          "path": "D:\\1800-worktrees\\a03-r1-final-review-19ab03c8\\docs\\evidence\\A03\\R1\\final-correction\\run\\processes\\G5\\completed.json",
+          "wait_basis": "EXPLICIT_WAITED",
+          "alive": false,
+          "elapsed_seconds": 0.8600000000005821,
+          "exit_code": 0,
+          "pid": 71800,
+          "timeout": false,
+          "waited": true
+        },
+        {
+          "path": "D:\\1800-worktrees\\a03-r1-final-review-19ab03c8\\docs\\evidence\\A03\\R1\\final-correction\\run\\processes\\G6-first\\completed.json",
+          "wait_basis": "EXPLICIT_WAITED",
+          "alive": false,
+          "elapsed_seconds": 8.0,
+          "exit_code": 0,
+          "pid": 76592,
+          "timeout": false,
+          "waited": true
+        },
+        {
+          "path": "D:\\1800-worktrees\\a03-r1-final-review-19ab03c8\\docs\\evidence\\A03\\R1\\final-correction\\run\\processes\\G6-reopen\\completed.json",
+          "wait_basis": "EXPLICIT_WAITED",
+          "alive": false,
+          "elapsed_seconds": 1.735000000000582,
+          "exit_code": 0,
+          "pid": 33972,
+          "timeout": false,
+          "waited": true
+        },
+        {
+          "path": "D:\\1800-worktrees\\a03-r1-final-review-19ab03c8\\docs\\evidence\\A03\\R1\\final-correction\\run\\processes\\L2\\completed.json",
+          "wait_basis": "EXPLICIT_WAITED",
+          "alive": false,
+          "elapsed_seconds": 10.65700000000652,
+          "exit_code": 0,
+          "pid": 64436,
+          "timeout": false,
+          "waited": true
+        },
+        {
+          "path": "D:\\1800-worktrees\\a03-r1-final-review-19ab03c8\\docs\\evidence\\A03\\R1\\final-correction\\run\\processes\\L3-execute\\completed.json",
+          "wait_basis": "EXPLICIT_WAITED",
+          "alive": false,
+          "elapsed_seconds": 6.342999999993481,
+          "exit_code": 0,
+          "pid": 69556,
+          "timeout": false,
+          "waited": true
+        },
+        {
+          "path": "D:\\1800-worktrees\\a03-r1-final-review-19ab03c8\\docs\\evidence\\A03\\R1\\final-correction\\run\\processes\\L3-reconcile\\completed.json",
+          "wait_basis": "EXPLICIT_WAITED",
+          "alive": false,
+          "elapsed_seconds": 3.813000000009197,
+          "exit_code": 0,
+          "pid": 62752,
+          "timeout": false,
+          "waited": true
+        },
+        {
+          "path": "D:\\1800-worktrees\\a03-r1-final-review-19ab03c8\\docs\\evidence\\A03\\R1\\final-correction\\run\\processes\\L3-second\\completed.json",
+          "wait_basis": "EXPLICIT_WAITED",
+          "alive": false,
+          "elapsed_seconds": 14.796999999991385,
+          "exit_code": 0,
+          "pid": 50212,
+          "timeout": false,
+          "waited": true
+        },
+        {
+          "path": "D:\\1800-worktrees\\a03-r1-final-review-19ab03c8\\docs\\evidence\\A03\\R1\\final-correction\\run\\processes\\L4\\completed.json",
+          "wait_basis": "EXPLICIT_WAITED",
+          "alive": false,
+          "elapsed_seconds": 1.312000000005355,
+          "exit_code": 0,
+          "pid": 67912,
+          "timeout": false,
+          "waited": true
+        }
+      ],
+      "raw_executed_files": 154
+    },
+    "independent": {
+      "matrix": [
+        {
+          "phase": "L2",
+          "process": {
+            "alive": false,
+            "elapsed_seconds": 10.921999999991385,
+            "exit_code": 0,
+            "pid": 78620,
+            "timeout": false,
+            "waited": true
+          },
+          "status": "ENDED"
+        },
+        {
+          "phase": "L3-execute",
+          "process": {
+            "alive": false,
+            "elapsed_seconds": 6.6560000000026776,
+            "exit_code": 0,
+            "pid": 41552,
+            "timeout": false,
+            "waited": true
+          },
+          "status": "ENDED"
+        },
+        {
+          "phase": "L3-reconcile",
+          "process": {
+            "alive": false,
+            "elapsed_seconds": 4.125,
+            "exit_code": 0,
+            "pid": 59756,
+            "timeout": false,
+            "waited": true
+          },
+          "status": "ENDED"
+        },
+        {
+          "phase": "L3-second",
+          "process": {
+            "alive": false,
+            "elapsed_seconds": 15.860000000000582,
+            "exit_code": 0,
+            "pid": 78080,
+            "timeout": false,
+            "waited": true
+          },
+          "status": "ENDED"
+        },
+        {
+          "phase": "G6-first",
+          "process": {
+            "alive": false,
+            "elapsed_seconds": 8.047000000005937,
+            "exit_code": 0,
+            "pid": 59664,
+            "timeout": false,
+            "waited": true
+          },
+          "status": "ENDED"
+        },
+        {
+          "phase": "G6-reopen",
+          "process": {
+            "alive": false,
+            "elapsed_seconds": 1.875,
+            "exit_code": 0,
+            "pid": 63236,
+            "timeout": false,
+            "waited": true
+          },
+          "status": "ENDED"
+        },
+        {
+          "phase": "L4",
+          "process": {
+            "alive": false,
+            "elapsed_seconds": 1.3589999999967404,
+            "exit_code": 0,
+            "pid": 46932,
+            "timeout": false,
+            "waited": true
+          },
+          "status": "ENDED"
+        },
+        {
+          "phase": "G2-G3",
+          "process": {
+            "alive": false,
+            "elapsed_seconds": 0.8910000000032596,
+            "exit_code": 0,
+            "pid": 77336,
+            "timeout": false,
+            "waited": true
+          },
+          "status": "ENDED"
+        },
+        {
+          "phase": "G5",
+          "process": {
+            "alive": false,
+            "elapsed_seconds": 0.875,
+            "exit_code": 0,
+            "pid": 20084,
+            "timeout": false,
+            "waited": true
+          },
+          "status": "ENDED"
+        },
+        {
+          "phase": "F",
+          "process": {
+            "alive": false,
+            "elapsed_seconds": 4.530999999988126,
+            "exit_code": 0,
+            "pid": 70884,
+            "timeout": false,
+            "waited": true
+          },
+          "status": "ENDED"
+        }
+      ],
+      "bounded": {
+        "new_targets": 2,
+        "dispatch": 3,
+        "legacy_generation": 0,
+        "M_L1_G4_new_business": 0,
+        "A_pending": 2,
+        "B_pending": 0,
+        "L3_pending": 1,
+        "L3_distinct_actions": true,
+        "G6_first_attempts": 3,
+        "G6_reopen_attempts": 0,
+        "L4": {
+          "controls": [
+            {
+              "key": "fork",
+              "layer": "FULL_NATIVE",
+              "result": {
+                "issues": [
+                  {
+                    "code": "RESOLUTION_FORK",
+                    "message": "one unique successor required",
+                    "path": "$.previous_resolution_ref"
+                  }
+                ],
+                "layer": "CONTRACT"
+              }
+            },
+            {
+              "key": "cycle",
+              "layer": "FULL_NATIVE_EXACT_REFERENCE",
+              "result": {
+                "issues": [
+                  {
+                    "code": "EXACT_REF",
+                    "message": "EXACT_REF",
+                    "path": "resolution-a1131e5f41e34791a9febdea73883ccf/previous_resolution_ref"
+                  }
+                ],
+                "layer": "CONTRACT"
+              }
+            },
+            {
+              "key": "wrong-original-receipt-full",
+              "layer": "FULL_NATIVE",
+              "result": {
+                "issues": [
+                  {
+                    "code": "EXACT_REF",
+                    "message": "EXACT_REF",
+                    "path": "resolution-a1131e5f41e34791a9febdea73883ccf/original_receipt_ref"
+                  }
+                ],
+                "layer": "CONTRACT"
+              }
+            },
+            {
+              "key": "wrong-original-receipt-semantic",
+              "layer": "VALUE_RESOLUTION_GUARD",
+              "result": {
+                "issues": [
+                  {
+                    "code": "REFERENCE_HASH_MISMATCH",
+                    "message": "artifact kind/digest differs",
+                    "path": "$.reference"
+                  }
+                ],
+                "layer": "CONTRACT"
+              }
+            }
+          ],
+          "dispatch": 0,
+          "new_targets": 0
+        },
+        "G2_G3": {
+          "G2_calls": 7,
+          "G3_calls": 4,
+          "controls": [
+            {
+              "key": "G2-runtime-directory-binding",
+              "result": {
+                "code": "LEDGER_VERSION_UNSUPPORTED",
+                "layer": "RUNTIME",
+                "message": "metadata mismatch"
+              }
+            },
+            {
+              "key": "G2-unknown-runtime-format",
+              "result": {
+                "code": "STATE_DIRECTORY_IDENTITY_MISMATCH",
+                "layer": "RUNTIME",
+                "message": "anchor/config identities differ"
+              }
+            },
+            {
+              "key": "G2-target-unknown",
+              "result": {
+                "issues": [
+                  {
+                    "code": "TARGET_STORE_CORRUPT",
+                    "message": "$.a02: [TARGET_STORE_VERSION_UNSUPPORTED] target application or user version differs",
+                    "path": "$.a02"
+                  }
+                ],
+                "layer": "CONTRACT"
+              }
+            },
+            {
+              "key": "G2-target-directory",
+              "result": {
+                "issues": [
+                  {
+                    "code": "STATE_DIRECTORY_IDENTITY_MISMATCH",
+                    "message": "target directory differs from established identity",
+                    "path": "$.a02"
+                  }
+                ],
+                "layer": "CONTRACT"
+              }
+            },
+            {
+              "key": "G2-unknown-exchange",
+              "result": {
+                "issues": [
+                  {
+                    "code": "NATIVE_VERSION_REQUIRED",
+                    "message": "NATIVE_VERSION_REQUIRED",
+                    "path": "$"
+                  }
+                ],
+                "layer": "CONTRACT"
+              }
+            },
+            {
+              "key": "G2-file-write-IO",
+              "result": {
+                "errno": 17,
+                "error": "FileExistsError",
+                "layer": "FILESYSTEM_IO",
+                "message": "[WinError 183] \u5f53\u6587\u4ef6\u5df2\u5b58\u5728\u65f6\uff0c\u65e0\u6cd5\u521b\u5efa\u8be5\u6587\u4ef6\u3002: 'D:\\\\1800-worktrees\\\\a03-r1-final-review-19ab03c8\\\\route-project\\\\docs\\\\evidence\\\\A03\\\\R1\\\\final-correction\\\\run\\\\cases\\\\G2-G3\\\\write-blocker'"
+              }
+            },
+            {
+              "key": "G2-SQL-rollback-wrapper",
+              "result": {
+                "code": "STORAGE_TRANSACTION_FAILED",
+                "layer": "RUNTIME",
+                "message": "no such column: final_deliberately_absent_column"
+              }
+            },
+            {
+              "key": "G3-1.1-archive-read",
+              "native_authority": false,
+              "version": "a03-exchange-1"
+            },
+            {
+              "key": "G3-1.1-as-native",
+              "result": {
+                "issues": [
+                  {
+                    "code": "NATIVE_VERSION_REQUIRED",
+                    "message": "NATIVE_VERSION_REQUIRED",
+                    "path": "$"
+                  }
+                ],
+                "layer": "CONTRACT"
+              }
+            },
+            {
+              "key": "G3-post-marker-conversion-IO",
+              "result": {
+                "errno": 17,
+                "error": "FileExistsError",
+                "layer": "FILESYSTEM_IO",
+                "message": "[WinError 183] \u5f53\u6587\u4ef6\u5df2\u5b58\u5728\u65f6\uff0c\u65e0\u6cd5\u521b\u5efa\u8be5\u6587\u4ef6\u3002: 'D:\\\\1800-worktrees\\\\a03-r1-final-review-19ab03c8\\\\route-project\\\\docs\\\\evidence\\\\A03\\\\R1\\\\final-correction\\\\run\\\\cases\\\\G2-G3\\\\interrupted-conversion\\\\conversion-incomplete.json'"
+              }
+            },
+            {
+              "key": "G3-reopen-incomplete",
+              "result": {
+                "issues": [
+                  {
+                    "code": "JSON_INPUT",
+                    "message": "[Errno 2] No such file or directory: 'D:\\\\1800-worktrees\\\\a03-r1-final-review-19ab03c8\\\\route-project\\\\docs\\\\evidence\\\\A03\\\\R1\\\\final-correction\\\\run\\\\cases\\\\G2-G3\\\\interrupted-conversion\\\\bundle.json'",
+                    "path": "$"
+                  }
+                ],
+                "layer": "CONTRACT"
+              }
+            }
+          ],
+          "conversion_marker": {
+            "conversion_id": "final-interrupted",
+            "source_sha256": "ba9794ea7ba4cd53decaecbac41bb3dadfda938e070dfe7eae6eac81bb89c5a0",
+            "status": "INCOMPLETE"
+          },
+          "dispatch": 0,
+          "negative_database_copies": 5,
+          "new_business_targets": 0,
+          "note": "transaction wrapper uses a deliberate invalid SELECT on its own stationary negative copy; no positive authority inferred",
+          "transaction_bytes_unchanged": true
+        },
+        "G5": {
+          "G5_calls": 2,
+          "dispatch": 0,
+          "foreign_head_different_snapshot": {
+            "issues": [
+              {
+                "code": "RECOVERY_CHAIN_INVALID",
+                "message": "selected head is not in the unique valid intent chain",
+                "path": "$.recovery_refs"
+              }
+            ],
+            "layer": "CONTRACT"
+          },
+          "layer": "PURE_VALUE_GUARDS; no new POST/Batch, mixed-native qualification or runtime effects",
+          "new_targets": 0,
+          "old_report_read": {
+            "issues": [
+              {
+                "code": "NATIVE_REPORT_READ_NOT_FRESH",
+                "message": "NATIVE_REPORT_READ_NOT_FRESH",
+                "path": "native-post-b5ab9898a8e244eabc48e11cc650e24b"
+              }
+            ],
+            "layer": "CONTRACT"
+          },
+          "real_heads": [
+            {
+              "artifact_id": "resolution-0b44b2c409354b7f9346e1367cfc7e5e",
+              "content_hash": "714d8b5055ecebf2047a608b54b1ec1325320d4fb525f6b4978f7c92d85360aa",
+              "kind": "ReconciliationResult",
+              "revision": 1
+            },
+            {
+              "artifact_id": "resolution-a1131e5f41e34791a9febdea73883ccf",
+              "content_hash": "e071bceaa691007f67f93d7137a00934b8a1a756052b237e0743a49cce894ba2",
+              "kind": "ReconciliationResult",
+              "revision": 1
+            }
+          ],
+          "snapshots": [
+            {
+              "artifact_id": "snapshot-a03-bac5aa3419af6a015576339a",
+              "content_hash": "6dc4cee024b8612432f91772c3fd49cbaa2ce0d85eb177eda096b17fe6e9b8ba",
+              "kind": "PlatformSnapshot",
+              "revision": 1
+            },
+            {
+              "artifact_id": "snapshot-a03-c82d60f1ba3afb2677a3173e",
+              "content_hash": "b55bf673194272fc7a2a84fc79179a488c3ec00e928e76593beb08ba327c0517",
+              "kind": "PlatformSnapshot",
+              "revision": 1
+            }
+          ]
+        },
+        "F": {
+          "after": [
+            "a90dd066787395644b3bd95e40623857c9ab9052f20a6bdee8db3799f8f1fef0",
+            "acd9c5abdc34c4da88e5b3ab8e6d937f2c4bc46dcd83eb1ab5fa3320e69b706a"
+          ],
+          "before": [
+            "a90dd066787395644b3bd95e40623857c9ab9052f20a6bdee8db3799f8f1fef0",
+            "acd9c5abdc34c4da88e5b3ab8e6d937f2c4bc46dcd83eb1ab5fa3320e69b706a"
+          ],
+          "claim": 0,
+          "dispatch": 0,
+          "inherited_F": {
+            "new_plan": "accepted M3-new-plan",
+            "normal": "accepted M1",
+            "unknown": "accepted L1"
+          },
+          "publisher": 0,
+          "reconcile": 0
+        }
+      },
+      "capture_pairs": [
+        {
+          "phase": "G6-first",
+          "hashes": {
+            "runtime": "af453a852d35d41266211262961814fea63cda85946d11032d306db59bc2d329",
+            "target": "cbbbee870c7e7d95c7b015717d001f52e7527e8bdbdaf90aef2874125f42af4f"
+          },
+          "SQL_matches": true,
+          "dispatch": 2,
+          "mutations": 1,
+          "questions": 1,
+          "frames": 2,
+          "intents": [
+            {
+              "id": "intent-92bc6ae65439440495cf892713ac4cac",
+              "state": "RESOLVED_NOT_APPLIED",
+              "receipt": "{\"artifact_id\":\"executionreceipt-7a659297f9bf4cbaacdba37b63877adf\",\"content_hash\":\"4db3cd52caaf0f2749b7295607b5b02a05a9b331ebaf81c629257c1095ef2f80\",\"kind\":\"ExecutionReceipt\",\"revision\":1}"
+            },
+            {
+              "id": "intent-6e406c2f2c134d8d8e7f8071c416a08e",
+              "state": "PENDING",
+              "receipt": "{\"artifact_id\":\"executionreceipt-7960b8df939743acb1c9f93642bb6d31\",\"content_hash\":\"cd27512291417930a694d066eafae6959b5de0775e9d781fb2b462407f995cac\",\"kind\":\"ExecutionReceipt\",\"revision\":1}"
+            }
+          ],
+          "permits": 2,
+          "legacy": 0,
+          "report_reads": 0,
+          "released": true,
+          "events": 29,
+          "native_readonly_entries": 0
+        },
+        {
+          "phase": "G6-reopen",
+          "hashes": {
+            "runtime": "b93c6d41f7b8b3075a1dd10b05d06580f388852492a6deec7bcb91889c80a156",
+            "target": "b333ac2c9d19006da5bb0c5bb9870e68912e3cb82368a7efb25ccc1640de067e"
+          },
+          "SQL_matches": true,
+          "dispatch": 2,
+          "mutations": 1,
+          "questions": 1,
+          "frames": 2,
+          "intents": [
+            {
+              "id": "intent-92bc6ae65439440495cf892713ac4cac",
+              "state": "RESOLVED_NOT_APPLIED",
+              "receipt": "{\"artifact_id\":\"executionreceipt-7a659297f9bf4cbaacdba37b63877adf\",\"content_hash\":\"4db3cd52caaf0f2749b7295607b5b02a05a9b331ebaf81c629257c1095ef2f80\",\"kind\":\"ExecutionReceipt\",\"revision\":1}"
+            },
+            {
+              "id": "intent-6e406c2f2c134d8d8e7f8071c416a08e",
+              "state": "PENDING",
+              "receipt": "{\"artifact_id\":\"executionreceipt-7960b8df939743acb1c9f93642bb6d31\",\"content_hash\":\"cd27512291417930a694d066eafae6959b5de0775e9d781fb2b462407f995cac\",\"kind\":\"ExecutionReceipt\",\"revision\":1}"
+            }
+          ],
+          "permits": 2,
+          "legacy": 0,
+          "report_reads": 0,
+          "released": true,
+          "events": 32,
+          "native_readonly_entries": 0
+        },
+        {
+          "phase": "L2",
+          "hashes": {
+            "runtime": "a90dd066787395644b3bd95e40623857c9ab9052f20a6bdee8db3799f8f1fef0",
+            "target": "ee3ff35daf78a18426216f5b5a174c6b6114f174e7f150ad00cfd1a00966058f"
+          },
+          "SQL_matches": true,
+          "dispatch": 1,
+          "mutations": 1,
+          "questions": 1,
+          "frames": 2,
+          "intents": [
+            {
+              "id": "intent-289db874d81148d191e566f9896b40c8",
+              "state": "APPLIED",
+              "receipt": "{\"artifact_id\":\"executionreceipt-ccaf125e18884115a2e0b396f85393c5\",\"content_hash\":\"fba5a18df4f5c6a7e492820c8b9b35d7b7b6830806451a94817fd6dab2ee89f6\",\"kind\":\"ExecutionReceipt\",\"revision\":1}"
+            },
+            {
+              "id": "intent-7f9a1d00b20b44d58651c03713892996",
+              "state": "RESOLVED_APPLIED",
+              "receipt": "{\"artifact_id\":\"executionreceipt-ccaf125e18884115a2e0b396f85393c5\",\"content_hash\":\"fba5a18df4f5c6a7e492820c8b9b35d7b7b6830806451a94817fd6dab2ee89f6\",\"kind\":\"ExecutionReceipt\",\"revision\":1}"
+            },
+            {
+              "id": "intent-1ef2441b234945fd8076449317f3d704",
+              "state": "APPLIED",
+              "receipt": "{\"artifact_id\":\"executionreceipt-fb90db250fd14cfc972328c717ed337c\",\"content_hash\":\"3f34fecf31c65968bba1192f05cc1344c45e629e1d3ab2af95162bf1adc45501\",\"kind\":\"ExecutionReceipt\",\"revision\":1}"
+            }
+          ],
+          "permits": 3,
+          "legacy": 2,
+          "report_reads": 2,
+          "released": true,
+          "events": 47,
+          "native_readonly_entries": 1
+        },
+        {
+          "phase": "L3-execute",
+          "hashes": {
+            "runtime": "203ade6e6beb7305015bb43ba2f18568b7e0b7dc56141dd31db50880bf5c7350",
+            "target": "2412024624eadf076d292562c4808c0af530010df14b93307e181648d3820ee9"
+          },
+          "SQL_matches": true,
+          "dispatch": 1,
+          "mutations": 0,
+          "questions": 0,
+          "frames": 0,
+          "intents": [
+            {
+              "id": "intent-92bc6ae65439440495cf892713ac4cac",
+              "state": "PENDING",
+              "receipt": "{\"artifact_id\":\"executionreceipt-7a659297f9bf4cbaacdba37b63877adf\",\"content_hash\":\"4db3cd52caaf0f2749b7295607b5b02a05a9b331ebaf81c629257c1095ef2f80\",\"kind\":\"ExecutionReceipt\",\"revision\":1}"
+            }
+          ],
+          "permits": 1,
+          "legacy": 0,
+          "report_reads": 0,
+          "released": true,
+          "events": 11,
+          "native_readonly_entries": 0
+        },
+        {
+          "phase": "L3-reconcile",
+          "hashes": {
+            "runtime": "f3f0bd1960e6ba4d2846ee9aca353e73d8f8388bbefe08211cf79f0a50830d71",
+            "target": "538a5a97fb61df430839eef948a3070234681484db01a8a0d7f8fd72c7aa452f"
+          },
+          "SQL_matches": true,
+          "dispatch": 1,
+          "mutations": 0,
+          "questions": 0,
+          "frames": 0,
+          "intents": [
+            {
+              "id": "intent-92bc6ae65439440495cf892713ac4cac",
+              "state": "RESOLVED_NOT_APPLIED",
+              "receipt": "{\"artifact_id\":\"executionreceipt-7a659297f9bf4cbaacdba37b63877adf\",\"content_hash\":\"4db3cd52caaf0f2749b7295607b5b02a05a9b331ebaf81c629257c1095ef2f80\",\"kind\":\"ExecutionReceipt\",\"revision\":1}"
+            }
+          ],
+          "permits": 1,
+          "legacy": 0,
+          "report_reads": 0,
+          "released": true,
+          "events": 15,
+          "native_readonly_entries": 0
+        },
+        {
+          "phase": "L3-second",
+          "hashes": {
+            "runtime": "f7c3bf5cacb869a63a107f38508836aa7a76873c25a28ec3d4ae34821b483c82",
+            "target": "a42fb5cd34069ecc82bd5164e8f240970de01e26692bd5fed4bcc9a8d5ccb609"
+          },
+          "SQL_matches": true,
+          "dispatch": 2,
+          "mutations": 1,
+          "questions": 1,
+          "frames": 2,
+          "intents": [
+            {
+              "id": "intent-92bc6ae65439440495cf892713ac4cac",
+              "state": "RESOLVED_NOT_APPLIED",
+              "receipt": "{\"artifact_id\":\"executionreceipt-7a659297f9bf4cbaacdba37b63877adf\",\"content_hash\":\"4db3cd52caaf0f2749b7295607b5b02a05a9b331ebaf81c629257c1095ef2f80\",\"kind\":\"ExecutionReceipt\",\"revision\":1}"
+            },
+            {
+              "id": "intent-6e406c2f2c134d8d8e7f8071c416a08e",
+              "state": "PENDING",
+              "receipt": "{\"artifact_id\":\"executionreceipt-7960b8df939743acb1c9f93642bb6d31\",\"content_hash\":\"cd27512291417930a694d066eafae6959b5de0775e9d781fb2b462407f995cac\",\"kind\":\"ExecutionReceipt\",\"revision\":1}"
+            }
+          ],
+          "permits": 2,
+          "legacy": 0,
+          "report_reads": 0,
+          "released": true,
+          "events": 26,
+          "native_readonly_entries": 0
+        }
+      ],
+      "imports": [
+        {
+          "phase": "L2",
+          "modules": 30,
+          "hashes_match": true
+        },
+        {
+          "phase": "L3-execute",
+          "modules": 29,
+          "hashes_match": true
+        },
+        {
+          "phase": "L3-reconcile",
+          "modules": 29,
+          "hashes_match": true
+        },
+        {
+          "phase": "L3-second",
+          "modules": 29,
+          "hashes_match": true
+        },
+        {
+          "phase": "G6-first",
+          "modules": 29,
+          "hashes_match": true
+        },
+        {
+          "phase": "G6-reopen",
+          "modules": 28,
+          "hashes_match": true
+        },
+        {
+          "phase": "L4",
+          "modules": 19,
+          "hashes_match": true
+        },
+        {
+          "phase": "G2-G3",
+          "modules": 24,
+          "hashes_match": true
+        },
+        {
+          "phase": "G5",
+          "modules": 20,
+          "hashes_match": true
+        },
+        {
+          "phase": "F",
+          "modules": 25,
+          "hashes_match": true
+        }
+      ],
+      "metrics": [
+        {
+          "phase": "L2",
+          "wall_seconds": 10.5,
+          "cpu_seconds": 8.75,
+          "pid": 78632
+        },
+        {
+          "phase": "L3-execute",
+          "wall_seconds": 6.2189999999973224,
+          "cpu_seconds": 4.9375,
+          "pid": 700
+        },
+        {
+          "phase": "L3-reconcile",
+          "wall_seconds": 3.686999999990803,
+          "cpu_seconds": 2.828125,
+          "pid": 21816
+        },
+        {
+          "phase": "L3-second",
+          "wall_seconds": 15.436999999990803,
+          "cpu_seconds": 11.96875,
+          "pid": 73988
+        },
+        {
+          "phase": "G6-first",
+          "wall_seconds": 7.60899999999674,
+          "cpu_seconds": 1.453125,
+          "pid": 54308
+        },
+        {
+          "phase": "G6-reopen",
+          "wall_seconds": 1.4530000000086147,
+          "cpu_seconds": 1.390625,
+          "pid": 56936
+        },
+        {
+          "phase": "L4",
+          "wall_seconds": 0.8910000000032596,
+          "cpu_seconds": 0.890625,
+          "pid": 16168
+        },
+        {
+          "phase": "G2-G3",
+          "wall_seconds": 0.4529999999940628,
+          "cpu_seconds": 0.46875,
+          "pid": 58128
+        },
+        {
+          "phase": "G5",
+          "wall_seconds": 0.4220000000059372,
+          "cpu_seconds": 0.421875,
+          "pid": 53072
+        },
+        {
+          "phase": "F",
+          "wall_seconds": 4.093000000008033,
+          "cpu_seconds": 4.09375,
+          "pid": 53936
+        }
+      ],
+      "completions": [
+        {
+          "path": "D:\\1800-worktrees\\a03-r1-final-review-19ab03c8\\route-project\\docs\\evidence\\A03\\R1\\final-correction\\run\\cases\\F\\process\\completed.json",
+          "wait_basis": "EXPLICIT_WAITED",
+          "alive": false,
+          "elapsed_seconds": 4.327999999994063,
+          "exit_code": 0,
+          "pid": 53936,
+          "timeout": false,
+          "waited": true
+        },
+        {
+          "path": "D:\\1800-worktrees\\a03-r1-final-review-19ab03c8\\route-project\\docs\\evidence\\A03\\R1\\final-correction\\run\\cases\\G2-G3\\process\\completed.json",
+          "wait_basis": "EXPLICIT_WAITED",
+          "alive": false,
+          "elapsed_seconds": 0.6870000000053551,
+          "exit_code": 0,
+          "pid": 58128,
+          "timeout": false,
+          "waited": true
+        },
+        {
+          "path": "D:\\1800-worktrees\\a03-r1-final-review-19ab03c8\\route-project\\docs\\evidence\\A03\\R1\\final-correction\\run\\cases\\G5\\process\\completed.json",
+          "wait_basis": "EXPLICIT_WAITED",
+          "alive": false,
+          "elapsed_seconds": 0.6560000000026776,
+          "exit_code": 0,
+          "pid": 53072,
+          "timeout": false,
+          "waited": true
+        },
+        {
+          "path": "D:\\1800-worktrees\\a03-r1-final-review-19ab03c8\\route-project\\docs\\evidence\\A03\\R1\\final-correction\\run\\cases\\G6-first\\process\\completed.json",
+          "wait_basis": "EXPLICIT_WAITED",
+          "alive": false,
+          "elapsed_seconds": 7.843000000008033,
+          "exit_code": 0,
+          "pid": 54308,
+          "timeout": false,
+          "waited": true
+        },
+        {
+          "path": "D:\\1800-worktrees\\a03-r1-final-review-19ab03c8\\route-project\\docs\\evidence\\A03\\R1\\final-correction\\run\\cases\\G6-reopen\\process\\completed.json",
+          "wait_basis": "EXPLICIT_WAITED",
+          "alive": false,
+          "elapsed_seconds": 1.6720000000059372,
+          "exit_code": 0,
+          "pid": 56936,
+          "timeout": false,
+          "waited": true
+        },
+        {
+          "path": "D:\\1800-worktrees\\a03-r1-final-review-19ab03c8\\route-project\\docs\\evidence\\A03\\R1\\final-correction\\run\\cases\\L2\\process\\completed.json",
+          "wait_basis": "EXPLICIT_WAITED",
+          "alive": false,
+          "elapsed_seconds": 10.73399999999674,
+          "exit_code": 0,
+          "pid": 78632,
+          "timeout": false,
+          "waited": true
+        },
+        {
+          "path": "D:\\1800-worktrees\\a03-r1-final-review-19ab03c8\\route-project\\docs\\evidence\\A03\\R1\\final-correction\\run\\cases\\L2\\target\\process-audit\\read-b3f2efd33dc84d2b8ede67b3569a3790\\completed.json",
+          "wait_basis": "PINNED_NATIVE_WAIT_THEN_POLL",
+          "alive": false,
+          "elapsed_seconds": 0.5619999999908032,
+          "exit_code": 0,
+          "pid": 65432,
+          "timeout": false
+        },
+        {
+          "path": "D:\\1800-worktrees\\a03-r1-final-review-19ab03c8\\route-project\\docs\\evidence\\A03\\R1\\final-correction\\run\\cases\\L2\\target\\process-audit\\read-fdd6ca413a0642a49a6a0adfcf0face1\\completed.json",
+          "wait_basis": "PINNED_NATIVE_WAIT_THEN_POLL",
+          "alive": false,
+          "elapsed_seconds": 0.6089999999967404,
+          "exit_code": 0,
+          "pid": 65008,
+          "timeout": false
+        },
+        {
+          "path": "D:\\1800-worktrees\\a03-r1-final-review-19ab03c8\\route-project\\docs\\evidence\\A03\\R1\\final-correction\\run\\cases\\L3-execute\\process\\completed.json",
+          "wait_basis": "EXPLICIT_WAITED",
+          "alive": false,
+          "elapsed_seconds": 6.437999999994645,
+          "exit_code": 0,
+          "pid": 700,
+          "timeout": false,
+          "waited": true
+        },
+        {
+          "path": "D:\\1800-worktrees\\a03-r1-final-review-19ab03c8\\route-project\\docs\\evidence\\A03\\R1\\final-correction\\run\\cases\\L3-execute\\target\\process-audit\\read-028bfe929606409bb49a243ee53037f6\\completed.json",
+          "wait_basis": "PINNED_NATIVE_WAIT_THEN_POLL",
+          "alive": false,
+          "elapsed_seconds": 0.6090000000112923,
+          "exit_code": 0,
+          "pid": 44632,
+          "timeout": false
+        },
+        {
+          "path": "D:\\1800-worktrees\\a03-r1-final-review-19ab03c8\\route-project\\docs\\evidence\\A03\\R1\\final-correction\\run\\cases\\L3-execute\\target\\process-audit\\read-0be0c8b5cc0f4a82afae6ba851741435\\completed.json",
+          "wait_basis": "PINNED_NATIVE_WAIT_THEN_POLL",
+          "alive": false,
+          "elapsed_seconds": 0.6089999999967404,
+          "exit_code": 0,
+          "pid": 55796,
+          "timeout": false
+        },
+        {
+          "path": "D:\\1800-worktrees\\a03-r1-final-review-19ab03c8\\route-project\\docs\\evidence\\A03\\R1\\final-correction\\run\\cases\\L3-execute\\target\\process-audit\\read-35673922d76044c3aa9b55b5bc79675c\\completed.json",
+          "wait_basis": "PINNED_NATIVE_WAIT_THEN_POLL",
+          "alive": false,
+          "elapsed_seconds": 0.625,
+          "exit_code": 0,
+          "pid": 67900,
+          "timeout": false
+        },
+        {
+          "path": "D:\\1800-worktrees\\a03-r1-final-review-19ab03c8\\route-project\\docs\\evidence\\A03\\R1\\final-correction\\run\\cases\\L3-execute\\target\\process-audit\\read-5175b1272963403f906010e5df981d02\\completed.json",
+          "wait_basis": "PINNED_NATIVE_WAIT_THEN_POLL",
+          "alive": false,
+          "elapsed_seconds": 2.0160000000032596,
+          "exit_code": 1,
+          "pid": 6620,
+          "timeout": true
+        },
+        {
+          "path": "D:\\1800-worktrees\\a03-r1-final-review-19ab03c8\\route-project\\docs\\evidence\\A03\\R1\\final-correction\\run\\cases\\L3-execute\\target\\process-audit\\read-64009a232d214145bf485fe9d6e73944\\completed.json",
+          "wait_basis": "PINNED_NATIVE_WAIT_THEN_POLL",
+          "alive": false,
+          "elapsed_seconds": 0.5780000000086147,
+          "exit_code": 0,
+          "pid": 22720,
+          "timeout": false
+        },
+        {
+          "path": "D:\\1800-worktrees\\a03-r1-final-review-19ab03c8\\route-project\\docs\\evidence\\A03\\R1\\final-correction\\run\\cases\\L3-execute\\target\\process-audit\\read-b711bc1a3fac4d8f95ee58ee7765cc74\\completed.json",
+          "wait_basis": "PINNED_NATIVE_WAIT_THEN_POLL",
+          "alive": false,
+          "elapsed_seconds": 0.6100000000005821,
+          "exit_code": 0,
+          "pid": 76160,
+          "timeout": false
+        },
+        {
+          "path": "D:\\1800-worktrees\\a03-r1-final-review-19ab03c8\\route-project\\docs\\evidence\\A03\\R1\\final-correction\\run\\cases\\L3-execute\\target\\process-audit\\read-bde61fa5c7954d06a5e56e9b132f74f6\\completed.json",
+          "wait_basis": "PINNED_NATIVE_WAIT_THEN_POLL",
+          "alive": false,
+          "elapsed_seconds": 2.0310000000026776,
+          "exit_code": 1,
+          "pid": 31296,
+          "timeout": true
+        },
+        {
+          "path": "D:\\1800-worktrees\\a03-r1-final-review-19ab03c8\\route-project\\docs\\evidence\\A03\\R1\\final-correction\\run\\cases\\L3-execute\\target\\process-audit\\read-d61a91c6661b4e3498c29f602a24eee6\\completed.json",
+          "wait_basis": "PINNED_NATIVE_WAIT_THEN_POLL",
+          "alive": false,
+          "elapsed_seconds": 0.5930000000080327,
+          "exit_code": 0,
+          "pid": 75024,
+          "timeout": false
+        },
+        {
+          "path": "D:\\1800-worktrees\\a03-r1-final-review-19ab03c8\\route-project\\docs\\evidence\\A03\\R1\\final-correction\\run\\cases\\L3-execute\\target\\process-audit\\read-e26b89cbc4084121b386df4e89ced1cc\\completed.json",
+          "wait_basis": "PINNED_NATIVE_WAIT_THEN_POLL",
+          "alive": false,
+          "elapsed_seconds": 2.0,
+          "exit_code": 1,
+          "pid": 72212,
+          "timeout": true
+        },
+        {
+          "path": "D:\\1800-worktrees\\a03-r1-final-review-19ab03c8\\route-project\\docs\\evidence\\A03\\R1\\final-correction\\run\\cases\\L3-execute\\target\\process-audit\\read-f6a1e75b1b3b4ad7962514b0d6ea00e6\\completed.json",
+          "wait_basis": "PINNED_NATIVE_WAIT_THEN_POLL",
+          "alive": false,
+          "elapsed_seconds": 0.6090000000112923,
+          "exit_code": 0,
+          "pid": 50532,
+          "timeout": false
+        },
+        {
+          "path": "D:\\1800-worktrees\\a03-r1-final-review-19ab03c8\\route-project\\docs\\evidence\\A03\\R1\\final-correction\\run\\cases\\L3-reconcile\\process\\completed.json",
+          "wait_basis": "EXPLICIT_WAITED",
+          "alive": false,
+          "elapsed_seconds": 3.9070000000065193,
+          "exit_code": 0,
+          "pid": 21816,
+          "timeout": false,
+          "waited": true
+        },
+        {
+          "path": "D:\\1800-worktrees\\a03-r1-final-review-19ab03c8\\route-project\\docs\\evidence\\A03\\R1\\final-correction\\run\\cases\\L3-second\\process\\completed.json",
+          "wait_basis": "EXPLICIT_WAITED",
+          "alive": false,
+          "elapsed_seconds": 15.65700000000652,
+          "exit_code": 0,
+          "pid": 73988,
+          "timeout": false,
+          "waited": true
+        },
+        {
+          "path": "D:\\1800-worktrees\\a03-r1-final-review-19ab03c8\\route-project\\docs\\evidence\\A03\\R1\\final-correction\\run\\cases\\L4\\process\\completed.json",
+          "wait_basis": "EXPLICIT_WAITED",
+          "alive": false,
+          "elapsed_seconds": 1.125,
+          "exit_code": 0,
+          "pid": 16168,
+          "timeout": false,
+          "waited": true
+        },
+        {
+          "path": "D:\\1800-worktrees\\a03-r1-final-review-19ab03c8\\route-project\\docs\\evidence\\A03\\R1\\final-correction\\run\\processes\\F\\completed.json",
+          "wait_basis": "EXPLICIT_WAITED",
+          "alive": false,
+          "elapsed_seconds": 4.530999999988126,
+          "exit_code": 0,
+          "pid": 70884,
+          "timeout": false,
+          "waited": true
+        },
+        {
+          "path": "D:\\1800-worktrees\\a03-r1-final-review-19ab03c8\\route-project\\docs\\evidence\\A03\\R1\\final-correction\\run\\processes\\G2-G3\\completed.json",
+          "wait_basis": "EXPLICIT_WAITED",
+          "alive": false,
+          "elapsed_seconds": 0.8910000000032596,
+          "exit_code": 0,
+          "pid": 77336,
+          "timeout": false,
+          "waited": true
+        },
+        {
+          "path": "D:\\1800-worktrees\\a03-r1-final-review-19ab03c8\\route-project\\docs\\evidence\\A03\\R1\\final-correction\\run\\processes\\G5\\completed.json",
+          "wait_basis": "EXPLICIT_WAITED",
+          "alive": false,
+          "elapsed_seconds": 0.875,
+          "exit_code": 0,
+          "pid": 20084,
+          "timeout": false,
+          "waited": true
+        },
+        {
+          "path": "D:\\1800-worktrees\\a03-r1-final-review-19ab03c8\\route-project\\docs\\evidence\\A03\\R1\\final-correction\\run\\processes\\G6-first\\completed.json",
+          "wait_basis": "EXPLICIT_WAITED",
+          "alive": false,
+          "elapsed_seconds": 8.047000000005937,
+          "exit_code": 0,
+          "pid": 59664,
+          "timeout": false,
+          "waited": true
+        },
+        {
+          "path": "D:\\1800-worktrees\\a03-r1-final-review-19ab03c8\\route-project\\docs\\evidence\\A03\\R1\\final-correction\\run\\processes\\G6-reopen\\completed.json",
+          "wait_basis": "EXPLICIT_WAITED",
+          "alive": false,
+          "elapsed_seconds": 1.875,
+          "exit_code": 0,
+          "pid": 63236,
+          "timeout": false,
+          "waited": true
+        },
+        {
+          "path": "D:\\1800-worktrees\\a03-r1-final-review-19ab03c8\\route-project\\docs\\evidence\\A03\\R1\\final-correction\\run\\processes\\L2\\completed.json",
+          "wait_basis": "EXPLICIT_WAITED",
+          "alive": false,
+          "elapsed_seconds": 10.921999999991385,
+          "exit_code": 0,
+          "pid": 78620,
+          "timeout": false,
+          "waited": true
+        },
+        {
+          "path": "D:\\1800-worktrees\\a03-r1-final-review-19ab03c8\\route-project\\docs\\evidence\\A03\\R1\\final-correction\\run\\processes\\L3-execute\\completed.json",
+          "wait_basis": "EXPLICIT_WAITED",
+          "alive": false,
+          "elapsed_seconds": 6.6560000000026776,
+          "exit_code": 0,
+          "pid": 41552,
+          "timeout": false,
+          "waited": true
+        },
+        {
+          "path": "D:\\1800-worktrees\\a03-r1-final-review-19ab03c8\\route-project\\docs\\evidence\\A03\\R1\\final-correction\\run\\processes\\L3-reconcile\\completed.json",
+          "wait_basis": "EXPLICIT_WAITED",
+          "alive": false,
+          "elapsed_seconds": 4.125,
+          "exit_code": 0,
+          "pid": 59756,
+          "timeout": false,
+          "waited": true
+        },
+        {
+          "path": "D:\\1800-worktrees\\a03-r1-final-review-19ab03c8\\route-project\\docs\\evidence\\A03\\R1\\final-correction\\run\\processes\\L3-second\\completed.json",
+          "wait_basis": "EXPLICIT_WAITED",
+          "alive": false,
+          "elapsed_seconds": 15.860000000000582,
+          "exit_code": 0,
+          "pid": 78080,
+          "timeout": false,
+          "waited": true
+        },
+        {
+          "path": "D:\\1800-worktrees\\a03-r1-final-review-19ab03c8\\route-project\\docs\\evidence\\A03\\R1\\final-correction\\run\\processes\\L4\\completed.json",
+          "wait_basis": "EXPLICIT_WAITED",
+          "alive": false,
+          "elapsed_seconds": 1.3589999999967404,
+          "exit_code": 0,
+          "pid": 46932,
+          "timeout": false,
+          "waited": true
+        }
+      ],
+      "raw_executed_files": 154
+    }
+  },
+  "sqlite_version": "3.37.2",
+  "SQL_only_immutable_copies": true,
+  "extra_fixed_identity_reads": [
+    {
+      "argv": [
+        "git",
+        "-c",
+        "core.longpaths=true",
+        "-C",
+        "D:\\1800-worktrees\\a03-r1-final-review-19ab03c8",
+        "show",
+        "9992cd8aba10987d25dd0dc0d0874abec02b27ef:tests/test_a03_r1_validation.py"
+      ],
+      "pid": 20348,
+      "exit_code": 0,
+      "waited": true,
+      "sha256": "a8476a7a32419c7c55378659887b001620ddb5262263165b10b0a1321244424f",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "git",
+        "-c",
+        "core.longpaths=true",
+        "-C",
+        "D:\\1800-worktrees\\a03-r1-final-review-19ab03c8",
+        "show",
+        "9992cd8aba10987d25dd0dc0d0874abec02b27ef:tests/test_a03_t3_closure.py"
+      ],
+      "pid": 65528,
+      "exit_code": 0,
+      "waited": true,
+      "sha256": "1e0a93614d976d80f93605aa1962f72d36068c04c68493eaa17cc0ee292a010c",
+      "stderr": ""
+    }
+  ],
+  "old_fixed_review_members_preserved": 1204,
+  "own_live_runtime_matches_new_L2_capture": true,
+  "own_A_target_unchanged": true,
+  "author_continuation_index": {
+    "current_database": "docs\\evidence\\A03\\R1\\final-correction\\run\\cases\\L2\\captures\\after-release\\runtime.sqlite3",
+    "current_database_sha256": "fd4c00628ba2ecd0157fa71ab157bdceb8ca78ddc50aeb71fc89b2a6b57c6d43",
+    "live_source_restored_or_deleted": false,
+    "new_live_files": [
+      {
+        "bytes": 1,
+        "retained": "docs/evidence/A03/R1/final-correction/continuation-files/gates/0cd3f758a25d3e5862084e0e6fcb763caa77e4135e2f96b13c1961b71edcc84a.lock",
+        "sha256": "5feceb66ffc86f38d952786c6d696c79c2dbc239dd4e91b46729d73a27fb57e9",
+        "source": "D:\\1800-worktrees\\a03-r1\\docs\\evidence\\A03\\R1\\execution\\candidate-1\\business\\cases\\M2-sufficient\\runtime\\gates\\0cd3f758a25d3e5862084e0e6fcb763caa77e4135e2f96b13c1961b71edcc84a.lock"
+      },
+      {
+        "bytes": 2810,
+        "retained": "docs/evidence/A03/R1/final-correction/continuation-files/objects/0ad238d71bad45af44c830e148e3af5ddea571023544c71531b8d315c67e080b.json",
+        "sha256": "0ad238d71bad45af44c830e148e3af5ddea571023544c71531b8d315c67e080b",
+        "source": "D:\\1800-worktrees\\a03-r1\\docs\\evidence\\A03\\R1\\execution\\candidate-1\\business\\cases\\M2-sufficient\\runtime\\objects\\0ad238d71bad45af44c830e148e3af5ddea571023544c71531b8d315c67e080b.json"
+      },
+      {
+        "bytes": 2972,
+        "retained": "docs/evidence/A03/R1/final-correction/continuation-files/objects/10a06e988d0121305e53e4528a8a16dca7aa2fdecf7011e4f5cde8593251c14b.json",
+        "sha256": "10a06e988d0121305e53e4528a8a16dca7aa2fdecf7011e4f5cde8593251c14b",
+        "source": "D:\\1800-worktrees\\a03-r1\\docs\\evidence\\A03\\R1\\execution\\candidate-1\\business\\cases\\M2-sufficient\\runtime\\objects\\10a06e988d0121305e53e4528a8a16dca7aa2fdecf7011e4f5cde8593251c14b.json"
+      },
+      {
+        "bytes": 5496,
+        "retained": "docs/evidence/A03/R1/final-correction/continuation-files/objects/2a98b9578c4618fa72feba48ae4313755ab0f41ce58eef3f5a730b17e37923e8.json",
+        "sha256": "2a98b9578c4618fa72feba48ae4313755ab0f41ce58eef3f5a730b17e37923e8",
+        "source": "D:\\1800-worktrees\\a03-r1\\docs\\evidence\\A03\\R1\\execution\\candidate-1\\business\\cases\\M2-sufficient\\runtime\\objects\\2a98b9578c4618fa72feba48ae4313755ab0f41ce58eef3f5a730b17e37923e8.json"
+      },
+      {
+        "bytes": 4635,
+        "retained": "docs/evidence/A03/R1/final-correction/continuation-files/objects/2aa2f7b510ef74788fd5b96cd5281f240ee13eb7d52acbc0807cc61acb4bc08f.json",
+        "sha256": "2aa2f7b510ef74788fd5b96cd5281f240ee13eb7d52acbc0807cc61acb4bc08f",
+        "source": "D:\\1800-worktrees\\a03-r1\\docs\\evidence\\A03\\R1\\execution\\candidate-1\\business\\cases\\M2-sufficient\\runtime\\objects\\2aa2f7b510ef74788fd5b96cd5281f240ee13eb7d52acbc0807cc61acb4bc08f.json"
+      },
+      {
+        "bytes": 2682,
+        "retained": "docs/evidence/A03/R1/final-correction/continuation-files/objects/2cb9bda064752a18c9bc9cccccdf223f7e03e5bc60698e3d20eeb410557a8a5d.json",
+        "sha256": "2cb9bda064752a18c9bc9cccccdf223f7e03e5bc60698e3d20eeb410557a8a5d",
+        "source": "D:\\1800-worktrees\\a03-r1\\docs\\evidence\\A03\\R1\\execution\\candidate-1\\business\\cases\\M2-sufficient\\runtime\\objects\\2cb9bda064752a18c9bc9cccccdf223f7e03e5bc60698e3d20eeb410557a8a5d.json"
+      },
+      {
+        "bytes": 4372,
+        "retained": "docs/evidence/A03/R1/final-correction/continuation-files/objects/3defab73ae6c7580b82218a46d9369008900ae71a1572fe88b8ac5392284c684.json",
+        "sha256": "3defab73ae6c7580b82218a46d9369008900ae71a1572fe88b8ac5392284c684",
+        "source": "D:\\1800-worktrees\\a03-r1\\docs\\evidence\\A03\\R1\\execution\\candidate-1\\business\\cases\\M2-sufficient\\runtime\\objects\\3defab73ae6c7580b82218a46d9369008900ae71a1572fe88b8ac5392284c684.json"
+      },
+      {
+        "bytes": 19878,
+        "retained": "docs/evidence/A03/R1/final-correction/continuation-files/objects/3f4cb9884492225fcdf5883ca5db3719db56dc7e0b770238a1121f7691d5ff16.json",
+        "sha256": "3f4cb9884492225fcdf5883ca5db3719db56dc7e0b770238a1121f7691d5ff16",
+        "source": "D:\\1800-worktrees\\a03-r1\\docs\\evidence\\A03\\R1\\execution\\candidate-1\\business\\cases\\M2-sufficient\\runtime\\objects\\3f4cb9884492225fcdf5883ca5db3719db56dc7e0b770238a1121f7691d5ff16.json"
+      },
+      {
+        "bytes": 2067,
+        "retained": "docs/evidence/A03/R1/final-correction/continuation-files/objects/468e47d226f6bbb20c15309e2d54b1d75a1aa927da95f1c540fcfa2e5e389516.json",
+        "sha256": "468e47d226f6bbb20c15309e2d54b1d75a1aa927da95f1c540fcfa2e5e389516",
+        "source": "D:\\1800-worktrees\\a03-r1\\docs\\evidence\\A03\\R1\\execution\\candidate-1\\business\\cases\\M2-sufficient\\runtime\\objects\\468e47d226f6bbb20c15309e2d54b1d75a1aa927da95f1c540fcfa2e5e389516.json"
+      },
+      {
+        "bytes": 3835,
+        "retained": "docs/evidence/A03/R1/final-correction/continuation-files/objects/58b9fb5cbf595a4a880b4ed58455de5bf650d0dff7676749abbaea8a225acfad.json",
+        "sha256": "58b9fb5cbf595a4a880b4ed58455de5bf650d0dff7676749abbaea8a225acfad",
+        "source": "D:\\1800-worktrees\\a03-r1\\docs\\evidence\\A03\\R1\\execution\\candidate-1\\business\\cases\\M2-sufficient\\runtime\\objects\\58b9fb5cbf595a4a880b4ed58455de5bf650d0dff7676749abbaea8a225acfad.json"
+      },
+      {
+        "bytes": 3808,
+        "retained": "docs/evidence/A03/R1/final-correction/continuation-files/objects/58d2534fbcc6a4161d61f497bebd7ba3614bca5a8d78344452f48b0cb22b77d2.json",
+        "sha256": "58d2534fbcc6a4161d61f497bebd7ba3614bca5a8d78344452f48b0cb22b77d2",
+        "source": "D:\\1800-worktrees\\a03-r1\\docs\\evidence\\A03\\R1\\execution\\candidate-1\\business\\cases\\M2-sufficient\\runtime\\objects\\58d2534fbcc6a4161d61f497bebd7ba3614bca5a8d78344452f48b0cb22b77d2.json"
+      },
+      {
+        "bytes": 19055,
+        "retained": "docs/evidence/A03/R1/final-correction/continuation-files/objects/5b2ea98c1fa97a6ea8ed5b0318e9fedeec0d6553470a4c534206fec0a208ded5.json",
+        "sha256": "5b2ea98c1fa97a6ea8ed5b0318e9fedeec0d6553470a4c534206fec0a208ded5",
+        "source": "D:\\1800-worktrees\\a03-r1\\docs\\evidence\\A03\\R1\\execution\\candidate-1\\business\\cases\\M2-sufficient\\runtime\\objects\\5b2ea98c1fa97a6ea8ed5b0318e9fedeec0d6553470a4c534206fec0a208ded5.json"
+      },
+      {
+        "bytes": 2054,
+        "retained": "docs/evidence/A03/R1/final-correction/continuation-files/objects/b7012051deb745217915382db48fb4a3bf9c727867b83ae9d0ad34f79c899d02.json",
+        "sha256": "b7012051deb745217915382db48fb4a3bf9c727867b83ae9d0ad34f79c899d02",
+        "source": "D:\\1800-worktrees\\a03-r1\\docs\\evidence\\A03\\R1\\execution\\candidate-1\\business\\cases\\M2-sufficient\\runtime\\objects\\b7012051deb745217915382db48fb4a3bf9c727867b83ae9d0ad34f79c899d02.json"
+      },
+      {
+        "bytes": 2682,
+        "retained": "docs/evidence/A03/R1/final-correction/continuation-files/objects/c3a9848a60941b43ad7843a604f26ca666984d0a89bbd2ba984eb1bbda5cc055.json",
+        "sha256": "c3a9848a60941b43ad7843a604f26ca666984d0a89bbd2ba984eb1bbda5cc055",
+        "source": "D:\\1800-worktrees\\a03-r1\\docs\\evidence\\A03\\R1\\execution\\candidate-1\\business\\cases\\M2-sufficient\\runtime\\objects\\c3a9848a60941b43ad7843a604f26ca666984d0a89bbd2ba984eb1bbda5cc055.json"
+      },
+      {
+        "bytes": 3700,
+        "retained": "docs/evidence/A03/R1/final-correction/continuation-files/objects/cb2ad3620b6e4025b5726d0c69d6c475349f4c7b4b6cd0248858ad141fdbe8db.json",
+        "sha256": "cb2ad3620b6e4025b5726d0c69d6c475349f4c7b4b6cd0248858ad141fdbe8db",
+        "source": "D:\\1800-worktrees\\a03-r1\\docs\\evidence\\A03\\R1\\execution\\candidate-1\\business\\cases\\M2-sufficient\\runtime\\objects\\cb2ad3620b6e4025b5726d0c69d6c475349f4c7b4b6cd0248858ad141fdbe8db.json"
+      },
+      {
+        "bytes": 2324,
+        "retained": "docs/evidence/A03/R1/final-correction/continuation-files/objects/dd9353db5db52d004c3ac9a751632f85e88b234add46feffefbb8ffd8bb26dcf.json",
+        "sha256": "dd9353db5db52d004c3ac9a751632f85e88b234add46feffefbb8ffd8bb26dcf",
+        "source": "D:\\1800-worktrees\\a03-r1\\docs\\evidence\\A03\\R1\\execution\\candidate-1\\business\\cases\\M2-sufficient\\runtime\\objects\\dd9353db5db52d004c3ac9a751632f85e88b234add46feffefbb8ffd8bb26dcf.json"
+      },
+      {
+        "bytes": 4247,
+        "retained": "docs/evidence/A03/R1/final-correction/continuation-files/objects/eadec5bf834b718a524c19c25286f0023788523b37712d33be9bf9efbbae5877.json",
+        "sha256": "eadec5bf834b718a524c19c25286f0023788523b37712d33be9bf9efbbae5877",
+        "source": "D:\\1800-worktrees\\a03-r1\\docs\\evidence\\A03\\R1\\execution\\candidate-1\\business\\cases\\M2-sufficient\\runtime\\objects\\eadec5bf834b718a524c19c25286f0023788523b37712d33be9bf9efbbae5877.json"
+      },
+      {
+        "bytes": 1710,
+        "retained": "docs/evidence/A03/R1/final-correction/continuation-files/objects/f06c863cacd7dd53dd0ab8f26e34d5f07de2c891029ce54db0b5a8fe6c0cc813.json",
+        "sha256": "f06c863cacd7dd53dd0ab8f26e34d5f07de2c891029ce54db0b5a8fe6c0cc813",
+        "source": "D:\\1800-worktrees\\a03-r1\\docs\\evidence\\A03\\R1\\execution\\candidate-1\\business\\cases\\M2-sufficient\\runtime\\objects\\f06c863cacd7dd53dd0ab8f26e34d5f07de2c891029ce54db0b5a8fe6c0cc813.json"
+      },
+      {
+        "bytes": 2067,
+        "retained": "docs/evidence/A03/R1/final-correction/continuation-files/objects/f2b1fb39d1e8fac171dcbe86a1e23357346505c90949d80fdaec9e420233d6dc.json",
+        "sha256": "f2b1fb39d1e8fac171dcbe86a1e23357346505c90949d80fdaec9e420233d6dc",
+        "source": "D:\\1800-worktrees\\a03-r1\\docs\\evidence\\A03\\R1\\execution\\candidate-1\\business\\cases\\M2-sufficient\\runtime\\objects\\f2b1fb39d1e8fac171dcbe86a1e23357346505c90949d80fdaec9e420233d6dc.json"
+      },
+      {
+        "bytes": 4181,
+        "retained": "docs/evidence/A03/R1/final-correction/continuation-files/objects/fa277f789cb5c61a58e582b78c0fb7d7974a2c60347f22e1da0f8e9eac72083b.json",
+        "sha256": "fa277f789cb5c61a58e582b78c0fb7d7974a2c60347f22e1da0f8e9eac72083b",
+        "source": "D:\\1800-worktrees\\a03-r1\\docs\\evidence\\A03\\R1\\execution\\candidate-1\\business\\cases\\M2-sufficient\\runtime\\objects\\fa277f789cb5c61a58e582b78c0fb7d7974a2c60347f22e1da0f8e9eac72083b.json"
+      },
+      {
+        "bytes": 48,
+        "retained": "docs/evidence/A03/R1/final-correction/continuation-files/packages/88879411337218df51112655f7bc4c26fd569fa3fd8d8600e3521b6610c8f696/assets/a03-target/1cdc8e7f2072d5eb5c8ce5e4231524857fc0fa8e0d1fe178b1e415b7c9cd1e74.json",
+        "sha256": "1cdc8e7f2072d5eb5c8ce5e4231524857fc0fa8e0d1fe178b1e415b7c9cd1e74",
+        "source": "D:\\1800-worktrees\\a03-r1\\docs\\evidence\\A03\\R1\\execution\\candidate-1\\business\\cases\\M2-sufficient\\runtime\\packages\\88879411337218df51112655f7bc4c26fd569fa3fd8d8600e3521b6610c8f696\\assets\\a03-target\\1cdc8e7f2072d5eb5c8ce5e4231524857fc0fa8e0d1fe178b1e415b7c9cd1e74.json"
+      },
+      {
+        "bytes": 6020,
+        "retained": "docs/evidence/A03/R1/final-correction/continuation-files/packages/88879411337218df51112655f7bc4c26fd569fa3fd8d8600e3521b6610c8f696/assets/a03-target/50216a5d932642da1dc045c9f1cef93a759d23a2b4b00e7fd1e300bdad5c2965.json",
+        "sha256": "50216a5d932642da1dc045c9f1cef93a759d23a2b4b00e7fd1e300bdad5c2965",
+        "source": "D:\\1800-worktrees\\a03-r1\\docs\\evidence\\A03\\R1\\execution\\candidate-1\\business\\cases\\M2-sufficient\\runtime\\packages\\88879411337218df51112655f7bc4c26fd569fa3fd8d8600e3521b6610c8f696\\assets\\a03-target\\50216a5d932642da1dc045c9f1cef93a759d23a2b4b00e7fd1e300bdad5c2965.json"
+      },
+      {
+        "bytes": 1011,
+        "retained": "docs/evidence/A03/R1/final-correction/continuation-files/packages/88879411337218df51112655f7bc4c26fd569fa3fd8d8600e3521b6610c8f696/assets/a03-target/545b60172f497edf95c4279a0c807beef8d3e008d5c0bf3b8f85a921effc9b1c.json",
+        "sha256": "545b60172f497edf95c4279a0c807beef8d3e008d5c0bf3b8f85a921effc9b1c",
+        "source": "D:\\1800-worktrees\\a03-r1\\docs\\evidence\\A03\\R1\\execution\\candidate-1\\business\\cases\\M2-sufficient\\runtime\\packages\\88879411337218df51112655f7bc4c26fd569fa3fd8d8600e3521b6610c8f696\\assets\\a03-target\\545b60172f497edf95c4279a0c807beef8d3e008d5c0bf3b8f85a921effc9b1c.json"
+      },
+      {
+        "bytes": 11626,
+        "retained": "docs/evidence/A03/R1/final-correction/continuation-files/packages/88879411337218df51112655f7bc4c26fd569fa3fd8d8600e3521b6610c8f696/assets/a03-target/61d2651a74c31bb3e1ca8f5abcf81acfb9cd25f07a0f6f0d6b8ed28ec754aef2.json",
+        "sha256": "61d2651a74c31bb3e1ca8f5abcf81acfb9cd25f07a0f6f0d6b8ed28ec754aef2",
+        "source": "D:\\1800-worktrees\\a03-r1\\docs\\evidence\\A03\\R1\\execution\\candidate-1\\business\\cases\\M2-sufficient\\runtime\\packages\\88879411337218df51112655f7bc4c26fd569fa3fd8d8600e3521b6610c8f696\\assets\\a03-target\\61d2651a74c31bb3e1ca8f5abcf81acfb9cd25f07a0f6f0d6b8ed28ec754aef2.json"
+      },
+      {
+        "bytes": 6031,
+        "retained": "docs/evidence/A03/R1/final-correction/continuation-files/packages/88879411337218df51112655f7bc4c26fd569fa3fd8d8600e3521b6610c8f696/assets/a03-target/69afef0a2156363015caa064a8a6fe8aa991b3c7b1931e2cb5a767474b5a3cc4.json",
+        "sha256": "69afef0a2156363015caa064a8a6fe8aa991b3c7b1931e2cb5a767474b5a3cc4",
+        "source": "D:\\1800-worktrees\\a03-r1\\docs\\evidence\\A03\\R1\\execution\\candidate-1\\business\\cases\\M2-sufficient\\runtime\\packages\\88879411337218df51112655f7bc4c26fd569fa3fd8d8600e3521b6610c8f696\\assets\\a03-target\\69afef0a2156363015caa064a8a6fe8aa991b3c7b1931e2cb5a767474b5a3cc4.json"
+      },
+      {
+        "bytes": 7667,
+        "retained": "docs/evidence/A03/R1/final-correction/continuation-files/packages/88879411337218df51112655f7bc4c26fd569fa3fd8d8600e3521b6610c8f696/assets/a03-target/908b7bd761daea38ffd6fc93e532a8901b4462d08afe8b1e769443dc9487491a.json",
+        "sha256": "908b7bd761daea38ffd6fc93e532a8901b4462d08afe8b1e769443dc9487491a",
+        "source": "D:\\1800-worktrees\\a03-r1\\docs\\evidence\\A03\\R1\\execution\\candidate-1\\business\\cases\\M2-sufficient\\runtime\\packages\\88879411337218df51112655f7bc4c26fd569fa3fd8d8600e3521b6610c8f696\\assets\\a03-target\\908b7bd761daea38ffd6fc93e532a8901b4462d08afe8b1e769443dc9487491a.json"
+      },
+      {
+        "bytes": 7667,
+        "retained": "docs/evidence/A03/R1/final-correction/continuation-files/packages/88879411337218df51112655f7bc4c26fd569fa3fd8d8600e3521b6610c8f696/assets/a03-target/945852a6fbed3925d03df44f93b0e5f61a1a59a16ccb7dd75a2327d49e87e542.json",
+        "sha256": "945852a6fbed3925d03df44f93b0e5f61a1a59a16ccb7dd75a2327d49e87e542",
+        "source": "D:\\1800-worktrees\\a03-r1\\docs\\evidence\\A03\\R1\\execution\\candidate-1\\business\\cases\\M2-sufficient\\runtime\\packages\\88879411337218df51112655f7bc4c26fd569fa3fd8d8600e3521b6610c8f696\\assets\\a03-target\\945852a6fbed3925d03df44f93b0e5f61a1a59a16ccb7dd75a2327d49e87e542.json"
+      },
+      {
+        "bytes": 11627,
+        "retained": "docs/evidence/A03/R1/final-correction/continuation-files/packages/88879411337218df51112655f7bc4c26fd569fa3fd8d8600e3521b6610c8f696/assets/a03-target/af2e01f392abca7e68d62674768b4b1eaa7840c26d249df56814d34f8e259e01.json",
+        "sha256": "af2e01f392abca7e68d62674768b4b1eaa7840c26d249df56814d34f8e259e01",
+        "source": "D:\\1800-worktrees\\a03-r1\\docs\\evidence\\A03\\R1\\execution\\candidate-1\\business\\cases\\M2-sufficient\\runtime\\packages\\88879411337218df51112655f7bc4c26fd569fa3fd8d8600e3521b6610c8f696\\assets\\a03-target\\af2e01f392abca7e68d62674768b4b1eaa7840c26d249df56814d34f8e259e01.json"
+      },
+      {
+        "bytes": 6020,
+        "retained": "docs/evidence/A03/R1/final-correction/continuation-files/packages/88879411337218df51112655f7bc4c26fd569fa3fd8d8600e3521b6610c8f696/assets/a03-target/e1cf0eae11a1bf76c6546ef032f58d739a512df62f3b112c78b02d1b078fb8d5.json",
+        "sha256": "e1cf0eae11a1bf76c6546ef032f58d739a512df62f3b112c78b02d1b078fb8d5",
+        "source": "D:\\1800-worktrees\\a03-r1\\docs\\evidence\\A03\\R1\\execution\\candidate-1\\business\\cases\\M2-sufficient\\runtime\\packages\\88879411337218df51112655f7bc4c26fd569fa3fd8d8600e3521b6610c8f696\\assets\\a03-target\\e1cf0eae11a1bf76c6546ef032f58d739a512df62f3b112c78b02d1b078fb8d5.json"
+      },
+      {
+        "bytes": 686,
+        "retained": "docs/evidence/A03/R1/final-correction/continuation-files/packages/88879411337218df51112655f7bc4c26fd569fa3fd8d8600e3521b6610c8f696/assets/inventory.json",
+        "sha256": "151114daf1eb7ece9ba79bca0f67b10472c5882d0ca48780bd07e09f66d71b5f",
+        "source": "D:\\1800-worktrees\\a03-r1\\docs\\evidence\\A03\\R1\\execution\\candidate-1\\business\\cases\\M2-sufficient\\runtime\\packages\\88879411337218df51112655f7bc4c26fd569fa3fd8d8600e3521b6610c8f696\\assets\\inventory.json"
+      },
+      {
+        "bytes": 3241,
+        "retained": "docs/evidence/A03/R1/final-correction/continuation-files/packages/88879411337218df51112655f7bc4c26fd569fa3fd8d8600e3521b6610c8f696/assets/native-pre/339667de2f4cdb78e9f66381a1880cc8c098d03cd84755d25cefc9058aa0809f.json",
+        "sha256": "339667de2f4cdb78e9f66381a1880cc8c098d03cd84755d25cefc9058aa0809f",
+        "source": "D:\\1800-worktrees\\a03-r1\\docs\\evidence\\A03\\R1\\execution\\candidate-1\\business\\cases\\M2-sufficient\\runtime\\packages\\88879411337218df51112655f7bc4c26fd569fa3fd8d8600e3521b6610c8f696\\assets\\native-pre\\339667de2f4cdb78e9f66381a1880cc8c098d03cd84755d25cefc9058aa0809f.json"
+      },
+      {
+        "bytes": 1929,
+        "retained": "docs/evidence/A03/R1/final-correction/continuation-files/packages/88879411337218df51112655f7bc4c26fd569fa3fd8d8600e3521b6610c8f696/assets/native-pre/f0eb20a5fa2f18e78f656918a9cc211aaa141a322b9467e61cf3cb20ff6029c1.json",
+        "sha256": "f0eb20a5fa2f18e78f656918a9cc211aaa141a322b9467e61cf3cb20ff6029c1",
+        "source": "D:\\1800-worktrees\\a03-r1\\docs\\evidence\\A03\\R1\\execution\\candidate-1\\business\\cases\\M2-sufficient\\runtime\\packages\\88879411337218df51112655f7bc4c26fd569fa3fd8d8600e3521b6610c8f696\\assets\\native-pre\\f0eb20a5fa2f18e78f656918a9cc211aaa141a322b9467e61cf3cb20ff6029c1.json"
+      },
+      {
+        "bytes": 3579,
+        "retained": "docs/evidence/A03/R1/final-correction/continuation-files/packages/88879411337218df51112655f7bc4c26fd569fa3fd8d8600e3521b6610c8f696/assets/page-1.pgm",
+        "sha256": "1f82898615c67c676c532b17a8bd8e801c73eb6e7e2ba5a7f685bf1c3582cc7a",
+        "source": "D:\\1800-worktrees\\a03-r1\\docs\\evidence\\A03\\R1\\execution\\candidate-1\\business\\cases\\M2-sufficient\\runtime\\packages\\88879411337218df51112655f7bc4c26fd569fa3fd8d8600e3521b6610c8f696\\assets\\page-1.pgm"
+      },
+      {
+        "bytes": 74,
+        "retained": "docs/evidence/A03/R1/final-correction/continuation-files/packages/88879411337218df51112655f7bc4c26fd569fa3fd8d8600e3521b6610c8f696/assets/proof.txt",
+        "sha256": "62b80d05a5f5d0f3cd0339dd526bafae47de46981bdaaa03586c029f34318bc6",
+        "source": "D:\\1800-worktrees\\a03-r1\\docs\\evidence\\A03\\R1\\execution\\candidate-1\\business\\cases\\M2-sufficient\\runtime\\packages\\88879411337218df51112655f7bc4c26fd569fa3fd8d8600e3521b6610c8f696\\assets\\proof.txt"
+      },
+      {
+        "bytes": 7625,
+        "retained": "docs/evidence/A03/R1/final-correction/continuation-files/packages/88879411337218df51112655f7bc4c26fd569fa3fd8d8600e3521b6610c8f696/assets/runtime/3703b62578451d47428eeff6eb29abec3a1a66a8d2c8df826b9503d44b1fd7ef.json",
+        "sha256": "3703b62578451d47428eeff6eb29abec3a1a66a8d2c8df826b9503d44b1fd7ef",
+        "source": "D:\\1800-worktrees\\a03-r1\\docs\\evidence\\A03\\R1\\execution\\candidate-1\\business\\cases\\M2-sufficient\\runtime\\packages\\88879411337218df51112655f7bc4c26fd569fa3fd8d8600e3521b6610c8f696\\assets\\runtime\\3703b62578451d47428eeff6eb29abec3a1a66a8d2c8df826b9503d44b1fd7ef.json"
+      },
+      {
+        "bytes": 4343,
+        "retained": "docs/evidence/A03/R1/final-correction/continuation-files/packages/88879411337218df51112655f7bc4c26fd569fa3fd8d8600e3521b6610c8f696/assets/runtime/94e6556399d133641c6fcbd20f5a54d9702fdc43c070e43cb1d280047f0bd8a3.json",
+        "sha256": "94e6556399d133641c6fcbd20f5a54d9702fdc43c070e43cb1d280047f0bd8a3",
+        "source": "D:\\1800-worktrees\\a03-r1\\docs\\evidence\\A03\\R1\\execution\\candidate-1\\business\\cases\\M2-sufficient\\runtime\\packages\\88879411337218df51112655f7bc4c26fd569fa3fd8d8600e3521b6610c8f696\\assets\\runtime\\94e6556399d133641c6fcbd20f5a54d9702fdc43c070e43cb1d280047f0bd8a3.json"
+      },
+      {
+        "bytes": 7626,
+        "retained": "docs/evidence/A03/R1/final-correction/continuation-files/packages/88879411337218df51112655f7bc4c26fd569fa3fd8d8600e3521b6610c8f696/assets/runtime/a803178a45425275df479406e019273417bd4a10052890da4d9785c3eae92086.json",
+        "sha256": "a803178a45425275df479406e019273417bd4a10052890da4d9785c3eae92086",
+        "source": "D:\\1800-worktrees\\a03-r1\\docs\\evidence\\A03\\R1\\execution\\candidate-1\\business\\cases\\M2-sufficient\\runtime\\packages\\88879411337218df51112655f7bc4c26fd569fa3fd8d8600e3521b6610c8f696\\assets\\runtime\\a803178a45425275df479406e019273417bd4a10052890da4d9785c3eae92086.json"
+      },
+      {
+        "bytes": 2702,
+        "retained": "docs/evidence/A03/R1/final-correction/continuation-files/packages/88879411337218df51112655f7bc4c26fd569fa3fd8d8600e3521b6610c8f696/assets/runtime/a899f504766f866498387467cf1ff663513b8d2a2e820e9d99b1e05eafe5203c.json",
+        "sha256": "a899f504766f866498387467cf1ff663513b8d2a2e820e9d99b1e05eafe5203c",
+        "source": "D:\\1800-worktrees\\a03-r1\\docs\\evidence\\A03\\R1\\execution\\candidate-1\\business\\cases\\M2-sufficient\\runtime\\packages\\88879411337218df51112655f7bc4c26fd569fa3fd8d8600e3521b6610c8f696\\assets\\runtime\\a899f504766f866498387467cf1ff663513b8d2a2e820e9d99b1e05eafe5203c.json"
+      },
+      {
+        "bytes": 5583,
+        "retained": "docs/evidence/A03/R1/final-correction/continuation-files/packages/88879411337218df51112655f7bc4c26fd569fa3fd8d8600e3521b6610c8f696/assets/runtime/d4e4cfd5694a2b509914536826a429c77a365a4429148687765a842e6c5ed79e.json",
+        "sha256": "d4e4cfd5694a2b509914536826a429c77a365a4429148687765a842e6c5ed79e",
+        "source": "D:\\1800-worktrees\\a03-r1\\docs\\evidence\\A03\\R1\\execution\\candidate-1\\business\\cases\\M2-sufficient\\runtime\\packages\\88879411337218df51112655f7bc4c26fd569fa3fd8d8600e3521b6610c8f696\\assets\\runtime\\d4e4cfd5694a2b509914536826a429c77a365a4429148687765a842e6c5ed79e.json"
+      },
+      {
+        "bytes": 38,
+        "retained": "docs/evidence/A03/R1/final-correction/continuation-files/packages/88879411337218df51112655f7bc4c26fd569fa3fd8d8600e3521b6610c8f696/assets/runtime/faff60c4c89ca236fa6632b41a6cbff9f953ece54c634569e6a31d2414208ed3.json",
+        "sha256": "faff60c4c89ca236fa6632b41a6cbff9f953ece54c634569e6a31d2414208ed3",
+        "source": "D:\\1800-worktrees\\a03-r1\\docs\\evidence\\A03\\R1\\execution\\candidate-1\\business\\cases\\M2-sufficient\\runtime\\packages\\88879411337218df51112655f7bc4c26fd569fa3fd8d8600e3521b6610c8f696\\assets\\runtime\\faff60c4c89ca236fa6632b41a6cbff9f953ece54c634569e6a31d2414208ed3.json"
+      },
+      {
+        "bytes": 4332,
+        "retained": "docs/evidence/A03/R1/final-correction/continuation-files/packages/88879411337218df51112655f7bc4c26fd569fa3fd8d8600e3521b6610c8f696/assets/runtime/ffddec273d0acaf62c89518f1625089b160c0c6fbb7029b05f52be9e4920bc2f.json",
+        "sha256": "ffddec273d0acaf62c89518f1625089b160c0c6fbb7029b05f52be9e4920bc2f",
+        "source": "D:\\1800-worktrees\\a03-r1\\docs\\evidence\\A03\\R1\\execution\\candidate-1\\business\\cases\\M2-sufficient\\runtime\\packages\\88879411337218df51112655f7bc4c26fd569fa3fd8d8600e3521b6610c8f696\\assets\\runtime\\ffddec273d0acaf62c89518f1625089b160c0c6fbb7029b05f52be9e4920bc2f.json"
+      },
+      {
+        "bytes": 24824,
+        "retained": "docs/evidence/A03/R1/final-correction/continuation-files/packages/88879411337218df51112655f7bc4c26fd569fa3fd8d8600e3521b6610c8f696/bundle-0dbe0caaa6f4f5947eaa1162e2d4c17bd71e6f887d4a432acbc193d4ddf9ccac.json",
+        "sha256": "0dbe0caaa6f4f5947eaa1162e2d4c17bd71e6f887d4a432acbc193d4ddf9ccac",
+        "source": "D:\\1800-worktrees\\a03-r1\\docs\\evidence\\A03\\R1\\execution\\candidate-1\\business\\cases\\M2-sufficient\\runtime\\packages\\88879411337218df51112655f7bc4c26fd569fa3fd8d8600e3521b6610c8f696\\bundle-0dbe0caaa6f4f5947eaa1162e2d4c17bd71e6f887d4a432acbc193d4ddf9ccac.json"
+      },
+      {
+        "bytes": 57786,
+        "retained": "docs/evidence/A03/R1/final-correction/continuation-files/packages/88879411337218df51112655f7bc4c26fd569fa3fd8d8600e3521b6610c8f696/bundle-1ce9fde087d5bd1aa058506f70bf1c86edb767705649dff5268158755d916c86.json",
+        "sha256": "1ce9fde087d5bd1aa058506f70bf1c86edb767705649dff5268158755d916c86",
+        "source": "D:\\1800-worktrees\\a03-r1\\docs\\evidence\\A03\\R1\\execution\\candidate-1\\business\\cases\\M2-sufficient\\runtime\\packages\\88879411337218df51112655f7bc4c26fd569fa3fd8d8600e3521b6610c8f696\\bundle-1ce9fde087d5bd1aa058506f70bf1c86edb767705649dff5268158755d916c86.json"
+      },
+      {
+        "bytes": 36415,
+        "retained": "docs/evidence/A03/R1/final-correction/continuation-files/packages/88879411337218df51112655f7bc4c26fd569fa3fd8d8600e3521b6610c8f696/bundle-29a58a9053cb6c59a253666fb4115349168bcdfe00942e1155d524527df237a1.json",
+        "sha256": "29a58a9053cb6c59a253666fb4115349168bcdfe00942e1155d524527df237a1",
+        "source": "D:\\1800-worktrees\\a03-r1\\docs\\evidence\\A03\\R1\\execution\\candidate-1\\business\\cases\\M2-sufficient\\runtime\\packages\\88879411337218df51112655f7bc4c26fd569fa3fd8d8600e3521b6610c8f696\\bundle-29a58a9053cb6c59a253666fb4115349168bcdfe00942e1155d524527df237a1.json"
+      },
+      {
+        "bytes": 31343,
+        "retained": "docs/evidence/A03/R1/final-correction/continuation-files/packages/88879411337218df51112655f7bc4c26fd569fa3fd8d8600e3521b6610c8f696/bundle-4564895847ed17e2f4be2470d5ecd4df89050028b2a7f1ebf7d219c085e9efbd.json",
+        "sha256": "4564895847ed17e2f4be2470d5ecd4df89050028b2a7f1ebf7d219c085e9efbd",
+        "source": "D:\\1800-worktrees\\a03-r1\\docs\\evidence\\A03\\R1\\execution\\candidate-1\\business\\cases\\M2-sufficient\\runtime\\packages\\88879411337218df51112655f7bc4c26fd569fa3fd8d8600e3521b6610c8f696\\bundle-4564895847ed17e2f4be2470d5ecd4df89050028b2a7f1ebf7d219c085e9efbd.json"
+      },
+      {
+        "bytes": 44970,
+        "retained": "docs/evidence/A03/R1/final-correction/continuation-files/packages/88879411337218df51112655f7bc4c26fd569fa3fd8d8600e3521b6610c8f696/bundle-59a81d7c8aef126668cf05ad3cc98f3b89f15e79616fba932992df845413bc8c.json",
+        "sha256": "59a81d7c8aef126668cf05ad3cc98f3b89f15e79616fba932992df845413bc8c",
+        "source": "D:\\1800-worktrees\\a03-r1\\docs\\evidence\\A03\\R1\\execution\\candidate-1\\business\\cases\\M2-sufficient\\runtime\\packages\\88879411337218df51112655f7bc4c26fd569fa3fd8d8600e3521b6610c8f696\\bundle-59a81d7c8aef126668cf05ad3cc98f3b89f15e79616fba932992df845413bc8c.json"
+      },
+      {
+        "bytes": 32167,
+        "retained": "docs/evidence/A03/R1/final-correction/continuation-files/packages/88879411337218df51112655f7bc4c26fd569fa3fd8d8600e3521b6610c8f696/bundle-7d71b9bbdb32e8bf1ad08afa7a53a9962372d2f543ab55991cc19e1bdf71d456.json",
+        "sha256": "7d71b9bbdb32e8bf1ad08afa7a53a9962372d2f543ab55991cc19e1bdf71d456",
+        "source": "D:\\1800-worktrees\\a03-r1\\docs\\evidence\\A03\\R1\\execution\\candidate-1\\business\\cases\\M2-sufficient\\runtime\\packages\\88879411337218df51112655f7bc4c26fd569fa3fd8d8600e3521b6610c8f696\\bundle-7d71b9bbdb32e8bf1ad08afa7a53a9962372d2f543ab55991cc19e1bdf71d456.json"
+      },
+      {
+        "bytes": 47653,
+        "retained": "docs/evidence/A03/R1/final-correction/continuation-files/packages/88879411337218df51112655f7bc4c26fd569fa3fd8d8600e3521b6610c8f696/bundle-7f80105a208346eb93fee753248889a4ac51113e236f7f28208bf16a8c3942ba.json",
+        "sha256": "7f80105a208346eb93fee753248889a4ac51113e236f7f28208bf16a8c3942ba",
+        "source": "D:\\1800-worktrees\\a03-r1\\docs\\evidence\\A03\\R1\\execution\\candidate-1\\business\\cases\\M2-sufficient\\runtime\\packages\\88879411337218df51112655f7bc4c26fd569fa3fd8d8600e3521b6610c8f696\\bundle-7f80105a208346eb93fee753248889a4ac51113e236f7f28208bf16a8c3942ba.json"
+      },
+      {
+        "bytes": 40597,
+        "retained": "docs/evidence/A03/R1/final-correction/continuation-files/packages/88879411337218df51112655f7bc4c26fd569fa3fd8d8600e3521b6610c8f696/bundle-8652812b6d25279a1334f5fae6482779a14a9d5409be459c546a056b8744c28a.json",
+        "sha256": "8652812b6d25279a1334f5fae6482779a14a9d5409be459c546a056b8744c28a",
+        "source": "D:\\1800-worktrees\\a03-r1\\docs\\evidence\\A03\\R1\\execution\\candidate-1\\business\\cases\\M2-sufficient\\runtime\\packages\\88879411337218df51112655f7bc4c26fd569fa3fd8d8600e3521b6610c8f696\\bundle-8652812b6d25279a1334f5fae6482779a14a9d5409be459c546a056b8744c28a.json"
+      },
+      {
+        "bytes": 9956,
+        "retained": "docs/evidence/A03/R1/final-correction/continuation-files/packages/88879411337218df51112655f7bc4c26fd569fa3fd8d8600e3521b6610c8f696/bundle-88879411337218df51112655f7bc4c26fd569fa3fd8d8600e3521b6610c8f696.json",
+        "sha256": "88879411337218df51112655f7bc4c26fd569fa3fd8d8600e3521b6610c8f696",
+        "source": "D:\\1800-worktrees\\a03-r1\\docs\\evidence\\A03\\R1\\execution\\candidate-1\\business\\cases\\M2-sufficient\\runtime\\packages\\88879411337218df51112655f7bc4c26fd569fa3fd8d8600e3521b6610c8f696\\bundle-88879411337218df51112655f7bc4c26fd569fa3fd8d8600e3521b6610c8f696.json"
+      },
+      {
+        "bytes": 16244,
+        "retained": "docs/evidence/A03/R1/final-correction/continuation-files/packages/88879411337218df51112655f7bc4c26fd569fa3fd8d8600e3521b6610c8f696/bundle-8db85c91e0d11c0f767b00d345450479e7ff49a7a5fbd36507762f05f4986a51.json",
+        "sha256": "8db85c91e0d11c0f767b00d345450479e7ff49a7a5fbd36507762f05f4986a51",
+        "source": "D:\\1800-worktrees\\a03-r1\\docs\\evidence\\A03\\R1\\execution\\candidate-1\\business\\cases\\M2-sufficient\\runtime\\packages\\88879411337218df51112655f7bc4c26fd569fa3fd8d8600e3521b6610c8f696\\bundle-8db85c91e0d11c0f767b00d345450479e7ff49a7a5fbd36507762f05f4986a51.json"
+      },
+      {
+        "bytes": 12024,
+        "retained": "docs/evidence/A03/R1/final-correction/continuation-files/packages/88879411337218df51112655f7bc4c26fd569fa3fd8d8600e3521b6610c8f696/bundle-91d3ae8e4c96d690fe48998a27996008eb3d541bcf172de0286edc7960bb789e.json",
+        "sha256": "91d3ae8e4c96d690fe48998a27996008eb3d541bcf172de0286edc7960bb789e",
+        "source": "D:\\1800-worktrees\\a03-r1\\docs\\evidence\\A03\\R1\\execution\\candidate-1\\business\\cases\\M2-sufficient\\runtime\\packages\\88879411337218df51112655f7bc4c26fd569fa3fd8d8600e3521b6610c8f696\\bundle-91d3ae8e4c96d690fe48998a27996008eb3d541bcf172de0286edc7960bb789e.json"
+      },
+      {
+        "bytes": 22756,
+        "retained": "docs/evidence/A03/R1/final-correction/continuation-files/packages/88879411337218df51112655f7bc4c26fd569fa3fd8d8600e3521b6610c8f696/bundle-bcd6ba46971ed24b52ba0824299cd5e1f211ef8cf1dfc08440b4c812f1cb6e39.json",
+        "sha256": "bcd6ba46971ed24b52ba0824299cd5e1f211ef8cf1dfc08440b4c812f1cb6e39",
+        "source": "D:\\1800-worktrees\\a03-r1\\docs\\evidence\\A03\\R1\\execution\\candidate-1\\business\\cases\\M2-sufficient\\runtime\\packages\\88879411337218df51112655f7bc4c26fd569fa3fd8d8600e3521b6610c8f696\\bundle-bcd6ba46971ed24b52ba0824299cd5e1f211ef8cf1dfc08440b4c812f1cb6e39.json"
+      },
+      {
+        "bytes": 28660,
+        "retained": "docs/evidence/A03/R1/final-correction/continuation-files/packages/88879411337218df51112655f7bc4c26fd569fa3fd8d8600e3521b6610c8f696/bundle-f2a87ae059429eb38a9c1c4e1283c80869a4fe86448df5d442ae996177c58ffe.json",
+        "sha256": "f2a87ae059429eb38a9c1c4e1283c80869a4fe86448df5d442ae996177c58ffe",
+        "source": "D:\\1800-worktrees\\a03-r1\\docs\\evidence\\A03\\R1\\execution\\candidate-1\\business\\cases\\M2-sufficient\\runtime\\packages\\88879411337218df51112655f7bc4c26fd569fa3fd8d8600e3521b6610c8f696\\bundle-f2a87ae059429eb38a9c1c4e1283c80869a4fe86448df5d442ae996177c58ffe.json"
+      },
+      {
+        "bytes": 31755,
+        "retained": "docs/evidence/A03/R1/final-correction/continuation-files/packages/88879411337218df51112655f7bc4c26fd569fa3fd8d8600e3521b6610c8f696/bundle-f63ce85edd94535676c1e6fada6b548008d08f15d38090f07b128dc2539404bc.json",
+        "sha256": "f63ce85edd94535676c1e6fada6b548008d08f15d38090f07b128dc2539404bc",
+        "source": "D:\\1800-worktrees\\a03-r1\\docs\\evidence\\A03\\R1\\execution\\candidate-1\\business\\cases\\M2-sufficient\\runtime\\packages\\88879411337218df51112655f7bc4c26fd569fa3fd8d8600e3521b6610c8f696\\bundle-f63ce85edd94535676c1e6fada6b548008d08f15d38090f07b128dc2539404bc.json"
+      }
+    ],
+    "old_committed_source": "54e86adfaf144093a688b62fe0dad5190ceb2fa6",
+    "original_stationary_copies_modified": false,
+    "source_directory": "D:\\1800-worktrees\\a03-r1\\docs\\evidence\\A03\\R1\\execution\\candidate-1\\business\\cases\\M2-sufficient\\runtime"
+  },
+  "registered_PID_states": [
+    {
+      "pid": 700,
+      "state": "NOT_OPENABLE_AS_LIVE_PROCESS"
+    },
+    {
+      "pid": 6620,
+      "state": "NOT_OPENABLE_AS_LIVE_PROCESS"
+    },
+    {
+      "pid": 16168,
+      "state": "NOT_OPENABLE_AS_LIVE_PROCESS"
+    },
+    {
+      "pid": 20084,
+      "state": "NOT_OPENABLE_AS_LIVE_PROCESS"
+    },
+    {
+      "pid": 21816,
+      "state": "NOT_OPENABLE_AS_LIVE_PROCESS"
+    },
+    {
+      "pid": 22720,
+      "state": "NOT_OPENABLE_AS_LIVE_PROCESS"
+    },
+    {
+      "pid": 31296,
+      "state": "NOT_OPENABLE_AS_LIVE_PROCESS"
+    },
+    {
+      "pid": 41552,
+      "state": "NOT_OPENABLE_AS_LIVE_PROCESS"
+    },
+    {
+      "pid": 44632,
+      "state": "NOT_OPENABLE_AS_LIVE_PROCESS"
+    },
+    {
+      "pid": 46932,
+      "state": "NOT_OPENABLE_AS_LIVE_PROCESS"
+    },
+    {
+      "pid": 50532,
+      "state": "NOT_OPENABLE_AS_LIVE_PROCESS"
+    },
+    {
+      "pid": 53072,
+      "state": "NOT_OPENABLE_AS_LIVE_PROCESS"
+    },
+    {
+      "pid": 53936,
+      "state": "NOT_OPENABLE_AS_LIVE_PROCESS"
+    },
+    {
+      "pid": 54308,
+      "state": "NOT_OPENABLE_AS_LIVE_PROCESS"
+    },
+    {
+      "pid": 55796,
+      "state": "NOT_OPENABLE_AS_LIVE_PROCESS"
+    },
+    {
+      "pid": 56936,
+      "state": "NOT_OPENABLE_AS_LIVE_PROCESS"
+    },
+    {
+      "pid": 58128,
+      "state": "NOT_OPENABLE_AS_LIVE_PROCESS"
+    },
+    {
+      "pid": 59664,
+      "state": "NOT_OPENABLE_AS_LIVE_PROCESS"
+    },
+    {
+      "pid": 59756,
+      "state": "NOT_OPENABLE_AS_LIVE_PROCESS"
+    },
+    {
+      "pid": 63236,
+      "state": "NOT_OPENABLE_AS_LIVE_PROCESS"
+    },
+    {
+      "pid": 65008,
+      "state": "NOT_OPENABLE_AS_LIVE_PROCESS"
+    },
+    {
+      "pid": 65432,
+      "state": "NOT_OPENABLE_AS_LIVE_PROCESS"
+    },
+    {
+      "pid": 67900,
+      "state": "NOT_OPENABLE_AS_LIVE_PROCESS"
+    },
+    {
+      "pid": 69544,
+      "state": "NOT_OPENABLE_AS_LIVE_PROCESS"
+    },
+    {
+      "pid": 70884,
+      "state": "NOT_OPENABLE_AS_LIVE_PROCESS"
+    },
+    {
+      "pid": 72212,
+      "state": "NOT_OPENABLE_AS_LIVE_PROCESS"
+    },
+    {
+      "pid": 73988,
+      "state": "NOT_OPENABLE_AS_LIVE_PROCESS"
+    },
+    {
+      "pid": 75024,
+      "state": "NOT_OPENABLE_AS_LIVE_PROCESS"
+    },
+    {
+      "pid": 76160,
+      "state": "NOT_OPENABLE_AS_LIVE_PROCESS"
+    },
+    {
+      "pid": 77336,
+      "state": "NOT_OPENABLE_AS_LIVE_PROCESS"
+    },
+    {
+      "pid": 78080,
+      "state": "NOT_OPENABLE_AS_LIVE_PROCESS"
+    },
+    {
+      "pid": 78620,
+      "state": "NOT_OPENABLE_AS_LIVE_PROCESS"
+    },
+    {
+      "pid": 78632,
+      "state": "NOT_OPENABLE_AS_LIVE_PROCESS"
+    }
+  ]
+}

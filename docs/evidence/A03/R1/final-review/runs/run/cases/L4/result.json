@@ -1,0 +1,62 @@
+{
+  "controls": [
+    {
+      "key": "fork",
+      "layer": "FULL_NATIVE",
+      "result": {
+        "issues": [
+          {
+            "code": "RESOLUTION_FORK",
+            "message": "one unique successor required",
+            "path": "$.previous_resolution_ref"
+          }
+        ],
+        "layer": "CONTRACT"
+      }
+    },
+    {
+      "key": "cycle",
+      "layer": "FULL_NATIVE_EXACT_REFERENCE",
+      "result": {
+        "issues": [
+          {
+            "code": "EXACT_REF",
+            "message": "EXACT_REF",
+            "path": "resolution-a1131e5f41e34791a9febdea73883ccf/previous_resolution_ref"
+          }
+        ],
+        "layer": "CONTRACT"
+      }
+    },
+    {
+      "key": "wrong-original-receipt-full",
+      "layer": "FULL_NATIVE",
+      "result": {
+        "issues": [
+          {
+            "code": "EXACT_REF",
+            "message": "EXACT_REF",
+            "path": "resolution-a1131e5f41e34791a9febdea73883ccf/original_receipt_ref"
+          }
+        ],
+        "layer": "CONTRACT"
+      }
+    },
+    {
+      "key": "wrong-original-receipt-semantic",
+      "layer": "VALUE_RESOLUTION_GUARD",
+      "result": {
+        "issues": [
+          {
+            "code": "REFERENCE_HASH_MISMATCH",
+            "message": "artifact kind/digest differs",
+            "path": "$.reference"
+          }
+        ],
+        "layer": "CONTRACT"
+      }
+    }
+  ],
+  "dispatch": 0,
+  "new_targets": 0
+}
