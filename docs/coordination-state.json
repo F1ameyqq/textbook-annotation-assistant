@@ -2,7 +2,7 @@
   "schema_version": 1,
   "project": "D:\\1800",
   "coordinator_thread_id": "01a13f26-7567-75e1-99ee-c9d2194e78bb",
-  "updated_at": "2026-10-18T10:21:24.360512+08:00",
+  "updated_at": "2026-10-18T10:25:05.070162+08:00",
   "automation": {
     "id": "1800-a",
     "kind": "heartbeat",
@@ -6730,7 +6730,7 @@
       "execution": {
         "thread_id": "01a14cce-b0f2-7fb3-86a7-f178e7777743",
         "host_id": "local",
-        "cursor": "ec7606d9-d2ad-43f6-95b4-47a16f532a25:1",
+        "cursor": "ec7606d9-d2ad-43f6-95b4-47a16f532a25:2",
         "phase": "EXECUTING",
         "dispatch_key": "A03-T1:execution:redispatch-2026-10-18",
         "thinking": "xhigh",
@@ -6742,14 +6742,14 @@
         "turn_status": "inProgress",
         "observed_thread_status": "active",
         "turn_id": "01a14cce-b480-7222-ab59-f4f40994383b",
-        "last_progress": "已确认产品基线干净，T1 只能新增取证工具、测试和本轮证据。旧 U2 的失败来自活动 SQLite 写入与复制重叠；我会用明确的写者暂停、事务结束和连接关闭边界解决同步，并保留旧失败的证据缺口。",
-        "last_checked_at": "2026-10-18T10:21:24.360512+08:00"
+        "last_progress": "同步方案已确定：每次复制前停止并 join 当前 keeper，确认只剩主线程；复制和只读审计结束后，用同一 owner/generation 启动新 keeper。正式释放时再停止当前 keeper。取证期间不调用业务，保留逐库原字节，且不把顺序复制称为跨库原子快照。接下来先用事件屏障控制的 SQLite 事务验证这条边界。",
+        "last_checked_at": "2026-10-18T10:25:05.070162+08:00"
       },
       "review": {
         "thread_id": "01a14ccf-9293-7381-a252-e24b37e7b66e",
         "host_id": "local",
-        "cursor": "07aec363-4443-44f0-bb4c-a09bf0b8c9e4:1",
-        "phase": "PREPARING_THEN_WAIT_FIXED_TARGET",
+        "cursor": "07aec363-4443-44f0-bb4c-a09bf0b8c9e4:2",
+        "phase": "PREPARATION_COMPLETE_WAITING_FOR_FROZEN_DELIVERY",
         "dispatch_key": "A03-T1:review:redispatch-2026-10-18",
         "thinking": "xhigh",
         "model": "USER_DEFAULT",
@@ -6757,13 +6757,33 @@
         "expected_report": "docs/tasks/A03-T1-review-preparation.md",
         "created_at": "2026-10-18T10:20:36.307675+08:00",
         "workflow_commit": "f7084b2e8f2e9a1fcf758f9cba56ec9c9fb1f304",
-        "turn_status": "inProgress",
-        "observed_thread_status": "active",
+        "turn_status": "completed",
+        "observed_thread_status": "idle",
         "turn_id": "01a14ccf-95e4-7213-8ad9-6b274c2bd912",
-        "last_progress": "我会先读取固定任务单和旧失败材料，核清 T1 的独立验收前提，只写准备说明。本轮不运行业务，也不查看浮动 T1 代码。",
-        "last_checked_at": "2026-10-18T10:21:24.360512+08:00"
+        "last_progress": "已写入独立验收准备说明，核对了冻结旧失败、必要摘要及文档链接。 业务复验全部未执行。现结束等待调度提供固定 target、manifest 和释放证明；A03 仍为 REWORK，I01 未释放。",
+        "last_checked_at": "2026-10-18T10:25:05.070162+08:00",
+        "last_completed_turn_id": "01a14ccf-95e4-7213-8ad9-6b274c2bd912",
+        "preparation": {
+          "task": "A03-T1",
+          "path": "docs/tasks/A03-T1-review-preparation.md",
+          "sha256": "8ba7ec38f80707cad268e5f54d7ee1afc1cc98c202eab4f85d25e1b0615d9848",
+          "frozen_commit_links_for_absent_root_files": [],
+          "scope": "preparation only; functional review NOT_RUN"
+        },
+        "functional_review": "NOT_RUN",
+        "session_released": true
       },
-      "workflow_commit": "f7084b2e8f2e9a1fcf758f9cba56ec9c9fb1f304"
+      "workflow_commit": "f7084b2e8f2e9a1fcf758f9cba56ec9c9fb1f304",
+      "latest_lightweight_observation": {
+        "at": "2026-10-18T10:25:05.070162+08:00",
+        "head": "1330047dd29890dea0e433ff01b991f615bf78f4",
+        "status": [
+          "?? docs/evidence/A03/T1/",
+          "?? examples/a03/T1-capture/",
+          "?? tests/test_a03_t1_capture.py"
+        ],
+        "scope": "version and artifact presence only; no running author code reviewed or tests repeated"
+      }
     },
     "A03-T2": {
       "status": "IN_PROGRESS",
@@ -6790,8 +6810,8 @@
       "execution": {
         "thread_id": "01a14ccf-9b9c-7df3-bf59-d9747f640d42",
         "host_id": "local",
-        "cursor": "a92ee13f-845d-4114-be00-70d81e37b0ca:1",
-        "phase": "EXECUTING",
+        "cursor": "a92ee13f-845d-4114-be00-70d81e37b0ca:2",
+        "phase": "STATIC_PREPARATION_WAITING_T1_DEPENDENCY",
         "dispatch_key": "A03-T2:execution:redispatch-2026-10-18",
         "thinking": "xhigh",
         "model": "USER_DEFAULT",
@@ -6802,14 +6822,14 @@
         "turn_status": "inProgress",
         "observed_thread_status": "active",
         "turn_id": "01a14ccf-9f31-7d10-8446-73959d8093de",
-        "last_progress": "我会先核对冻结任务单与项目约定，在指定 T2 工作目录内静态梳理实现和 H1 API，提交准备报告后停下；本轮不运行产品或业务取证。",
-        "last_checked_at": "2026-10-18T10:21:24.360512+08:00"
+        "last_progress": "H1 可通过现有 API 表达：一次底层 dispatch 建立 UNKNOWN，释放后由新进程执行一次 reconcile(max_attempts=1)，再显式调用 publish_quality。需要避开会自动发布报告的 run_plan。本轮静态核对未发现需在四文件范围内修复的具体缺陷，我将沿用 1330047d，保存准备报告及静态摘要后冻结提交。",
+        "last_checked_at": "2026-10-18T10:25:05.070162+08:00"
       },
       "review": {
         "thread_id": "01a14ccf-a5c1-71f2-a6eb-90ea011d8705",
         "host_id": "local",
-        "cursor": "846f94bd-c69f-4cac-8db1-21285fd53e6b:1",
-        "phase": "PREPARING_THEN_WAIT_FIXED_TARGET",
+        "cursor": "846f94bd-c69f-4cac-8db1-21285fd53e6b:2",
+        "phase": "PREPARATION_COMPLETE_WAITING_FOR_FROZEN_DELIVERY",
         "dispatch_key": "A03-T2:review:redispatch-2026-10-18",
         "thinking": "xhigh",
         "model": "USER_DEFAULT",
@@ -6817,13 +6837,32 @@
         "expected_report": "docs/tasks/A03-T2-review-preparation.md",
         "created_at": "2026-10-18T10:20:41.469170+08:00",
         "workflow_commit": "f7084b2e8f2e9a1fcf758f9cba56ec9c9fb1f304",
-        "turn_status": "inProgress",
-        "observed_thread_status": "active",
+        "turn_status": "completed",
+        "observed_thread_status": "idle",
         "turn_id": "01a14ccf-aa12-7c92-bc4b-cb59a05cded3",
-        "last_progress": "我先读取冻结任务单和四文件责任边界，仅写独立验收准备说明；本轮不运行 C/H1 或业务验证。",
-        "last_checked_at": "2026-10-18T10:21:24.360512+08:00"
+        "last_progress": "已完成独立验收准备说明，仅新增该文件，未操作 Git 索引或提交。UTF-8、链接及空白检查通过。 C/H1、产品静态审查和业务验证均未执行。等待调度提供完整固定 target、T1 已接受工具提交及释放证明；A03 仍为 REWORK，I01 未释放。",
+        "last_checked_at": "2026-10-18T10:25:05.070162+08:00",
+        "last_completed_turn_id": "01a14ccf-aa12-7c92-bc4b-cb59a05cded3",
+        "preparation": {
+          "task": "A03-T2",
+          "path": "docs/tasks/A03-T2-review-preparation.md",
+          "sha256": "5bfb4ea7f9915bbea69a19ccaba2026e5301a0ae6178191c800c05e3daac9c2b",
+          "frozen_commit_links_for_absent_root_files": [],
+          "scope": "preparation only; functional review NOT_RUN"
+        },
+        "functional_review": "NOT_RUN",
+        "session_released": true
       },
-      "workflow_commit": "f7084b2e8f2e9a1fcf758f9cba56ec9c9fb1f304"
+      "workflow_commit": "f7084b2e8f2e9a1fcf758f9cba56ec9c9fb1f304",
+      "latest_lightweight_observation": {
+        "at": "2026-10-18T10:25:05.070162+08:00",
+        "head": "1330047dd29890dea0e433ff01b991f615bf78f4",
+        "status": [
+          "?? docs/evidence/A03/T2/",
+          "?? examples/a03/T2-history/"
+        ],
+        "scope": "version and artifact presence only; no running author code reviewed or tests repeated"
+      }
     },
     "A03-T3": {
       "status": "IN_PROGRESS",
@@ -6850,7 +6889,7 @@
       "execution": {
         "thread_id": "01a14ccf-afa4-7260-a2a2-a47633772ae5",
         "host_id": "local",
-        "cursor": "625b3403-1db6-4b33-af44-f0b84067ab61:1",
+        "cursor": "625b3403-1db6-4b33-af44-f0b84067ab61:2",
         "phase": "EXECUTING",
         "dispatch_key": "A03-T3:execution:redispatch-2026-10-18",
         "thinking": "xhigh",
@@ -6862,14 +6901,14 @@
         "turn_status": "inProgress",
         "observed_thread_status": "active",
         "turn_id": "01a14ccf-b413-7a03-9914-f8c85242db45",
-        "last_progress": "我会在指定的 A03-T3 工作目录中核对冻结任务文本和历史验收证据，编制余量矩阵及有界集成计划。范围保持离线文档核对，不改产品、不运行场景。",
-        "last_checked_at": "2026-10-18T10:21:24.360512+08:00"
+        "last_progress": "找到一个确定的功能缺口：当前 commit_unattempted_absence 仍直接返回 EVENT_PREFIX_CONTRACT_GAP，native store 也没有覆盖该入口。因此“未尝试动作＋充分 ABSENT”的正向路径需要实现，不能只列为缺证据。六类单动作崩溃窗口已有分轮有限证据；计划将保留引用，只安排最终候选受影响部分的兼容检查。",
+        "last_checked_at": "2026-10-18T10:25:05.070162+08:00"
       },
       "review": {
         "thread_id": "01a14ccf-b8c3-7941-a80f-73594e7859a5",
         "host_id": "local",
-        "cursor": "6edfea69-590d-4e04-b191-563639b4a645:1",
-        "phase": "PREPARING_THEN_WAIT_FIXED_TARGET",
+        "cursor": "6edfea69-590d-4e04-b191-563639b4a645:2",
+        "phase": "PREPARATION_COMPLETE_WAITING_FOR_FROZEN_DELIVERY",
         "dispatch_key": "A03-T3:review:redispatch-2026-10-18",
         "thinking": "xhigh",
         "model": "USER_DEFAULT",
@@ -6877,13 +6916,32 @@
         "expected_report": "docs/tasks/A03-T3-review-preparation.md",
         "created_at": "2026-10-18T10:20:45.956512+08:00",
         "workflow_commit": "f7084b2e8f2e9a1fcf758f9cba56ec9c9fb1f304",
-        "turn_status": "inProgress",
-        "observed_thread_status": "active",
+        "turn_status": "completed",
+        "observed_thread_status": "idle",
         "turn_id": "01a14ccf-bc2e-7013-88b1-675e1e77be88",
-        "last_progress": "我会先核对冻结任务单、原 28 项标准和交接边界，只写 T3 独立验收准备说明，不运行产品或业务。",
-        "last_checked_at": "2026-10-18T10:21:24.360512+08:00"
+        "last_progress": "已写入独立验收准备说明，静态核对了全部28项原标准及7处固定提交引用。 未运行产品或业务，未操作Git索引或提交。等待T3冻结矩阵、计划及释放证明；A03仍为REWORK，I01未释放。",
+        "last_checked_at": "2026-10-18T10:25:05.070162+08:00",
+        "last_completed_turn_id": "01a14ccf-bc2e-7013-88b1-675e1e77be88",
+        "preparation": {
+          "task": "A03-T3",
+          "path": "docs/tasks/A03-T3-review-preparation.md",
+          "sha256": "6c7f9f3fcaab3cd01b6e26080d37a43bfba4394e98ebe02e3ff7aa2e9fb9082f",
+          "frozen_commit_links_for_absent_root_files": [
+            "6b61ac9d623e76cbe6311f64d012fd04e2e03c21:docs/tasks/A03-original-executor-handoff-2026-10-18.md",
+            "6b61ac9d623e76cbe6311f64d012fd04e2e03c21:docs/tasks/A03-P2-R12-R2-issue-ownership-report.md"
+          ],
+          "scope": "preparation only; functional review NOT_RUN"
+        },
+        "functional_review": "NOT_RUN",
+        "session_released": true
       },
-      "workflow_commit": "f7084b2e8f2e9a1fcf758f9cba56ec9c9fb1f304"
+      "workflow_commit": "f7084b2e8f2e9a1fcf758f9cba56ec9c9fb1f304",
+      "latest_lightweight_observation": {
+        "at": "2026-10-18T10:25:05.070162+08:00",
+        "head": "1330047dd29890dea0e433ff01b991f615bf78f4",
+        "status": [],
+        "scope": "version and artifact presence only; no running author code reviewed or tests repeated"
+      }
     }
   },
   "route": [
@@ -8506,15 +8564,16 @@
       "host_id": "local",
       "sent_at": "2026-10-18T10:19:53.767531+08:00",
       "workflow_commit": "f7084b2e8f2e9a1fcf758f9cba56ec9c9fb1f304",
-      "cursor": "ec7606d9-d2ad-43f6-95b4-47a16f532a25:1",
+      "cursor": "ec7606d9-d2ad-43f6-95b4-47a16f532a25:2",
       "turn_id": "01a14cce-b480-7222-ab59-f4f40994383b",
-      "started_observed_at": "2026-10-18T10:21:24.360512+08:00"
+      "started_observed_at": "2026-10-18T10:21:24.360512+08:00",
+      "last_observed_at": "2026-10-18T10:25:05.070162+08:00"
     },
     {
       "key": "A03-T1:review:redispatch-2026-10-18",
       "task": "A03-T1",
       "role": "review",
-      "state": "STARTED",
+      "state": "PREPARATION_COMPLETE_WAITING_DELIVERY",
       "created_at": "2026-10-18T10:18:00.633799+08:00",
       "base_commit": "1330047dd29890dea0e433ff01b991f615bf78f4",
       "handoff_commit": "6b61ac9d623e76cbe6311f64d012fd04e2e03c21",
@@ -8529,9 +8588,10 @@
       "host_id": "local",
       "sent_at": "2026-10-18T10:20:36.307675+08:00",
       "workflow_commit": "f7084b2e8f2e9a1fcf758f9cba56ec9c9fb1f304",
-      "cursor": "07aec363-4443-44f0-bb4c-a09bf0b8c9e4:1",
+      "cursor": "07aec363-4443-44f0-bb4c-a09bf0b8c9e4:2",
       "turn_id": "01a14ccf-95e4-7213-8ad9-6b274c2bd912",
-      "started_observed_at": "2026-10-18T10:21:24.360512+08:00"
+      "started_observed_at": "2026-10-18T10:21:24.360512+08:00",
+      "last_observed_at": "2026-10-18T10:25:05.070162+08:00"
     },
     {
       "key": "A03-T2:execution:redispatch-2026-10-18",
@@ -8552,15 +8612,16 @@
       "host_id": "local",
       "sent_at": "2026-10-18T10:20:38.803337+08:00",
       "workflow_commit": "f7084b2e8f2e9a1fcf758f9cba56ec9c9fb1f304",
-      "cursor": "a92ee13f-845d-4114-be00-70d81e37b0ca:1",
+      "cursor": "a92ee13f-845d-4114-be00-70d81e37b0ca:2",
       "turn_id": "01a14ccf-9f31-7d10-8446-73959d8093de",
-      "started_observed_at": "2026-10-18T10:21:24.360512+08:00"
+      "started_observed_at": "2026-10-18T10:21:24.360512+08:00",
+      "last_observed_at": "2026-10-18T10:25:05.070162+08:00"
     },
     {
       "key": "A03-T2:review:redispatch-2026-10-18",
       "task": "A03-T2",
       "role": "review",
-      "state": "STARTED",
+      "state": "PREPARATION_COMPLETE_WAITING_DELIVERY",
       "created_at": "2026-10-18T10:18:00.633799+08:00",
       "base_commit": "1330047dd29890dea0e433ff01b991f615bf78f4",
       "handoff_commit": "6b61ac9d623e76cbe6311f64d012fd04e2e03c21",
@@ -8575,9 +8636,10 @@
       "host_id": "local",
       "sent_at": "2026-10-18T10:20:41.469170+08:00",
       "workflow_commit": "f7084b2e8f2e9a1fcf758f9cba56ec9c9fb1f304",
-      "cursor": "846f94bd-c69f-4cac-8db1-21285fd53e6b:1",
+      "cursor": "846f94bd-c69f-4cac-8db1-21285fd53e6b:2",
       "turn_id": "01a14ccf-aa12-7c92-bc4b-cb59a05cded3",
-      "started_observed_at": "2026-10-18T10:21:24.360512+08:00"
+      "started_observed_at": "2026-10-18T10:21:24.360512+08:00",
+      "last_observed_at": "2026-10-18T10:25:05.070162+08:00"
     },
     {
       "key": "A03-T3:execution:redispatch-2026-10-18",
@@ -8598,15 +8660,16 @@
       "host_id": "local",
       "sent_at": "2026-10-18T10:20:43.837153+08:00",
       "workflow_commit": "f7084b2e8f2e9a1fcf758f9cba56ec9c9fb1f304",
-      "cursor": "625b3403-1db6-4b33-af44-f0b84067ab61:1",
+      "cursor": "625b3403-1db6-4b33-af44-f0b84067ab61:2",
       "turn_id": "01a14ccf-b413-7a03-9914-f8c85242db45",
-      "started_observed_at": "2026-10-18T10:21:24.360512+08:00"
+      "started_observed_at": "2026-10-18T10:21:24.360512+08:00",
+      "last_observed_at": "2026-10-18T10:25:05.070162+08:00"
     },
     {
       "key": "A03-T3:review:redispatch-2026-10-18",
       "task": "A03-T3",
       "role": "review",
-      "state": "STARTED",
+      "state": "PREPARATION_COMPLETE_WAITING_DELIVERY",
       "created_at": "2026-10-18T10:18:00.633799+08:00",
       "base_commit": "1330047dd29890dea0e433ff01b991f615bf78f4",
       "handoff_commit": "6b61ac9d623e76cbe6311f64d012fd04e2e03c21",
@@ -8621,21 +8684,21 @@
       "host_id": "local",
       "sent_at": "2026-10-18T10:20:45.956512+08:00",
       "workflow_commit": "f7084b2e8f2e9a1fcf758f9cba56ec9c9fb1f304",
-      "cursor": "6edfea69-590d-4e04-b191-563639b4a645:1",
+      "cursor": "6edfea69-590d-4e04-b191-563639b4a645:2",
       "turn_id": "01a14ccf-bc2e-7013-88b1-675e1e77be88",
-      "started_observed_at": "2026-10-18T10:21:24.360512+08:00"
+      "started_observed_at": "2026-10-18T10:21:24.360512+08:00",
+      "last_observed_at": "2026-10-18T10:25:05.070162+08:00"
     }
   ],
   "last_action": {
-    "at": "2026-10-18T10:21:24.360512+08:00",
-    "type": "A03_SPLIT_SIX_CHATS_STARTED",
+    "at": "2026-10-18T10:25:05.070162+08:00",
+    "type": "A03_SPLIT_LIGHTWEIGHT_CHECK_AND_PREPARATION_ARCHIVE",
     "tasks": [
       "A03-T1",
       "A03-T2",
       "A03-T3"
     ],
-    "workflow_commit": "f7084b2e8f2e9a1fcf758f9cba56ec9c9fb1f304",
-    "summary": "Three execution chats and three independent review chats created with xhigh, all acknowledged scope and active; cursors saved; old A03 retired; automation routing updated."
+    "summary": "Saved six cursors and three read-only review preparation reports; no duplicate dispatch, tests or old A03 wakeup."
   },
   "limitations": [
     "Current route uses mock B artifacts until independently agreed interface/artifact versions exist.",
@@ -9051,23 +9114,11 @@
     }
   ],
   "last_heartbeat": {
+    "at": "2026-10-18T10:25:05.070162+08:00",
+    "trigger": "2026-10-18T02:22:49.348Z",
     "automation_id": "1800-a",
-    "trigger_time": "2026-10-18T02:03:19.077Z",
-    "checked_at": "2026-10-18T10:05:14.064671+08:00",
-    "task_id": "A03",
-    "execution_thread_id": "01a145aa-2fea-7942-97f9-ad260acf4e30",
-    "review_thread_id": "01a145aa-8d59-7c70-8d81-731712103a9a",
-    "execution_cursor": "506fd3cf-091f-418b-b002-636f503b5e4b:76",
-    "review_cursor": "abdea222-4697-4046-86b1-a5dc48889fac:66",
-    "root_head_observed": "a4963f89785fba30e86c7d12687c2c579aa54551",
-    "candidate_code_commit": "1330047dd29890dea0e433ff01b991f615bf78f4",
-    "status": "P2_R12_R2_FIRST_CAPTURE_FAILURE_SEALING",
-    "acceptance_scope": "P1 and limited R2-R6 accepted; R7 readonly product locally INTEGRATED; R8-R2 projection/N1, R8-R3 POST_HOLD/local/N1-N5, R8-R4 N6/single runtime-init control limited ACCEPTED. Whole native A03 not accepted or integrated. R9-R1 owner lifecycle and D1/standalone/borrow/D2 fixed single-question demos limited ACCEPTED at bfd7fe896a7eee663ea8e0b6cf967548d8dd8f39. R10 two live-process owner/fencing cases limited ACCEPTED at 1c26b4a8eb378af33e57668472d2071e9ea6afff. R11/R11-R1 four crash cuts limited ACCEPTED at cc5966dc58c62017a27266c40ca0cedc5c68485c; author F2/F3 intermediate binary omission remains.",
-    "next_dependency": "Wait original executor sealed exact delivery and complete release; review existing failure/source and bounded capture synchronization correction without rerunning accepted groups or inventing new scenarios. Whole A03 and I01 remain unreleased.",
-    "dispatch_result": "NO_NEW_DISPATCH_EXISTING_EXECUTOR_SEALING_FAILURE",
-    "tests_run_by_coordinator": false,
-    "settings_changed": false,
-    "notify": "AUTHOR_VALIDATION_FAILURE_AND_ETA_CONDITION_FAILED"
+    "decision": "DONT_NOTIFY",
+    "reason": "Three new executors progressing; review preparations complete and waiting for frozen delivery; no functional acceptance or user action."
   },
   "interactive_progress_history": [
     {
