@@ -1,0 +1,270 @@
+[
+  {
+    "actual_four_full_entry_expectations_met": true,
+    "basis": "Original A06 receiver task: wrapper and payload.result each have version and identity independently checked",
+    "decisive_lines": [
+      303,
+      304,
+      306,
+      307
+    ],
+    "evidence_type": "STATIC_FIXED_SOURCE_PLUS_ORIGINAL_INPUT_OBSERVATION",
+    "excerpts": {
+      "238-242": "238:     evidence, graph, check, report = (documents[n] for n in required)\n239:     for obj, name in zip((evidence, graph, check), required):\n240:         version_policy(obj.get(\"schema_version\"), kind=obj.get(\"kind\"), location=\"CURRENT\", path=name + \"#/schema_version\")\n241:         if obj.get(\"book_id\") != manifest[\"book_id\"] or obj.get(\"scope_id\") != manifest[\"scope_id\"] + \"+adjacent-resource-173-prefix\":\n242:             fail(\"CURRENT_SCOPE_MISMATCH\", name, \"fixed book/adjacent-prefix scope differs\", \"CURRENT_BINDING\")",
+      "260-268": "260:     objects, values, references, nodes = {}, {}, [], []\n261:     for name, doc in documents.items():\n262:         for location, obj in walk(doc, name + \"#\"):\n263:             nodes.append((location, obj))\n264:             if \"artifact_id\" in obj:\n265:                 if \"payload\" in obj and \"content_hash\" in obj:\n266:                     if sha(canonical(obj[\"payload\"])) != obj[\"content_hash\"]:\n267:                         fail(\"CONTENT_HASH_MISMATCH\", location + \"/content_hash\", \"B canonical payload SHA mismatch\", \"OBJECT\")\n268:                     objects.setdefault(ref_key(obj), []).append(location)",
+      "296-328": "296:     for i, stage in enumerate(stages):\n297:         loc = f\"artifacts/pipeline-report.json#/payload/stages/{i}\"\n298:         output = stage[\"output\"]\n299:         name = safe_member(output[\"path\"], loc + \"/output/path\")\n300:         if name not in files or sha(files[name]) != output[\"sha256\"]:\n301:             fail(\"WRAPPER_FILE_MISMATCH\", loc + \"/output\", name, \"CURRENT_BINDING\")\n302:         wrapper = documents[name]\n303:         if wrapper.get(\"schema_version\") != \"b-pipeline-stage-trial/0.1\" or wrapper.get(\"kind\") != \"PipelineStageTrial\":\n304:             fail(\"UNSUPPORTED_VERSION\", name, str(wrapper.get(\"schema_version\")), \"VERSION\")\n305:         exact(output[\"artifact_ref\"], wrapper, loc + \"/output/artifact_ref\")\n306:         result = wrapper[\"payload\"][\"result\"]\n307:         exact(stage[\"result_ref\"], result, loc + \"/result_ref\")\n308:         if (stage[\"state\"] != \"DONE\" or stage[\"current_run_receipt\"][\"run_id\"] != RUN_ID or\n309:                 wrapper[\"payload\"][\"stage_id\"] != stage[\"stage_id\"] or wrapper.get(\"book_id\") != \"46007447\" or\n310:                 wrapper.get(\"scope_id\") != manifest[\"scope_id\"]):\n311:             fail(\"STAGE_BINDING_MISMATCH\", loc, \"stage state/run/book/scope mismatch\", \"CURRENT_BINDING\")\n312:         final_routes = {\"continuation_prepare\": (\"evidence_ref\", (\"payload\", \"evidence\")),\n313:                         \"content_apply\": (\"graph_ref\", (\"payload\", \"graph\")),\n314:                         \"content_quality\": (\"quality_ref\", ())}\n315:         final_route = None\n316:         if stage[\"stage_id\"] in final_routes:\n317:             key, route = final_routes[stage[\"stage_id\"]]\n318:             final = result\n319:             for field in route:\n320:                 final = final[field]\n321:             if final != finals[key]:\n322:                 fail(\"RESULT_IDENTITY_MISMATCH\", name + \"#/payload/result/\" + \"/\".join(route),\n323:                      \"exact final envelope differs from current artifact\", \"CURRENT_BINDING\")\n324:             bound_results.add(key)\n325:             final_route = {\"final_output\": key, \"path\": name + \"#/payload/result\" + (\"/\" + \"/\".join(route) if route else \"\")}\n326:         stage_bindings.append({\"stage_id\": stage[\"stage_id\"], \"wrapper_path\": name,\n327:                                \"wrapper_ref\": ref(wrapper), \"result_ref\": ref(result),\n328:                                \"run_receipt\": stage[\"current_run_receipt\"], \"final_route\": final_route})",
+      "43-49": "43: def canonical(data):\n44:     return json.dumps(data, ensure_ascii=False, sort_keys=True, separators=(\",\", \":\"),\n45:                       allow_nan=False).encode(\"utf-8\")\n46: \n47: \n48: def ref(obj):\n49:     return {key: obj[key] for key in (\"artifact_id\", \"revision\", \"content_hash\") if key in obj}"
+    },
+    "extra_public_receiver_call": false,
+    "extra_variant_generated": false,
+    "final_current_versions_gated": true,
+    "finding": "Wrapper schema_version/kind is gated. Non-final stage payload.result has only artifact_id/revision/content_hash ref binding, with no independent result schema_version/kind policy; raw native values retained is not version checking.",
+    "id": "F01",
+    "no_claim_of_executed_unknown_intermediate_version_acceptance": true,
+    "observed_wrapper_result_versions": [
+      {
+        "result_kind": "EvidenceBundleTrial",
+        "result_ref": {
+          "artifact_id": "evidencebundletrial-0b4ccd9976860ee169a30990",
+          "content_hash": "23ae6b63e3b1d136e5b599d7c69d2a1dccb0b801e135b85f59446920cf364371",
+          "revision": 1
+        },
+        "result_version": "b-evidence-trial/0.2",
+        "stage_id": "evidence",
+        "wrapper_kind": "PipelineStageTrial",
+        "wrapper_ref": {
+          "artifact_id": "pipeline-stage-e1c7b96dea02508f15aa5ef5",
+          "content_hash": "e1c7b96dea02508f15aa5ef524085b7df43a84526117ee4c03c371a7daeaf200",
+          "revision": 1
+        },
+        "wrapper_version": "b-pipeline-stage-trial/0.1"
+      },
+      {
+        "result_kind": "EvidenceBundleTrial",
+        "result_ref": {
+          "artifact_id": "evidencebundletrial-e0922a94a8f2c3c59459ee03",
+          "content_hash": "b0c79621d46783579384f04872ba209a7006348af823af50da74c37e04cc326b",
+          "revision": 1
+        },
+        "result_version": "b-evidence-trial/0.3",
+        "stage_id": "recover",
+        "wrapper_kind": "PipelineStageTrial",
+        "wrapper_ref": {
+          "artifact_id": "pipeline-stage-ed44ddcc7357ddb53e4e6004",
+          "content_hash": "ed44ddcc7357ddb53e4e6004c1c19b6b8b07152ee4664422c13c80c11f36d79a",
+          "revision": 1
+        },
+        "wrapper_version": "b-pipeline-stage-trial/0.1"
+      },
+      {
+        "result_kind": "QuestionGraphTrial",
+        "result_ref": {
+          "artifact_id": "questiongraphtrial-343078f0f2071baa00bc618a",
+          "content_hash": "421ad1cb3115468eb0e39d97197edb67f6e1f264e844d49694ef6bf2ac603692",
+          "revision": 1
+        },
+        "result_version": "b-graph-trial/0.3",
+        "stage_id": "assemble",
+        "wrapper_kind": "PipelineStageTrial",
+        "wrapper_ref": {
+          "artifact_id": "pipeline-stage-e1e385e83abdebf272f066bd",
+          "content_hash": "e1e385e83abdebf272f066bdc72ac4a03a04fb2b099bf4727e1db8c9144332ee",
+          "revision": 1
+        },
+        "wrapper_version": "b-pipeline-stage-trial/0.1"
+      },
+      {
+        "result_kind": "RecoveryReviewTrial",
+        "result_ref": {
+          "artifact_id": "recoveryreviewtrial-2fa1b6b024afaffc57646e6c",
+          "content_hash": "2d5412a45c668ccab73e05ef9bc1a16deb5930336f46fb2448f768e5b3a6730f",
+          "revision": 1
+        },
+        "result_version": "b-recovery-review-trial/0.1",
+        "stage_id": "recovery_review",
+        "wrapper_kind": "PipelineStageTrial",
+        "wrapper_ref": {
+          "artifact_id": "pipeline-stage-ae41e44250e52a6a8174910d",
+          "content_hash": "ae41e44250e52a6a8174910d42f2f4baf06586523a2c782f21a0f1b969cf5979",
+          "revision": 1
+        },
+        "wrapper_version": "b-pipeline-stage-trial/0.1"
+      },
+      {
+        "result_kind": "CheckReportTrial",
+        "result_ref": {
+          "artifact_id": "checkreporttrial-ea44ce2317c447d12e9339ca",
+          "content_hash": "05d14b02cbb5ea9964d0f587650dacf26c3542311a16a556cdd2cdd8a7aaaa4b",
+          "revision": 1
+        },
+        "result_version": "b-check-trial/0.3",
+        "stage_id": "quality",
+        "wrapper_kind": "PipelineStageTrial",
+        "wrapper_ref": {
+          "artifact_id": "pipeline-stage-5fd560238b5d173d5c15ced4",
+          "content_hash": "5fd560238b5d173d5c15ced4348de0bcbc3a9696a50829998363e77d7141e765",
+          "revision": 1
+        },
+        "wrapper_version": "b-pipeline-stage-trial/0.1"
+      },
+      {
+        "result_kind": "ContinuationScopeTrial",
+        "result_ref": {
+          "artifact_id": "continuationscopetrial-1624bcb1f1d903f64310fbcb",
+          "content_hash": "bb860e68c723f2a688e833267e5df949c56f33e6f07f3a7db63cc7dfbdccda18",
+          "revision": 1
+        },
+        "result_version": "b-continuation-scope-trial/0.1",
+        "stage_id": "continuation_prepare",
+        "wrapper_kind": "PipelineStageTrial",
+        "wrapper_ref": {
+          "artifact_id": "pipeline-stage-06da3f673733b22833b55ed5",
+          "content_hash": "06da3f673733b22833b55ed57754f4896b419bfda3ffe766dcd18c8bb5f2b45a",
+          "revision": 1
+        },
+        "wrapper_version": "b-pipeline-stage-trial/0.1"
+      },
+      {
+        "result_kind": "ContinuationProofStageTrial",
+        "result_ref": {
+          "artifact_id": "continuationproofstagetrial-28f33cef50091e847f7ee853",
+          "content_hash": "63829e96b2fdb9cbf2f3f8000802eec9912a78fc81e14eacf2e1e917a548add8",
+          "revision": 1
+        },
+        "result_version": "b-continuation-proof-stage-trial/0.1",
+        "stage_id": "continuation_proof",
+        "wrapper_kind": "PipelineStageTrial",
+        "wrapper_ref": {
+          "artifact_id": "pipeline-stage-b5cecbf9bbe8b645b723cb69",
+          "content_hash": "b5cecbf9bbe8b645b723cb6974b7d505b9d386760b02c4bc1b05b8f3b6f3136c",
+          "revision": 1
+        },
+        "wrapper_version": "b-pipeline-stage-trial/0.1"
+      },
+      {
+        "result_kind": "ContinuationApplyStageTrial",
+        "result_ref": {
+          "artifact_id": "continuationapplystagetrial-2cf36ea878b1adeeaf7c5a3b",
+          "content_hash": "6efb34aec1abb0ebde9a165ba50d6c1813c5f72bfaa128110b9c22318b4ad54d",
+          "revision": 1
+        },
+        "result_version": "b-continuation-apply-stage-trial/0.1",
+        "stage_id": "continuation_apply",
+        "wrapper_kind": "PipelineStageTrial",
+        "wrapper_ref": {
+          "artifact_id": "pipeline-stage-e2cd9d0085acfc47f0add96e",
+          "content_hash": "e2cd9d0085acfc47f0add96ed89b2a3532d5329ff0a7f09b62a5978c7aafde71",
+          "revision": 1
+        },
+        "wrapper_version": "b-pipeline-stage-trial/0.1"
+      },
+      {
+        "result_kind": "CheckReportTrial",
+        "result_ref": {
+          "artifact_id": "checkreporttrial-839dac901a6a2f37dbc58b94",
+          "content_hash": "0ae88ac8cce965db6e7ac192bc82e54aa46426bb8312cb1c19d06bac21624980",
+          "revision": 1
+        },
+        "result_version": "b-check-trial/0.4",
+        "stage_id": "continuation_quality",
+        "wrapper_kind": "PipelineStageTrial",
+        "wrapper_ref": {
+          "artifact_id": "pipeline-stage-98c20e9a64a926f2fd69fef9",
+          "content_hash": "98c20e9a64a926f2fd69fef9a55bb006897ce1dcc7643c3a334a2b0c62764269",
+          "revision": 1
+        },
+        "wrapper_version": "b-pipeline-stage-trial/0.1"
+      },
+      {
+        "result_kind": "InlinePreparationTrial",
+        "result_ref": {
+          "artifact_id": "inline-preparation-a410ca4585d503b3322cfd0b",
+          "content_hash": "bb8fe7d2b447cb85be82d9c379c42bc969043036337741fd9d89e15aa0a1312d",
+          "revision": 1
+        },
+        "result_version": "b-inline-preparation-trial/0.1",
+        "stage_id": "inline_prepare",
+        "wrapper_kind": "PipelineStageTrial",
+        "wrapper_ref": {
+          "artifact_id": "pipeline-stage-f018afb9cce441bdab4ff5e8",
+          "content_hash": "f018afb9cce441bdab4ff5e83fa83620eb3760292aeffbfc6d1e3d74c433c936",
+          "revision": 1
+        },
+        "wrapper_version": "b-pipeline-stage-trial/0.1"
+      },
+      {
+        "result_kind": "InlineApplyStageTrial",
+        "result_ref": {
+          "artifact_id": "inline-apply-stage-15141c40e3ee8111482291f4",
+          "content_hash": "5984bd9c44d412c79e3e381f5e61ac899bc7042dd178ff5a140c454cfd241e8c",
+          "revision": 1
+        },
+        "result_version": "b-inline-apply-stage-trial/0.1",
+        "stage_id": "inline_apply",
+        "wrapper_kind": "PipelineStageTrial",
+        "wrapper_ref": {
+          "artifact_id": "pipeline-stage-88aa11b578e17f86d9cd95b1",
+          "content_hash": "88aa11b578e17f86d9cd95b1d21c9d0fcdb1f98c53d172cd0a5ed1145d7cad9f",
+          "revision": 1
+        },
+        "wrapper_version": "b-pipeline-stage-trial/0.1"
+      },
+      {
+        "result_kind": "CheckReportTrial",
+        "result_ref": {
+          "artifact_id": "inline-check-2e73b742fb8ebadcbe5b98ce",
+          "content_hash": "a61838ddaba7da890950fbef23da2ff768381721a0c0427865640fd5239ba38e",
+          "revision": 1
+        },
+        "result_version": "b-check-trial/0.5",
+        "stage_id": "inline_quality",
+        "wrapper_kind": "PipelineStageTrial",
+        "wrapper_ref": {
+          "artifact_id": "pipeline-stage-71c0adf3e7a4fcfa3bcbaf51",
+          "content_hash": "71c0adf3e7a4fcfa3bcbaf51a2a50ce38c731bb727f03d1a58a4bbddb8a0e62e",
+          "revision": 1
+        },
+        "wrapper_version": "b-pipeline-stage-trial/0.1"
+      },
+      {
+        "result_kind": "ContentRevisionApplicationTrial",
+        "result_ref": {
+          "artifact_id": "content-revision-application-ce10846998e16bbca08f1807",
+          "content_hash": "1f00ac36e6076639ecc4106aa3b84a6edf68a58b14c25a0f0f2e6b99e2e137d2",
+          "revision": 1
+        },
+        "result_version": "b-content-revision-application-trial/0.2",
+        "stage_id": "content_apply",
+        "wrapper_kind": "PipelineStageTrial",
+        "wrapper_ref": {
+          "artifact_id": "pipeline-stage-0d7fff941b46a42409e96bc8",
+          "content_hash": "0d7fff941b46a42409e96bc8b188a3b1205a05c2137ca0ba6241abb69864b2c5",
+          "revision": 1
+        },
+        "wrapper_version": "b-pipeline-stage-trial/0.1"
+      },
+      {
+        "result_kind": "CheckReportTrial",
+        "result_ref": {
+          "artifact_id": "content-check-b3fbf1f56dabbe89ca48556b",
+          "content_hash": "403d4589e3de1ff7947e182bc6e811045dff39bcaa5820d75b02685aec55f7a4",
+          "revision": 1
+        },
+        "result_version": "b-check-trial/0.7",
+        "stage_id": "content_quality",
+        "wrapper_kind": "PipelineStageTrial",
+        "wrapper_ref": {
+          "artifact_id": "pipeline-stage-5f203bc900a7f0b70245181d",
+          "content_hash": "5f203bc900a7f0b70245181d2b30d75261fc381baec6665d015ffb91cb32cc16",
+          "revision": 1
+        },
+        "wrapper_version": "b-pipeline-stage-trial/0.1"
+      }
+    ],
+    "priority": "P2",
+    "second_candidate_not_activated": true,
+    "source": "src/annotation/source/b_handoff/reader.py",
+    "source_sha256": "241b2de4b82e84e12f5067bb8079d4cad6925339e0f9a343587fff5f2f2428f3",
+    "status": "OPEN_REWORK"
+  }
+]

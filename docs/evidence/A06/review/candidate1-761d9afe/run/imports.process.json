@@ -1,0 +1,33 @@
+{
+  "argv": [
+    "C:\\Users\\ASUS\\AppData\\Local\\Programs\\Python\\Python39\\python.exe",
+    "-B",
+    "-c",
+    "import sys,json,pathlib,hashlib,inspect,PIL,pydantic\nimport annotation.source.b_handoff as b\nimport annotation.source.b_handoff.reader as r\nimport annotation.source.b_handoff.views as v\nimport annotation.source.b_handoff.__main__ as cli\nimport annotation.contracts as c\nmods=[b,r,v,cli,c]\nprint(json.dumps({'python':sys.version,'executable':sys.executable,'Pillow':PIL.__version__,'pydantic':pydantic.__version__,'schema_version':c.SCHEMA_VERSION,'schema_title':c.schema().get('title'),'contract_entries':{n:callable(getattr(c,n,None)) for n in ['load_bundle','validate_bundle','schema','ContractError']},'receive_signature':str(inspect.signature(b.receive_package)),'modules':[{'name':m.__name__,'file':m.__file__,'sha256':hashlib.sha256(pathlib.Path(m.__file__).read_bytes()).hexdigest()} for m in mods]}))\n"
+  ],
+  "cwd": "D:\\1800\\docs\\evidence\\A06\\review\\candidate1-761d9afe\\foreign-cwd-one",
+  "environment_overrides": {
+    "GIT_NO_LAZY_FETCH": "1",
+    "GIT_OPTIONAL_LOCKS": "0",
+    "PYTHONDONTWRITEBYTECODE": "1",
+    "PYTHONIOENCODING": "utf-8",
+    "PYTHONPATH": "D:\\1800\\docs\\evidence\\A06\\review\\candidate1-761d9afe\\code\\src"
+  },
+  "exit_code": 0,
+  "finished_utc": "2026-10-18T08:54:14.322307+00:00",
+  "name": "imports",
+  "parent_pid": 78152,
+  "pid": 70728,
+  "process_reaped": true,
+  "started_utc": "2026-10-18T08:54:13.567057+00:00",
+  "stderr": {
+    "bytes": 0,
+    "file": "imports.stderr.txt",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "stdout": {
+    "bytes": 1731,
+    "file": "imports.stdout.txt",
+    "sha256": "105257ec21aaef82f75a1fdcc9f0b82ff48549fe0c198faad3fd786ffc267cc8"
+  }
+}

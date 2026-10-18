@@ -1,0 +1,33 @@
+{
+  "argv": [
+    "C:\\Users\\ASUS\\AppData\\Local\\Programs\\Python\\Python39\\python.exe",
+    "-B",
+    "-c",
+    "import json\nfrom annotation.source.b_handoff import version_policy,HandoffError\nrows=[]\nfor kind,prefix in [('QuestionGraphTrial','b-graph-trial/'),('CheckReportTrial','b-check-trial/')]:\n for v,location,bound in [('0.4','CURRENT',False),('0.4','ARCHIVE',True),('0.5','CURRENT',False),('0.5','ARCHIVE',True),('0.6','CURRENT',False),('0.7','CURRENT',False),('9.9','CURRENT',False)]:\n  try: observed=version_policy(prefix+v,kind=kind,location=location,bound_archive=bound)\n  except HandoffError as e: observed=e.code\n  rows.append(dict(kind=kind,version=v,location=location,observed=observed))\nprint(json.dumps(rows))\n"
+  ],
+  "cwd": "D:\\1800\\docs\\evidence\\A06\\review\\candidate1-761d9afe\\foreign-cwd-one",
+  "environment_overrides": {
+    "GIT_NO_LAZY_FETCH": "1",
+    "GIT_OPTIONAL_LOCKS": "0",
+    "PYTHONDONTWRITEBYTECODE": "1",
+    "PYTHONIOENCODING": "utf-8",
+    "PYTHONPATH": "D:\\1800\\docs\\evidence\\A06\\review\\candidate1-761d9afe\\code\\src"
+  },
+  "exit_code": 0,
+  "finished_utc": "2026-10-18T08:54:42.575281+00:00",
+  "name": "versions",
+  "parent_pid": 78152,
+  "pid": 68236,
+  "process_reaped": true,
+  "started_utc": "2026-10-18T08:54:42.255439+00:00",
+  "stderr": {
+    "bytes": 0,
+    "file": "versions.stderr.txt",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "stdout": {
+    "bytes": 1482,
+    "file": "versions.stdout.txt",
+    "sha256": "1c25ecbc79ff5dee3aa13d458fe5bf7174523b1bc8218d027e09fa636c3f5674"
+  }
+}

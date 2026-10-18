@@ -2,7 +2,7 @@
   "schema_version": 1,
   "project": "D:\\1800",
   "coordinator_thread_id": "01a13f26-7567-75e1-99ee-c9d2194e78bb",
-  "updated_at": "2026-10-18T16:51:32.305628+08:00",
+  "updated_at": "2026-10-18T17:03:02.345109+08:00",
   "automation": {
     "id": "1800-a",
     "kind": "heartbeat",
@@ -8294,8 +8294,8 @@
       }
     },
     "I01-A": {
-      "status": "REVIEW",
-      "phase": "INDEPENDENT_REVIEW_RUNNING",
+      "status": "ACCEPTED",
+      "phase": "COORDINATOR_ACCEPTED_PENDING_LOCAL_INTEGRATION",
       "base_commit": "a1c3c3b2d452ecbdf5c57a8b7372e7d53de0f8d8",
       "depends_on": [
         "A01",
@@ -8334,7 +8334,7 @@
         "delivery_preflight": "docs/evidence/coordinator/heartbeat-20261018-0839/I01-A-delivery-preflight.json"
       },
       "review": {
-        "status": "RUNNING",
+        "status": "ACCEPTED_FIXED_DELIVERY_RELEASED",
         "dispatch_key": "I01-A:review:3fdc5d37",
         "thinking": "xhigh",
         "thread_id": "01a14e1c-1d38-7fb3-83f2-015b0380ea56",
@@ -8342,25 +8342,39 @@
         "workflow_commit": "1534616372e977ddadb2918fbd29044290c263cf",
         "dispatch_result": "SENT_EXISTING_THREAD",
         "dispatched_at": "2026-10-18T16:44:33.302014+08:00",
-        "cursor": "46c8c4aa-f7e6-47c0-b60b-dfd9c7bf29dd:3",
+        "cursor": "46c8c4aa-f7e6-47c0-b60b-dfd9c7bf29dd:11",
         "turn_id": "01a14e2f-1aa5-79f1-a17e-65237c01a95a",
-        "turn_status": "inProgress",
-        "observed_thread_status": "active",
-        "last_checked_at": "2026-10-18T16:51:32.305628+08:00",
-        "next_dependency": "Wait for coordinator fixed author delivery and release; no candidate review authorized yet.",
+        "turn_status": "completed",
+        "observed_thread_status": "idle",
+        "last_checked_at": "2026-10-18T17:03:02.345109+08:00",
+        "next_dependency": "Coordinator acceptance recorded; scoped local integration pending.",
         "target_commit": "3fdc5d37e221fc73410f197605f5d7b8878182d5",
         "candidate_commit": "be68b8d7c645de556d601458d1d493258f063721",
         "task_document": "docs/tasks/I01-A-review-dispatch.md",
         "dispatch_intent_at": "2026-10-18T16:43:39.349583+08:00",
         "dispatch_returned_thread_id": "01a14e1c-1d38-7fb3-83f2-015b0380ea56",
-        "last_progress": "Independent A01 public entries/N/E/U-execute complete; U new-process MATCH recovery and release/archive still in progress, not accepted."
+        "last_progress": "Review reports N/E/U complete and limited ACCEPTED draft; manifest/link archive pending; not yet fixed or coordinator accepted.",
+        "session_released": true,
+        "report": "docs/tasks/I01-A-review-report.md",
+        "report_sha256": "3ce68d3843f872e2a55c096836db777ab39edb89270e9c24ddc7dd485a98c7df",
+        "evidence_manifest": "docs/evidence/I01-A/review/manifest.json",
+        "evidence_manifest_sha256": "e29721fb92487c9e6c13a6108ad2bb4c0821b69ae7ed8269e7dadbdacdbfbbe3"
       },
-      "next_dependency": "Independent fixed three-path review and release; then coordinator acceptance/integration.",
-      "worktree_status": "READY_FIXED_BASE"
+      "next_dependency": "Scoped local integration of fixed666 added paths, preserving all existing products; static freeze check only, no N/E/U rerun.",
+      "worktree_status": "READY_FIXED_BASE",
+      "coordinator_acceptance": {
+        "at": "2026-10-18T17:03:02.345109+08:00",
+        "document": "docs/tasks/I01-A-coordinator-acceptance.md",
+        "target_commit": "3fdc5d37e221fc73410f197605f5d7b8878182d5",
+        "scope": "A01 public offline consumption and three fresh synthetic N/E/U integration paths; not real A01-native or B integration. Each execution/review max3targets/3dispatch.",
+        "manifest_members_rehashed": 678,
+        "static_check": "docs/evidence/coordinator/heartbeat-20261018-0854/i01-static-freeze-check.json",
+        "new_business_runs": 0
+      }
     },
     "A06": {
-      "status": "REVIEW",
-      "phase": "INDEPENDENT_REVIEW_RUNNING",
+      "status": "REWORK",
+      "phase": "FIRST_REVIEW_F01_CONFIRMED_PENDING_BOUNDED_CORRECTION",
       "base_commit": "a1c3c3b2d452ecbdf5c57a8b7372e7d53de0f8d8",
       "depends_on": [
         "C01"
@@ -8399,7 +8413,7 @@
         "delivery_preflight": "docs/evidence/coordinator/heartbeat-20261018-0839/A06-delivery-preflight.json"
       },
       "review": {
-        "status": "RUNNING",
+        "status": "REWORK_FIXED_DELIVERY_RELEASED",
         "dispatch_key": "A06:review:761d9afe",
         "thinking": "xhigh",
         "thread_id": "01a14e21-162e-7840-9052-501984bc3d75",
@@ -8407,25 +8421,39 @@
         "dispatch_result": "SENT_EXISTING_THREAD",
         "task_workflow_commit": "83e69beb9fb261676c8d012127e5b73e1f770261",
         "dispatched_at": "2026-10-18T16:48:57.116448+08:00",
-        "cursor": "7d898927-095a-4d1d-8fb8-73c84f943097:3",
+        "cursor": "7d898927-095a-4d1d-8fb8-73c84f943097:8",
         "turn_id": "01a14e33-2222-79f2-ad0b-bf4a17136301",
-        "turn_status": "inProgress",
-        "observed_thread_status": "active",
-        "last_checked_at": "2026-10-18T16:51:32.305628+08:00",
-        "next_dependency": "Wait for coordinator fixed author delivery and release; no candidate review authorized yet.",
-        "last_progress": "Fixed first candidate independent review started; awaits own four-entry/version results, report and release.",
+        "turn_status": "completed",
+        "observed_thread_status": "idle",
+        "last_checked_at": "2026-10-18T17:03:02.345109+08:00",
+        "next_dependency": "Coordinator F01 bounded correction; no further review business until next fixed release.",
+        "last_progress": "Reviewer reports original-scope static missing payload.result version validation; intends REWORK, fixed report/release pending; no new negative or rerun.",
         "target_commit": "761d9afed8b9d3d33851ad3d79b0bee7c294089d",
         "candidate_commit": "9076d35e81678cdba8ad8651e95a44265fdc345c",
         "task_document": "docs/tasks/A06-review-dispatch.md",
         "dispatch_intent_at": "2026-10-18T16:47:58.822596+08:00",
         "dispatch_returned_thread_id": "01a14e21-162e-7840-9052-501984bc3d75",
-        "workflow_commit": "d956b3138c28e82dec05573003d5e95fde72989f"
+        "workflow_commit": "d956b3138c28e82dec05573003d5e95fde72989f",
+        "session_released": true,
+        "report": "docs/tasks/A06-review-report.md",
+        "report_sha256": "fdefde2e92095b9e922ae264a6b9595af5d93ee4c6dd5f5f980e941a031c0ae4",
+        "evidence_manifest": "docs/evidence/A06/review/candidate1-761d9afe/review-manifest.json",
+        "evidence_manifest_sha256": "b3842a023b39c1f26ba42db6eab93329adfae4ad084e756b09cb67a780af5624",
+        "findings": [
+          {
+            "id": "F01",
+            "scope": "original requirement wrapper/result separate version/kind",
+            "evidence": "reader.py303-307 checks wrapper only; ref at48-49 excludes schema_version/kind",
+            "verified_by_coordinator_static": true,
+            "dynamic_negative_run": false
+          }
+        ]
       },
       "input_zip": "D:\\1800\\.local\\stages\\coordinator\\b-handoff-0e5434f\\B-46007447-Q16-offline-HOLD-2026-10-17.zip",
       "zip_sha256": "b2bed674f87cde7fb2df4fdf31dec9ede08f494fc6190f654abda51dd4dae89d",
       "max_frozen_candidates": 2,
       "B_confirmation": "UNCONFIRMED",
-      "next_dependency": "Independent fixed four-entry/version review and release; then coordinator acceptance/integration; shared mapping/history requiredness remain separate."
+      "next_dependency": "Bounded second final candidate for existing F01 stage-result version/kind requirement; preserve first four-entry results."
     }
   },
   "route": [
@@ -10652,21 +10680,14 @@
     }
   ],
   "last_action": {
-    "at": "2026-10-18T16:51:32.305628+08:00",
+    "at": "2026-10-18T17:03:02.345109+08:00",
     "task_ids": [
       "I01-A",
       "A06"
     ],
-    "action": "FIXED_DELIVERIES_PRECHECKED_AND_REGISTERED_INDEPENDENT_REVIEWS_STARTED",
-    "coordinator_head": "d956b3138c28e82dec05573003d5e95fde72989f",
-    "versions": {
-      "I01-A_delivery": "3fdc5d37e221fc73410f197605f5d7b8878182d5",
-      "I01-A_candidate": "be68b8d7c645de556d601458d1d493258f063721",
-      "A06_delivery": "761d9afed8b9d3d33851ad3d79b0bee7c294089d",
-      "A06_candidate": "9076d35e81678cdba8ad8651e95a44265fdc345c"
-    },
-    "dispatch_result": "SENT_TO_TWO_EXISTING_REVIEW_THREADS; no duplicate chats",
-    "next_dependency": "Independent fixed reports/manifests and releases, then coordinator acceptance/scoped integration. B mapping/admission remains unconfirmed."
+    "action": "I01_LIMITED_ACCEPTED_A06_F01_REWORK_CONFIRMED",
+    "dispatch_result": "NO_NEW_DISPATCH_YET",
+    "next_dependency": "I01 scoped integration; A06 second final correction task"
   },
   "limitations": [
     "Current route uses mock B artifacts until independently agreed interface/artifact versions exist.",
@@ -10674,25 +10695,20 @@
     "Platform test is single-book serial, no book submission, no unbudgeted paid models."
   ],
   "last_check": {
-    "at": "2026-10-18T16:51:32.305628+08:00",
-    "trigger": "2026-10-18T08:39:55.901Z",
-    "coordinator_head": "d956b3138c28e82dec05573003d5e95fde72989f",
-    "scope": "Required docs/state and actual Git checked; fixed author delivery scope/raw members/release preflight; registered independent reviews continued and compact snapshots saved.",
-    "preflights": [
-      "docs/evidence/coordinator/heartbeat-20261018-0839/I01-A-delivery-preflight.json",
-      "docs/evidence/coordinator/heartbeat-20261018-0839/A06-delivery-preflight.json"
-    ],
-    "new_threads": 0,
-    "existing_review_continuations": 2,
-    "coordinator_tests_run": 0,
-    "coordinator_business_runs": 0,
-    "coordinator_SQL_calls": 0,
-    "B_messages": 0,
+    "at": "2026-10-18T16:57:35.737759+08:00",
+    "trigger": "2026-10-18T08:54:56.078Z",
+    "coordinator_head": "ebf9825a1a8d1b52b028ab783115834a3633c9ab",
+    "scope": "Required docs/state and actual Git checked; compact saved-cursor snapshots. Review outputs still active, not accepted. Git status stat-only changes resolved by diff refresh; no semantic tracked product differences or file writes by coordinator.",
     "task_statuses": {
       "I01-A": "REVIEW",
       "A06": "REVIEW"
     },
-    "next_dependency": "Independent reviews complete and release; not accepted/integrated yet."
+    "new_threads": 0,
+    "existing_review_continuations": 0,
+    "coordinator_tests_run": 0,
+    "coordinator_business_runs": 0,
+    "B_messages": 0,
+    "next_dependency": "Frozen review deliveries and release; I01 scope integration planning can proceed read-only."
   },
   "prepared_next_batch": {
     "status": "DISPATCHED",

@@ -1,0 +1,40 @@
+{
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "design_only": {
+      "const": true
+    },
+    "case_id": {
+      "type": "string",
+      "pattern": "^[A-Za-z][A-Za-z0-9_.:-]{0,127}$"
+    },
+    "bundle": {
+      "$ref": "recovery-exchange.schema.json"
+    },
+    "ledger_export": {
+      "anyOf": [
+        {
+          "$ref": "ledger-export.schema.json"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "runtime_claim": {
+      "type": "object"
+    }
+  },
+  "required": [
+    "design_only",
+    "case_id",
+    "bundle",
+    "ledger_export",
+    "runtime_claim"
+  ],
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "case-file.schema.json",
+  "title": "DESIGN_ONLY example wrapper; not consumed by production",
+  "$comment": " P1-R1 DESIGN_ONLY revision; NOT IMPLEMENTED."
+}
