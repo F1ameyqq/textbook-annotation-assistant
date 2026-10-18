@@ -1,140 +1,976 @@
 {
-  "checked_at_utc": "2026-10-17T22:32:49.941210+00:00",
-  "source_worktree": "C:/Users/ASUS/.codex/worktrees/a03-runtime-recovery/1800",
-  "base_commit": "bfd7fe896a7eee663ea8e0b6cf967548d8dd8f39",
-  "target_commit": "1c26b4a8eb378af33e57668472d2071e9ea6afff",
-  "root_head_before_action": "e59966de41f22f087f59499ea650eb3330820f17",
-  "decision": "READY_FOR_INDEPENDENT_REVIEW_NOT_ACCEPTED",
+  "at": "2026-10-18T06:31:55.509362+00:00",
+  "task_id": "A03-R1",
+  "target_commit": "54e86adfaf144093a688b62fe0dad5190ceb2fa6",
+  "candidate_commit": "6097a06de937fee8876feccedf46920510850b83",
+  "manifest": "docs/evidence/A03/R1/execution/manifest.json",
+  "manifest_sha256": "be1e8da1c7a7da02b82ddd3e2803bb8fa44e3b1048ccdf8c114a459f5d768f16",
+  "report": "docs/tasks/A03-R1-execution-report.md",
+  "report_sha256": "f0a8f282194b9a3b8ea84ce2eeaa3472be99c1c1119e0579b24574f2a3d76f6c",
+  "members_raw_hash_verified": 1300,
+  "total_member_bytes": 35118730,
+  "hash_mismatches": [],
+  "product_delta_candidate_to_delivery": [],
   "working_tree_clean": true,
-  "base_entries_unchanged": 32152,
-  "added_raw_blobs_verified": 261,
-  "manifest_entries_verified": 260,
-  "report": "docs/tasks/A03-P2-R10-owner-fencing-report.md",
-  "report_sha256": "a718ddf8b3969dd8b44d81fb22f4ee86b30400c9d85f7226194a6136613e86d4",
-  "manifest": "docs/evidence/A03/execution/P2-R10-owner-fencing/manifest.json",
-  "manifest_sha256": "7372f10d785322d949a29ea4b28c730ea90411f05ddc2448a39f4e6d2b9bc9a7",
-  "process_release": "docs/evidence/A03/execution/P2-R10-owner-fencing/process-release.json",
-  "process_release_sha256": "b7d20a8254ba93b815b40066724a23c75a1206c0f826df90aa9838da4dc1fbd2",
-  "process_records_checked": [
-    {
-      "pid": 68864,
-      "record": "runs/C1/started.json",
-      "exit_code": 0,
-      "alive": false
-    },
-    {
-      "pid": 8636,
-      "record": "runs/C2/started.json",
-      "exit_code": 0,
-      "alive": false
-    },
-    {
-      "pid": 55388,
-      "record": "runs/frozen-readback/started.json",
-      "exit_code": 0,
-      "alive": false
-    },
-    {
-      "pid": 8076,
-      "record": "validation/r10-01/cases/C2/target/process-audit/read-5820effebb4343f09f1c1f3611e5144a/started.json",
-      "exit_code": 0,
-      "alive": false
-    },
-    {
-      "pid": 58044,
-      "record": "validation/r10-01/processes/C1-A/started.json",
-      "exit_code": 0,
-      "alive": false
-    },
-    {
-      "pid": 54768,
-      "record": "validation/r10-01/processes/C1-B/started.json",
-      "exit_code": 0,
-      "alive": false
-    },
-    {
-      "pid": 64532,
-      "record": "validation/r10-01/processes/C2-A/started.json",
-      "exit_code": 0,
-      "alive": false
-    },
-    {
-      "pid": 30244,
-      "record": "validation/r10-01/processes/C2-B/started.json",
-      "exit_code": 0,
-      "alive": false
-    }
-  ],
-  "current_recorded_pid_check": [
-    {
-      "pid": 8076,
-      "present": false
-    },
-    {
-      "pid": 8636,
-      "present": false
-    },
-    {
-      "pid": 30244,
-      "present": false
-    },
-    {
-      "pid": 40708,
-      "present": false
-    },
-    {
-      "pid": 54768,
-      "present": false
-    },
-    {
-      "pid": 55388,
-      "present": false
-    },
-    {
-      "pid": 58044,
-      "present": false
-    },
-    {
-      "pid": 64532,
-      "present": false
-    },
-    {
-      "pid": 66068,
-      "present": false
-    },
-    {
-      "pid": 66588,
-      "present": false
-    },
-    {
-      "pid": 68864,
-      "present": false
-    }
-  ],
-  "author_outcome": {
-    "status": "REVIEW",
-    "C1": "PASS_ONCE_TWO_LIVE_PROCESSES_BEFORE_CLAIM_COMMON_RELEASE_ONE_ACTIVE_ONE_BUSY_REFUSAL",
-    "C2": "PASS_ONCE_REAL_A_RELEASE_B_CLAIM_LIVE_OLD_A_RUN_PLAN_LEASE_REFUSAL",
-    "each_case_target_effect_count": 0,
-    "functional_reruns": 0,
-    "product_modifications": 0,
-    "field_reset_probe": "NOT_EXECUTED_NO_RERUN_VARIANT_OR_DELEGATION",
-    "I01": "NOT_RELEASED"
-  },
-  "task_document": "docs/tasks/A03-P2-R10-owner-fencing-validation.md",
-  "task_sha256": "5314105f2b1c8b773c4ceda21ed82904ea210258ecbb2406ce6cd29490c1510a",
-  "checks": [
-    "exact clean HEAD and parent",
-    "all old raw Git mode/type/blob entries unchanged",
-    "added paths restricted and complete manifest coverage",
-    "manifest and raw target blob bytes",
-    "recorded start/completion/release crosschecks and current OS PID absence",
-    "raw dispatched task identity"
-  ],
+  "author_claim": "REWORK; M five and L1 completed, L2 input driver RESOURCE_HASH; L/G/F incomplete",
+  "functional_acceptance": false,
   "product_imports": 0,
-  "functional_runs": 0,
-  "product_changes": 0,
-  "platform_actions": 0,
-  "field_reset": "NOT_EXECUTED_NO_RERUN_VARIANT_OR_DELEGATION",
-  "I01": "NOT_RELEASED"
+  "SQL_calls": 0,
+  "business_reruns": 0,
+  "release_records": [
+    {
+      "path": "docs/evidence/A03/R1/execution/candidate-1/business/cases/M1/release-execute.json",
+      "owner_id": null,
+      "owner_phase": "RELEASED",
+      "lease_until": 0.0,
+      "generation": 1,
+      "pending_count": 0,
+      "paused": false,
+      "owned_threads": [
+        "MainThread"
+      ],
+      "keeper_alive": false,
+      "owned_async_writers": 0,
+      "all_keeper_threads_released": true
+    },
+    {
+      "path": "docs/evidence/A03/R1/execution/candidate-1/business/cases/M1/release-finish.json",
+      "owner_id": null,
+      "owner_phase": "RELEASED",
+      "lease_until": 0.0,
+      "generation": 2,
+      "pending_count": 0,
+      "paused": false,
+      "owned_threads": [
+        "MainThread"
+      ],
+      "keeper_alive": null,
+      "owned_async_writers": null,
+      "all_keeper_threads_released": true
+    },
+    {
+      "path": "docs/evidence/A03/R1/execution/candidate-1/business/cases/M2-insufficient/release-execute.json",
+      "owner_id": null,
+      "owner_phase": "RELEASED",
+      "lease_until": 0.0,
+      "generation": 1,
+      "pending_count": 1,
+      "paused": true,
+      "owned_threads": [
+        "MainThread"
+      ],
+      "keeper_alive": false,
+      "owned_async_writers": 0,
+      "all_keeper_threads_released": true
+    },
+    {
+      "path": "docs/evidence/A03/R1/execution/candidate-1/business/cases/M2-insufficient/release-finish.json",
+      "owner_id": null,
+      "owner_phase": "RELEASED",
+      "lease_until": 0.0,
+      "generation": 2,
+      "pending_count": 2,
+      "paused": true,
+      "owned_threads": [
+        "MainThread"
+      ],
+      "keeper_alive": false,
+      "owned_async_writers": 0,
+      "all_keeper_threads_released": true
+    },
+    {
+      "path": "docs/evidence/A03/R1/execution/candidate-1/business/cases/M2-sufficient/release-execute.json",
+      "owner_id": null,
+      "owner_phase": "RELEASED",
+      "lease_until": 0.0,
+      "generation": 1,
+      "pending_count": 1,
+      "paused": true,
+      "owned_threads": [
+        "MainThread"
+      ],
+      "keeper_alive": false,
+      "owned_async_writers": 0,
+      "all_keeper_threads_released": true
+    },
+    {
+      "path": "docs/evidence/A03/R1/execution/candidate-1/business/cases/M2-sufficient/release-finish.json",
+      "owner_id": null,
+      "owner_phase": "RELEASED",
+      "lease_until": 0.0,
+      "generation": 2,
+      "pending_count": 1,
+      "paused": true,
+      "owned_threads": [
+        "MainThread"
+      ],
+      "keeper_alive": false,
+      "owned_async_writers": 0,
+      "all_keeper_threads_released": true
+    },
+    {
+      "path": "docs/evidence/A03/R1/execution/candidate-1/business/cases/M3-final-drift/release-execute.json",
+      "owner_id": null,
+      "owner_phase": "RELEASED",
+      "lease_until": 0.0,
+      "generation": 1,
+      "pending_count": 1,
+      "paused": true,
+      "owned_threads": [
+        "MainThread"
+      ],
+      "keeper_alive": false,
+      "owned_async_writers": 0,
+      "all_keeper_threads_released": true
+    },
+    {
+      "path": "docs/evidence/A03/R1/execution/candidate-1/business/cases/M3-final-drift/release-finish.json",
+      "owner_id": null,
+      "owner_phase": "RELEASED",
+      "lease_until": 0.0,
+      "generation": 3,
+      "pending_count": 0,
+      "paused": true,
+      "owned_threads": [
+        "MainThread"
+      ],
+      "keeper_alive": false,
+      "owned_async_writers": 0,
+      "all_keeper_threads_released": true
+    },
+    {
+      "path": "docs/evidence/A03/R1/execution/candidate-1/business/cases/M3-new-plan/release-execute.json",
+      "owner_id": null,
+      "owner_phase": "RELEASED",
+      "lease_until": 0.0,
+      "generation": 1,
+      "pending_count": 1,
+      "paused": true,
+      "owned_threads": [
+        "MainThread"
+      ],
+      "keeper_alive": false,
+      "owned_async_writers": 0,
+      "all_keeper_threads_released": true
+    },
+    {
+      "path": "docs/evidence/A03/R1/execution/candidate-1/business/cases/M3-new-plan/release-finish.json",
+      "owner_id": null,
+      "owner_phase": "RELEASED",
+      "lease_until": 0.0,
+      "generation": 3,
+      "pending_count": 0,
+      "paused": false,
+      "owned_threads": [
+        "MainThread"
+      ],
+      "keeper_alive": null,
+      "owned_async_writers": null,
+      "all_keeper_threads_released": true
+    }
+  ],
+  "process_completion_records": [
+    {
+      "path": "docs/evidence/A03/R1/execution/candidate-1/business/cases/M1/processes/execute/completed.json",
+      "value": {
+        "alive": false,
+        "elapsed_seconds": 32.84399999999732,
+        "exit_code": 0,
+        "pid": 69916,
+        "timeout": false,
+        "waited": true
+      }
+    },
+    {
+      "path": "docs/evidence/A03/R1/execution/candidate-1/business/cases/M1/processes/finish/completed.json",
+      "value": {
+        "alive": false,
+        "elapsed_seconds": 2.4219999999913853,
+        "exit_code": 0,
+        "pid": 33148,
+        "timeout": false,
+        "waited": true
+      }
+    },
+    {
+      "path": "docs/evidence/A03/R1/execution/candidate-1/business/cases/M1/target/process-audit/read-89fe48e5b52c4cfb9a2ea1ef1ba91310/completed.json",
+      "value": {
+        "alive": false,
+        "elapsed_seconds": 1.0939999999973224,
+        "exit_code": 0,
+        "pid": 20348,
+        "timeout": false
+      }
+    },
+    {
+      "path": "docs/evidence/A03/R1/execution/candidate-1/business/cases/M1/target/process-audit/read-9478407d9dcd4d47bdc309b68fd7a880/completed.json",
+      "value": {
+        "alive": false,
+        "elapsed_seconds": 0.5939999999973224,
+        "exit_code": 0,
+        "pid": 29412,
+        "timeout": false
+      }
+    },
+    {
+      "path": "docs/evidence/A03/R1/execution/candidate-1/business/cases/M2-insufficient/processes/execute/completed.json",
+      "value": {
+        "alive": false,
+        "elapsed_seconds": 16.421999999991385,
+        "exit_code": 0,
+        "pid": 49236,
+        "timeout": false,
+        "waited": true
+      }
+    },
+    {
+      "path": "docs/evidence/A03/R1/execution/candidate-1/business/cases/M2-insufficient/processes/finish/completed.json",
+      "value": {
+        "alive": false,
+        "elapsed_seconds": 4.797000000005937,
+        "exit_code": 0,
+        "pid": 74112,
+        "timeout": false,
+        "waited": true
+      }
+    },
+    {
+      "path": "docs/evidence/A03/R1/execution/candidate-1/business/cases/M2-insufficient/target/process-audit/read-16cc8ce5b50e4c288d7c6313f5d159f4/completed.json",
+      "value": {
+        "alive": false,
+        "elapsed_seconds": 0.7649999999994179,
+        "exit_code": 0,
+        "pid": 56060,
+        "timeout": false
+      }
+    },
+    {
+      "path": "docs/evidence/A03/R1/execution/candidate-1/business/cases/M2-insufficient/target/process-audit/read-308ca34ef49948cfa448e3a396181c86/completed.json",
+      "value": {
+        "alive": false,
+        "elapsed_seconds": 0.7809999999881256,
+        "exit_code": 0,
+        "pid": 52560,
+        "timeout": false
+      }
+    },
+    {
+      "path": "docs/evidence/A03/R1/execution/candidate-1/business/cases/M2-insufficient/target/process-audit/read-c2e333016ca0443ba57170cc0a86284d/completed.json",
+      "value": {
+        "alive": false,
+        "elapsed_seconds": 0.7030000000086147,
+        "exit_code": 0,
+        "pid": 2552,
+        "timeout": false
+      }
+    },
+    {
+      "path": "docs/evidence/A03/R1/execution/candidate-1/business/cases/M2-sufficient/processes/execute/completed.json",
+      "value": {
+        "alive": false,
+        "elapsed_seconds": 14.514999999999418,
+        "exit_code": 0,
+        "pid": 77264,
+        "timeout": false,
+        "waited": true
+      }
+    },
+    {
+      "path": "docs/evidence/A03/R1/execution/candidate-1/business/cases/M2-sufficient/processes/finish/completed.json",
+      "value": {
+        "alive": false,
+        "elapsed_seconds": 7.8289999999979045,
+        "exit_code": 0,
+        "pid": 51164,
+        "timeout": false,
+        "waited": true
+      }
+    },
+    {
+      "path": "docs/evidence/A03/R1/execution/candidate-1/business/cases/M2-sufficient/target/process-audit/read-439d60ae79d94ba581fc6a95ebdacd77/completed.json",
+      "value": {
+        "alive": false,
+        "elapsed_seconds": 0.6089999999967404,
+        "exit_code": 0,
+        "pid": 69416,
+        "timeout": false
+      }
+    },
+    {
+      "path": "docs/evidence/A03/R1/execution/candidate-1/business/cases/M2-sufficient/target/process-audit/read-79679f38859343b09d5d4c0e0624615b/completed.json",
+      "value": {
+        "alive": false,
+        "elapsed_seconds": 0.5780000000086147,
+        "exit_code": 0,
+        "pid": 28728,
+        "timeout": false
+      }
+    },
+    {
+      "path": "docs/evidence/A03/R1/execution/candidate-1/business/cases/M2-sufficient/target/process-audit/read-8648b39a0aaa410491feaa07832e069a/completed.json",
+      "value": {
+        "alive": false,
+        "elapsed_seconds": 0.6399999999994179,
+        "exit_code": 0,
+        "pid": 59152,
+        "timeout": false
+      }
+    },
+    {
+      "path": "docs/evidence/A03/R1/execution/candidate-1/business/cases/M2-sufficient/target/process-audit/read-a15ae3c138b94c33997acf5111fce5c8/completed.json",
+      "value": {
+        "alive": false,
+        "elapsed_seconds": 0.625,
+        "exit_code": 0,
+        "pid": 72000,
+        "timeout": false
+      }
+    },
+    {
+      "path": "docs/evidence/A03/R1/execution/candidate-1/business/cases/M2-sufficient/target/process-audit/read-c31690b03aa74acbb2415fbdacdf6899/completed.json",
+      "value": {
+        "alive": false,
+        "elapsed_seconds": 0.6880000000091968,
+        "exit_code": 0,
+        "pid": 24976,
+        "timeout": false
+      }
+    },
+    {
+      "path": "docs/evidence/A03/R1/execution/candidate-1/business/cases/M2-sufficient/target/process-audit/read-e26854f3655e4ae18d2da2bc1e688e32/completed.json",
+      "value": {
+        "alive": false,
+        "elapsed_seconds": 0.625,
+        "exit_code": 0,
+        "pid": 39548,
+        "timeout": false
+      }
+    },
+    {
+      "path": "docs/evidence/A03/R1/execution/candidate-1/business/cases/M3-final-drift/processes/execute/completed.json",
+      "value": {
+        "alive": false,
+        "elapsed_seconds": 7.235000000000582,
+        "exit_code": 0,
+        "pid": 64168,
+        "timeout": false,
+        "waited": true
+      }
+    },
+    {
+      "path": "docs/evidence/A03/R1/execution/candidate-1/business/cases/M3-final-drift/processes/finish/completed.json",
+      "value": {
+        "alive": false,
+        "elapsed_seconds": 13.422000000005937,
+        "exit_code": 0,
+        "pid": 57176,
+        "timeout": false,
+        "waited": true
+      }
+    },
+    {
+      "path": "docs/evidence/A03/R1/execution/candidate-1/business/cases/M3-final-drift/target/process-audit/read-2985b941875d44a9abbf6ca959b4c1cc/completed.json",
+      "value": {
+        "alive": false,
+        "elapsed_seconds": 0.6089999999967404,
+        "exit_code": 0,
+        "pid": 43180,
+        "timeout": false
+      }
+    },
+    {
+      "path": "docs/evidence/A03/R1/execution/candidate-1/business/cases/M3-final-drift/target/process-audit/read-32855c4b3f694f5ab455673c3cd9074d/completed.json",
+      "value": {
+        "alive": false,
+        "elapsed_seconds": 0.5780000000086147,
+        "exit_code": 0,
+        "pid": 52580,
+        "timeout": false
+      }
+    },
+    {
+      "path": "docs/evidence/A03/R1/execution/candidate-1/business/cases/M3-final-drift/target/process-audit/read-4a520af2d2294277a0bfdba23e619cf9/completed.json",
+      "value": {
+        "alive": false,
+        "elapsed_seconds": 0.5630000000091968,
+        "exit_code": 0,
+        "pid": 56548,
+        "timeout": false
+      }
+    },
+    {
+      "path": "docs/evidence/A03/R1/execution/candidate-1/business/cases/M3-final-drift/target/process-audit/read-63956543c94240518fb5adc691d590df/completed.json",
+      "value": {
+        "alive": false,
+        "elapsed_seconds": 0.625,
+        "exit_code": 0,
+        "pid": 8500,
+        "timeout": false
+      }
+    },
+    {
+      "path": "docs/evidence/A03/R1/execution/candidate-1/business/cases/M3-final-drift/target/process-audit/read-78552bb4e76a4da79925de103fed5cc4/completed.json",
+      "value": {
+        "alive": false,
+        "elapsed_seconds": 0.625,
+        "exit_code": 0,
+        "pid": 59888,
+        "timeout": false
+      }
+    },
+    {
+      "path": "docs/evidence/A03/R1/execution/candidate-1/business/cases/M3-new-plan/processes/execute/completed.json",
+      "value": {
+        "alive": false,
+        "elapsed_seconds": 9.764999999999418,
+        "exit_code": 0,
+        "pid": 57924,
+        "timeout": false,
+        "waited": true
+      }
+    },
+    {
+      "path": "docs/evidence/A03/R1/execution/candidate-1/business/cases/M3-new-plan/processes/finish/completed.json",
+      "value": {
+        "alive": false,
+        "elapsed_seconds": 41.5630000000092,
+        "exit_code": 0,
+        "pid": 37348,
+        "timeout": false,
+        "waited": true
+      }
+    },
+    {
+      "path": "docs/evidence/A03/R1/execution/candidate-1/business/cases/M3-new-plan/target/process-audit/read-0791537742a64f38bd0e3d4fbb808e69/completed.json",
+      "value": {
+        "alive": false,
+        "elapsed_seconds": 0.5939999999973224,
+        "exit_code": 0,
+        "pid": 63432,
+        "timeout": false
+      }
+    },
+    {
+      "path": "docs/evidence/A03/R1/execution/candidate-1/business/cases/M3-new-plan/target/process-audit/read-16932d4eaaac46eba8fec303d3448bb2/completed.json",
+      "value": {
+        "alive": false,
+        "elapsed_seconds": 0.5620000000053551,
+        "exit_code": 0,
+        "pid": 71448,
+        "timeout": false
+      }
+    },
+    {
+      "path": "docs/evidence/A03/R1/execution/candidate-1/business/cases/M3-new-plan/target/process-audit/read-1769888bd85f46f6a62ba412345043eb/completed.json",
+      "value": {
+        "alive": false,
+        "elapsed_seconds": 0.6089999999967404,
+        "exit_code": 0,
+        "pid": 65500,
+        "timeout": false
+      }
+    },
+    {
+      "path": "docs/evidence/A03/R1/execution/candidate-1/business/cases/M3-new-plan/target/process-audit/read-45c1a102e2794ff08bf682e8fbf2e49d/completed.json",
+      "value": {
+        "alive": false,
+        "elapsed_seconds": 0.5779999999940628,
+        "exit_code": 0,
+        "pid": 45232,
+        "timeout": false
+      }
+    },
+    {
+      "path": "docs/evidence/A03/R1/execution/candidate-1/business/cases/M3-new-plan/target/process-audit/read-464bd737f4b0442c813e5896bb8a02b3/completed.json",
+      "value": {
+        "alive": false,
+        "elapsed_seconds": 0.5780000000086147,
+        "exit_code": 0,
+        "pid": 20316,
+        "timeout": false
+      }
+    },
+    {
+      "path": "docs/evidence/A03/R1/execution/candidate-1/business/cases/M3-new-plan/target/process-audit/read-67e94c4cdd924a469a1cfd3777ac8dbe/completed.json",
+      "value": {
+        "alive": false,
+        "elapsed_seconds": 0.6879999999946449,
+        "exit_code": 0,
+        "pid": 16140,
+        "timeout": false
+      }
+    },
+    {
+      "path": "docs/evidence/A03/R1/execution/candidate-1/business/cases/M3-new-plan/target/process-audit/read-7437bfb1d9ae425181fb265f99b751fc/completed.json",
+      "value": {
+        "alive": false,
+        "elapsed_seconds": 0.5780000000086147,
+        "exit_code": 0,
+        "pid": 27000,
+        "timeout": false
+      }
+    },
+    {
+      "path": "docs/evidence/A03/R1/execution/candidate-1/business/cases/M3-new-plan/target/process-audit/read-8dbea76cbfd6466cb39187e079e1db67/completed.json",
+      "value": {
+        "alive": false,
+        "elapsed_seconds": 0.6559999999881256,
+        "exit_code": 0,
+        "pid": 74660,
+        "timeout": false
+      }
+    },
+    {
+      "path": "docs/evidence/A03/R1/execution/candidate-1/business/cases/M3-new-plan/target/process-audit/read-dda2ed3464f64f4aa8e3e9ec3ab12d52/completed.json",
+      "value": {
+        "alive": false,
+        "elapsed_seconds": 0.625,
+        "exit_code": 0,
+        "pid": 53140,
+        "timeout": false
+      }
+    },
+    {
+      "path": "docs/evidence/A03/R1/execution/candidate-1/business/cases/M3-new-plan/target/process-audit/read-e06f87699b7947999a56ec068668ec6c/completed.json",
+      "value": {
+        "alive": false,
+        "elapsed_seconds": 0.625,
+        "exit_code": 0,
+        "pid": 44880,
+        "timeout": false
+      }
+    },
+    {
+      "path": "docs/evidence/A03/R1/execution/candidate-1/business/cases/M3-new-plan/target/process-audit/read-e81bdcf657ab427cb2033965c4fa9d3c/completed.json",
+      "value": {
+        "alive": false,
+        "elapsed_seconds": 0.6089999999967404,
+        "exit_code": 0,
+        "pid": 58552,
+        "timeout": false
+      }
+    },
+    {
+      "path": "docs/evidence/A03/R1/execution/candidate-1/business/processes/M1/completed.json",
+      "value": {
+        "alive": false,
+        "elapsed_seconds": 35.46899999999732,
+        "exit_code": 0,
+        "pid": 48604,
+        "timeout": false,
+        "waited": true
+      }
+    },
+    {
+      "path": "docs/evidence/A03/R1/execution/candidate-1/business/processes/M2-insufficient/completed.json",
+      "value": {
+        "alive": false,
+        "elapsed_seconds": 21.39100000000326,
+        "exit_code": 0,
+        "pid": 43728,
+        "timeout": false,
+        "waited": true
+      }
+    },
+    {
+      "path": "docs/evidence/A03/R1/execution/candidate-1/business/processes/M2-sufficient/completed.json",
+      "value": {
+        "alive": false,
+        "elapsed_seconds": 22.562000000005355,
+        "exit_code": 0,
+        "pid": 6920,
+        "timeout": false,
+        "waited": true
+      }
+    },
+    {
+      "path": "docs/evidence/A03/R1/execution/candidate-1/business/processes/M3-final-drift/completed.json",
+      "value": {
+        "alive": false,
+        "elapsed_seconds": 20.843999999997322,
+        "exit_code": 0,
+        "pid": 16936,
+        "timeout": false,
+        "waited": true
+      }
+    },
+    {
+      "path": "docs/evidence/A03/R1/execution/candidate-1/business/processes/M3-new-plan/completed.json",
+      "value": {
+        "alive": false,
+        "elapsed_seconds": 51.48500000000058,
+        "exit_code": 0,
+        "pid": 48476,
+        "timeout": false,
+        "waited": true
+      }
+    },
+    {
+      "path": "docs/evidence/A03/R1/execution/deltas/processes/legacy/completed.json",
+      "value": {
+        "alive": false,
+        "elapsed_seconds": 0.8910000000032596,
+        "exit_code": 1,
+        "pid": 59516,
+        "timeout": false,
+        "waited": true
+      }
+    },
+    {
+      "path": "docs/evidence/A03/R1/execution/deltas-correction/processes/B/completed.json",
+      "value": {
+        "alive": false,
+        "elapsed_seconds": 1.2960000000020955,
+        "exit_code": 1,
+        "pid": 67716,
+        "timeout": false,
+        "waited": true
+      }
+    },
+    {
+      "path": "docs/evidence/A03/R1/execution/deltas-correction/processes/L1/completed.json",
+      "value": {
+        "alive": false,
+        "elapsed_seconds": 21.687999999994645,
+        "exit_code": 0,
+        "pid": 27824,
+        "timeout": false,
+        "waited": true
+      }
+    },
+    {
+      "path": "docs/evidence/A03/R1/execution/deltas-correction/processes/legacy/completed.json",
+      "value": {
+        "alive": false,
+        "elapsed_seconds": 1.1090000000112923,
+        "exit_code": 0,
+        "pid": 67076,
+        "timeout": false,
+        "waited": true
+      }
+    },
+    {
+      "path": "docs/evidence/A03/R1/execution/preflight-01/process-0/completed.json",
+      "value": {
+        "alive": false,
+        "elapsed_seconds": 1.4689999999973224,
+        "exit_code": 0,
+        "pid": 16576,
+        "timeout": false,
+        "waited": true
+      }
+    },
+    {
+      "path": "docs/evidence/A03/R1/execution/preflight-01/process-1/completed.json",
+      "value": {
+        "alive": false,
+        "elapsed_seconds": 1.2180000000080327,
+        "exit_code": 1,
+        "pid": 22792,
+        "timeout": false,
+        "waited": true
+      }
+    },
+    {
+      "path": "docs/evidence/A03/R1/execution/preflight-02/process-0/completed.json",
+      "value": {
+        "alive": false,
+        "elapsed_seconds": 1.2179999999934807,
+        "exit_code": 0,
+        "pid": 45332,
+        "timeout": false,
+        "waited": true
+      }
+    },
+    {
+      "path": "docs/evidence/A03/R1/execution/preflight-02/process-1/completed.json",
+      "value": {
+        "alive": false,
+        "elapsed_seconds": 1.1410000000032596,
+        "exit_code": 0,
+        "pid": 74312,
+        "timeout": false,
+        "waited": true
+      }
+    },
+    {
+      "path": "docs/evidence/A03/R1/execution/verification/M-assertions/completed.json",
+      "value": {
+        "alive": false,
+        "elapsed_seconds": 0.21899999999732245,
+        "exit_code": 0,
+        "pid": 73372,
+        "timeout": false,
+        "waited": true
+      }
+    }
+  ],
+  "selected_evidence": {
+    "docs/evidence/A03/R1/execution/candidate-1/business/matrix.json": {
+      "actual": [
+        {
+          "case": "M1",
+          "process": {
+            "alive": false,
+            "elapsed_seconds": 35.46899999999732,
+            "exit_code": 0,
+            "pid": 48604,
+            "timeout": false,
+            "waited": true
+          }
+        },
+        {
+          "case": "M2-sufficient",
+          "process": {
+            "alive": false,
+            "elapsed_seconds": 22.562000000005355,
+            "exit_code": 0,
+            "pid": 6920,
+            "timeout": false,
+            "waited": true
+          }
+        },
+        {
+          "case": "M2-insufficient",
+          "process": {
+            "alive": false,
+            "elapsed_seconds": 21.39100000000326,
+            "exit_code": 0,
+            "pid": 43728,
+            "timeout": false,
+            "waited": true
+          }
+        },
+        {
+          "case": "M3-new-plan",
+          "process": {
+            "alive": false,
+            "elapsed_seconds": 51.48500000000058,
+            "exit_code": 0,
+            "pid": 48476,
+            "timeout": false,
+            "waited": true
+          }
+        },
+        {
+          "case": "M3-final-drift",
+          "process": {
+            "alive": false,
+            "elapsed_seconds": 20.843999999997322,
+            "exit_code": 0,
+            "pid": 16936,
+            "timeout": false,
+            "waited": true
+          }
+        }
+      ],
+      "candidate": "6097a06d",
+      "not_run": []
+    },
+    "docs/evidence/A03/R1/execution/deltas/matrix.json": {
+      "actual": [
+        {
+          "phase": "legacy",
+          "process": {
+            "alive": false,
+            "elapsed_seconds": 0.8910000000032596,
+            "exit_code": 1,
+            "pid": 59516,
+            "timeout": false,
+            "waited": true
+          }
+        }
+      ],
+      "not_run": [
+        "L1",
+        "B",
+        "L3-execute",
+        "L3-recover",
+        "L3-second"
+      ]
+    },
+    "docs/evidence/A03/R1/execution/deltas-correction/L1/result.json": {
+      "counts": [
+        1,
+        2,
+        3,
+        2
+      ],
+      "full_book_refusal": {
+        "code": "BOOK_WRITE_PAUSED",
+        "layer": "RUNTIME",
+        "message": "current complete ledger has pending obligations"
+      },
+      "reconcile": {
+        "attempt_count": 1,
+        "call_id": "R1-L1-once",
+        "deadline_exceeded": false,
+        "paused": true,
+        "pending_count": 2,
+        "resolutions": [
+          {
+            "attempt_count": 1,
+            "classification": "MATCH",
+            "intent_elapsed_seconds": 9.328999999997905,
+            "intent_id": "intent-6951e2d22b874ce6b3d1a41d9874a8e6",
+            "last_attempt_index": 1,
+            "result_ref": {
+              "artifact_id": "resolution-052d06d4017b43799a38ce3e8222a96e",
+              "content_hash": "ca1c54b1c289da5f4d5f7125a36e395cd90222387e98db36c129eefc79a01ccb",
+              "kind": "ReconciliationResult",
+              "revision": 1
+            },
+            "status": "RESOLVED_APPLIED"
+          }
+        ],
+        "status": "HOLD_PENDING",
+        "target_effects_during_reconcile": 0
+      },
+      "report": {
+        "batch_ref": {
+          "artifact_id": "native-batch-c344941a0f01453fb57172dcf57d9a6f",
+          "content_hash": "4b528d0d7e17182c0901d163f1bbb1bfbd4257586d1548dbbe4d4b0930406736",
+          "kind": "BatchReport",
+          "revision": 1
+        },
+        "content_check_status": "PENDING",
+        "frame_structure": "FAIL",
+        "postcheck_ref": {
+          "artifact_id": "native-post-e3762a49310d4bf09e9ec000d74ee563",
+          "content_hash": "6c1b854815c657f38de0b2fdd10cb1a7bf843992986771fde8d8f9e62f83df90",
+          "kind": "CheckReport",
+          "revision": 1
+        },
+        "submission_status": "NOT_SUBMITTED"
+      },
+      "status": {
+        "owner_id": null,
+        "owner_phase": "RELEASED",
+        "lease_until": 0.0,
+        "pending_count": 2,
+        "paused": true,
+        "generation": 4
+      }
+    },
+    "docs/evidence/A03/R1/execution/deltas-correction/matrix.json": {
+      "actual": [
+        {
+          "phase": "legacy",
+          "process": {
+            "alive": false,
+            "elapsed_seconds": 1.1090000000112923,
+            "exit_code": 0,
+            "pid": 67076,
+            "timeout": false,
+            "waited": true
+          }
+        },
+        {
+          "phase": "L1",
+          "process": {
+            "alive": false,
+            "elapsed_seconds": 21.687999999994645,
+            "exit_code": 0,
+            "pid": 27824,
+            "timeout": false,
+            "waited": true
+          }
+        },
+        {
+          "phase": "B",
+          "process": {
+            "alive": false,
+            "elapsed_seconds": 1.2960000000020955,
+            "exit_code": 1,
+            "pid": 67716,
+            "timeout": false,
+            "waited": true
+          }
+        }
+      ],
+      "not_run": [
+        "L3-execute",
+        "L3-recover",
+        "L3-second"
+      ]
+    },
+    "docs/evidence/A03/R1/execution/process-release-audit-final.json": {
+      "checked_at": "2026-10-18T14:26:15.0041596+08:00",
+      "recorded_ids": [
+        2552,
+        6920,
+        8500,
+        16140,
+        16576,
+        16936,
+        20316,
+        20348,
+        22792,
+        24976,
+        27000,
+        27824,
+        28728,
+        29412,
+        33148,
+        37348,
+        39548,
+        43180,
+        43728,
+        44880,
+        45232,
+        45332,
+        48476,
+        48604,
+        49236,
+        51164,
+        52560,
+        52580,
+        53140,
+        56060,
+        56548,
+        57176,
+        57924,
+        58552,
+        59152,
+        59516,
+        59888,
+        63432,
+        64168,
+        65500,
+        67076,
+        67716,
+        69416,
+        69916,
+        71448,
+        72000,
+        73372,
+        74112,
+        74312,
+        74660,
+        77264
+      ],
+      "currently_alive_ids": [],
+      "excluded_current_audit_pid": 47576,
+      "prior_sample_note": "PID 28728 was gone at the next check; PID reuse by the audit shell is not a surviving test process",
+      "method": "Get-Process read-only audit; no signals or state changes"
+    },
+    "docs/evidence/A03/R1/execution/verification/result.json": {
+      "summary_keys": [
+        "M",
+        "continued_ledger_release",
+        "dispatch_sum",
+        "no_new_B_registration",
+        "original_failure_scenes_opened",
+        "primary_sqlite_opened",
+        "processes"
+      ],
+      "byte_length_of_parsed_evidence": 32763,
+      "details_referenced_at_fixed_commit": "54e86adfaf144093a688b62fe0dad5190ceb2fa6"
+    }
+  },
+  "process_summary": {
+    "records": 51,
+    "recorded_alive": 0,
+    "missing_waited_flag": 27
+  }
 }
