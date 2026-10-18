@@ -1,5 +1,7 @@
 # A 侧开发调度与验收
 
+2026-10-18 当前收口：A06第二最终候选已完成[独立验收](tasks/A06-second-final-review-report.md)、[调度接受](tasks/A06-coordinator-acceptance.md)，并在 `61695306a97e90ea2d69b21c9dfe096f8a641081` [本地集成](tasks/A06-local-integration.md)。122新增路径与固定交付原字节一致，原主线全部路径保全，3项窄字段集成检查通过。作者/独立验收均释放，不再续派或重跑。I01-A有限合成链已集成；[给B的确认消息](b-minimal-integration-confirmation-2026-10-18.md)由用户转发，共同映射、准入、合格真实单题与实际共享仍待确认。下方A06 REVIEW/REWORK段落均为历史；只读HOLD通过不代表正向业务通过，A04真实平台阻断保持。
+
 2026-10-18 17:09 最新调度结论：I01-A已完成独立和调度有限接受，并在 `f356dde53bf9cc852eb35fc3710c884c397ce6c5` [本地集成](tasks/I01-A-local-integration.md)，只覆盖A01公共离线消费和N/E/U合成三路径。A06第一候选独立REWORK，唯一F01为中间stage result缺少独立版本/kind校验；已按[第二最终纠正](tasks/A06-second-final-correction.md)续派原作者，固定交付释放后再复验差量。下文旧REVIEW/未集成表述均为历史时点，不重复派发。B只读接收待A06接受；正向业务仍待共同映射/准入/合格样例。
 
 2026-10-18 16:49 最新调度结论：A03-R1 原有限离线范围已完成独立与调度接受，并在 `a1c3c3b2d452ecbdf5c57a8b7372e7d53de0f8d8` 本地集成，见[集成记录](tasks/A03-R1-local-integration.md)。I01-A 固定交付 `3fdc5d37e221fc73410f197605f5d7b8878182d5` 与 A06 固定交付 `761d9afed8b9d3d33851ad3d79b0bee7c294089d` 已通过交付预检及释放核对，分别按 [I01-A 派发](tasks/I01-A-review-dispatch.md)、[A06 派发](tasks/A06-review-dispatch.md)启动现有独立验收；当前均 REVIEW，尚未接受或集成。下方 A03 REWORK/等待验收段落保留历史时点，不能据此重启旧任务或撤销已记录结论；实时状态及 cursor 以调度 JSON 为准。A06 只读 HOLD 接收不等于 B 真实输出的可执行映射，后者仍待共同字段/必要引用确认、执行准入及合格单题样例。未推送或向 B 发送新材料。
