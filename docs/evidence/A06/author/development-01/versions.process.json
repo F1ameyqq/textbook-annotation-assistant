@@ -1,0 +1,21 @@
+{
+  "argv": [
+    "C:\\Users\\ASUS\\AppData\\Local\\Programs\\Python\\Python39\\python.exe",
+    "-c",
+    "import json\nfrom annotation.source.b_handoff import version_policy,HandoffError\nrows=[]\nfor kind,prefix in [('QuestionGraphTrial','b-graph-trial/'),('CheckReportTrial','b-check-trial/')]:\n for v,location,bound in [('0.4','CURRENT',False),('0.4','ARCHIVE',True),('0.5','CURRENT',False),('0.5','ARCHIVE',True),('0.6','CURRENT',False),('0.7','CURRENT',False),('9.9','CURRENT',False)]:\n  try: observed=version_policy(prefix+v,kind=kind,location=location,bound_archive=bound)\n  except HandoffError as e: observed=e.code\n  rows.append(dict(kind=kind,version=v,location=location,observed=observed))\nprint(json.dumps(rows))\n"
+  ],
+  "cwd": "D:\\1800-worktrees\\a06\\tests\\fixtures\\a06\\generated\\development-01\\foreign-cwd",
+  "environment_overrides": {
+    "GIT_NO_LAZY_FETCH": "1",
+    "PYTHONDONTWRITEBYTECODE": "1",
+    "PYTHONIOENCODING": "utf-8",
+    "PYTHONPATH": "D:\\1800-worktrees\\a06\\src"
+  },
+  "exit_code": 0,
+  "finished_unix": 1792312433.7766168,
+  "name": "versions",
+  "process_reaped": true,
+  "started_unix": 1792312433.57863,
+  "stderr_file": "versions.stderr.txt",
+  "stdout_file": "versions.stdout.txt"
+}
