@@ -2,7 +2,7 @@
   "schema_version": 1,
   "project": "D:\\1800",
   "coordinator_thread_id": "01a13f26-7567-75e1-99ee-c9d2194e78bb",
-  "updated_at": "2026-10-18T13:54:58.260819+08:00",
+  "updated_at": "2026-10-18T13:56:33.710586+08:00",
   "automation": {
     "id": "1800-a",
     "kind": "heartbeat",
@@ -7914,7 +7914,17 @@
         "product_acceptance": false,
         "workflow_commit": "8a2aa8aa0fe5a2be9d18b1926c9efb538bb518d8",
         "observed_candidate_commit": "b8c75119c556b61e36b0cc1f817dbc53044cce41",
-        "final_delivery_received": false
+        "final_delivery_received": false,
+        "timeout_interpretation": {
+          "at": "2026-10-18T13:56:33.710586+08:00",
+          "source": "docs/tasks/A03-redispatch-2026-10-18.md:25",
+          "original_scope": "Fixed single-question synthetic test subprocess watchdog45s, parent90s; later inherited by three-action M1.",
+          "business_SLA_basis": "No45-second business SLA identified in current contracts-v1/development-plan; no calibrated multi-action performance baseline supplied.",
+          "interpretation": "A watchdog timeout proves the bounded test is incomplete, not by itself a functional save/recovery defect. Duplicate full validation is independently confirmed; it does not justify treating45s as an immutable product requirement.",
+          "current_frozen_run": "Preserve existing45/90 authorization through current run and release; no mid-run budget change or automatic retry.",
+          "next_scope_principle": "Separate functional assertions from performance measurements; any future outer watchdog must be explicitly scoped for the measured workload while preserving internal lease/gate/read/currentness/UNKNOWN rules and original failures.",
+          "new_business_or_dispatch_authorized": false
+        }
       }
     }
   },
@@ -10411,6 +10421,17 @@
       "scope": "Explain accepted T1/T2 closure vs M2/M3 functional evidence pending and confirmed M1 duplicate-validation timeout; no floating-code acceptance.",
       "dispatch_result": "NO_NEW_DISPATCH_ACTIVE_EXECUTOR_UNDISTURBED",
       "tests_run": false,
+      "next_dependency": "Frozen repaired candidate, finite guard results and M functional evidence with release; then existing independent reviewer."
+    },
+    {
+      "at": "2026-10-18T13:56:33.710586+08:00",
+      "question": "Why must execution finish within45 seconds?",
+      "task_id": "A03-T3",
+      "thread_id": "01a14ccf-afa4-7260-a2a2-a47633772ae5",
+      "cursor": "625b3403-1db6-4b33-af44-f0b84067ab61:16",
+      "observed_candidate_commit": "b8c75119c556b61e36b0cc1f817dbc53044cce41",
+      "scope": "Clarify watchdog provenance and distinguish incomplete test from functional defect; current run not changed.",
+      "dispatch_result": "NO_NEW_DISPATCH_OR_RERUN",
       "next_dependency": "Frozen repaired candidate, finite guard results and M functional evidence with release; then existing independent reviewer."
     }
   ],
