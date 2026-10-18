@@ -1,5 +1,7 @@
 # 模块化开发计划与两人分工
 
+2026-10-18 用户已核准固定第1题内容、六组区域及30条单题范围处置，仅用于离线模拟，见[授权记录](approvals/A07-Q1-offline-business-approval.json)。现在推进[A07有限真实来源离线模拟](tasks/A07-Q1-offline-simulation.md)及[独立验收](tasks/A07-Q1-independent-review.md)。新路径保留真实来源 OBSERVED，目标与回执仅模拟；旧 A03 pins、A06/I01、B原件/HOLD保持。下方业务待定是此前时点；B共同采用、平台资格仍未证明。
+
 2026-10-18 Q1新输入：[A侧技术确认](b-q1-a-side-confirmation-2026-10-18.md)已固定核对B提交 `ef6ba4dd083e7fd5378e80123b2b038dd11d7052` 的单题旁文件及历史E0.1补件。样例已收到且来源/几何可追溯，未成为业务核准样例。后续具体工作是保留真实来源身份的单题HOLD适配及准入后模拟；现有A02合成专用门需要有界扩展和独立验收，不能把I01旧合成通过当作真实B正向通过。内容与单题范围政策的业务核准及双方口径确认未完成，当前无计划/模拟回执；A04真实平台阻断保持。
 
 2026-10-18 18:19 当前交接入口：[阶段二源码与调用说明](a-stage2-handoff.md)及[进展架构图](handoff/a-stage2/progress-architecture.html)已推送至 `codex/a-stage2-handoff`，确切提交 `37089f9e0229da76ae1c45461b7e63929590be56`，见[回执](tasks/A-stage2-publication-receipt.md)。远端材料可用这一依赖已解除；双方字段映射、历史引用必要性、真实单题准入/样例及B确认仍未解除。保留I01合成与A06只读HOLD的有限范围，不据此自动派正向联调或真实平台任务。

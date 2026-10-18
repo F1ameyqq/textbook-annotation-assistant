@@ -2,7 +2,7 @@
   "schema_version": 1,
   "project": "D:\\1800",
   "coordinator_thread_id": "01a13f26-7567-75e1-99ee-c9d2194e78bb",
-  "updated_at": "2026-10-18T10:21:43.073418+00:00",
+  "updated_at": "2026-10-18T19:50:26.791435+08:00",
   "automation": {
     "id": "1800-a",
     "kind": "heartbeat",
@@ -8588,6 +8588,29 @@
         "pushed": false,
         "shared_with_B": false
       }
+    },
+    "A07": {
+      "task_id": "A07",
+      "status": "DISPATCH_INTENT_RECORDED",
+      "scope": "Fixed B Q1 observed source to A-only offline six-frame plan and simulated receipt; no platform or joint B acceptance",
+      "base_commit": "2e71462dda8d225e4f41e8c6cd03a9ce7b88046a",
+      "b_commit": "ef6ba4dd083e7fd5378e80123b2b038dd11d7052",
+      "candidate_zip_sha256": "3039645ca69c2604f542c479cb180049604788a3ca28ffac1b5063dee533afac",
+      "approval_path": "docs/approvals/A07-Q1-offline-business-approval.json",
+      "approval_sha256": "cf6f675cfd98d438d7d465fc553e0ebbf1bfff71bd62f8453854f8527015cb6c",
+      "execution_document": "docs/tasks/A07-Q1-offline-simulation.md",
+      "review_document": "docs/tasks/A07-Q1-independent-review.md",
+      "execution_thread_id": null,
+      "review_thread_id": null,
+      "execution_cursor": null,
+      "review_cursor": null,
+      "max_frozen_implementation_candidates": 2,
+      "used_candidates": 0,
+      "next_dependency": "Create isolated execution and waiting independent review chats after fixed workflow commit",
+      "created_at": "2026-10-18T19:50:26.791435+08:00",
+      "retired_task_replay_authorized": false,
+      "platform_actions_authorized": false,
+      "dispatch_results": []
     }
   },
   "route": [
@@ -10845,19 +10868,43 @@
       "sent_at": "2026-10-18T17:24:05.037376+08:00",
       "returned_thread_id": "01a14e21-162e-7840-9052-501984bc3d75",
       "workflow_commit": "5989ef6733064485fee62349be889c58737cbb0d"
+    },
+    {
+      "dispatch_key": "A07:execution:q1-approved:2e71462d",
+      "task_id": "A07",
+      "role": "execution",
+      "status": "INTENT_RECORDED",
+      "created_at": "2026-10-18T19:50:26.791435+08:00",
+      "base_commit": "2e71462dda8d225e4f41e8c6cd03a9ce7b88046a",
+      "task_document": "docs/tasks/A07-Q1-offline-simulation.md",
+      "thinking": "xhigh",
+      "thread_id": null,
+      "next_dependency": "Create isolated execution chat"
+    },
+    {
+      "dispatch_key": "A07:review:q1-approved:2e71462d",
+      "task_id": "A07",
+      "role": "review",
+      "status": "INTENT_RECORDED",
+      "created_at": "2026-10-18T19:50:26.791435+08:00",
+      "base_commit": "2e71462dda8d225e4f41e8c6cd03a9ce7b88046a",
+      "task_document": "docs/tasks/A07-Q1-independent-review.md",
+      "thinking": "xhigh",
+      "thread_id": null,
+      "next_dependency": "Frozen author delivery and release"
     }
   ],
   "last_action": {
-    "at": "2026-10-18T10:19:55.496449+00:00",
-    "action": "PUBLISH_A_STAGE2_WITH_PROGRESS_ARCHITECTURE",
+    "at": "2026-10-18T19:50:26.791435+08:00",
+    "action": "RECORD_Q1_USER_APPROVAL_AND_A07_DISPATCH_INTENTS",
     "task_ids": [
-      "A-PUBLISH-02"
+      "A07"
     ],
     "thread_id": "01a13f26-7567-75e1-99ee-c9d2194e78bb",
-    "version": "37089f9e0229da76ae1c45461b7e63929590be56",
-    "scope": "A06 receiver, complete public contracts/source dependencies, fixed consumer/tests, current release entry and finite A03/I01 supplementary evidence; no new live/pending databases or failure archive. User additionally requested a diagram-design current progress architecture HTML in the same push.",
-    "dispatch_result": "USER_AUTHORIZED_NON_FORCE_SINGLE_REF_PUSH_VERIFIED",
-    "next_dependency": "User-transmitted B mapping/history requiredness/admission/qualified single-question input. Remote availability is proven; B reading or acceptance is not."
+    "version": "2e71462dda8d225e4f41e8c6cd03a9ce7b88046a",
+    "scope": "Fixed B Q1 observed source to A-only offline six-frame plan and simulated receipt; no platform or joint B acceptance",
+    "dispatch_result": "INTENTS_RECORDED_BEFORE_CREATION",
+    "next_dependency": "Create isolated execution and waiting independent review chats after fixed workflow commit"
   },
   "limitations": [
     "Current route uses mock B artifacts until independently agreed interface/artifact versions exist.",
@@ -11150,50 +11197,76 @@
     "B_availability": "AVAILABLE_IN_REMOTE_BRANCH; not messaged or confirmed"
   },
   "external_handoff_observation": {
-    "checked_at": "2026-10-17T16:57:40.564544+08:00",
-    "owner": "A coordinator",
-    "side_observed": "B",
-    "action_id": "B_HANDOFF_RECEIPT_0e5434f",
-    "coordinator_thread_id": "01a13f26-7567-75e1-99ee-c9d2194e78bb",
-    "scope": "Frozen package portability, byte/image verification and receiving-side compatibility preparation only; not B internal acceptance.",
-    "branch": "origin/b-side/readonly-book-46007447",
-    "commit": "0e5434f0ecf57152ec03f66bd7d0cf48b7c0700f",
-    "code_baseline": "c3cc2df7a0be24c125c83681c0499c0d328d78f6",
-    "a_published_handoff_commit": "a15301ef3532aca25dcd527aae1c680c1e220e9f",
-    "result": "PACKAGE_BYTES_VERIFIED_MAPPING_PENDING",
-    "package": {
-      "path": "handoffs/b/46007447/B-46007447-Q16-offline-HOLD-2026-10-17.zip",
-      "sha256": "b2bed674f87cde7fb2df4fdf31dec9ede08f494fc6190f654abda51dd4dae89d",
-      "manifest_sha256": "3952a42e5ea966a0ec039564c71dc1db242c061af807aa730ac1f7f015e8189f",
-      "run_id": "pipeline-run-0a2c03e193694ef88953f3ca08b8cde2",
-      "schema_version": "b-handoff-package-trial/0.1"
+    "task_id": "A-B-Q1-CONFIRM-01",
+    "at": "2026-10-18T19:38:17.138380+08:00",
+    "status": "A_USER_APPROVED_OFFLINE_ONLY_ADAPTER_DISPATCH_PREPARING",
+    "b_commit": "ef6ba4dd083e7fd5378e80123b2b038dd11d7052",
+    "pr_url": "https://github.com/F1ameyqq/textbook-annotation-assistant/pull/3",
+    "remote_pr_head_matches": true,
+    "a_published_consumer": "37089f9e0229da76ae1c45461b7e63929590be56",
+    "question_id": "q-e92a499995ca1bbd570a2a09",
+    "book_id": "46007447",
+    "candidate_zip_sha256": "3039645ca69c2604f542c479cb180049604788a3ca28ffac1b5063dee533afac",
+    "candidate_file_sha256": "0ce9ffb0f468ba0cc07f37978121e7f9b991b07b94335d117da3e8ea241aea5c",
+    "technical_checks": {
+      "static_checks": 258,
+      "failures": 0,
+      "source_images": 2,
+      "crops": 13,
+      "semantic_groups": 6,
+      "native_fragments": 7,
+      "scope_issues": 31,
+      "proof_objects": 78,
+      "historical_E01_received_and_identity_matched": true
     },
-    "checks": {
-      "manifest_entries": 103,
-      "zip_members": 104,
-      "stages": 14,
-      "historical_receipt_hashes": 44,
-      "inline_consumed_members": 95,
-      "fully_decoded_images": 38,
-      "B_verifier_exit": 0,
-      "B_helper_self_tests": 3,
-      "A_public_consumer_run": false,
-      "shared_mapping_confirmed": false,
-      "full_suite_run": false,
-      "evidence": "docs/evidence/coordinator/b-handoff-0e5434f/package-audit.json",
-      "reference_classification": "docs/evidence/coordinator/b-handoff-0e5434f/reference-resolution.json"
-    },
-    "receipt_document": "docs/b-handoff-receipt-2026-10-17.md",
-    "receipt_sha256": "2d1906e7d22cd6722dba32a4dfe1a6eba863ae7c923b04bc8d0bacbfc4a27097",
-    "observed_limits": [
-      "Business HOLD remains: 34 question candidates, 66 answer candidates, 127 issues. No full chapter or content-quality acceptance.",
-      "B native trial envelope/reference shapes differ from A public contract; exact limited reader mapping remains to be confirmed.",
-      "One historical b-evidence reference lacks a located envelope in package JSON; clarify whether required input or optional lineage.",
-      "Three B helper self-tests do not establish full A receiving-entry rejection behavior.",
-      "Requirement original and explicit shared interface confirmation are not newly supplied in this package."
+    "confirmation_document": "docs/b-q1-a-side-confirmation-2026-10-18.md",
+    "business_acceptance": true,
+    "scope_policy_business_approval": true,
+    "joint_adoption_confirmed": false,
+    "c01_execution_eligible": false,
+    "new_receiver_implemented": false,
+    "plan_created": false,
+    "mock_executed": false,
+    "platform_actions": 0,
+    "b_scripts_executed": 0,
+    "message_sent_to_B": false,
+    "pushed": false,
+    "agents": [
+      "/root/q1_contract_mapping_audit",
+      "/root/q1_package_scope_audit"
     ],
-    "next_dependency": "Agree narrow B-native read-only/HOLD receiving map and historical reference treatment, then separate A implementation and independent review. This offline slice does not require A03 recovery completion.",
-    "dispatch_result": "No B message/task, no A duplicate chat; no merge/push, platform action or model call. A03 reviewer continues unchanged."
+    "scope": "Fixed-source technical confirmation only; original A06/I01 and B records unchanged.",
+    "next_dependencies": [
+      "A07 bounded observed-source adapter and independent acceptance for A-local offline simulation",
+      "B joint adoption remains unconfirmed; not a claim of joint acceptance",
+      "A04 live platform still blocked"
+    ],
+    "evidence_files": [
+      {
+        "path": "docs/evidence/coordinator/b-q1-confirmation-20261018/independent-package-scope-audit.json",
+        "sha256": "01f33ddb7f8aed89a2545defc92e5215231b1ee0c08c13b0acc14356b0fdeb69"
+      },
+      {
+        "path": "docs/evidence/coordinator/b-q1-confirmation-20261018/independent_package_scope_audit.py",
+        "sha256": "e756624cfbfdab1ed452a32b107eeaee97238ca522614d4a49c3b36b1bb9e4a1"
+      },
+      {
+        "path": "docs/evidence/coordinator/b-q1-confirmation-20261018/history-binding.json",
+        "sha256": "fc1267b7287af000e7294bd6228b3a567a2756c04dace035e3def95cd94c76fe"
+      }
+    ],
+    "automation_updated": true,
+    "business_decision_requested": true,
+    "business_decision_status": "APPROVED_DIRECT_USER_REPLY",
+    "agents_status": "BOTH_COMPLETED_READ_ONLY",
+    "local_confirmation_commit": "2e71462dda8d225e4f41e8c6cd03a9ce7b88046a",
+    "technical_confirmation_historical_status": "TECHNICAL_CONFIRMATION_COMPLETE_EXECUTION_HOLD",
+    "business_approval_scope": "FIXED_Q1_A_SIDE_OFFLINE_SIMULATION_ONLY",
+    "business_approval_record": "docs/approvals/A07-Q1-offline-business-approval.json",
+    "business_approval_sha256": "cf6f675cfd98d438d7d465fc553e0ebbf1bfff71bd62f8453854f8527015cb6c",
+    "business_approved_at": "2026-10-18T19:50:26.791435+08:00",
+    "independent_human_visual_review_proven": false,
+    "platform_eligible": false
   },
   "partner_handoff_document": {
     "requested_at": "2026-10-17T13:38:17.014529+08:00",
@@ -11284,14 +11357,115 @@
       ],
       "next_dependency": "Agree a small complete real artifact package and requirement version, then A public validator and mock consumer can check compatibility.",
       "dispatch_result": "No B messages or tasks; no branch merge, push, platform activity, or paid model calls."
+    },
+    {
+      "at": "2026-10-18T19:31:57.768608+08:00",
+      "task_id": "A-B-Q1-CONFIRM-01",
+      "status": "REVIEWING_FIXED_B_SIDECAR_HOLD",
+      "b_commit": "ef6ba4dd083e7fd5378e80123b2b038dd11d7052",
+      "pr": 3,
+      "remote_pr_head_matches": true,
+      "scope": "Read-only six-item technical compatibility confirmation; no plan, mock, platform, B message or business approval.",
+      "agents": [
+        "/root/q1_contract_mapping_audit"
+      ],
+      "next_dependency": "Exact blob acquisition in partial clone, candidate assets and policy audit"
+    },
+    {
+      "task_id": "A-B-Q1-CONFIRM-01",
+      "at": "2026-10-18T19:38:17.138380+08:00",
+      "status": "TECHNICAL_CONFIRMATION_COMPLETE_EXECUTION_HOLD",
+      "b_commit": "ef6ba4dd083e7fd5378e80123b2b038dd11d7052",
+      "pr_url": "https://github.com/F1ameyqq/textbook-annotation-assistant/pull/3",
+      "remote_pr_head_matches": true,
+      "a_published_consumer": "37089f9e0229da76ae1c45461b7e63929590be56",
+      "question_id": "q-e92a499995ca1bbd570a2a09",
+      "book_id": "46007447",
+      "candidate_zip_sha256": "3039645ca69c2604f542c479cb180049604788a3ca28ffac1b5063dee533afac",
+      "candidate_file_sha256": "0ce9ffb0f468ba0cc07f37978121e7f9b991b07b94335d117da3e8ea241aea5c",
+      "technical_checks": {
+        "static_checks": 258,
+        "failures": 0,
+        "source_images": 2,
+        "crops": 13,
+        "semantic_groups": 6,
+        "native_fragments": 7,
+        "scope_issues": 31,
+        "proof_objects": 78,
+        "historical_E01_received_and_identity_matched": true
+      },
+      "confirmation_document": "docs/b-q1-a-side-confirmation-2026-10-18.md",
+      "business_acceptance": false,
+      "scope_policy_business_approval": false,
+      "joint_adoption_confirmed": false,
+      "c01_execution_eligible": false,
+      "new_receiver_implemented": false,
+      "plan_created": false,
+      "mock_executed": false,
+      "platform_actions": 0,
+      "b_scripts_executed": 0,
+      "message_sent_to_B": false,
+      "pushed": false,
+      "agents": [
+        "/root/q1_contract_mapping_audit",
+        "/root/q1_package_scope_audit"
+      ],
+      "scope": "Fixed-source technical confirmation only; original A06/I01 and B records unchanged.",
+      "next_dependencies": [
+        "Business approval of candidate content/regions/relation and single-question scope policy",
+        "Joint adoption of A six-item technical response",
+        "Bounded A OBSERVED-source to SIMULATED-target adapter and independent acceptance; retain HOLD before admission"
+      ],
+      "evidence_files": [
+        {
+          "path": "docs/evidence/coordinator/b-q1-confirmation-20261018/independent-package-scope-audit.json",
+          "sha256": "01f33ddb7f8aed89a2545defc92e5215231b1ee0c08c13b0acc14356b0fdeb69"
+        },
+        {
+          "path": "docs/evidence/coordinator/b-q1-confirmation-20261018/independent_package_scope_audit.py",
+          "sha256": "e756624cfbfdab1ed452a32b107eeaee97238ca522614d4a49c3b36b1bb9e4a1"
+        },
+        {
+          "path": "docs/evidence/coordinator/b-q1-confirmation-20261018/history-binding.json",
+          "sha256": "fc1267b7287af000e7294bd6228b3a567a2756c04dace035e3def95cd94c76fe"
+        }
+      ]
     }
   ],
   "last_heartbeat": {
-    "at": "2026-10-18T17:55:33.806337+08:00",
-    "trigger": "2026-10-18T09:54:27.026Z",
-    "automation_id": "1800-a",
-    "decision": "DONT_NOTIFY",
-    "reason": "No material change. Finite offline tasks remain integrated; waiting external confirmation or explicit sharing request. No closed-thread polling, tests or dispatch."
+    "at": "2026-10-18T11:25:12.750304+00:00",
+    "triggered_at": "2026-10-18T11:24:33.217Z",
+    "action": "QUIET_EXTERNAL_DEPENDENCY_CHECK",
+    "task_ids": [
+      "A03-R1",
+      "I01-A",
+      "A06",
+      "A-PUBLISH-02"
+    ],
+    "coordinator_thread_id": "01a13f26-7567-75e1-99ee-c9d2194e78bb",
+    "status": "UNCHANGED_WAITING_EXTERNAL_CONFIRMATION",
+    "local_head": "257fed7d694dac6b8b450dc6cebd0d6f21d9791c",
+    "published_commit": "37089f9e0229da76ae1c45461b7e63929590be56",
+    "scope": "Read current coordination documents and state; verify local Git refs, publication receipt and diagram digest. No acceptance or product changes.",
+    "active_execution_or_review_threads": [],
+    "cursors_preserved": true,
+    "wait_threads_called": false,
+    "wait_threads_reason": "No still-dependent active registered execution or review; closed threads are not polled.",
+    "tests_run": 0,
+    "new_dispatches": 0,
+    "pushes": 0,
+    "message_sent_to_B": false,
+    "next_dependency": "User-transmitted shared mapping, history requiredness, execution admission and qualified real single-question input. A04 live blockers remain.",
+    "dispatch_result": "NO_NEW_DISPATCH",
+    "documents_sha256": {
+      "AGENTS.md": "cca9a72acb443902a010677dcead1c046d2cde149aa2fb9b832cff28eb3202c0",
+      "docs/coordination.md": "23e0400177e68a2cdaac409d90d079906ecce44ca3ab8bcb5c62e39b558b08a4",
+      "docs/development-plan.md": "5abfe866d131ea15bafe5e91e96ad35232236084ce72ab86f227ba69b571b672"
+    },
+    "artifact_digest_matches": true,
+    "remote_repolled": false,
+    "documents_unchanged": true,
+    "receipt_matches": true
   },
   "interactive_progress_history": [
     {
@@ -11445,7 +11619,7 @@
     "scope": "A06 and I01 finite scope integrated; no active work; quiet external mapping/sample wait, A04 live blockers preserved; no repeat closed task polling."
   },
   "current_handoff_status": {
-    "at": "2026-10-18T10:19:55.496449+00:00",
+    "at": "2026-10-18T19:38:17.138380+08:00",
     "B_status": "PENDING_A_AS_LAST_REPORTED_BY_B; NOT_UNILATERALLY_CLOSED",
     "A_public_API": "FIXED_SOURCE_IMPORT_AND_CONSUMERS_VERIFIED; A06_PUBLISHED",
     "B_native_receiver": "ACCEPTED_AND_LOCAL_INTEGRATED_FIXED_READONLY_HOLD_REFUSAL",
@@ -11455,17 +11629,19 @@
       "0.6": "UNSUPPORTED_VERSION; no full received positive objects",
       "0.7": "FIXED_CURRENT_G_AND_CHECK_LIMITED_READONLY_HOLD_ACCEPTED; NOT_EXECUTION_ELIGIBLE"
     },
-    "history_requiredness": "UNCONFIRMED",
-    "shared_mapping": "UNCONFIRMED",
+    "history_requiredness": "E01_EXACT_ORIGINAL_RECEIVED; DIRECT_FROZEN_CONSUMPTION_NO_REEXECUTION; EARLY_REBUILD_REQUIRES_ORIGINAL; OLD_A06_RECEIPT_UNCHANGED",
+    "shared_mapping": "A_Q1_TECHNICAL_RESPONSE_RECORDED; JOINT_ADOPTION_AND_BUSINESS_POLICY_PENDING",
     "local_integration": "61695306a97e90ea2d69b21c9dfe096f8a641081",
     "new_material_pushed": true,
     "message_sent_to_B": false,
-    "executable_B_to_A_mapping": "NOT_IMPLEMENTED_OR_ACCEPTED; current native runtime is A_INTERNAL_FIXED_SYNTHETIC_ONLY",
+    "executable_B_to_A_mapping": "BOUNDED_OBSERVED_TO_SIMULATED_ADAPTER_NOT_YET_IMPLEMENTED; EXISTING_A02_SYNTHETIC_ONLY",
     "minimum_B_readonly_entry": "Fixed receiver and source-mode handoff are available on the verified remote branch; B interpretation and acceptance remain unconfirmed.",
     "I01_A": "FINITE_OFFLINE_INTEGRATED",
-    "next_confirmation_message": "docs/b-minimal-integration-confirmation-2026-10-18.md",
+    "next_confirmation_message": "docs/b-q1-a-side-confirmation-2026-10-18.md",
     "published_branch": "codex/a-stage2-handoff",
-    "published_commit": "37089f9e0229da76ae1c45461b7e63929590be56"
+    "published_commit": "37089f9e0229da76ae1c45461b7e63929590be56",
+    "real_single_question_sample": "Q1_FIXED_CANDIDATE_RECEIVED_AND_STATICALLY_VERIFIED; HOLD_NOT_BUSINESS_APPROVED",
+    "Q1_confirmation_task": "A-B-Q1-CONFIRM-01"
   },
   "current_batch_closure": {
     "at": "2026-10-18T10:19:55.496449+00:00",
@@ -11474,18 +11650,19 @@
       "I01-A",
       "A06"
     ],
-    "status": "FINITE_OFFLINE_TASKS_INTEGRATED",
+    "status": "A07_NEW_BOUNDED_SCOPE_AUTHORIZED",
     "active_execution_or_review_threads": [],
     "open_external_dependencies": [
-      "Shared B mapping and history requiredness",
-      "Real single-question admission and fixture"
+      "B joint adoption remains unconfirmed",
+      "A04 live platform remains BLOCKED"
     ],
     "other_route_blockers": [
       "A04 live R01-R06/S01 remain BLOCKED; no current bounded live dispatch"
     ],
     "whole_project_complete": false,
-    "automatic_new_task_authorized_now": false,
-    "publication_commit": "37089f9e0229da76ae1c45461b7e63929590be56"
+    "automatic_new_task_authorized_now": true,
+    "publication_commit": "37089f9e0229da76ae1c45461b7e63929590be56",
+    "next_preparable_scope": "A07 fixed Q1 observed source to simulated target"
   },
   "publication_stage2": {
     "task_id": "A-PUBLISH-02",

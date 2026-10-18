@@ -1,5 +1,9 @@
 # 第1题旁文件：A侧技术确认与准入边界
 
+2026-10-18 用户已核准固定第1题内容、六组区域及30条单题范围处置，仅用于离线模拟，见[授权记录](approvals/A07-Q1-offline-business-approval.json)。现在推进[A07有限真实来源离线模拟](tasks/A07-Q1-offline-simulation.md)及[独立验收](tasks/A07-Q1-independent-review.md)。新路径保留真实来源 OBSERVED，目标与回执仅模拟；旧 A03 pins、A06/I01、B原件/HOLD保持。下方业务待定是此前时点；B共同采用、平台资格仍未证明。
+
+以下为此前固定技术确认记录，保留其时点结论；历史证据文件不回写。
+
 任务 `A-B-Q1-CONFIRM-01`，2026-10-18。针对用户转发的 [PR #3](https://github.com/F1ameyqq/textbook-annotation-assistant/pull/3)，本次实际查询到的 PR 头为 `ef6ba4dd083e7fd5378e80123b2b038dd11d7052`，与指定版本一致。只读检查固定提交；未合并、评论或向 B 发消息。
 
 **结论：六项技术处理口径已明确，固定旁文件的来源、摘要和几何核对通过；执行准入仍为 HOLD。** 这不是人工/业务接受，也不是公共消费者已经支持新格式或正向模拟已经通过。旧 A06、I01-A、A03-R1 的范围和回执保持。
