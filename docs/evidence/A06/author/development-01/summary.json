@@ -1,0 +1,77 @@
+{
+  "all_expectations_met": false,
+  "author_only": true,
+  "background_processes_started": 0,
+  "children_reaped": 10,
+  "original_unchanged": true,
+  "outcomes": [
+    {
+      "case": "original",
+      "decision": "REJECTED",
+      "error": {
+        "code": "UNBOUND_FINAL_OUTPUT",
+        "layer": "CURRENT_BINDING",
+        "message": "['quality_ref']",
+        "path": "artifacts/pipeline-report.json"
+      },
+      "exit_code": 2,
+      "expected_matched": false,
+      "input_sha256": "b2bed674f87cde7fb2df4fdf31dec9ede08f494fc6190f654abda51dd4dae89d"
+    },
+    {
+      "case": "bad-resource",
+      "decision": "REJECTED",
+      "error": {
+        "code": "UNBOUND_FINAL_OUTPUT",
+        "layer": "CURRENT_BINDING",
+        "message": "['quality_ref']",
+        "path": "artifacts/pipeline-report.json"
+      },
+      "exit_code": 2,
+      "expected_matched": false,
+      "input_sha256": "b759b87bbe13646f23519a6f8a7ba49554ee3c5aa56f885431846eca2df2ccf1"
+    },
+    {
+      "case": "stale-check",
+      "decision": "REJECTED",
+      "error": {
+        "code": "STALE_CHECK",
+        "layer": "CURRENT_BINDING",
+        "message": "expected {'artifact_id': 'inline-graph-d995930d9d62cf20dcef6877', 'content_hash': '5054df516d5ca26c0318e0cb1864fee29e8dff737a3c10b0cb6b9082ca6a6fba', 'revision': 1}; observed {'artifact_id': 'content-graph-290905ae84afe51289f7a338', 'revision': 2, 'content_hash': '3c90194e146cf93a32ac1c022a1b04d6bfce295762cc5ce7823bb74292b6d110'}",
+        "path": "artifacts/check.json#/payload/graph_ref"
+      },
+      "exit_code": 2,
+      "expected_matched": true,
+      "input_sha256": "f7bb2786a9700169d8df31766c62ee8c94ada6fe3ea6efb7dc2dd5e76d9c0414"
+    },
+    {
+      "case": "unknown-version",
+      "decision": "REJECTED",
+      "error": {
+        "code": "UNSUPPORTED_VERSION",
+        "layer": "VERSION",
+        "message": "b-graph-trial/9.9",
+        "path": "artifacts/graph.json#/schema_version"
+      },
+      "exit_code": 2,
+      "expected_matched": true,
+      "input_sha256": "777287ec0bf0d4fed591e9a5b7af5c0bf3f1a994b8c32dfaabcaf89d2b3afd84"
+    },
+    {
+      "case": "c01-normal",
+      "exit_code": 0,
+      "expected_matched": true
+    },
+    {
+      "case": "c01-exception",
+      "exit_code": 0,
+      "expected_matched": true
+    },
+    {
+      "case": "c01-unknown",
+      "exit_code": 0,
+      "expected_matched": true
+    }
+  ],
+  "status": "REVIEW"
+}

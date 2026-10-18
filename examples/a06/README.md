@@ -1,8 +1,9 @@
 # A06：固定 B 原生包的只读接收入口
 
 本地交付状态 **REVIEW**，等待独立验收和调度决定。A 基线为
-`a1c3c3b2d452ecbdf5c57a8b7372e7d53de0f8d8`；实现冻结提交和最终交付提交见
-[执行报告](../../docs/tasks/A06-execution-report.md)。本说明未发给 B；没有共同映射确认或联合业务验收。
+`a1c3c3b2d452ecbdf5c57a8b7372e7d53de0f8d8`；实现冻结提交为
+`9076d35e81678cdba8ad8651e95a44265fdc345c`。最终交付提交仅追加本文、报告和证据，产品字节不变；
+见[执行报告](../../docs/tasks/A06-execution-report.md)。本说明未发给 B；没有共同映射确认或联合业务验收。
 
 B 包提交 `0e5434f0ecf57152ec03f66bd7d0cf48b7c0700f`，包说明代码基线
 `c3cc2df7a0be24c125c83681c0499c0d328d78f6`。仅消费固定的
