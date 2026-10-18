@@ -2,7 +2,7 @@
   "schema_version": 1,
   "project": "D:\\1800",
   "coordinator_thread_id": "01a13f26-7567-75e1-99ee-c9d2194e78bb",
-  "updated_at": "2026-10-18T12:23:48.842669+08:00",
+  "updated_at": "2026-10-18T12:41:34.818374+08:00",
   "automation": {
     "id": "1800-a",
     "kind": "heartbeat",
@@ -1947,7 +1947,7 @@
       "execution_task": "docs/tasks/A03-P2-R12-inconclusive-readback-validation.md",
       "review_task": "docs/tasks/A03-P2-R11-R1-archive-closure.md",
       "acceptance_scope": "P1 and limited R2-R6 accepted; R7 readonly product locally INTEGRATED; R8-R2 projection/N1, R8-R3 POST_HOLD/local/N1-N5, R8-R4 N6/single runtime-init control limited ACCEPTED. Whole native A03 not accepted or integrated. R9-R1 owner lifecycle and D1/standalone/borrow/D2 fixed single-question demos limited ACCEPTED at bfd7fe896a7eee663ea8e0b6cf967548d8dd8f39. R10 two live-process owner/fencing cases limited ACCEPTED at 1c26b4a8eb378af33e57668472d2071e9ea6afff. R11/R11-R1 four crash cuts limited ACCEPTED at cc5966dc58c62017a27266c40ca0cedc5c68485c; author F2/F3 intermediate binary omission remains.",
-      "next_dependency": "T1 and T2 finite scopes ACCEPTED; T3 K helper integrated and D-M adopted. M implementation running; fixed delivery/release then independent M review, followed by bounded L/G/F before A03 overall and I01-A decision.",
+      "next_dependency": "T1/T2 finite acceptance retained. T3 M1 timed out at frozen candidate; independent static failure assessment prepared. No timeout extension or replay; remaining M/L/G/F and I01 await bounded closure.",
       "dispatch_status": "NEW_SIX_CHATS_STARTED",
       "B_confirmation": "NOT_CONFIRMED",
       "workflow_commit": "77d3e123ab7247eae6f81f7acd669e3a69c934a0",
@@ -7326,19 +7326,19 @@
       }
     },
     "A03-T3": {
-      "status": "IN_PROGRESS",
+      "status": "REWORK",
       "parent_task": "A03",
-      "phase": "M_IMPLEMENTATION_RUNNING",
+      "phase": "M1_TIMEOUT_STATIC_REVIEW_PREPARED",
       "base_commit": "1330047dd29890dea0e433ff01b991f615bf78f4",
       "handoff_commit": "6b61ac9d623e76cbe6311f64d012fd04e2e03c21",
       "execution_task": "docs/tasks/A03-T3-closure-and-integration.md",
       "review_task": "docs/tasks/A03-T3-closure-and-integration.md",
       "task_sha256": "5e7337a5721ffd4f87440c630ae0e8839415ee51b4de57afc7773a41590f76f5",
-      "acceptance_scope": "Plan and mapping remain ACCEPTED; M implementation not yet delivered or accepted",
-      "next_dependency": "Existing T3 executor frozen M candidate/evidence and release, then existing independent T3 review; L/G/F remain future bounded packages.",
+      "acceptance_scope": "Prior mapping/plan ACCEPTED only; M implementation candidate not functionally accepted. M1 timeout, four scenes NOT_RUN.",
+      "next_dependency": "Independent static timeout boundary/root cause and minimal bounded remedy; coordinator then dispatches specific correction/diagnostic before any new business attempt.",
       "branch": "codex/a03-t3-closure",
       "worktree": "D:/1800-worktrees/a03-t3",
-      "worktree_status": "HANDED_BACK_TO_EXISTING_EXECUTOR",
+      "worktree_status": "CLEAN_RELEASED",
       "worktree_method": "CLI fallback after app long-path failure; explicit per-command core.longpaths=true",
       "failed_app_worktree": {
         "name": "a03-t3-closure",
@@ -7346,12 +7346,12 @@
         "reason": "Filename too long; failed paths absent and worktree list clean before fallback"
       },
       "reasoning_policy": "xhigh for new chats; model default",
-      "dispatch_status": "EXECUTION_CONTINUATION_ACKNOWLEDGED",
+      "dispatch_status": "STATIC_REVIEW_INTENT_RECORDED",
       "execution": {
         "thread_id": "01a14ccf-afa4-7260-a2a2-a47633772ae5",
         "host_id": "local",
-        "cursor": "625b3403-1db6-4b33-af44-f0b84067ab61:9",
-        "phase": "M_IMPLEMENTATION_RUNNING",
+        "cursor": "625b3403-1db6-4b33-af44-f0b84067ab61:10",
+        "phase": "M_FROZEN_REWORK_DELIVERED_RELEASED",
         "dispatch_key": "A03-T3:execution:M:62a023a",
         "thinking": "xhigh",
         "model": "USER_DEFAULT",
@@ -7359,42 +7359,27 @@
         "expected_report": "docs/tasks/A03-T3-M-execution-report.md",
         "created_at": "2026-10-18T10:20:43.837153+08:00",
         "workflow_commit": "4fa7237d1114ed2c89f65cbb28579a8956812062",
-        "turn_status": "inProgress",
-        "observed_thread_status": "active",
+        "turn_status": "completed",
+        "observed_thread_status": "idle",
         "turn_id": "01a14d2d-c4cd-7303-8182-244100c1bcc8",
-        "last_progress": "Executor reports M implementation and five-scenario driver prepared; static checks and fixed candidate precede business validation. This is progress only, not delivery or acceptance.",
-        "last_checked_at": "2026-10-18T12:23:48.842669+08:00",
-        "last_completed_turn_id": "01a14cf5-9725-7001-9933-e594ac4a5770",
-        "target_commit": "765aef597a93fe36060fce65e17b22fe1c3408b8",
+        "last_progress": "M1 timed out at 45 seconds after 2 dispatch/effects; third action RESERVED. Four remaining scenes not run. Frozen failure evidence and release checked; no business replay.",
+        "last_checked_at": "2026-10-18T12:41:34.818374+08:00",
+        "last_completed_turn_id": "01a14d2d-c4cd-7303-8182-244100c1bcc8",
+        "target_commit": "3f39a117b1b98e85c5a449a07f13b3490ef77e18",
         "working_tree_clean": true,
-        "session_released": null,
+        "session_released": true,
         "delivery_preflight": {
-          "path": "docs/evidence/coordinator/heartbeat-20261018-0322/checks.json",
-          "target_commit": "765aef597a93fe36060fce65e17b22fe1c3408b8",
-          "base_commit": "3fcdb73416142a0a85dfb951a7f839849871c549",
-          "manifest": "docs/evidence/A03/T3/execution/plan-R1/manifest.json",
-          "manifest_sha256": "02b80200878ddf09a08c603dc2a2c45bef4917764d978fc0019d58655f8b7937",
-          "report": "docs/tasks/A03-T3-integration-plan.md",
-          "report_sha256": "06689496af2b6604cd25227532ac7dec415f60b07a60df01942c3fa197548fd8",
-          "members_raw_hash_verified": 8,
-          "hash_mismatches": [],
-          "changed_paths": [
-            "docs/evidence/A03/T3/execution/plan-R1/adoption-and-count-register.json",
-            "docs/evidence/A03/T3/execution/plan-R1/audit_plan_revision.py",
-            "docs/evidence/A03/T3/execution/plan-R1/first-static-failure/audit_plan_revision.attempt-01.py",
-            "docs/evidence/A03/T3/execution/plan-R1/first-static-failure/observed-tool-return.json",
-            "docs/evidence/A03/T3/execution/plan-R1/manifest.json",
-            "docs/evidence/A03/T3/execution/plan-R1/reference-index.json",
-            "docs/evidence/A03/T3/execution/plan-R1/revision-checks.json",
-            "docs/tasks/A03-T3-integration-plan.md",
-            "docs/tasks/A03-T3-remaining-matrix.md"
-          ],
-          "product_delta": [],
+          "path": "docs/evidence/coordinator/heartbeat-20261018-0437/T3-M-delivery-preflight.json",
+          "target_commit": "3f39a117b1b98e85c5a449a07f13b3490ef77e18",
+          "candidate_commit": "c73070884476dc2edcb952d88e4f6ed356b74ae8",
+          "manifest": "docs/evidence/A03/T3/execution/M/manifest.json",
+          "manifest_sha256": "f88adb018dc19bcae5c7fcce4b566a374773207e9c6e192e0404dd8fa6e14708",
+          "report": "docs/tasks/A03-T3-M-execution-report.md",
+          "report_sha256": "7d9c35308b594c2d73d9327556f1d77b09be3cbe30b89f211df29c12758bc522",
+          "members_raw_hash_verified": 263,
           "working_tree_clean": true,
-          "old_execution_files_unchanged": 4,
-          "release_basis": "Completed author turn; documentation only, no business/SQL processes",
-          "new_plan_evidence_files": 7,
-          "functional_review": "NOT_RUN_DOCUMENT_ONLY"
+          "session_released": true,
+          "functional_acceptance": false
         },
         "delivery_history": [
           {
@@ -7445,18 +7430,19 @@
             "session_released": true,
             "last_completed_turn_id": "01a14cf5-9725-7001-9933-e594ac4a5770"
           }
-        ]
+        ],
+        "candidate_commit": "c73070884476dc2edcb952d88e4f6ed356b74ae8"
       },
       "review": {
         "thread_id": "01a14ccf-b8c3-7941-a80f-73594e7859a5",
         "host_id": "local",
         "cursor": "6edfea69-590d-4e04-b191-563639b4a645:6",
-        "phase": "PLAN_R1_COMPLETED",
-        "dispatch_key": "A03-T3:review:765aef597a93fe36060fce65e17b22fe1c3408b8",
+        "phase": "M_TIMEOUT_STATIC_REVIEW_PREPARED",
+        "dispatch_key": "A03-T3:review:M-timeout-static:3f39a117",
         "thinking": "xhigh",
         "model": "USER_DEFAULT",
-        "task_document": "docs/tasks/A03-T3-plan-R1-review-handoff.md",
-        "expected_report": "docs/tasks/A03-T3-plan-R1-review-report.md",
+        "task_document": "docs/tasks/A03-T3-M-timeout-review-handoff.md",
+        "expected_report": "docs/tasks/A03-T3-M-timeout-review-report.md",
         "created_at": "2026-10-18T10:20:45.956512+08:00",
         "workflow_commit": "0beba0d0c82376b119c46b1d35a137fde541113c",
         "turn_status": "completed",
@@ -7484,7 +7470,7 @@
         "report_sha256": "a1b6295e086adb78c49549ed8759167054b3aab971dc3ccdbb264f0edaed1c8c",
         "evidence_manifest": "docs/evidence/A03/T3/review-plan-R1/manifest.json",
         "evidence_manifest_sha256": "89b11687ddbf873d81c374dcc04bec2b400f8d8b9536b0ec84e77f2f2db45859",
-        "pending_target_commit": "765aef597a93fe36060fce65e17b22fe1c3408b8",
+        "pending_target_commit": "3f39a117b1b98e85c5a449a07f13b3490ef77e18",
         "review_history": [
           {
             "decision": "ACCEPTED_MATRIX_PLAN_REWORK",
@@ -7492,9 +7478,17 @@
             "report_sha256": "ffc1baff90e997e8a82d3dd98041229999c8cbb6609fb75574a5d834d19d3582",
             "evidence_manifest": "docs/evidence/A03/T3/review/manifest.json",
             "evidence_manifest_sha256": "9b8732c0af648fb864e2ef8fd83209aad70128435f772bc538b97dd961bcb655"
+          },
+          {
+            "decision": "ACCEPTED_PLAN_R1_ONLY",
+            "report": "docs/tasks/A03-T3-plan-R1-review-report.md",
+            "report_sha256": "a1b6295e086adb78c49549ed8759167054b3aab971dc3ccdbb264f0edaed1c8c",
+            "target_commit": "765aef597a93fe36060fce65e17b22fe1c3408b8",
+            "evidence_manifest": "docs/evidence/A03/T3/review-plan-R1/manifest.json",
+            "evidence_manifest_sha256": "89b11687ddbf873d81c374dcc04bec2b400f8d8b9536b0ec84e77f2f2db45859"
           }
         ],
-        "next_dependency": "Do not review floating code; wait for coordinator admitted fixed M candidate and session release."
+        "next_dependency": "One fixed static timeout assessment after released failed M delivery; no M2/M3 business validation dispatched."
       },
       "workflow_commit": "f7084b2e8f2e9a1fcf758f9cba56ec9c9fb1f304",
       "latest_lightweight_observation": {
@@ -7518,25 +7512,19 @@
         }
       },
       "pending_review_dispatch": {
-        "key": "A03-T3:review:765aef597a93fe36060fce65e17b22fe1c3408b8",
+        "key": "A03-T3:review:M-timeout-static:3f39a117",
         "task": "A03-T3",
         "role": "review",
-        "state": "COMPLETED",
-        "created_at": "2026-10-18T11:29:02.400442+08:00",
-        "document": "docs/tasks/A03-T3-plan-R1-review-handoff.md",
-        "document_sha256": "26bd91b633eb618f397c6dcc800d26f2754a075c45ad0ac5ae9c8f33e1cfeb86",
-        "target_commit": "765aef597a93fe36060fce65e17b22fe1c3408b8",
+        "state": "INTENT_RECORDED",
+        "created_at": "2026-10-18T12:41:34.818374+08:00",
+        "document": "docs/tasks/A03-T3-M-timeout-review-handoff.md",
+        "document_sha256": "ed878c8cdaae2aa0a9c8f432581b7d669dab7d1d53a9552d0e94cc8b56fc9ae8",
+        "target_commit": "3f39a117b1b98e85c5a449a07f13b3490ef77e18",
+        "candidate_commit": "c73070884476dc2edcb952d88e4f6ed356b74ae8",
         "thread_id": "01a14ccf-b8c3-7941-a80f-73594e7859a5",
         "host_id": "local",
         "thinking": "xhigh",
-        "scope": "C1-C4 document revision and affected references only; prior 28-item mapping retained",
-        "sent_at": "2026-10-18T11:31:27.208257+08:00",
-        "workflow_commit": "0beba0d0c82376b119c46b1d35a137fde541113c",
-        "result": "send_message_to_thread returned the registered review thread id",
-        "cursor": "6edfea69-590d-4e04-b191-563639b4a645:6",
-        "turn_id": "01a14d0e-f8a9-7382-b17e-5a8f9f7fb41d",
-        "started_observed_at": "2026-10-18T11:31:53.728294+08:00",
-        "completed_observed_at": "2026-10-18T11:40:25.362728+08:00"
+        "scope": "Read-only independent M1 timeout boundary/root-cause assessment and one bounded repair or diagnostic proposal. No business replay, timeout increase, full M acceptance or archival re-seal."
       },
       "coordinator_acceptance": {
         "at": "2026-10-18T11:40:25.362728+08:00",
@@ -7551,7 +7539,7 @@
         "key": "A03-T3:execution:M:62a023a",
         "task": "A03-T3",
         "role": "execution",
-        "state": "STARTED",
+        "state": "COMPLETED_REWORK",
         "created_at": "2026-10-18T12:02:26.870664+08:00",
         "document": "docs/tasks/A03-T3-M-implementation-handoff.md",
         "document_sha256": "19ce538a5c3d693c1a15656c4f2a0716c7f9b8916dfb4f63ae375e84a6b5211e",
@@ -7563,9 +7551,11 @@
         "sent_at": "2026-10-18T12:03:45.201854+08:00",
         "workflow_commit": "4fa7237d1114ed2c89f65cbb28579a8956812062",
         "result": "send_message_to_thread returned registered T3 execution thread id; thinking=xhigh, model omitted",
-        "cursor": "625b3403-1db6-4b33-af44-f0b84067ab61:9",
+        "cursor": "625b3403-1db6-4b33-af44-f0b84067ab61:10",
         "turn_id": "01a14d2d-c4cd-7303-8182-244100c1bcc8",
-        "started_observed_at": "2026-10-18T12:04:01.690551+08:00"
+        "started_observed_at": "2026-10-18T12:04:01.690551+08:00",
+        "completed_observed_at": "2026-10-18T12:41:34.818374+08:00",
+        "target_commit": "3f39a117b1b98e85c5a449a07f13b3490ef77e18"
       },
       "review_dispatch_history": [
         {
@@ -7581,6 +7571,27 @@
           "workflow_commit": "69ef1b3456c7c44c463c4f4fb43b6064b8cf4e09",
           "cursor": "6edfea69-590d-4e04-b191-563639b4a645:3",
           "turn_id": "01a14ce3-8217-7461-87da-dbad7e40fb9b"
+        },
+        {
+          "key": "A03-T3:review:765aef597a93fe36060fce65e17b22fe1c3408b8",
+          "task": "A03-T3",
+          "role": "review",
+          "state": "COMPLETED",
+          "created_at": "2026-10-18T11:29:02.400442+08:00",
+          "document": "docs/tasks/A03-T3-plan-R1-review-handoff.md",
+          "document_sha256": "26bd91b633eb618f397c6dcc800d26f2754a075c45ad0ac5ae9c8f33e1cfeb86",
+          "target_commit": "765aef597a93fe36060fce65e17b22fe1c3408b8",
+          "thread_id": "01a14ccf-b8c3-7941-a80f-73594e7859a5",
+          "host_id": "local",
+          "thinking": "xhigh",
+          "scope": "C1-C4 document revision and affected references only; prior 28-item mapping retained",
+          "sent_at": "2026-10-18T11:31:27.208257+08:00",
+          "workflow_commit": "0beba0d0c82376b119c46b1d35a137fde541113c",
+          "result": "send_message_to_thread returned the registered review thread id",
+          "cursor": "6edfea69-590d-4e04-b191-563639b4a645:6",
+          "turn_id": "01a14d0e-f8a9-7382-b17e-5a8f9f7fb41d",
+          "started_observed_at": "2026-10-18T11:31:53.728294+08:00",
+          "completed_observed_at": "2026-10-18T11:40:25.362728+08:00"
         }
       ],
       "coordinator_acceptance_history": [
@@ -7671,7 +7682,30 @@
           "started_observed_at": "2026-10-18T11:03:11.118584+08:00",
           "completed_observed_at": "2026-10-18T11:29:02.400442+08:00"
         }
-      ]
+      ],
+      "M_failure": {
+        "at": "2026-10-18T12:41:34.818374+08:00",
+        "target_commit": "3f39a117b1b98e85c5a449a07f13b3490ef77e18",
+        "candidate_commit": "c73070884476dc2edcb952d88e4f6ed356b74ae8",
+        "case": "M1",
+        "status": "FAILED_TIMEOUT",
+        "limit_seconds": 45,
+        "actual_seconds": 45.031,
+        "fresh_targets": 1,
+        "dispatch": 2,
+        "effects": 2,
+        "third_action": "RESERVED_NO_INTENT",
+        "not_run": [
+          "M2-sufficient",
+          "M2-insufficient",
+          "M3-new-plan",
+          "M3-final-drift"
+        ],
+        "root_cause": "UNPROVEN",
+        "business_reruns": 0,
+        "original_crash_DB_journal_retained": true,
+        "cleanup_owner_released": true
+      }
     }
   },
   "route": [
@@ -9590,7 +9624,7 @@
       "key": "A03-T3:execution:M:62a023a",
       "task": "A03-T3",
       "role": "execution",
-      "state": "STARTED",
+      "state": "COMPLETED_REWORK",
       "created_at": "2026-10-18T12:02:26.870664+08:00",
       "document": "docs/tasks/A03-T3-M-implementation-handoff.md",
       "document_sha256": "19ce538a5c3d693c1a15656c4f2a0716c7f9b8916dfb4f63ae375e84a6b5211e",
@@ -9602,18 +9636,34 @@
       "sent_at": "2026-10-18T12:03:45.201854+08:00",
       "workflow_commit": "4fa7237d1114ed2c89f65cbb28579a8956812062",
       "result": "send_message_to_thread returned registered T3 execution thread id; thinking=xhigh, model omitted",
-      "cursor": "625b3403-1db6-4b33-af44-f0b84067ab61:9",
+      "cursor": "625b3403-1db6-4b33-af44-f0b84067ab61:10",
       "turn_id": "01a14d2d-c4cd-7303-8182-244100c1bcc8",
-      "started_observed_at": "2026-10-18T12:04:01.690551+08:00"
+      "started_observed_at": "2026-10-18T12:04:01.690551+08:00",
+      "completed_observed_at": "2026-10-18T12:41:34.818374+08:00",
+      "target_commit": "3f39a117b1b98e85c5a449a07f13b3490ef77e18"
+    },
+    {
+      "key": "A03-T3:review:M-timeout-static:3f39a117",
+      "task": "A03-T3",
+      "role": "review",
+      "state": "INTENT_RECORDED",
+      "created_at": "2026-10-18T12:41:34.818374+08:00",
+      "document": "docs/tasks/A03-T3-M-timeout-review-handoff.md",
+      "document_sha256": "ed878c8cdaae2aa0a9c8f432581b7d669dab7d1d53a9552d0e94cc8b56fc9ae8",
+      "target_commit": "3f39a117b1b98e85c5a449a07f13b3490ef77e18",
+      "candidate_commit": "c73070884476dc2edcb952d88e4f6ed356b74ae8",
+      "thread_id": "01a14ccf-b8c3-7941-a80f-73594e7859a5",
+      "host_id": "local",
+      "thinking": "xhigh",
+      "scope": "Read-only independent M1 timeout boundary/root-cause assessment and one bounded repair or diagnostic proposal. No business replay, timeout increase, full M acceptance or archival re-seal."
     }
   ],
   "last_action": {
-    "at": "2026-10-18T12:23:48.842669+08:00",
-    "action": "LIGHTWEIGHT_T3_M_PROGRESS_CHECK",
+    "at": "2026-10-18T12:41:34.818374+08:00",
+    "action": "T3_M_REWORK_DELIVERY_ADMITTED_STATIC_REVIEW_INTENT",
     "task_id": "A03-T3",
-    "thread_id": "01a14ccf-afa4-7260-a2a2-a47633772ae5",
-    "dispatch_result": "NO_DISPATCH_ACTIVE_EXECUTION",
-    "next_dependency": "Existing T3 executor frozen M candidate/evidence and release, then existing independent T3 review; L/G/F remain future bounded packages."
+    "thread_id": "01a14ccf-b8c3-7941-a80f-73594e7859a5",
+    "dispatch_result": "INTENT_RECORDED_BEFORE_SEND"
   },
   "limitations": [
     "Current route uses mock B artifacts until independently agreed interface/artifact versions exist.",
@@ -9621,15 +9671,14 @@
     "Platform test is single-book serial, no book submission, no unbudgeted paid models."
   ],
   "last_check": {
-    "at": "2026-10-18T12:23:48.842669+08:00",
-    "coordinator_head": "a5fa3819015b053a95d5192bb4e540ca58d7a94a",
-    "scope": "Read current required coordination documents/state and compact T3 snapshot. M execution active, no frozen report or manifest; one preserved pre-business schema-path preparation error observed. No independent acceptance or extra dispatch due.",
-    "thread_cursor": "625b3403-1db6-4b33-af44-f0b84067ab61:9",
-    "observed_task_id": "A03-T3",
+    "at": "2026-10-18T12:41:34.818374+08:00",
+    "coordinator_head": "6edd60ed0c261d924e771d0be61aa222256ba35f",
+    "scope": "Required docs and actual Git/thread read. Frozen 263 raw members, candidate immutability, scope and recorded process/owner release verified. M1 functional failure preserved.",
+    "thread_cursor": "625b3403-1db6-4b33-af44-f0b84067ab61:10",
+    "tests_run": false,
     "business_reruns": 0,
     "product_imports": 0,
-    "tests_run": false,
-    "duplicate_dispatch": false,
+    "SQL_calls": 0,
     "root_product_integrated": false
   },
   "prepared_next_batch": {
