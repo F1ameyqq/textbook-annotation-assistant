@@ -2,7 +2,7 @@
   "schema_version": 1,
   "project": "D:\\1800",
   "coordinator_thread_id": "01a13f26-7567-75e1-99ee-c9d2194e78bb",
-  "updated_at": "2026-10-18T19:57:04.100734+08:00",
+  "updated_at": "2026-10-18T20:17:44.926106+08:00",
   "automation": {
     "id": "1800-a",
     "kind": "heartbeat",
@@ -8591,7 +8591,7 @@
     },
     "A07": {
       "task_id": "A07",
-      "status": "EXECUTING",
+      "status": "READY_FOR_INDEPENDENT_REVIEW",
       "scope": "Fixed B Q1 observed source to A-only offline six-frame plan and simulated receipt; no platform or joint B acceptance",
       "base_commit": "2e71462dda8d225e4f41e8c6cd03a9ce7b88046a",
       "b_commit": "ef6ba4dd083e7fd5378e80123b2b038dd11d7052",
@@ -8602,11 +8602,11 @@
       "review_document": "docs/tasks/A07-Q1-independent-review.md",
       "execution_thread_id": "01a14edd-f319-7b70-8993-62e04de3a2d4",
       "review_thread_id": "01a14edb-bdc9-7370-890c-3b301b6ea414",
-      "execution_cursor": "511a4b4f-1ba7-4a71-9ac5-2ba69534cf9f:1",
+      "execution_cursor": "511a4b4f-1ba7-4a71-9ac5-2ba69534cf9f:3",
       "review_cursor": "65496636-3236-4063-9ba6-c8ca5d3c3561:1",
       "max_frozen_implementation_candidates": 2,
-      "used_candidates": 0,
-      "next_dependency": "Author fixed candidate, report, raw manifest and own process release; then continue registered independent review",
+      "used_candidates": 1,
+      "next_dependency": "Send registered independent review the fixed candidate and dispatch document",
       "created_at": "2026-10-18T19:50:26.791435+08:00",
       "retired_task_replay_authorized": false,
       "platform_actions_authorized": false,
@@ -8640,14 +8640,25 @@
       "worktree": "D:/1800-worktrees/a07-q1",
       "branch": "codex/a07-q1-offline",
       "execution_host_id": "local",
-      "execution_status": "RUNNING",
+      "execution_status": "READY_FOR_REVIEW_RELEASED",
       "review_preparation": {
         "completed": true,
         "business_attempts": 0,
         "file_writes": 0,
         "released": true
       },
-      "last_snapshot_at": "2026-10-18T19:57:04.100734+08:00"
+      "last_snapshot_at": "2026-10-18T19:59:25.696887+08:00",
+      "product_candidate_commit": "6dad9b9a40a10989c102d91cf7b54f19c012015f",
+      "delivery_commit": "d2e710c817cf85505ac4fad4919dd51d1062d33a",
+      "execution_report": "docs/tasks/A07-Q1-execution-report.md",
+      "author_consumption": {
+        "complete_attempts": 1,
+        "successful_closures": 1,
+        "dispatches": 1
+      },
+      "preflight": "docs/evidence/coordinator/a07-preflight-20261018/preflight.json",
+      "preflight_result": "PASS_DELIVERY_ONLY_NOT_ACCEPTED",
+      "author_released": true
     }
   },
   "route": [
@@ -10937,38 +10948,36 @@
       "returned_thread_id": "01a14edb-bdc9-7370-890c-3b301b6ea414",
       "host_id": "local",
       "created_successfully_at": "2026-10-18T19:53:40.365633+08:00"
+    },
+    {
+      "dispatch_key": "A07:review:candidate1:d2e710c8",
+      "task_id": "A07",
+      "role": "review",
+      "action": "send_message_to_thread",
+      "thread_id": "01a14edb-bdc9-7370-890c-3b301b6ea414",
+      "host_id": "local",
+      "status": "INTENT_RECORDED",
+      "at": "2026-10-18T20:17:44.926106+08:00",
+      "candidate_commit": "6dad9b9a40a10989c102d91cf7b54f19c012015f",
+      "target_commit": "d2e710c817cf85505ac4fad4919dd51d1062d33a",
+      "task_document": "docs/tasks/A07-Q1-review-dispatch.md",
+      "thinking": "xhigh",
+      "acceptance_scope": "Fixed B Q1 observed source to A-only offline six-frame plan and simulated receipt; no platform or joint B acceptance",
+      "next_dependency": "Independent fixed report, raw manifest and release"
     }
   ],
   "last_action": {
-    "at": "2026-10-18T19:56:00.130336+08:00",
-    "action": "A07_DISPATCH_CONFIRMED_AND_AUTOMATION_UPDATED",
+    "at": "2026-10-18T20:17:44.926106+08:00",
+    "action": "A07_FIXED_DELIVERY_PREFLIGHT_AND_REVIEW_DISPATCH_INTENT",
     "task_ids": [
       "A07"
     ],
-    "thread_id": "01a13f26-7567-75e1-99ee-c9d2194e78bb",
-    "version": "2e71462dda8d225e4f41e8c6cd03a9ce7b88046a",
+    "thread_id": "01a14edd-f319-7b70-8993-62e04de3a2d4",
+    "version": "d2e710c817cf85505ac4fad4919dd51d1062d33a",
+    "cursor": "511a4b4f-1ba7-4a71-9ac5-2ba69534cf9f:3",
     "scope": "Fixed B Q1 observed source to A-only offline six-frame plan and simulated receipt; no platform or joint B acceptance",
-    "dispatch_result": [
-      {
-        "role": "review",
-        "thread_id": "01a14edb-bdc9-7370-890c-3b301b6ea414",
-        "host_id": "local",
-        "status": "CREATED",
-        "at": "2026-10-18T19:53:40.365633+08:00"
-      },
-      {
-        "role": "execution",
-        "thread_id": "01a14edd-f319-7b70-8993-62e04de3a2d4",
-        "host_id": "local",
-        "status": "CREATED",
-        "at": "2026-10-18T19:56:00.130336+08:00"
-      }
-    ],
-    "next_dependency": "Author fixed candidate, report, raw manifest and own process release; then continue registered independent review",
-    "cursor": {
-      "execution": "511a4b4f-1ba7-4a71-9ac5-2ba69534cf9f:1",
-      "review": "65496636-3236-4063-9ba6-c8ca5d3c3561:1"
-    }
+    "dispatch_result": "PREFLIGHT_PASS_REVIEW_INTENT_RECORDED",
+    "next_dependency": "Send registered independent review the fixed candidate and dispatch document"
   },
   "limitations": [
     "Current route uses mock B artifacts until independently agreed interface/artifact versions exist.",
@@ -10976,68 +10985,27 @@
     "Platform test is single-book serial, no book submission, no unbudgeted paid models."
   ],
   "last_check": {
-    "at": "2026-10-18T17:55:33.806337+08:00",
-    "trigger": "2026-10-18T09:54:27.026Z",
-    "coordinator_head": "817e6d73b939ba33db5c8050d987f1c7f2095dfa",
-    "scope": "Required coordination documents read; integration ancestry and raw-byte integration reports checked; A06 fixed author/review report, manifest and release digests unchanged. Closed threads not repolled.",
-    "task_checks": [
-      {
-        "task_id": "A03-R1",
-        "status": "INTEGRATED",
-        "integration_commit": "a1c3c3b2d452ecbdf5c57a8b7372e7d53de0f8d8",
-        "integration_is_ancestor": true,
-        "report": null,
-        "report_sha256": null,
-        "scope": "Equivalent A03 internal validation/transaction orchestration with existing SQLite/public contracts/delivery; original V01-V10/R01-R18, mapped M/L/G/F bounded delta. No functional reduction.",
-        "execution_thread_id": "01a14da3-8798-75c0-af50-ca8fec19b48c",
-        "execution_cursor": "b1048ea3-80d3-4361-bed1-9b4e3a39f600:9",
-        "review_thread_id": "01a14da3-e8f3-7991-9b05-4a3fc38e2362",
-        "review_cursor": "9f41c9c7-380d-4189-b49b-805a2b10a792:7",
-        "cursor_action": "PRESERVED_NOT_REPOLLED_CLOSED_TASK",
-        "next_dependency": "Finite offline scope integrated; I01-A and A06 now integrated. Await concrete shared real B mapping/admission/sample; no A03 repair."
-      },
-      {
-        "task_id": "I01-A",
-        "status": "INTEGRATED",
-        "integration_commit": "f356dde53bf9cc852eb35fc3710c884c397ce6c5",
-        "integration_is_ancestor": true,
-        "report": null,
-        "report_sha256": null,
-        "scope": "A01 public offline consumption and three fresh synthetic N/E/U integration paths; not real A01-native or B integration. Each execution/review max3targets/3dispatch.",
-        "execution_thread_id": "01a14e1b-adf0-7162-a8a2-0081bb07ee70",
-        "execution_cursor": "f644a9ef-4581-4d0d-be8a-42f3413b76f8:5",
-        "review_thread_id": "01a14e1c-1d38-7fb3-83f2-015b0380ea56",
-        "review_cursor": "46c8c4aa-f7e6-47c0-b60b-dfd9c7bf29dd:11",
-        "cursor_action": "PRESERVED_NOT_REPOLLED_CLOSED_TASK",
-        "next_dependency": "No further I01-A business; B positive integration requires explicit mapping/admission and qualifying real fixture. A06 remains separate."
-      },
-      {
-        "task_id": "A06",
-        "status": "INTEGRATED",
-        "integration_commit": "61695306a97e90ea2d69b21c9dfe096f8a641081",
-        "integration_is_ancestor": true,
-        "report": "docs/tasks/A06-local-integration.md",
-        "report_sha256": "77dd14c96de94a441e6507429e3daf8e1c3427d17be88cf0e805ea104455ea56",
-        "scope": "Fixed B ZIP current E0.3/G0.7/C0.7 diagnostic HOLD; historical0.4/0.5 archive only;0.6/unknown reject; original+3full-entry variants; no executable C01 conversion or joint confirmation.",
-        "execution_thread_id": "01a14e1e-23fe-7c30-81cc-74a786c6559a",
-        "execution_cursor": "150ab7c0-1874-4c17-ad14-414f8aaefab3:10",
-        "review_thread_id": "01a14e21-162e-7840-9052-501984bc3d75",
-        "review_cursor": "e271d15e-6d91-423a-b98b-61101b8238c2:1",
-        "cursor_action": "PRESERVED_NOT_REPOLLED_CLOSED_TASK",
-        "next_dependency": "User forwards B confirmation request; shared mapping, admission and qualified real single-question fixture before bounded A-side positive adapter/integration. No A06 reruns or third candidate."
-      }
+    "at": "2026-10-18T19:59:25.696887+08:00",
+    "trigger_at": "2026-10-18T11:58:29.019Z",
+    "automation_id": "1800-a",
+    "task_id": "A07",
+    "thread_id": "01a14edd-f319-7b70-8993-62e04de3a2d4",
+    "status": "EXECUTING",
+    "version": "b1c84db9d1d5603a4fd6aa5487d7c45ec6fca50a",
+    "root_head": "60b6ef79697f27e08fd01389a2c3e552957e3cdb",
+    "scope": "Fixed B Q1 observed source to A-only offline six-frame plan and simulated receipt; no platform or joint B acceptance",
+    "cursor": "511a4b4f-1ba7-4a71-9ac5-2ba69534cf9f:2",
+    "author_report_present": false,
+    "fixed_delivery_ready": false,
+    "observed_new_paths": [
+      "config/policies/a07-q1-offline-v1.json",
+      "src/annotation/source/b_q1/"
     ],
-    "active_execution_or_review_threads": [],
-    "new_threads": 0,
-    "continuations": 0,
-    "coordinator_tests_run": 0,
-    "coordinator_business_runs": 0,
-    "B_messages": 0,
-    "pushes": 0,
-    "dispatch_result": "NO_DISPATCH_NO_CHANGE_WAITING_EXTERNAL_INPUT",
-    "next_dependency": "User-transmitted B mapping/history requiredness/admission/qualified real single-question input, or explicit material-sharing request. A04 live blockers remain; no new bounded live scope.",
-    "latest_user_request_scope": "Push inventory question answered; no instruction to execute push.",
-    "whole_project_complete": false
+    "floating_code_reviewed": false,
+    "tests_run": 0,
+    "dispatch_result": "NO_DUPLICATE_DISPATCH_AUTHOR_RUNNING_REVIEW_WAITING",
+    "next_dependency": "Author fixed candidate, report, raw manifest and own process release; then continue registered independent review",
+    "decision": "DONT_NOTIFY"
   },
   "prepared_next_batch": {
     "status": "DISPATCHED",
@@ -11497,39 +11465,27 @@
     }
   ],
   "last_heartbeat": {
-    "at": "2026-10-18T11:25:12.750304+00:00",
-    "triggered_at": "2026-10-18T11:24:33.217Z",
-    "action": "QUIET_EXTERNAL_DEPENDENCY_CHECK",
-    "task_ids": [
-      "A03-R1",
-      "I01-A",
-      "A06",
-      "A-PUBLISH-02"
+    "at": "2026-10-18T19:59:25.696887+08:00",
+    "trigger_at": "2026-10-18T11:58:29.019Z",
+    "automation_id": "1800-a",
+    "task_id": "A07",
+    "thread_id": "01a14edd-f319-7b70-8993-62e04de3a2d4",
+    "status": "EXECUTING",
+    "version": "b1c84db9d1d5603a4fd6aa5487d7c45ec6fca50a",
+    "root_head": "60b6ef79697f27e08fd01389a2c3e552957e3cdb",
+    "scope": "Fixed B Q1 observed source to A-only offline six-frame plan and simulated receipt; no platform or joint B acceptance",
+    "cursor": "511a4b4f-1ba7-4a71-9ac5-2ba69534cf9f:2",
+    "author_report_present": false,
+    "fixed_delivery_ready": false,
+    "observed_new_paths": [
+      "config/policies/a07-q1-offline-v1.json",
+      "src/annotation/source/b_q1/"
     ],
-    "coordinator_thread_id": "01a13f26-7567-75e1-99ee-c9d2194e78bb",
-    "status": "UNCHANGED_WAITING_EXTERNAL_CONFIRMATION",
-    "local_head": "257fed7d694dac6b8b450dc6cebd0d6f21d9791c",
-    "published_commit": "37089f9e0229da76ae1c45461b7e63929590be56",
-    "scope": "Read current coordination documents and state; verify local Git refs, publication receipt and diagram digest. No acceptance or product changes.",
-    "active_execution_or_review_threads": [],
-    "cursors_preserved": true,
-    "wait_threads_called": false,
-    "wait_threads_reason": "No still-dependent active registered execution or review; closed threads are not polled.",
+    "floating_code_reviewed": false,
     "tests_run": 0,
-    "new_dispatches": 0,
-    "pushes": 0,
-    "message_sent_to_B": false,
-    "next_dependency": "User-transmitted shared mapping, history requiredness, execution admission and qualified real single-question input. A04 live blockers remain.",
-    "dispatch_result": "NO_NEW_DISPATCH",
-    "documents_sha256": {
-      "AGENTS.md": "cca9a72acb443902a010677dcead1c046d2cde149aa2fb9b832cff28eb3202c0",
-      "docs/coordination.md": "23e0400177e68a2cdaac409d90d079906ecce44ca3ab8bcb5c62e39b558b08a4",
-      "docs/development-plan.md": "5abfe866d131ea15bafe5e91e96ad35232236084ce72ab86f227ba69b571b672"
-    },
-    "artifact_digest_matches": true,
-    "remote_repolled": false,
-    "documents_unchanged": true,
-    "receipt_matches": true
+    "dispatch_result": "NO_DUPLICATE_DISPATCH_AUTHOR_RUNNING_REVIEW_WAITING",
+    "next_dependency": "Author fixed candidate, report, raw manifest and own process release; then continue registered independent review",
+    "decision": "DONT_NOTIFY"
   },
   "interactive_progress_history": [
     {
