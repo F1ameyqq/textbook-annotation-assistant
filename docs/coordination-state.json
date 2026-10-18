@@ -8019,7 +8019,7 @@
     },
     "A03-R1": {
       "status": "REWORK",
-      "phase": "FIXED_DELIVERY_REVIEW_DISPATCH_INTENT",
+      "phase": "FIXED_REWORK_INDEPENDENT_REVIEW_RUNNING",
       "parent_task": "A03",
       "user_authorization": "2026-10-18 user: 开始执行; same-function replacement described immediately before.",
       "base_commit": "d5f777590e72eb070af0497afdb144d60c61b95d",
@@ -8057,24 +8057,29 @@
       },
       "review": {
         "thread_id": "01a14da3-e8f3-7991-9b05-4a3fc38e2362",
-        "status": "DISPATCH_INTENT",
+        "status": "RUNNING",
         "thinking": "xhigh",
         "dispatch_key": "A03-R1:review:54e86adf",
         "host_id": "local",
         "created_at": "2026-10-18T06:13:15.014149+00:00",
-        "workflow_commit": "0476257d",
+        "workflow_commit": "07708f34",
         "task_document": "docs/tasks/A03-R1-independent-review.md",
         "expected_report": "docs/tasks/A03-R1-review-report.md",
-        "cursor": "9f41c9c7-380d-4189-b49b-805a2b10a792:1",
-        "turn_status": "completed",
-        "observed_thread_status": "idle",
-        "turn_id": "01a14da3-eea2-75f2-b436-877f62233a03",
-        "last_checked_at": "2026-10-18T06:18:34.633230+00:00",
-        "last_progress": "WAITING_FIXED_DELIVERY; no functional review yet.",
+        "cursor": "9f41c9c7-380d-4189-b49b-805a2b10a792:2",
+        "turn_status": "inProgress",
+        "observed_thread_status": "active",
+        "turn_id": "01a14db7-86ce-7643-9ba7-aca57c3cf695",
+        "last_checked_at": "2026-10-18T06:34:42.339044+00:00",
+        "last_progress": "Formal fixed-delivery review started; reviewer preparing isolated copy and separating product defects, input failures and unfinished validation.",
         "phase": "FIXED_CANDIDATE_INDEPENDENT_REVIEW",
-        "pending_target_commit": "54e86adfaf144093a688b62fe0dad5190ceb2fa6",
+        "pending_target_commit": null,
         "handoff_document": "docs/tasks/A03-R1-review-dispatch-2026-10-18.md",
-        "next_dependency": "Review fixed product and M/L1 evidence, finite independent checks and consolidated existing-matrix remaining gaps."
+        "next_dependency": "Review fixed product and M/L1 evidence, finite independent checks and consolidated existing-matrix remaining gaps.",
+        "dispatch_result": "SENT_EXISTING_THREAD",
+        "dispatch_returned_thread_id": "01a14da3-e8f3-7991-9b05-4a3fc38e2362",
+        "dispatched_at": "2026-10-18T06:34:26.197250+00:00",
+        "target_commit": "54e86adfaf144093a688b62fe0dad5190ceb2fa6",
+        "candidate_commit": "6097a06de937fee8876feccedf46920510850b83"
       },
       "next_dependency": "Existing independent reviewer fixed-delivery judgment; then one bounded consolidated correction decision within A03-R1 scope, not automatic retries or I01 release.",
       "created_at": "2026-10-18T06:08:48.379704+00:00",
@@ -8100,16 +8105,25 @@
       },
       "max_frozen_business_candidates": 2,
       "workflow_commit": "0476257d",
-      "last_checked_at": "2026-10-18T06:18:34.633230+00:00",
+      "last_checked_at": "2026-10-18T06:34:42.339044+00:00",
       "last_observation": {
-        "at": "2026-10-18T06:18:34.633230+00:00",
-        "head": "6097a06de937fee8876feccedf46920510850b83",
-        "status_porcelain": [
-          "?? docs/evidence/A03/R1/"
+        "at": "2026-10-18T06:34:26.197250+00:00",
+        "head": "54e86adfaf144093a688b62fe0dad5190ceb2fa6",
+        "status_porcelain": [],
+        "author_delivery_ready": true,
+        "author_status": "REWORK",
+        "review_dispatch_result": "SENT_EXISTING_THREAD",
+        "new_product_acceptance": false
+      },
+      "budget_interpretation_pending_review": {
+        "product_source_candidates_observed": 1,
+        "product_source_candidate": "6097a06de937fee8876feccedf46920510850b83",
+        "L_driver_freezes": [
+          "d0438c998c9e161ae7d919e2ac83ce9075a56751",
+          "456740b4360c408efdc3165e6e98b136770613ab"
         ],
-        "floating_code_reviewed": false,
-        "author_delivery_ready": false,
-        "review_dispatch_result": "NOT_DISPATCHED_WAIT_FIXED_DELIVERY"
+        "automatic_third_driver_run_authorized": false,
+        "next_step": "Independent reviewer checks run identities and remaining coverage; coordinator decides bounded consolidated correction without resetting consumed driver budget."
       }
     }
   },
@@ -10205,13 +10219,19 @@
       "dispatch_key": "A03-R1:review:54e86adf",
       "target_commit": "54e86adfaf144093a688b62fe0dad5190ceb2fa6",
       "task_document": "docs/tasks/A03-R1-review-dispatch-2026-10-18.md",
-      "status": "INTENT_RECORDED"
+      "status": "SENT",
+      "sent_at": "2026-10-18T06:34:26.197250+00:00",
+      "returned_thread_id": "01a14da3-e8f3-7991-9b05-4a3fc38e2362",
+      "workflow_commit": "07708f34"
     }
   ],
   "last_action": {
-    "at": "2026-10-18T06:33:39.076192+00:00",
+    "at": "2026-10-18T06:34:26.197250+00:00",
     "task_id": "A03-R1",
-    "action": "Verified fixed author REWORK delivery and recorded existing-reviewer continuation intent.",
+    "action": "Sent fixed REWORK candidate to existing independent review after raw hashes and release preflight; no author rerun.",
+    "review_thread_id": "01a14da3-e8f3-7991-9b05-4a3fc38e2362",
+    "workflow_commit": "07708f34",
+    "target_commit": "54e86adfaf144093a688b62fe0dad5190ceb2fa6",
     "product_acceptance": false,
     "integration": false,
     "next_dependency": "Existing independent reviewer fixed-delivery judgment; then one bounded consolidated correction decision within A03-R1 scope, not automatic retries or I01 release."
@@ -10222,26 +10242,27 @@
     "Platform test is single-book serial, no book submission, no unbudgeted paid models."
   ],
   "last_check": {
-    "at": "2026-10-18T06:18:34.633230+00:00",
-    "trigger": "2026-10-18T06:14:53.625Z",
-    "coordinator_head": "95378681d1c73061f24ccb699a5a5c17ce960f17",
-    "scope": "Required coordination documents reread, actual root and R1 Git state, registered cursor snapshots; completed old T3 static closure checked against raw Git. No floating product review or test rerun.",
-    "tasks": [
-      "A03-R1",
-      "A03-T3"
-    ],
-    "a03_r1_execution_thread_id": "01a14da3-8798-75c0-af50-ca8fec19b48c",
-    "a03_r1_execution_cursor": "b1048ea3-80d3-4361-bed1-9b4e3a39f600:2",
-    "a03_r1_review_thread_id": "01a14da3-e8f3-7991-9b05-4a3fc38e2362",
-    "a03_r1_review_cursor": "9f41c9c7-380d-4189-b49b-805a2b10a792:1",
-    "a03_r1_head": "6097a06de937fee8876feccedf46920510850b83",
-    "a03_r1_delivery_ready": false,
-    "t3_review_cursor": "6edfea69-590d-4e04-b191-563639b4a645:13",
-    "evidence": "docs/evidence/coordinator/heartbeat-20261018-0614/checks.json",
+    "at": "2026-10-18T06:34:26.197250+00:00",
+    "trigger": "2026-10-18T06:29:53.869Z",
+    "coordinator_head": "07708f34",
+    "scope": "Required coordination docs/current Git/registered cursor snapshots; fixed author delivery 1300 raw Git members and release records checked. No product/SQL/business runs.",
+    "task_id": "A03-R1",
+    "execution_thread_id": "01a14da3-8798-75c0-af50-ca8fec19b48c",
+    "execution_cursor": "b1048ea3-80d3-4361-bed1-9b4e3a39f600:6",
+    "review_thread_id": "01a14da3-e8f3-7991-9b05-4a3fc38e2362",
+    "review_cursor": "9f41c9c7-380d-4189-b49b-805a2b10a792:2",
+    "target_commit": "54e86adfaf144093a688b62fe0dad5190ceb2fa6",
+    "candidate_commit": "6097a06de937fee8876feccedf46920510850b83",
+    "delivery_preflight": "docs/evidence/coordinator/heartbeat-20261018-0629/delivery-preflight.json",
     "tests_run": false,
-    "new_dispatches": 0,
+    "business_reruns": 0,
+    "SQL_calls": 0,
+    "new_threads": 0,
+    "existing_review_continuations": 1,
     "product_integrated": false,
-    "next_dependency": "Author fixed runnable replacement and release; then continue registered independent reviewer, coordinator accept/integrate, I01-A."
+    "next_dependency": "Existing independent reviewer fixed-delivery judgment; then one bounded consolidated correction decision within A03-R1 scope, not automatic retries or I01 release.",
+    "review_turn_id": "01a14db7-86ce-7643-9ba7-aca57c3cf695",
+    "review_turn_status": "inProgress"
   },
   "prepared_next_batch": {
     "status": "DISPATCHED",
@@ -10588,11 +10609,11 @@
     }
   ],
   "last_heartbeat": {
-    "at": "2026-10-18T06:18:34.633230+00:00",
-    "trigger": "2026-10-18T06:14:53.625Z",
+    "at": "2026-10-18T06:34:26.197250+00:00",
+    "trigger": "2026-10-18T06:29:53.869Z",
     "automation_id": "1800-a",
-    "decision": "DONT_NOTIFY",
-    "reason": "A03-R1 is implementing before first frozen delivery; reviewer waiting. Old T3 static closure confirms known incomplete evidence without new defect or user action. No repeated tests or dispatch."
+    "decision": "NOTIFY",
+    "reason": "First replacement candidate delivered with M five and L1 author evidence; L2 raw-input failure and remaining gaps recorded. Existing independent review started after fixed delivery/release check."
   },
   "interactive_progress_history": [
     {
