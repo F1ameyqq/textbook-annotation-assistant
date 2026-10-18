@@ -2,7 +2,7 @@
   "schema_version": 1,
   "project": "D:\\1800",
   "coordinator_thread_id": "01a13f26-7567-75e1-99ee-c9d2194e78bb",
-  "updated_at": "2026-10-18T11:46:07.923787+08:00",
+  "updated_at": "2026-10-18T12:02:26.870664+08:00",
   "automation": {
     "id": "1800-a",
     "kind": "heartbeat",
@@ -1947,7 +1947,7 @@
       "execution_task": "docs/tasks/A03-P2-R12-inconclusive-readback-validation.md",
       "review_task": "docs/tasks/A03-P2-R11-R1-archive-closure.md",
       "acceptance_scope": "P1 and limited R2-R6 accepted; R7 readonly product locally INTEGRATED; R8-R2 projection/N1, R8-R3 POST_HOLD/local/N1-N5, R8-R4 N6/single runtime-init control limited ACCEPTED. Whole native A03 not accepted or integrated. R9-R1 owner lifecycle and D1/standalone/borrow/D2 fixed single-question demos limited ACCEPTED at bfd7fe896a7eee663ea8e0b6cf967548d8dd8f39. R10 two live-process owner/fencing cases limited ACCEPTED at 1c26b4a8eb378af33e57668472d2071e9ea6afff. R11/R11-R1 four crash cuts limited ACCEPTED at cc5966dc58c62017a27266c40ca0cedc5c68485c; author F2/F3 intermediate binary omission remains.",
-      "next_dependency": "T3 plan-R1 accepted; T2 C12/H1 independently passed but formal acceptance withheld for missing final inventory. Coordinator preserved fixed files and prepared one static archive closure. Exact K and M implementation wait for that conclusion; no business rerun.",
+      "next_dependency": "T1 and T2 finite scopes ACCEPTED; T3 K helper integrated and D-M adopted. M implementation continuation prepared; independent M review then bounded L/G/F before A03 overall and I01-A decision.",
       "dispatch_status": "NEW_SIX_CHATS_STARTED",
       "B_confirmation": "NOT_CONFIRMED",
       "workflow_commit": "77d3e123ab7247eae6f81f7acd669e3a69c934a0",
@@ -6874,16 +6874,16 @@
       }
     },
     "A03-T2": {
-      "status": "REWORK",
+      "status": "ACCEPTED",
       "parent_task": "A03",
-      "phase": "STATIC_ARCHIVE_RECHECK_RUNNING",
+      "phase": "C12_H1_AND_ARCHIVE_ACCEPTED",
       "base_commit": "1330047dd29890dea0e433ff01b991f615bf78f4",
       "handoff_commit": "6b61ac9d623e76cbe6311f64d012fd04e2e03c21",
       "execution_task": "docs/tasks/A03-T2-history-and-report.md",
       "review_task": "docs/tasks/A03-T2-history-and-report.md",
       "task_sha256": "37afb0a61597e8b7fee610c3cb7d8996f4032963660deb8a070cd5d04287a53e",
       "acceptance_scope": "C12 and one H1 history/report chain only; product baseline unchanged",
-      "next_dependency": "Coordinator preserves and freezes existing evidence without altering failed review, then one bounded static archive recheck in existing reviewer. No product or business rerun.",
+      "next_dependency": "No T2 rework remains in fixed scope. T3 uses accepted capture dependency at fixed K; whole A03 and I01 remain unaccepted.",
       "branch": "codex/a03-t2-history",
       "worktree": "D:/1800-worktrees/a03-t2",
       "worktree_status": "CLEAN_RELEASED",
@@ -6894,7 +6894,7 @@
         "reason": "Filename too long; failed paths absent and worktree list clean before fallback"
       },
       "reasoning_policy": "xhigh for new chats; model default",
-      "dispatch_status": "STATIC_RECHECK_ACKNOWLEDGED",
+      "dispatch_status": "COMPLETED",
       "execution": {
         "thread_id": "01a14ccf-9b9c-7df3-bf59-d9747f640d42",
         "host_id": "local",
@@ -7170,8 +7170,8 @@
       "review": {
         "thread_id": "01a14ccf-a5c1-71f2-a6eb-90ea011d8705",
         "host_id": "local",
-        "cursor": "846f94bd-c69f-4cac-8db1-21285fd53e6b:6",
-        "phase": "STATIC_ARCHIVE_RECHECK_RUNNING",
+        "cursor": "846f94bd-c69f-4cac-8db1-21285fd53e6b:7",
+        "phase": "STATIC_ARCHIVE_RECHECK_COMPLETED",
         "dispatch_key": "A03-T2:review:static-archive-recheck:699f748",
         "thinking": "xhigh",
         "model": "USER_DEFAULT",
@@ -7179,12 +7179,12 @@
         "expected_report": "docs/tasks/A03-T2-static-archive-review-report.md",
         "created_at": "2026-10-18T10:20:41.469170+08:00",
         "workflow_commit": "94c376914db82942ceb0246f338e5caa574cfb42",
-        "turn_status": "inProgress",
-        "observed_thread_status": "active",
+        "turn_status": "completed",
+        "observed_thread_status": "idle",
         "turn_id": "01a14d1d-3642-7880-b13e-ff7af4d0d524",
-        "last_progress": "结论：REWORK，仅封存缺口。C12 与唯一 H1 独立实测通过，业务未重跑；我编写的静态工具第二次失败，导致最终 manifest 未生成，已按停止规则保留现场。 验收报告 业务进程、keeper、owner 均已释放。A03 整体及 I01 未放行。",
-        "last_checked_at": "2026-10-18T11:46:07.923787+08:00",
-        "last_completed_turn_id": "01a14d0e-b3a0-77f0-8cdb-afed71487c40",
+        "last_progress": "Completed finite static archive closure; no further business execution or pending owned resource.",
+        "last_checked_at": "2026-10-18T11:59:06.123083+08:00",
+        "last_completed_turn_id": "01a14d1d-3642-7880-b13e-ff7af4d0d524",
         "preparation": {
           "task": "A03-T2",
           "path": "docs/tasks/A03-T2-review-preparation.md",
@@ -7192,14 +7192,25 @@
           "frozen_commit_links_for_absent_root_files": [],
           "scope": "preparation only; functional review NOT_RUN"
         },
-        "functional_review": "C12_AND_H1_PASSED_INDEPENDENTLY_BUT_FORMAL_ACCEPTANCE_WITHHELD",
+        "functional_review": "C12_H1_ACCEPTED_WITH_HISTORICAL_LIMITATIONS",
         "session_released": true,
         "pending_target_commit": "699f748a124162b3118e3996c03757725daac363",
         "handoff_document": "docs/tasks/A03-T2-review-handoff.md",
         "target_commit": "699f748a124162b3118e3996c03757725daac363",
-        "decision": "REWORK_STATIC_ARCHIVE_ONLY",
-        "report": "docs/tasks/A03-T2-review-report.md",
-        "report_sha256": "e77aa974729845c687f9ce205966e87d59250f12f7b23a4429facb4aa17ab103"
+        "decision": "ACCEPTED_FIXED_C12_H1_AND_NEW_ARCHIVE_INVENTORY_ONLY",
+        "report": "docs/tasks/A03-T2-static-archive-review-report.md",
+        "report_sha256": "19ef1aff1575a7f1546f4774dc9a57832d6de9430dfed851af341e866dcb137a",
+        "review_history": [
+          {
+            "decision": "REWORK_STATIC_ARCHIVE_ONLY",
+            "report": "docs/tasks/A03-T2-review-report.md",
+            "report_sha256": "e77aa974729845c687f9ce205966e87d59250f12f7b23a4429facb4aa17ab103",
+            "target_commit": "699f748a124162b3118e3996c03757725daac363",
+            "functional_review": "C12_AND_H1_PASSED_INDEPENDENTLY_BUT_FORMAL_ACCEPTANCE_WITHHELD"
+          }
+        ],
+        "evidence": "docs/evidence/A03/T2/review/static-archive-recheck.json",
+        "evidence_sha256": "a3f7b00da6b2a9e2923b7b5a1bf27bd60b8d625b40302d1a5db2dc25c1c6a3f8"
       },
       "workflow_commit": "f7084b2e8f2e9a1fcf758f9cba56ec9c9fb1f304",
       "latest_lightweight_observation": {
@@ -7250,7 +7261,7 @@
         "key": "A03-T2:review:static-archive-recheck:699f748",
         "task": "A03-T2",
         "role": "review",
-        "state": "STARTED",
+        "state": "COMPLETED_ACCEPTED",
         "created_at": "2026-10-18T11:43:52.161535+08:00",
         "document": "docs/tasks/A03-T2-static-archive-recheck.md",
         "document_sha256": "2eea97413cb42b1e82650a0d216bd1d1fa3100c240735eda4de75593fb0aabbc",
@@ -7263,12 +7274,13 @@
         "workflow_commit": "94c376914db82942ceb0246f338e5caa574cfb42",
         "result": "send_message_to_thread returned registered T2 review id",
         "turn_id": "01a14d1d-3642-7880-b13e-ff7af4d0d524",
-        "cursor": "846f94bd-c69f-4cac-8db1-21285fd53e6b:6",
-        "started_observed_at": "2026-10-18T11:46:07.923787+08:00"
+        "cursor": "846f94bd-c69f-4cac-8db1-21285fd53e6b:7",
+        "started_observed_at": "2026-10-18T11:46:07.923787+08:00",
+        "completed_observed_at": "2026-10-18T11:59:06.123083+08:00"
       },
       "archive_remediation": {
-        "state": "FROZEN_STATIC_RECHECK_SENT",
-        "at": "2026-10-18T11:42:51.155937+08:00",
+        "state": "ACCEPTED_NEW_INVENTORY_ONLY",
+        "at": "2026-10-18T11:59:06.123083+08:00",
         "owner": "A coordinator",
         "scope": "New coordinator-owned inventory and source-copy hash verification of completed review files only; failed reviewer manifest remains absent, scripts and reports unchanged; no business/SQL/retry of old sealer",
         "reviewer_recheck": "Single static closure check after frozen archive; no automatic retry",
@@ -7302,19 +7314,27 @@
           "started_observed_at": "2026-10-18T11:31:53.728294+08:00",
           "completed_observed_at": "2026-10-18T11:42:51.155937+08:00"
         }
-      ]
+      ],
+      "coordinator_acceptance": {
+        "at": "2026-10-18T11:59:06.123083+08:00",
+        "target_commit": "699f748a124162b3118e3996c03757725daac363",
+        "decision": "ACCEPTED_FIXED_C12_H1_AND_NEW_ARCHIVE_INVENTORY_ONLY",
+        "report": "docs/tasks/A03-T2-coordinator-acceptance.md",
+        "checks": "docs/evidence/coordinator/heartbeat-20261018-0352/T2-checks.json",
+        "product_integration": false
+      }
     },
     "A03-T3": {
-      "status": "ACCEPTED",
+      "status": "IN_PROGRESS",
       "parent_task": "A03",
-      "phase": "PLAN_ACCEPTED_WAITING_T2_K",
+      "phase": "M_IMPLEMENTATION_DISPATCH_PREPARED",
       "base_commit": "1330047dd29890dea0e433ff01b991f615bf78f4",
       "handoff_commit": "6b61ac9d623e76cbe6311f64d012fd04e2e03c21",
       "execution_task": "docs/tasks/A03-T3-closure-and-integration.md",
       "review_task": "docs/tasks/A03-T3-closure-and-integration.md",
       "task_sha256": "5e7337a5721ffd4f87440c630ae0e8839415ee51b4de57afc7773a41590f76f5",
-      "acceptance_scope": "C1-C4 plan revision and prior 28-item mapping only; functional implementation not accepted",
-      "next_dependency": "T2 independent completion and coordinator acceptance; fixed K and D-M implementation scope before product dispatch",
+      "acceptance_scope": "Plan and mapping remain ACCEPTED; M implementation not yet delivered or accepted",
+      "next_dependency": "Existing T3 executor frozen M candidate/evidence and release, then existing independent T3 review; L/G/F remain future bounded packages.",
       "branch": "codex/a03-t3-closure",
       "worktree": "D:/1800-worktrees/a03-t3",
       "worktree_status": "CLEAN_RELEASED",
@@ -7325,24 +7345,24 @@
         "reason": "Filename too long; failed paths absent and worktree list clean before fallback"
       },
       "reasoning_policy": "xhigh for new chats; model default",
-      "dispatch_status": "REVIEW_CONTINUATION_ACKNOWLEDGED",
+      "dispatch_status": "INTENT_RECORDED",
       "execution": {
         "thread_id": "01a14ccf-afa4-7260-a2a2-a47633772ae5",
         "host_id": "local",
         "cursor": "625b3403-1db6-4b33-af44-f0b84067ab61:6",
-        "phase": "FROZEN_DELIVERED_RELEASED",
-        "dispatch_key": "A03-T3:execution:plan-R1-C1-C4",
+        "phase": "M_DISPATCH_PREPARED",
+        "dispatch_key": "A03-T3:execution:M:62a023a",
         "thinking": "xhigh",
         "model": "USER_DEFAULT",
-        "task_document": "docs/tasks/A03-T3-plan-revision-handoff.md",
-        "expected_report": "docs/tasks/A03-T3-remaining-matrix.md",
+        "task_document": "docs/tasks/A03-T3-M-implementation-handoff.md",
+        "expected_report": "docs/tasks/A03-T3-M-execution-report.md",
         "created_at": "2026-10-18T10:20:43.837153+08:00",
         "workflow_commit": "b6e00eb3d0512b4ad838676d72c28e8036125301",
         "turn_status": "completed",
         "observed_thread_status": "idle",
         "turn_id": "01a14cf5-9725-7001-9933-e594ac4a5770",
         "last_progress": "Frozen delivery completed; coordinator raw-byte/scope/release admission passed; no functional acceptance yet.",
-        "last_checked_at": "2026-10-18T11:29:02.400442+08:00",
+        "last_checked_at": "2026-10-18T12:02:26.870664+08:00",
         "last_completed_turn_id": "01a14cf5-9725-7001-9933-e594ac4a5770",
         "target_commit": "765aef597a93fe36060fce65e17b22fe1c3408b8",
         "working_tree_clean": true,
@@ -7390,6 +7410,39 @@
               "product_delta": [],
               "functional_tests_run": false
             }
+          },
+          {
+            "target_commit": "765aef597a93fe36060fce65e17b22fe1c3408b8",
+            "delivery_preflight": {
+              "path": "docs/evidence/coordinator/heartbeat-20261018-0322/checks.json",
+              "target_commit": "765aef597a93fe36060fce65e17b22fe1c3408b8",
+              "base_commit": "3fcdb73416142a0a85dfb951a7f839849871c549",
+              "manifest": "docs/evidence/A03/T3/execution/plan-R1/manifest.json",
+              "manifest_sha256": "02b80200878ddf09a08c603dc2a2c45bef4917764d978fc0019d58655f8b7937",
+              "report": "docs/tasks/A03-T3-integration-plan.md",
+              "report_sha256": "06689496af2b6604cd25227532ac7dec415f60b07a60df01942c3fa197548fd8",
+              "members_raw_hash_verified": 8,
+              "hash_mismatches": [],
+              "changed_paths": [
+                "docs/evidence/A03/T3/execution/plan-R1/adoption-and-count-register.json",
+                "docs/evidence/A03/T3/execution/plan-R1/audit_plan_revision.py",
+                "docs/evidence/A03/T3/execution/plan-R1/first-static-failure/audit_plan_revision.attempt-01.py",
+                "docs/evidence/A03/T3/execution/plan-R1/first-static-failure/observed-tool-return.json",
+                "docs/evidence/A03/T3/execution/plan-R1/manifest.json",
+                "docs/evidence/A03/T3/execution/plan-R1/reference-index.json",
+                "docs/evidence/A03/T3/execution/plan-R1/revision-checks.json",
+                "docs/tasks/A03-T3-integration-plan.md",
+                "docs/tasks/A03-T3-remaining-matrix.md"
+              ],
+              "product_delta": [],
+              "working_tree_clean": true,
+              "old_execution_files_unchanged": 4,
+              "release_basis": "Completed author turn; documentation only, no business/SQL processes",
+              "new_plan_evidence_files": 7,
+              "functional_review": "NOT_RUN_DOCUMENT_ONLY"
+            },
+            "session_released": true,
+            "last_completed_turn_id": "01a14cf5-9725-7001-9933-e594ac4a5770"
           }
         ]
       },
@@ -7439,7 +7492,8 @@
             "evidence_manifest": "docs/evidence/A03/T3/review/manifest.json",
             "evidence_manifest_sha256": "9b8732c0af648fb864e2ef8fd83209aad70128435f772bc538b97dd961bcb655"
           }
-        ]
+        ],
+        "next_dependency": "Do not review floating code; wait for coordinator admitted fixed M candidate and session release."
       },
       "workflow_commit": "f7084b2e8f2e9a1fcf758f9cba56ec9c9fb1f304",
       "latest_lightweight_observation": {
@@ -7481,24 +7535,18 @@
         "workflow_commit": "94c376914db82942ceb0246f338e5caa574cfb42"
       },
       "pending_execution_dispatch": {
-        "key": "A03-T3:execution:plan-R1-C1-C4",
+        "key": "A03-T3:execution:M:62a023a",
         "task": "A03-T3",
         "role": "execution",
-        "state": "COMPLETED",
-        "created_at": "2026-10-18T10:59:23.089540+08:00",
-        "document": "docs/tasks/A03-T3-plan-revision-handoff.md",
-        "document_sha256": "6750eff7ffd06ae0ca869f59068befa417de62e97019a9bb6201a9165fbbdb93",
+        "state": "INTENT_RECORDED",
+        "created_at": "2026-10-18T12:02:26.870664+08:00",
+        "document": "docs/tasks/A03-T3-M-implementation-handoff.md",
+        "document_sha256": "19ce538a5c3d693c1a15656c4f2a0716c7f9b8916dfb4f63ae375e84a6b5211e",
+        "base_commit": "62a023a1c88c20d884a61f38d1ad995b0908b74c",
         "thread_id": "01a14ccf-afa4-7260-a2a2-a47633772ae5",
         "host_id": "local",
         "thinking": "xhigh",
-        "scope": "One consolidated document revision; no product/business/SQL.",
-        "sent_at": "2026-10-18T11:02:39.967982+08:00",
-        "workflow_commit": "b6e00eb3d0512b4ad838676d72c28e8036125301",
-        "result": "send_message_to_thread returned expected registered thread id",
-        "cursor": "625b3403-1db6-4b33-af44-f0b84067ab61:4",
-        "turn_id": "01a14cf5-9725-7001-9933-e594ac4a5770",
-        "started_observed_at": "2026-10-18T11:03:11.118584+08:00",
-        "completed_observed_at": "2026-10-18T11:29:02.400442+08:00"
+        "scope": "Adopted D-M implementation and M1-M3 only: at most 5 native targets, 11 dispatch; fixed whitelist; no L/G/F or whole A03 acceptance."
       },
       "review_dispatch_history": [
         {
@@ -7524,6 +7572,85 @@
           "checks": "docs/evidence/coordinator/heartbeat-20261018-0252/checks.json",
           "product_integration": false,
           "workflow_commit": "b6e00eb3d0512b4ad838676d72c28e8036125301"
+        },
+        {
+          "at": "2026-10-18T11:40:25.362728+08:00",
+          "target_commit": "765aef597a93fe36060fce65e17b22fe1c3408b8",
+          "decision": "ACCEPTED_PLAN_R1_ONLY",
+          "checks": "docs/evidence/coordinator/heartbeat-20261018-0337/T3-checks.json",
+          "product_integration": false,
+          "report": "docs/tasks/A03-T3-plan-R1-coordinator-acceptance.md",
+          "workflow_commit": "94c376914db82942ceb0246f338e5caa574cfb42"
+        }
+      ],
+      "pending_integration": {
+        "key": "A03-T3:integration:K:765aef5:T1-capture",
+        "task": "A03-T3",
+        "role": "coordinator-integration",
+        "state": "INTEGRATED_DEPENDENCY_ONLY",
+        "created_at": "2026-10-18T11:59:06.123083+08:00",
+        "base_commit": "765aef597a93fe36060fce65e17b22fe1c3408b8",
+        "source_commit": "ed90664ab15afd1938725441e2bc86db7884f784",
+        "paths": [
+          "examples/a03/T1-capture/capture.py"
+        ],
+        "sha256": "3e07d56f409d8203c42f252f7a2900e902e31f56e1ff5fc7475335d33d0b042b",
+        "scope": "Only accepted capture helper copied verbatim into clean released T3 branch; compile/raw-index/product-equality checks; no business or root product integration.",
+        "completed_at": "2026-10-18T12:02:26.870664+08:00",
+        "integration_commit": "62a023a1c88c20d884a61f38d1ad995b0908b74c",
+        "checks": "docs/evidence/coordinator/heartbeat-20261018-0352/K-integration.json",
+        "root_product_integrated": false,
+        "whole_A03_integrated": false
+      },
+      "accepted_combination": {
+        "K": "62a023a1c88c20d884a61f38d1ad995b0908b74c",
+        "product_base": "1330047dd29890dea0e433ff01b991f615bf78f4",
+        "plan_target": "765aef597a93fe36060fce65e17b22fe1c3408b8",
+        "T2_accepted_target": "699f748a124162b3118e3996c03757725daac363",
+        "capture": {
+          "key": "A03-T3:integration:K:765aef5:T1-capture",
+          "task": "A03-T3",
+          "role": "coordinator-integration",
+          "state": "INTEGRATED_DEPENDENCY_ONLY",
+          "created_at": "2026-10-18T11:59:06.123083+08:00",
+          "base_commit": "765aef597a93fe36060fce65e17b22fe1c3408b8",
+          "source_commit": "ed90664ab15afd1938725441e2bc86db7884f784",
+          "paths": [
+            "examples/a03/T1-capture/capture.py"
+          ],
+          "sha256": "3e07d56f409d8203c42f252f7a2900e902e31f56e1ff5fc7475335d33d0b042b",
+          "scope": "Only accepted capture helper copied verbatim into clean released T3 branch; compile/raw-index/product-equality checks; no business or root product integration.",
+          "completed_at": "2026-10-18T12:02:26.870664+08:00",
+          "integration_commit": "62a023a1c88c20d884a61f38d1ad995b0908b74c",
+          "checks": "docs/evidence/coordinator/heartbeat-20261018-0352/K-integration.json",
+          "root_product_integrated": false,
+          "whole_A03_integrated": false
+        },
+        "D_CONV": "LEGACY_INITIAL_ONLY",
+        "D_M": "ADOPTED_FOR_IMPLEMENTATION",
+        "shared_private_contract_integrator": "existing A03-T3 executor; exact whitelist in M handoff",
+        "B_confirmation": false
+      },
+      "execution_dispatch_history": [
+        {
+          "key": "A03-T3:execution:plan-R1-C1-C4",
+          "task": "A03-T3",
+          "role": "execution",
+          "state": "COMPLETED",
+          "created_at": "2026-10-18T10:59:23.089540+08:00",
+          "document": "docs/tasks/A03-T3-plan-revision-handoff.md",
+          "document_sha256": "6750eff7ffd06ae0ca869f59068befa417de62e97019a9bb6201a9165fbbdb93",
+          "thread_id": "01a14ccf-afa4-7260-a2a2-a47633772ae5",
+          "host_id": "local",
+          "thinking": "xhigh",
+          "scope": "One consolidated document revision; no product/business/SQL.",
+          "sent_at": "2026-10-18T11:02:39.967982+08:00",
+          "workflow_commit": "b6e00eb3d0512b4ad838676d72c28e8036125301",
+          "result": "send_message_to_thread returned expected registered thread id",
+          "cursor": "625b3403-1db6-4b33-af44-f0b84067ab61:4",
+          "turn_id": "01a14cf5-9725-7001-9933-e594ac4a5770",
+          "started_observed_at": "2026-10-18T11:03:11.118584+08:00",
+          "completed_observed_at": "2026-10-18T11:29:02.400442+08:00"
         }
       ]
     }
@@ -9404,7 +9531,7 @@
       "key": "A03-T2:review:static-archive-recheck:699f748",
       "task": "A03-T2",
       "role": "review",
-      "state": "STARTED",
+      "state": "COMPLETED_ACCEPTED",
       "created_at": "2026-10-18T11:43:52.161535+08:00",
       "document": "docs/tasks/A03-T2-static-archive-recheck.md",
       "document_sha256": "2eea97413cb42b1e82650a0d216bd1d1fa3100c240735eda4de75593fb0aabbc",
@@ -9417,16 +9544,49 @@
       "workflow_commit": "94c376914db82942ceb0246f338e5caa574cfb42",
       "result": "send_message_to_thread returned registered T2 review id",
       "turn_id": "01a14d1d-3642-7880-b13e-ff7af4d0d524",
-      "cursor": "846f94bd-c69f-4cac-8db1-21285fd53e6b:6",
-      "started_observed_at": "2026-10-18T11:46:07.923787+08:00"
+      "cursor": "846f94bd-c69f-4cac-8db1-21285fd53e6b:7",
+      "started_observed_at": "2026-10-18T11:46:07.923787+08:00",
+      "completed_observed_at": "2026-10-18T11:59:06.123083+08:00"
+    },
+    {
+      "key": "A03-T3:integration:K:765aef5:T1-capture",
+      "task": "A03-T3",
+      "role": "coordinator-integration",
+      "state": "INTEGRATED_DEPENDENCY_ONLY",
+      "created_at": "2026-10-18T11:59:06.123083+08:00",
+      "base_commit": "765aef597a93fe36060fce65e17b22fe1c3408b8",
+      "source_commit": "ed90664ab15afd1938725441e2bc86db7884f784",
+      "paths": [
+        "examples/a03/T1-capture/capture.py"
+      ],
+      "sha256": "3e07d56f409d8203c42f252f7a2900e902e31f56e1ff5fc7475335d33d0b042b",
+      "scope": "Only accepted capture helper copied verbatim into clean released T3 branch; compile/raw-index/product-equality checks; no business or root product integration.",
+      "completed_at": "2026-10-18T12:02:26.870664+08:00",
+      "integration_commit": "62a023a1c88c20d884a61f38d1ad995b0908b74c",
+      "checks": "docs/evidence/coordinator/heartbeat-20261018-0352/K-integration.json",
+      "root_product_integrated": false,
+      "whole_A03_integrated": false
+    },
+    {
+      "key": "A03-T3:execution:M:62a023a",
+      "task": "A03-T3",
+      "role": "execution",
+      "state": "INTENT_RECORDED",
+      "created_at": "2026-10-18T12:02:26.870664+08:00",
+      "document": "docs/tasks/A03-T3-M-implementation-handoff.md",
+      "document_sha256": "19ce538a5c3d693c1a15656c4f2a0716c7f9b8916dfb4f63ae375e84a6b5211e",
+      "base_commit": "62a023a1c88c20d884a61f38d1ad995b0908b74c",
+      "thread_id": "01a14ccf-afa4-7260-a2a2-a47633772ae5",
+      "host_id": "local",
+      "thinking": "xhigh",
+      "scope": "Adopted D-M implementation and M1-M3 only: at most 5 native targets, 11 dispatch; fixed whitelist; no L/G/F or whole A03 acceptance."
     }
   ],
   "last_action": {
-    "at": "2026-10-18T11:46:07.923787+08:00",
-    "action": "T2_STATIC_ARCHIVE_RECHECK_ACKNOWLEDGED",
-    "task_id": "A03-T2",
-    "dispatch_result": "EXISTING_REVIEW_ACTIVE_WITH_SAVED_CURSOR",
-    "inventory": "docs/evidence/coordinator/heartbeat-20261018-0337/T2-archive-inventory.json"
+    "at": "2026-10-18T12:02:26.870664+08:00",
+    "action": "T2_ACCEPTED_K_INTEGRATED_M_DISPATCH_INTENT",
+    "task_id": "A03-T2/A03-T3",
+    "dispatch_result": "INTENT_RECORDED_BEFORE_SEND"
   },
   "limitations": [
     "Current route uses mock B artifacts until independently agreed interface/artifact versions exist.",
@@ -9434,10 +9594,12 @@
     "Platform test is single-book serial, no book submission, no unbudgeted paid models."
   ],
   "last_check": {
-    "at": "2026-10-18T11:46:07.923787+08:00",
-    "coordinator_head": "94c376914db82942ceb0246f338e5caa574cfb42",
-    "scope": "T3 finite plan accepted; T2 archival-only REWORK preserved, completed business evidence frozen and one static closure now running",
-    "product_or_platform_actions": false
+    "at": "2026-10-18T12:02:26.870664+08:00",
+    "coordinator_head": "6a01cf7a2d532f628ffc3a151ddac96fb9c05083",
+    "scope": "T2 limited acceptance plus five-stage immutable DB spot checks; exact T3 K helper-only integration",
+    "business_reruns": 0,
+    "product_imports": 0,
+    "root_product_integrated": false
   },
   "prepared_next_batch": {
     "status": "DISPATCHED",
