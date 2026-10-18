@@ -1,0 +1,197 @@
+{
+  "status": "PREPARATION_BLOCKED_STATIC_NATIVE_UNKNOWN_POST_CONTRACT",
+  "base": "cc5966dc58c62017a27266c40ca0cedc5c68485c",
+  "product_calls": 0,
+  "analysis_method": "Read-only strict UTF-8/compile/AST literal-field analysis and JSON Schema comparison; no AST slicing for execution, no product import or validation call.",
+  "actual_python": "C:\\Users\\ASUS\\AppData\\Local\\Programs\\Python\\Python39\\python.exe",
+  "source_index": {
+    "src/annotation/runtime/storage/__init__.py": {
+      "raw_sha256": "93cb82da040346cfba95a312f3615b8bfc5c47edee01ba69584ac338882cfa3a",
+      "bytes": 77114,
+      "utf8_strict_compile_ok": true
+    },
+    "src/annotation/runtime/storage/native.py": {
+      "raw_sha256": "c3e2f01ccbfb7b64c49a5272eb51ffbe2f6af8c8abb5a51c4c9c6965166b902a",
+      "bytes": 29793,
+      "utf8_strict_compile_ok": true
+    },
+    "src/annotation/contracts/a03_native/__init__.py": {
+      "raw_sha256": "8e00b9843f7c6e9cb3b4bd7fb26bb3423cb981a63af6a9018de559f459bb79ca",
+      "bytes": 14277,
+      "utf8_strict_compile_ok": true
+    },
+    "src/annotation/delivery/mock/persistent.py": {
+      "raw_sha256": "8af1f8de7a4ec08966dc10d7180060f89a47aad1eddce19c3c45bacd953d2487",
+      "bytes": 44562,
+      "utf8_strict_compile_ok": true
+    },
+    "src/annotation/delivery/planner/__init__.py": {
+      "raw_sha256": "78c4242c48730eb7b8fec5e7c13b0164a111a6475383c5a4cc4e9fb22c0bdfb4",
+      "bytes": 26611,
+      "utf8_strict_compile_ok": true
+    },
+    "src/annotation/runtime/recovery/__init__.py": {
+      "raw_sha256": "c62a558218e333e212a928a9bf0bb94a79a45e4bb91b08ee5a705e38bc12200d",
+      "bytes": 13701,
+      "utf8_strict_compile_ok": true
+    }
+  },
+  "schema": {
+    "path": "src/annotation/contracts/a03_native/data/schemas/exchange.json",
+    "raw_sha256": "8417b84787ec3ff95966129e7bf14e388c0b66018f4828d3c438fd2e1134a1af",
+    "pointer": "/$defs/AmendedCheckReport/properties/payload/oneOf/2",
+    "POST_required": [
+      "stage",
+      "subject",
+      "graph",
+      "policy",
+      "receipt",
+      "report_snapshot_ref",
+      "action_bindings",
+      "recovery_refs",
+      "frame_structure",
+      "content_check_status",
+      "submission_status",
+      "decision",
+      "issues",
+      "report_observation"
+    ],
+    "additionalProperties": false,
+    "root_artifact_union": {
+      "oneOf": [
+        {
+          "$ref": "#/$defs/AmendedSourceBundle"
+        },
+        {
+          "$ref": "#/$defs/AmendedEvidenceBundle"
+        },
+        {
+          "$ref": "#/$defs/AmendedQuestionGraph"
+        },
+        {
+          "$ref": "#/$defs/AmendedPlatformSnapshot"
+        },
+        {
+          "$ref": "#/$defs/AmendedCheckReport"
+        },
+        {
+          "$ref": "#/$defs/AmendedApplyPlan"
+        },
+        {
+          "$ref": "#/$defs/AmendedExecutionReceipt"
+        },
+        {
+          "$ref": "#/$defs/AmendedReviewPatch"
+        },
+        {
+          "$ref": "#/$defs/AmendedBatchReport"
+        },
+        {
+          "$ref": "#/$defs/AmendedWriteIntent"
+        },
+        {
+          "$ref": "#/$defs/AmendedExecutionProgress"
+        },
+        {
+          "$ref": "#/$defs/AmendedReconciliationResult"
+        }
+      ]
+    }
+  },
+  "producer": {
+    "path": "src/annotation/runtime/storage/__init__.py",
+    "call": {
+      "line": 793,
+      "end_line": 800,
+      "source": "                        post = self._new_artifact(plan, \"CheckReport\", {\"stage\": \"POST_APPLY\",\n                            \"subject\": reference(receipt), \"graph\": plan[\"payload\"][\"graph\"],\n                            \"policy\": plan[\"payload\"][\"policy\"], \"snapshot\": facts[-1][\"observed_snapshot_ref\"],\n                            \"receipt\": reference(receipt), \"coverage\": pre[\"payload\"][\"coverage\"],\n                            \"checks\": [{\"check_id\": name, \"outcome\": \"UNAVAILABLE\", \"evidence_refs\": proof,\n                                \"reason\": \"Original save result remains UNKNOWN\"} for name in (\"frame_structure\", \"final_content\")],\n                            \"issues\": issues, \"decision\": \"HOLD\", \"reason\": \"Actual UNKNOWN facts require read-only reconciliation\",\n                            \"recovery_refs\": []}, dependencies)"
+    },
+    "enclosing_conditions": [
+      {
+        "line": 790,
+        "condition": "issues"
+      },
+      {
+        "line": 786,
+        "condition": "receipt is None"
+      },
+      {
+        "line": 770,
+        "condition": "all((row['fact'] for row in rows))"
+      }
+    ],
+    "generated_POST_payload_keys": [
+      "stage",
+      "subject",
+      "graph",
+      "policy",
+      "snapshot",
+      "receipt",
+      "coverage",
+      "checks",
+      "issues",
+      "decision",
+      "reason",
+      "recovery_refs"
+    ],
+    "missing_required_fields": [
+      "action_bindings",
+      "content_check_status",
+      "frame_structure",
+      "report_observation",
+      "report_snapshot_ref",
+      "submission_status"
+    ],
+    "forbidden_extra_fields": [
+      "checks",
+      "coverage",
+      "reason",
+      "snapshot"
+    ]
+  },
+  "call_chain_source": {
+    "commit_action_result": {
+      "line": 1138,
+      "end_line": 1140,
+      "source": "def commit_action_result(committed_intent, prepared_action, observation, comparison, *, owner_id, generation):\n    return _delegate(\"commit_action_result\", committed_intent, prepared_action, observation, comparison,\n                     owner_id=owner_id, generation=generation)"
+    },
+    "_project_plan_locked": {
+      "line": 760,
+      "end_line": 826,
+      "source": "    def _project_plan_locked(self, registration_id, plan=None):\n        reg, plan = self.registration(registration_id), plan or self._plan(registration_id)\n        plan_id = digest(reference(plan))\n        with self.transaction() as connection:\n            rows = connection.execute(\"SELECT * FROM actions WHERE plan=? ORDER BY position\", (plan_id,)).fetchall()\n            if not rows:\n                return {\"actions\": [], \"state\": \"NO_ACTIONS\"}\n            bundle = self.bundle(registration_id)\n            dependencies = [a for a in bundle[\"artifacts\"] if a[\"book_id\"] == plan[\"book_id\"] and a[\"scope_id\"] == plan[\"scope_id\"]]\n            receipt = None\n            if all(row[\"fact\"] for row in rows):\n                resources = [json.loads(row[\"fact\"]) for row in rows]\n                facts = [self.read_resource(r, registration_id) for r in resources]\n                unknown = [f for f in facts if f[\"result\"][\"outcome\"] == \"UNKNOWN\"]\n                issues = [{\"issue_id\": \"issue-save-unknown-\" + digest(f)[:32], \"code\": \"SAVE_UNKNOWN\",\n                    \"scope_type\": \"action\", \"scope_id\": f[\"action_id\"],\n                    \"evidence_refs\": f[\"result\"][\"after_evidence_refs\"] or f[\"result\"][\"before_evidence_refs\"],\n                    \"severity\": \"blocking\", \"blocks\": [\"APPLY\", \"COMPLETE\"],\n                    \"suggested_strategy\": {\"strategy_id\": \"RECONCILE\", \"max_attempts\": 0, \"max_cost\": 0.0},\n                    \"reason\": \"Actual controlled read did not establish this action's effect; retain original UNKNOWN\"}\n                    for f in unknown]\n                payload = {\"plan\": reference(plan), \"execution_mode\": \"SIMULATED\", \"results\": [f[\"result\"] for f in facts],\n                    \"action_fact_refs\": resources, \"unresolved_issue_ids\": [i[\"issue_id\"] for i in issues],\n                    \"write_disposition\": \"PAUSE_RECONCILE\" if any(f[\"result\"][\"outcome\"] == \"UNKNOWN\" for f in facts) else \"POSTCHECK\" if all(f[\"result\"][\"outcome\"] == \"APPLIED\" for f in facts) else \"RECHECK_TARGET\"}\n                receipt = next((a for a in dependencies if a[\"kind\"] == \"ExecutionReceipt\"\n                    and a[\"payload\"][\"plan\"] == reference(plan) and a[\"payload\"].get(\"action_fact_refs\") == resources), None)\n                if receipt is None:\n                    receipt = self._new_artifact(plan, \"ExecutionReceipt\", payload, dependencies)\n                    self._append(connection, registration_id, receipt)\n                    dependencies.append(receipt)\n                    if issues:\n                        pre = next(a for a in dependencies if reference(a) == plan[\"payload\"][\"precheck\"])\n                        proof = list(dict.fromkeys(e for i in issues for e in i[\"evidence_refs\"]))\n                        post = self._new_artifact(plan, \"CheckReport\", {\"stage\": \"POST_APPLY\",\n                            \"subject\": reference(receipt), \"graph\": plan[\"payload\"][\"graph\"],\n                            \"policy\": plan[\"payload\"][\"policy\"], \"snapshot\": facts[-1][\"observed_snapshot_ref\"],\n                            \"receipt\": reference(receipt), \"coverage\": pre[\"payload\"][\"coverage\"],\n                            \"checks\": [{\"check_id\": name, \"outcome\": \"UNAVAILABLE\", \"evidence_refs\": proof,\n                                \"reason\": \"Original save result remains UNKNOWN\"} for name in (\"frame_structure\", \"final_content\")],\n                            \"issues\": issues, \"decision\": \"HOLD\", \"reason\": \"Actual UNKNOWN facts require read-only reconciliation\",\n                            \"recovery_refs\": []}, dependencies)\n                        self._append(connection, registration_id, post)\n                        dependencies.append(post)\n                for row in rows:\n                    if row[\"intent\"]:\n                        connection.execute(\"UPDATE intents SET receipt=? WHERE id=? AND receipt IS NULL\", (canonical(reference(receipt)).decode(), row[\"intent\"]))\n            book = connection.execute(\"SELECT * FROM books WHERE key=?\", (reg[\"book\"],)).fetchone()\n            items = []\n            for row in rows:\n                intent = connection.execute(\"SELECT * FROM intents WHERE id=?\", (row[\"intent\"],)).fetchone() if row[\"intent\"] else None\n                resolution = connection.execute(\"SELECT * FROM resolutions WHERE intent=? ORDER BY rowid DESC LIMIT 1\", (row[\"intent\"],)).fetchone() if row[\"intent\"] else None\n                intent_ref = json.loads(intent['ref']) if intent else None\n                material = self.read_resource(json.loads(row['fact']), registration_id) if row['fact'] is not None else None\n                attempt_fact, attempt_evidence = self._progress_attempt(row, intent_ref, reference(plan), material)\n                effective = {\"RESOLVED_APPLIED\": \"APPLIED\", \"RESOLVED_NOT_APPLIED\": \"NOT_APPLIED\"}.get(resolution[\"outcome\"] if resolution else \"\", row[\"state\"] if row[\"state\"] in (\"APPLIED\", \"NOT_APPLIED\") else \"UNDETERMINED\" if not intent else \"UNKNOWN\")\n                items.append({\"action_id\": row[\"id\"], \"intent_ref\": json.loads(intent[\"ref\"]) if intent else None,\n                    \"attempt_fact\": attempt_fact,\n                    \"dependency_status\": \"SATISFIED\" if row[\"position\"] == 0 or all(x[\"state\"] == \"APPLIED\" for x in rows[:row[\"position\"]]) else \"BLOCKED\",\n                    \"attempt_evidence_refs\": attempt_evidence, \"receipt_ref\": reference(receipt) if receipt else json.loads(intent[\"receipt\"]) if intent and intent[\"receipt\"] else None,\n                    \"resolution_head_ref\": json.loads(resolution[\"ref\"]) if resolution else None, \"effective_outcome\": effective,\n                    \"result_fact\": json.loads(row[\"fact\"]) if row[\"fact\"] else None})\n            progress = self._new_artifact(plan, \"ExecutionProgress\", {\"plan_ref\": reference(plan), \"journal_id\": book[\"journal\"],\n                \"journal_head_sequence\": book[\"head_sequence\"], \"journal_head_hash\": book[\"head_hash\"], \"actions\": items}, dependencies)\n            self._append(connection, registration_id, progress)\n            if all(row[\"state\"] == \"APPLIED\" for row in rows):\n                connection.execute(\"UPDATE plans SET status='FINISHED' WHERE id=?\", (plan_id,))\n        return {\"progress_ref\": reference(progress), \"receipt_ref\": reference(receipt) if receipt else None, \"actions\": items}"
+    },
+    "_new_artifact": {
+      "line": 493,
+      "end_line": 500,
+      "source": "    def _new_artifact(self, plan, kind, payload, dependencies, artifact_id=None):\n        value = {key: copy.deepcopy(plan[key]) for key in\n            (\"schema_version\", \"run_id\", \"book_id\", \"scope_id\", \"producer\")}\n        value.update(artifact_id=artifact_id or unique(kind.lower()), revision=1, kind=kind,\n            payload=plain(payload), input_refs=list({canonical(reference(a)): reference(a) for a in dependencies}.values()), created_at=now())\n        value[\"producer\"].update(module=\"a03-runtime\", implementation_version=\"a03-p2\")\n        value[\"content_hash\"] = digest(value)\n        return value"
+    },
+    "native_append": {
+      "line": 291,
+      "end_line": 298,
+      "source": "    def _append(self, connection, registration_id, *artifacts):\n        row = connection.execute('SELECT * FROM registrations WHERE id=?', (registration_id,)).fetchone()\n        bundle = json.loads(Path(row['bundle_path']).read_bytes())\n        for artifact in artifacts:\n            if not any(reference(a) == reference(artifact) for a in bundle['artifacts']):\n                bundle['artifacts'].append(plain(artifact))\n        self._validate(bundle, asset_root=row['package_root'])\n        return super()._append(connection, registration_id, *artifacts)"
+    },
+    "native_reports": {
+      "line": 211,
+      "end_line": 271,
+      "source": "def _reports(ctx, heads):\n    \"\"\"Native reports consume an independent report read and immutable heads.\"\"\"\n    from .. import recovery\n    for artifact in ctx.artifacts.values():\n        payload = artifact['payload']\n        if artifact['kind'] == 'CheckReport' and payload['stage'] == 'POST_APPLY':\n            receipt = ctx.resolve(payload['receipt'], artifact, 'ExecutionReceipt')\n            plan = ctx.resolve(receipt['payload']['plan'], artifact, 'ApplyPlan')\n            snapshot = ctx.resolve(payload['report_snapshot_ref'], artifact, 'PlatformSnapshot')\n            need(payload['subject'] == payload['receipt']\n                 and payload['graph'] == plan['payload']['graph'] and payload['policy'] == plan['payload']['policy'],\n                 'NATIVE_REPORT_BINDING', artifact['artifact_id'])\n            need([b['action_id'] for b in payload['action_bindings']] == [a['action_id'] for a in plan['payload']['actions']],\n                 'NATIVE_REPORT_ACTION_COVERAGE', artifact['artifact_id'])\n            _, observation = ctx.resource(payload['report_observation'])\n            need(observation['target_state_hash'] == snapshot['payload']['observed_hash']\n                 and observation['target_state_version'] == snapshot['payload']['observed_version'],\n                 'NATIVE_REPORT_READ_BINDING', artifact['artifact_id'])\n            effective = {r['action_id']: r['outcome'] for r in receipt['payload']['results']}\n            from annotation.delivery.planner import compare_action_effect\n            comparisons = []\n            for action, binding, fact_ref in zip(plan['payload']['actions'], payload['action_bindings'], receipt['payload']['action_fact_refs']):\n                fact = recovery._fact(ctx, fact_ref, artifact)\n                need(binding['action_digest'] == digest(action) and binding['fact_ref'] == fact_ref\n                     and binding['intent_ref'] == fact['intent_ref']\n                     and binding['resolution_head_ref'] == fact['resolution_ref']\n                     and binding['observed_snapshot_ref'] == fact['observed_snapshot_ref']\n                     and binding['effective_outcome'] == fact['result']['outcome'],\n                     'NATIVE_REPORT_FACT_BINDING', artifact['artifact_id'])\n                _, before = ctx.resource(fact['prepared_before'])\n                comparisons.append(compare_action_effect(action, before, observation))\n            need(payload['frame_structure'] == ('PASS' if all(c['effect_match'] == 'MATCH' for c in comparisons) else 'FAIL'),\n                 'NATIVE_REPORT_FRAME_COMPARISON', artifact['artifact_id'])\n            for ref in payload['recovery_refs']:\n                head = ctx.resolve(ref, artifact, 'ReconciliationResult')\n                hp = head['payload']\n                recovery._consumer_resolution_head(ctx, artifact, ref, heads, intent_ref=hp['intent_ref'],\n                    plan_ref=receipt['payload']['plan'], action_id=hp['action_id'])\n                if hp['original_receipt_ref'] is None:\n                    matches = [ctx.resource(r)[1] for r in receipt['payload']['action_fact_refs']]\n                    need(any(f['intent_ref'] == hp['intent_ref'] and f['resolution_ref'] == ref for f in matches),\n                         'NATIVE_LATE_RECEIPT_BINDING', artifact['artifact_id'])\n                else:\n                    need(hp['original_receipt_ref'] == payload['receipt'], 'NATIVE_ORIGINAL_RECEIPT', artifact['artifact_id'])\n                need(recovery._timestamp(snapshot['payload']['observed_at']) > recovery._timestamp(hp['observed_at']),\n                     'NATIVE_REPORT_READ_NOT_FRESH', artifact['artifact_id'])\n                effective[hp['action_id']] = {'RESOLVED_APPLIED': 'APPLIED', 'RESOLVED_NOT_APPLIED': 'NOT_APPLIED', 'STILL_UNKNOWN': 'UNKNOWN'}[hp['resolution']]\n            need(payload['decision'] != 'PASS' or all(v == 'APPLIED' for v in effective.values()),\n                 'UNPROVEN_APPLY', artifact['artifact_id'])\n        if artifact['kind'] == 'BatchReport':\n            source = ctx.resolve(payload['source'], artifact, 'SourceBundle')\n            post = ctx.resolve(payload['postcheck'], artifact, 'CheckReport')['payload']\n            need(payload['receipt'] == post['receipt'] and payload['graph'] == post['graph']\n                 and payload['report_snapshot_ref'] == post['report_snapshot_ref']\n                 and payload['recovery_refs'] == post['recovery_refs'], 'NATIVE_BATCH_BINDING', artifact['artifact_id'])\n            need(payload['scope_manifest'] == source['payload']['scope_manifest']\n                 and payload['total_expected'] == len(payload['scope_manifest'])\n                 and [q['question_id'] for q in payload['questions']] == payload['scope_manifest'],\n                 'DENOMINATOR_CHANGED', artifact['artifact_id'])\n            need(payload['content_check_status'] == 'PENDING' and payload['submission_status'] == 'NOT_SUBMITTED',\n                 'COMPLETION_GUARD', artifact['artifact_id'])"
+    }
+  },
+  "reason": "The required single-action UNKNOWN fact makes issues nonempty; projection emits legacy-shaped POST_APPLY. Native append validates the 1.4 AmendedCheckReport unchanged, so this output cannot satisfy the fixed native schema. No dynamic outer error code is asserted.",
+  "functional_groups": {
+    "U1": "NOT_RUN_STATIC_PREREQUISITE_CONFLICT",
+    "U2": "NOT_RUN_AFTER_REQUIRED_U1_PREREQUISITE_STOP",
+    "U3": "NOT_RUN_AFTER_REQUIRED_U1_PREREQUISITE_STOP",
+    "U4": "NOT_RUN_AFTER_REQUIRED_U1_PREREQUISITE_STOP",
+    "U5": "NOT_RUN_AFTER_REQUIRED_U1_PREREQUISITE_STOP"
+  },
+  "database_stages": "NOT_CREATED: no init/register/PRE/dispatch/UNKNOWN/reconcile process started; no binary or zero-row evidence fabricated.",
+  "nominal_unexecuted_reconcile_expectations": {
+    "U1": "partial removes one of two frames; comparator CONFLICT/UNKNOWN, nominal STILL_UNKNOWN",
+    "U2": "applied target plus duplicate identity read; comparator CONFLICT/UNKNOWN, no duplicate added to stored business state",
+    "U3": "CONTRADICTORY read; comparator INDETERMINATE/UNKNOWN",
+    "U4": "TRUNCATED read with incomplete scope; comparator INDETERMINATE/UNKNOWN",
+    "U5": "UNAVAILABLE read with null sequence/hash/version and no snapshot; comparator INDETERMINATE/UNKNOWN"
+  },
+  "nominal_expectation_limit": "Source-derived planning only; no admission, capture, resolution, failure-record or paused outcome has been dynamically verified.",
+  "field_reset_probe": "NOT_EXECUTED_NO_RERUN_VARIANT_OR_DELEGATION",
+  "I01": "NOT_RELEASED"
+}

@@ -1,0 +1,58 @@
+{
+  "profile_id": "a03-p2-r2-static-2-PROPOSAL",
+  "status": "STATIC_UNIMPLEMENTED",
+  "registry": [
+    "SourceBundle",
+    "EvidenceBundle",
+    "QuestionGraph",
+    "PlatformSnapshot",
+    "CheckReport",
+    "ApplyPlan",
+    "ExecutionReceipt",
+    "ReviewPatch",
+    "BatchReport",
+    "WriteIntent",
+    "ExecutionProgress",
+    "ReconciliationResult"
+  ],
+  "legacy_version": "1.1.0-a-recovery-proposal",
+  "legacy_role": "IMMUTABLE_READ_ONLY_INPUT; never writer output or old-tail resume",
+  "new_version": "1.3.0-a03-static-proposal",
+  "prefix_boundary": "Only exact profile/format + valid schema + bytes-bound prefix.frames, reached through Resource; each frame owns recursive declarations; all other ordinary refs same book/scope; one global mixed DAG",
+  "session_binding_fields": [
+    "ledger_id",
+    "readonly_session_id",
+    "entry_id",
+    "parent_call_id",
+    "owner_id",
+    "generation",
+    "registration_id",
+    "target_store_id",
+    "target_session_id",
+    "target_key",
+    "plan_ref",
+    "scope_id",
+    "action_id",
+    "action_digest",
+    "fence_token"
+  ],
+  "entry": "begin_readonly_absence(binding, H0); persistent counter before each read; two evidence + final-gated currentness read; H0 immediately precedes STARTED; only same-binding session bookkeeping until Hfinal; immutable unique fact at Hfinal+1",
+  "write_guards": [
+    "claim",
+    "takeover",
+    "plan_accept/start",
+    "commit_intent",
+    "issue/consume_permit",
+    "target_effect",
+    "hold_clear",
+    "profile_adoption",
+    "conversion_registration"
+  ],
+  "pre_entry": "produce/admit_synthetic_precheck(context=INITIAL|POST_HOLD, exact approved oracle, actual snapshot, five checks, private native run); INITIAL has no hold; POST_HOLD exact hold head and fresh observation",
+  "conversion_admission": "only terminal COMMITTED record referencing durable manifest; manifest never references COMMITTED; incomplete/failed/reopen diagnostic only; no automatic completion",
+  "r17_roles": {
+    "single_head": "future unmodified A02 planner one-question input; version bridge unresolved, no native pass",
+    "multi_head": "R1 immutable value fixtures only; no claim of reachable multihead history"
+  },
+  "field_reset_probe": "NOT_EXECUTED_NO_RERUN_VARIANT_OR_DELEGATION"
+}
