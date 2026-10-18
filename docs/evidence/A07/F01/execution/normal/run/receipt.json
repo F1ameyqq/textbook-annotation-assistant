@@ -1,0 +1,111 @@
+{
+  "schema_version": "1.0.0-a-proposal",
+  "artifact_id": "a07-receipt-a07-f01-author-1",
+  "revision": 1,
+  "kind": "ExecutionReceipt",
+  "run_id": "a07-f01-author-1",
+  "book_id": "46007447",
+  "scope_id": "a07-fixed-q1-offline",
+  "input_refs": [
+    {
+      "artifact_id": "a07-source-a07-f01-author-1",
+      "revision": 1,
+      "kind": "SourceBundle",
+      "content_hash": "6394a72902cff1d926cf93f3b0202fe4caca02cb3426174ad0b77135d8b8da58"
+    },
+    {
+      "artifact_id": "a07-evidence-a07-f01-author-1",
+      "revision": 1,
+      "kind": "EvidenceBundle",
+      "content_hash": "37506b80a5baa13d37276554ab8fcf8407c1bbff398ce758233f1e77f875d598"
+    },
+    {
+      "artifact_id": "a07-graph-a07-f01-author-1",
+      "revision": 1,
+      "kind": "QuestionGraph",
+      "content_hash": "aca06364fd937030ad21f125a35be231e97b5f6d5c13f0970068eefcc966e8c3"
+    },
+    {
+      "artifact_id": "a07-pre_apply-a07-f01-author-1",
+      "revision": 1,
+      "kind": "CheckReport",
+      "content_hash": "ed37737666bd726a4638f0b599b1a6c9270a33d21bcb878864ff2589938c3072"
+    },
+    {
+      "artifact_id": "a07-snapshot-a07-f01-author-1",
+      "revision": 1,
+      "kind": "PlatformSnapshot",
+      "content_hash": "a0f389d0cacf0d38b55b5c6c8dd4703140d836114e9269abcaa6f6bf2e0aef7e"
+    },
+    {
+      "artifact_id": "a07-target-a07-f01-author-1",
+      "revision": 1,
+      "kind": "CheckReport",
+      "content_hash": "59c95b3f2be2c5d35f8350f699fd6fb69b88a635b8f73a4a515ea42723d4b3e4"
+    },
+    {
+      "artifact_id": "a07-plan-a07-f01-author-1",
+      "revision": 1,
+      "kind": "ApplyPlan",
+      "content_hash": "003e4789f766becc14b0cf625237635d4ff16826c52647be124599f36459ceba"
+    }
+  ],
+  "producer": {
+    "module": "annotation.a07.q1",
+    "implementation_version": "a07-q1-offline-v1",
+    "config_version": "a07-policy-1954726fa502b0a7c0a8d5705a3ca1ecfe35bd94e67a2131dc9b707115ad745b",
+    "policy_versions": [
+      {
+        "policy_id": "a07-q1-offline-v1",
+        "revision": 1,
+        "content_hash": "98694c6a054b5557353e080b9bbb20f00e81b445c31583eb80e115fcff0bcde2"
+      }
+    ],
+    "model_version": null,
+    "prompt_version": null,
+    "evidence_mode": "SYNTHETIC"
+  },
+  "content_hash": "05673b6489d7dc991ddd36269f0828f3ed6cb26bc63c29dec91e7da36d7762a9",
+  "created_at": "2026-10-18T13:17:05.161348+00:00",
+  "payload": {
+    "plan": {
+      "artifact_id": "a07-plan-a07-f01-author-1",
+      "revision": 1,
+      "kind": "ApplyPlan",
+      "content_hash": "003e4789f766becc14b0cf625237635d4ff16826c52647be124599f36459ceba"
+    },
+    "execution_mode": "SIMULATED",
+    "results": [
+      {
+        "action_id": "a07-create-57d640f2e2ecb3441c4fb677",
+        "outcome": "APPLIED",
+        "platform_ids": [
+          "mock-question-1",
+          "mock-frame-1",
+          "mock-frame-2",
+          "mock-frame-3",
+          "mock-frame-4",
+          "mock-frame-5",
+          "mock-frame-6"
+        ],
+        "before_evidence_refs": [
+          "ev-execution-before"
+        ],
+        "after_evidence_refs": [
+          "ev-execution-after"
+        ],
+        "readback": {
+          "path": "assets/readback.json",
+          "sha256": "aa5747b9f892e3b2f682382b3288e88006e90009205f1307d0080b0c59a57d08",
+          "media_type": "application/json"
+        },
+        "effect_match": "MATCH",
+        "next_step": "POSTCHECK",
+        "replay_allowed": false,
+        "reason": "independent target readback matches all projected frames"
+      }
+    ],
+    "unresolved_issue_ids": [],
+    "write_disposition": "POSTCHECK"
+  }
+}
