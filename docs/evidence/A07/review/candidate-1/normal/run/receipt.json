@@ -1,0 +1,111 @@
+{
+  "schema_version": "1.0.0-a-proposal",
+  "artifact_id": "a07-receipt-a07-review-1",
+  "revision": 1,
+  "kind": "ExecutionReceipt",
+  "run_id": "a07-review-1",
+  "book_id": "46007447",
+  "scope_id": "a07-fixed-q1-offline",
+  "input_refs": [
+    {
+      "artifact_id": "a07-source-a07-review-1",
+      "revision": 1,
+      "kind": "SourceBundle",
+      "content_hash": "522c89a1182ed769b946ff1351a9ac9044e1a30e36bcac80da147e4ccb52c4b5"
+    },
+    {
+      "artifact_id": "a07-evidence-a07-review-1",
+      "revision": 1,
+      "kind": "EvidenceBundle",
+      "content_hash": "9a32837e7ea644b89b22834b6870f3d467a641867c63432f957160ba1f8d80c8"
+    },
+    {
+      "artifact_id": "a07-graph-a07-review-1",
+      "revision": 1,
+      "kind": "QuestionGraph",
+      "content_hash": "7694a40db50a222ba552420523c5812420e50a434ca3add52a5df6fe486918a3"
+    },
+    {
+      "artifact_id": "a07-pre_apply-a07-review-1",
+      "revision": 1,
+      "kind": "CheckReport",
+      "content_hash": "563a481bbf374d29f7e391507137d55822b612b97160675e28acf0eb92d45272"
+    },
+    {
+      "artifact_id": "a07-snapshot-a07-review-1",
+      "revision": 1,
+      "kind": "PlatformSnapshot",
+      "content_hash": "90db0a19d73fefddee60c6cf0f8664900b1fe1c348b0170ab61b5c600ca4092b"
+    },
+    {
+      "artifact_id": "a07-target-a07-review-1",
+      "revision": 1,
+      "kind": "CheckReport",
+      "content_hash": "4e9a057d500ab58babe195f712bb55e292b8e4c7d07897fb40719adb6a4eaa7e"
+    },
+    {
+      "artifact_id": "a07-plan-a07-review-1",
+      "revision": 1,
+      "kind": "ApplyPlan",
+      "content_hash": "085db1af2db83282603a655150099b9fdc79ff9a6c28879f725753e6cc307456"
+    }
+  ],
+  "producer": {
+    "module": "annotation.a07.q1",
+    "implementation_version": "a07-q1-offline-v1",
+    "config_version": "a07-policy-1954726fa502b0a7c0a8d5705a3ca1ecfe35bd94e67a2131dc9b707115ad745b",
+    "policy_versions": [
+      {
+        "policy_id": "a07-q1-offline-v1",
+        "revision": 1,
+        "content_hash": "c145c85adbcc9eda45b96f831a5b89e28a17b68b72f0331272fc577b0ca2c2f6"
+      }
+    ],
+    "model_version": null,
+    "prompt_version": null,
+    "evidence_mode": "SYNTHETIC"
+  },
+  "content_hash": "e9c63fcbc8fa3571dcb1d943d1a30be627e193efc061ceb501e7cb537d6921d3",
+  "created_at": "2026-10-18T12:21:31.800642+00:00",
+  "payload": {
+    "plan": {
+      "artifact_id": "a07-plan-a07-review-1",
+      "revision": 1,
+      "kind": "ApplyPlan",
+      "content_hash": "085db1af2db83282603a655150099b9fdc79ff9a6c28879f725753e6cc307456"
+    },
+    "execution_mode": "SIMULATED",
+    "results": [
+      {
+        "action_id": "a07-create-69a8a6cfeb37e02498d7bbcc",
+        "outcome": "APPLIED",
+        "platform_ids": [
+          "mock-question-1",
+          "mock-frame-1",
+          "mock-frame-2",
+          "mock-frame-3",
+          "mock-frame-4",
+          "mock-frame-5",
+          "mock-frame-6"
+        ],
+        "before_evidence_refs": [
+          "ev-execution-before"
+        ],
+        "after_evidence_refs": [
+          "ev-execution-after"
+        ],
+        "readback": {
+          "path": "assets/readback.json",
+          "sha256": "df3c33600ca7c08b873b756466a1a269643263559439d50047fa536edcdac019",
+          "media_type": "application/json"
+        },
+        "effect_match": "MATCH",
+        "next_step": "POSTCHECK",
+        "replay_allowed": false,
+        "reason": "independent target readback matches all projected frames"
+      }
+    ],
+    "unresolved_issue_ids": [],
+    "write_disposition": "POSTCHECK"
+  }
+}

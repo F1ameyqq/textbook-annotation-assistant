@@ -1,3 +1,5 @@
+> 2026-10-18 A07 修复后交接：[当前入口](docs/a07-q1-handoff.md)。固定第1题离线验证完成，六框 Q/W/W/W/W/A；原始证据保持，未连接平台，B共同采用仍待确认。下文保留已发布阶段的说明。
+
 # A 侧第二阶段交接
 
 本分支用于 A/B 接口交接。请从 [当前交接说明](docs/a-stage2-handoff.md) 开始，或打开 [现有进展架构图](docs/handoff/a-stage2/progress-architecture.html)。

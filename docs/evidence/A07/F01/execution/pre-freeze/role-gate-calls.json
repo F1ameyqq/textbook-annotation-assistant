@@ -1,0 +1,105 @@
+{
+  "pid": 23244,
+  "rule_basis": {
+    "workflow": "ca1fb902c2228579cd2d0c84d81fc72cd0643796",
+    "rule_path": "项目交接说明.md",
+    "rule_raw_sha256": "bc50d8c4b0173b4050c552fdb5d74fc3e7dc16a32a1458d70dbe135cf93f7611",
+    "lines": {
+      "72": "| W | 选项 | 普通选择题各选项独立框，选项字母也在框内。 |",
+      "98": "| R02 | 每个普通选择题选项单独一个框，字母含在框内。 | 不得把 A～D 四个选项合成一个 W 框。 |"
+    },
+    "existing_policy_basis": {
+      "config/policies/usense-v1-proposal.json": {
+        "raw_sha256": "ec1d0906599cd2e111c275f33c9d0a16564ffda85f9c6149236723bf3f847ff9",
+        "ordinary_roles": {
+          "stem": "Q",
+          "option": "W",
+          "answer": "A"
+        }
+      },
+      "config/policies/synthetic-choice-separate.json": {
+        "raw_sha256": "d7bc392ee24d90d2c2bde114f9385e15c95ed89a13232dd36382d5a500297fff",
+        "ordinary_roles": {
+          "stem": "Q",
+          "option": "W",
+          "answer": "A"
+        }
+      }
+    },
+    "expected_roles": [
+      "Q",
+      "W",
+      "W",
+      "W",
+      "W",
+      "A"
+    ],
+    "expected_derived_from_old_readback": false
+  },
+  "calls": [
+    {
+      "option_role": "W",
+      "actual_mapped_roles": [
+        "Q",
+        "W",
+        "W",
+        "W",
+        "W",
+        "A"
+      ],
+      "expected_roles_from_original_rules": [
+        "Q",
+        "W",
+        "W",
+        "W",
+        "W",
+        "A"
+      ],
+      "checks": {
+        "source_integrity": "PASS",
+        "structure": "PASS",
+        "answer_matching": "PASS",
+        "coverage": "PASS",
+        "policy": "PASS"
+      },
+      "decision": "PASS",
+      "C01_resealed_input_valid": true,
+      "reached_layer": "PRE_APPLY.policy.ordinary_choice_role_mapping",
+      "zero_target_change": true
+    },
+    {
+      "option_role": "Q",
+      "actual_mapped_roles": [
+        "Q",
+        "Q",
+        "Q",
+        "Q",
+        "Q",
+        "A"
+      ],
+      "expected_roles_from_original_rules": [
+        "Q",
+        "W",
+        "W",
+        "W",
+        "W",
+        "A"
+      ],
+      "checks": {
+        "source_integrity": "PASS",
+        "structure": "PASS",
+        "answer_matching": "PASS",
+        "coverage": "PASS",
+        "policy": "FAIL"
+      },
+      "decision": "HOLD",
+      "C01_resealed_input_valid": true,
+      "reached_layer": "PRE_APPLY.policy.ordinary_choice_role_mapping",
+      "zero_target_change": true
+    }
+  ],
+  "targets_created": 0,
+  "complete_business_attempts": 0,
+  "business_dispatches": 0,
+  "successful_closures": 0
+}
