@@ -6504,7 +6504,8 @@
         "A03-T1",
         "A03-T2",
         "A03-T3"
-      ]
+      ],
+      "implementation_task": "A03-R1"
     },
     "D01": {
       "status": "INTEGRATED",
@@ -7671,7 +7672,8 @@
         "turn_id": "01a14d8c-7af4-7240-9fef-d820eba942d3",
         "started_observed_at": "2026-10-18T13:48:11.697683+08:00",
         "last_checked_at": "2026-10-18T13:54:58.260819+08:00",
-        "observed_candidate_commit": "b8c75119c556b61e36b0cc1f817dbc53044cce41"
+        "observed_candidate_commit": "b8c75119c556b61e36b0cc1f817dbc53044cce41",
+        "superseded_by": "A03-R1; do not redispatch this old product task"
       },
       "review_dispatch_history": [
         {
@@ -7999,11 +8001,12 @@
         },
         "functional_acceptance": false
       },
-      "replacement_task": "A03-R1"
+      "replacement_task": "A03-R1",
+      "product_continuation_status": "SUPERSEDED_BY_USER_AUTHORIZED_A03_R1"
     },
     "A03-R1": {
-      "status": "DISPATCH_PREPARATION",
-      "phase": "EQUIVALENT_IMPLEMENTATION_AUTHORIZED",
+      "status": "IN_PROGRESS",
+      "phase": "EXECUTION_RUNNING_REVIEW_WAIT_FIXED_DELIVERY",
       "parent_task": "A03",
       "user_authorization": "2026-10-18 user: 开始执行; same-function replacement described immediately before.",
       "base_commit": "d5f777590e72eb070af0497afdb144d60c61b95d",
@@ -8013,18 +8016,40 @@
       "review_task": "docs/tasks/A03-R1-independent-review.md",
       "worktree": "D:/1800-worktrees/a03-r1",
       "execution": {
-        "thread_id": null,
-        "status": "INTENT_RECORDED",
+        "thread_id": "01a14da3-8798-75c0-af50-ca8fec19b48c",
+        "status": "RUNNING",
         "thinking": "xhigh",
-        "dispatch_key": "A03-R1:execution:d5f77759"
+        "dispatch_key": "A03-R1:execution:d5f77759",
+        "host_id": "local",
+        "created_at": "2026-10-18T06:12:29.602456+00:00",
+        "workflow_commit": "0476257d",
+        "task_document": "docs/tasks/A03-R1-equivalent-runtime.md",
+        "expected_report": "docs/tasks/A03-R1-execution-report.md",
+        "cursor": "b1048ea3-80d3-4361-bed1-9b4e3a39f600:1",
+        "turn_status": "inProgress",
+        "observed_thread_status": "active",
+        "turn_id": "01a14da3-8d31-72e2-8586-f4d51778c451",
+        "last_checked_at": "2026-10-18T06:14:25.955178+00:00",
+        "last_progress": "Verified baseline/branch and clean checkout; examining dependency-aware pure computation reuse and live guards; implementation started."
       },
       "review": {
-        "thread_id": null,
-        "status": "INTENT_RECORDED_WAIT_FIXED_DELIVERY",
+        "thread_id": "01a14da3-e8f3-7991-9b05-4a3fc38e2362",
+        "status": "WAITING_FIXED_DELIVERY",
         "thinking": "xhigh",
-        "dispatch_key": "A03-R1:review:d5f77759"
+        "dispatch_key": "A03-R1:review:d5f77759",
+        "host_id": "local",
+        "created_at": "2026-10-18T06:13:15.014149+00:00",
+        "workflow_commit": "0476257d",
+        "task_document": "docs/tasks/A03-R1-independent-review.md",
+        "expected_report": "docs/tasks/A03-R1-review-report.md",
+        "cursor": "9f41c9c7-380d-4189-b49b-805a2b10a792:1",
+        "turn_status": "completed",
+        "observed_thread_status": "idle",
+        "turn_id": "01a14da3-eea2-75f2-b436-877f62233a03",
+        "last_checked_at": "2026-10-18T06:14:25.955178+00:00",
+        "last_progress": "WAITING_FIXED_DELIVERY; no functional review yet."
       },
-      "next_dependency": "Create isolated worktree and new execution/review chats. Review waits for frozen candidate and release.",
+      "next_dependency": "Author fixed runnable replacement and release; then continue registered independent reviewer, coordinator accept/integrate, I01-A.",
       "created_at": "2026-10-18T06:08:48.379704+00:00",
       "managed_worktree_attempt": {
         "operation_id": "1caa7fff-6d91-4e03-894c-e41553f60074",
@@ -8034,7 +8059,7 @@
       },
       "branch": "codex/a03-equivalent-runtime",
       "worktree_method": "explicit_git_longpaths_after_managed_creation_failed",
-      "worktree_status": "CREATING",
+      "worktree_status": "CREATED_BASE_CLEAN",
       "task_sha256": "ecdb8f9510cf36c0446ca03e09ec50b3560185abb3cb662b13a77b4877271feb",
       "review_task_sha256": "9ee7ac2c6e246a0117b8c9d7bc8c36aa7f5888c9c4f1912881dcafcb6541280d",
       "watchdog": {
@@ -8046,7 +8071,8 @@
         "absolute_parent_cap_seconds": 360,
         "inner_safety_deadlines": "UNCHANGED"
       },
-      "max_frozen_business_candidates": 2
+      "max_frozen_business_candidates": 2,
+      "workflow_commit": "0476257d"
     }
   },
   "route": [
@@ -10103,24 +10129,45 @@
       "task_id": "A03-R1",
       "stage": "execution",
       "dispatch_key": "A03-R1:execution:d5f77759",
-      "status": "INTENT_RECORDED",
+      "status": "DISPATCHED",
       "at": "2026-10-18T06:08:48.379704+00:00",
-      "thread_id": null,
-      "target_commit": "d5f777590e72eb070af0497afdb144d60c61b95d"
+      "thread_id": "01a14da3-8798-75c0-af50-ca8fec19b48c",
+      "target_commit": "d5f777590e72eb070af0497afdb144d60c61b95d",
+      "host_id": "local",
+      "dispatched_at": "2026-10-18T06:12:29.602456+00:00",
+      "workflow_commit": "0476257d",
+      "dispatch_result": {
+        "threadId": "01a14da3-8798-75c0-af50-ca8fec19b48c",
+        "hostId": "local"
+      }
     },
     {
       "task_id": "A03-R1",
       "stage": "review",
       "dispatch_key": "A03-R1:review:d5f77759",
-      "status": "INTENT_RECORDED",
+      "status": "DISPATCHED",
       "at": "2026-10-18T06:08:48.379704+00:00",
-      "thread_id": null,
-      "target_commit": "d5f777590e72eb070af0497afdb144d60c61b95d"
+      "thread_id": "01a14da3-e8f3-7991-9b05-4a3fc38e2362",
+      "target_commit": "d5f777590e72eb070af0497afdb144d60c61b95d",
+      "host_id": "local",
+      "dispatched_at": "2026-10-18T06:13:15.014149+00:00",
+      "workflow_commit": "0476257d",
+      "dispatch_result": {
+        "threadId": "01a14da3-e8f3-7991-9b05-4a3fc38e2362",
+        "hostId": "local"
+      }
     }
   ],
   "last_action": {
-    "at": "2026-10-18T06:08:48.379704+00:00",
-    "action": "User approved equivalent A03 replacement; new execution/review dispatch intents recorded before worktree/chat creation."
+    "at": "2026-10-18T06:14:25.955178+00:00",
+    "action": "A03-R1 execution and independent review chats created; author running, reviewer WAITING_FIXED_DELIVERY; heartbeat updated and verified.",
+    "task_id": "A03-R1",
+    "workflow_commit": "0476257d",
+    "execution_thread_id": "01a14da3-8798-75c0-af50-ca8fec19b48c",
+    "review_thread_id": "01a14da3-e8f3-7991-9b05-4a3fc38e2362",
+    "implementation_complete": false,
+    "product_acceptance": false,
+    "next_dependency": "Author fixed runnable replacement and release; then continue registered independent reviewer, coordinator accept/integrate, I01-A."
   },
   "limitations": [
     "Current route uses mock B artifacts until independently agreed interface/artifact versions exist.",
@@ -10450,34 +10497,18 @@
     "shown_in_codex": "QUEUED"
   },
   "last_interactive_check": {
-    "at": "2026-10-18T06:04:39.247241+00:00",
-    "question": "Equivalent-function alternative to repeatedly failing A03 implementation",
-    "task_id": "A03-T3",
-    "thread_id": "01a14ccf-afa4-7260-a2a2-a47633772ae5",
-    "cursor": "625b3403-1db6-4b33-af44-f0b84067ab61:17",
-    "observed_head": "d5f777590e72eb070af0497afdb144d60c61b95d",
-    "state": "FROZEN_REWORK_RELEASED",
-    "scope": "Read-only architecture assessment and frozen delivery preflight; no scope reduction, new product run or wholesale rewrite adopted.",
-    "advisory_agent": "/root/a03_equivalent_alternative",
-    "tests_run": false,
-    "next_dependency": "Bounded read-only failure-delivery review; equivalent-function alternative under user discussion. No automatic further repair/run.",
-    "alternative_assessment": {
-      "status": "PROPOSAL_ONLY_NOT_IMPLEMENTED_OR_ACCEPTED",
-      "recommendation": "Preserve SQLite ledger/delivery/public contracts; replace repeated bundle/context validation and tangled execution orchestration with explicit transition handlers separating input validation from fresh execution authority.",
-      "same_functions": [
-        "Durable intent before dispatch and actual readback receipts",
-        "Restart pending reconciliation and UNKNOWN whole-book pause",
-        "Local action dedup and live owner/generation/head/target checks",
-        "Unattempted action accounting, fresh planning after hold clear, complete truthful reports"
-      ],
-      "reuse_limits": "T1/T2 evidence remains accepted only for exact unchanged scope; replacement must verify impacted semantics using existing V01-V10/R01-R18 mapped M/L/G/F, not assume old acceptance transfers.",
-      "validation_boundary": "Same-call repeated parse/schema/closure work may be consolidated. Cross-call reuse or incremental append validation requires equivalence proof including real byte/pin/root/registry changes; no cached PASS bypass.",
-      "cutover": "Frozen old evidence and pending ledgers untouched; independent fresh offline candidate first, no automatic live-ledger migration or dual writer.",
-      "watchdog": "45s is not business SLA; functional requirements and measured performance assessed separately with bounded, explicitly scoped future watchdog.",
-      "current_action": "Existing reviewer receives only static fixed-delivery closure. No further repair, benchmark, extended business rerun, platform action or replacement implementation dispatched in this interactive turn.",
-      "advisory_agent": "/root/a03_equivalent_alternative"
-    },
-    "dispatch_result": "EXISTING_REVIEWER_STARTED_STATIC_ONLY_CURSOR11; NO_REPLACEMENT_IMPLEMENTATION_DISPATCH"
+    "at": "2026-10-18T06:14:25.955178+00:00",
+    "request": "开始执行",
+    "decision": "User-authorized equivalent replacement launched",
+    "task_id": "A03-R1",
+    "base_commit": "d5f777590e72eb070af0497afdb144d60c61b95d",
+    "worktree": "D:/1800-worktrees/a03-r1",
+    "execution_cursor": "b1048ea3-80d3-4361-bed1-9b4e3a39f600:1",
+    "review_cursor": "9f41c9c7-380d-4189-b49b-805a2b10a792:1",
+    "dispatch_result": "BOTH_CREATED_AUTHOR_ACTIVE_REVIEW_WAITING",
+    "acceptance_scope": "Equivalent A03 internal validation/transaction orchestration with existing SQLite/public contracts/delivery; original V01-V10/R01-R18, mapped M/L/G/F bounded delta. No functional reduction.",
+    "next_dependency": "Author fixed runnable replacement and release; then continue registered independent reviewer, coordinator accept/integrate, I01-A.",
+    "coordinator_checks": "Task paths, Git baseline/clean, diff check, dispatch receipts, compact snapshots, automation config; no product tests in coordinator."
   },
   "external_handoff_history": [
     {
@@ -10627,6 +10658,20 @@
         "current_action": "Existing reviewer receives only static fixed-delivery closure. No further repair, benchmark, extended business rerun, platform action or replacement implementation dispatched in this interactive turn.",
         "advisory_agent": "/root/a03_equivalent_alternative"
       }
+    },
+    {
+      "at": "2026-10-18T06:14:25.955178+00:00",
+      "request": "开始执行",
+      "decision": "User-authorized equivalent replacement launched",
+      "task_id": "A03-R1",
+      "base_commit": "d5f777590e72eb070af0497afdb144d60c61b95d",
+      "worktree": "D:/1800-worktrees/a03-r1",
+      "execution_cursor": "b1048ea3-80d3-4361-bed1-9b4e3a39f600:1",
+      "review_cursor": "9f41c9c7-380d-4189-b49b-805a2b10a792:1",
+      "dispatch_result": "BOTH_CREATED_AUTHOR_ACTIVE_REVIEW_WAITING",
+      "acceptance_scope": "Equivalent A03 internal validation/transaction orchestration with existing SQLite/public contracts/delivery; original V01-V10/R01-R18, mapped M/L/G/F bounded delta. No functional reduction.",
+      "next_dependency": "Author fixed runnable replacement and release; then continue registered independent reviewer, coordinator accept/integrate, I01-A.",
+      "coordinator_checks": "Task paths, Git baseline/clean, diff check, dispatch receipts, compact snapshots, automation config; no product tests in coordinator."
     }
   ],
   "last_user_followup": {
@@ -10667,5 +10712,16 @@
       "product_tests_SQL_platform_runs": 0,
       "route_changed": false
     }
+  },
+  "automation_route_update": {
+    "id": "1800-a",
+    "status": "UPDATED_AND_FILE_VERIFIED",
+    "at": "2026-10-18T06:13:15.014149+00:00",
+    "current_task": "A03-R1",
+    "retired_product_continuation": "A03-T3 execution; old original A03 chats remain retired",
+    "cadence_and_notifications": "Preserve15min; quiet unless meaningful change/action.",
+    "verified_at": "2026-10-18T06:14:25.955178+00:00",
+    "prompt_sha256": "5e7e11ee34d1e907743826d1a046a8cff6d1e6a28ed492d78493837565a97d52",
+    "active": true
   }
 }
