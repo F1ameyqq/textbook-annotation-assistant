@@ -2,7 +2,7 @@
   "schema_version": 1,
   "project": "D:\\1800",
   "coordinator_thread_id": "01a13f26-7567-75e1-99ee-c9d2194e78bb",
-  "updated_at": "2026-10-18T13:26:42.333931+00:00",
+  "updated_at": "2026-10-18T13:34:12.954232+00:00",
   "automation": {
     "id": "1800-a",
     "kind": "heartbeat",
@@ -8591,7 +8591,7 @@
     },
     "A07": {
       "task_id": "A07",
-      "status": "REVIEW",
+      "status": "ACCEPTED_PENDING_LOCAL_INTEGRATION",
       "scope": "Fixed B Q1 observed source to A-only offline six-frame plan and simulated receipt; no platform or joint B acceptance",
       "base_commit": "2e71462dda8d225e4f41e8c6cd03a9ce7b88046a",
       "b_commit": "ef6ba4dd083e7fd5378e80123b2b038dd11d7052",
@@ -8603,10 +8603,10 @@
       "execution_thread_id": "01a14edd-f319-7b70-8993-62e04de3a2d4",
       "review_thread_id": "01a14edb-bdc9-7370-890c-3b301b6ea414",
       "execution_cursor": "511a4b4f-1ba7-4a71-9ac5-2ba69534cf9f:15",
-      "review_cursor": "65496636-3236-4063-9ba6-c8ca5d3c3561:12",
+      "review_cursor": "65496636-3236-4063-9ba6-c8ca5d3c3561:18",
       "max_frozen_implementation_candidates": 2,
       "used_candidates": 1,
-      "next_dependency": "One independent F01 delta, fixed report/raw manifest/release",
+      "next_dependency": "Scope-limited local integration of fixed accepted F01 product and new evidence; zero new business",
       "created_at": "2026-10-18T19:50:26.791435+08:00",
       "retired_task_replay_authorized": false,
       "platform_actions_authorized": false,
@@ -8677,7 +8677,7 @@
         "managed_failed_path_remains": false
       },
       "review_host_id": "local",
-      "review_status": "F01_REVIEW_RUNNING",
+      "review_status": "F01_PASS_FIXED_DELIVERY_RELEASED",
       "worktree": "D:/1800-worktrees/a07-q1",
       "branch": "codex/a07-q1-offline",
       "execution_host_id": "local",
@@ -8726,9 +8726,9 @@
       "message_sent_to_B": false,
       "repeat_business_authorized": false,
       "automation_updated_after_integration": true,
-      "effective_acceptance": "HOLD_OPTION_ROLE_MISMATCH",
+      "effective_acceptance": "ACCEPTED_FIXED_Q1_OFFLINE_ROLE_CORRECTED",
       "historical_acceptance_preserved": true,
-      "open_finding": "A07-F01",
+      "open_finding": null,
       "finding_document": "docs/tasks/A07-Q1-role-mapping-finding.md",
       "new_repair_dispatched": true,
       "role_mapping_finding": {
@@ -8761,7 +8761,7 @@
       },
       "role_correction": {
         "finding_id": "A07-F01",
-        "status": "REVIEW",
+        "status": "ACCEPTED",
         "authority": "docs/approvals/A07-F01-role-correction-approval.json",
         "authority_sha256": "7c6c2e9ceaa2abfb5d6379498d859c3411d13f60e89fed2914e999788fa32b8e",
         "task_document": "docs/tasks/A07-F01-role-correction.md",
@@ -8769,18 +8769,23 @@
         "execution_thread_id": "01a14edd-f319-7b70-8993-62e04de3a2d4",
         "review_thread_id": "01a14edb-bdc9-7370-890c-3b301b6ea414",
         "execution_cursor": "511a4b4f-1ba7-4a71-9ac5-2ba69534cf9f:15",
-        "review_cursor": "65496636-3236-4063-9ba6-c8ca5d3c3561:12",
+        "review_cursor": "65496636-3236-4063-9ba6-c8ca5d3c3561:18",
         "additional_limits": {
           "execution_normal_attempts": 1,
           "review_normal_attempts": 1
         },
         "consumption": {
           "execution_normal_attempts": 1,
-          "review_normal_attempts": 0,
+          "review_normal_attempts": 1,
           "execution_dispatches": 1,
           "execution_successes": 1,
           "execution_gate_checks": 2,
-          "execution_replay_rejections": 1
+          "execution_replay_rejections": 1,
+          "review_dispatches": 1,
+          "review_successes": 1,
+          "review_gate_checks": 2,
+          "review_replay_rejections": 1,
+          "coordinator_normal_attempts": 0
         },
         "preserve_previous_consumption": true,
         "pushed": false,
@@ -8804,8 +8809,26 @@
         "review_dispatch_result": "SENT_TO_EXISTING_REGISTERED_REVIEW",
         "review_dispatched_at": "2026-10-18T13:26:42.333931+00:00",
         "review_active_confirmed": true,
-        "review_progress_claim": "One independent delta successful; awaiting fixed report/raw manifest/release"
-      }
+        "review_progress_claim": "One independent delta successful; awaiting fixed report/raw manifest/release",
+        "review_delivery": "71bf89251a3225a7e0defe5fc6feb84d0628dd85",
+        "review_report": "docs/tasks/A07-F01-review-report.md",
+        "review_released": true,
+        "accepted_at": "2026-10-18T13:34:12.954232+00:00",
+        "acceptance_document": "docs/tasks/A07-F01-coordinator-acceptance.md",
+        "review_preflight": "docs/evidence/coordinator/a07-f01-20261018/review-preflight-explicit-manifest.json",
+        "recorded_review_check": "docs/evidence/coordinator/a07-f01-20261018/review-recorded-delta.json",
+        "additional_allowance_remaining": {
+          "execution": 0,
+          "review": 0
+        },
+        "cumulative_normal_attempts": {
+          "execution": 2,
+          "review": 2
+        }
+      },
+      "closed_findings": [
+        "A07-F01"
+      ]
     }
   },
   "route": [
@@ -11156,18 +11179,18 @@
     }
   ],
   "last_action": {
-    "at": "2026-10-18T13:26:42.333931+00:00",
-    "action": "A07_F01_FIXED_INDEPENDENT_REVIEW_DISPATCHED",
+    "at": "2026-10-18T13:34:12.954232+00:00",
+    "action": "A07_F01_COORDINATOR_ACCEPTED",
     "task_ids": [
       "A07"
     ],
-    "version": "53d1249887eabf9ee77fde6b0edf0f4d279016bd",
-    "candidate": "3d22524ff626fc7b0376b7312be6fe75f2e73aab",
-    "scope": "F01 only; raw integrity and fixed recorded result, no new business",
     "thread_id": "01a14edb-bdc9-7370-890c-3b301b6ea414",
-    "cursor": "65496636-3236-4063-9ba6-c8ca5d3c3561:4",
-    "dispatch_result": "SENT",
-    "next_dependency": "One independent F01 delta, fixed report/raw manifest/release"
+    "cursor": "65496636-3236-4063-9ba6-c8ca5d3c3561:18",
+    "version": "71bf89251a3225a7e0defe5fc6feb84d0628dd85",
+    "product_candidate": "3d22524ff626fc7b0376b7312be6fe75f2e73aab",
+    "scope": "Fixed Q1 four option Q-to-W role correction, six contents/coordinates preserved",
+    "dispatch_result": "NO_ADDITIONAL_DISPATCH",
+    "next_dependency": "Scope-limited local integration of fixed accepted F01 product and new evidence; zero new business"
   },
   "limitations": [
     "Current route uses mock B artifacts until independently agreed interface/artifact versions exist.",
@@ -11867,10 +11890,8 @@
       "A06",
       "A07"
     ],
-    "status": "A07_F01_AUTHORIZED_CORRECTION",
-    "active_execution_or_review_threads": [
-      "01a14edb-bdc9-7370-890c-3b301b6ea414"
-    ],
+    "status": "A07_F01_ACCEPTED_LOCAL_INTEGRATION_PENDING",
+    "active_execution_or_review_threads": [],
     "open_external_dependencies": [
       "B joint adoption remains unconfirmed",
       "A04 live platform remains BLOCKED"
