@@ -2,7 +2,7 @@
   "schema_version": 1,
   "project": "D:\\1800",
   "coordinator_thread_id": "01a13f26-7567-75e1-99ee-c9d2194e78bb",
-  "updated_at": "2026-10-18T08:36:09.291560+08:00",
+  "updated_at": "2026-10-18T08:37:31.757838+08:00",
   "automation": {
     "id": "1800-a",
     "kind": "heartbeat",
@@ -1937,7 +1937,7 @@
     },
     "A03": {
       "status": "REWORK",
-      "phase": "P2_R12_PREREQUISITE_REVIEW_INTENT",
+      "phase": "P2_R12_PREREQUISITE_STATIC_REVIEW_IN_PROGRESS",
       "depends_on": [
         "A02"
       ],
@@ -1946,7 +1946,7 @@
       "review_task": "docs/tasks/A03-P2-R11-R1-archive-closure.md",
       "acceptance_scope": "P1 and limited R2-R6 accepted; R7 readonly product locally INTEGRATED; R8-R2 projection/N1, R8-R3 POST_HOLD/local/N1-N5, R8-R4 N6/single runtime-init control limited ACCEPTED. Whole native A03 not accepted or integrated. R9-R1 owner lifecycle and D1/standalone/borrow/D2 fixed single-question demos limited ACCEPTED at bfd7fe896a7eee663ea8e0b6cf967548d8dd8f39. R10 two live-process owner/fencing cases limited ACCEPTED at 1c26b4a8eb378af33e57668472d2071e9ea6afff. R11/R11-R1 four crash cuts limited ACCEPTED at cc5966dc58c62017a27266c40ca0cedc5c68485c; author F2/F3 intermediate binary omission remains.",
       "next_dependency": "Independent static confirmation of frozen R12 preparation conflict and minimal repair boundary; then bounded repair if confirmed and original U1-U5 execution/review. No native integration or I01 release.",
-      "dispatch_status": "REVIEW_INTENT_RECORDED",
+      "dispatch_status": "REVIEW_STARTED",
       "B_confirmation": "NOT_CONFIRMED",
       "workflow_commit": "77d3e123ab7247eae6f81f7acd669e3a69c934a0",
       "worktree_name": "a03-runtime-recovery",
@@ -1992,10 +1992,10 @@
       "review": {
         "thread_id": "01a145aa-8d59-7c70-8d81-731712103a9a",
         "host_id": "local",
-        "cursor": "abdea222-4697-4046-86b1-a5dc48889fac:61",
-        "turn_status": "completed",
-        "observed_thread_status": "idle",
-        "phase": "P2_R12_PREREQUISITE_REVIEW_INTENT",
+        "cursor": "abdea222-4697-4046-86b1-a5dc48889fac:62",
+        "turn_status": "inProgress",
+        "observed_thread_status": "active",
+        "phase": "P2_R12_PREREQUISITE_STATIC_REVIEW_IN_PROGRESS",
         "base_commit": "cc5966dc58c62017a27266c40ca0cedc5c68485c",
         "target_commit": "394fe51f5ed14c5ed312073a20faac0f5cbb9990",
         "task_document": "docs/tasks/A03-P2-R12-prerequisite-review-handoff.md",
@@ -2003,9 +2003,11 @@
         "expected_report": "docs/tasks/A03-P2-R12-prerequisite-review-report.md",
         "reasoning_policy": "PRESERVE_USER_SETTING",
         "dispatch_key": "A03:review:P2-R12-prerequisite:394fe51f5ed14c5ed312073a20faac0f5cbb9990",
-        "last_checked_at": "2026-10-18T08:36:09.291560+08:00",
+        "last_checked_at": "2026-10-18T08:37:31.757838+08:00",
         "last_completed_turn_id": "01a14c46-151e-76c3-b63b-4a5d53b99da5",
-        "last_progress": "R12 static review intent recorded; prior R11-R1 verdict remains archived, new review not started."
+        "last_progress": "Reviewer started fixed-commit raw Git/AST/JSON static review; product calls and SQL connections remain zero.",
+        "workflow_commit": "7bc96e3aa378fb7b5b0a4b5cdd49fb721777ac84",
+        "turn_id": "01a14c70-7746-7750-9546-1e967e273db9"
       },
       "review_handoff": {
         "key": "A03:review:P2-R7-readonly-codec:8ad45dd07214ae406a3fab28d76a4b5abd6eef03",
@@ -3212,7 +3214,7 @@
           "completed_at": "2026-10-18T00:09:56.399342+08:00"
         }
       ],
-      "operational_status": "R12_FROZEN_STATIC_CONFLICT_PENDING_INDEPENDENT_REVIEW",
+      "operational_status": "R12_FROZEN_STATIC_CONFLICT_INDEPENDENT_REVIEW_ACTIVE",
       "last_resume_attempt_at": "2026-10-17T02:17:41.707122+00:00",
       "review_history": [
         {
@@ -4268,7 +4270,7 @@
         "document": "docs/tasks/A03-P2-R12-prerequisite-review-handoff.md",
         "sha256": "b55a77279059871377e59aa1d7eafd6adba7492fba9d3b598f493e1ea5d14db3",
         "target_commit": "394fe51f5ed14c5ed312073a20faac0f5cbb9990",
-        "status": "INTENT_RECORDED"
+        "status": "REVIEW_IN_PROGRESS"
       },
       "review_archive_r2_proposal": {
         "status": "ARCHIVED_LOCALLY",
@@ -4914,7 +4916,7 @@
         "task": "A03",
         "stage": "P2_R12_PREREQUISITE_STATIC_REVIEW",
         "role": "review",
-        "state": "INTENT_RECORDED",
+        "state": "STARTED",
         "created_at": "2026-10-18T08:36:09.291560+08:00",
         "base_commit": "cc5966dc58c62017a27266c40ca0cedc5c68485c",
         "target_commit": "394fe51f5ed14c5ed312073a20faac0f5cbb9990",
@@ -4926,7 +4928,14 @@
         "send_message_thinking": "OMIT",
         "send_message_model": "OMIT",
         "scope": "Frozen preparation-stop provenance and class-qualified UNKNOWN projection/native POST schema conflict; bounded repair recommendation only; no product/SQL/functional calls.",
-        "result": "Intent saved before dispatch; existing original reviewer reused."
+        "result": "Original reviewer active on static-only R12 prerequisite review; no setting override.",
+        "sent_at": "2026-10-18T08:36:54.708179+08:00",
+        "returned_thread_id": "01a145aa-8d59-7c70-8d81-731712103a9a",
+        "workflow_commit": "7bc96e3aa378fb7b5b0a4b5cdd49fb721777ac84",
+        "started_observed_at": "2026-10-18T08:37:31.757838+08:00",
+        "last_observed_at": "2026-10-18T08:37:31.757838+08:00",
+        "cursor": "abdea222-4697-4046-86b1-a5dc48889fac:62",
+        "turn_id": "01a14c70-7746-7750-9546-1e967e273db9"
       },
       "review_r8_frozen_record": {
         "thread_id": "01a145aa-8d59-7c70-8d81-731712103a9a",
@@ -5408,7 +5417,7 @@
         "task": "A03",
         "stage": "P2_R12_PREREQUISITE_STATIC_REVIEW",
         "role": "review",
-        "state": "INTENT_RECORDED",
+        "state": "STARTED",
         "created_at": "2026-10-18T08:36:09.291560+08:00",
         "base_commit": "cc5966dc58c62017a27266c40ca0cedc5c68485c",
         "target_commit": "394fe51f5ed14c5ed312073a20faac0f5cbb9990",
@@ -5420,7 +5429,14 @@
         "send_message_thinking": "OMIT",
         "send_message_model": "OMIT",
         "scope": "Frozen preparation-stop provenance and class-qualified UNKNOWN projection/native POST schema conflict; bounded repair recommendation only; no product/SQL/functional calls.",
-        "result": "Intent saved before dispatch; existing original reviewer reused."
+        "result": "Original reviewer active on static-only R12 prerequisite review; no setting override.",
+        "sent_at": "2026-10-18T08:36:54.708179+08:00",
+        "returned_thread_id": "01a145aa-8d59-7c70-8d81-731712103a9a",
+        "workflow_commit": "7bc96e3aa378fb7b5b0a4b5cdd49fb721777ac84",
+        "started_observed_at": "2026-10-18T08:37:31.757838+08:00",
+        "last_observed_at": "2026-10-18T08:37:31.757838+08:00",
+        "cursor": "abdea222-4697-4046-86b1-a5dc48889fac:62",
+        "turn_id": "01a14c70-7746-7750-9546-1e967e273db9"
       },
       "review_r8_r3_frozen_record": {
         "thread_id": "01a145aa-8d59-7c70-8d81-731712103a9a",
@@ -5977,7 +5993,7 @@
         "uncommitted_report": "docs/tasks/A03-P2-R12-inconclusive-readback-report.md",
         "uncommitted_report_sha256": "cfb51c43f718349aa2c8d99fbb9bc3e145eb6b891e4d9507065648af9bd4fc04",
         "delivery_complete": true,
-        "independent_review_dispatched": false,
+        "independent_review_dispatched": true,
         "target_commit": "394fe51f5ed14c5ed312073a20faac0f5cbb9990",
         "frozen_report": "docs/tasks/A03-P2-R12-inconclusive-readback-report.md",
         "frozen_report_sha256": "cfb51c43f718349aa2c8d99fbb9bc3e145eb6b891e4d9507065648af9bd4fc04",
@@ -7720,7 +7736,7 @@
       "task": "A03",
       "stage": "P2_R12_PREREQUISITE_STATIC_REVIEW",
       "role": "review",
-      "state": "INTENT_RECORDED",
+      "state": "STARTED",
       "created_at": "2026-10-18T08:36:09.291560+08:00",
       "base_commit": "cc5966dc58c62017a27266c40ca0cedc5c68485c",
       "target_commit": "394fe51f5ed14c5ed312073a20faac0f5cbb9990",
@@ -7732,20 +7748,29 @@
       "send_message_thinking": "OMIT",
       "send_message_model": "OMIT",
       "scope": "Frozen preparation-stop provenance and class-qualified UNKNOWN projection/native POST schema conflict; bounded repair recommendation only; no product/SQL/functional calls.",
-      "result": "Intent saved before dispatch; existing original reviewer reused."
+      "result": "Original reviewer active on static-only R12 prerequisite review; no setting override.",
+      "sent_at": "2026-10-18T08:36:54.708179+08:00",
+      "returned_thread_id": "01a145aa-8d59-7c70-8d81-731712103a9a",
+      "workflow_commit": "7bc96e3aa378fb7b5b0a4b5cdd49fb721777ac84",
+      "started_observed_at": "2026-10-18T08:37:31.757838+08:00",
+      "last_observed_at": "2026-10-18T08:37:31.757838+08:00",
+      "cursor": "abdea222-4697-4046-86b1-a5dc48889fac:62",
+      "turn_id": "01a14c70-7746-7750-9546-1e967e273db9"
     }
   ],
   "last_action": {
-    "at": "2026-10-18T08:36:09.291560+08:00",
+    "at": "2026-10-18T08:37:31.757838+08:00",
     "task_id": "A03",
-    "type": "R12_STATIC_REVIEW_INTENT_RECORDED",
+    "type": "R12_STATIC_REVIEW_STARTED",
     "thread_id": "01a145aa-8d59-7c70-8d81-731712103a9a",
     "execution_cursor": "506fd3cf-091f-418b-b002-636f503b5e4b:67",
-    "review_cursor": "abdea222-4697-4046-86b1-a5dc48889fac:61",
+    "review_cursor": "abdea222-4697-4046-86b1-a5dc48889fac:62",
     "version": "394fe51f5ed14c5ed312073a20faac0f5cbb9990",
     "acceptance_scope": "P1 and limited R2-R6 accepted; R7 readonly product locally INTEGRATED; R8-R2 projection/N1, R8-R3 POST_HOLD/local/N1-N5, R8-R4 N6/single runtime-init control limited ACCEPTED. Whole native A03 not accepted or integrated. R9-R1 owner lifecycle and D1/standalone/borrow/D2 fixed single-question demos limited ACCEPTED at bfd7fe896a7eee663ea8e0b6cf967548d8dd8f39. R10 two live-process owner/fencing cases limited ACCEPTED at 1c26b4a8eb378af33e57668472d2071e9ea6afff. R11/R11-R1 four crash cuts limited ACCEPTED at cc5966dc58c62017a27266c40ca0cedc5c68485c; author F2/F3 intermediate binary omission remains.",
     "next_dependency": "Independent static confirmation of frozen R12 preparation conflict and minimal repair boundary; then bounded repair if confirmed and original U1-U5 execution/review. No native integration or I01 release.",
-    "dispatch_result": "INTENT_RECORDED"
+    "dispatch_result": "STARTED",
+    "workflow_commit": "7bc96e3aa378fb7b5b0a4b5cdd49fb721777ac84",
+    "review_turn_id": "01a14c70-7746-7750-9546-1e967e273db9"
   },
   "limitations": [
     "Current route uses mock B artifacts until independently agreed interface/artifact versions exist.",
@@ -7753,7 +7778,7 @@
     "Platform test is single-book serial, no book submission, no unbudgeted paid models."
   ],
   "last_check": {
-    "at": "2026-10-18T08:36:09.291560+08:00",
+    "at": "2026-10-18T08:37:31.757838+08:00",
     "trigger": "2026-10-18T00:30:17.586Z",
     "task_id": "A03",
     "checked_task_ids": [
@@ -7766,13 +7791,13 @@
     "execution_cursor": "506fd3cf-091f-418b-b002-636f503b5e4b:67",
     "execution_turn_id": "01a14c57-7742-77d0-8940-3cc80effbdac",
     "review_thread_id": "01a145aa-8d59-7c70-8d81-731712103a9a",
-    "review_cursor": "abdea222-4697-4046-86b1-a5dc48889fac:61",
-    "review_status": "intent recorded; prior turn completed",
+    "review_cursor": "abdea222-4697-4046-86b1-a5dc48889fac:62",
+    "review_status": "inProgress; static prerequisite verification only",
     "review_completed_turn_id": "01a14c46-151e-76c3-b63b-4a5d53b99da5",
-    "phase": "P2_R12_PREREQUISITE_REVIEW_INTENT",
+    "phase": "P2_R12_PREREQUISITE_STATIC_REVIEW_IN_PROGRESS",
     "acceptance_scope": "P1 and limited R2-R6 accepted; R7 readonly product locally INTEGRATED; R8-R2 projection/N1, R8-R3 POST_HOLD/local/N1-N5, R8-R4 N6/single runtime-init control limited ACCEPTED. Whole native A03 not accepted or integrated. R9-R1 owner lifecycle and D1/standalone/borrow/D2 fixed single-question demos limited ACCEPTED at bfd7fe896a7eee663ea8e0b6cf967548d8dd8f39. R10 two live-process owner/fencing cases limited ACCEPTED at 1c26b4a8eb378af33e57668472d2071e9ea6afff. R11/R11-R1 four crash cuts limited ACCEPTED at cc5966dc58c62017a27266c40ca0cedc5c68485c; author F2/F3 intermediate binary omission remains.",
     "next_dependencies": "Independent static confirmation of frozen R12 preparation conflict and minimal repair boundary; then bounded repair if confirmed and original U1-U5 execution/review. No native integration or I01 release.",
-    "dispatch_result": "INTENT_RECORDED",
+    "dispatch_result": "STARTED",
     "coordinator_preflight": "docs/evidence/coordinator/heartbeat-20261018-0830/r12-delivery-preflight.json",
     "coordinator_preflight_sha256": "dec3a853ec091bab3cebf0231a360bb31d7b21f5d7bcb641223bc3c422e4dd31",
     "read_documents_sha256": {
@@ -7787,8 +7812,9 @@
     "full_suite_rerun": false,
     "settings_changed": false,
     "notification": "NOTIFY",
-    "reason": "Exact R12 preparation-block delivery verified; independent static review intent recorded.",
-    "workflow_commit": "7593f880ebec191ed55e03b2d3893d68b00ab0ca"
+    "reason": "R12 frozen preparation-block delivery verified and original independent reviewer started bounded static verification; U1-U5 remain unrun.",
+    "workflow_commit": "7bc96e3aa378fb7b5b0a4b5cdd49fb721777ac84",
+    "review_turn_id": "01a14c70-7746-7750-9546-1e967e273db9"
   },
   "prepared_next_batch": {
     "status": "DISPATCHED",
@@ -8149,7 +8175,7 @@
     }
   ],
   "last_heartbeat": {
-    "at": "2026-10-18T08:36:09.291560+08:00",
+    "at": "2026-10-18T08:37:31.757838+08:00",
     "trigger": "2026-10-18T00:30:17.586Z",
     "task_id": "A03",
     "checked_task_ids": [
@@ -8162,13 +8188,13 @@
     "execution_cursor": "506fd3cf-091f-418b-b002-636f503b5e4b:67",
     "execution_turn_id": "01a14c57-7742-77d0-8940-3cc80effbdac",
     "review_thread_id": "01a145aa-8d59-7c70-8d81-731712103a9a",
-    "review_cursor": "abdea222-4697-4046-86b1-a5dc48889fac:61",
-    "review_status": "intent recorded; prior turn completed",
+    "review_cursor": "abdea222-4697-4046-86b1-a5dc48889fac:62",
+    "review_status": "inProgress; static prerequisite verification only",
     "review_completed_turn_id": "01a14c46-151e-76c3-b63b-4a5d53b99da5",
-    "phase": "P2_R12_PREREQUISITE_REVIEW_INTENT",
+    "phase": "P2_R12_PREREQUISITE_STATIC_REVIEW_IN_PROGRESS",
     "acceptance_scope": "P1 and limited R2-R6 accepted; R7 readonly product locally INTEGRATED; R8-R2 projection/N1, R8-R3 POST_HOLD/local/N1-N5, R8-R4 N6/single runtime-init control limited ACCEPTED. Whole native A03 not accepted or integrated. R9-R1 owner lifecycle and D1/standalone/borrow/D2 fixed single-question demos limited ACCEPTED at bfd7fe896a7eee663ea8e0b6cf967548d8dd8f39. R10 two live-process owner/fencing cases limited ACCEPTED at 1c26b4a8eb378af33e57668472d2071e9ea6afff. R11/R11-R1 four crash cuts limited ACCEPTED at cc5966dc58c62017a27266c40ca0cedc5c68485c; author F2/F3 intermediate binary omission remains.",
     "next_dependencies": "Independent static confirmation of frozen R12 preparation conflict and minimal repair boundary; then bounded repair if confirmed and original U1-U5 execution/review. No native integration or I01 release.",
-    "dispatch_result": "INTENT_RECORDED",
+    "dispatch_result": "STARTED",
     "coordinator_preflight": "docs/evidence/coordinator/heartbeat-20261018-0830/r12-delivery-preflight.json",
     "coordinator_preflight_sha256": "dec3a853ec091bab3cebf0231a360bb31d7b21f5d7bcb641223bc3c422e4dd31",
     "read_documents_sha256": {
@@ -8183,7 +8209,8 @@
     "full_suite_rerun": false,
     "settings_changed": false,
     "notification": "NOTIFY",
-    "reason": "Exact R12 preparation-block delivery verified; independent static review intent recorded.",
-    "workflow_commit": "7593f880ebec191ed55e03b2d3893d68b00ab0ca"
+    "reason": "R12 frozen preparation-block delivery verified and original independent reviewer started bounded static verification; U1-U5 remain unrun.",
+    "workflow_commit": "7bc96e3aa378fb7b5b0a4b5cdd49fb721777ac84",
+    "review_turn_id": "01a14c70-7746-7750-9546-1e967e273db9"
   }
 }
