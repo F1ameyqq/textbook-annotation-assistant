@@ -1,0 +1,72 @@
+diff --git a/src/annotation/contracts/a03_native/data/adoption.json b/src/annotation/contracts/a03_native/data/adoption.json
+index 33a33b61..821fa38e 100644
+--- a/src/annotation/contracts/a03_native/data/adoption.json
++++ b/src/annotation/contracts/a03_native/data/adoption.json
+@@ -1,5 +1,5 @@
+ {
+-  "profile_sha256": "741cadbfaaa622f2e24610026dcbfd6d68fd214dd1e4e1a1fb042df44b97445c",
++  "profile_sha256": "33cb93c20fadb74a3e72b55b688413b78a269daab3d7d0e6d292335ef9273bff",
+   "scope": "A_INTERNAL_FIXED_SYNTHETIC_ONLY",
+   "runtime_authority": "PRIVATE_DURABLE_REGISTRY_REQUIRED",
+   "status": "REVIEW",
+diff --git a/src/annotation/contracts/a03_native/data/profile.json b/src/annotation/contracts/a03_native/data/profile.json
+index fc414e6b..4558b31d 100644
+--- a/src/annotation/contracts/a03_native/data/profile.json
++++ b/src/annotation/contracts/a03_native/data/profile.json
+@@ -77,7 +77,7 @@
+     ],
+     [
+       "@annotation/runtime/storage/__init__.py",
+-      "93cb82da040346cfba95a312f3615b8bfc5c47edee01ba69584ac338882cfa3a"
++      "d4d9882add415d93b8bc779a2873727f1f1ee4ce8ef41e77461d4bc05df48200"
+     ],
+     [
+       "@annotation/runtime/storage/common.py",
+@@ -89,7 +89,7 @@
+     ],
+     [
+       "@annotation/runtime/storage/native.py",
+-      "c3e2f01ccbfb7b64c49a5272eb51ffbe2f6af8c8abb5a51c4c9c6965166b902a"
++      "a9b039a9989ffb3afc954c87b6adbf512cf1e4ba4833cbb9e07984735b35db9b"
+     ],
+     [
+       "@annotation/runtime/storage/native_target.py",
+diff --git a/src/annotation/runtime/storage/__init__.py b/src/annotation/runtime/storage/__init__.py
+index dabc8d44..99f447bb 100644
+--- a/src/annotation/runtime/storage/__init__.py
++++ b/src/annotation/runtime/storage/__init__.py
+@@ -757,6 +757,10 @@ class RuntimeStore(HoldSupport):
+             fail('RECOVERY_CHAIN_INVALID', 'material fact must bind the exact plan/action/intent before attempt projection')
+         return fact['result']['attempt_fact'], copy.deepcopy(fact['result']['attempt_evidence_refs'])
+ 
++    def _project_unknown_diagnostic_post(self):
++        """Whether projection owns the legacy UNKNOWN diagnostic report."""
++        return True
++
+     def _project_plan_locked(self, registration_id, plan=None):
+         reg, plan = self.registration(registration_id), plan or self._plan(registration_id)
+         plan_id = digest(reference(plan))
+@@ -787,7 +791,7 @@ class RuntimeStore(HoldSupport):
+                     receipt = self._new_artifact(plan, "ExecutionReceipt", payload, dependencies)
+                     self._append(connection, registration_id, receipt)
+                     dependencies.append(receipt)
+-                    if issues:
++                    if issues and self._project_unknown_diagnostic_post():
+                         pre = next(a for a in dependencies if reference(a) == plan["payload"]["precheck"])
+                         proof = list(dict.fromkeys(e for i in issues for e in i["evidence_refs"]))
+                         post = self._new_artifact(plan, "CheckReport", {"stage": "POST_APPLY",
+diff --git a/src/annotation/runtime/storage/native.py b/src/annotation/runtime/storage/native.py
+index 779bfc12..2fec8b72 100644
+--- a/src/annotation/runtime/storage/native.py
++++ b/src/annotation/runtime/storage/native.py
+@@ -221,6 +221,10 @@ class NativeRuntimeStore(RuntimeStore):
+     _application_id = 0x41303452
+     _user_version = 4
+ 
++    def _project_unknown_diagnostic_post(self):
++        # Native reports require their own fresh observation and explicit publisher.
++        return False
++
+     def __init__(self, *args, **kwargs):
+         super().__init__(*args, **kwargs)
+         self.native_registry = NativeRegistry(self)

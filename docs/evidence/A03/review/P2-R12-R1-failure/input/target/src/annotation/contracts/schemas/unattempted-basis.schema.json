@@ -1,0 +1,242 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "a03-unattempted-basis-P1-R1-design",
+  "title": "P1-R1 DESIGN_ONLY non-Artifact basis Resource",
+  "$comment": "Field/byte equality only. This JSON never establishes current gate/owner/ledger authority, actual new reads or committed facts.",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "format_version": {
+      "const": "a03-unattempted-basis-1"
+    },
+    "design_only": {
+      "type": "boolean"
+    },
+    "origin": {
+      "const": "SYNTHETIC"
+    },
+    "actual": {
+      "type": "string"
+    },
+    "plan_ref": {
+      "additionalProperties": false,
+      "properties": {
+        "artifact_id": {
+          "pattern": "^[A-Za-z][A-Za-z0-9_.:-]{0,127}$",
+          "title": "Artifact Id",
+          "type": "string"
+        },
+        "revision": {
+          "exclusiveMinimum": 0,
+          "title": "Revision",
+          "type": "integer"
+        },
+        "kind": {
+          "const": "ApplyPlan",
+          "type": "string"
+        },
+        "content_hash": {
+          "pattern": "^[0-9a-f]{64}$",
+          "title": "Content Hash",
+          "type": "string"
+        }
+      },
+      "required": [
+        "artifact_id",
+        "revision",
+        "kind",
+        "content_hash"
+      ],
+      "title": "ArtifactRef",
+      "type": "object"
+    },
+    "source_ref": {
+      "additionalProperties": false,
+      "properties": {
+        "artifact_id": {
+          "pattern": "^[A-Za-z][A-Za-z0-9_.:-]{0,127}$",
+          "title": "Artifact Id",
+          "type": "string"
+        },
+        "revision": {
+          "exclusiveMinimum": 0,
+          "title": "Revision",
+          "type": "integer"
+        },
+        "kind": {
+          "const": "SourceBundle"
+        },
+        "content_hash": {
+          "pattern": "^[0-9a-f]{64}$",
+          "title": "Content Hash",
+          "type": "string"
+        }
+      },
+      "required": [
+        "artifact_id",
+        "revision",
+        "kind",
+        "content_hash"
+      ],
+      "title": "ArtifactRef",
+      "type": "object"
+    },
+    "target_key": {
+      "$ref": "recovery-exchange.schema.json#/$defs/TargetKey"
+    },
+    "plan_status": {
+      "const": "INTERRUPTED"
+    },
+    "generation": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "action_digest": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "expected_event_head": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "sequence": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "hash": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        }
+      },
+      "required": [
+        "sequence",
+        "hash"
+      ]
+    },
+    "gate_held": {
+      "const": true
+    },
+    "comparison": {
+      "const": "ABSENT"
+    },
+    "observer_calls": {
+      "const": 2
+    },
+    "retries": {
+      "const": 0
+    },
+    "single_read_seconds": {
+      "const": 2
+    },
+    "entry_seconds": {
+      "const": 8
+    },
+    "parent_call_seconds": {
+      "const": 60
+    },
+    "journal_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "registration_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "action_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "owner_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "target_store_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "target_session_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "scope_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "complete_uncalled_prefix": {
+      "$ref": "#/$defs/JsonResource"
+    },
+    "first_observation_ref": {
+      "$ref": "#/$defs/JsonResource"
+    },
+    "readonly_prepared_ref": {
+      "$ref": "#/$defs/JsonResource"
+    },
+    "second_observation_ref": {
+      "$ref": "#/$defs/JsonResource"
+    }
+  },
+  "required": [
+    "format_version",
+    "origin",
+    "plan_ref",
+    "source_ref",
+    "target_key",
+    "plan_status",
+    "generation",
+    "action_digest",
+    "expected_event_head",
+    "gate_held",
+    "comparison",
+    "observer_calls",
+    "retries",
+    "single_read_seconds",
+    "entry_seconds",
+    "parent_call_seconds",
+    "journal_id",
+    "registration_id",
+    "action_id",
+    "owner_id",
+    "target_store_id",
+    "target_session_id",
+    "scope_id",
+    "complete_uncalled_prefix",
+    "first_observation_ref",
+    "readonly_prepared_ref",
+    "second_observation_ref"
+  ],
+  "$defs": {
+    "JsonResource": {
+      "additionalProperties": false,
+      "properties": {
+        "path": {
+          "title": "Path",
+          "type": "string"
+        },
+        "sha256": {
+          "pattern": "^[0-9a-f]{64}$",
+          "title": "Sha256",
+          "type": "string"
+        },
+        "media_type": {
+          "const": "application/json"
+        },
+        "origin": {
+          "type": "string",
+          "enum": [
+            "SYNTHETIC",
+            "ORIGINAL",
+            "OBSERVED"
+          ]
+        }
+      },
+      "required": [
+        "path",
+        "sha256",
+        "media_type",
+        "origin"
+      ],
+      "title": "Resource",
+      "type": "object"
+    }
+  }
+}
