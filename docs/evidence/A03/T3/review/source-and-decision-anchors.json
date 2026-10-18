@@ -1,0 +1,619 @@
+{
+  "target": "3fcdb73416142a0a85dfb951a7f839849871c549",
+  "source_commit": "1330047dd29890dea0e433ff01b991f615bf78f4",
+  "decision_workflow": "f7084b2e8f2e9a1fcf758f9cba56ec9c9fb1f304",
+  "scope": "STATIC_PATH_REASONING_ONLY_NO_PRODUCT_IMPORT_OR_DATABASE",
+  "anchors": [
+    {
+      "label": "UNATTEMPTED_STUB",
+      "commit": "1330047dd29890dea0e433ff01b991f615bf78f4",
+      "path": "src/annotation/runtime/storage/__init__.py",
+      "raw_sha256": "d5edd3e106e161f24bf1c8def72321492c7b8f31b72c44771ac5f5f31fa6d445",
+      "start": 1045,
+      "end": 1048,
+      "text": "    def commit_unattempted_absence(self, bundle, request, *, owner_id, generation, asset_root, observer):\n        # Frozen R2 only models one same-plan journal from sequence one. Do not\n        # rewrite real ledger coordinates or omit control events to fit it.\n        fail(\"EVENT_PREFIX_CONTRACT_GAP\", \"P2 global prefix profile requires explicit coordinator approval\", 2)",
+      "type": "STATIC_SOURCE_OR_DOCUMENT_EXCERPT_NOT_RUNTIME_RESULT"
+    },
+    {
+      "label": "ONE_QUESTION_LANGUAGE",
+      "commit": "1330047dd29890dea0e433ff01b991f615bf78f4",
+      "path": "src/annotation/quality/synthetic_precheck.py",
+      "raw_sha256": "f1a212e4b7693362945da1843c14e13264d16f7187b612671bec0b9f4f010aef",
+      "start": 48,
+      "end": 85,
+      "text": "    oracle = json.loads(_raw_oracle())\n    sp, ep, gp = source.payload, evidence.payload, graph.payload\n    asset_ok = len(sp.assets) == 1\n    for asset in sp.assets:\n        path = (root / asset.path).resolve(strict=True)\n        if root not in path.parents or path.is_symlink():\n            reject('RESOURCE_PATH', 'PGM escaped explicit root')\n        raw = path.read_bytes()\n        if hashlib.sha256(raw).hexdigest() != asset.sha256:\n            reject('RESOURCE_HASH_MISMATCH', 'PGM raw bytes differ')\n        try:\n            # P2 permits comments; consume the complete raster, never just header.\n            tokens = b' '.join(line.split(b'#', 1)[0] for line in raw.splitlines()).split()\n            header = tokens[:4]\n            pixels = [int(value) for value in tokens[4:]]\n            expected = [0 if (4 <= x < 28 and (4 <= y < 10 or 18 <= y < 24)) else 255\n                        for y in range(32) for x in range(32)]\n            asset_ok = asset_ok and header == [b'P2', b'32', b'32', b'255'] and pixels == expected\n        except ValueError:\n            asset_ok = False\n        asset_ok = asset_ok and asset.width == 32 and asset.height == 32\n    source_ok = asset_ok and len(sp.pages_expected) == len(sp.pages_acquired) == 1 and sp.pages_expected == sp.pages_acquired == [sp.assets[0].asset_id]\n    questions, regions, fragments = gp.questions, ep.regions, gp.fragments\n    structure_ok = (len(questions) == 1 and len(regions) == 2 and [f.role for f in fragments] == ['stem', 'answer']\n        and [r.box.bbox for r in regions] == [[4, 4, 28, 10], [4, 18, 28, 24]]\n        and not questions[0].shared_fragment_ids and not questions[0].cross_page\n        and questions[0].fragment_ids == [f.fragment_id for f in fragments]\n        and len(fragments) == 2 and all(f.region_ids == [r.region_id] for f, r in zip(fragments, regions)))\n    answers = [f.fragment_id for f in fragments if f.role == 'answer']\n    relations = gp.answer_relations\n    answer_ok = len(relations) == 1 and len(answers) == 1 and relations[0].status == 'SELECTED' and relations[0].question_id == questions[0].question_id and relations[0].candidate_fragment_ids == relations[0].selected_fragment_ids == answers\n    coverage_ok = (sp.scope_manifest == [q.question_id for q in questions]\n        and len(sp.pages_expected) == 1 and len(ep.coverage_clues) == 2\n        and [c.disposition for c in ep.coverage_clues] == ['ASSIGNED', 'ASSIGNED']\n        and {rid for c in ep.coverage_clues for rid in c.region_ids} == {r.region_id for r in regions})\n    policy_ok = (policy.option_grouping == 'SEPARATE' and dict(policy.role_mapping) ==\n        {'stem': 'Q', 'option': 'W', 'answer': 'A', 'explanation': 'E', 'shared_material': 'Q'}\n        and all(q.question_type == 'free_response' for q in questions))",
+      "type": "STATIC_SOURCE_OR_DOCUMENT_EXCERPT_NOT_RUNTIME_RESULT"
+    },
+    {
+      "label": "PLANNER_ACTION_PER_QUESTION",
+      "commit": "1330047dd29890dea0e433ff01b991f615bf78f4",
+      "path": "src/annotation/delivery/planner/__init__.py",
+      "raw_sha256": "78c4242c48730eb7b8fec5e7c13b0164a111a6475383c5a4cc4e9fb22c0bdfb4",
+      "start": 265,
+      "end": 290,
+      "text": "        for question in graph.payload.questions:\n            qid = question.question_id\n            pid = question.external_refs.platform_question_id\n            directory = config.directory_map[question.directory_id]\n            existing = platform.get(pid)\n            order = existing.platform_order if existing else next_orders[directory]\n            frames = [f.model_dump(mode=\"json\") for f in snapshot.payload.frames if f.platform_question_id == pid] if existing else []\n            before = {\"question_exists\": existing is not None, \"platform_question_id\": pid,\n                      \"directory_id\": directory, \"frame_count\": len(frames), \"frames_hash\": frame_facts(frames)}\n            if existing:\n                before[\"platform_order\"] = order\n            else:\n                before[\"next_order\"] = order\n                next_orders[directory] += 1\n            projected = projection_frames(bundle, graph, question, policy)\n            if not projected:\n                reject(\"EMPTY_PROJECTION\", \"question has no frame projection: \" + qid)\n            action_id = \"action-a02-\" + content_digest({\"plan_id\": artifact_id, \"question_id\": qid,\n                                                        \"graph\": artifact_ref(graph), \"snapshot\": artifact_ref(snapshot)})[:32]\n            actions.append({\"action_id\": action_id,\n                            \"target\": {\"target_id\": snapshot.payload.target_id, \"question_id\": qid, \"platform_question_id\": pid},\n                            \"source_entity_ids\": [qid] + list(dict.fromkeys(f[\"fragment_id\"] for f in projected)),\n                            \"expected_before\": before, \"operation\": \"CREATE_FRAMES\",\n                            \"expected_after\": {\"question_exists\": True, \"directory_id\": directory,\n                                               \"platform_order\": order, \"frames\": encoded(projected)},\n                            \"depends_on\": [actions[-1][\"action_id\"]] if actions else []})",
+      "type": "STATIC_SOURCE_OR_DOCUMENT_EXCERPT_NOT_RUNTIME_RESULT"
+    },
+    {
+      "label": "NATIVE_PLAN_WHILE_HOLD",
+      "commit": "1330047dd29890dea0e433ff01b991f615bf78f4",
+      "path": "src/annotation/runtime/storage/native.py",
+      "raw_sha256": "a9b039a9989ffb3afc954c87b6adbf512cf1e4ba4833cbb9e07984735b35db9b",
+      "start": 415,
+      "end": 432,
+      "text": "    def record_native_plan(self, registration_id, bundle, plan_ref, config, *, owner_id, generation):\n        from annotation.contracts import assert_plan_ready\n        from annotation.delivery.planner import verify_generated_plan\n        from annotation.quality.targetcheck import resolve_artifact\n        reg = self.registration(registration_id)\n        context = self.bridge_for(bundle, reg['package_root'])\n        validated = validate_native_bundle(bundle, bridge_context=context)\n        plan = resolve_artifact(validated, plan_ref, 'ApplyPlan')\n        assert_plan_ready(validated, plan_ref, plan.payload.snapshot, bridge_context=context)\n        verify_generated_plan(validated, plan, plan.payload.snapshot, config, bridge_context=context)\n        with self.effect_gate(self.target_key(reg['id'])).acquire(), self.transaction() as connection:\n            self._lease(connection, reg['book'], owner_id, generation)\n            original = self.bundle(reg['id'])\n            incoming = plain(validated)\n            if incoming['artifacts'][:len(original['artifacts'])] != original['artifacts'] or incoming['evidence'] != original['evidence']:\n                fail('NATIVE_PLAN_HISTORY_CHANGED')\n            self._append(connection, reg['id'], *incoming['artifacts'][len(original['artifacts']):])\n        return plan_ref",
+      "type": "STATIC_SOURCE_OR_DOCUMENT_EXCERPT_NOT_RUNTIME_RESULT"
+    },
+    {
+      "label": "ORDINARY_LEASE_HOLD_GUARD",
+      "commit": "1330047dd29890dea0e433ff01b991f615bf78f4",
+      "path": "src/annotation/runtime/storage/__init__.py",
+      "raw_sha256": "d5edd3e106e161f24bf1c8def72321492c7b8f31b72c44771ac5f5f31fa6d445",
+      "start": 340,
+      "end": 354,
+      "text": "    def _lease(self, connection, key, owner_id, generation, *, pending_ok=False):\n        row = connection.execute(\"SELECT * FROM books WHERE key=?\", (key,)).fetchone()\n        if row is None or row[\"owner\"] != owner_id or row[\"generation\"] != generation or row[\"phase\"] != \"ACTIVE\" or row[\"lease\"] < time.time() or row[\"process_id\"] != self.instance or row[\"pid\"] != os.getpid():\n            fail(\"OWNER_GENERATION_STALE\", \"current ACTIVE lease required\", 4)\n        if not pending_ok and self._pending(connection, key):\n            fail(\"BOOK_WRITE_PAUSED\", \"current complete ledger has pending obligations\", 3)\n        if not pending_ok and row[\"hold\"]:\n            fail(\"TARGET_DRIFT_HOLD\", row[\"hold\"], 3)\n        return row\n\n    def _pending(self, connection, key, except_intent=None):\n        rows = [dict(row) for row in connection.execute(\"SELECT * FROM intents WHERE book=? AND state='PENDING'\", (key,))\n                if row[\"id\"] != except_intent]\n        rows += [dict(row) for row in connection.execute(\"SELECT * FROM legacy WHERE book=?\", (key,))]\n        return rows",
+      "type": "STATIC_SOURCE_OR_DOCUMENT_EXCERPT_NOT_RUNTIME_RESULT"
+    },
+    {
+      "label": "POST_HOLD_PROOF_REQUIRES_CURRENT_HOLD",
+      "commit": "1330047dd29890dea0e433ff01b991f615bf78f4",
+      "path": "src/annotation/runtime/storage/native.py",
+      "raw_sha256": "a9b039a9989ffb3afc954c87b6adbf512cf1e4ba4833cbb9e07984735b35db9b",
+      "start": 258,
+      "end": 284,
+      "text": "    def _pre_lease(self, connection, reg, owner_id, generation, *, kind, context=None,\n                   expected_head=None, accepted=False):\n        \"\"\"POST_HOLD read-only PRE exception with explicit pending/hold/head checks.\n\n        Shared _lease still proves ACTIVE owner/generation/PID/instance. Its\n        ordinary and INITIAL hold prohibition is unchanged. This helper neither\n        clears a hold nor grants a plan/intent/permit or target effect.\n        \"\"\"\n        if kind not in ('INITIAL', 'POST_HOLD'):\n            fail('NATIVE_PRE_CONTEXT_INVALID')\n        post_hold = kind == 'POST_HOLD'\n        book = self._lease(connection, reg['book'], owner_id, generation, pending_ok=accepted or post_hold)\n        if post_hold:\n            if self._pending(connection, reg['book']):\n                fail('BOOK_WRITE_PAUSED', 'POST_HOLD PRE cannot bypass unresolved book obligations', 3)\n            if not book['hold']:\n                fail('NATIVE_RUN_CURRENTNESS' if context else 'NATIVE_PRE_CONTEXT_INVALID', 'POST_HOLD needs the actual current hold')\n            event = self._post_hold_event(connection, reg, book)\n            if context is not None:\n                if context['hold_id'] != book['hold']:\n                    fail('NATIVE_RUN_CURRENTNESS', 'POST_HOLD run belongs to another hold')\n                if (expected_head is None or context['hold_head'] != {'sequence': expected_head[0], 'hash': expected_head[1]}):\n                    fail('NATIVE_RUN_STALE_HEAD', 'POST_HOLD context does not bind its registered head')\n                if self.read_resource(context['hold_ref'], reg['id']) != event:\n                    fail('NATIVE_RUN_CURRENTNESS', 'POST_HOLD resource is not the exact current hold event')\n        if expected_head is not None and (book['head_sequence'], book['head_hash']) != expected_head:\n            fail('NATIVE_RUN_STALE_HEAD', 'whole-book head progressed after actual PRE')",
+      "type": "STATIC_SOURCE_OR_DOCUMENT_EXCERPT_NOT_RUNTIME_RESULT"
+    },
+    {
+      "label": "ASSERT_PRE_USES_CURRENT_PROOF",
+      "commit": "1330047dd29890dea0e433ff01b991f615bf78f4",
+      "path": "src/annotation/runtime/storage/native.py",
+      "raw_sha256": "a9b039a9989ffb3afc954c87b6adbf512cf1e4ba4833cbb9e07984735b35db9b",
+      "start": 160,
+      "end": 174,
+      "text": "        if operation == 'assert_pre':\n            entry = self.admitted.get(digest(kwargs['pre_ref']))\n            if not entry or type(entry[0]) is not AdmittedPreRun or entry[0]._token is not entry[1]:\n                fail('NATIVE_ADMITTED_RUN_REQUIRED', 'PASS bytes or reopened registry cannot recreate process-private proof')\n            with self.store.connect() as connection:\n                row = dict(connection.execute('SELECT * FROM native_pre_runs WHERE id=?', (entry[0].run_id,)).fetchone())\n            if json.loads(row['pre_ref']) != plain(kwargs['pre_ref']) or json.loads(row['snapshot']) != plain(kwargs['snapshot_ref']):\n                fail('NATIVE_PRE_BINDING_MISMATCH')\n            self._current(row, accepted=bool(row['accepted_plan']))\n            if row['accepted_plan']:\n                with self.store.connect() as connection:\n                    plan = connection.execute('SELECT * FROM plans WHERE id=?', (row['accepted_plan'],)).fetchone()\n                    if not plan or plan['status'] != 'RUNNING':\n                        fail('NATIVE_ACCEPTED_PLAN_NOT_CURRENT')\n            return entry[0]",
+      "type": "STATIC_SOURCE_OR_DOCUMENT_EXCERPT_NOT_RUNTIME_RESULT"
+    },
+    {
+      "label": "CLEAR_REQUIRES_INDEXED_CANDIDATE",
+      "commit": "1330047dd29890dea0e433ff01b991f615bf78f4",
+      "path": "src/annotation/runtime/storage/holds.py",
+      "raw_sha256": "a9f1ab4df356681b2df1d882faef1b9d9a08bb6b7d91dd514684dbfbaf1b2275",
+      "start": 291,
+      "end": 337,
+      "text": "        with self.connect() as connection:\n            rows = connection.execute('SELECT key FROM books WHERE hold=?', (hold_id,)).fetchall()\n            if len(rows) != 1:\n                fail('HOLD_EVIDENCE_INVALID', 'exact active hold does not exist')\n            target_key = json.loads(connection.execute('SELECT target_key FROM books WHERE key=?', (rows[0]['key'],)).fetchone()[0])\n        reg = self._hold_registration(target_key)\n        observer = self._hold_observer(reg)\n        with self.effect_gate(target_key).acquire():\n            self.verify_integrity()\n            with self.connect() as connection:\n                book = self._lease(connection, reg['book'], owner_id, generation, pending_ok=True)\n                if book['hold'] != hold_id:\n                    fail('HOLD_EVIDENCE_INVALID', 'active hold changed')\n                if self._pending(connection, reg['book']):\n                    fail('BOOK_WRITE_PAUSED', 'all book scopes must have no unresolved save obligation', 3)\n                expected_head = (book['head_sequence'], book['head_hash'])\n                hold = None\n                for row in connection.execute('SELECT body FROM events WHERE book=? ORDER BY sequence DESC', (reg['book'],)):\n                    event = json.loads(row['body'])\n                    if event['event'] == 'TARGET_DRIFT_HOLD' and event['payload'].get('hold_id') == hold_id:\n                        hold = event\n                        break\n                if hold is None:\n                    fail('HOLD_EVIDENCE_INVALID', 'active hold lacks its immutable event')\n                refs = [(snapshot_ref, 'PlatformSnapshot'), (precheck_ref, 'CheckReport'),\n                        (targetcheck_ref, 'CheckReport'), (candidate_plan_ref, 'ApplyPlan')]\n                snapshot, precheck, targetcheck, plan = [self._hold_artifact(connection, ref, reg, kind) for ref, kind in refs]\n                native, _, native_resource = self._hold_native_for_snapshot(connection, reg, observer, snapshot_ref)\n            self._hold_fence(observer, target_key, owner_id, generation)\n            hp = hold['payload']\n            if (_time(native['observed_at']) <= max(_time(hp['observed_at']), _time(hold['recorded_at'])) or\n                    native['read_sequence'] <= hp['read_sequence']):\n                fail('OBSERVATION_NOT_FRESH', 'candidate snapshot must be a new actual observation after the hold')\n            if (plain(precheck_ref) in hp['prior_precheck_refs'] or _time(precheck['created_at']) <= _time(hold['recorded_at']) or\n                    precheck['payload']['stage'] != 'PRE_APPLY' or precheck['payload']['decision'] != 'PASS'):\n                fail('HOLD_EVIDENCE_INVALID', 'a genuinely new post-hold PRE_APPLY is required; old PRE cannot be relabeled by this runtime')\n            pp = plan['payload']\n            if (pp['snapshot'] != plain(snapshot_ref) or pp['precheck'] != plain(precheck_ref) or\n                    pp['targetcheck'] != plain(targetcheck_ref) or targetcheck['payload']['stage'] != 'TARGET' or\n                    targetcheck['payload']['snapshot'] != plain(snapshot_ref) or targetcheck['payload']['subject'] != plain(snapshot_ref) or\n                    targetcheck['payload']['decision'] != 'PASS' or _time(targetcheck['created_at']) < _time(native['observed_at']) or\n                    _time(plan['created_at']) < max(_time(native['observed_at']), _time(precheck['created_at']), _time(targetcheck['created_at']))):\n                fail('HOLD_EVIDENCE_INVALID', 'candidate plan/new PRE/new TARGET/current snapshot bindings differ')\n            try:\n                bundle = self._validate(self.bundle(reg['id']), asset_root=reg['package_root'])\n                selected = assert_recovery_plan_ready(bundle, candidate_plan_ref, snapshot_ref, bridge_context=getattr(bundle, \"bridge_context\", None))\n                verify_generated_plan(bundle, selected, snapshot_ref, configuration(json.loads(reg['config'])), bridge_context=getattr(bundle, \"bridge_context\", None))",
+      "type": "STATIC_SOURCE_OR_DOCUMENT_EXCERPT_NOT_RUNTIME_RESULT"
+    },
+    {
+      "label": "CLEAR_LOCAL_CURRENTNESS_AND_EVENT",
+      "commit": "1330047dd29890dea0e433ff01b991f615bf78f4",
+      "path": "src/annotation/runtime/storage/holds.py",
+      "raw_sha256": "a9f1ab4df356681b2df1d882faef1b9d9a08bb6b7d91dd514684dbfbaf1b2275",
+      "start": 341,
+      "end": 365,
+      "text": "            # Retain the same book gate while the independent target is read.\n            # No dispatch permit is issued or consumed by this route.\n            self.renew(target_key, owner_id=owner_id, generation=generation)\n            captured, verified_snapshot, actual = self._hold_read(reg, observer, deadline)\n            if (actual['target_state_hash'], actual['target_state_version']) != (native['target_state_hash'], native['target_state_version']):\n                fail('TARGET_CHANGED', 'target changed after candidate planning; hold remains', 3)\n            self.fault('BEFORE_HOLD_CLEAR_COMMIT')\n            with self.transaction() as connection:\n                book = self._lease(connection, reg['book'], owner_id, generation, pending_ok=True)\n                self._hold_assert_head(book, expected_head)\n                if book['hold'] != hold_id or self._pending(connection, reg['book']):\n                    fail('BOOK_WRITE_PAUSED', 'hold or full-book unresolved set changed', 3)\n                self._hold_current(observer, target_key, owner_id, generation, actual)\n                if time.monotonic() >= deadline:\n                    fail('RECOVERY_DEADLINE_EXCEEDED', 'hold clearance deadline exhausted', 6)\n                self._append(connection, reg['id'], verified_snapshot)\n                payload = {'hold_id': hold_id, 'hold_event_hash': hold['event_hash'], 'registration_id': reg['id'],\n                    'plan_ref': plain(candidate_plan_ref), 'candidate_plan_ref': plain(candidate_plan_ref),\n                    'snapshot_ref': plain(snapshot_ref), 'precheck_ref': plain(precheck_ref), 'targetcheck_ref': plain(targetcheck_ref),\n                    'candidate_observation': native_resource, 'verification_observation': captured['resource'],\n                    'verification_snapshot_ref': reference(verified_snapshot), 'target_state_hash': actual['target_state_hash'],\n                    'target_state_version': actual['target_state_version'], 'read_sequence': actual['read_sequence']}\n                event = self._event(connection, reg['book'], 'HOLD_CLEARED', payload)\n                connection.execute('UPDATE books SET hold=NULL WHERE key=? AND hold=?', (reg['book'], hold_id))\n            return Handle(cleared=True, hold_id=hold_id, event_head={'sequence': event['sequence'], 'hash': event['event_hash']},",
+      "type": "STATIC_SOURCE_OR_DOCUMENT_EXCERPT_NOT_RUNTIME_RESULT"
+    },
+    {
+      "label": "INDEXED_ARTIFACT_ONLY",
+      "commit": "1330047dd29890dea0e433ff01b991f615bf78f4",
+      "path": "src/annotation/runtime/storage/holds.py",
+      "raw_sha256": "a9f1ab4df356681b2df1d882faef1b9d9a08bb6b7d91dd514684dbfbaf1b2275",
+      "start": 63,
+      "end": 75,
+      "text": "    def _hold_artifact(self, connection, ref, reg, kind=None):\n        from annotation.contracts import content_digest\n        ref = plain(ref)\n        if not isinstance(ref, dict) or set(ref) != {'artifact_id', 'revision', 'kind', 'content_hash'}:\n            fail('HOLD_EVIDENCE_INVALID', 'exact four-field artifact reference required')\n        rows = connection.execute('SELECT path FROM artifacts WHERE ref=? AND book=? AND scope=?',\n            (canonical(ref).decode(), self.target_key(reg['id'])['book_id'], reg['scope'])).fetchall()\n        if len(rows) != 1:\n            fail('HOLD_EVIDENCE_INVALID', 'artifact is not indexed in the exact registered book/scope')\n        artifact = json.loads(Path(rows[0]['path']).read_bytes())\n        if reference(artifact) != ref or content_digest(artifact) != ref['content_hash'] or (kind and artifact['kind'] != kind):\n            fail('HOLD_EVIDENCE_INVALID', 'indexed artifact identity or bytes differ')\n        return artifact",
+      "type": "STATIC_SOURCE_OR_DOCUMENT_EXCERPT_NOT_RUNTIME_RESULT"
+    },
+    {
+      "label": "ARCHIVE_IMPORT_CLASSIFICATION",
+      "commit": "1330047dd29890dea0e433ff01b991f615bf78f4",
+      "path": "src/annotation/runtime/storage/__init__.py",
+      "raw_sha256": "d5edd3e106e161f24bf1c8def72321492c7b8f31b72c44771ac5f5f31fa6d445",
+      "start": 906,
+      "end": 922,
+      "text": "        key = self.book_id(target_key)\n        resource = self.object({\"eligibility\": \"ARCHIVE_ONLY\", \"bundle\": value,\n            \"archive_root\": str(archive_root), \"original_sha256\": hashlib.sha256(original_bytes).hexdigest()})\n        rows = []\n        with self.transaction() as connection:\n            if not connection.execute(\"SELECT 1 FROM books WHERE key=?\", (key,)).fetchone():\n                connection.execute(\"INSERT INTO books(key,target_key,journal,head_hash) VALUES(?,?,?,?)\", (key, canonical(target_key).decode(), unique(\"journal\"), ZERO))\n            for artifact in value[\"artifacts\"]:\n                self._artifact(connection, artifact)\n                if artifact[\"kind\"] == \"ExecutionReceipt\" and artifact[\"book_id\"] == target_key[\"book_id\"]:\n                    for result in artifact[\"payload\"][\"results\"]:\n                        if result[\"outcome\"] == \"UNKNOWN\":\n                            identity = digest({\"receipt\": reference(artifact), \"action\": result[\"action_id\"]})\n                            connection.execute(\"INSERT OR IGNORE INTO legacy VALUES(?,?,?,?,?)\", (identity, key, artifact[\"scope_id\"], \"LEGACY_UNRECORDED\", str(resource)))\n                            rows.append(identity)\n            self._event(connection, key, \"HISTORY_ARCHIVE_IMPORTED\", {\"archive_sha256\": digest(value), \"legacy_ids\": rows})\n        return {\"archive_only\": True, \"legacy_ids\": rows, \"classification\": \"LEGACY_UNRECORDED\" if rows else \"ARCHIVE_ONLY\"}",
+      "type": "STATIC_SOURCE_OR_DOCUMENT_EXCERPT_NOT_RUNTIME_RESULT"
+    },
+    {
+      "label": "RECONCILE_BUDGET",
+      "commit": "1330047dd29890dea0e433ff01b991f615bf78f4",
+      "path": "src/annotation/runtime/recovery/__init__.py",
+      "raw_sha256": "c62a558218e333e212a928a9bf0bb94a79a45e4bb91b08ee5a705e38bc12200d",
+      "start": 135,
+      "end": 170,
+      "text": "def reconcile(store, registration_id=None, *, call_id=None, read_fault=None, owner_id=None,\n              max_attempts=3, intent_filter=None):\n    from annotation.contracts import validate_recovery_bundle\n    from annotation.delivery.reconciler import reconcile_action, make_reconciliation_result\n    from .observation import observe_bounded\n    if type(max_attempts) is not int or not 1 <= max_attempts <= 3:\n        fail(\"RECONCILE_ATTEMPT_LIMIT\", \"approved per-call maximum is three\", 2)\n    reg = store.registration(registration_id)\n    key, observer = store.target_key(reg[\"id\"]), open_observer(store, reg[\"id\"])\n    call = store.begin_recovery_call(key, call_id)\n    deadline = time.monotonic() + min(60, max(0, call[\"created\"] + 60 - time.time()))\n    claim = claim_current(store, observer, key, owner_id, deadline=deadline)\n    owner, generation = claim[\"owner_id\"], claim[\"generation\"]\n    results = []\n    attempts_total = 0\n    from .lease import LeaseKeeper\n    keeper = LeaseKeeper(store, key, owner, generation).start()\n    try:\n        for iid in json.loads(call[\"queue\"]):\n            keeper.check()\n            row = store.pending_intent(iid)\n            if row[\"state\"] != \"PENDING\":\n                continue\n            if intent_filter and iid != intent_filter:\n                results.append({\"intent_id\": iid, \"status\": \"NOT_VISITED\", \"attempt_count\": 0})\n                continue\n            intent_started = time.monotonic()\n            per_intent = min(deadline, intent_started + store.intent_remaining_seconds(call[\"id\"], iid))\n            record = {\"intent_id\": iid, \"status\": \"STILL_UNKNOWN\", \"classification\": \"INDETERMINATE\", \"attempt_count\": 0}\n            for _ in range(max_attempts):\n                keeper.check()\n                if time.monotonic() >= per_intent:\n                    record[\"code\"] = \"RECOVERY_DEADLINE_EXCEEDED\"\n                    break\n                try:\n                    number = store.register_attempt(call[\"id\"], iid, owner_id=owner, generation=generation)",
+      "type": "STATIC_SOURCE_OR_DOCUMENT_EXCERPT_NOT_RUNTIME_RESULT"
+    },
+    {
+      "label": "PERSISTED_ATTEMPT_LIMIT",
+      "commit": "1330047dd29890dea0e433ff01b991f615bf78f4",
+      "path": "src/annotation/runtime/storage/__init__.py",
+      "raw_sha256": "d5edd3e106e161f24bf1c8def72321492c7b8f31b72c44771ac5f5f31fa6d445",
+      "start": 936,
+      "end": 958,
+      "text": "    def register_attempt(self, call_id, intent_id, *, owner_id, generation):\n        with self.transaction() as connection:\n            call = connection.execute(\"SELECT * FROM calls WHERE id=?\", (call_id,)).fetchone()\n            if not call or intent_id not in json.loads(call[\"queue\"]):\n                fail(\"RECOVERY_CALL_CONFLICT\")\n            self._lease(connection, call[\"book\"], owner_id, generation, pending_ok=True)\n            if time.time() - call[\"created\"] >= 60:\n                fail(\"RECOVERY_DEADLINE_EXCEEDED\", \"persisted call deadline exhausted\", 6)\n            window = connection.execute(\"SELECT started FROM attempt_windows WHERE call_id=? AND intent=?\", (call_id, intent_id)).fetchone()\n            if window and time.time() - window[0] >= 8:\n                fail(\"RECOVERY_DEADLINE_EXCEEDED\", \"persisted intent window exhausted\", 6)\n            connection.execute(\"INSERT OR IGNORE INTO attempt_windows VALUES(?,?,?)\", (call_id, intent_id, time.time()))\n            count = connection.execute(\"SELECT COUNT(*) FROM attempts WHERE call_id=? AND intent=?\", (call_id, intent_id)).fetchone()[0]\n            if count >= 3:\n                fail(\"RECONCILE_ATTEMPT_LIMIT\", \"persisted per-call attempts exhausted\", 3)\n            number = count + 1\n            connection.execute(\"INSERT INTO attempts VALUES(?,?,?,'STARTED',NULL)\", (call_id, intent_id, number))\n        return number\n\n    def intent_remaining_seconds(self, call_id, intent_id):\n        with self.connect() as connection:\n            row = connection.execute(\"SELECT started FROM attempt_windows WHERE call_id=? AND intent=?\", (call_id, intent_id)).fetchone()\n        return 8 if not row else max(0, 8 - (time.time() - row[0]))",
+      "type": "STATIC_SOURCE_OR_DOCUMENT_EXCERPT_NOT_RUNTIME_RESULT"
+    },
+    {
+      "label": "CONVERTER_LEGACY_COMPLETION",
+      "commit": "1330047dd29890dea0e433ff01b991f615bf78f4",
+      "path": "src/annotation/contracts/recovery.py",
+      "raw_sha256": "0aee20dcc74fa38493cff2a3322f09603557d60cb29a36754ee25b7f369a4c31",
+      "start": 1273,
+      "end": 1279,
+      "text": "                'bundle_sha256': file_digest(bundle_path), 'mapping_path': str(output_dir / 'conversion-manifest.json'),\n                'status': 'INITIAL_SIMULATED_INPUT_ONLY', 'artifact_mappings': mappings,\n                'resource_mappings': resource_records, 'history_migrated': False}\n    with (output_dir / 'conversion-manifest.json').open('x', encoding='utf-8', newline='\\n') as handle:\n        handle.write(json.dumps(manifest, ensure_ascii=False, indent=2) + '\\n')\n    # Keep the initial marker as diagnostic history, now explicitly completed.\n    incomplete.write_text(json.dumps({'conversion_id': conversion_id, 'status': 'COMPLETED_NEW_FIXTURE',",
+      "type": "STATIC_SOURCE_OR_DOCUMENT_EXCERPT_NOT_RUNTIME_RESULT"
+    },
+    {
+      "label": "NATIVE_FRESH_META",
+      "commit": "1330047dd29890dea0e433ff01b991f615bf78f4",
+      "path": "src/annotation/runtime/storage/native.py",
+      "raw_sha256": "a9b039a9989ffb3afc954c87b6adbf512cf1e4ba4833cbb9e07984735b35db9b",
+      "start": 435,
+      "end": 455,
+      "text": "def init_native_state(anchor_path, state_dir, *, expected_ledger_id, expected_target_store_id, before_completion=None):\n    anchor, directory = Path(anchor_path).resolve(), Path(state_dir).resolve()\n    if anchor.exists() or directory.exists():\n        fail('STATE_INIT_TARGET_EXISTS', 'native init requires two fresh paths', 5)\n    directory.mkdir(parents=True)\n    selection = select_native_codec()\n    metadata = {'version': NativeRuntimeStore._db_version, 'ledger_id': expected_ledger_id,\n        'target_store_id': expected_target_store_id, 'state_dir': str(directory), 'profile': selection.profile_id,\n        'profile_sha256': selection.profile_sha256, 'adoption_sha256': selection.adoption_sha256,\n        'initialization': 'COMPLETE', 'migration': 'NOT_IMPLEMENTED_BLOCKED'}\n    with sqlite3.connect(str(directory / 'runtime.sqlite3')) as connection:\n        connection.execute('PRAGMA application_id=' + str(NativeRuntimeStore._application_id))\n        connection.execute('PRAGMA user_version=4')\n        connection.executescript(SQL + NATIVE_SQL)\n        if before_completion is not None:\n            before_completion()\n        connection.executemany('INSERT INTO meta VALUES(?,?)', metadata.items())\n    descriptor = {'format_version': 'a03-native-runtime-anchor-1', 'state_dir': str(directory),\n        'anchor_path': str(anchor), 'ledger_id': expected_ledger_id,\n        'target_store_id': expected_target_store_id, 'db_version': NativeRuntimeStore._db_version}\n    exclusive_bytes(anchor, canonical(descriptor))",
+      "type": "STATIC_SOURCE_OR_DOCUMENT_EXCERPT_NOT_RUNTIME_RESULT"
+    },
+    {
+      "label": "CLI_LEGACY",
+      "commit": "1330047dd29890dea0e433ff01b991f615bf78f4",
+      "path": "src/annotation/runtime/recovery/cli.py",
+      "raw_sha256": "4eeb8a836d332448caae3e5d13688a3c36ae9c389cb6bb43b4b08574a73f0ef7",
+      "matched_lines": [
+        {
+          "line": 7,
+          "text": "from annotation.runtime.storage import init_state, open_state"
+        },
+        {
+          "line": 26,
+          "text": "        store = init_state(request[\"anchor_path\"], state_dir=request[\"state_dir\"], **expected)"
+        },
+        {
+          "line": 38,
+          "text": "    store = open_state(request[\"anchor_path\"], **expected)"
+        },
+        {
+          "line": 82,
+          "text": "    if operation == \"replan\":"
+        },
+        {
+          "line": 115,
+          "text": "def _build_current_plan_locked(store, registration_id, observer, config):"
+        },
+        {
+          "line": 130,
+          "text": "    pre = next(a for a in bundle.artifacts if a.kind == \"CheckReport\" and a.payload.stage == \"PRE_APPLY\")"
+        }
+      ],
+      "type": "STATIC_SOURCE_OR_DOCUMENT_EXCERPT_NOT_RUNTIME_RESULT"
+    },
+    {
+      "label": "R1_DECISIONS",
+      "commit": "f7084b2e8f2e9a1fcf758f9cba56ec9c9fb1f304",
+      "path": "docs/tasks/A03-P2-R1-proposal-coordinator-decision.md",
+      "raw_sha256": "33142b401e7059db37af03e9c7d601086eae342c550305deea65468aaee24211",
+      "matched_lines": [
+        {
+          "line": 17,
+          "text": "| 未尝试只读预算 | 选定独立持久计数的最多 **3 次实际读取**，包含最终 currentness 读；每读2秒、entry8秒、parent60秒、busy1秒、gate5秒、lease10秒/续期2秒，均由最早绝对期限截短。retries=0；读前计数，崩溃耗次；同 entry/call 接管或重开不重置。无 intent 不借用 intent 计数，不自动换 call 循环。 | 三读的准确时点、失败/耗尽和永久唯一 fact key；后续功能证明计数及期限，而非值包自报。 |"
+        },
+        {
+          "line": 18,
+          "text": "| 排他与 CAS | 选择有持久记录的 logical readonly session；中间可释放 OS gate。所有受控目标写入口、claim/takeover 均需尊重 active session。最终第三读在短 gate 内，随后只做本地校验和 CAS，不暗加第四次目标业务读。H0 必须是本 session STARTED 前真实头，至 Hfinal 的窗口只能有本 session 许可记账；owner/generation/registration/target/session/read 绑定一致。 | 死亡/过期 session 明确收口，lease 失效即暂停；不得声称新增逻辑锁已实现。若静态协议无法证明所有写入口覆盖，应列具体阻断，不退化成布尔标志。 |"
+        },
+        {
+          "line": 19,
+          "text": "| 已知 DB 接纳 | 选择显式接纳事务中的持久 profile meta 判别 + adoption event，新入口必须校验二者一致，旧严格 meta 比较必须拒绝新库。只接纳 exact 已知合成格式；不接纳未知库。接纳必须先有可核对的排他和旧 writer 退出条件，不能只防重新 open 而忽略已持有连接。 | 明确 meta 键、版本、事务/崩溃状态，跨 runtime/target fence 的顺序及不一致时停止效果；保留旧行/hash。无法在限定模型闭合则阻断接纳，不扩大自动迁移。 |"
+        },
+        {
+          "line": 20,
+          "text": "| R17 | 原 R17 的新 POST/Batch、精确有效结果、新检查、保留 UNKNOWN、拒绝旧报告/直接改 VERIFIED、PENDING/NOT_SUBMITTED 全部保持。下一段原生正向证据选用 **未改 A02 planner 生成的真实最小单动作计划**：UNKNOWN、null 原 receipt、终局 head、晚到完整 receipt、独立 report 读。不剪裁旧计划、不恢复旧尾。 | 单头路径也要证明可达性。多头/不同 snapshot 保留为值层表达与绑定验证，不能算原生恢复通过；在当前首 UNKNOWN 即停模型下不批准伪造多头历史或跨计划聚合。原生多头若未来需要，另立历史模型范围。此分层不豁免原 R17 的可达行为要求。 |"
+        },
+        {
+          "line": 22,
+          "text": "| 转换接纳点 | completion manifest 的写入/rename 仅是准备；选择追加的 **COMMITTED 状态记录**为唯一完成接纳点，它引用已落盘 manifest 的摘要。manifest 不回指 COMMITTED，避免自引用。rename 后未 COMMITTED 仍 INCOMPLETE；重开只读，不自动补提交，重做用新目录/新 ID。 | 完整静态目标及可解释的旧/新映射；旧 PRE/plan 的归档与新派生资格分开。新初始类型结构/语义一致；中断点实测留到功能阶段。 |"
+        },
+        {
+          "line": 23,
+          "text": "| 证据保全 | 接收历史 NOT_RETAINED 作为不可修复的已知限制，不把它记为通过或要求重建旧原件。采用新运行预登记、持久目录、原始流、失败 finally、退出及不可覆盖 run id 的保全原则。 | 后续所有新运行必须落实。缺失历史不得成为对未来失败删除证据的理由。 |"
+        }
+      ],
+      "type": "STATIC_SOURCE_OR_DOCUMENT_EXCERPT_NOT_RUNTIME_RESULT"
+    },
+    {
+      "label": "R2_STATIC_ONLY",
+      "commit": "f7084b2e8f2e9a1fcf758f9cba56ec9c9fb1f304",
+      "path": "docs/tasks/A03-P2-R2-proposal-coordinator-decision.md",
+      "raw_sha256": "130595f774882eb025df6050934f5fb62a3ecc2d3ac32d8460c93e22d7722a2b",
+      "matched_lines": [
+        {
+          "line": 12,
+          "text": "| SESSION-02 | ACCEPTED，仅本轮有限静态值 | 相同会话、H0/三读/Hfinal/fact 绑定及原损坏字段的定位拒绝；真实锁、计数持久化、读取、CAS 未执行。 |"
+        },
+        {
+          "line": 13,
+          "text": "| CONVERSION-07 | ACCEPTED，仅本轮有限静态值 | 初始类型、完整映射与分母、INITIAL/POST_HOLD、COMMITTED 静态完成点；实际转换与重开未执行。 |"
+        }
+      ],
+      "type": "STATIC_SOURCE_OR_DOCUMENT_EXCERPT_NOT_RUNTIME_RESULT"
+    },
+    {
+      "label": "R8_FIXED_LANGUAGE_FRESH_ONLY",
+      "commit": "f7084b2e8f2e9a1fcf758f9cba56ec9c9fb1f304",
+      "path": "docs/tasks/A03-P2-R8-native-bridge-implementation.md",
+      "raw_sha256": "b7dbf94ff06d8ba272b1bd20bf61afbe09fa1dd99c501dcb70f865ab36737721",
+      "matched_lines": [
+        {
+          "line": 14,
+          "text": "2. 采用固定合成 oracle 的五项判据作为本轮产品 producer 的唯一测试语言：R2 `oracle.json` SHA256 `659a715bd293026e28ec50f6bccbe1cecdf6511d168afc9f98d9ab05f6e8efb9`，纯比较 verifier SHA256 `6667659ccc71cf1c0769d2ca7c684021140046a71a2ca73e40699aa354afac2d`。保留两份历史原件的 CANDIDATE/false 标记；另加新采用记录说明迁移，不执行旧 examples 模块。产品实际读取完整资源、解析 32×32 PGM 并计算源完整性、结构、答案关系、覆盖分母、policy 五项；不能读预期答案后直接返回 PASS，不能以 Graph hash 相等替代比较。输入明确唯一 Source/Evidence/Graph/Policy，不能用最后一个同 kind 节点覆盖歧义。只证明这个固定合成语言，不能代表 OCR、B 质量或真实内容检查。"
+        },
+        {
+          "line": 30,
+          "text": "- planner 的投影、目录/题序、action-id、依赖、policy 和事实比较算法保持；通过上述真实 PRE/TARGET 调用现有 create_plan，固定单题应生成一个 CREATE_FRAMES。PreparedAction 必须来自实际 session；observation binding 保留 R4 全部 19 字段及同计划 progress，新增 snapshot/resources 在持久消费者提交前进入完整闭包。"
+        },
+        {
+          "line": 32,
+          "text": "本轮只创建新的合成 runtime/target 两个独立 SQLite 库。为新格式增加明确 meta/profile/adoption 记录及严格 open 检查；原默认入口拒绝新格式，新入口拒绝不匹配/中断的格式。未知库、既有旧库接纳与旧连接迁移保持阻断，不能隐式迁移或重置。实际 read budget/期限/lease 继续采用 P1/R1 已选值，读前计数、崩溃耗次、retries=0；不能通过新 call/重开刷新预算。原 A03 更广泛数据库迁移与故障矩阵不是本轮接受范围。"
+        },
+        {
+          "line": 54,
+          "text": "| N7 新库生命周期 | 全新双库版本/profile/adoption 元数据严格绑定，重开身份一致；一项不完整初始化在正式完成点前拒绝且无效果。旧库接纳保持 NOT_IMPLEMENTED/BLOCKED，不伪称完成。 |"
+        },
+        {
+          "line": 58,
+          "text": "最多一次本轮局部修复，仅复跑实际受影响组，保留首次失败；超出范围或出现新的独立语义阻断后交付具体残余，不扩大矩阵、换大量候选或无限返工。N1 不能闭合时交真实最短失败位置和其余已完成实现，不补造后续成功值。原 P2 V01–V10/R01–R18 未被豁免；本轮审阅后再核定剩余明确项目，不能把这一条单动作链等同于全功能验收。"
+        }
+      ],
+      "type": "STATIC_SOURCE_OR_DOCUMENT_EXCERPT_NOT_RUNTIME_RESULT"
+    },
+    {
+      "label": "R8R3_POST_HOLD_LIMIT",
+      "commit": "f7084b2e8f2e9a1fcf758f9cba56ec9c9fb1f304",
+      "path": "docs/tasks/A03-P2-R8-R3-post-hold-coordinator-decision.md",
+      "raw_sha256": "fcbff83bb8de4c0505c3ca6788327a426f9c34a5d9047f6a17e4c2daa746b0d9",
+      "matched_lines": [
+        {
+          "line": 9,
+          "text": "POST_HOLD 现在能在合法 owner/generation 下启动只读预检、核对当前性并正式接纳；INITIAL、pending 和普通写入的禁令保留。独立 N2 在同一真实 hold 下产生两个不同 generation/head 的 ADMITTED 运行，旧证明及真实 60 秒超时被拒绝，hold 未清除，效果仍为一次。不同 hold 替换、合格解除 hold 后恢复写入没有由本例证明。"
+        },
+        {
+          "line": 15,
+          "text": "## N7 原失败的处理"
+        },
+        {
+          "line": 17,
+          "text": "原 N7 在旧入口拒绝原生目标时，新增断言要求外层错误码 `TARGET_STORE_VERSION_UNSUPPORTED`；实际 `ContractError` 继承 `ValueError`，被外层捕获并包装为 `TARGET_STORE_CORRUPT`，消息保留版本不支持原因。冻结的 V08/R14 要求 fail closed 和可定位错误，没有约定这个精确外层符号。已审源码/合同/测试中未见依赖该符号的其他消费分支。"
+        },
+        {
+          "line": 19,
+          "text": "因此本调度采用独立分类：**这是新增驱动断言过严，本轮不要求修改 persistent.py，也不重跑这个失败路径**。原 FAILED 与 stderr 永久保留，不能改成 PASS。该差异对外层诊断可见；没有原 N7 专用前后摘要对，不补称所有 I/O 完全未变化。初始化中断分支当时尚未到达。"
+        }
+      ],
+      "type": "STATIC_SOURCE_OR_DOCUMENT_EXCERPT_NOT_RUNTIME_RESULT"
+    },
+    {
+      "label": "R8R4_MULTI_PENDING",
+      "commit": "f7084b2e8f2e9a1fcf758f9cba56ec9c9fb1f304",
+      "path": "docs/tasks/A03-P2-R8-R4-remaining-coordinator-decision.md",
+      "raw_sha256": "4289d650b01b5bbf0cd8ac08a80e4fb0b08034845c96f57948100db48f7b0cb7",
+      "matched_lines": [
+        {
+          "line": 11,
+          "text": "N7 通过现有 before_completion 钩子产生一次同进程受控异常，原异常传播；runtime 有表但没有完成标记和 anchor，随后正常 open 一次拒绝。目标库未创建。这不是进程崩溃或目标初始化全部故障点的证明。原 R3 N7 FAILED 和“新增外层诊断断言过严”的分类永久保留，未重跑或改写为 PASS。"
+        },
+        {
+          "line": 23,
+          "text": "当前 synthetic_precheck 明确只接受固定32×32、单题、两片段语言。下一轮不把两题夹具当作现成支持，也不暗改 oracle/版本/pins。正常多动作、混合尾段及充分/不足 ABSENT、跨 scope/run/书未决、竞争者、其他故障切点、版本/身份/资格负例、归档转换、报告/分母/次数边界继续按原覆盖表保留。后续多动作能力须有明确的有限实现与采用范围，不让当前单题演示替代它。"
+        }
+      ],
+      "type": "STATIC_SOURCE_OR_DOCUMENT_EXCERPT_NOT_RUNTIME_RESULT"
+    },
+    {
+      "label": "R10_LIMITED_ACCEPTANCE",
+      "commit": "f7084b2e8f2e9a1fcf758f9cba56ec9c9fb1f304",
+      "path": "docs/tasks/A03-P2-R10-owner-fencing-coordinator-decision.md",
+      "raw_sha256": "6f526b74583c7b5e21775989ca5c6202731ab13f54d7372fa36ed0ebe82ad65d",
+      "matched_lines": [
+        {
+          "line": 3,
+          "text": "2026-10-18（Asia/Shanghai）。target `1c26b4a8eb378af33e57668472d2071e9ea6afff` 的 **C1 双进程同书claim互斥、C2实际换代后存活旧持有者run_plan拒绝有限 ACCEPTED**。这是原V06/R09中的两个子项；整个 native A03仍未完成、未整体集成，I01未释放。"
+        },
+        {
+          "line": 9,
+          "text": "C1共同放行前两进程均就绪；一个ACTIVE、一个OWNER_BUSY，双方都存活至结果观察完成，再正常释放。C2的原A确实拥有正式PRE/计划及第一代claim；正常释放后B第二代接管，仍存活的旧A在run_plan的lease守卫收到OWNER_GENERATION_STALE，拒绝前后无新增intent/permit/效果且B继续ACTIVE。最终两例effects均0；不把claim互斥与旧资格拒绝冒称已完成效果提交竞争或死进程回收。"
+        },
+        {
+          "line": 13,
+          "text": "本次只归档证据与有限接受，不集成候选产品、不推送、不表示B共同确认。续派[四个剩余崩溃切点验证](A03-P2-R11-crash-cut-validation.md)，对应原V02/R03；现有AFTER_INTENT_COMMIT与效果后丢回执证据只引用、不重演。多动作/混合尾段、其他ABSENT/冲突矩阵、新检查/真正新计划、跨scope/run/书、版本/资格/迁移/报告/分母/次数等仍按原清单保留。多动作仍需明确采用范围；B包版本映射未共同确认。"
+        }
+      ],
+      "type": "STATIC_SOURCE_OR_DOCUMENT_EXCERPT_NOT_RUNTIME_RESULT"
+    },
+    {
+      "label": "R11_FOUR_CUTS_ONLY",
+      "commit": "f7084b2e8f2e9a1fcf758f9cba56ec9c9fb1f304",
+      "path": "docs/tasks/A03-P2-R11-crash-cuts-coordinator-decision.md",
+      "raw_sha256": "bfdd3972009c1bb49234917a4f3c9c8f5cef80d74111e34f378a0d7ceee62a2c",
+      "matched_lines": [
+        {
+          "line": 3,
+          "text": "2026-10-18（Asia/Shanghai）。结论：**ACCEPTED，范围仅为固定单题的四个崩溃切点**。"
+        },
+        {
+          "line": 9,
+          "text": "| BEFORE_INTENT_COMMIT | 已预留 plan/action，但没有 intent、permit 或效果；新进程只查询，不伪造 UNKNOWN 或未尝试回执。 |"
+        },
+        {
+          "line": 10,
+          "text": "| AFTER_DISPATCH_STARTED | intent 和已消费 permit 已落库，效果为 0；新进程保留未决事实，经一次完整新读回解决为 NOT_APPLIED，仍保留可能已尝试的事实，不重发旧动作。 |"
+        },
+        {
+          "line": 11,
+          "text": "| AFTER_READBACK_CAPTURE | 效果为 1，结果尚未提交；新进程保留 UNKNOWN，经一次新独立读回解决为 APPLIED，效果不增加。 |"
+        },
+        {
+          "line": 12,
+          "text": "| AFTER_RECEIPT_COMMIT | 正式 APPLIED 回执已经落库；新进程只查询，两库字节不变，效果仍为 1，不补造恢复 resolution。 |"
+        },
+        {
+          "line": 18,
+          "text": "执行者 F2/F3 的中间数据库二进制原件仍缺失；当时 SQL、摘要、事件和产物只证明它们自己的证据层。独立验收实际保存的 32 份阶段原件支持上述独立结论，不能追补执行者缺件，也未把该限制改记为完整。"
+        },
+        {
+          "line": 20,
+          "text": "本次归档提交只保存证据、结论和下一任务；**不代表 native A03 已集成、已推送或 I01 已释放**。A03 整体仍为 REWORK。下一项为[原 V03/R05 的异常读回五例](A03-P2-R12-inconclusive-readback-validation.md)，不重跑已接受的 MATCH、ABSENT、R10 或 R11。其后仍按原清单核对未覆盖项及范围明确的集成；B 版本映射仍待双方确认。"
+        }
+      ],
+      "type": "STATIC_SOURCE_OR_DOCUMENT_EXCERPT_NOT_RUNTIME_RESULT"
+    }
+  ],
+  "ast_checks": {
+    "unattempted_inherited_unconditional_stub": true,
+    "legacy_converter_has_no_committed_record": true
+  },
+  "manual_static_path_findings": [
+    {
+      "id": "M3-SEAM-REGISTER",
+      "path": "POST_HOLD ADMITTED -> create_plan -> record_native_plan",
+      "finding": "record_native_plan calls ordinary _lease while hold is active; its candidate cannot be persisted by this listed path before clear.",
+      "anchors": [
+        "NATIVE_PLAN_WHILE_HOLD",
+        "ORDINARY_LEASE_HOLD_GUARD",
+        "CLEAR_REQUIRES_INDEXED_CANDIDATE",
+        "INDEXED_ARTIFACT_ONLY"
+      ],
+      "result_kind": "STATIC_COMPOSITION_GAP_NOT_DYNAMIC_FAILURE"
+    },
+    {
+      "id": "M3-SEAM-CONSUME",
+      "path": "clear_target_drift_hold -> run_plan -> assert_pre -> _current -> _pre_lease(POST_HOLD)",
+      "finding": "POST_HOLD proof validation still requires an active exact hold; a clear/use transition is not specified by the listed sequence.",
+      "anchors": [
+        "POST_HOLD_PROOF_REQUIRES_CURRENT_HOLD",
+        "ASSERT_PRE_USES_CURRENT_PROOF",
+        "CLEAR_LOCAL_CURRENTNESS_AND_EVENT"
+      ],
+      "result_kind": "STATIC_COMPOSITION_GAP_NOT_DYNAMIC_FAILURE"
+    },
+    {
+      "id": "CONVERSION-SCOPE",
+      "finding": "R1 static COMMITTED fixture rule and known-DB adoption are separate. R8 explicitly keeps old DB adoption blocked; current converter is legacy initial fixture only.",
+      "result_kind": "COORDINATOR_ADOPTION_DECISION_PENDING_NOT_IMPLICIT_MIGRATION_REQUIREMENT"
+    }
+  ],
+  "commands": [
+    {
+      "argv": [
+        "git",
+        "-c",
+        "core.longpaths=true",
+        "show",
+        "1330047dd29890dea0e433ff01b991f615bf78f4:src/annotation/runtime/storage/__init__.py"
+      ],
+      "cwd": "D:\\1800",
+      "exit_code": 0,
+      "completed_and_reaped": true,
+      "stdout_sha256": "d5edd3e106e161f24bf1c8def72321492c7b8f31b72c44771ac5f5f31fa6d445",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "git",
+        "-c",
+        "core.longpaths=true",
+        "show",
+        "1330047dd29890dea0e433ff01b991f615bf78f4:src/annotation/quality/synthetic_precheck.py"
+      ],
+      "cwd": "D:\\1800",
+      "exit_code": 0,
+      "completed_and_reaped": true,
+      "stdout_sha256": "f1a212e4b7693362945da1843c14e13264d16f7187b612671bec0b9f4f010aef",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "git",
+        "-c",
+        "core.longpaths=true",
+        "show",
+        "1330047dd29890dea0e433ff01b991f615bf78f4:src/annotation/delivery/planner/__init__.py"
+      ],
+      "cwd": "D:\\1800",
+      "exit_code": 0,
+      "completed_and_reaped": true,
+      "stdout_sha256": "78c4242c48730eb7b8fec5e7c13b0164a111a6475383c5a4cc4e9fb22c0bdfb4",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "git",
+        "-c",
+        "core.longpaths=true",
+        "show",
+        "1330047dd29890dea0e433ff01b991f615bf78f4:src/annotation/runtime/storage/native.py"
+      ],
+      "cwd": "D:\\1800",
+      "exit_code": 0,
+      "completed_and_reaped": true,
+      "stdout_sha256": "a9b039a9989ffb3afc954c87b6adbf512cf1e4ba4833cbb9e07984735b35db9b",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "git",
+        "-c",
+        "core.longpaths=true",
+        "show",
+        "1330047dd29890dea0e433ff01b991f615bf78f4:src/annotation/runtime/storage/holds.py"
+      ],
+      "cwd": "D:\\1800",
+      "exit_code": 0,
+      "completed_and_reaped": true,
+      "stdout_sha256": "a9f1ab4df356681b2df1d882faef1b9d9a08bb6b7d91dd514684dbfbaf1b2275",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "git",
+        "-c",
+        "core.longpaths=true",
+        "show",
+        "1330047dd29890dea0e433ff01b991f615bf78f4:src/annotation/runtime/recovery/__init__.py"
+      ],
+      "cwd": "D:\\1800",
+      "exit_code": 0,
+      "completed_and_reaped": true,
+      "stdout_sha256": "c62a558218e333e212a928a9bf0bb94a79a45e4bb91b08ee5a705e38bc12200d",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "git",
+        "-c",
+        "core.longpaths=true",
+        "show",
+        "1330047dd29890dea0e433ff01b991f615bf78f4:src/annotation/contracts/recovery.py"
+      ],
+      "cwd": "D:\\1800",
+      "exit_code": 0,
+      "completed_and_reaped": true,
+      "stdout_sha256": "0aee20dcc74fa38493cff2a3322f09603557d60cb29a36754ee25b7f369a4c31",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "git",
+        "-c",
+        "core.longpaths=true",
+        "show",
+        "1330047dd29890dea0e433ff01b991f615bf78f4:src/annotation/runtime/recovery/cli.py"
+      ],
+      "cwd": "D:\\1800",
+      "exit_code": 0,
+      "completed_and_reaped": true,
+      "stdout_sha256": "4eeb8a836d332448caae3e5d13688a3c36ae9c389cb6bb43b4b08574a73f0ef7",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "git",
+        "-c",
+        "core.longpaths=true",
+        "show",
+        "f7084b2e8f2e9a1fcf758f9cba56ec9c9fb1f304:docs/tasks/A03-P2-R1-proposal-coordinator-decision.md"
+      ],
+      "cwd": "D:\\1800",
+      "exit_code": 0,
+      "completed_and_reaped": true,
+      "stdout_sha256": "33142b401e7059db37af03e9c7d601086eae342c550305deea65468aaee24211",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "git",
+        "-c",
+        "core.longpaths=true",
+        "show",
+        "f7084b2e8f2e9a1fcf758f9cba56ec9c9fb1f304:docs/tasks/A03-P2-R2-proposal-coordinator-decision.md"
+      ],
+      "cwd": "D:\\1800",
+      "exit_code": 0,
+      "completed_and_reaped": true,
+      "stdout_sha256": "130595f774882eb025df6050934f5fb62a3ecc2d3ac32d8460c93e22d7722a2b",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "git",
+        "-c",
+        "core.longpaths=true",
+        "show",
+        "f7084b2e8f2e9a1fcf758f9cba56ec9c9fb1f304:docs/tasks/A03-P2-R8-native-bridge-implementation.md"
+      ],
+      "cwd": "D:\\1800",
+      "exit_code": 0,
+      "completed_and_reaped": true,
+      "stdout_sha256": "b7dbf94ff06d8ba272b1bd20bf61afbe09fa1dd99c501dcb70f865ab36737721",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "git",
+        "-c",
+        "core.longpaths=true",
+        "show",
+        "f7084b2e8f2e9a1fcf758f9cba56ec9c9fb1f304:docs/tasks/A03-P2-R8-R3-post-hold-coordinator-decision.md"
+      ],
+      "cwd": "D:\\1800",
+      "exit_code": 0,
+      "completed_and_reaped": true,
+      "stdout_sha256": "fcbff83bb8de4c0505c3ca6788327a426f9c34a5d9047f6a17e4c2daa746b0d9",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "git",
+        "-c",
+        "core.longpaths=true",
+        "show",
+        "f7084b2e8f2e9a1fcf758f9cba56ec9c9fb1f304:docs/tasks/A03-P2-R8-R4-remaining-coordinator-decision.md"
+      ],
+      "cwd": "D:\\1800",
+      "exit_code": 0,
+      "completed_and_reaped": true,
+      "stdout_sha256": "4289d650b01b5bbf0cd8ac08a80e4fb0b08034845c96f57948100db48f7b0cb7",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "git",
+        "-c",
+        "core.longpaths=true",
+        "show",
+        "f7084b2e8f2e9a1fcf758f9cba56ec9c9fb1f304:docs/tasks/A03-P2-R10-owner-fencing-coordinator-decision.md"
+      ],
+      "cwd": "D:\\1800",
+      "exit_code": 0,
+      "completed_and_reaped": true,
+      "stdout_sha256": "6f526b74583c7b5e21775989ca5c6202731ab13f54d7372fa36ed0ebe82ad65d",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "git",
+        "-c",
+        "core.longpaths=true",
+        "show",
+        "f7084b2e8f2e9a1fcf758f9cba56ec9c9fb1f304:docs/tasks/A03-P2-R11-crash-cuts-coordinator-decision.md"
+      ],
+      "cwd": "D:\\1800",
+      "exit_code": 0,
+      "completed_and_reaped": true,
+      "stdout_sha256": "bfdd3972009c1bb49234917a4f3c9c8f5cef80d74111e34f378a0d7ceee62a2c",
+      "stderr": ""
+    }
+  ],
+  "business_runs": 0,
+  "product_imports": 0,
+  "database_connections": 0
+}

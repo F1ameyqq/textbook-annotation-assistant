@@ -1,0 +1,104 @@
+{
+  "scope": "fixed independent review manifests, raw SQL copies, capture fixture, T3 references",
+  "business_calls": 0,
+  "full_suite": false,
+  "platform_actions": 0,
+  "manifests": {
+    "T1": {
+      "path": "docs/evidence/A03/T1/review/independent-01/manifest.json",
+      "sha256": "4621301d4ed6a6fcf804e1f7a550c937532c745ed5f5fe50f921b0eb89605a27",
+      "verified_members": 797
+    },
+    "T3": {
+      "path": "docs/evidence/A03/T3/review/manifest.json",
+      "sha256": "9b8732c0af648fb864e2ef8fd83209aad70128435f772bc538b97dd961bcb655",
+      "verified_members": 13
+    }
+  },
+  "release": {
+    "registered_processes": 37,
+    "released_owners": 6,
+    "global_pid_scan": false
+  },
+  "cases": {
+    "L1": {
+      "owner_released": true,
+      "report_reads": null,
+      "recovery_preserves_originals": false
+    },
+    "U1": {
+      "owner_released": true,
+      "report_reads": 0,
+      "recovery_preserves_originals": true
+    },
+    "U2": {
+      "owner_released": true,
+      "report_reads": 0,
+      "recovery_preserves_originals": true
+    },
+    "U3": {
+      "owner_released": true,
+      "report_reads": 0,
+      "recovery_preserves_originals": true
+    },
+    "U4": {
+      "owner_released": true,
+      "report_reads": 0,
+      "recovery_preserves_originals": true
+    },
+    "U5": {
+      "owner_released": true,
+      "report_reads": 0,
+      "recovery_preserves_originals": true
+    }
+  },
+  "capture_sha256": "3e07d56f409d8203c42f252f7a2900e902e31f56e1ff5fc7475335d33d0b042b",
+  "fixture": {
+    "exit_code": 0,
+    "result": {
+      "author_assertions": "PASS",
+      "business_calls": 0,
+      "connection_closed": true,
+      "errors": [],
+      "events": [
+        {
+          "at_ns": 1792292207257601700,
+          "event": "transaction-open"
+        },
+        {
+          "at_ns": 1792292207258667700,
+          "event": "finish-requested"
+        },
+        {
+          "at_ns": 1792292207265463400,
+          "event": "committed",
+          "in_transaction": false
+        },
+        {
+          "at_ns": 1792292207265463400,
+          "event": "connection-closed"
+        }
+      ],
+      "raw_byte_copy": true,
+      "sidecar_deletions": 0,
+      "sleep_calls": 0,
+      "synchronization": "transaction-open Event -> finish Event -> commit/close -> join -> raw copy -> immutable copy SQL",
+      "thread_joined": true
+    },
+    "business_calls": 0
+  },
+  "T3": {
+    "references": 70,
+    "linked_indexes": 44,
+    "unique_original_ids": 28,
+    "matrix": "ACCEPTED_LIMITED",
+    "plan": "C1_C4_REVISION_REQUIRED",
+    "product_execution": false
+  },
+  "decisions": {
+    "T1": "ACCEPTED_CAPTURE_AND_L1_U1_U5_ONLY",
+    "T3": "ACCEPTED_28_MAPPING_ONLY",
+    "A03": "REWORK",
+    "I01": "NOT_RELEASED"
+  }
+}
