@@ -1,0 +1,59 @@
+EEE
+======================================================================
+ERROR: test_resource_replacement_same_size_and_mtime_rejected_on_reuse (__main__.ValidationReuseTests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "D:\1800-worktrees\a03-r1-integration\tests\test_a03_r1_validation.py", line 40, in test_resource_replacement_same_size_and_mtime_rejected_on_reuse
+    good = self.store._validate(self.data, asset_root=self.root)
+  File "D:\1800-worktrees\a03-r1-integration\src\annotation\runtime\storage\native.py", line 260, in _validate
+    return _validate_native_for_registry(self.native_registry, bundle, root)
+  File "D:\1800-worktrees\a03-r1-integration\src\annotation\contracts\a03_native\__init__.py", line 130, in _validate_native_for_registry
+    data, manifest, selection = _validated_value(registry, bundle, root)
+  File "D:\1800-worktrees\a03-r1-integration\src\annotation\contracts\a03_native\__init__.py", line 161, in _validated_value
+    selection = select_native_codec()
+  File "D:\1800-worktrees\a03-r1-integration\src\annotation\contracts\a03_native\__init__.py", line 78, in select_native_codec
+    need(hashlib.sha256(location.read_bytes()).hexdigest() == expected,
+  File "D:\1800-worktrees\a03-r1-integration\src\annotation\contracts\a03_bridge\_errors.py", line 16, in need
+    raise StaticCodecError(code, path, message)
+annotation.contracts.a03_bridge._errors.StaticCodecError: @annotation/contracts/models.py: [NATIVE_IMPLEMENTATION_PIN] NATIVE_IMPLEMENTATION_PIN
+
+======================================================================
+ERROR: test_root_registry_and_declarations_are_distinct_dependencies (__main__.ValidationReuseTests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "D:\1800-worktrees\a03-r1-integration\tests\test_a03_r1_validation.py", line 50, in test_root_registry_and_declarations_are_distinct_dependencies
+    good = self.store._validate(self.data, asset_root=self.root)
+  File "D:\1800-worktrees\a03-r1-integration\src\annotation\runtime\storage\native.py", line 260, in _validate
+    return _validate_native_for_registry(self.native_registry, bundle, root)
+  File "D:\1800-worktrees\a03-r1-integration\src\annotation\contracts\a03_native\__init__.py", line 130, in _validate_native_for_registry
+    data, manifest, selection = _validated_value(registry, bundle, root)
+  File "D:\1800-worktrees\a03-r1-integration\src\annotation\contracts\a03_native\__init__.py", line 161, in _validated_value
+    selection = select_native_codec()
+  File "D:\1800-worktrees\a03-r1-integration\src\annotation\contracts\a03_native\__init__.py", line 78, in select_native_codec
+    need(hashlib.sha256(location.read_bytes()).hexdigest() == expected,
+  File "D:\1800-worktrees\a03-r1-integration\src\annotation\contracts\a03_bridge\_errors.py", line 16, in need
+    raise StaticCodecError(code, path, message)
+annotation.contracts.a03_bridge._errors.StaticCodecError: @annotation/contracts/models.py: [NATIVE_IMPLEMENTATION_PIN] NATIVE_IMPLEMENTATION_PIN
+
+======================================================================
+ERROR: test_unchanged_bytes_reuse_but_input_mutation_rejects (__main__.ValidationReuseTests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "D:\1800-worktrees\a03-r1-integration\tests\test_a03_r1_validation.py", line 27, in test_unchanged_bytes_reuse_but_input_mutation_rejects
+    good = self.store._validate(self.data, asset_root=self.root)
+  File "D:\1800-worktrees\a03-r1-integration\src\annotation\runtime\storage\native.py", line 260, in _validate
+    return _validate_native_for_registry(self.native_registry, bundle, root)
+  File "D:\1800-worktrees\a03-r1-integration\src\annotation\contracts\a03_native\__init__.py", line 130, in _validate_native_for_registry
+    data, manifest, selection = _validated_value(registry, bundle, root)
+  File "D:\1800-worktrees\a03-r1-integration\src\annotation\contracts\a03_native\__init__.py", line 161, in _validated_value
+    selection = select_native_codec()
+  File "D:\1800-worktrees\a03-r1-integration\src\annotation\contracts\a03_native\__init__.py", line 78, in select_native_codec
+    need(hashlib.sha256(location.read_bytes()).hexdigest() == expected,
+  File "D:\1800-worktrees\a03-r1-integration\src\annotation\contracts\a03_bridge\_errors.py", line 16, in need
+    raise StaticCodecError(code, path, message)
+annotation.contracts.a03_bridge._errors.StaticCodecError: @annotation/contracts/models.py: [NATIVE_IMPLEMENTATION_PIN] NATIVE_IMPLEMENTATION_PIN
+
+----------------------------------------------------------------------
+Ran 3 tests in 0.060s
+
+FAILED (errors=3)

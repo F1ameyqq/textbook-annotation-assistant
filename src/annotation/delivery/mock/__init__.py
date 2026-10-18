@@ -11,7 +11,8 @@ from pathlib import Path
 from annotation.contracts import (
     artifact_ref, assert_plan_ready, content_digest, seal_artifact, validate_bundle,
 )
-from annotation.delivery.planner import encoded, frame_facts, verify_generated_plan
+from annotation.delivery.planner import (encoded, frame_facts, verify_generated_plan,
+                                         action_facts, compare_action_effect)
 from annotation.quality.targetcheck import (
     append_artifacts, coverage_for, make_artifact, reject, resolve_artifact,
 )
@@ -104,74 +105,19 @@ class MockSession:
         self._log.append({"event": "external_change", "book_id": book_id, "epoch": target["epoch"]})
 
     def _facts(self, action, view):
-        before = action.expected_before
-        directory = before["directory_id"]
-        pid = action.target.platform_question_id
-        if pid is None:
-            pid = view["internal_bindings"].get(action.target.question_id)
-        question = next((q for q in view["target"]["questions"] if q["platform_question_id"] == pid), None)
-        frames = [f for f in view["target"]["frames"] if f["platform_question_id"] == pid] if question else []
-        facts = {"question_exists": question is not None, "platform_question_id": pid,
-                 "directory_id": question["directory_id"] if question else directory,
-                 "frame_count": len(frames), "frames_hash": frame_facts(frames)}
-        if "platform_order" in before:
-            facts["platform_order"] = question["platform_order"] if question else None
-        if "next_order" in before:
-            facts["next_order"] = max([q["platform_order"] for q in view["target"]["questions"]
-                                       if q["directory_id"] == directory] + [0]) + 1
-        return facts
+        return action_facts(action, view)
 
     def _write(self, book_id, action, partial=False):
         target = self._target(book_id)
-        payload = target["payload"]
-        pid = action.target.platform_question_id
-        if pid is None:
-            number = len(payload["questions"]) + 1
-            existing = {q["platform_question_id"] for q in payload["questions"]}
-            while "mock-question-" + str(number) in existing:
-                number += 1
-            pid = "mock-question-" + str(number)
-            directory = action.expected_before["directory_id"]
-            order = max([q["platform_order"] for q in payload["questions"] if q["directory_id"] == directory] + [0]) + 1
-            payload["questions"].append({"platform_question_id": pid, "directory_id": directory, "platform_order": order})
-        target["bindings"][action.target.question_id] = pid
-        projected = json.loads(action.expected_after["frames"])
-        if partial:
-            projected = projected[:-1]
-        for frame in projected:
-            number = len(payload["frames"]) + 1
-            existing = {f["platform_frame_id"] for f in payload["frames"]}
-            while "mock-frame-" + str(number) in existing:
-                number += 1
-            fid = "mock-frame-" + str(number)
-            payload["frames"].append({"platform_frame_id": fid, "platform_question_id": pid,
-                                      "box": frame["box"], "platform_role": frame["platform_role"]})
-            target["projections"][fid] = copy.deepcopy(frame)
-        target["epoch"] += 1
+        state = {"target": target["payload"], "internal_bindings": target["bindings"],
+                 "frame_projections": target["projections"], "epoch": target["epoch"]}
+        pid = apply_synthetic_action(state, action.model_dump(mode="json"), partial)
+        target["epoch"] = state["epoch"]
         return {"status": "OK", "platform_question_id": pid}
 
     def _compare(self, action, before, readback):
-        """Only evidence comparisons determine outcomes; response status is not an input."""
-        if readback.get("read_status") != "OK":
-            return "UNKNOWN", [], "readback unavailable or contradictory"
-        after = readback["view"]
-        pid = action.target.platform_question_id or after["internal_bindings"].get(action.target.question_id)
-        question = next((q for q in after["target"]["questions"] if q["platform_question_id"] == pid), None)
-        frames = [f for f in after["target"]["frames"] if f["platform_question_id"] == pid] if question else []
-        projected = [after["frame_projections"].get(f["platform_frame_id"]) for f in frames]
-        expected = action.expected_after
-        if (question and question["directory_id"] == expected["directory_id"] and
-                question["platform_order"] == expected["platform_order"] and
-                encoded(projected) == expected["frames"] and frames and
-                all(f["box"] == p["box"] and f["platform_role"] == p["platform_role"]
-                    for f, p in zip(frames, projected))):
-            return "APPLIED", [pid] + [f["platform_frame_id"] for f in frames], "independent target readback matches all projected frames"
-        # A conclusive absence needs BOTH a known pre-state and an unchanged relevant target.
-        facts_before, facts_after = self._facts(action, before), self._facts(action, after)
-        if (facts_after == facts_before and
-                facts_after["frame_count"] == 0):
-            return "NOT_APPLIED", [], "explicit readback proves projected frames ABSENT and relevant target unchanged"
-        return "UNKNOWN", [], "effect is partial, changed, or lacks a provable ABSENT baseline"
+        comparison = compare_action_effect(action, before, readback)
+        return comparison.outcome, comparison.platform_ids, comparison.reason
 
     def execute(self, bundle, plan_ref, config, *, asset_root, receipt_id, created_at, faults=None):
         """Execute once and return a validated bundle with a calculated receipt.
@@ -326,3 +272,7 @@ class MockSession:
         if disposition != "PAUSE_RECONCILE":
             self._pending.discard(book)
         return output
+
+
+# Additive recovery API; the accepted in-memory A02 API remains available.
+from .persistent import BookEffectGate, PersistentMockSession, compare_action, apply_synthetic_action

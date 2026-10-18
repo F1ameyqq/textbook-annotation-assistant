@@ -50,9 +50,19 @@ def resolve_policy(bundle, reference):
 
 
 def make_artifact(kind, identity, anchor, payload, dependencies, config_version,
-                  module, created_at, run_id=None):
+                  module, created_at, run_id=None, *, bridge_context=None):
     """Seal using C01's single structural authority; no local contract definitions."""
+    payload = dict(payload)
+    if anchor.schema_version in ("1.1.0-a-recovery-proposal", "1.4.0-a03-native-proposal") and kind == "CheckReport":
+        payload.setdefault("recovery_refs", [])
     refs = [artifact_ref(item) for item in dependencies]
+    if anchor.schema_version == '1.4.0-a03-native-proposal':
+        exact = {}
+        for ref in refs:
+            key = (ref['artifact_id'], ref['revision'])
+            if key in exact and exact[key] != ref:
+                reject('NATIVE_DEPENDENCY_CONFLICT', 'same identity with different exact reference')
+            exact[key] = ref
     refs = list({(r["artifact_id"], r["revision"]): r for r in refs}.values())
     policies = [payload["policy"]] if "policy" in payload else [
         p.model_dump(mode="json") for p in anchor.producer.policy_versions]
@@ -65,13 +75,18 @@ def make_artifact(kind, identity, anchor, payload, dependencies, config_version,
                      "model_version": None, "prompt_version": None,
                      "evidence_mode": "SYNTHETIC"},
         "created_at": created_at, "payload": payload,
-    })
+    }, bridge_context=bridge_context)
 
 
-def append_artifacts(bundle, *artifacts, asset_root=None):
+def append_artifacts(bundle, *artifacts, asset_root=None, bridge_context=None):
+    if asset_root is None:
+        asset_root = getattr(bundle, "asset_root", None)
     data = bundle.model_dump(mode="json")
     data["artifacts"].extend(artifacts)
-    return validate_bundle(data, asset_root=asset_root)
+    if data.get('format_version') == 'a03-exchange-4-proposal':
+        from annotation.contracts.a03_native import derive_context
+        bridge_context = derive_context(bridge_context, data, asset_root=asset_root)
+    return validate_bundle(data, asset_root=asset_root, bridge_context=bridge_context)
 
 
 def coverage_for(bundle, graph):
@@ -115,9 +130,9 @@ def projection_frames(bundle, graph, question, policy):
     return frames
 
 
-def analyze_target(bundle, graph_ref, snapshot_ref, current_snapshot_ref, policy_reference, config):
+def analyze_target(bundle, graph_ref, snapshot_ref, current_snapshot_ref, policy_reference, config, *, bridge_context=None):
     """Compute TARGET payload from facts, independent of any input CheckReport decision."""
-    bundle = validate_bundle(bundle)
+    bundle = validate_bundle(bundle, bridge_context=bridge_context)
     graph = resolve_artifact(bundle, graph_ref, "QuestionGraph")
     snapshot = resolve_artifact(bundle, snapshot_ref, "PlatformSnapshot")
     current = resolve_artifact(bundle, current_snapshot_ref, "PlatformSnapshot")
@@ -162,8 +177,22 @@ def analyze_target(bundle, graph_ref, snapshot_ref, current_snapshot_ref, policy
             target_problems.append(q.question_id + ": unmapped new question cannot claim an existing order")
     if len(set(mapped)) != len(mapped):
         target_problems.append("multiple internal questions share one platform ID; projection unsupported")
-    if any(a.kind == "ExecutionReceipt" and a.book_id == graph.book_id and
-           any(r.outcome == "UNKNOWN" for r in a.payload.results) for a in bundle.artifacts):
+    if graph.schema_version in ("1.1.0-a-recovery-proposal", "1.4.0-a03-native-proposal"):
+        from annotation.contracts import effective_recovery_outcomes
+        # Namespace is fixed by the actual runtime target. Same-scope public
+        # eligibility can infer it only from exact locally bound intent inputs.
+        keys = [a.payload.target_key.model_dump(mode="json") for a in bundle.artifacts
+                if a.kind == "WriteIntent" and a.book_id == graph.book_id and a.scope_id == graph.scope_id
+                and a.payload.target_key.target_id == snapshot.payload.target_id]
+        if len({content_digest(k) for k in keys}) > 1:
+            reject("TARGET_IDENTITY_MISMATCH", "same target has conflicting canonical namespace bindings")
+        unknown = (effective_recovery_outcomes(bundle, target_key=keys[0], scope_id=graph.scope_id, bridge_context=bridge_context).paused
+                   if keys else any(a.kind == "ExecutionReceipt" and a.book_id == graph.book_id and
+                                    any(r.outcome == "UNKNOWN" for r in a.payload.results) for a in bundle.artifacts))
+    else:
+        unknown = any(a.kind == "ExecutionReceipt" and a.book_id == graph.book_id and
+                      any(r.outcome == "UNKNOWN" for r in a.payload.results) for a in bundle.artifacts)
+    if unknown:
         target_problems.append("same book has unresolved UNKNOWN history; reconciliation interface missing")
     check("target_version", target_problems, "TARGET_CHANGED", "RECHECK_TARGET")
 
@@ -219,19 +248,22 @@ def analyze_target(bundle, graph_ref, snapshot_ref, current_snapshot_ref, policy
     check("policy", policy_problems, "POLICY_UNRESOLVED" if unresolved_policy else "UNSUPPORTED_LAYOUT")
     check("coverage", [] if complete else ["independent scope/pages/clues are incomplete"], "UNASSIGNED_CONTENT")
     decision = "PASS" if not issues else "EXCEPTION" if policy_problems or not complete else "HOLD"
-    return {"stage": "TARGET", "subject": artifact_ref(snapshot), "graph": artifact_ref(graph),
+    result = {"stage": "TARGET", "subject": artifact_ref(snapshot), "graph": artifact_ref(graph),
             "policy": policy_ref(policy), "snapshot": artifact_ref(snapshot), "receipt": None,
             "coverage": coverage, "checks": checks, "issues": issues, "decision": decision,
             "reason": "SYNTHETIC target conditions computed by A02; no algorithm or platform acceptance"}
+    if graph.schema_version in ("1.1.0-a-recovery-proposal", "1.4.0-a03-native-proposal"):
+        result["recovery_refs"] = []
+    return result
 
 
 def check_target(bundle, graph_ref, snapshot_ref, current_snapshot_ref, policy_reference, config,
-                 *, artifact_id, created_at, run_id=None):
-    bundle = validate_bundle(bundle)
+                 *, artifact_id, created_at, run_id=None, bridge_context=None):
+    bundle = validate_bundle(bundle, bridge_context=bridge_context)
     graph = resolve_artifact(bundle, graph_ref, "QuestionGraph")
     snapshot = resolve_artifact(bundle, snapshot_ref, "PlatformSnapshot")
     current = resolve_artifact(bundle, current_snapshot_ref, "PlatformSnapshot")
-    payload = analyze_target(bundle, graph_ref, snapshot_ref, current_snapshot_ref, policy_reference, config)
+    payload = analyze_target(bundle, graph_ref, snapshot_ref, current_snapshot_ref, policy_reference, config, bridge_context=bridge_context)
     report = make_artifact("CheckReport", artifact_id, graph, payload, [graph, snapshot, current],
-                           config.version, "a02-targetcheck", created_at, run_id)
-    return append_artifacts(bundle, report)
+                           config.version, "a02-targetcheck", created_at, run_id, bridge_context=bridge_context)
+    return append_artifacts(bundle, report, bridge_context=bridge_context)

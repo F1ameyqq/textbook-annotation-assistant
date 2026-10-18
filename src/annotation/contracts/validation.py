@@ -637,18 +637,61 @@ def _batch(ctx, a, path):
     ctx.evrefs(p.submission_evidence_refs, path + ".submission_evidence_refs")
 
 
-def validate_bundle(bundle, asset_root=None):
+def validate_bundle(bundle, asset_root=None, *, bridge_context=None):
     """Validate schema, exact dependencies, geometry, policy and state invariants.
 
     asset_root=None deliberately skips file-byte validation; load_bundle defaults to it on.
     Re-parse even model instances to catch mutations of nested Python lists/dicts.
     """
+    version = bundle.get('format_version') if isinstance(bundle, dict) else getattr(bundle, 'format_version', None)
+    if version == 'a03-exchange-4-proposal':
+        from .a03_native import validate_native_bundle
+        return validate_native_bundle(bundle, bridge_context=bridge_context, asset_root=asset_root)
+    return _validate_c01_context(_Context(_parse_c01(bundle)), asset_root)
+
+
+def _parse_c01(bundle):
     try:
         bundle = ExchangeBundle.model_validate(as_data(bundle))
     except ValidationError as error:
         raise ContractError([{"path": "$" + "".join("[{}]".format(x) if isinstance(x, int) else "." + x for x in e["loc"]),
                               "code": "SCHEMA", "message": e["msg"]} for e in error.errors(include_url=False)]) from error
-    ctx = _Context(bundle)
+    return bundle
+
+
+class _NativeProjectionContext(_Context):
+    """Private full-fact proof consumer, with no caller-provided allowed IDs."""
+
+    def __init__(self, bundle, native):
+        from .recovery import _native_receipt_issue_ownership, _identity, _legacy_projection_value
+        proofs = _native_receipt_issue_ownership(native)
+        expected, _ = _legacy_projection_value(native)
+        if as_data(bundle) != as_data(_parse_c01(expected)):
+            fail('$.receipt', 'NATIVE_ISSUE_OWNERSHIP', 'proof binds only the exact native semantic projection')
+        super().__init__(bundle)
+        self._receipt_proofs = {}
+        for artifact in bundle.artifacts:
+            if artifact.kind != 'ExecutionReceipt':
+                continue
+            proof = proofs.get(_identity(artifact.model_dump(mode='json')))
+            if proof is None or list(artifact.payload.unresolved_issue_ids) != [i['issue_id'] for i in proof['issues']]:
+                fail('$.receipt', 'NATIVE_ISSUE_OWNERSHIP', 'projection must preserve its own proven issue binding')
+            self._receipt_proofs[(artifact.artifact_id, artifact.revision)] = (artifact_ref(artifact), proof)
+
+    def receipt_issues(self, artifact):
+        bound, proof = self._receipt_proofs[(artifact.artifact_id, artifact.revision)]
+        if bound != artifact_ref(artifact):
+            fail('$.receipt', 'NATIVE_ISSUE_OWNERSHIP', 'proof cannot be transferred to another projected consumer')
+        return {issue['issue_id'] for issue in proof['issues']}
+
+
+def _validate_native_projection(bundle, native):
+    """Internal native-to-C01 adapter; original closure is checked, not IDs."""
+    return _validate_c01_context(_NativeProjectionContext(_parse_c01(bundle), native), None)
+
+
+def _validate_c01_context(ctx, asset_root):
+    bundle = ctx.bundle
     _relationships(ctx)
     _resources(ctx, asset_root)
     handlers = {"SourceBundle": _source, "EvidenceBundle": _evidence, "QuestionGraph": _graph,
@@ -675,7 +718,10 @@ def validate_bundle(bundle, asset_root=None):
                 subset([frame.platform_question_id], {q.platform_question_id for q in p.questions}, path + ".frames[{}]".format(i))
         for name in ("unresolved_issue_ids", "related_issue_ids"):
             if hasattr(artifact.payload, name):
-                subset(getattr(artifact.payload, name), all_issues, path + "." + name)
+                allowed = all_issues
+                if type(ctx) is _NativeProjectionContext and artifact.kind == 'ExecutionReceipt' and name == 'unresolved_issue_ids':
+                    allowed = all_issues | ctx.receipt_issues(artifact)
+                subset(getattr(artifact.payload, name), allowed, path + "." + name)
         if artifact.producer.evidence_mode == "OBSERVED":
             # A synthetic evidence file cannot be relabeled into an observation chain.
             for location, value in walk(artifact, ctx.paths[key]):
