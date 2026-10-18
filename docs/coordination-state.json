@@ -2,7 +2,7 @@
   "schema_version": 1,
   "project": "D:\\1800",
   "coordinator_thread_id": "01a13f26-7567-75e1-99ee-c9d2194e78bb",
-  "updated_at": "2026-10-18T17:10:46.988269+08:00",
+  "updated_at": "2026-10-18T17:13:41.697758+08:00",
   "automation": {
     "id": "1800-a",
     "kind": "heartbeat",
@@ -8388,7 +8388,7 @@
     },
     "A06": {
       "status": "REWORK",
-      "phase": "SECOND_FINAL_F01_CORRECTION_RUNNING",
+      "phase": "SECOND_FINAL_AUTHOR_ARCHIVING",
       "base_commit": "a1c3c3b2d452ecbdf5c57a8b7372e7d53de0f8d8",
       "depends_on": [
         "C01"
@@ -8408,15 +8408,15 @@
         "dispatch_result": "SENT_EXISTING_THREAD",
         "task_workflow_commit": "83e69beb9fb261676c8d012127e5b73e1f770261",
         "dispatched_at": "2026-10-18T17:06:14.840634+08:00",
-        "cursor": "150ab7c0-1874-4c17-ad14-414f8aaefab3:8",
+        "cursor": "150ab7c0-1874-4c17-ad14-414f8aaefab3:9",
         "turn_id": "01a14e42-8cc6-75b1-b205-efc819d29ede",
         "turn_status": "inProgress",
         "observed_thread_status": "active",
-        "last_checked_at": "2026-10-18T17:10:46.988269+08:00",
-        "observed_head": "761d9afed8b9d3d33851ad3d79b0bee7c294089d",
-        "next_dependency": "Fixed second final candidate and release; no third candidate.",
-        "last_progress": "Second final F01 correction running; fixed14stage kind/version rules drafted, no frozen delivery yet.",
-        "reported_frozen_candidate": "9076d35e81678cdba8ad8651e95a44265fdc345c",
+        "last_checked_at": "2026-10-18T17:13:41.697758+08:00",
+        "observed_head": "43ebdd21f2dc6803ae322b95776806e167884749",
+        "next_dependency": "Wait fixed final delivery report/manifest and release before preflight and registered independent delta review.",
+        "last_progress": "Second final candidate two entry results reported conforming: original HOLD, nonfinal inline_apply unknown result VERSION rejection; release/report/manifest still being archived. No frozen final delivery or acceptance yet.",
+        "reported_frozen_candidate": "43ebdd21f2dc6803ae322b95776806e167884749",
         "target_commit": "761d9afed8b9d3d33851ad3d79b0bee7c294089d",
         "candidate_commit": "9076d35e81678cdba8ad8651e95a44265fdc345c",
         "report": "docs/tasks/A06-execution-report.md",
@@ -8469,9 +8469,9 @@
       "zip_sha256": "b2bed674f87cde7fb2df4fdf31dec9ede08f494fc6190f654abda51dd4dae89d",
       "max_frozen_candidates": 2,
       "B_confirmation": "UNCONFIRMED",
-      "next_dependency": "Bounded second final candidate for existing F01 stage-result version/kind requirement; preserve first four-entry results.",
+      "next_dependency": "Wait fixed final delivery report/manifest and release before preflight and registered independent delta review.",
       "correction": {
-        "status": "SENT_RUNNING",
+        "status": "FROZEN_TWO_ENTRIES_REPORTED_ARCHIVING",
         "task": "docs/tasks/A06-second-final-correction.md",
         "base_commit": "761d9afed8b9d3d33851ad3d79b0bee7c294089d",
         "candidate_number": 2,
@@ -8479,9 +8479,10 @@
         "finding": "F01",
         "scope": "Fixed14stage result kind/version gate; original HOLD plus one nonfinal result unknown-version complete entry, each once; inherited unaffected first-review results.",
         "business_dispatches": 0,
-        "next_dependency": "Send existing author; fixed second delivery/release then registered independent delta review.",
+        "next_dependency": "Wait fixed final delivery report/manifest and release before preflight and registered independent delta review.",
         "workflow_commit": "aab6a34214ae6b25ff784425e680c8ef4abdcea0",
-        "dispatched_at": "2026-10-18T17:06:14.840634+08:00"
+        "dispatched_at": "2026-10-18T17:06:14.840634+08:00",
+        "candidate_commit": "43ebdd21f2dc6803ae322b95776806e167884749"
       }
     }
   },
@@ -10725,18 +10726,17 @@
     }
   ],
   "last_action": {
-    "at": "2026-10-18T17:10:46.988269+08:00",
+    "at": "2026-10-18T17:13:41.697758+08:00",
     "task_ids": [
-      "I01-A",
       "A06"
     ],
-    "action": "I01_FINITE_SCOPE_INTEGRATED_A06_FINAL_F01_CORRECTION_RUNNING",
-    "versions": {
-      "I01_integration": "f356dde53bf9cc852eb35fc3710c884c397ce6c5",
-      "A06_correction_base": "761d9afed8b9d3d33851ad3d79b0bee7c294089d"
-    },
-    "dispatch_result": "ONE_EXISTING_A06_AUTHOR_CONTINUATION_SENT; no duplicate thread",
-    "next_dependency": "A06 fixed second final delivery/release then registered independent delta review; external mapping still unconfirmed."
+    "action": "COMPACT_AUTHOR_PROGRESS_CHECK_ONLY",
+    "thread_id": "01a14e1e-23fe-7c30-81cc-74a786c6559a",
+    "cursor": "150ab7c0-1874-4c17-ad14-414f8aaefab3:9",
+    "version": "43ebdd21f2dc6803ae322b95776806e167884749",
+    "acceptance_scope": "Fixed14stage result kind/version gate; original HOLD plus one nonfinal result unknown-version complete entry, each once; inherited unaffected first-review results.",
+    "dispatch_result": "NO_NEW_DISPATCH_AUTHOR_ALREADY_ACTIVE",
+    "next_dependency": "Wait fixed final delivery report/manifest and release before preflight and registered independent delta review."
   },
   "limitations": [
     "Current route uses mock B artifacts until independently agreed interface/artifact versions exist.",
@@ -10744,30 +10744,22 @@
     "Platform test is single-book serial, no book submission, no unbudgeted paid models."
   ],
   "last_check": {
-    "at": "2026-10-18T17:10:46.988269+08:00",
-    "trigger": "2026-10-18T08:54:56.078Z",
-    "coordinator_head": "f356dde53bf9cc852eb35fc3710c884c397ce6c5",
-    "scope": "Frozen independent reports/manifests/source/release verified; I01 accepted and scoped local integration with two static byte checks; A06 F01 confirmed and one bounded second-final continuation sent.",
+    "at": "2026-10-18T17:13:41.697758+08:00",
+    "trigger": "2026-10-18T09:12:56.380Z",
+    "coordinator_head": "a5e230e3f9096f85b2645a8b47b7e0e1a3b15201",
+    "scope": "Required documents/state read; actual Git heads and saved-cursor compact author snapshot checked. Author still archiving; no floating report/source audit or repeat execution.",
     "task_statuses": {
       "I01-A": "INTEGRATED",
       "A06": "REWORK"
     },
-    "review_manifest_members_verified": {
-      "I01-A": 678,
-      "A06": 507
-    },
+    "A06_observed_candidate": "43ebdd21f2dc6803ae322b95776806e167884749",
+    "root_semantic_tracked_diff": 0,
     "new_threads": 0,
-    "author_continuations": 1,
+    "continuations": 0,
+    "coordinator_tests_run": 0,
     "coordinator_business_runs": 0,
-    "coordinator_SQL_calls": 0,
     "B_messages": 0,
-    "next_dependency": "A06 fixed second final delivery/release then registered independent delta review; external mapping still unconfirmed.",
-    "closure_tool_limits": [
-      "A dispatch-intent updater first assumed mapping but actual list; failed before save/send, corrected and intent committed before send.",
-      "Integration checkout converted11 newly added scripts EOL; raw source bytes restored before commit; no product/pin change.",
-      "Chinese coordinator script first launch decoding failed before execution; UTF8 contents verified and explicit UTF8 compile completed. No product/business rerun."
-    ],
-    "coordinator_static_checks": 2
+    "next_dependency": "Wait fixed final delivery report/manifest and release before preflight and registered independent delta review."
   },
   "prepared_next_batch": {
     "status": "DISPATCHED",
@@ -11128,11 +11120,11 @@
     }
   ],
   "last_heartbeat": {
-    "at": "2026-10-18T17:10:46.988269+08:00",
-    "trigger": "2026-10-18T08:54:56.078Z",
+    "at": "2026-10-18T17:13:41.697758+08:00",
+    "trigger": "2026-10-18T09:12:56.380Z",
     "automation_id": "1800-a",
-    "decision": "NOTIFY",
-    "reason": "I01-A completed limited acceptance/local integration; A06 F01 review failure confirmed and second final bounded correction dispatched."
+    "decision": "DONT_NOTIFY",
+    "reason": "Existing second-final author remains active sealing delivery; no failure, new dispatch or user action."
   },
   "interactive_progress_history": [
     {
