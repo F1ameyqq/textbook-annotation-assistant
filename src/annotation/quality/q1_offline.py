@@ -77,7 +77,10 @@ def pre_apply(bundle, inputs, root, run_id, created_at):
             "native_fragments_accounted": len([f for r in selected for f in r["source_fragment_ids"]]) == 7,
             "thirty_bound_exclusions": len([d for d in facts["dispositions"] if d["disposition"] == "OUTSIDE_FIXED_SINGLE_QUESTION"]) == 30,
             "no_whole_page_claim": facts["provenance"]["whole_page_coverage_claim"] is False},
-        "policy": {"separate_options": policy.option_grouping == "SEPARATE", "internal_only": policy.confirmation_status == "A_INTERNAL_PROPOSAL" and policy.applicability == "PROPOSAL_ONLY",
+        # Original ordinary-choice rule: 项目交接说明.md:72/98, option -> W.
+        "policy": {"ordinary_choice": len(graph.payload.questions) == 1 and q.question_type == "ordinary_choice",
+            "ordinary_choice_role_mapping": [policy.role_mapping[f.role] for f in sorted(fragments, key=lambda f: (f.reading_order, f.fragment_id))] == ["Q", "W", "W", "W", "W", "A"],
+            "separate_options": policy.option_grouping == "SEPARATE", "internal_only": policy.confirmation_status == "A_INTERNAL_PROPOSAL" and policy.applicability == "PROPOSAL_ONLY",
             "exact_authorization": APPROVAL_SHA in policy.source_notes[0] and POLICY_SHA in policy.source_notes[1],
             "all_scoped_issues_disposed": len(facts["dispositions"]) == 31 and all(d["original_issue_unchanged"] for d in facts["dispositions"]),
             "business_review_by_user": len([d for d in facts["dispositions"] if d["disposition"] == "A_USER_APPROVED_FOR_FIXED_OFFLINE_SCOPE"]) == 1}}

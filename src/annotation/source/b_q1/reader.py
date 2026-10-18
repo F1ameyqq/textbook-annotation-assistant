@@ -292,7 +292,7 @@ def build_source(inputs, root, run_id, created_at):
     base, side = facts["base"], facts["side"]
     p = facts["candidate"]["payload"]
     policy = seal_policy({"policy_id": "a07-q1-offline-v1", "revision": 1, "confirmation_status": "A_INTERNAL_PROPOSAL",
-        "option_grouping": "SEPARATE", "role_mapping": {"stem": "Q", "option": "Q", "answer": "A", "explanation": "E", "shared_material": "W"},
+        "option_grouping": "SEPARATE", "role_mapping": {"stem": "Q", "option": "W", "answer": "A", "explanation": "E", "shared_material": "W"},
         "source_notes": ["A-only fixed Q1 offline user approval SHA256 " + APPROVAL_SHA,
             "30 exclusions and six region whitelist policy SHA256 " + POLICY_SHA, "B HOLD and original issues preserved; joint adoption unproven"],
         "frame_save_status": "SYNTHETIC", "ocr_status": "UNVERIFIED", "applicability": "PROPOSAL_ONLY"})
