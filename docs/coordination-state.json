@@ -7329,14 +7329,14 @@
     "A03-T3": {
       "status": "REWORK",
       "parent_task": "A03",
-      "phase": "M_VALIDATION_R1_STATIC_REVIEW_RUNNING",
+      "phase": "M_VALIDATION_R1_STATIC_CLOSURE_COMPLETE_SUPERSEDED",
       "base_commit": "1330047dd29890dea0e433ff01b991f615bf78f4",
       "handoff_commit": "6b61ac9d623e76cbe6311f64d012fd04e2e03c21",
       "execution_task": "docs/tasks/A03-T3-closure-and-integration.md",
       "review_task": "docs/tasks/A03-T3-closure-and-integration.md",
       "task_sha256": "5e7337a5721ffd4f87440c630ae0e8839415ee51b4de57afc7773a41590f76f5",
       "acceptance_scope": "Prior mapping/plan ACCEPTED only; M implementation candidate not functionally accepted. M1 timeout, four scenes NOT_RUN.",
-      "next_dependency": "Complete already-running static R1 delivery review only; product continuation transferred to A03-R1.",
+      "next_dependency": "No further T3 dispatch. A03-R1 fixed candidate and release, independent acceptance, coordinator integration, then I01-A.",
       "branch": "codex/a03-t3-closure",
       "worktree": "D:/1800-worktrees/a03-t3",
       "worktree_status": "OWNED_BY_EXECUTOR",
@@ -7540,7 +7540,7 @@
           }
         ],
         "candidate_commit": "b8c75119c556b61e36b0cc1f817dbc53044cce41",
-        "next_dependency": "Frozen repaired candidate, finite guard results and M functional evidence with release; then existing independent reviewer.",
+        "next_dependency": "No further T3 dispatch. A03-R1 fixed candidate and release, independent acceptance, coordinator integration, then I01-A.",
         "release_status": "RAW_RECORDS_CHECKED_OWNER_RELEASED_PENDING_PRESERVED",
         "observed_candidate_commit": "b8c75119c556b61e36b0cc1f817dbc53044cce41",
         "product_candidate_commit": "c73070884476dc2edcb952d88e4f6ed356b74ae8",
@@ -7550,8 +7550,8 @@
       "review": {
         "thread_id": "01a14ccf-b8c3-7941-a80f-73594e7859a5",
         "host_id": "local",
-        "cursor": "6edfea69-590d-4e04-b191-563639b4a645:12",
-        "phase": "M_VALIDATION_R1_STATIC_REVIEW_DISPATCHED",
+        "cursor": "6edfea69-590d-4e04-b191-563639b4a645:13",
+        "phase": "M_VALIDATION_R1_STATIC_CLOSURE_COMPLETE",
         "dispatch_key": "A03-T3:review:M-validation-R1:d5f77759",
         "thinking": "xhigh",
         "model": "USER_DEFAULT",
@@ -7559,12 +7559,12 @@
         "expected_report": "docs/tasks/A03-T3-M-validation-R1-review-report.md",
         "created_at": "2026-10-18T10:20:45.956512+08:00",
         "workflow_commit": "f82ae616",
-        "turn_status": "inProgress",
-        "observed_thread_status": "active",
+        "turn_status": "completed",
+        "observed_thread_status": "idle",
         "turn_id": "01a14d9d-2772-7c61-85ba-ae7d041afd7b",
-        "last_progress": "Dispatched bounded static review of fixed R1 failure; zero business reruns; functional status remains REWORK.",
-        "last_checked_at": "2026-10-18T06:06:06.811521+00:00",
-        "last_completed_turn_id": "01a14d7a-7af2-7593-aa8b-79b6f0084aae",
+        "last_progress": "Fixed failure closure complete; no new static defect confirmed, watchdog not business SLA; pending 1 preserved and owner released. No business rerun; M/A03 not accepted and I01 not released.",
+        "last_checked_at": "2026-10-18T06:18:34.633230+00:00",
+        "last_completed_turn_id": "01a14d9d-2772-7c61-85ba-ae7d041afd7b",
         "preparation": {
           "task": "A03-T3",
           "path": "docs/tasks/A03-T3-review-preparation.md",
@@ -7575,16 +7575,16 @@
           ],
           "scope": "preparation only; functional review NOT_RUN"
         },
-        "functional_review": "NOT_RUN_STATIC_DIAGNOSTIC_ONLY",
-        "session_released": null,
-        "target_commit": "7b9245eaa55bad1699ee40baf71be09dd6df8371",
-        "handoff_document": "docs/tasks/A03-T3-M1-diagnostic-review-handoff.md",
-        "decision": "ACCEPTED_DIAGNOSTIC_ONLY",
-        "report": "docs/tasks/A03-T3-M1-diagnostic-review-report.md",
-        "report_sha256": "94d7295563993163e4a705a3f97d58ee4c36f95c7647e917cff355d7091b7244",
+        "functional_review": "NOT_RUN_STATIC_FAILURE_CLOSURE_ONLY",
+        "session_released": true,
+        "target_commit": "d5f777590e72eb070af0497afdb144d60c61b95d",
+        "handoff_document": "docs/tasks/A03-T3-M-validation-R1-review-handoff.md",
+        "decision": "REWORK_STATIC_CLOSURE_COMPLETE",
+        "report": "docs/tasks/A03-T3-M-validation-R1-review-report.md",
+        "report_sha256": "0fad8f0b02ebe36c14a8245de53da41fcb77e918a942fe32d708b834ce56327b",
         "evidence_manifest": null,
         "evidence_manifest_sha256": null,
-        "pending_target_commit": "d5f777590e72eb070af0497afdb144d60c61b95d",
+        "pending_target_commit": null,
         "review_history": [
           {
             "decision": "ACCEPTED_MATRIX_PLAN_REWORK",
@@ -7609,11 +7609,24 @@
             "evidence_index": "docs/evidence/A03/T3/review-M-timeout/read-record.json",
             "evidence_index_sha256": "d96aff2324301ec447579c85792d91afb9fb0f9847e9241d5f974b966d1d63dd",
             "functional_review": "NOT_RUN_STATIC_TIMEOUT_REVIEW_ONLY"
+          },
+          {
+            "target_commit": "7b9245eaa55bad1699ee40baf71be09dd6df8371",
+            "decision": "ACCEPTED_DIAGNOSTIC_ONLY",
+            "report": "docs/tasks/A03-T3-M1-diagnostic-review-report.md",
+            "report_sha256": "94d7295563993163e4a705a3f97d58ee4c36f95c7647e917cff355d7091b7244",
+            "evidence_index": "docs/evidence/A03/T3/review-M1-diagnostic/recalculation.json",
+            "evidence_index_sha256": "3a3cfefd385e5af72ed348a2288e50714553dc84bb95909a2e9bb9ebe6d1d060",
+            "functional_review": "NOT_RUN_STATIC_DIAGNOSTIC_ONLY"
           }
         ],
-        "next_dependency": "Fixed bounded product repair and fresh M evidence, released by author before independent functional review.",
-        "evidence_index": "docs/evidence/A03/T3/review-M1-diagnostic/recalculation.json",
-        "evidence_index_sha256": "3a3cfefd385e5af72ed348a2288e50714553dc84bb95909a2e9bb9ebe6d1d060"
+        "next_dependency": "No further T3 work. Equivalent product implementation and independent review continue under A03-R1.",
+        "evidence_index": "docs/evidence/A03/T3/review-M-validation-R1/readonly-checks.json",
+        "evidence_index_sha256": "781bd214307e1aa883d1e58873e6aa80a279fde9d5abbe4d4ceea863f9a9f867",
+        "status": "COMPLETED_STATIC_CLOSURE_ONLY",
+        "candidate_commit": "b8c75119c556b61e36b0cc1f817dbc53044cce41",
+        "dispatch_allowed": false,
+        "coordinator_intake": "docs/evidence/coordinator/heartbeat-20261018-0614/checks.json"
       },
       "workflow_commit": "f7084b2e8f2e9a1fcf758f9cba56ec9c9fb1f304",
       "latest_lightweight_observation": {
@@ -8025,12 +8038,15 @@
         "workflow_commit": "0476257d",
         "task_document": "docs/tasks/A03-R1-equivalent-runtime.md",
         "expected_report": "docs/tasks/A03-R1-execution-report.md",
-        "cursor": "b1048ea3-80d3-4361-bed1-9b4e3a39f600:1",
+        "cursor": "b1048ea3-80d3-4361-bed1-9b4e3a39f600:2",
         "turn_status": "inProgress",
         "observed_thread_status": "active",
         "turn_id": "01a14da3-8d31-72e2-8586-f4d51778c451",
-        "last_checked_at": "2026-10-18T06:14:25.955178+00:00",
-        "last_progress": "Verified baseline/branch and clean checkout; examining dependency-aware pure computation reuse and live guards; implementation started."
+        "last_checked_at": "2026-10-18T06:18:34.633230+00:00",
+        "last_progress": "Author reports registry-isolated private validation reuse with actual consumed-resource/pin rechecks; preparing finite negative controls before first frozen business candidate. Outer budget 180/240; inner deadlines unchanged.",
+        "observed_head": "6097a06de937fee8876feccedf46920510850b83",
+        "working_tree_clean": false,
+        "observed_report_present": false
       },
       "review": {
         "thread_id": "01a14da3-e8f3-7991-9b05-4a3fc38e2362",
@@ -8046,7 +8062,7 @@
         "turn_status": "completed",
         "observed_thread_status": "idle",
         "turn_id": "01a14da3-eea2-75f2-b436-877f62233a03",
-        "last_checked_at": "2026-10-18T06:14:25.955178+00:00",
+        "last_checked_at": "2026-10-18T06:18:34.633230+00:00",
         "last_progress": "WAITING_FIXED_DELIVERY; no functional review yet."
       },
       "next_dependency": "Author fixed runnable replacement and release; then continue registered independent reviewer, coordinator accept/integrate, I01-A.",
@@ -8072,7 +8088,18 @@
         "inner_safety_deadlines": "UNCHANGED"
       },
       "max_frozen_business_candidates": 2,
-      "workflow_commit": "0476257d"
+      "workflow_commit": "0476257d",
+      "last_checked_at": "2026-10-18T06:18:34.633230+00:00",
+      "last_observation": {
+        "at": "2026-10-18T06:18:34.633230+00:00",
+        "head": "6097a06de937fee8876feccedf46920510850b83",
+        "status_porcelain": [
+          "?? docs/evidence/A03/R1/"
+        ],
+        "floating_code_reviewed": false,
+        "author_delivery_ready": false,
+        "review_dispatch_result": "NOT_DISPATCHED_WAIT_FIXED_DELIVERY"
+      }
     }
   },
   "route": [
@@ -10159,14 +10186,14 @@
     }
   ],
   "last_action": {
-    "at": "2026-10-18T06:14:25.955178+00:00",
-    "action": "A03-R1 execution and independent review chats created; author running, reviewer WAITING_FIXED_DELIVERY; heartbeat updated and verified.",
-    "task_id": "A03-R1",
-    "workflow_commit": "0476257d",
-    "execution_thread_id": "01a14da3-8798-75c0-af50-ca8fec19b48c",
-    "review_thread_id": "01a14da3-e8f3-7991-9b05-4a3fc38e2362",
-    "implementation_complete": false,
+    "at": "2026-10-18T06:18:34.633230+00:00",
+    "action": "Recorded completed T3 static failure closure and refreshed A03-R1 progress; no new dispatch.",
+    "task_ids": [
+      "A03-T3",
+      "A03-R1"
+    ],
     "product_acceptance": false,
+    "integration": false,
     "next_dependency": "Author fixed runnable replacement and release; then continue registered independent reviewer, coordinator accept/integrate, I01-A."
   },
   "limitations": [
@@ -10175,25 +10202,26 @@
     "Platform test is single-book serial, no book submission, no unbudgeted paid models."
   ],
   "last_check": {
-    "at": "2026-10-18T13:54:58.260819+08:00",
-    "coordinator_head": "cf8bf0c64378c3361c341f912a4dd40ccbc8d466",
-    "scope": "Required AGENTS/coordination/development-plan/state reread; actual root and T3 Git status; one compact registered T3 execution snapshot. No floating-code or unsealed-evidence acceptance.",
-    "task_id": "A03-T3",
-    "thread_id": "01a14ccf-afa4-7260-a2a2-a47633772ae5",
-    "execution_cursor": "625b3403-1db6-4b33-af44-f0b84067ab61:16",
-    "review_cursor": "6edfea69-590d-4e04-b191-563639b4a645:10",
-    "observed_candidate_commit": "b8c75119c556b61e36b0cc1f817dbc53044cce41",
-    "turn_status": "inProgress",
-    "expected_report": "docs/tasks/A03-T3-M-validation-R1-report.md",
-    "final_report_present": false,
-    "unsealed_artifacts_present": true,
+    "at": "2026-10-18T06:18:34.633230+00:00",
+    "trigger": "2026-10-18T06:14:53.625Z",
+    "coordinator_head": "95378681d1c73061f24ccb699a5a5c17ce960f17",
+    "scope": "Required coordination documents reread, actual root and R1 Git state, registered cursor snapshots; completed old T3 static closure checked against raw Git. No floating product review or test rerun.",
+    "tasks": [
+      "A03-R1",
+      "A03-T3"
+    ],
+    "a03_r1_execution_thread_id": "01a14da3-8798-75c0-af50-ca8fec19b48c",
+    "a03_r1_execution_cursor": "b1048ea3-80d3-4361-bed1-9b4e3a39f600:2",
+    "a03_r1_review_thread_id": "01a14da3-e8f3-7991-9b05-4a3fc38e2362",
+    "a03_r1_review_cursor": "9f41c9c7-380d-4189-b49b-805a2b10a792:1",
+    "a03_r1_head": "6097a06de937fee8876feccedf46920510850b83",
+    "a03_r1_delivery_ready": false,
+    "t3_review_cursor": "6edfea69-590d-4e04-b191-563639b4a645:13",
+    "evidence": "docs/evidence/coordinator/heartbeat-20261018-0614/checks.json",
     "tests_run": false,
-    "business_reruns": 0,
-    "product_imports": 0,
-    "SQL_calls": 0,
     "new_dispatches": 0,
-    "root_product_integrated": false,
-    "next_dependency": "Frozen repaired candidate, finite guard results and M functional evidence with release; then existing independent reviewer."
+    "product_integrated": false,
+    "next_dependency": "Author fixed runnable replacement and release; then continue registered independent reviewer, coordinator accept/integrate, I01-A."
   },
   "prepared_next_batch": {
     "status": "DISPATCHED",
@@ -10540,11 +10568,11 @@
     }
   ],
   "last_heartbeat": {
-    "at": "2026-10-18T13:54:58.260819+08:00",
-    "trigger": "2026-10-18T05:53:53.297Z",
+    "at": "2026-10-18T06:18:34.633230+00:00",
+    "trigger": "2026-10-18T06:14:53.625Z",
     "automation_id": "1800-a",
     "decision": "DONT_NOTIFY",
-    "reason": "Existing T3 repair remains active; fixed candidate observed but final functional result/release pending. No new dispatch, user decision, accepted milestone or verified failure to notify."
+    "reason": "A03-R1 is implementing before first frozen delivery; reviewer waiting. Old T3 static closure confirms known incomplete evidence without new defect or user action. No repeated tests or dispatch."
   },
   "interactive_progress_history": [
     {
