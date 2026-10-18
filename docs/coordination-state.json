@@ -2,7 +2,7 @@
   "schema_version": 1,
   "project": "D:\\1800",
   "coordinator_thread_id": "01a13f26-7567-75e1-99ee-c9d2194e78bb",
-  "updated_at": "2026-10-18T17:22:52.443919+08:00",
+  "updated_at": "2026-10-18T17:24:05.037376+08:00",
   "automation": {
     "id": "1800-a",
     "kind": "heartbeat",
@@ -8388,7 +8388,7 @@
     },
     "A06": {
       "status": "REVIEW",
-      "phase": "SECOND_FINAL_REVIEW_DISPATCH_INTENT",
+      "phase": "SECOND_FINAL_INDEPENDENT_REVIEW",
       "base_commit": "a1c3c3b2d452ecbdf5c57a8b7372e7d53de0f8d8",
       "depends_on": [
         "C01"
@@ -8430,28 +8430,28 @@
         "release_sha256": "5cc99900a4195965cfe516f377bb30ed19fcd9e5e9b66ae227c4390209be301b"
       },
       "review": {
-        "status": "DISPATCH_INTENT",
+        "status": "REVIEW_RUNNING",
         "dispatch_key": "A06:review:second-final:d7873781",
         "thinking": "xhigh",
         "thread_id": "01a14e21-162e-7840-9052-501984bc3d75",
         "host_id": "local",
         "dispatch_result": "SENT_EXISTING_THREAD",
         "task_workflow_commit": "83e69beb9fb261676c8d012127e5b73e1f770261",
-        "dispatched_at": "2026-10-18T16:48:57.116448+08:00",
-        "cursor": "7d898927-095a-4d1d-8fb8-73c84f943097:8",
-        "turn_id": "01a14e33-2222-79f2-ad0b-bf4a17136301",
-        "turn_status": "completed",
-        "observed_thread_status": "idle",
-        "last_checked_at": "2026-10-18T17:22:52.443919+08:00",
-        "next_dependency": "Send existing reviewer two-entry final delta; no full matrix.",
-        "last_progress": "First review REWORK preserved; second fixed delivery preflight passed.",
+        "dispatched_at": "2026-10-18T17:24:05.037376+08:00",
+        "cursor": "7d898927-095a-4d1d-8fb8-73c84f943097:9",
+        "turn_id": "01a14e52-800a-74a0-94e1-11a1a0de8c50",
+        "turn_status": "inProgress",
+        "observed_thread_status": "active",
+        "last_checked_at": "2026-10-18T17:24:05.037376+08:00",
+        "next_dependency": "Wait fixed independent final delta report, raw manifest and release; then coordinator limited acceptance and integration.",
+        "last_progress": "Reviewer acknowledged fixed second-final F01 delta and started preparation.",
         "target_commit": "d78737815279965f660057bea0a572b426098aaa",
         "candidate_commit": "43ebdd21f2dc6803ae322b95776806e167884749",
         "task_document": "docs/tasks/A06-second-final-review-dispatch.md",
         "dispatch_intent_at": "2026-10-18T17:22:52.443919+08:00",
         "dispatch_returned_thread_id": "01a14e21-162e-7840-9052-501984bc3d75",
-        "workflow_commit": "d956b3138c28e82dec05573003d5e95fde72989f",
-        "session_released": true,
+        "workflow_commit": "5989ef6733064485fee62349be889c58737cbb0d",
+        "session_released": false,
         "report": "docs/tasks/A06-second-final-review-report.md",
         "evidence_manifest": "docs/evidence/A06/review/second-final/review-manifest.json",
         "findings": [
@@ -8468,9 +8468,9 @@
       "zip_sha256": "b2bed674f87cde7fb2df4fdf31dec9ede08f494fc6190f654abda51dd4dae89d",
       "max_frozen_candidates": 2,
       "B_confirmation": "UNCONFIRMED",
-      "next_dependency": "Send existing reviewer two-entry final delta; no full matrix.",
+      "next_dependency": "Wait fixed independent final delta report, raw manifest and release; then coordinator limited acceptance and integration.",
       "correction": {
-        "status": "FIXED_DELIVERY_PRECHECK_PASSED",
+        "status": "INDEPENDENT_REVIEW_RUNNING",
         "task": "docs/tasks/A06-second-final-correction.md",
         "base_commit": "761d9afed8b9d3d33851ad3d79b0bee7c294089d",
         "candidate_number": 2,
@@ -8478,7 +8478,7 @@
         "finding": "F01",
         "scope": "Fixed14stage result kind/version gate; original HOLD plus one nonfinal result unknown-version complete entry, each once; inherited unaffected first-review results.",
         "business_dispatches": 0,
-        "next_dependency": "Send existing reviewer two-entry final delta; no full matrix.",
+        "next_dependency": "Wait fixed independent final delta report, raw manifest and release; then coordinator limited acceptance and integration.",
         "workflow_commit": "aab6a34214ae6b25ff784425e680c8ef4abdcea0",
         "dispatched_at": "2026-10-18T17:06:14.840634+08:00",
         "candidate_commit": "43ebdd21f2dc6803ae322b95776806e167884749",
@@ -10802,23 +10802,27 @@
       "action": "send_message_to_thread",
       "thread_id": "01a14e21-162e-7840-9052-501984bc3d75",
       "host_id": "local",
-      "status": "INTENT_RECORDED",
+      "status": "SENT",
       "at": "2026-10-18T17:22:52.443919+08:00",
       "target_commit": "d78737815279965f660057bea0a572b426098aaa",
       "candidate_commit": "43ebdd21f2dc6803ae322b95776806e167884749",
       "task_document": "docs/tasks/A06-second-final-review-dispatch.md",
       "acceptance_scope": "Original F01 two-entry delta and inherited unaffected first review; no third candidate.",
-      "thinking": "xhigh"
+      "thinking": "xhigh",
+      "sent_at": "2026-10-18T17:24:05.037376+08:00",
+      "returned_thread_id": "01a14e21-162e-7840-9052-501984bc3d75",
+      "workflow_commit": "5989ef6733064485fee62349be889c58737cbb0d"
     }
   ],
   "last_action": {
-    "at": "2026-10-18T17:22:52.443919+08:00",
-    "action": "A06_FIXED_FINAL_PREFLIGHT_AND_REVIEW_INTENT",
+    "at": "2026-10-18T17:24:05.037376+08:00",
+    "action": "A06_SECOND_FINAL_REVIEW_DISPATCH_CONFIRMED",
     "task_id": "A06",
     "thread_id": "01a14e21-162e-7840-9052-501984bc3d75",
     "version": "d78737815279965f660057bea0a572b426098aaa",
-    "evidence": "docs/evidence/coordinator/a06-second-final-preflight-20261018/preflight.json",
-    "next_dependency": "Send existing reviewer two-entry final delta; no full matrix."
+    "cursor": "7d898927-095a-4d1d-8fb8-73c84f943097:9",
+    "dispatch_result": "SENT_EXISTING_THREAD_AND_ACTIVE",
+    "next_dependency": "Wait fixed independent final delta report, raw manifest and release; then coordinator limited acceptance and integration."
   },
   "limitations": [
     "Current route uses mock B artifacts until independently agreed interface/artifact versions exist.",
@@ -11339,7 +11343,7 @@
   "last_user_followup": {
     "at": "2026-10-18T17:22:52.443919+08:00",
     "question": "A06 acceptance and minimum B integration remaining steps",
-    "A06": "Second final fixed delivery, independent delta pending dispatch",
+    "A06": "Second final independent delta review active; not accepted or integrated.",
     "I01_A": "INTEGRATED f356dde53bf9cc852eb35fc3710c884c397ce6c5",
     "B_readonly_next": "A06 independent delta, coordinator acceptance and local integration, then fixed handoff availability",
     "B_positive_next": [
