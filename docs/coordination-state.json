@@ -2,7 +2,7 @@
   "schema_version": 1,
   "project": "D:\\1800",
   "coordinator_thread_id": "01a13f26-7567-75e1-99ee-c9d2194e78bb",
-  "updated_at": "2026-10-18T12:58:48.613179+08:00",
+  "updated_at": "2026-10-18T13:00:17.346818+08:00",
   "automation": {
     "id": "1800-a",
     "kind": "heartbeat",
@@ -7328,7 +7328,7 @@
     "A03-T3": {
       "status": "REWORK",
       "parent_task": "A03",
-      "phase": "M1_DIAGNOSTIC_INTENT_RECORDED",
+      "phase": "M1_DIAGNOSTIC_RUNNING",
       "base_commit": "1330047dd29890dea0e433ff01b991f615bf78f4",
       "handoff_commit": "6b61ac9d623e76cbe6311f64d012fd04e2e03c21",
       "execution_task": "docs/tasks/A03-T3-closure-and-integration.md",
@@ -7350,24 +7350,24 @@
       "execution": {
         "thread_id": "01a14ccf-afa4-7260-a2a2-a47633772ae5",
         "host_id": "local",
-        "cursor": "625b3403-1db6-4b33-af44-f0b84067ab61:10",
-        "phase": "M1_DIAGNOSTIC_INTENT_RECORDED",
+        "cursor": "625b3403-1db6-4b33-af44-f0b84067ab61:11",
+        "phase": "M1_DIAGNOSTIC_RUNNING",
         "dispatch_key": "A03-T3:execution:M1-diagnostic:3f39a117",
         "thinking": "xhigh",
         "model": "USER_DEFAULT",
         "task_document": "docs/tasks/A03-T3-M1-diagnostic-handoff.md",
         "expected_report": "docs/tasks/A03-T3-M1-diagnostic-report.md",
         "created_at": "2026-10-18T10:20:43.837153+08:00",
-        "workflow_commit": "4fa7237d1114ed2c89f65cbb28579a8956812062",
-        "turn_status": "completed",
-        "observed_thread_status": "idle",
-        "turn_id": "01a14d2d-c4cd-7303-8182-244100c1bcc8",
-        "last_progress": "M1 timed out at 45 seconds after 2 dispatch/effects; third action RESERVED. Four remaining scenes not run. Frozen failure evidence and release checked; no business replay.",
-        "last_checked_at": "2026-10-18T12:41:34.818374+08:00",
+        "workflow_commit": "c077c2c77901d1df754ffeee4a0004162323a579",
+        "turn_status": "inProgress",
+        "observed_thread_status": "active",
+        "turn_id": "01a14d61-1485-7940-9155-14990281974c",
+        "last_progress": "Executor acknowledged fixed diagnostic task; verifying clean baseline and preparing driver-only candidate for one bounded diagnostic.",
+        "last_checked_at": "2026-10-18T13:00:17.346818+08:00",
         "last_completed_turn_id": "01a14d2d-c4cd-7303-8182-244100c1bcc8",
         "target_commit": "3f39a117b1b98e85c5a449a07f13b3490ef77e18",
-        "working_tree_clean": true,
-        "session_released": true,
+        "working_tree_clean": null,
+        "session_released": null,
         "delivery_preflight": {
           "path": "docs/evidence/coordinator/heartbeat-20261018-0437/T3-M-delivery-preflight.json",
           "target_commit": "3f39a117b1b98e85c5a449a07f13b3490ef77e18",
@@ -7432,7 +7432,8 @@
           }
         ],
         "candidate_commit": "c73070884476dc2edcb952d88e4f6ed356b74ae8",
-        "next_dependency": "Frozen diagnostic evidence and released session, then existing independent review before product repair."
+        "next_dependency": "Frozen diagnostic evidence and released session, then existing independent review before product repair.",
+        "release_status": "PENDING_NEW_DIAGNOSTIC_DELIVERY"
       },
       "review": {
         "thread_id": "01a14ccf-b8c3-7941-a80f-73594e7859a5",
@@ -7495,24 +7496,15 @@
       },
       "workflow_commit": "f7084b2e8f2e9a1fcf758f9cba56ec9c9fb1f304",
       "latest_lightweight_observation": {
-        "at": "2026-10-18T12:23:48.842669+08:00",
-        "head": "c73070884476dc2edcb952d88e4f6ed356b74ae8",
-        "changed_path_count": 0,
-        "working_tree_clean": true,
-        "report_present": false,
-        "manifest_present": false,
-        "adoption_document_present": true,
-        "scope": "Read status and progress only; no floating source review, product tests or acceptance.",
-        "preparation_failure_observation": {
-          "path": "docs/evidence/A03/T3/execution/M/preparation-failure-01/observed-tool-return.json",
-          "phase": "Before candidate freeze and business execution",
-          "error": "FileNotFoundError: schema basename resolved directly under data instead of data/schemas",
-          "recorded_correction": "Use data/schemas for basis/prefix/fact",
-          "product_imports_or_business_calls": 0,
-          "writes_before_error": 0,
-          "independent_acceptance": false,
-          "scope": "Observed author-preserved tool failure record only; current task remains active, no repair dispatch or additional retry authorized."
-        }
+        "at": "2026-10-18T13:00:17.346818+08:00",
+        "thread_id": "01a14ccf-afa4-7260-a2a2-a47633772ae5",
+        "cursor": "625b3403-1db6-4b33-af44-f0b84067ab61:11",
+        "turn_id": "01a14d61-1485-7940-9155-14990281974c",
+        "status": "active",
+        "scope": "One fresh M1 diagnostic only; driver timing and faulthandler stacks; at most1 target/3 dispatch/3 effects, child45/parent90, zero product changes or business retries. Preserve failure and release new session.",
+        "base_commit": "3f39a117b1b98e85c5a449a07f13b3490ef77e18",
+        "new_delivery": false,
+        "tests_run_by_coordinator": false
       },
       "pending_review_dispatch": {
         "key": "A03-T3:review:M-timeout-static:3f39a117",
@@ -7552,7 +7544,7 @@
         "key": "A03-T3:execution:M1-diagnostic:3f39a117",
         "task": "A03-T3",
         "role": "execution",
-        "state": "INTENT_RECORDED",
+        "state": "STARTED",
         "created_at": "2026-10-18T12:58:48.613179+08:00",
         "document": "docs/tasks/A03-T3-M1-diagnostic-handoff.md",
         "document_sha256": "fdab7e670e7ea62645bd1790fb152183ef632e9dcead75a7be59a981bd4f25a8",
@@ -7562,7 +7554,13 @@
         "host_id": "local",
         "thinking": "xhigh",
         "scope": "One fresh M1 diagnostic only; driver timing and faulthandler stacks; at most1 target/3 dispatch/3 effects, child45/parent90, zero product changes or business retries. Preserve failure and release new session.",
-        "next_dependency": "Frozen diagnostic evidence and released session, then existing independent review before product repair."
+        "next_dependency": "Frozen diagnostic evidence and released session, then existing independent review before product repair.",
+        "sent_at": "2026-10-18T12:59:47.286988+08:00",
+        "workflow_commit": "c077c2c77901d1df754ffeee4a0004162323a579",
+        "result": "send_message_to_thread returned existing T3 executor id; xhigh, model omitted",
+        "cursor": "625b3403-1db6-4b33-af44-f0b84067ab61:11",
+        "turn_id": "01a14d61-1485-7940-9155-14990281974c",
+        "started_observed_at": "2026-10-18T13:00:17.346818+08:00"
       },
       "review_dispatch_history": [
         {
@@ -9720,7 +9718,7 @@
       "key": "A03-T3:execution:M1-diagnostic:3f39a117",
       "task": "A03-T3",
       "role": "execution",
-      "state": "INTENT_RECORDED",
+      "state": "STARTED",
       "created_at": "2026-10-18T12:58:48.613179+08:00",
       "document": "docs/tasks/A03-T3-M1-diagnostic-handoff.md",
       "document_sha256": "fdab7e670e7ea62645bd1790fb152183ef632e9dcead75a7be59a981bd4f25a8",
@@ -9730,17 +9728,22 @@
       "host_id": "local",
       "thinking": "xhigh",
       "scope": "One fresh M1 diagnostic only; driver timing and faulthandler stacks; at most1 target/3 dispatch/3 effects, child45/parent90, zero product changes or business retries. Preserve failure and release new session.",
-      "next_dependency": "Frozen diagnostic evidence and released session, then existing independent review before product repair."
+      "next_dependency": "Frozen diagnostic evidence and released session, then existing independent review before product repair.",
+      "sent_at": "2026-10-18T12:59:47.286988+08:00",
+      "workflow_commit": "c077c2c77901d1df754ffeee4a0004162323a579",
+      "result": "send_message_to_thread returned existing T3 executor id; xhigh, model omitted",
+      "cursor": "625b3403-1db6-4b33-af44-f0b84067ab61:11",
+      "turn_id": "01a14d61-1485-7940-9155-14990281974c",
+      "started_observed_at": "2026-10-18T13:00:17.346818+08:00"
     }
   ],
   "last_action": {
-    "at": "2026-10-18T12:58:48.613179+08:00",
-    "action": "T3_M1_DIAGNOSTIC_INTENT_RECORDED",
+    "at": "2026-10-18T13:00:17.346818+08:00",
+    "action": "T3_M1_DIAGNOSTIC_START_ACKNOWLEDGED",
     "task_id": "A03-T3",
     "thread_id": "01a14ccf-afa4-7260-a2a2-a47633772ae5",
-    "dispatch_result": "INTENT_SAVED_BEFORE_EXISTING_THREAD_MESSAGE",
-    "base_commit": "3f39a117b1b98e85c5a449a07f13b3490ef77e18",
-    "document": "docs/tasks/A03-T3-M1-diagnostic-handoff.md"
+    "dispatch_result": "EXISTING_EXECUTOR_ACTIVE_CURSOR_SAVED",
+    "workflow_commit": "c077c2c77901d1df754ffeee4a0004162323a579"
   },
   "limitations": [
     "Current route uses mock B artifacts until independently agreed interface/artifact versions exist.",
@@ -9748,15 +9751,17 @@
     "Platform test is single-book serial, no book submission, no unbudgeted paid models."
   ],
   "last_check": {
-    "at": "2026-10-18T12:58:48.613179+08:00",
-    "coordinator_head": "36bd561e6780f6bc4e96ed89136e8924b17308d6",
+    "at": "2026-10-18T13:00:17.346818+08:00",
+    "coordinator_head": "c077c2c77901d1df754ffeee4a0004162323a579",
     "scope": "Required docs/current Git, completed independent timeout review, six necessary raw blobs and static call boundary; diagnostic budget adopted.",
     "thread_cursor": "6edfea69-590d-4e04-b191-563639b4a645:8",
     "tests_run": false,
     "business_reruns": 0,
     "product_imports": 0,
     "SQL_calls": 0,
-    "root_product_integrated": false
+    "root_product_integrated": false,
+    "execution_cursor": "625b3403-1db6-4b33-af44-f0b84067ab61:11",
+    "review_cursor": "6edfea69-590d-4e04-b191-563639b4a645:8"
   },
   "prepared_next_batch": {
     "status": "DISPATCHED",
@@ -10126,11 +10131,11 @@
     }
   ],
   "last_heartbeat": {
-    "at": "2026-10-18T12:58:48.613179+08:00",
+    "at": "2026-10-18T13:00:17.346818+08:00",
     "trigger": "2026-10-18T04:52:52.426Z",
     "automation_id": "1800-a",
     "decision": "NOTIFY",
-    "reason": "Independent timeout review completed without proven root cause; bounded single instrumented diagnostic adopted for existing T3 executor."
+    "reason": "Static timeout review closed with root cause unproven. Existing T3 executor has started one frozen driver-only diagnostic, bounded to 1 target/3 dispatch under unchanged45/90 seconds. No product acceptance or I01 release."
   },
   "interactive_progress_history": [
     {
