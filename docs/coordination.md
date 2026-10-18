@@ -1,6 +1,6 @@
 # A 侧开发调度与验收
 
-2026-10-18 当前推进点：T1 取证/六例及 [T2 固定 C12/H1](tasks/A03-T2-coordinator-acceptance.md) 已有限 ACCEPTED；T3 计划 C1–C4 已接受，组合 K=`62a023a1c88c20d884a61f38d1ad995b0908b74c` 仅集成已接受 capture 工具。D-CONV=LEGACY_INITIAL_ONLY、[D-M 完整实现包](tasks/A03-T3-M-implementation-handoff.md)范围不变。原M1失败后[一次有界诊断](tasks/A03-T3-M1-diagnostic-handoff.md)已冻结交付 `7b9245eaa55bad1699ee40baf71be09dd6df8371` 并释放：子45.016秒超时，原始计时/七组栈支持重复校验为主要耗时；第三intent/permit已返回，第三dispatch未完成，实际2次dispatch/2effect，pending=1保留。产品未改，优化收益未证明。调度核对233个新索引成员及范围/释放后续派[独立诊断复核](tasks/A03-T3-M1-diagnostic-review-handoff.md)，只复算既有日志并确定最小修复边界，不新增诊断起点。其余M2/M3及L/G/F尚未执行，A03整体REWORK、I01未释放；历史失败及限制保留。派发实际回执见 coordination-state.json。
+2026-10-18 当前推进点：T1取证/六例及T2固定C12/H1有限ACCEPTED，T3计划C1–C4及capture组合K保留。固定诊断F=`7b9245eaa55bad1699ee40baf71be09dd6df8371`已通过独立复核并由[调度接受](tasks/A03-T3-M1-diagnostic-coordinator-acceptance.md)，仅ACCEPTED_DIAGNOSTIC_ONLY：44.015秒内主线程CPU42.234375秒，固定代码确认同次native完整校验重复。现在采用[最小产品修复及M复验](tasks/A03-T3-M-validation-R1-handoff.md)：两个实现文件加真实pins，公开重验/运行守卫保持；有限负控后fresh M1，成功才继续M2/M3四例，最多5起点/11dispatch，45/90秒不放宽。历史两起点/四实际dispatch及诊断pending=1保留，不追加诊断。产品尚未修复或接受；L/G/F与I01仍按实际证据释放，A03整体REWORK。派发实际回执见coordination-state.json。
 
 2026-10-18 用户新增指令：[A03 停止原对话并拆分交接](tasks/A03-redispatch-2026-10-18.md)。原 A03 执行/验收只完成交接，此后由新建 A03-T1（取证与异常读回）、T2（历史回执与报告）、T3（剩余矩阵与集成）执行和独立验收对话接手。旧文的原对话续派安排被本条替代；新对话与cursor以调度JSON登记为准，唯一写入者和依赖见新任务单。原A03手动推理设置例外保留，新对话默认xhigh。整体A03/I01状态不因交接自动通过。
 
