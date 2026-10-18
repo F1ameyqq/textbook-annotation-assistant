@@ -2,7 +2,7 @@
   "schema_version": 1,
   "project": "D:\\1800",
   "coordinator_thread_id": "01a13f26-7567-75e1-99ee-c9d2194e78bb",
-  "updated_at": "2026-10-18T16:22:39.846611+08:00",
+  "updated_at": "2026-10-18T16:24:49.423104+08:00",
   "automation": {
     "id": "1800-a",
     "kind": "heartbeat",
@@ -8294,7 +8294,7 @@
       }
     },
     "I01-A": {
-      "status": "DISPATCH_PENDING",
+      "status": "EXECUTING",
       "phase": "READY_AFTER_A03_INTEGRATION",
       "base_commit": "a1c3c3b2d452ecbdf5c57a8b7372e7d53de0f8d8",
       "depends_on": [
@@ -8308,18 +8308,58 @@
       "branch": "codex/i01-a",
       "acceptance_scope": "A01 public offline consumption and three fresh synthetic N/E/U integration paths; not real A01-native or B integration. Each execution/review max3targets/3dispatch.",
       "execution": {
-        "status": "CREATE_INTENT_RECORDED",
+        "status": "DISPATCHED",
         "dispatch_key": "I01-A:execution:a1c3c3b2d452ecbdf5c57a8b7372e7d53de0f8d8",
+        "thinking": "xhigh",
+        "thread_id": "01a14e1b-adf0-7162-a8a2-0081bb07ee70",
+        "host_id": "local",
+        "workflow_commit": "8b0fe38b3b520f0ff80801c98121acd3f335a1fc",
+        "dispatch_result": "CREATED",
+        "dispatched_at": "2026-10-18T16:23:47.532124+08:00"
+      },
+      "review": {
+        "status": "WAITING_FIXED_DELIVERY",
+        "dispatch_key": "I01-A:review:a1c3c3b2d452ecbdf5c57a8b7372e7d53de0f8d8",
+        "thinking": "xhigh",
+        "thread_id": "01a14e1c-1d38-7fb3-83f2-015b0380ea56",
+        "host_id": "local",
+        "workflow_commit": "8b0fe38b3b520f0ff80801c98121acd3f335a1fc",
+        "dispatch_result": "CREATED",
+        "dispatched_at": "2026-10-18T16:24:04.741355+08:00"
+      },
+      "next_dependency": "Execution fixed candidate/report/manifest/release, then independent review; coordinator decision before integration.",
+      "worktree_status": "READY_FIXED_BASE"
+    },
+    "A06": {
+      "status": "DISPATCH_PENDING",
+      "phase": "B_NATIVE_RECEIVER_READY",
+      "base_commit": "a1c3c3b2d452ecbdf5c57a8b7372e7d53de0f8d8",
+      "depends_on": [
+        "C01"
+      ],
+      "user_request": "2026-10-18 forwarded B PENDING_A for importable A contracts/validator/fixed consumer and explicit B0.4/0.5/0.6/0.7 adaptation/rejection",
+      "execution_task": "docs/tasks/A06-b-native-receiver.md",
+      "review_task": "docs/tasks/A06-independent-review.md",
+      "worktree": "D:/1800-worktrees/a06",
+      "branch": "codex/a06-b-native-receiver",
+      "acceptance_scope": "Fixed B ZIP current E0.3/G0.7/C0.7 diagnostic HOLD; historical0.4/0.5 archive only;0.6/unknown reject; original+3full-entry variants; no executable C01 conversion or joint confirmation.",
+      "execution": {
+        "status": "CREATE_INTENT_RECORDED",
+        "dispatch_key": "A06:execution:a1c3c3b2d452ecbdf5c57a8b7372e7d53de0f8d8",
         "thinking": "xhigh",
         "thread_id": null
       },
       "review": {
         "status": "CREATE_INTENT_RECORDED_WAIT_FIXED_DELIVERY",
-        "dispatch_key": "I01-A:review:a1c3c3b2d452ecbdf5c57a8b7372e7d53de0f8d8",
+        "dispatch_key": "A06:review:a1c3c3b2d452ecbdf5c57a8b7372e7d53de0f8d8",
         "thinking": "xhigh",
         "thread_id": null
       },
-      "next_dependency": "Execution fixed candidate/report/manifest/release, then independent review; coordinator decision before integration."
+      "input_zip": "D:\\1800\\.local\\stages\\coordinator\\b-handoff-0e5434f\\B-46007447-Q16-offline-HOLD-2026-10-17.zip",
+      "zip_sha256": "b2bed674f87cde7fb2df4fdf31dec9ede08f494fc6190f654abda51dd4dae89d",
+      "max_frozen_candidates": 2,
+      "B_confirmation": "UNCONFIRMED",
+      "next_dependency": "Fixed executable receiver candidate/report/manifest and release; independent finite review; coordinator decision; joint mapping separately unconfirmed."
     }
   },
   "route": [
@@ -8358,6 +8398,14 @@
         "A02",
         "A03"
       ]
+    },
+    {
+      "task": "A06",
+      "depends_on": [
+        "C01"
+      ],
+      "parallel_with": "I01-A",
+      "scope": "B native read-only receipt and explicit version disposition; user-forwarded PENDING_A"
     }
   ],
   "dispatch_intents": [
@@ -10439,15 +10487,35 @@
       "task": "I01-A",
       "role": "execution",
       "dispatch_key": "I01-A:execution:a1c3c3b2d452ecbdf5c57a8b7372e7d53de0f8d8",
-      "status": "INTENT_RECORDED",
-      "target_thread_id": null,
-      "base_commit": "a1c3c3b2d452ecbdf5c57a8b7372e7d53de0f8d8"
+      "status": "CREATED",
+      "target_thread_id": "01a14e1b-adf0-7162-a8a2-0081bb07ee70",
+      "base_commit": "a1c3c3b2d452ecbdf5c57a8b7372e7d53de0f8d8",
+      "dispatched_at": "2026-10-18T16:23:47.532124+08:00"
     },
     {
       "at": "2026-10-18T16:22:39.846611+08:00",
       "task": "I01-A",
       "role": "review",
       "dispatch_key": "I01-A:review:a1c3c3b2d452ecbdf5c57a8b7372e7d53de0f8d8",
+      "status": "CREATED",
+      "target_thread_id": "01a14e1c-1d38-7fb3-83f2-015b0380ea56",
+      "base_commit": "a1c3c3b2d452ecbdf5c57a8b7372e7d53de0f8d8",
+      "dispatched_at": "2026-10-18T16:24:04.741355+08:00"
+    },
+    {
+      "at": "2026-10-18T16:24:49.423104+08:00",
+      "task": "A06",
+      "role": "execution",
+      "dispatch_key": "A06:execution:a1c3c3b2d452ecbdf5c57a8b7372e7d53de0f8d8",
+      "status": "INTENT_RECORDED",
+      "target_thread_id": null,
+      "base_commit": "a1c3c3b2d452ecbdf5c57a8b7372e7d53de0f8d8"
+    },
+    {
+      "at": "2026-10-18T16:24:49.423104+08:00",
+      "task": "A06",
+      "role": "review",
+      "dispatch_key": "A06:review:a1c3c3b2d452ecbdf5c57a8b7372e7d53de0f8d8",
       "status": "INTENT_RECORDED",
       "target_thread_id": null,
       "base_commit": "a1c3c3b2d452ecbdf5c57a8b7372e7d53de0f8d8"
