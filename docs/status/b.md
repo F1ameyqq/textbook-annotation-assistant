@@ -8,6 +8,24 @@
 
 
 
+## 2026-10-18 可搬运复现与第15题检查范围
+
+- 第5页v3正式可搬运包以b5cc1ea固定代码、原图及E0.4/G0.9/Check0.9为基础，包SHA `11bdbee894d256018c02a3175f3f62a037e8d1bc4a35dadc288477f0ed713af4`。打包成员与总控各从最终ZIP解包执行冷/暖3阶段，0/3缓存且产物引用与原运行一致，独立运行审计accepted/HOLD；旧章节reader确实拒绝0.9。首包有两个HTML/CSS文件换行差异，已保留旧字节并修正包；总控对最终包58/58代码成员逐字匹配Git blob并再次冷暖重放通过。回执 `evaluation/book-46007447-viewer13-v3-portable-root-receipt.json`。
+- 第7页v2候选包又从最终ZIP解包校验通过：3原图、9区域、6候选，无生产分配；身份模型复核不等于语义/人工核准。
+- 第15题固定rev9计划与两个新增操作已独立核查，专用断言另存 `tests/fixtures/book46007447/q15-v9-high-level-assertions.py`。通用consumer对重复题号与分数改plain两负例实际接受；这两项只能由本题高层断言检查，不能声称通用API拒绝。损坏像素回执、遗漏冲突、错源、吞后续题、跨栏大框五类consumer拒绝。详见[独立报告](../reviews/q15-content-revision-v9-independent-plan-audit.md)。原preparation receipt保留为历史，涉及两负例的拒绝口径以本报告为准。
+- 当前代码首次14阶段实际运行在第13阶段因E/G05/Check05引用漂移正确拒绝，报告与审计保留为 `evaluation/q15-v9-stale-first-pipeline-*.json`，未将其称为成功应用。正在正式重绑定；历史旧计划和图谱不覆盖。
+- 本机IAB已实际观察4区块/16公式的独立预览，1/4和平方上标显示正确，无重复15前缀；这是提取当前review_ui.js渲染函数的局部预览，不证明旧完整复核工作区支持新计划。回执 `evaluation/book-46007447-q15-formula-preview.json`。模型核验不等于人工验收。
+
+## 2026-10-18 共享材料候选身份绑定
+
+- 第5页结构输出已有真实material_id/三个task_id，来源成员将此前“漫话勾股世界”的五源行与七几何区域绑定到固定G0.9文件SHA/产物引用，见[候选报告v2](../reviews/46007447-math-world-g09-readonly-binding-report-v2-20261018.md)。总控核对3任务身份/锚点、5源行存在及7裁片摘要均一致；固定图文件SHA `fd58025e9111bdca4db415b46d40756e9187aa6861aa31d3119600cd8d4ee295`。
+- 102仅任务1第一空、104仅任务2公式分子、108跨任务2/3、110续任务3、112仅图中b标签，不能把五行算成五答案。v2所有生产分配许可均false；候选一对一基数字段不授予生产权限。图底原图/阈值复核无需扩框，但FIGURE_EXTENT_UNVERIFIED继续保留。19 UNASSIGNED不变，未创建或选择生产答案。v1保留为历史，v2 SHA `5d4b2fea33341325515b0835d24d1f91a452e11ce6327aee4bf673e010ee6b44`为当前候选；验证见 `evaluation/book-46007447-math-world-g09-sidecar-integration.json`。
+
+## 2026-10-18 第7页独立候选复核补充
+
+- [来源成员独立报告](../reviews/46007447-page7-answer-crosswalk-independent-review-20261018.md)确认六组均可保留MODEL_VISUAL_CANDIDATE，11–14中等、15–16高把握，仍无生产配答。v2包补充两种口径：19条UNASSIGNED源行与32个已组装未匹配答案实体不同；六候选均仍在32内，两个数字都不减6。v2的题答/来源几何不变，原v1包保留，包SHA `2842ac9b4a37355755aa11a0d835cb576a424fb8f3134559b4a3a0ed123a857e`，详见 `evaluation/book-46007447-page7-answer-crosswalk-v2-validation.json`。
+- [Q15独立来源核对](../reviews/q15-answer-draft-v1-independent-source-audit.md)认为六行数学与跨栏顺序model-visual通过，但正式应用前需去重印刷题号、明确plain/latex消费并渲染核验、纠正误称旧AF上标缺失的说明，且空格/句点仍为规范化。当前仅源转写草稿通过，不等于生产应用或人工验收；内容成员据此准备正式操作。
+
 ## 2026-10-18 第5页v3独立终审与实际集成
 
 - 质量成员已恢复并完成[独立最终报告](../reviews/viewer13-reviewed-layout-v3-independent-final-audit.md)，SHA `b88219c6f36ebfe07fbba0ebff7047e96a6256898ab01fea076f021c65266ddd`：固定v3补丁技术PASS，未作人工/业务/发布验收。该报告的65139f4是此前实际核查的兼容基线；本轮13204a7相对它仅文档/证据增量，生产代码相同，随后应用原补丁。
