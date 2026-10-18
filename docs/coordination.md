@@ -1,5 +1,7 @@
 # A 侧开发调度与验收
 
+2026-10-18 最新复核：[A07-F01选项角色偏差](tasks/A07-Q1-role-mapping-finding.md)已确认。六框数量符合书面规则，但普通选项被映射Q，预期应为W；此前执行/读回只证明与错误计划一致，验收遗漏业务规则比较。代码仍在原集成提交，冻结证据保留，当前有效接受为HOLD_OPTION_ROLE_MISMATCH，尚无新的修复派发/执行额度；不能无保留交接为规则已通过。
+
 2026-10-18 A07已完成[调度接受](tasks/A07-Q1-coordinator-acceptance.md)与[本地集成](tasks/A07-Q1-local-integration.md)，提交 `07479d69edcbfe8c051f347d21bea714b085e70f`。固定真实Q1生成新C01、五项PRE_APPLY、模拟TARGET及1题6框计划，独立实际内存变更/读回零差异，10次拒绝零新增变更。作者与独立均释放，不再复跑成功业务。最新[六项答复](b-q1-a-side-confirmation-2026-10-18.md)可由用户转发；新材料仅本地，B共同采用/联合验收和A04真实平台未证明。下方A07待实施及业务待核准均为历史时点。
 
 2026-10-18 用户已核准固定第1题内容、六组区域及30条单题范围处置，仅用于离线模拟，见[授权记录](approvals/A07-Q1-offline-business-approval.json)。现在推进[A07有限真实来源离线模拟](tasks/A07-Q1-offline-simulation.md)及[独立验收](tasks/A07-Q1-independent-review.md)。新路径保留真实来源 OBSERVED，目标与回执仅模拟；旧 A03 pins、A06/I01、B原件/HOLD保持。下方业务待定是此前时点；B共同采用、平台资格仍未证明。

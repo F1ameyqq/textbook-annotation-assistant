@@ -1,5 +1,7 @@
 # 模块化开发计划与两人分工
 
+2026-10-18 A07最新缺口：普通选择题六框数量正确，但实际选项角色Q应为W。见[复核记录](tasks/A07-Q1-role-mapping-finding.md)。已集成事实保留，业务角色符合性待纠正，现为HOLD_OPTION_ROLE_MISMATCH；未自动追加修复、模拟或验收额度，后续状态不得只依据下方此前里程碑。
+
 2026-10-18 A07最新里程碑：固定真实第1题已完成新C01、五项PRE_APPLY、显式模拟TARGET、1题6框计划及独立读回/模拟回执，并在 `07479d69edcbfe8c051f347d21bea714b085e70f` [本地集成](tasks/A07-Q1-local-integration.md)。用户核准只用于此单题离线模拟；作者和独立各一次成功后收口。下一步为固定口径/产物的跨侧采用确认，不能宣称B已确认或将本次扩展到真实平台。新材料未推送，A04真实R01-R06/S01仍BLOCKED；下方待实施/待核准是历史。
 
 2026-10-18 用户已核准固定第1题内容、六组区域及30条单题范围处置，仅用于离线模拟，见[授权记录](approvals/A07-Q1-offline-business-approval.json)。现在推进[A07有限真实来源离线模拟](tasks/A07-Q1-offline-simulation.md)及[独立验收](tasks/A07-Q1-independent-review.md)。新路径保留真实来源 OBSERVED，目标与回执仅模拟；旧 A03 pins、A06/I01、B原件/HOLD保持。下方业务待定是此前时点；B共同采用、平台资格仍未证明。
