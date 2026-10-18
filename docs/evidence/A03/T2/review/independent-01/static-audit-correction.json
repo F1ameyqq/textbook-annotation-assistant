@@ -1,0 +1,17 @@
+{
+  "count": 1,
+  "original": "audit.py",
+  "corrected": "audit-r1.py",
+  "original_sha256": "bec15862f94674e8409608bb95cae2233cb6122c6ed61430eda23da99f4c3b3a",
+  "corrected_sha256": "c8d3364f6d7e470c74364712276d7c9fc66b7a8e4b8e5d6978a7e3231eb8bb44",
+  "first_failure": "audit-first-failure.json",
+  "cause": "files.path is runtime-relative; existing native observer completion records use elapsed_seconds and raw retained streams without timestamp/digest fields",
+  "changes": [
+    "Anchor files.path to its own case/runtime",
+    "Interpret existing native observer metadata without fabricating absent fields",
+    "Reuse retained successful raw-manifest Git check"
+  ],
+  "business_calls": 0,
+  "business_reruns": 0,
+  "product_tool_inputs_expectations_changed": false
+}

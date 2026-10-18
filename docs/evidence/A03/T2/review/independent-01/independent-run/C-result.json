@@ -1,0 +1,181 @@
+{
+  "cases_run": 12,
+  "dispatches": 0,
+  "functional_assertions": "PASS",
+  "observations": 0,
+  "results": [
+    {
+      "actual_codes": [],
+      "entry": "native",
+      "expected_code": null,
+      "name": "C01-valid-native"
+    },
+    {
+      "actual_codes": [
+        "NATIVE_ISSUE_OWNERSHIP"
+      ],
+      "entry": "native",
+      "expected_code": "NATIVE_ISSUE_OWNERSHIP",
+      "issues": [
+        {
+          "code": "NATIVE_ISSUE_OWNERSHIP",
+          "message": "missing, extra, duplicated or borrowed UNKNOWN issue binding",
+          "path": "$.receipt.unresolved_issue_ids"
+        }
+      ],
+      "name": "C02-missing-ID"
+    },
+    {
+      "actual_codes": [
+        "NATIVE_ISSUE_OWNERSHIP"
+      ],
+      "entry": "native",
+      "expected_code": "NATIVE_ISSUE_OWNERSHIP",
+      "issues": [
+        {
+          "code": "NATIVE_ISSUE_OWNERSHIP",
+          "message": "missing, extra, duplicated or borrowed UNKNOWN issue binding",
+          "path": "$.receipt.unresolved_issue_ids"
+        }
+      ],
+      "name": "C03-extra-ID"
+    },
+    {
+      "actual_codes": [
+        "NATIVE_ISSUE_OWNERSHIP"
+      ],
+      "entry": "native",
+      "expected_code": "NATIVE_ISSUE_OWNERSHIP",
+      "issues": [
+        {
+          "code": "NATIVE_ISSUE_OWNERSHIP",
+          "message": "missing, extra, duplicated or borrowed UNKNOWN issue binding",
+          "path": "$.receipt.unresolved_issue_ids"
+        }
+      ],
+      "name": "C04-duplicate-ID"
+    },
+    {
+      "actual_codes": [
+        "ACTION_DIGEST_MISMATCH"
+      ],
+      "entry": "native",
+      "expected_code": "ACTION_DIGEST_MISMATCH",
+      "issues": [
+        {
+          "code": "ACTION_DIGEST_MISMATCH",
+          "message": "fact action differs",
+          "path": "$.fact"
+        }
+      ],
+      "name": "C05-action-digest"
+    },
+    {
+      "actual_codes": [
+        "RECOVERY_CHAIN_INVALID"
+      ],
+      "entry": "native",
+      "expected_code": "RECOVERY_CHAIN_INVALID",
+      "issues": [
+        {
+          "code": "RECOVERY_CHAIN_INVALID",
+          "message": "fact obligation or original action differs",
+          "path": "$.fact"
+        }
+      ],
+      "name": "C06-intent-obligation"
+    },
+    {
+      "actual_codes": [
+        "ORDINARY_SCOPE"
+      ],
+      "entry": "native",
+      "expected_code": "ORDINARY_SCOPE",
+      "issues": [
+        {
+          "code": "ORDINARY_SCOPE",
+          "message": "ORDINARY_SCOPE",
+          "path": "contract-receipt-A"
+        }
+      ],
+      "name": "C07-consumer-scope"
+    },
+    {
+      "actual_codes": [
+        "NATIVE_ISSUE_OWNERSHIP"
+      ],
+      "entry": "native",
+      "expected_code": "NATIVE_ISSUE_OWNERSHIP",
+      "issues": [
+        {
+          "code": "NATIVE_ISSUE_OWNERSHIP",
+          "message": "missing, extra, duplicated or borrowed UNKNOWN issue binding",
+          "path": "$.receipt.unresolved_issue_ids"
+        }
+      ],
+      "name": "C08-consumer-borrow"
+    },
+    {
+      "actual_codes": [
+        "RESOURCE_READ"
+      ],
+      "entry": "native",
+      "expected_code": "RESOURCE_READ",
+      "issues": [
+        {
+          "code": "RESOURCE_READ",
+          "message": "[WinError 2] 系统找不到指定的文件。: 'D:\\\\1800\\\\.local\\\\A03-T2-independent-review\\\\r1\\\\c\\\\examples\\\\a03\\\\P2-R12-R2-issue-ownership\\\\contract-inputs\\\\C09-missing-resource\\\\assets\\\\contract-fact-A.json'",
+          "path": "assets/contract-fact-A.json"
+        }
+      ],
+      "name": "C09-missing-resource"
+    },
+    {
+      "actual_codes": [
+        "RESOURCE_HASH"
+      ],
+      "entry": "native",
+      "expected_code": "RESOURCE_HASH",
+      "issues": [
+        {
+          "code": "RESOURCE_HASH",
+          "message": "RESOURCE_HASH",
+          "path": "assets/contract-fact-A.json"
+        }
+      ],
+      "name": "C10-tampered-resource"
+    },
+    {
+      "actual_codes": [
+        "NATIVE_ISSUE_PROOF_REQUIRED"
+      ],
+      "entry": "whitelist",
+      "expected_code": "NATIVE_ISSUE_PROOF_REQUIRED",
+      "issues": [
+        {
+          "code": "NATIVE_ISSUE_PROOF_REQUIRED",
+          "message": "original native closure required, not allowed IDs",
+          "path": "$.receipt"
+        }
+      ],
+      "name": "C11-ID-whitelist"
+    },
+    {
+      "actual_codes": [
+        "MISSING_REFERENCE"
+      ],
+      "entry": "public",
+      "expected_code": "MISSING_REFERENCE",
+      "issues": [
+        {
+          "code": "MISSING_REFERENCE",
+          "message": "unknown reference issue-save-unknown",
+          "path": "$.artifacts[9].payload.unresolved_issue_ids[0]"
+        }
+      ],
+      "name": "C12-public-C01"
+    }
+  ],
+  "runtime_databases_created": 0,
+  "status": "REVIEW"
+}

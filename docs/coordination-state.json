@@ -2,7 +2,7 @@
   "schema_version": 1,
   "project": "D:\\1800",
   "coordinator_thread_id": "01a13f26-7567-75e1-99ee-c9d2194e78bb",
-  "updated_at": "2026-10-18T11:31:53.728294+08:00",
+  "updated_at": "2026-10-18T11:43:52.161535+08:00",
   "automation": {
     "id": "1800-a",
     "kind": "heartbeat",
@@ -1947,7 +1947,7 @@
       "execution_task": "docs/tasks/A03-P2-R12-inconclusive-readback-validation.md",
       "review_task": "docs/tasks/A03-P2-R11-R1-archive-closure.md",
       "acceptance_scope": "P1 and limited R2-R6 accepted; R7 readonly product locally INTEGRATED; R8-R2 projection/N1, R8-R3 POST_HOLD/local/N1-N5, R8-R4 N6/single runtime-init control limited ACCEPTED. Whole native A03 not accepted or integrated. R9-R1 owner lifecycle and D1/standalone/borrow/D2 fixed single-question demos limited ACCEPTED at bfd7fe896a7eee663ea8e0b6cf967548d8dd8f39. R10 two live-process owner/fencing cases limited ACCEPTED at 1c26b4a8eb378af33e57668472d2071e9ea6afff. R11/R11-R1 four crash cuts limited ACCEPTED at cc5966dc58c62017a27266c40ca0cedc5c68485c; author F2/F3 intermediate binary omission remains.",
-      "next_dependency": "T1 limited ACCEPTED; T2 C12/H1 fixed author delivery and T3 C1-C4 fixed plan now admitted for their existing independent reviews. K/M/L/G requires accepted T2 and plan decision; A03 REWORK, I01 not released.",
+      "next_dependency": "T3 plan-R1 accepted; T2 C12/H1 independently passed but formal acceptance withheld for missing final inventory. Coordinator preserved fixed files and prepared one static archive closure. Exact K and M implementation wait for that conclusion; no business rerun.",
       "dispatch_status": "NEW_SIX_CHATS_STARTED",
       "B_confirmation": "NOT_CONFIRMED",
       "workflow_commit": "77d3e123ab7247eae6f81f7acd669e3a69c934a0",
@@ -6874,16 +6874,16 @@
       }
     },
     "A03-T2": {
-      "status": "REVIEW",
+      "status": "REWORK",
       "parent_task": "A03",
-      "phase": "INDEPENDENT_REVIEW_RUNNING",
+      "phase": "STATIC_ARCHIVE_RECHECK_INTENDED",
       "base_commit": "1330047dd29890dea0e433ff01b991f615bf78f4",
       "handoff_commit": "6b61ac9d623e76cbe6311f64d012fd04e2e03c21",
       "execution_task": "docs/tasks/A03-T2-history-and-report.md",
       "review_task": "docs/tasks/A03-T2-history-and-report.md",
       "task_sha256": "37afb0a61597e8b7fee610c3cb7d8996f4032963660deb8a070cd5d04287a53e",
       "acceptance_scope": "C12 and one H1 history/report chain only; product baseline unchanged",
-      "next_dependency": "Existing independent review of fixed target, then coordinator decision; whole A03 and I01 remain unresolved.",
+      "next_dependency": "Coordinator preserves and freezes existing evidence without altering failed review, then one bounded static archive recheck in existing reviewer. No product or business rerun.",
       "branch": "codex/a03-t2-history",
       "worktree": "D:/1800-worktrees/a03-t2",
       "worktree_status": "CLEAN_RELEASED",
@@ -6894,7 +6894,7 @@
         "reason": "Filename too long; failed paths absent and worktree list clean before fallback"
       },
       "reasoning_policy": "xhigh for new chats; model default",
-      "dispatch_status": "REVIEW_CONTINUATION_ACKNOWLEDGED",
+      "dispatch_status": "STATIC_RECHECK_INTENDED",
       "execution": {
         "thread_id": "01a14ccf-9b9c-7df3-bf59-d9747f640d42",
         "host_id": "local",
@@ -7170,8 +7170,8 @@
       "review": {
         "thread_id": "01a14ccf-a5c1-71f2-a6eb-90ea011d8705",
         "host_id": "local",
-        "cursor": "846f94bd-c69f-4cac-8db1-21285fd53e6b:3",
-        "phase": "INDEPENDENT_REVIEW_RUNNING",
+        "cursor": "846f94bd-c69f-4cac-8db1-21285fd53e6b:5",
+        "phase": "REWORK_STATIC_ARCHIVE_ONLY",
         "dispatch_key": "A03-T2:review:699f748a124162b3118e3996c03757725daac363",
         "thinking": "xhigh",
         "model": "USER_DEFAULT",
@@ -7179,12 +7179,12 @@
         "expected_report": "docs/tasks/A03-T2-review-report.md",
         "created_at": "2026-10-18T10:20:41.469170+08:00",
         "workflow_commit": "0beba0d0c82376b119c46b1d35a137fde541113c",
-        "turn_status": "inProgress",
-        "observed_thread_status": "active",
+        "turn_status": "completed",
+        "observed_thread_status": "idle",
         "turn_id": "01a14d0e-b3a0-77f0-8cdb-afed71487c40",
-        "last_progress": "T1 接受范围确认仅含 capture.py，T2 驱动把 H1 分为建立、恢复和报告三个正常进程，并保留一次 dispatch、一次 reconcile、一次报告读回的限制。我正在创建独立副本，按冻结索引核对实际执行字节，包括原 checkout 与 raw runtime-view 的换行差异。",
-        "last_checked_at": "2026-10-18T11:31:53.728294+08:00",
-        "last_completed_turn_id": "01a14ccf-aa12-7c92-bc4b-cb59a05cded3",
+        "last_progress": "结论：REWORK，仅封存缺口。C12 与唯一 H1 独立实测通过，业务未重跑；我编写的静态工具第二次失败，导致最终 manifest 未生成，已按停止规则保留现场。 验收报告 业务进程、keeper、owner 均已释放。A03 整体及 I01 未放行。",
+        "last_checked_at": "2026-10-18T11:42:51.155937+08:00",
+        "last_completed_turn_id": "01a14d0e-b3a0-77f0-8cdb-afed71487c40",
         "preparation": {
           "task": "A03-T2",
           "path": "docs/tasks/A03-T2-review-preparation.md",
@@ -7192,11 +7192,14 @@
           "frozen_commit_links_for_absent_root_files": [],
           "scope": "preparation only; functional review NOT_RUN"
         },
-        "functional_review": "NOT_RUN",
-        "session_released": false,
+        "functional_review": "C12_AND_H1_PASSED_INDEPENDENTLY_BUT_FORMAL_ACCEPTANCE_WITHHELD",
+        "session_released": true,
         "pending_target_commit": "699f748a124162b3118e3996c03757725daac363",
         "handoff_document": "docs/tasks/A03-T2-review-handoff.md",
-        "target_commit": "699f748a124162b3118e3996c03757725daac363"
+        "target_commit": "699f748a124162b3118e3996c03757725daac363",
+        "decision": "REWORK_STATIC_ARCHIVE_ONLY",
+        "report": "docs/tasks/A03-T2-review-report.md",
+        "report_sha256": "e77aa974729845c687f9ce205966e87d59250f12f7b23a4429facb4aa17ab103"
       },
       "workflow_commit": "f7084b2e8f2e9a1fcf758f9cba56ec9c9fb1f304",
       "latest_lightweight_observation": {
@@ -7244,37 +7247,67 @@
         "remote_push": false
       },
       "pending_review_dispatch": {
-        "key": "A03-T2:review:699f748a124162b3118e3996c03757725daac363",
+        "key": "A03-T2:review:static-archive-recheck:699f748",
         "task": "A03-T2",
         "role": "review",
-        "state": "STARTED",
-        "created_at": "2026-10-18T11:29:02.400442+08:00",
-        "document": "docs/tasks/A03-T2-review-handoff.md",
-        "document_sha256": "1b05c70a98a49f3424f414ab176c1d1c1f72758b7304e947b6fdf21f6d12d038",
+        "state": "INTENDED",
+        "created_at": "2026-10-18T11:43:52.161535+08:00",
+        "document": "docs/tasks/A03-T2-static-archive-recheck.md",
+        "document_sha256": "2eea97413cb42b1e82650a0d216bd1d1fa3100c240735eda4de75593fb0aabbc",
         "target_commit": "699f748a124162b3118e3996c03757725daac363",
         "thread_id": "01a14ccf-a5c1-71f2-a6eb-90ea011d8705",
         "host_id": "local",
         "thinking": "xhigh",
-        "scope": "C12 and one H1 history/report chain only; product baseline unchanged",
-        "sent_at": "2026-10-18T11:31:27.208257+08:00",
-        "workflow_commit": "0beba0d0c82376b119c46b1d35a137fde541113c",
-        "result": "send_message_to_thread returned the registered review thread id",
-        "cursor": "846f94bd-c69f-4cac-8db1-21285fd53e6b:3",
-        "turn_id": "01a14d0e-b3a0-77f0-8cdb-afed71487c40",
-        "started_observed_at": "2026-10-18T11:31:53.728294+08:00"
-      }
+        "scope": "One static archive closure; no product imports/business/SQL or failed-tool rerun"
+      },
+      "archive_remediation": {
+        "state": "FROZEN_FILES_PREPARED",
+        "at": "2026-10-18T11:42:51.155937+08:00",
+        "owner": "A coordinator",
+        "scope": "New coordinator-owned inventory and source-copy hash verification of completed review files only; failed reviewer manifest remains absent, scripts and reports unchanged; no business/SQL/retry of old sealer",
+        "reviewer_recheck": "Single static closure check after frozen archive; no automatic retry",
+        "inventory": "docs/evidence/coordinator/heartbeat-20261018-0337/T2-archive-inventory.json",
+        "inventory_sha256": "55d35f4724962fd6e7de0878976aa2de92c5c5849c6c7886d3a31c9a02d3dcd2",
+        "files": 267,
+        "source_pairs": 262,
+        "external_streams": 24,
+        "raw_stage_databases": 14
+      },
+      "review_dispatch_history": [
+        {
+          "key": "A03-T2:review:699f748a124162b3118e3996c03757725daac363",
+          "task": "A03-T2",
+          "role": "review",
+          "state": "COMPLETED_REWORK",
+          "created_at": "2026-10-18T11:29:02.400442+08:00",
+          "document": "docs/tasks/A03-T2-review-handoff.md",
+          "document_sha256": "1b05c70a98a49f3424f414ab176c1d1c1f72758b7304e947b6fdf21f6d12d038",
+          "target_commit": "699f748a124162b3118e3996c03757725daac363",
+          "thread_id": "01a14ccf-a5c1-71f2-a6eb-90ea011d8705",
+          "host_id": "local",
+          "thinking": "xhigh",
+          "scope": "C12 and one H1 history/report chain only; product baseline unchanged",
+          "sent_at": "2026-10-18T11:31:27.208257+08:00",
+          "workflow_commit": "0beba0d0c82376b119c46b1d35a137fde541113c",
+          "result": "send_message_to_thread returned the registered review thread id",
+          "cursor": "846f94bd-c69f-4cac-8db1-21285fd53e6b:5",
+          "turn_id": "01a14d0e-b3a0-77f0-8cdb-afed71487c40",
+          "started_observed_at": "2026-10-18T11:31:53.728294+08:00",
+          "completed_observed_at": "2026-10-18T11:42:51.155937+08:00"
+        }
+      ]
     },
     "A03-T3": {
-      "status": "REVIEW",
+      "status": "ACCEPTED",
       "parent_task": "A03",
-      "phase": "INDEPENDENT_REVIEW_RUNNING",
+      "phase": "PLAN_ACCEPTED_WAITING_T2_K",
       "base_commit": "1330047dd29890dea0e433ff01b991f615bf78f4",
       "handoff_commit": "6b61ac9d623e76cbe6311f64d012fd04e2e03c21",
       "execution_task": "docs/tasks/A03-T3-closure-and-integration.md",
       "review_task": "docs/tasks/A03-T3-closure-and-integration.md",
       "task_sha256": "5e7337a5721ffd4f87440c630ae0e8839415ee51b4de57afc7773a41590f76f5",
-      "acceptance_scope": "C1-C4 document revision and affected references only; prior 28-item mapping retained",
-      "next_dependency": "Existing independent review of fixed target, then coordinator decision; whole A03 and I01 remain unresolved.",
+      "acceptance_scope": "C1-C4 plan revision and prior 28-item mapping only; functional implementation not accepted",
+      "next_dependency": "T2 independent completion and coordinator acceptance; fixed K and D-M implementation scope before product dispatch",
       "branch": "codex/a03-t3-closure",
       "worktree": "D:/1800-worktrees/a03-t3",
       "worktree_status": "CLEAN_RELEASED",
@@ -7356,8 +7389,8 @@
       "review": {
         "thread_id": "01a14ccf-b8c3-7941-a80f-73594e7859a5",
         "host_id": "local",
-        "cursor": "6edfea69-590d-4e04-b191-563639b4a645:5",
-        "phase": "INDEPENDENT_REVIEW_RUNNING",
+        "cursor": "6edfea69-590d-4e04-b191-563639b4a645:6",
+        "phase": "PLAN_R1_COMPLETED",
         "dispatch_key": "A03-T3:review:765aef597a93fe36060fce65e17b22fe1c3408b8",
         "thinking": "xhigh",
         "model": "USER_DEFAULT",
@@ -7365,12 +7398,12 @@
         "expected_report": "docs/tasks/A03-T3-plan-R1-review-report.md",
         "created_at": "2026-10-18T10:20:45.956512+08:00",
         "workflow_commit": "0beba0d0c82376b119c46b1d35a137fde541113c",
-        "turn_status": "inProgress",
-        "observed_thread_status": "active",
+        "turn_status": "completed",
+        "observed_thread_status": "idle",
         "turn_id": "01a14d0e-f8a9-7382-b17e-5a8f9f7fb41d",
-        "last_progress": "修订稿已将 hold 候选限定为清除 hold 的证据，并明确清除后重新生成 INITIAL PRE；转换部分也已区分旧 converter、条件性 COMMITTED 方案和仍未批准的数据库迁移。我会继续核对历史材料来源、计数及17处受影响引用，不重审旧28项。",
-        "last_checked_at": "2026-10-18T11:31:53.728294+08:00",
-        "last_completed_turn_id": "01a14ccf-bc2e-7013-88b1-675e1e77be88",
+        "last_progress": "ACCEPTED，仅限C1–C4计划修订；无必要返修。 D-CONV、D-M仍待调度采用。 复核报告：SHA256 a1b6295e086adb78c49549ed8759167054b3aab971dc3ccdbb264f0edaed1c8c 证据清单：SHA256 89b11687ddbf873d81c374dcc04bec2b400f8d8b9536b0ec84e77f2f2db45859 旧报告及证据保持原字节。未运行产品、业务或SQL，无自有会话待释放。A03仍REWORK，I01未释放。",
+        "last_checked_at": "2026-10-18T11:40:25.362728+08:00",
+        "last_completed_turn_id": "01a14d0e-f8a9-7382-b17e-5a8f9f7fb41d",
         "preparation": {
           "task": "A03-T3",
           "path": "docs/tasks/A03-T3-review-preparation.md",
@@ -7382,15 +7415,24 @@
           "scope": "preparation only; functional review NOT_RUN"
         },
         "functional_review": "NOT_RUN_DOCUMENT_REVIEW_ONLY",
-        "session_released": false,
+        "session_released": true,
         "target_commit": "765aef597a93fe36060fce65e17b22fe1c3408b8",
         "handoff_document": "docs/tasks/A03-T3-plan-R1-review-handoff.md",
-        "decision": "ACCEPTED_MATRIX_PLAN_REWORK",
-        "report": "docs/tasks/A03-T3-review-report.md",
-        "report_sha256": "ffc1baff90e997e8a82d3dd98041229999c8cbb6609fb75574a5d834d19d3582",
-        "evidence_manifest": "docs/evidence/A03/T3/review/manifest.json",
-        "evidence_manifest_sha256": "9b8732c0af648fb864e2ef8fd83209aad70128435f772bc538b97dd961bcb655",
-        "pending_target_commit": "765aef597a93fe36060fce65e17b22fe1c3408b8"
+        "decision": "ACCEPTED_PLAN_R1_ONLY",
+        "report": "docs/tasks/A03-T3-plan-R1-review-report.md",
+        "report_sha256": "a1b6295e086adb78c49549ed8759167054b3aab971dc3ccdbb264f0edaed1c8c",
+        "evidence_manifest": "docs/evidence/A03/T3/review-plan-R1/manifest.json",
+        "evidence_manifest_sha256": "89b11687ddbf873d81c374dcc04bec2b400f8d8b9536b0ec84e77f2f2db45859",
+        "pending_target_commit": "765aef597a93fe36060fce65e17b22fe1c3408b8",
+        "review_history": [
+          {
+            "decision": "ACCEPTED_MATRIX_PLAN_REWORK",
+            "report": "docs/tasks/A03-T3-review-report.md",
+            "report_sha256": "ffc1baff90e997e8a82d3dd98041229999c8cbb6609fb75574a5d834d19d3582",
+            "evidence_manifest": "docs/evidence/A03/T3/review/manifest.json",
+            "evidence_manifest_sha256": "9b8732c0af648fb864e2ef8fd83209aad70128435f772bc538b97dd961bcb655"
+          }
+        ]
       },
       "workflow_commit": "f7084b2e8f2e9a1fcf758f9cba56ec9c9fb1f304",
       "latest_lightweight_observation": {
@@ -7405,7 +7447,7 @@
         "key": "A03-T3:review:765aef597a93fe36060fce65e17b22fe1c3408b8",
         "task": "A03-T3",
         "role": "review",
-        "state": "STARTED",
+        "state": "COMPLETED",
         "created_at": "2026-10-18T11:29:02.400442+08:00",
         "document": "docs/tasks/A03-T3-plan-R1-review-handoff.md",
         "document_sha256": "26bd91b633eb618f397c6dcc800d26f2754a075c45ad0ac5ae9c8f33e1cfeb86",
@@ -7417,17 +7459,18 @@
         "sent_at": "2026-10-18T11:31:27.208257+08:00",
         "workflow_commit": "0beba0d0c82376b119c46b1d35a137fde541113c",
         "result": "send_message_to_thread returned the registered review thread id",
-        "cursor": "6edfea69-590d-4e04-b191-563639b4a645:5",
+        "cursor": "6edfea69-590d-4e04-b191-563639b4a645:6",
         "turn_id": "01a14d0e-f8a9-7382-b17e-5a8f9f7fb41d",
-        "started_observed_at": "2026-10-18T11:31:53.728294+08:00"
+        "started_observed_at": "2026-10-18T11:31:53.728294+08:00",
+        "completed_observed_at": "2026-10-18T11:40:25.362728+08:00"
       },
       "coordinator_acceptance": {
-        "at": "2026-10-18T10:59:23.089540+08:00",
-        "target_commit": "3fcdb73416142a0a85dfb951a7f839849871c549",
-        "decision": "ACCEPTED_MATRIX_PLAN_REWORK",
-        "checks": "docs/evidence/coordinator/heartbeat-20261018-0252/checks.json",
+        "at": "2026-10-18T11:40:25.362728+08:00",
+        "target_commit": "765aef597a93fe36060fce65e17b22fe1c3408b8",
+        "decision": "ACCEPTED_PLAN_R1_ONLY",
+        "checks": "docs/evidence/coordinator/heartbeat-20261018-0337/T3-checks.json",
         "product_integration": false,
-        "workflow_commit": "b6e00eb3d0512b4ad838676d72c28e8036125301"
+        "report": "docs/tasks/A03-T3-plan-R1-coordinator-acceptance.md"
       },
       "pending_execution_dispatch": {
         "key": "A03-T3:execution:plan-R1-C1-C4",
@@ -7463,6 +7506,16 @@
           "workflow_commit": "69ef1b3456c7c44c463c4f4fb43b6064b8cf4e09",
           "cursor": "6edfea69-590d-4e04-b191-563639b4a645:3",
           "turn_id": "01a14ce3-8217-7461-87da-dbad7e40fb9b"
+        }
+      ],
+      "coordinator_acceptance_history": [
+        {
+          "at": "2026-10-18T10:59:23.089540+08:00",
+          "target_commit": "3fcdb73416142a0a85dfb951a7f839849871c549",
+          "decision": "ACCEPTED_MATRIX_PLAN_REWORK",
+          "checks": "docs/evidence/coordinator/heartbeat-20261018-0252/checks.json",
+          "product_integration": false,
+          "workflow_commit": "b6e00eb3d0512b4ad838676d72c28e8036125301"
         }
       ]
     }
@@ -9301,7 +9354,7 @@
       "key": "A03-T2:review:699f748a124162b3118e3996c03757725daac363",
       "task": "A03-T2",
       "role": "review",
-      "state": "STARTED",
+      "state": "COMPLETED_REWORK",
       "created_at": "2026-10-18T11:29:02.400442+08:00",
       "document": "docs/tasks/A03-T2-review-handoff.md",
       "document_sha256": "1b05c70a98a49f3424f414ab176c1d1c1f72758b7304e947b6fdf21f6d12d038",
@@ -9313,15 +9366,16 @@
       "sent_at": "2026-10-18T11:31:27.208257+08:00",
       "workflow_commit": "0beba0d0c82376b119c46b1d35a137fde541113c",
       "result": "send_message_to_thread returned the registered review thread id",
-      "cursor": "846f94bd-c69f-4cac-8db1-21285fd53e6b:3",
+      "cursor": "846f94bd-c69f-4cac-8db1-21285fd53e6b:5",
       "turn_id": "01a14d0e-b3a0-77f0-8cdb-afed71487c40",
-      "started_observed_at": "2026-10-18T11:31:53.728294+08:00"
+      "started_observed_at": "2026-10-18T11:31:53.728294+08:00",
+      "completed_observed_at": "2026-10-18T11:42:51.155937+08:00"
     },
     {
       "key": "A03-T3:review:765aef597a93fe36060fce65e17b22fe1c3408b8",
       "task": "A03-T3",
       "role": "review",
-      "state": "STARTED",
+      "state": "COMPLETED",
       "created_at": "2026-10-18T11:29:02.400442+08:00",
       "document": "docs/tasks/A03-T3-plan-R1-review-handoff.md",
       "document_sha256": "26bd91b633eb618f397c6dcc800d26f2754a075c45ad0ac5ae9c8f33e1cfeb86",
@@ -9333,22 +9387,32 @@
       "sent_at": "2026-10-18T11:31:27.208257+08:00",
       "workflow_commit": "0beba0d0c82376b119c46b1d35a137fde541113c",
       "result": "send_message_to_thread returned the registered review thread id",
-      "cursor": "6edfea69-590d-4e04-b191-563639b4a645:5",
+      "cursor": "6edfea69-590d-4e04-b191-563639b4a645:6",
       "turn_id": "01a14d0e-f8a9-7382-b17e-5a8f9f7fb41d",
-      "started_observed_at": "2026-10-18T11:31:53.728294+08:00"
+      "started_observed_at": "2026-10-18T11:31:53.728294+08:00",
+      "completed_observed_at": "2026-10-18T11:40:25.362728+08:00"
+    },
+    {
+      "key": "A03-T2:review:static-archive-recheck:699f748",
+      "task": "A03-T2",
+      "role": "review",
+      "state": "INTENDED",
+      "created_at": "2026-10-18T11:43:52.161535+08:00",
+      "document": "docs/tasks/A03-T2-static-archive-recheck.md",
+      "document_sha256": "2eea97413cb42b1e82650a0d216bd1d1fa3100c240735eda4de75593fb0aabbc",
+      "target_commit": "699f748a124162b3118e3996c03757725daac363",
+      "thread_id": "01a14ccf-a5c1-71f2-a6eb-90ea011d8705",
+      "host_id": "local",
+      "thinking": "xhigh",
+      "scope": "One static archive closure; no product imports/business/SQL or failed-tool rerun"
     }
   ],
   "last_action": {
-    "at": "2026-10-18T11:31:53.728294+08:00",
-    "action": "T2_T3_EXISTING_INDEPENDENT_REVIEWS_DISPATCHED",
-    "tasks": [
-      "A03-T2",
-      "A03-T3"
-    ],
-    "checks": "docs/evidence/coordinator/heartbeat-20261018-0322/checks.json",
-    "dispatch_result": "BOTH_EXISTING_REVIEW_THREADS_ACKNOWLEDGED_IN_PROGRESS",
-    "remote_push": false,
-    "snapshot": "docs/evidence/coordinator/heartbeat-20261018-0322/review-start-snapshot.json"
+    "at": "2026-10-18T11:43:52.161535+08:00",
+    "action": "T2_STATIC_ARCHIVE_FROZEN_RECHECK_INTENDED",
+    "task_id": "A03-T2",
+    "dispatch_result": "INTENDED_EXISTING_REVIEW_THREAD_ONLY",
+    "inventory": "docs/evidence/coordinator/heartbeat-20261018-0337/T2-archive-inventory.json"
   },
   "limitations": [
     "Current route uses mock B artifacts until independently agreed interface/artifact versions exist.",
@@ -9729,11 +9793,11 @@
     }
   ],
   "last_heartbeat": {
-    "at": "2026-10-18T11:31:53.728294+08:00",
-    "trigger": "2026-10-18T03:22:53.572Z",
+    "at": "2026-10-18T11:40:25.362728+08:00",
+    "trigger": "2026-10-18T03:37:51.267Z",
     "automation_id": "1800-a",
     "decision": "NOTIFY",
-    "reason": "T2 fixed C12/H1 and T3 C1-C4 revision deliveries verified; both existing independent reviewers now running. A03 remains REWORK; no user decision needed."
+    "reason": "T3 plan revision accepted after coordinator checks; T2 review final sealing remains active"
   },
   "interactive_progress_history": [
     {
