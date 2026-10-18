@@ -2,7 +2,7 @@
   "schema_version": 1,
   "project": "D:\\1800",
   "coordinator_thread_id": "01a13f26-7567-75e1-99ee-c9d2194e78bb",
-  "updated_at": "2026-10-18T12:32:50.090848+00:00",
+  "updated_at": "2026-10-18T12:36:18.898182+00:00",
   "automation": {
     "id": "1800-a",
     "kind": "heartbeat",
@@ -8591,7 +8591,7 @@
     },
     "A07": {
       "task_id": "A07",
-      "status": "ACCEPTED",
+      "status": "INTEGRATED",
       "scope": "Fixed B Q1 observed source to A-only offline six-frame plan and simulated receipt; no platform or joint B acceptance",
       "base_commit": "2e71462dda8d225e4f41e8c6cd03a9ce7b88046a",
       "b_commit": "ef6ba4dd083e7fd5378e80123b2b038dd11d7052",
@@ -8606,7 +8606,7 @@
       "review_cursor": "65496636-3236-4063-9ba6-c8ca5d3c3561:3",
       "max_frozen_implementation_candidates": 2,
       "used_candidates": 1,
-      "next_dependency": "Scoped local integration of author and review additions; no new business replay",
+      "next_dependency": "B joint adoption / explicit artifact sharing request; A04 live remains blocked; no automatic replay or new candidate",
       "created_at": "2026-10-18T19:50:26.791435+08:00",
       "retired_task_replay_authorized": false,
       "platform_actions_authorized": false,
@@ -8635,6 +8635,17 @@
           "candidate_commit": "6dad9b9a40a10989c102d91cf7b54f19c012015f",
           "delivery_commit": "d2e710c817cf85505ac4fad4919dd51d1062d33a",
           "workflow_commit": "505bac6195186a5dda45fb6bc56ec97f901ae4ab"
+        },
+        {
+          "role": "coordinator",
+          "action": "fixed_evidence_acceptance_and_scoped_integration",
+          "status": "COMPLETED",
+          "at": "2026-10-18T12:38:20.032553+00:00",
+          "author_delivery": "d2e710c817cf85505ac4fad4919dd51d1062d33a",
+          "review_delivery": "efe440d07d3600ee9755f1709778a2a742bb2f52",
+          "integration_commit": "07479d69edcbfe8c051f347d21bea714b085e70f",
+          "new_thread_created": false,
+          "new_business_attempts": 0
         }
       ],
       "workflow_commit": "b1c84db9d1d5603a4fd6aa5487d7c45ec6fca50a",
@@ -8683,7 +8694,19 @@
       },
       "coordinator_acceptance": "docs/tasks/A07-Q1-coordinator-acceptance.md",
       "coordinator_evidence": "docs/evidence/coordinator/a07-acceptance-20261018/fixed-artifact-recheck.json",
-      "accepted_at": "2026-10-18T12:32:50.090848+00:00"
+      "accepted_at": "2026-10-18T12:32:50.090848+00:00",
+      "integration_commit": "07479d69edcbfe8c051f347d21bea714b085e70f",
+      "author_merge_commit": "ee554db57fa7e26ed5938cc522f8f2ce7b6c7b9d",
+      "coordinator_acceptance_commit": "a3aa161bc1edd75a92a2f01d573513cb25140537",
+      "integration_document": "docs/tasks/A07-Q1-local-integration.md",
+      "integration_evidence": "docs/evidence/coordinator/a07-acceptance-20261018/integration-check.json",
+      "integrated_at": "2026-10-18T12:36:18.898182+00:00",
+      "added_paths": 119,
+      "prior_main_paths_preserved": 29303,
+      "pushed": false,
+      "message_sent_to_B": false,
+      "repeat_business_authorized": false,
+      "automation_updated_after_integration": true
     }
   },
   "route": [
@@ -11261,8 +11284,8 @@
   },
   "external_handoff_observation": {
     "task_id": "A-B-Q1-CONFIRM-01",
-    "at": "2026-10-18T19:38:17.138380+08:00",
-    "status": "A07_EXECUTING_USER_APPROVED_OFFLINE_ONLY",
+    "at": "2026-10-18T12:36:18.898182+00:00",
+    "status": "A07_LOCAL_OFFLINE_INTEGRATED_JOINT_ADOPTION_UNCONFIRMED",
     "b_commit": "ef6ba4dd083e7fd5378e80123b2b038dd11d7052",
     "pr_url": "https://github.com/F1ameyqq/textbook-annotation-assistant/pull/3",
     "remote_pr_head_matches": true,
@@ -11287,9 +11310,9 @@
     "scope_policy_business_approval": true,
     "joint_adoption_confirmed": false,
     "c01_execution_eligible": false,
-    "new_receiver_implemented": false,
-    "plan_created": false,
-    "mock_executed": false,
+    "new_receiver_implemented": true,
+    "plan_created": true,
+    "mock_executed": true,
     "platform_actions": 0,
     "b_scripts_executed": 0,
     "message_sent_to_B": false,
@@ -11298,11 +11321,11 @@
       "/root/q1_contract_mapping_audit",
       "/root/q1_package_scope_audit"
     ],
-    "scope": "Fixed-source technical confirmation only; original A06/I01 and B records unchanged.",
+    "scope": "Fixed Q1 A-local offline positive simulation accepted and integrated; B original HOLD and joint/platform boundaries preserved",
     "next_dependencies": [
-      "A07 bounded observed-source adapter and independent acceptance for A-local offline simulation",
-      "B joint adoption remains unconfirmed; not a claim of joint acceptance",
-      "A04 live platform still blocked"
+      "B joint adoption and evidence exchange at fixed versions remain unconfirmed",
+      "New Q1 confirmation/approval/A07 materials not pushed; no repeat stage2 publication",
+      "A04 live remains blocked; no bounded platform task authorized"
     ],
     "evidence_files": [
       {
@@ -11329,7 +11352,19 @@
     "business_approval_sha256": "cf6f675cfd98d438d7d465fc553e0ebbf1bfff71bd62f8453854f8527015cb6c",
     "business_approved_at": "2026-10-18T19:50:26.791435+08:00",
     "independent_human_visual_review_proven": false,
-    "platform_eligible": false
+    "platform_eligible": false,
+    "a07_offline_execution_eligible": true,
+    "c01_execution_eligible_field_scope": "Original B package and joint/platform eligibility remain false; only new A07 fixed authorized offline chain passed",
+    "a07_integration_commit": "07479d69edcbfe8c051f347d21bea714b085e70f",
+    "a07_plan_ref": {
+      "artifact_id": "a07-plan-a07-review-1",
+      "content_hash": "085db1af2db83282603a655150099b9fdc79ff9a6c28879f725753e6cc307456"
+    },
+    "a07_receipt_ref": {
+      "artifact_id": "a07-receipt-a07-review-1",
+      "revision": 1,
+      "content_hash": "e9c63fcbc8fa3571dcb1d943d1a30be627e193efc061ceb501e7cb537d6921d3"
+    }
   },
   "partner_handoff_document": {
     "requested_at": "2026-10-17T13:38:17.014529+08:00",
@@ -11688,13 +11723,14 @@
     "Q1_confirmation_task": "A-B-Q1-CONFIRM-01"
   },
   "current_batch_closure": {
-    "at": "2026-10-18T10:19:55.496449+00:00",
+    "at": "2026-10-18T12:36:18.898182+00:00",
     "tasks": [
       "A03-R1",
       "I01-A",
-      "A06"
+      "A06",
+      "A07"
     ],
-    "status": "A07_ACCEPTED_LOCAL_INTEGRATION_PENDING",
+    "status": "A07_INTEGRATED_WAITING_EXTERNAL_ADOPTION",
     "active_execution_or_review_threads": [],
     "open_external_dependencies": [
       "B joint adoption remains unconfirmed",
@@ -11706,7 +11742,7 @@
     "whole_project_complete": false,
     "automatic_new_task_authorized_now": false,
     "publication_commit": "37089f9e0229da76ae1c45461b7e63929590be56",
-    "next_preparable_scope": "A07 fixed Q1 observed source to simulated target"
+    "next_preparable_scope": null
   },
   "publication_stage2": {
     "task_id": "A-PUBLISH-02",
