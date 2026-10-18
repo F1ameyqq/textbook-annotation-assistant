@@ -19,6 +19,7 @@ from pathlib import Path
 import platform
 import sqlite3
 import threading
+import tempfile
 from uuid import uuid4
 
 from PIL import Image
@@ -315,14 +316,47 @@ class ReviewWorkspace:
                            "object": self._write_bytes(raw, "sources", ".bin")})
         return result
 
+    @contextmanager
+    def _geometry_source(self, plan):
+        """Give both consumers freshly checked original bytes across manifests.
+
+        This transient manifest is only an adapter for their single-manifest
+        API. It never substitutes frozen workspace copies for current sources.
+        """
+        needed = {op["source_region"]["asset_id"] for op in plan["payload"]["operations"]
+                  if op.get("source_geometry_revisions")}
+        if not needed:
+            yield None
+            return
+        with tempfile.TemporaryDirectory(prefix=".geometry-", dir=self.workdir) as temporary:
+            root = Path(temporary)
+            assets = []
+            for identity in self._source_identity:
+                if identity["asset_id"] not in needed:
+                    continue
+                raw = self._paths[identity["asset_id"]].read_bytes()
+                if hashlib.sha256(raw).hexdigest() != identity["sha256"]:
+                    raise SourceChanged("original source changed before geometry verification")
+                name = str(len(assets)) + ".bin"
+                (root/name).write_bytes(raw)
+                assets.append(dict(identity, path=name, reading_order=len(assets)))
+            if {asset["asset_id"] for asset in assets} != needed:
+                raise SourceChanged("geometry source is outside the verified source scope")
+            manifest = dict(schema_version="b-source-trial/0.1", artifact_id="review-geometry-source",
+                            book_id=self._inputs["evidence"]["book_id"], scope_id="review-geometry-source", assets=assets)
+            path = root/"source.json"
+            path.write_text(_json(manifest), encoding="utf-8")
+            yield path
+
     def _build_documents(self, plan):
         e, g, c, r = [self._inputs[k] for k in ("evidence", "graph", "base_check", "review")]
         validate_revision_plan(plan, e, g, c)
-        application = apply_content_revision(e, g, c, plan)
-        check = build_content_quality(e, g, c, plan, application, r)
-        result = dict(plan=copy.deepcopy(plan), application=application, graph=application["payload"]["graph"], check=check,
-                      application_audit=audit_content_application(e, g, c, plan, application),
-                      quality_audit=audit_content_quality(e, g, c, plan, application, r, check))
+        with self._geometry_source(plan) as source:
+            application = apply_content_revision(e, g, c, plan, source_path=source)
+            check = build_content_quality(e, g, c, plan, application, r, source_path=source)
+            result = dict(plan=copy.deepcopy(plan), application=application, graph=application["payload"]["graph"], check=check,
+                          application_audit=audit_content_application(e, g, c, plan, application, source_path=source),
+                          quality_audit=audit_content_quality(e, g, c, plan, application, r, check, source_path=source))
         self._accepted(result)
         return result
 
@@ -365,8 +399,9 @@ class ReviewWorkspace:
             raise ValueError("persisted graph is not the actual application graph")
         e, g, c, r = [self._inputs[k] for k in ("evidence", "graph", "base_check", "review")]
         validate_revision_plan(documents["plan"], e, g, c)
-        application_check = audit_content_application(e, g, c, documents["plan"], documents["application"])
-        quality_check = audit_content_quality(e, g, c, documents["plan"], documents["application"], r, documents["check"])
+        with self._geometry_source(documents["plan"]) as source:
+            application_check = audit_content_application(e, g, c, documents["plan"], documents["application"], source_path=source)
+            quality_check = audit_content_quality(e, g, c, documents["plan"], documents["application"], r, documents["check"], source_path=source)
         if not _same(application_check, documents["application_audit"]) or not _same(quality_check, documents["quality_audit"]):
             raise ValueError("persisted audit differs from current independent checks")
         self._accepted(dict(application_audit=application_check, quality_audit=quality_check))
@@ -452,6 +487,8 @@ class ReviewWorkspace:
                 blocks.append(dict(key=_block_key(answer["answer_id"], operation_id=fragment["operation_id"], block_id=fragment["block_id"]),
                     kind="REGION", role=fragment["role"], asset_id=fragment["asset_id"], bbox=copy.deepcopy(fragment["bbox"]), source_fragment_ids=copy.deepcopy(ids),
                     source_text="\n".join(by_id[fid]["text"] for fid in ids), text=fragment["text"], runs=copy.deepcopy(fragment["runs"]), candidates=[]))
+                if fragment.get("source_geometry_revisions"):
+                    blocks[-1]["source_geometry_revisions"] = copy.deepcopy(fragment["source_geometry_revisions"])
                 if self._inputs.get("region_catalog"):
                     from .region_review import region_options
                     blocks[-1]["region_candidates"] = region_options(self._inputs["region_catalog"], answer["answer_id"], blocks[-1])
