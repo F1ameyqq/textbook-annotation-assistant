@@ -182,3 +182,9 @@ workflow_commit（调度规则版本）：
 仓库里只保存脱敏证据。账号密码、token、浏览器 profile、原始视频不进入任务单、PR 或共享提交。跨账号传递的是任务和代码版本，不是登录状态。
 
 本机制采用现有 A 侧项目编号与模块边界。关于代理分工和持久工作记录，可参考 [OpenAI Docs：Subagents](https://learn.chatgpt.com/docs/agent-configuration/subagents) 与 [Codex 开发流程示例](https://developers.openai.com/cookbook/examples/codex/iterating-development-workflows-with-codex)；本文件不是对 B 侧的开发管理规则。
+
+## 2026-10-18 A03-R1最终接受与下一派发
+
+A03-R1最终交付19ab03c849bfab3dcde2dc86be37c59f3add1ebe的原有限离线范围已独立验收和调度接受，并以a1c3c3b2d452ecbdf5c57a8b7372e7d53de0f8d8本地范围集成。见[本地集成记录](tasks/A03-R1-local-integration.md)。旧A03/T3及R1作者不再派修复或业务。I01-A现在释放固定桩三路径，执行/独立验收分开。
+
+用户转来的B反馈仍为PENDING_A：可导入A公共接口已存在，但缺B原生总入口与实际接收回执。A侧另行落实A06只读接收，显式区分0.4/0.5历史归档、0.6尚无完整接收对象、当前0.7诊断HOLD；历史引用必需性及共同合同未确认保持待确认。不得对B派单或将本地提交视为共享。

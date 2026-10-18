@@ -2,7 +2,7 @@
   "schema_version": 1,
   "project": "D:\\1800",
   "coordinator_thread_id": "01a13f26-7567-75e1-99ee-c9d2194e78bb",
-  "updated_at": "2026-10-18T16:08:21.692400+08:00",
+  "updated_at": "2026-10-18T16:22:39.846611+08:00",
   "automation": {
     "id": "1800-a",
     "kind": "heartbeat",
@@ -1938,8 +1938,8 @@
       }
     },
     "A03": {
-      "status": "ACCEPTED",
-      "phase": "R1_ACCEPTED_PENDING_LOCAL_INTEGRATION",
+      "status": "INTEGRATED",
+      "phase": "FINITE_OFFLINE_INTEGRATED_I01_READY",
       "depends_on": [
         "A02"
       ],
@@ -1947,7 +1947,7 @@
       "execution_task": "docs/tasks/A03-P2-R12-inconclusive-readback-validation.md",
       "review_task": "docs/tasks/A03-P2-R11-R1-archive-closure.md",
       "acceptance_scope": "P1 and limited R2-R6 accepted; R7 readonly product locally INTEGRATED; R8-R2 projection/N1, R8-R3 POST_HOLD/local/N1-N5, R8-R4 N6/single runtime-init control limited ACCEPTED. Whole native A03 not accepted or integrated. R9-R1 owner lifecycle and D1/standalone/borrow/D2 fixed single-question demos limited ACCEPTED at bfd7fe896a7eee663ea8e0b6cf967548d8dd8f39. R10 two live-process owner/fencing cases limited ACCEPTED at 1c26b4a8eb378af33e57668472d2071e9ea6afff. R11/R11-R1 four crash cuts limited ACCEPTED at cc5966dc58c62017a27266c40ca0cedc5c68485c; author F2/F3 intermediate binary omission remains.",
-      "next_dependency": "Scoped local integration preserving existing A01/A02/A04/D01; appropriate checks; then I01-A.",
+      "next_dependency": "I01-A fixed-stub three-path execution and separate A06 B-native read-only receiver; no B joint acceptance inferred.",
       "dispatch_status": "NEW_SIX_CHATS_STARTED",
       "B_confirmation": "NOT_CONFIRMED",
       "workflow_commit": "77d3e123ab7247eae6f81f7acd669e3a69c934a0",
@@ -6520,7 +6520,25 @@
         "independent_manifest_members": 437,
         "independent_manifest_bytes": 9775355,
         "session_released": true,
-        "integrated": false
+        "integrated": true
+      },
+      "integration": {
+        "at": "2026-10-18T16:21:17.903655+08:00",
+        "status": "INTEGRATED",
+        "commit": "a1c3c3b2d452ecbdf5c57a8b7372e7d53de0f8d8",
+        "source_commit": "19ab03c849bfab3dcde2dc86be37c59f3add1ebe",
+        "scope": "46 A/M source paths, fixed runnable closure, native package-data additive; current A01/A02/A04/D01 retained.",
+        "checks": "docs/evidence/coordinator/heartbeat-20261018-0759/integration-checks.json",
+        "main_check": "docs/evidence/coordinator/heartbeat-20261018-0759/main-integration-check.json",
+        "tests": {
+          "contracts": 70,
+          "native_validation": 3,
+          "A02_compatibility": 62
+        },
+        "initial_environment_failure_preserved": true,
+        "A03_business_runs": 0,
+        "pushed": false,
+        "B_shared": false
       }
     },
     "D01": {
@@ -8034,8 +8052,8 @@
       "product_continuation_status": "SUPERSEDED_BY_USER_AUTHORIZED_A03_R1"
     },
     "A03-R1": {
-      "status": "ACCEPTED",
-      "phase": "ACCEPTED_PENDING_SCOPED_LOCAL_INTEGRATION",
+      "status": "INTEGRATED",
+      "phase": "FINITE_OFFLINE_INTEGRATED_I01_READY",
       "parent_task": "A03",
       "user_authorization": "2026-10-18 user: 开始执行; same-function replacement described immediately before.",
       "base_commit": "d5f777590e72eb070af0497afdb144d60c61b95d",
@@ -8156,7 +8174,7 @@
         "frozen_driver_commit": "9992cd8aba10987d25dd0dc0d0874abec02b27ef",
         "observed_manifest_present": true
       },
-      "next_dependency": "Scoped local integration preserving existing A01/A02/A04/D01; appropriate checks; then I01-A.",
+      "next_dependency": "I01-A fixed-stub three-path execution and separate A06 B-native read-only receiver; no B joint acceptance inferred.",
       "created_at": "2026-10-18T06:08:48.379704+00:00",
       "managed_worktree_attempt": {
         "operation_id": "1caa7fff-6d91-4e03-894c-e41553f60074",
@@ -8254,8 +8272,54 @@
         "independent_manifest_members": 437,
         "independent_manifest_bytes": 9775355,
         "session_released": true,
-        "integrated": false
+        "integrated": true
+      },
+      "integration": {
+        "at": "2026-10-18T16:21:17.903655+08:00",
+        "status": "INTEGRATED",
+        "commit": "a1c3c3b2d452ecbdf5c57a8b7372e7d53de0f8d8",
+        "source_commit": "19ab03c849bfab3dcde2dc86be37c59f3add1ebe",
+        "scope": "46 A/M source paths, fixed runnable closure, native package-data additive; current A01/A02/A04/D01 retained.",
+        "checks": "docs/evidence/coordinator/heartbeat-20261018-0759/integration-checks.json",
+        "main_check": "docs/evidence/coordinator/heartbeat-20261018-0759/main-integration-check.json",
+        "tests": {
+          "contracts": 70,
+          "native_validation": 3,
+          "A02_compatibility": 62
+        },
+        "initial_environment_failure_preserved": true,
+        "A03_business_runs": 0,
+        "pushed": false,
+        "B_shared": false
       }
+    },
+    "I01-A": {
+      "status": "DISPATCH_PENDING",
+      "phase": "READY_AFTER_A03_INTEGRATION",
+      "base_commit": "a1c3c3b2d452ecbdf5c57a8b7372e7d53de0f8d8",
+      "depends_on": [
+        "A01",
+        "A02",
+        "A03"
+      ],
+      "execution_task": "docs/tasks/I01-A-minimal-integration.md",
+      "review_task": "docs/tasks/I01-A-independent-review.md",
+      "worktree": "D:/1800-worktrees/i01-a",
+      "branch": "codex/i01-a",
+      "acceptance_scope": "A01 public offline consumption and three fresh synthetic N/E/U integration paths; not real A01-native or B integration. Each execution/review max3targets/3dispatch.",
+      "execution": {
+        "status": "CREATE_INTENT_RECORDED",
+        "dispatch_key": "I01-A:execution:a1c3c3b2d452ecbdf5c57a8b7372e7d53de0f8d8",
+        "thinking": "xhigh",
+        "thread_id": null
+      },
+      "review": {
+        "status": "CREATE_INTENT_RECORDED_WAIT_FIXED_DELIVERY",
+        "dispatch_key": "I01-A:review:a1c3c3b2d452ecbdf5c57a8b7372e7d53de0f8d8",
+        "thinking": "xhigh",
+        "thread_id": null
+      },
+      "next_dependency": "Execution fixed candidate/report/manifest/release, then independent review; coordinator decision before integration."
     }
   },
   "route": [
@@ -10369,17 +10433,35 @@
       "sent_at": "2026-10-18T07:06:15.268274+00:00",
       "returned_thread_id": "01a14da3-8798-75c0-af50-ca8fec19b48c",
       "workflow_commit": "b9f2b496"
+    },
+    {
+      "at": "2026-10-18T16:22:39.846611+08:00",
+      "task": "I01-A",
+      "role": "execution",
+      "dispatch_key": "I01-A:execution:a1c3c3b2d452ecbdf5c57a8b7372e7d53de0f8d8",
+      "status": "INTENT_RECORDED",
+      "target_thread_id": null,
+      "base_commit": "a1c3c3b2d452ecbdf5c57a8b7372e7d53de0f8d8"
+    },
+    {
+      "at": "2026-10-18T16:22:39.846611+08:00",
+      "task": "I01-A",
+      "role": "review",
+      "dispatch_key": "I01-A:review:a1c3c3b2d452ecbdf5c57a8b7372e7d53de0f8d8",
+      "status": "INTENT_RECORDED",
+      "target_thread_id": null,
+      "base_commit": "a1c3c3b2d452ecbdf5c57a8b7372e7d53de0f8d8"
     }
   ],
   "last_action": {
-    "at": "2026-10-18T16:08:21.692400+08:00",
+    "at": "2026-10-18T16:21:17.903655+08:00",
     "task_id": "A03-R1",
-    "action": "A03_R1_FINAL_FINITE_ACCEPTED",
-    "target_commit": "19ab03c849bfab3dcde2dc86be37c59f3add1ebe",
+    "action": "SCOPED_LOCAL_INTEGRATION_COMPLETED",
+    "version": "a1c3c3b2d452ecbdf5c57a8b7372e7d53de0f8d8",
     "review_thread_id": "01a14da3-e8f3-7991-9b05-4a3fc38e2362",
-    "review_cursor": "9f41c9c7-380d-4189-b49b-805a2b10a792:7",
-    "dispatch_result": "NO_REPEAT_DISPATCH",
-    "next_dependency": "Scoped local integration preserving existing A01/A02/A04/D01; appropriate checks; then I01-A."
+    "cursor": "9f41c9c7-380d-4189-b49b-805a2b10a792:7",
+    "dispatch_result": "NEXT_TASK_PREPARATION",
+    "next_dependency": "I01-A fixed-stub three-path execution and separate A06 B-native read-only receiver; no B joint acceptance inferred."
   },
   "limitations": [
     "Current route uses mock B artifacts until independently agreed interface/artifact versions exist.",
@@ -10892,43 +10974,9 @@
     }
   ],
   "last_user_followup": {
-    "at": "2026-10-18T13:50:02.200569+08:00",
-    "questions": [
-      "When can A03 be fully fixed?",
-      "Why is repair difficult and are there alternatives?"
-    ],
-    "estimate": "Current bounded repair plus M validation and independent review roughly1-2h as uncertain work estimate, not measured completion or A03 full deadline.",
-    "alternative_under_readonly_assessment": "Restricted single-question integration with UNKNOWN stop/manual reconciliation; no scope change adopted and no I01/platform/B dispatch.",
-    "advisory_agent": "/root/minimal_integration_options",
-    "authorized_work_continues": "A03-T3:execution:M-validation-R1:7b9245ea",
-    "advisory_status": "READ_ONLY_SCOPE_CHECK_COMPLETE",
-    "alternative_assessment": {
-      "recommendation": "Parallel restricted offline integration slice and existing bounded A03 repair; not replacement or acceptance of full I01.",
-      "A_fixed_commit": "a15301ef3532aca25dcd527aae1c680c1e220e9f",
-      "B_package_commit": "0e5434f0ecf57152ec03f66bd7d0cf48b7c0700f",
-      "B_package_status": "PACKAGE_BYTES_VERIFIED_MAPPING_PENDING",
-      "possible_slice": [
-        "A fixed synthetic single-question plan and simulated receipt; UNKNOWN stops",
-        "B native read-only content/regions/issues and HOLD intake, with fixed versions and rejection controls"
-      ],
-      "actual_external_dependencies": [
-        "Shared native mapping confirmation",
-        "Historical b-evidence reference required-vs-optional classification"
-      ],
-      "A_work_remaining": [
-        "Bounded receiving adapter implementation and independent acceptance after mapping is fixed"
-      ],
-      "scope_decision_needed_only_if": "User wants reduced slice to replace full I01/M1 milestone including recovery; independent preparatory/offline work does not waive existing gates.",
-      "real_platform_inference": false,
-      "references": [
-        "docs/b-handoff-receipt-2026-10-17.md",
-        "docs/b-minimal-integration-handoff-2026-10-17.md",
-        "docs/development-plan.md"
-      ],
-      "new_B_or_stage_messages": 0,
-      "product_tests_SQL_platform_runs": 0,
-      "route_changed": false
-    }
+    "at": "2026-10-18T16:22:39.846611+08:00",
+    "message": "B reports A public consumer and receive/integration PENDING_A awaiting importable contract/validator, fixed consumer and explicit B0.4/0.5/0.6/0.7 adaptation/rejection.",
+    "action": "Prepare separate A06 read-only receiver; I01 fixed stubs do not close B gap; no B message sent."
   },
   "automation_route_update": {
     "id": "1800-a",
