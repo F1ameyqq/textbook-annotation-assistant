@@ -2,7 +2,7 @@
   "schema_version": 1,
   "project": "D:\\1800",
   "coordinator_thread_id": "01a13f26-7567-75e1-99ee-c9d2194e78bb",
-  "updated_at": "2026-10-18T11:43:52.161535+08:00",
+  "updated_at": "2026-10-18T11:46:07.923787+08:00",
   "automation": {
     "id": "1800-a",
     "kind": "heartbeat",
@@ -6876,7 +6876,7 @@
     "A03-T2": {
       "status": "REWORK",
       "parent_task": "A03",
-      "phase": "STATIC_ARCHIVE_RECHECK_INTENDED",
+      "phase": "STATIC_ARCHIVE_RECHECK_RUNNING",
       "base_commit": "1330047dd29890dea0e433ff01b991f615bf78f4",
       "handoff_commit": "6b61ac9d623e76cbe6311f64d012fd04e2e03c21",
       "execution_task": "docs/tasks/A03-T2-history-and-report.md",
@@ -6894,7 +6894,7 @@
         "reason": "Filename too long; failed paths absent and worktree list clean before fallback"
       },
       "reasoning_policy": "xhigh for new chats; model default",
-      "dispatch_status": "STATIC_RECHECK_INTENDED",
+      "dispatch_status": "STATIC_RECHECK_ACKNOWLEDGED",
       "execution": {
         "thread_id": "01a14ccf-9b9c-7df3-bf59-d9747f640d42",
         "host_id": "local",
@@ -7170,20 +7170,20 @@
       "review": {
         "thread_id": "01a14ccf-a5c1-71f2-a6eb-90ea011d8705",
         "host_id": "local",
-        "cursor": "846f94bd-c69f-4cac-8db1-21285fd53e6b:5",
-        "phase": "REWORK_STATIC_ARCHIVE_ONLY",
-        "dispatch_key": "A03-T2:review:699f748a124162b3118e3996c03757725daac363",
+        "cursor": "846f94bd-c69f-4cac-8db1-21285fd53e6b:6",
+        "phase": "STATIC_ARCHIVE_RECHECK_RUNNING",
+        "dispatch_key": "A03-T2:review:static-archive-recheck:699f748",
         "thinking": "xhigh",
         "model": "USER_DEFAULT",
-        "task_document": "docs/tasks/A03-T2-review-handoff.md",
-        "expected_report": "docs/tasks/A03-T2-review-report.md",
+        "task_document": "docs/tasks/A03-T2-static-archive-recheck.md",
+        "expected_report": "docs/tasks/A03-T2-static-archive-review-report.md",
         "created_at": "2026-10-18T10:20:41.469170+08:00",
-        "workflow_commit": "0beba0d0c82376b119c46b1d35a137fde541113c",
-        "turn_status": "completed",
-        "observed_thread_status": "idle",
-        "turn_id": "01a14d0e-b3a0-77f0-8cdb-afed71487c40",
+        "workflow_commit": "94c376914db82942ceb0246f338e5caa574cfb42",
+        "turn_status": "inProgress",
+        "observed_thread_status": "active",
+        "turn_id": "01a14d1d-3642-7880-b13e-ff7af4d0d524",
         "last_progress": "结论：REWORK，仅封存缺口。C12 与唯一 H1 独立实测通过，业务未重跑；我编写的静态工具第二次失败，导致最终 manifest 未生成，已按停止规则保留现场。 验收报告 业务进程、keeper、owner 均已释放。A03 整体及 I01 未放行。",
-        "last_checked_at": "2026-10-18T11:42:51.155937+08:00",
+        "last_checked_at": "2026-10-18T11:46:07.923787+08:00",
         "last_completed_turn_id": "01a14d0e-b3a0-77f0-8cdb-afed71487c40",
         "preparation": {
           "task": "A03-T2",
@@ -7250,7 +7250,7 @@
         "key": "A03-T2:review:static-archive-recheck:699f748",
         "task": "A03-T2",
         "role": "review",
-        "state": "INTENDED",
+        "state": "STARTED",
         "created_at": "2026-10-18T11:43:52.161535+08:00",
         "document": "docs/tasks/A03-T2-static-archive-recheck.md",
         "document_sha256": "2eea97413cb42b1e82650a0d216bd1d1fa3100c240735eda4de75593fb0aabbc",
@@ -7258,10 +7258,16 @@
         "thread_id": "01a14ccf-a5c1-71f2-a6eb-90ea011d8705",
         "host_id": "local",
         "thinking": "xhigh",
-        "scope": "One static archive closure; no product imports/business/SQL or failed-tool rerun"
+        "scope": "One static archive closure; no product imports/business/SQL or failed-tool rerun",
+        "sent_at": "2026-10-18T11:45:23.046236+08:00",
+        "workflow_commit": "94c376914db82942ceb0246f338e5caa574cfb42",
+        "result": "send_message_to_thread returned registered T2 review id",
+        "turn_id": "01a14d1d-3642-7880-b13e-ff7af4d0d524",
+        "cursor": "846f94bd-c69f-4cac-8db1-21285fd53e6b:6",
+        "started_observed_at": "2026-10-18T11:46:07.923787+08:00"
       },
       "archive_remediation": {
-        "state": "FROZEN_FILES_PREPARED",
+        "state": "FROZEN_STATIC_RECHECK_SENT",
         "at": "2026-10-18T11:42:51.155937+08:00",
         "owner": "A coordinator",
         "scope": "New coordinator-owned inventory and source-copy hash verification of completed review files only; failed reviewer manifest remains absent, scripts and reports unchanged; no business/SQL/retry of old sealer",
@@ -7271,7 +7277,8 @@
         "files": 267,
         "source_pairs": 262,
         "external_streams": 24,
-        "raw_stage_databases": 14
+        "raw_stage_databases": 14,
+        "archive_commit": "94c376914db82942ceb0246f338e5caa574cfb42"
       },
       "review_dispatch_history": [
         {
@@ -7470,7 +7477,8 @@
         "decision": "ACCEPTED_PLAN_R1_ONLY",
         "checks": "docs/evidence/coordinator/heartbeat-20261018-0337/T3-checks.json",
         "product_integration": false,
-        "report": "docs/tasks/A03-T3-plan-R1-coordinator-acceptance.md"
+        "report": "docs/tasks/A03-T3-plan-R1-coordinator-acceptance.md",
+        "workflow_commit": "94c376914db82942ceb0246f338e5caa574cfb42"
       },
       "pending_execution_dispatch": {
         "key": "A03-T3:execution:plan-R1-C1-C4",
@@ -9396,7 +9404,7 @@
       "key": "A03-T2:review:static-archive-recheck:699f748",
       "task": "A03-T2",
       "role": "review",
-      "state": "INTENDED",
+      "state": "STARTED",
       "created_at": "2026-10-18T11:43:52.161535+08:00",
       "document": "docs/tasks/A03-T2-static-archive-recheck.md",
       "document_sha256": "2eea97413cb42b1e82650a0d216bd1d1fa3100c240735eda4de75593fb0aabbc",
@@ -9404,14 +9412,20 @@
       "thread_id": "01a14ccf-a5c1-71f2-a6eb-90ea011d8705",
       "host_id": "local",
       "thinking": "xhigh",
-      "scope": "One static archive closure; no product imports/business/SQL or failed-tool rerun"
+      "scope": "One static archive closure; no product imports/business/SQL or failed-tool rerun",
+      "sent_at": "2026-10-18T11:45:23.046236+08:00",
+      "workflow_commit": "94c376914db82942ceb0246f338e5caa574cfb42",
+      "result": "send_message_to_thread returned registered T2 review id",
+      "turn_id": "01a14d1d-3642-7880-b13e-ff7af4d0d524",
+      "cursor": "846f94bd-c69f-4cac-8db1-21285fd53e6b:6",
+      "started_observed_at": "2026-10-18T11:46:07.923787+08:00"
     }
   ],
   "last_action": {
-    "at": "2026-10-18T11:43:52.161535+08:00",
-    "action": "T2_STATIC_ARCHIVE_FROZEN_RECHECK_INTENDED",
+    "at": "2026-10-18T11:46:07.923787+08:00",
+    "action": "T2_STATIC_ARCHIVE_RECHECK_ACKNOWLEDGED",
     "task_id": "A03-T2",
-    "dispatch_result": "INTENDED_EXISTING_REVIEW_THREAD_ONLY",
+    "dispatch_result": "EXISTING_REVIEW_ACTIVE_WITH_SAVED_CURSOR",
     "inventory": "docs/evidence/coordinator/heartbeat-20261018-0337/T2-archive-inventory.json"
   },
   "limitations": [
@@ -9420,10 +9434,10 @@
     "Platform test is single-book serial, no book submission, no unbudgeted paid models."
   ],
   "last_check": {
-    "at": "2026-10-18T11:29:02.400442+08:00",
-    "coordinator_head": "afc834f5ee722e475135bc8b66289b251152cfd1",
-    "scope": "Fixed delivery hashes, allowable diff, release evidence, saved cursors and idle reviewers; no business or full-suite rerun",
-    "old_A03_retired": true
+    "at": "2026-10-18T11:46:07.923787+08:00",
+    "coordinator_head": "94c376914db82942ceb0246f338e5caa574cfb42",
+    "scope": "T3 finite plan accepted; T2 archival-only REWORK preserved, completed business evidence frozen and one static closure now running",
+    "product_or_platform_actions": false
   },
   "prepared_next_batch": {
     "status": "DISPATCHED",
@@ -9793,11 +9807,11 @@
     }
   ],
   "last_heartbeat": {
-    "at": "2026-10-18T11:40:25.362728+08:00",
+    "at": "2026-10-18T11:45:23.046236+08:00",
     "trigger": "2026-10-18T03:37:51.267Z",
     "automation_id": "1800-a",
     "decision": "NOTIFY",
-    "reason": "T3 plan revision accepted after coordinator checks; T2 review final sealing remains active"
+    "reason": "T3 plan accepted; T2 independent business passed but archival-only REWORK retained. Frozen coordinator inventory sent for one static closure; no business replay."
   },
   "interactive_progress_history": [
     {
