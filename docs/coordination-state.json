@@ -2,7 +2,7 @@
   "schema_version": 1,
   "project": "D:\\1800",
   "coordinator_thread_id": "01a13f26-7567-75e1-99ee-c9d2194e78bb",
-  "updated_at": "2026-10-18T17:03:02.345109+08:00",
+  "updated_at": "2026-10-18T17:05:23.101430+08:00",
   "automation": {
     "id": "1800-a",
     "kind": "heartbeat",
@@ -8453,7 +8453,18 @@
       "zip_sha256": "b2bed674f87cde7fb2df4fdf31dec9ede08f494fc6190f654abda51dd4dae89d",
       "max_frozen_candidates": 2,
       "B_confirmation": "UNCONFIRMED",
-      "next_dependency": "Bounded second final candidate for existing F01 stage-result version/kind requirement; preserve first four-entry results."
+      "next_dependency": "Bounded second final candidate for existing F01 stage-result version/kind requirement; preserve first four-entry results.",
+      "correction": {
+        "status": "DISPATCH_INTENT",
+        "task": "docs/tasks/A06-second-final-correction.md",
+        "base_commit": "761d9afed8b9d3d33851ad3d79b0bee7c294089d",
+        "candidate_number": 2,
+        "max_candidates": 2,
+        "finding": "F01",
+        "scope": "Fixed14stage result kind/version gate; original HOLD plus one nonfinal result unknown-version complete entry, each once; inherited unaffected first-review results.",
+        "business_dispatches": 0,
+        "next_dependency": "Send existing author; fixed second delivery/release then registered independent delta review."
+      }
     }
   },
   "route": [
@@ -10677,17 +10688,32 @@
       "sent_at": "2026-10-18T16:48:57.116448+08:00",
       "returned_thread_id": "01a14e21-162e-7840-9052-501984bc3d75",
       "workflow_commit": "d956b3138c28e82dec05573003d5e95fde72989f"
+    },
+    {
+      "dispatch_key": "A06:execution:second-final-F01:761d9afe",
+      "task_id": "A06",
+      "phase": "SECOND_FINAL_CORRECTION",
+      "status": "INTENT_RECORDED",
+      "thread_id": "01a14e1e-23fe-7c30-81cc-74a786c6559a",
+      "created_at": "2026-10-18T17:05:23.101430+08:00",
+      "base_commit": "761d9afed8b9d3d33851ad3d79b0bee7c294089d",
+      "task_document": "docs/tasks/A06-second-final-correction.md",
+      "thinking": "xhigh",
+      "max_frozen_candidates": 2,
+      "next_dependency": "Send existing author; fixed second delivery/release then registered independent delta review."
     }
   ],
   "last_action": {
-    "at": "2026-10-18T17:03:02.345109+08:00",
+    "at": "2026-10-18T17:05:23.101430+08:00",
     "task_ids": [
-      "I01-A",
       "A06"
     ],
-    "action": "I01_LIMITED_ACCEPTED_A06_F01_REWORK_CONFIRMED",
-    "dispatch_result": "NO_NEW_DISPATCH_YET",
-    "next_dependency": "I01 scoped integration; A06 second final correction task"
+    "action": "SECOND_FINAL_F01_DISPATCH_INTENT_RECORDED",
+    "thread_id": "01a14e1e-23fe-7c30-81cc-74a786c6559a",
+    "base_commit": "761d9afed8b9d3d33851ad3d79b0bee7c294089d",
+    "acceptance_scope": "Fixed14stage result kind/version gate; original HOLD plus one nonfinal result unknown-version complete entry, each once; inherited unaffected first-review results.",
+    "dispatch_result": "INTENT_ONLY_NOT_SENT",
+    "next_dependency": "Send same A06 author; no third candidate."
   },
   "limitations": [
     "Current route uses mock B artifacts until independently agreed interface/artifact versions exist.",
