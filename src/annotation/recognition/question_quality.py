@@ -3,7 +3,7 @@
 This rule module does not assemble, select, transcribe or generate graph gold.
 Callers supply the existing scoped-identity and scalar predicates explicitly.
 """
-from .baseline import valid_bbox
+from .baseline import digest,valid_bbox
 from .policy import option_set_valid,choice_answer_valid
 
 
@@ -22,12 +22,28 @@ def audit_questions(evidence,graph,review,*,scope_key,scalar_issues):
         keys.setdefault(key, []).append(q)
     coverage = []
     for aid, page in pages.items():
-        if page["layout"]["mode"] != "two_columns":
+        mode=page["layout"]["mode"]
+        reviewed=(evidence.get("payload",{}).get("context",{}).get("pages",{}).get(aid,{})
+                  .get("reviewed_layout"))
+        receipt=page.get("reviewed_layout_receipt")
+        reviewed_mode_valid=(evidence.get("schema_version")=="b-evidence-trial/0.4"
+            and isinstance(reviewed,dict) and isinstance(receipt,dict)
+            and receipt.get("policy")=="EXACT_SOURCE_PARTITION/0.1"
+            and receipt.get("source_sha256")==page.get("source",{}).get("sha256")
+            and receipt.get("baseline_ref")==reviewed.get("baseline_ref")
+            and receipt.get("reviewed_layout_hash")==digest(reviewed)
+            and receipt.get("review_kind")=="MODEL_DRAFT" and receipt.get("verification_status")=="UNVERIFIED"
+            and page.get("layout",{}).get("reviewed_layout_hash")==digest(reviewed)
+            and page.get("layout",{}).get("cut_x")==reviewed.get("cut_x")
+            and set(receipt.get("group_by_line_id",{}))=={line.get("line_id") for line in page.get("ocr_lines",[])}
+            and set(receipt.get("column_by_line_id",{}))=={line.get("line_id") for line in page.get("ocr_lines",[])})
+        if mode!="two_columns" and not (mode=="two_columns_with_reviewed_spanning_headers" and reviewed_mode_valid):
             add("UNRESOLVED_LAYOUT", aid)
         if page["page_role"] != "question":
             continue
         census = review["question_census"].get(aid)
-        actual = [q["printed_number"] for q in questions if q["asset_id"] == aid and not q["parent_question_id"]]
+        actual = [q["printed_number"] for q in questions if q["asset_id"] == aid and not q["parent_question_id"]
+                  and q.get("counting_status","PRINTED_TOP_LEVEL") == "PRINTED_TOP_LEVEL"]
         expected = census["printed_numbers"] if census else []
         if not census:
             add("NO_INDEPENDENT_CENSUS", aid)

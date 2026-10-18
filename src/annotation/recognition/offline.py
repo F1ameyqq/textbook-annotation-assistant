@@ -21,9 +21,14 @@ from .recovery_quality import audit_recovery
 from .question_quality import audit_questions
 
 CONTEXT_SCHEMA = "b-context-trial/0.1"
+CONTEXT_STRUCTURED_SCHEMA = "b-context-trial/0.2"
 EVIDENCE_SCHEMA = "b-evidence-trial/0.2"
+EVIDENCE_STRUCTURED_SCHEMA = "b-evidence-trial/0.4"
 GRAPH_SCHEMA = "b-graph-trial/0.2"
+GRAPH_STRUCTURED_SCHEMA = "b-graph-trial/0.9"
 CHECK_SCHEMA = "b-check-trial/0.2"
+CHECK_STRUCTURED_SCHEMA = "b-check-trial/0.9"
+REVIEWED_LAYOUT_POLICY = "EXACT_SOURCE_PARTITION/0.1"
 QSTART = re.compile(r"^\s*(\d{1,2})\s*[.．、]\s*(?=[\u4e00-\u9fffA-Za-z（(])")
 ASTART = re.compile(r"^\s*(\d{1,2})\s*[.．、]\s*(.+)$")
 OPTION = re.compile(r"^\s*([A-G])[.．、]")
@@ -56,29 +61,163 @@ def check_artifact(value, schemas):
         raise ValueError("invalid artifact revision")
 
 
+def _reviewed_layout_syntax(asset, reviewed):
+    group_keys = {"group_id", "kind", "section_path", "ordered_line_ids", "flow_segments",
+                  "spanning_line_ids", "printed_number", "parent_group_id", "material_id", "label",
+                  "response_kind", "counting_status", "reason"}
+    kinds = {"QUESTION", "VARIANT", "MATERIAL_TITLE", "MATERIAL_BODY", "FIGURE_LABELS",
+             "TASK_SECTION_HEADING", "TASK", "EXCLUDE"}
+    snapshots = reviewed.get("line_snapshots") if isinstance(reviewed, dict) else None
+    groups = reviewed.get("groups") if isinstance(reviewed, dict) else None
+    if (not isinstance(reviewed, dict) or set(reviewed) != {"policy", "source_sha256", "source_size", "cut_x",
+            "baseline_ref", "baseline_producer", "expected_line_count", "review_kind", "verification_status",
+            "line_snapshots", "groups"}
+            or reviewed.get("policy") != REVIEWED_LAYOUT_POLICY or reviewed.get("source_sha256") != asset["sha256"]
+            or reviewed.get("source_size") != [asset["width"], asset["height"]]
+            or type(reviewed.get("cut_x")) is not int or not 0 < reviewed["cut_x"] < asset["width"]
+            or not isinstance(reviewed.get("baseline_ref"), dict)
+            or set(reviewed["baseline_ref"]) != {"artifact_id", "revision", "content_hash"}
+            or not isinstance(reviewed.get("baseline_producer"), dict) or not reviewed["baseline_producer"]
+            or type(reviewed.get("expected_line_count")) is not int or reviewed["expected_line_count"] <= 0
+            or reviewed.get("review_kind") != "MODEL_DRAFT" or reviewed.get("verification_status") != "UNVERIFIED"
+            or not isinstance(snapshots, list) or not snapshots or not isinstance(groups, list) or not groups):
+        raise ValueError("reviewed layout identity, source or draft status is invalid")
+    snapshot_ids = []
+    for row in snapshots:
+        if (not isinstance(row, dict) or set(row) != {"line_id", "text", "bbox"}
+                or not isinstance(row.get("line_id"), str) or not row["line_id"]
+                or not isinstance(row.get("text"), str) or not valid_bbox(row.get("bbox", []), asset["width"], asset["height"])
+                or any(isinstance(value, bool) for value in row["bbox"])):
+            raise ValueError("reviewed layout line snapshot is invalid")
+        snapshot_ids.append(row["line_id"])
+    if len(snapshot_ids) != len(set(snapshot_ids)):
+        raise ValueError("reviewed layout line snapshots must be unique")
+    snapshot_map = {row["line_id"]: row for row in snapshots}
+    allocated, group_ids, material_ids, semantic_keys = [], [], set(), []
+    for group in groups:
+        if (not isinstance(group, dict) or set(group) != group_keys or not isinstance(group.get("group_id"), str)
+                or not group["group_id"] or group.get("kind") not in kinds
+                or not isinstance(group.get("section_path"), list)
+                or any(not isinstance(value, str) or not value for value in group["section_path"])
+                or not isinstance(group.get("ordered_line_ids"), list) or not group["ordered_line_ids"]
+                or not all(isinstance(value, str) and value for value in group["ordered_line_ids"])
+                or len(group["ordered_line_ids"]) != len(set(group["ordered_line_ids"]))
+                or not isinstance(group.get("flow_segments"), list) or not group["flow_segments"]
+                or not isinstance(group.get("spanning_line_ids"), list)
+                or not set(group["spanning_line_ids"]).issubset(group["ordered_line_ids"])
+                or not isinstance(group.get("reason"), str) or not group["reason"]):
+            raise ValueError("reviewed layout group syntax is invalid")
+        flattened = []
+        for segment in group["flow_segments"]:
+            if (not isinstance(segment, dict) or set(segment) != {"column", "line_ids"}
+                    or segment.get("column") not in (0, 1) or not isinstance(segment.get("line_ids"), list)
+                    or not segment["line_ids"] or not all(isinstance(value, str) and value for value in segment["line_ids"])):
+                raise ValueError("reviewed layout flow segment is invalid")
+            flattened.extend(segment["line_ids"])
+        if flattened != group["ordered_line_ids"]:
+            raise ValueError("reviewed layout flow must exactly project ordered source lines")
+        columns = [segment["column"] for segment in group["flow_segments"]]
+        if (group["kind"] == "TASK" and len(columns) > 1 and columns != [0, 1]) or (
+                group["kind"] not in {"TASK", "MATERIAL_TITLE"} and len(columns) != 1):
+            raise ValueError("reviewed layout permits only an explicit one-time task column transition")
+        if group["kind"] != "MATERIAL_TITLE" and group["spanning_line_ids"]:
+            raise ValueError("only an explicit material title may cross the column cut")
+        if group["kind"] == "MATERIAL_TITLE" and not group["spanning_line_ids"]:
+            raise ValueError("material title must name its actual spanning source line")
+        if group["kind"] == "QUESTION" and (not group.get("printed_number") or group.get("parent_group_id") is not None
+                or group.get("counting_status") != "PRINTED_TOP_LEVEL"):
+            raise ValueError("printed question group identity is invalid")
+        if group["kind"] == "VARIANT" and (not group.get("parent_group_id") or group.get("counting_status") != "UNKNOWN"):
+            raise ValueError("variant must remain an uncounted child draft")
+        if group["kind"] == "TASK" and (not group.get("material_id") or not group.get("label")
+                or not group.get("response_kind") or group.get("counting_status") != "UNKNOWN"):
+            raise ValueError("shared-material task must retain unknown counting and response semantics")
+        if group["kind"] in {"MATERIAL_TITLE", "MATERIAL_BODY", "FIGURE_LABELS", "TASK_SECTION_HEADING"}:
+            if not group.get("material_id") or group.get("counting_status") != "NOT_A_QUESTION":
+                raise ValueError("material group cannot claim question counting")
+            material_ids.add(group["material_id"])
+        if group["kind"] == "EXCLUDE" and group.get("counting_status") != "EXCLUDED":
+            raise ValueError("source decoration exclusion is invalid")
+        first_text = snapshot_map.get(group["ordered_line_ids"][0], {}).get("text", "")
+        if group["kind"] == "QUESTION":
+            match = QSTART.match(first_text)
+            if (not match or group["printed_number"] != match[1] or group.get("material_id") is not None
+                    or group.get("label") is not None or group.get("response_kind") is not None):
+                raise ValueError("printed question metadata differs from its raw anchor")
+        elif group["kind"] == "VARIANT":
+            if (not first_text.startswith("【变式】") or group.get("material_id") is not None
+                    or group.get("label") is not None or group.get("response_kind") is not None):
+                raise ValueError("variant metadata differs from its raw anchor")
+        elif group["kind"] == "TASK":
+            label_match = re.match(r"^\s*([（(]\d+[）)])", first_text)
+            if (not label_match or group.get("label") != label_match[1].replace("（","(").replace("）",")")
+                    or group.get("response_kind") != "UNKNOWN" or group.get("printed_number") is not None
+                    or group.get("parent_group_id") is not None):
+                raise ValueError("task metadata differs from its raw anchor or claims a response type")
+        elif group["kind"] in {"MATERIAL_TITLE","MATERIAL_BODY","FIGURE_LABELS","TASK_SECTION_HEADING"}:
+            if (group.get("printed_number") is not None or group.get("parent_group_id") is not None
+                    or group.get("label") is not None or group.get("response_kind") is not None):
+                raise ValueError("material metadata contains question or response claims")
+        elif any(group.get(key) is not None for key in ("printed_number","parent_group_id","material_id","label","response_kind")):
+            raise ValueError("excluded decoration contains semantic identity claims")
+        semantic_keys.append((group["kind"], group.get("label") if group["kind"] == "TASK" else None))
+        group_ids.append(group["group_id"]); allocated.extend(group["ordered_line_ids"])
+    if (len(group_ids) != len(set(group_ids)) or set(allocated) != set(snapshot_ids)
+            or len(allocated) != len(set(allocated)) or len(semantic_keys) != len(set(semantic_keys))):
+        raise ValueError("reviewed layout groups must partition every source line once in source order")
+    by_group = {group["group_id"]: group for group in groups}
+    for group in groups:
+        if group["kind"] == "VARIANT" and by_group.get(group["parent_group_id"], {}).get("kind") != "QUESTION":
+            raise ValueError("variant parent is not the reviewed printed question")
+        if (group["kind"] == "VARIANT" and group.get("printed_number") !=
+                by_group[group["parent_group_id"]].get("printed_number")+":variant"):
+            raise ValueError("variant printed identity is not derived from its printed parent")
+        if group["kind"] == "TASK" and group["material_id"] not in material_ids:
+            raise ValueError("task belongs to an unknown reviewed material")
+
+
 def validate_context(source, context):
-    if context.get("schema_version") != CONTEXT_SCHEMA:
+    if context.get("schema_version") not in {CONTEXT_SCHEMA, CONTEXT_STRUCTURED_SCHEMA}:
         raise ValueError("unsupported context schema")
     if (context.get("book_id"), context.get("scope_id")) != (source["book_id"], source["scope_id"]):
         raise ValueError("context book/scope mismatch")
     assets = {a["asset_id"]: a for a in source["assets"]}
     if set(context.get("pages", {})) != set(assets):
         raise ValueError("context must explicitly cover every input asset")
+    if context["schema_version"] == CONTEXT_STRUCTURED_SCHEMA:
+        provenance=context.get("provenance")
+        if (set(context)!={"schema_version","artifact_id","book_id","scope_id","pages","reference_quality","provenance"}
+                or context.get("reference_quality")!="MODEL_VISUAL_DEVELOPMENT_REVIEW"
+                or provenance!="Explicit model draft over the frozen 48-row OCR; not human review."):
+            raise ValueError("structured context must remain an exact model-development draft")
     for aid, page in context["pages"].items():
         if page.get("sha256") != assets[aid]["sha256"]:
             raise ValueError("context asset hash mismatch")
+        if context["schema_version"] == CONTEXT_STRUCTURED_SCHEMA and set(page)!={"sha256","role","windows","reviewed_layout"}:
+            raise ValueError("structured context page has unknown or missing fields")
         windows = page.get("windows", [])
         if page.get("role") not in {"question", "answer"} or not windows:
             raise ValueError("context needs page role and section windows")
         for w in windows:
+            if set(w)!={"column","y_range","path"} or not isinstance(w.get("y_range"),list) or len(w["y_range"])!=2:
+                raise ValueError("invalid context window")
             lo, hi = w["y_range"]
-            if (w["column"] not in (0, 1) or not 0 <= lo < hi <= assets[aid]["height"]
+            if (w["column"] not in (0, 1) or type(lo)is not int or type(hi)is not int
+                    or not 0 <= lo < hi <= assets[aid]["height"]
                     or not w.get("path") or any(not isinstance(s, str) or not s for s in w["path"])):
                 raise ValueError("invalid context window")
         for i, a in enumerate(windows):
             for b in windows[i + 1:]:
                 if a["column"] == b["column"] and max(a["y_range"][0], b["y_range"][0]) < min(a["y_range"][1], b["y_range"][1]):
                     raise ValueError("overlapping context windows")
+        reviewed = page.get("reviewed_layout")
+        if context["schema_version"] == CONTEXT_STRUCTURED_SCHEMA:
+            if page.get("role") == "question" and reviewed is None:
+                raise ValueError("structured question context requires an explicit reviewed layout")
+            if reviewed is not None:
+                _reviewed_layout_syntax(assets[aid], reviewed)
+        elif reviewed is not None:
+            raise ValueError("context 0.1 cannot carry reviewed layout structure")
 
 
 def detect_columns(mask, lines):
@@ -115,6 +254,133 @@ def locate(line, layout, windows):
     return None
 
 
+def _locate_column(line, column, windows):
+    y = (line["bbox"][1] + line["bbox"][3]) / 2
+    matches = [(index, window) for index, window in enumerate(windows)
+               if window["column"] == column and window["y_range"][0] <= y < window["y_range"][1]]
+    if len(matches) != 1:
+        return None
+    index, window = matches[0]
+    return {"column": column, "window_index": index, "section_path": window["path"]}
+
+
+def _derive_reviewed_structure(asset, lines, cut):
+    by_id = {line["line_id"]: line for line in lines}
+    column = lambda line: int((line["bbox"][0] + line["bbox"][2]) / 2 >= cut)
+    order = lambda values: sorted(values, key=lambda line: (line["bbox"][1], line["bbox"][0], line["line_id"]))
+    only = lambda values, label: values[0] if len(values) == 1 else (_ for _ in ()).throw(ValueError("reviewed layout needs one "+label))
+    qline = only([line for line in lines if QSTART.match(line["text"])], "printed question anchor")
+    variant = only([line for line in lines if line["text"].startswith("【变式】")], "variant anchor")
+    task_heading = only([line for line in lines if re.match(r"^\s*任务\s*[：:]", line["text"])], "task-section heading")
+    task_anchors = {label: only([line for line in lines if re.match(r"^\s*[（(]"+label+r"[）)]", line["text"])], "task "+label)
+                    for label in ("1", "2", "3")}
+    title_left = only([line for line in lines if line["text"].startswith("漫话勾股世界")], "left title anchor")
+    title_right = only([line for line in lines if "教材P6" in line["text"] and "阅读" in line["text"] and "思考" in line["text"]], "right title anchor")
+    vertical_overlap = min(title_left["bbox"][3], title_right["bbox"][3]) - max(title_left["bbox"][1], title_right["bbox"][1])
+    if (not title_left["bbox"][2] < title_right["bbox"][0] < cut < title_right["bbox"][2]
+            or vertical_overlap < .5 * min(title_left["bbox"][3]-title_left["bbox"][1], title_right["bbox"][3]-title_right["bbox"][1])):
+        raise ValueError("title anchors do not independently prove the reviewed spanning geometry")
+    title_top = min(title_left["bbox"][1], title_right["bbox"][1])
+    decoration = [line for line in lines if (line["bbox"][1] > .93*asset["height"]
+                  and (re.fullmatch(r"\s*\d+\s*", line["text"]) or "数学" in line["text"]))]
+    figure_labels = [line for line in lines if line["text"].strip() in {"图1", "图2", "剪开", "右边部分", "上下翻转"}]
+    excluded = {line["line_id"] for line in decoration+figure_labels+[qline,variant,task_heading,*task_anchors.values(),title_left,title_right]}
+    q_rows = order([line for line in lines if column(line) == 0 and qline["bbox"][1] <= line["bbox"][1] < title_top and line["line_id"] not in excluded])
+    variant_rows = order([line for line in lines if column(line) == 1 and variant["bbox"][1] <= line["bbox"][1] < title_top and line["line_id"] not in excluded])
+    task1_left = order([line for line in lines if column(line) == 0 and line["bbox"][1] >= task_anchors["1"]["bbox"][1]
+                        and line["line_id"] not in {value["line_id"] for value in decoration}])
+    task1_right = order([line for line in lines if column(line) == 1 and title_right["bbox"][3] < line["bbox"][1] < task_anchors["2"]["bbox"][1]])
+    task2 = order([line for line in lines if column(line) == 1 and task_anchors["2"]["bbox"][1] <= line["bbox"][1] < task_anchors["3"]["bbox"][1]])
+    task3 = order([line for line in lines if column(line) == 1 and task_anchors["3"]["bbox"][1] <= line["bbox"][1]
+                   and line["line_id"] not in {value["line_id"] for value in decoration}])
+    consumed = {line["line_id"] for line in decoration+figure_labels+[qline,variant,task_heading,title_left,title_right]
+                +q_rows+variant_rows+task1_left+task1_right+task2+task3}
+    body = order([line for line in lines if line["line_id"] not in consumed])
+    def ids(values): return [line["line_id"] for line in values]
+    # Same-band figure actions use horizontal order; other bands use vertical order.
+    figure_rows = []
+    for line in sorted(figure_labels, key=lambda value:(value["bbox"][1],value["bbox"][0])):
+        center = (line["bbox"][1]+line["bbox"][3])/2
+        target = next((row for row in figure_rows if abs(row[0]-center) <= 12), None)
+        if target is None: figure_rows.append([center,line])
+        else: target.append(line)
+    ordered_figures = [line for row in figure_rows for line in sorted(row[1:],key=lambda value:value["bbox"][0])]
+    number = QSTART.match(qline["text"])[1]
+    result = {
+        ("QUESTION", None): ([qline["line_id"], *ids(q_rows)], [(0,[qline["line_id"],*ids(q_rows)])]),
+        ("VARIANT", None): ([variant["line_id"], *ids(variant_rows)], [(1,[variant["line_id"],*ids(variant_rows)])]),
+        ("MATERIAL_TITLE", None): ([title_left["line_id"],title_right["line_id"]], [(0,[title_left["line_id"]]),(1,[title_right["line_id"]])]),
+        ("MATERIAL_BODY", None): (ids(body), [(0,ids(body))]),
+        ("FIGURE_LABELS", None): (ids(ordered_figures), [(0,ids(ordered_figures))]),
+        ("TASK_SECTION_HEADING", None): ([task_heading["line_id"]], [(0,[task_heading["line_id"]])]),
+        ("TASK", "(1)"): (ids(task1_left)+ids(task1_right), [(0,ids(task1_left)),(1,ids(task1_right))]),
+        ("TASK", "(2)"): (ids(task2), [(1,ids(task2))]),
+        ("TASK", "(3)"): (ids(task3), [(1,ids(task3))]),
+        ("EXCLUDE", None): (ids(order(decoration)), [(1,ids(order(decoration)))])}
+    if any(not line_ids or any(not segment_ids for _,segment_ids in segments) for line_ids,segments in result.values()):
+        raise ValueError("independently derived reviewed structure contains an empty required group")
+    if set(line_id for line_ids,_ in result.values() for line_id in line_ids) != set(by_id):
+        raise ValueError("independently derived reviewed structure does not cover the exact OCR scope")
+    return result, {"printed_number":number,"question_anchor":qline["line_id"],"variant_anchor":variant["line_id"],
+                    "title_line_ids":[title_left["line_id"],title_right["line_id"]],
+                    "task_anchor_line_ids":{label:task_anchors[label]["line_id"] for label in ("1","2","3")},
+                    "task_section_heading_line_id":task_heading["line_id"]}
+
+
+def _reviewed_layout_receipt(asset, lines, layout, windows, reviewed, baseline):
+    _reviewed_layout_syntax(asset, reviewed)
+    baseline_ref = {key:baseline[key] for key in ("artifact_id","revision","content_hash")}
+    if (reviewed["baseline_ref"] != baseline_ref or reviewed["baseline_producer"] != baseline.get("producer")
+            or reviewed["expected_line_count"] != len(lines)):
+        raise ValueError("reviewed layout does not bind the exact baseline OCR artifact, producer and line count")
+    snapshots = [{"line_id": line["line_id"], "text": line["text"], "bbox": line["bbox"]} for line in lines]
+    if snapshots != reviewed["line_snapshots"] or layout["cut_x"] != reviewed["cut_x"]:
+        raise ValueError("reviewed layout differs from the current frozen OCR or detected cut")
+    cut, height = layout["cut_x"], asset["height"]
+    actual_crossing = [line["line_id"] for line in lines
+                       if line["bbox"][0] < cut < line["bbox"][2] and line["bbox"][3] > .2 * height]
+    declared_crossing = [line_id for group in reviewed["groups"] for line_id in group["spanning_line_ids"]]
+    if actual_crossing != declared_crossing:
+        raise ValueError("actual crossing source lines differ from the exact reviewed title exception")
+    derived, anchors = _derive_reviewed_structure(asset, lines, cut)
+    claims = {}
+    for group in reviewed["groups"]:
+        key = (group["kind"],group["label"] if group["kind"] == "TASK" else None)
+        claims[key] = (group["ordered_line_ids"],[(segment["column"],segment["line_ids"]) for segment in group["flow_segments"]])
+    if claims != derived:
+        raise ValueError("reviewed grouping claims differ from independently derived source structure")
+    line_map = {line["line_id"]: line for line in lines}
+    def source_order(values):
+        bands = []
+        for value in sorted(values,key=lambda line:(line["bbox"][1],line["bbox"][0],line["line_id"])):
+            center=(value["bbox"][1]+value["bbox"][3])/2
+            band=next((row for row in bands if abs(row[0]-center)<=12),None)
+            if band is None: bands.append([center,value])
+            else: band.append(value)
+        return [value for row in bands for value in sorted(row[1:],key=lambda line:(line["bbox"][0],line["bbox"][1],line["line_id"]))]
+    group_map, column_map = {}, {}
+    for group in reviewed["groups"]:
+        if group["section_path"] and not any(window["path"] == group["section_path"] for window in windows):
+            raise ValueError("reviewed layout group uses an unknown semantic path")
+        for segment in group["flow_segments"]:
+            ordered = [line_map[line_id] for line_id in segment["line_ids"]]
+            expected_order = source_order(ordered) if group["kind"] == "FIGURE_LABELS" else sorted(
+                ordered,key=lambda line:(line["bbox"][1],line["bbox"][0],line["line_id"]))
+            if ordered != expected_order:
+                raise ValueError("reviewed segment is not in strict source y/x order")
+            for line_id in segment["line_ids"]:
+                line = line_map[line_id]
+                midpoint_column = int((line["bbox"][0] + line["bbox"][2]) / 2 >= cut)
+                if line_id not in declared_crossing and midpoint_column != segment["column"]:
+                    raise ValueError("reviewed layout assigns a nonspanning source line to the wrong column")
+                group_map[line_id] = group["group_id"]; column_map[line_id] = segment["column"]
+    return {"policy": REVIEWED_LAYOUT_POLICY, "source_sha256": asset["sha256"], "baseline_ref":baseline_ref,
+            "cut_x": cut, "actual_crossing_line_ids": actual_crossing,
+            "group_by_line_id": group_map, "column_by_line_id": column_map,
+            "derived_anchors":anchors,"reviewed_layout_hash": digest(reviewed), "verification_status": "UNVERIFIED",
+            "review_kind": "MODEL_DRAFT"}
+
+
 def refine(source_path, baseline, context):
     """Validate cached OCR against actual local bytes, then refine dense answers."""
     source, inputs = load_source(source_path)
@@ -138,11 +404,23 @@ def refine(source_path, baseline, context):
         lines = copy.deepcopy(original["ocr_lines"])
         if any(not valid_bbox(a["bbox"], asset["width"], asset["height"]) for a in lines):
             raise ValueError("invalid OCR box")
-        layout = detect_columns(np.array(Image.open(path).convert("L")) < 160, lines)
         page_context = context["pages"][asset["asset_id"]]
         for i, line in enumerate(lines):
             line["line_id"] = f"{asset['asset_id']}/ocr/{i}"
-            line["location"] = locate(line, layout, page_context["windows"]) if layout["mode"] == "two_columns" else None
+        layout = detect_columns(np.array(Image.open(path).convert("L")) < 160, lines)
+        reviewed = page_context.get("reviewed_layout")
+        receipt = _reviewed_layout_receipt(asset, lines, layout, page_context["windows"], reviewed, baseline) if reviewed else None
+        if receipt:
+            layout = {**layout, "mode": "two_columns_with_reviewed_spanning_headers",
+                      "reviewed_spanning_line_ids": receipt["actual_crossing_line_ids"],
+                      "reviewed_layout_hash": receipt["reviewed_layout_hash"]}
+        for line in lines:
+            if receipt:
+                line["location"] = _locate_column(line, receipt["column_by_line_id"][line["line_id"]], page_context["windows"])
+                if line["location"] is None:
+                    raise ValueError("reviewed source line is outside its declared semantic window")
+            else:
+                line["location"] = locate(line, layout, page_context["windows"]) if layout["mode"] == "two_columns" else None
         detail = []
         if page_context["role"] == "answer":
             for line in lines:
@@ -162,14 +440,17 @@ def refine(source_path, baseline, context):
                     atom.update(line_id=f"{line['line_id']}/detail/{j}", parent_line_id=line["line_id"],
                                 location=line["location"], crop_to_original=[[1/scale, 0, box[0]], [0, 1/scale, box[1]], [0, 0, 1]])
                     detail.append(atom)
-        pages.append({"asset_id": asset["asset_id"], "source": asset, "page_role": page_context["role"],
+        page = {"asset_id": asset["asset_id"], "source": asset, "page_role": page_context["role"],
                       "layout": layout, "ocr_lines": lines, "answer_detail_lines": detail,
-                      "unscoped_line_ids": [a["line_id"] for a in lines if not a["location"]]})
+                      "unscoped_line_ids": [a["line_id"] for a in lines if not a["location"]]}
+        if receipt: page["reviewed_layout_receipt"] = receipt
+        pages.append(page)
     payload = {"pages": pages, "quality_decision": "NOT_EVALUATED",
                "context": context, "history_annotations_consumed": False,
                "limitations": ["Reviewed section windows are development input, not automatic directory recognition.",
                                "OCR and figure candidates are unverified; two-column layouts only."]}
-    return artifact(EVIDENCE_SCHEMA, "EvidenceBundleTrial", source, payload,
+    schema = EVIDENCE_STRUCTURED_SCHEMA if context["schema_version"] == CONTEXT_STRUCTURED_SCHEMA else EVIDENCE_SCHEMA
+    return artifact(schema, "EvidenceBundleTrial", source, payload,
                     [ref(baseline), {"artifact_id": context["artifact_id"], "content_hash": digest(context)}],
                     {"module": __name__, "version": "0.2.0", "code_sha256": code_digest(Path(__file__)),
                      "baseline_producer": baseline["producer"], "answer_row_scale": 3})
@@ -183,13 +464,112 @@ def scope_key(book, path, number):
     return (book, tuple(path), str(number))
 
 
+def _assemble_reviewed_question_page(evidence, page):
+    context_page = evidence["payload"]["context"]["pages"][page["asset_id"]]
+    reviewed, receipt = context_page["reviewed_layout"], page.get("reviewed_layout_receipt")
+    if not receipt or receipt.get("reviewed_layout_hash") != digest(reviewed):
+        raise ValueError("reviewed question page lacks its exact refinement receipt")
+    lines = {line["line_id"]: line for line in page["ocr_lines"]}
+    groups = {group["group_id"]: group for group in reviewed["groups"]}
+    questions, materials, coverage = [], [], []
+
+    def fragments(group, role, prefix):
+        result = []
+        for line_id in group["ordered_line_ids"]:
+            line = lines[line_id]
+            result.append({"fragment_id": entity_id(evidence, prefix, line_id), "role": role,
+                           "content_type": "text", "option_label": None, "option_start": False,
+                           "column": line["location"]["column"] if line.get("location") else receipt["column_by_line_id"][line_id],
+                           "bbox": line["bbox"], "asset_id": page["asset_id"], "text": line["text"],
+                           "evidence_refs": [line_id]})
+        return result
+
+    question_by_group = {}
+    for group in reviewed["groups"]:
+        if group["kind"] not in {"QUESTION", "VARIANT"}: continue
+        anchor = group["ordered_line_ids"][0]
+        parent = question_by_group.get(group["parent_group_id"])
+        if group["kind"] == "VARIANT" and parent is None:
+            raise ValueError("reviewed variant must follow its printed parent question")
+        body = fragments(group, "stem", "f")
+        question = {"question_id": entity_id(evidence, "q", anchor), "book_id": evidence["book_id"],
+                    "section_path": group["section_path"], "printed_number": group["printed_number"],
+                    "parent_question_id": parent["question_id"] if parent else None, "anchor_ref": anchor,
+                    "asset_id": page["asset_id"], "fragments": body, "candidate_answer_ids": [],
+                    "selected_answer_id": None, "verification_status": "UNVERIFIED",
+                    "flags": ["FIGURE_EXTENT_UNVERIFIED"], "structure_group_id": group["group_id"],
+                    "counting_status": group["counting_status"]}
+        questions.append(question); question_by_group[group["group_id"]] = question
+
+    material_ids = list(dict.fromkeys(group["material_id"] for group in reviewed["groups"] if group["material_id"]))
+    for source_material_id in material_ids:
+        title_groups = [group for group in reviewed["groups"] if group["kind"] == "MATERIAL_TITLE" and group["material_id"] == source_material_id]
+        body_groups = [group for group in reviewed["groups"] if group["kind"] == "MATERIAL_BODY" and group["material_id"] == source_material_id]
+        figure_groups = [group for group in reviewed["groups"] if group["kind"] == "FIGURE_LABELS" and group["material_id"] == source_material_id]
+        heading_groups = [group for group in reviewed["groups"] if group["kind"] == "TASK_SECTION_HEADING" and group["material_id"] == source_material_id]
+        task_groups = [group for group in reviewed["groups"] if group["kind"] == "TASK" and group["material_id"] == source_material_id]
+        if any(len(values) != 1 for values in (title_groups,body_groups,figure_groups,heading_groups)) or not task_groups:
+            raise ValueError("shared material requires one title, body, figure-label set, task heading and explicit tasks")
+        title_group, body_group = title_groups[0], body_groups[0]
+        title_fragments = fragments(title_group, "material_title", "mf")
+        body_fragments = fragments(body_group, "material_body", "mf")
+        figure_fragments = fragments(figure_groups[0], "figure_label", "mf")
+        heading_fragments = fragments(heading_groups[0], "task_section_heading", "mf")
+        material_id = entity_id(evidence, "material", title_group["ordered_line_ids"][0])
+        tasks = []
+        for group in task_groups:
+            task_fragments = fragments(group, "task_prompt", "tf")
+            tasks.append({"task_id": entity_id(evidence, "task", group["ordered_line_ids"][0]),
+                          "material_id": material_id, "label": group["label"], "anchor_ref": group["ordered_line_ids"][0],
+                          "section_path": group["section_path"], "asset_id": page["asset_id"],
+                          "response_kind": group["response_kind"], "counting_status": "UNKNOWN",
+                          "verification_status": "UNVERIFIED", "flow_segments": copy.deepcopy(group["flow_segments"]),
+                          "fragments": task_fragments, "text": "\n".join(item["text"] for item in task_fragments),
+                          "flags": ["BUSINESS_REVIEW_REQUIRED", "FIGURE_EXTENT_UNVERIFIED"]})
+        materials.append({"material_id": material_id, "source_material_id": source_material_id,
+                          "book_id": evidence["book_id"], "asset_id": page["asset_id"],
+                          "section_path": title_group["section_path"], "verification_status": "UNVERIFIED",
+                          "counting_status": "NOT_A_QUESTION", "title_fragments": title_fragments,
+                          "body_fragments": body_fragments, "figure_label_fragments": figure_fragments,
+                          "task_section_heading_fragments": heading_fragments,
+                          "title": "\n".join(item["text"] for item in title_fragments),
+                          "text": "\n".join(item["text"] for item in body_fragments), "tasks": tasks,
+                          "flags": ["TITLE_SEPARATOR_UNCAPTURED", "FIGURE_EXTENT_UNVERIFIED", "BUSINESS_REVIEW_REQUIRED"]})
+
+    owner_by_line = {}
+    for group in reviewed["groups"]:
+        if group["kind"] in {"QUESTION", "VARIANT"}:
+            owner_kind, owner_id, status = "question", question_by_group[group["group_id"]]["question_id"], "CONSUMED_QUESTION"
+        elif group["kind"] == "TASK":
+            material = next(value for value in materials if value["source_material_id"] == group["material_id"])
+            task = next(value for value in material["tasks"] if value["label"] == group["label"])
+            owner_kind, owner_id, status = "task", task["task_id"], "CONSUMED_SHARED_TASK"
+        elif group["kind"] in {"MATERIAL_TITLE", "MATERIAL_BODY", "FIGURE_LABELS", "TASK_SECTION_HEADING"}:
+            material = next(value for value in materials if value["source_material_id"] == group["material_id"])
+            owner_kind, owner_id = "shared_material", material["material_id"]
+            status = {"MATERIAL_TITLE":"CONSUMED_SHARED_TITLE","MATERIAL_BODY":"CONSUMED_SHARED_BODY",
+                      "FIGURE_LABELS":"CONSUMED_FIGURE_LABEL","TASK_SECTION_HEADING":"CONSUMED_TASK_SECTION_HEADING"}[group["kind"]]
+        else:
+            owner_kind, owner_id, status = "exclusion", group["group_id"], "EXCLUDED_DECORATION"
+        for line_id in group["ordered_line_ids"]:
+            owner_by_line[line_id] = {"asset_id": page["asset_id"], "line_id": line_id, "status": status,
+                                     "owner_kind": owner_kind, "owner_id": owner_id, "group_id": group["group_id"]}
+    coverage = [owner_by_line[line["line_id"]] for line in page["ocr_lines"]]
+    return questions, materials, coverage
+
+
 def assemble(evidence):
-    check_artifact(evidence, {EVIDENCE_SCHEMA, "b-evidence-trial/0.3"})
-    questions, answers, assembly_issues = [], [], []
+    check_artifact(evidence, {EVIDENCE_SCHEMA, "b-evidence-trial/0.3", EVIDENCE_STRUCTURED_SCHEMA})
+    questions, answers, assembly_issues, shared_materials, question_source_coverage = [], [], [], [], []
     for page in evidence["payload"]["pages"]:
         lines = sorted((a for a in page["ocr_lines"] if a.get("location")),
                        key=lambda a: (a["location"]["column"], a["bbox"][1], a["bbox"][0]))
         if page["page_role"] == "question":
+            if page.get("reviewed_layout_receipt"):
+                current_questions, current_materials, current_coverage = _assemble_reviewed_question_page(evidence, page)
+                questions.extend(current_questions); shared_materials.extend(current_materials)
+                question_source_coverage.extend(current_coverage)
+                continue
             current, captions = None, []
             for line in lines:
                 text, loc = line["text"], line["location"]
@@ -260,7 +640,10 @@ def assemble(evidence):
                "unmatched_answer_ids": [a["answer_id"] for a in answers if not any(
                    a["answer_id"] in q["candidate_answer_ids"] for q in questions)],
                "selection_status": "DRAFT_UNVERIFIED", "platform_actions": []}
-    schema = "b-graph-trial/0.3" if evidence["schema_version"].endswith("/0.3") else GRAPH_SCHEMA
+    if evidence["schema_version"] == EVIDENCE_STRUCTURED_SCHEMA:
+        payload.update(shared_materials=shared_materials, question_source_coverage=question_source_coverage)
+    schema = (GRAPH_STRUCTURED_SCHEMA if evidence["schema_version"] == EVIDENCE_STRUCTURED_SCHEMA else
+              "b-graph-trial/0.3" if evidence["schema_version"].endswith("/0.3") else GRAPH_SCHEMA)
     return artifact(schema, "QuestionGraphTrial", evidence, payload, [ref(evidence)],
                     {"module": __name__ + ".assemble", "version": "0.2.0", "code_sha256": code_digest(Path(__file__)),
                      "policy_code_sha256": code_digest(Path(__file__).with_name("policy.py")),
@@ -277,14 +660,30 @@ def scalar_issues(value, expected):
 
 
 def quality_check(evidence, graph, review):
-    check_artifact(evidence, {EVIDENCE_SCHEMA, "b-evidence-trial/0.3"})
-    check_artifact(graph, {GRAPH_SCHEMA, "b-graph-trial/0.3"})
+    check_artifact(evidence, {EVIDENCE_SCHEMA, "b-evidence-trial/0.3", EVIDENCE_STRUCTURED_SCHEMA})
+    expected_graph = (GRAPH_STRUCTURED_SCHEMA if evidence["schema_version"] == EVIDENCE_STRUCTURED_SCHEMA else
+                      "b-graph-trial/0.3" if evidence["schema_version"].endswith("/0.3") else GRAPH_SCHEMA)
+    check_artifact(graph, {expected_graph})
     if (graph["book_id"], graph["scope_id"], graph["input_refs"]) != (evidence["book_id"], evidence["scope_id"], [ref(evidence)]):
         raise ValueError("graph not bound to this evidence revision")
     if review.get("schema_version") != "b-review-trial/0.1":
         raise ValueError("unsupported review schema")
     if review.get("book_id") != evidence["book_id"] or review.get("scope_id") != evidence["scope_id"]:
         raise ValueError("review book/scope mismatch")
+    if evidence["schema_version"] == EVIDENCE_STRUCTURED_SCHEMA:
+        context=evidence["payload"]["context"]
+        expected_census={page["asset_id"]:{"sha256":page["source"]["sha256"],"printed_numbers":[
+            group["printed_number"] for group in context["pages"][page["asset_id"]]["reviewed_layout"]["groups"]
+            if group["kind"]=="QUESTION"]} for page in evidence["payload"]["pages"]}
+        if (set(review)!={"schema_version","artifact_id","book_id","scope_id","reference_quality","provenance",
+                         "question_census","answer_checks"}
+                or not isinstance(review.get("artifact_id"),str) or not review.get("artifact_id")
+                or review.get("reference_quality")!="MODEL_VISUAL_DEVELOPMENT_REVIEW"
+                or review.get("provenance")!=("Coordinator original-image observation before recognition. Top-level printed question 8, "
+                    "its unnumbered variant, and separately unnumbered reading material with tasks (1)(2)(3). "
+                    "The numeric census alone does not certify material coverage.")
+                or review.get("question_census")!=expected_census or review.get("answer_checks")!=[]):
+            raise ValueError("structured review must remain the exact model-development census")
     pages = {p["asset_id"]: p for p in evidence["payload"]["pages"]}
     for aid, census in review["question_census"].items():
         if aid not in pages or census["sha256"] != pages[aid]["source"]["sha256"]:
@@ -307,6 +706,18 @@ def quality_check(evidence, graph, review):
     answer_metrics.update(recovery_metrics)
     for finding in answer_findings:
         add(finding["code"], finding["scope_id"], finding["evidence_refs"], finding["severity"], finding["detail"])
+    if evidence["schema_version"] == EVIDENCE_STRUCTURED_SCHEMA:
+        for material in graph["payload"].get("shared_materials", []):
+            material_fragments = (material["title_fragments"] + material["body_fragments"]
+                                  + material["figure_label_fragments"] + material["task_section_heading_fragments"])
+            refs = [ref for fragment in material_fragments for ref in fragment["evidence_refs"]]
+            add("SHARED_MATERIAL_TRANSCRIPTION_UNVERIFIED", material["material_id"], refs, "REVIEW",
+                {"tasks": len(material["tasks"]), "counting_status": material["counting_status"]})
+            add("FIGURE_EXTENT_UNVERIFIED", material["material_id"], refs, "REVIEW")
+            for task in material["tasks"]:
+                task_refs = [ref for fragment in task["fragments"] for ref in fragment["evidence_refs"]]
+                add("SHARED_TASK_COUNT_AND_SCORING_UNKNOWN", task["task_id"], task_refs, "REVIEW",
+                    {"label": task["label"], "response_kind": task["response_kind"]})
     # This independent development census catches a removed whole question, but
     # does not certify diagram extents, formula transcription or business truth.
     add("BUSINESS_REVIEW_REQUIRED", evidence["scope_id"], severity="REVIEW",
@@ -320,7 +731,12 @@ def quality_check(evidence, graph, review):
                "summary": {"questions": len(questions), "answers": len(answers),
                            "unique_candidate_links": sum(q["selected_answer_id"] is not None for q in questions),
                            "issues": len(issues), **answer_metrics}}
-    schema = "b-check-trial/0.3" if evidence["schema_version"].endswith("/0.3") else CHECK_SCHEMA
+    if evidence["schema_version"] == EVIDENCE_STRUCTURED_SCHEMA:
+        payload["summary"].update(shared_materials=len(graph["payload"].get("shared_materials", [])),
+                                  shared_tasks=sum(len(value["tasks"]) for value in graph["payload"].get("shared_materials", [])),
+                                  question_source_rows=len(graph["payload"].get("question_source_coverage", [])))
+    schema = (CHECK_STRUCTURED_SCHEMA if evidence["schema_version"] == EVIDENCE_STRUCTURED_SCHEMA else
+              "b-check-trial/0.3" if evidence["schema_version"].endswith("/0.3") else CHECK_SCHEMA)
     return artifact(schema, "CheckReportTrial", evidence, payload,
                     [ref(evidence), ref(graph), {"artifact_id": review["artifact_id"], "content_hash": digest(review)}],
                     {"module": __name__ + ".quality_check", "version": "0.2.0", "code_sha256": code_digest(Path(__file__)),

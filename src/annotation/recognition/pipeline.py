@@ -170,7 +170,7 @@ def _implementation(stage, mode, kind, use_ocr, worker, *, continuation_enabled=
         names = ["batch", "baseline"]
     elif stage == "evidence":
         names = ["baseline"]
-        helpers = {name: _function_sha(getattr(offline, name)) for name in ("check_artifact", "validate_context")}
+        helpers = {name: _function_sha(getattr(offline, name)) for name in ("check_artifact", "validate_context", "_reviewed_layout_syntax")}
     elif stage in CONTENT_STAGES:
         names = ["content_revision", "content_revision_quality", "question_quality", "offline", "policy", "baseline"]
         helpers = {name: _function_sha(getattr(offline, name)) for name in ("artifact", "ref", "check_artifact", "scope_key", "scalar_issues")}
@@ -190,8 +190,10 @@ def _implementation(stage, mode, kind, use_ocr, worker, *, continuation_enabled=
         if stage == "recover": helpers["validate_context"] = _function_sha(offline.validate_context)
     else:
         common = ["artifact", "ref", "check_artifact"]
-        specific = {"refine": ["validate_context", "detect_columns", "locate"],
-                    "assemble": ["entity_id", "scope_key"], "quality": ["scalar_issues", "scope_key"]}
+        specific = {"refine": ["validate_context", "detect_columns", "locate", "_locate_column",
+                               "_reviewed_layout_syntax", "_derive_reviewed_structure", "_reviewed_layout_receipt"],
+                    "assemble": ["entity_id", "scope_key", "_assemble_reviewed_question_page"],
+                    "quality": ["scalar_issues", "scope_key"]}
         helpers = {name: _function_sha(getattr(offline, name)) for name in common+specific[stage]}
         names = {"refine": ["baseline"], "assemble": ["answer_assembly", "policy"],
                  "quality": ["question_quality", "answer_quality", "recovery_quality", "recovery_apply", "policy"]}[stage]
@@ -201,10 +203,11 @@ def _implementation(stage, mode, kind, use_ocr, worker, *, continuation_enabled=
     synthetic_refine = stage == "refine" and kind == "SYNTHETIC_TEST" and refine is not offline.refine
     recognizer = (batch._recognizer(use_ocr, worker) if stage == "recognition"
                   else batch._recognizer(True, worker if synthetic_refine else None) if stage == "refine" else None)
-    globals_by_stage = {"recognition": [], "evidence": ["CONTEXT_SCHEMA", "EVIDENCE_SCHEMA"], "refine": ["CONTEXT_SCHEMA", "EVIDENCE_SCHEMA", "ASTART"],
+    structured = ["CONTEXT_STRUCTURED_SCHEMA", "EVIDENCE_STRUCTURED_SCHEMA", "GRAPH_STRUCTURED_SCHEMA", "CHECK_STRUCTURED_SCHEMA", "REVIEWED_LAYOUT_POLICY"]
+    globals_by_stage = {"recognition": [], "evidence": ["CONTEXT_SCHEMA", "EVIDENCE_SCHEMA", *structured], "refine": ["CONTEXT_SCHEMA", "EVIDENCE_SCHEMA", "ASTART", "QSTART", *structured],
                         "recover": ["EVIDENCE_SCHEMA", "CONTEXT_SCHEMA"], "recovery_review": ["EVIDENCE_SCHEMA"],
-                        "assemble": ["EVIDENCE_SCHEMA", "GRAPH_SCHEMA", "QSTART", "ASTART", "OPTION", "CAPTION", "DECORATION"],
-                        "quality": ["EVIDENCE_SCHEMA", "GRAPH_SCHEMA", "CHECK_SCHEMA"]}
+                        "assemble": ["EVIDENCE_SCHEMA", "GRAPH_SCHEMA", "QSTART", "ASTART", "OPTION", "CAPTION", "DECORATION", *structured],
+                        "quality": ["EVIDENCE_SCHEMA", "GRAPH_SCHEMA", "CHECK_SCHEMA", *structured]}
     globals_by_stage.update({name: [] for name in CONTINUATION_STAGES})
     globals_by_stage.update({name: [] for name in INLINE_STAGES})
     globals_by_stage.update({name: [] for name in CONTENT_STAGES})
@@ -250,7 +253,9 @@ def _validate_review(source, review):
 
 
 def _validate_evidence(value, source, context):
-    offline.check_artifact(value, {"b-evidence-trial/0.2", "b-evidence-trial/0.3"})
+    expected = {"b-context-trial/0.1": {"b-evidence-trial/0.2", "b-evidence-trial/0.3"},
+                "b-context-trial/0.2": {"b-evidence-trial/0.4"}}.get(context.get("schema_version"), set())
+    offline.check_artifact(value, expected)
     if (value.get("kind") != "EvidenceBundleTrial"
             or (value.get("book_id"), value.get("scope_id")) != (source["book_id"], source["scope_id"])
             or value["payload"].get("context") != context):
@@ -397,11 +402,17 @@ def _validate_result(stage, value, source, context, review, dependencies, recogn
                 or value["payload"].get("new_ocr_calls") != 0 or value["payload"].get("decision") != "HOLD"):
             raise ValueError("recovery review is not bound to current review and recovered evidence")
     elif stage == "assemble":
-        offline.check_artifact(value, {"b-graph-trial/0.2", "b-graph-trial/0.3"})
+        evidence_schema = current_evidence["schema_version"] if current_evidence else None
+        graph_schema = {"b-evidence-trial/0.2":"b-graph-trial/0.2", "b-evidence-trial/0.3":"b-graph-trial/0.3",
+                        "b-evidence-trial/0.4":"b-graph-trial/0.9"}.get(evidence_schema)
+        offline.check_artifact(value, {graph_schema})
         if value.get("kind") != "QuestionGraphTrial" or value.get("input_refs") != [dependencies["evidence"]["result_ref"]]:
             raise ValueError("graph not bound to its exact evidence revision")
     else:
-        offline.check_artifact(value, {"b-check-trial/0.2", "b-check-trial/0.3"})
+        evidence_schema = current_evidence["schema_version"] if current_evidence else None
+        check_schema = {"b-evidence-trial/0.2":"b-check-trial/0.2", "b-evidence-trial/0.3":"b-check-trial/0.3",
+                        "b-evidence-trial/0.4":"b-check-trial/0.9"}.get(evidence_schema)
+        offline.check_artifact(value, {check_schema})
         if (value.get("kind") != "CheckReportTrial" or value.get("input_refs") != [dependencies["evidence"]["result_ref"],
                 dependencies["graph"]["result_ref"], dependencies["review"]["reference"]]
                 or value["payload"].get("decision") != "HOLD"):
@@ -487,6 +498,9 @@ def run_pipeline(source_path, context_path, review_path, workdir, *, use_ocr=Fal
     context, review = [json.loads(p.read_text(encoding="utf-8")) for p in (context_path, review_path)]
     offline.validate_context(source, context)
     _validate_review(source, review)
+    if context.get("schema_version") == "b-context-trial/0.2" and any(
+            value is not None for value in (recovery_path, continuation_path, inline_path, content_revision_path)):
+        raise ValueError("structured E0.4/graph0.9 is not accepted by legacy downstream adapters")
     cached_evidence = None
     if evidence_path is not None:
         evidence_path = Path(evidence_path)
