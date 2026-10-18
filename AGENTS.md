@@ -1,5 +1,7 @@
 # 项目开发约定
 
+- 2026-10-18 发布状态优先：用户已授权的阶段二交接与进展架构图已推送至 `codex/a-stage2-handoff`，远端提交 `37089f9e0229da76ae1c45461b7e63929590be56` 已核实。见 `docs/a-stage2-handoff.md`、`docs/tasks/A-stage2-publication-receipt.md`。下方“新材料未推送”为历史时点；A未向B发送消息，不代表B已读取或确认。共同映射/准入/真实单题与A04真实平台阻断仍保持。
+
 - 2026-10-18 当前优先状态：A03-R1、I01-A有限离线范围已接受并本地集成；A06最终交付 `d7873781` 已完成独立及调度接受，并在 `61695306a97e90ea2d69b21c9dfe096f8a641081` 本地集成。见 `docs/tasks/A06-local-integration.md` 与调度JSON。A06作者/验收均释放，不再续派修复或重跑；下方旧待验收段落为历史。B共同映射、准入和合格单题仍待确认，新材料未推送/未发送B；A04真实平台阻断未因此解除。
 
 - 公共技术语义见 `docs/architecture.md` 和 `docs/contracts-v1.md`。A 侧任务另读 `docs/coordination.md`，以任务号、基线和改动范围确定本次工作；B 侧参考 `docs/b-side-handoff.md`，自行管理开发流程。

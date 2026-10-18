@@ -1,5 +1,7 @@
 # 模块化开发计划与两人分工
 
+2026-10-18 18:19 当前交接入口：[阶段二源码与调用说明](a-stage2-handoff.md)及[进展架构图](handoff/a-stage2/progress-architecture.html)已推送至 `codex/a-stage2-handoff`，确切提交 `37089f9e0229da76ae1c45461b7e63929590be56`，见[回执](tasks/A-stage2-publication-receipt.md)。远端材料可用这一依赖已解除；双方字段映射、历史引用必要性、真实单题准入/样例及B确认仍未解除。保留I01合成与A06只读HOLD的有限范围，不据此自动派正向联调或真实平台任务。
+
 2026-10-18 当前步骤：A06已完成有限独立验收、调度接受及[本地集成](tasks/A06-local-integration.md)，与已集成I01-A合成链分别收口。下一可执行正向联调需要[共同字段映射、执行准入和真实单题确认](b-minimal-integration-confirmation-2026-10-18.md)，由用户向B转发；A承担自身适配/校验/规划模拟，未向B派单或确认共同合同。当前没有活动A06实施/验收任务，不重跑成功样例、不追加第三候选；A04真实平台项及新材料共享仍按真实状态保留。
 
 2026-10-18 17:09 当前步骤：I01-A原有限离线任务已[接受并本地集成](tasks/I01-A-local-integration.md)，不再重跑成功三路径。A06第一候选F01已确认并进入[第二、最终有界纠正](tasks/A06-second-final-correction.md)，仅结果层版本/kind及两项受影响接收差量，其他第一验收结果按不变范围保留。B只读HOLD接收与正向业务联调的边界保持，不能把I01合成路径当真实B执行资格。
