@@ -2,7 +2,7 @@
   "schema_version": 1,
   "project": "D:\\1800",
   "coordinator_thread_id": "01a13f26-7567-75e1-99ee-c9d2194e78bb",
-  "updated_at": "2026-10-18T13:21:19.671111+00:00",
+  "updated_at": "2026-10-18T13:26:01.903246+00:00",
   "automation": {
     "id": "1800-a",
     "kind": "heartbeat",
@@ -8602,11 +8602,11 @@
       "review_document": "docs/tasks/A07-Q1-independent-review.md",
       "execution_thread_id": "01a14edd-f319-7b70-8993-62e04de3a2d4",
       "review_thread_id": "01a14edb-bdc9-7370-890c-3b301b6ea414",
-      "execution_cursor": "511a4b4f-1ba7-4a71-9ac5-2ba69534cf9f:9",
+      "execution_cursor": "511a4b4f-1ba7-4a71-9ac5-2ba69534cf9f:15",
       "review_cursor": "65496636-3236-4063-9ba6-c8ca5d3c3561:3",
       "max_frozen_implementation_candidates": 2,
       "used_candidates": 1,
-      "next_dependency": "Author fixed F01 correction, raw manifest and release; then one independent delta trial",
+      "next_dependency": "One independent F01 delta, fixed report/raw manifest/release",
       "created_at": "2026-10-18T19:50:26.791435+08:00",
       "retired_task_replay_authorized": false,
       "platform_actions_authorized": false,
@@ -8671,7 +8671,7 @@
       "worktree": "D:/1800-worktrees/a07-q1",
       "branch": "codex/a07-q1-offline",
       "execution_host_id": "local",
-      "execution_status": "F01_EXECUTING",
+      "execution_status": "F01_FIXED_DELIVERY_RELEASED",
       "review_preparation": {
         "completed": true,
         "business_attempts": 0,
@@ -8751,22 +8751,26 @@
       },
       "role_correction": {
         "finding_id": "A07-F01",
-        "status": "EXECUTING",
+        "status": "REVIEW_DISPATCH_INTENT",
         "authority": "docs/approvals/A07-F01-role-correction-approval.json",
         "authority_sha256": "7c6c2e9ceaa2abfb5d6379498d859c3411d13f60e89fed2914e999788fa32b8e",
         "task_document": "docs/tasks/A07-F01-role-correction.md",
         "base_commit": "f0ff0fae1cc58e35187877d1dfdee674c979892c",
         "execution_thread_id": "01a14edd-f319-7b70-8993-62e04de3a2d4",
         "review_thread_id": "01a14edb-bdc9-7370-890c-3b301b6ea414",
-        "execution_cursor": "511a4b4f-1ba7-4a71-9ac5-2ba69534cf9f:9",
+        "execution_cursor": "511a4b4f-1ba7-4a71-9ac5-2ba69534cf9f:15",
         "review_cursor": "65496636-3236-4063-9ba6-c8ca5d3c3561:3",
         "additional_limits": {
           "execution_normal_attempts": 1,
           "review_normal_attempts": 1
         },
         "consumption": {
-          "execution_normal_attempts": 0,
-          "review_normal_attempts": 0
+          "execution_normal_attempts": 1,
+          "review_normal_attempts": 0,
+          "execution_dispatches": 1,
+          "execution_successes": 1,
+          "execution_gate_checks": 2,
+          "execution_replay_rejections": 1
         },
         "preserve_previous_consumption": true,
         "pushed": false,
@@ -8778,7 +8782,14 @@
         "review_status": "WAITING_FOR_FIXED_CANDIDATE",
         "automation_updated": true,
         "execution_active_confirmed": true,
-        "author_progress_claim": "Single delta successful; waiting fixed report/manifest/release before verification"
+        "author_progress_claim": "Final raw Git manifest verification in progress; no second business run",
+        "product_candidate": "3d22524ff626fc7b0376b7312be6fe75f2e73aab",
+        "execution_delivery": "6f8f1d6fa4c8db9678738673a54fa862df9a666e",
+        "execution_report": "docs/tasks/A07-F01-execution-report.md",
+        "author_released": true,
+        "preflight": "docs/evidence/coordinator/a07-f01-20261018/author-preflight-corrected.json",
+        "recorded_author_check": "docs/evidence/coordinator/a07-f01-20261018/author-recorded-delta.json",
+        "review_dispatch_document": "docs/tasks/A07-F01-review-dispatch.md"
       }
     }
   },
@@ -11107,20 +11118,38 @@
       "sent_at": "2026-10-18T13:13:35.501188+00:00",
       "workflow_commit": "ca1fb902c2228579cd2d0c84d81fc72cd0643796",
       "returned_thread_id": "01a14edd-f319-7b70-8993-62e04de3a2d4"
+    },
+    {
+      "dispatch_key": "A07:F01:review:3d22524f",
+      "task_id": "A07",
+      "finding_id": "A07-F01",
+      "role": "review",
+      "action": "send_message_to_thread",
+      "thread_id": "01a14edb-bdc9-7370-890c-3b301b6ea414",
+      "host_id": "local",
+      "status": "INTENT_RECORDED",
+      "at": "2026-10-18T13:26:01.903246+00:00",
+      "candidate_commit": "3d22524ff626fc7b0376b7312be6fe75f2e73aab",
+      "delivery_commit": "6f8f1d6fa4c8db9678738673a54fa862df9a666e",
+      "task_document": "docs/tasks/A07-F01-review-dispatch.md",
+      "thinking": "xhigh",
+      "acceptance_scope": "Four option roles W; one independent offline delta; unchanged six contents/coordinates",
+      "next_dependency": "Fixed independent report/raw manifest/release"
     }
   ],
   "last_action": {
-    "at": "2026-10-18T13:13:35.501188+00:00",
-    "action": "A07_F01_CORRECTION_DISPATCHED",
+    "at": "2026-10-18T13:26:01.903246+00:00",
+    "action": "A07_F01_AUTHOR_PREFLIGHT_AND_REVIEW_INTENT",
     "task_ids": [
       "A07"
     ],
-    "version": "ca1fb902c2228579cd2d0c84d81fc72cd0643796",
-    "thread_id": "01a14edd-f319-7b70-8993-62e04de3a2d4",
-    "cursor": "511a4b4f-1ba7-4a71-9ac5-2ba69534cf9f:4",
-    "scope": "Four option roles only; one offline delta each side",
-    "dispatch_result": "SENT_TO_EXISTING_REGISTERED_EXECUTION",
-    "next_dependency": "Author fixed F01 correction, raw manifest and release; then one independent delta trial"
+    "version": "6f8f1d6fa4c8db9678738673a54fa862df9a666e",
+    "candidate": "3d22524ff626fc7b0376b7312be6fe75f2e73aab",
+    "scope": "F01 only; raw integrity and fixed recorded result, no new business",
+    "thread_id": "01a14edb-bdc9-7370-890c-3b301b6ea414",
+    "cursor": "65496636-3236-4063-9ba6-c8ca5d3c3561:3",
+    "dispatch_result": "INTENT_RECORDED",
+    "next_dependency": "One independent F01 delta, fixed report/raw manifest/release"
   },
   "limitations": [
     "Current route uses mock B artifacts until independently agreed interface/artifact versions exist.",
@@ -11821,9 +11850,7 @@
       "A07"
     ],
     "status": "A07_F01_AUTHORIZED_CORRECTION",
-    "active_execution_or_review_threads": [
-      "01a14edd-f319-7b70-8993-62e04de3a2d4"
-    ],
+    "active_execution_or_review_threads": [],
     "open_external_dependencies": [
       "B joint adoption remains unconfirmed",
       "A04 live platform remains BLOCKED"

@@ -19,6 +19,15 @@ PRODUCT_ADDITIONS = {
     "tests/test_a07_role_delta.py",
     "examples/a07/role_delta_check.py",
 }
+PRE_FREEZE_EVIDENCE = {
+    'docs/evidence/A07/F01/execution/authorizations/A07-F01-role-correction-approval.json',
+    'docs/evidence/A07/F01/execution/authorizations/A07-Q1-offline-business-approval.json',
+    'docs/evidence/A07/F01/execution/authorizations/binding.json',
+    'docs/evidence/A07/F01/execution/pre-freeze/role-gate-calls.json',
+    'docs/evidence/A07/F01/execution/pre-freeze/role-gate-output.txt',
+    'docs/evidence/A07/F01/execution/pre-freeze/role-gate-process.json',
+    'docs/evidence/A07/F01/execution/pre-freeze/scope-check.json',
+}
 ENV = dict(os.environ, GIT_NO_LAZY_FETCH="1", GIT_NO_REPLACE_OBJECTS="1")
 
 
@@ -135,7 +144,7 @@ def main():
             row["status"] == "M" and row["path"] in PRODUCT_EDITS and
             row["after"]["mode"] == row["before"]["mode"] and
             row["after"]["type"] == row["before"]["type"] == "blob"
-            or row["status"] == "A" and row["path"] in PRODUCT_ADDITIONS and
+            or row["status"] == "A" and row["path"] in (PRODUCT_ADDITIONS | PRE_FREEZE_EVIDENCE) and
             row["after"]["type"] == "blob" and row["after"]["mode"] in ("100644", "100755")
         )]
         prefix = "docs/evidence/A07/F01/" + args.role + "/"
