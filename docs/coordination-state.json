@@ -2,7 +2,7 @@
   "schema_version": 1,
   "project": "D:\\1800",
   "coordinator_thread_id": "01a13f26-7567-75e1-99ee-c9d2194e78bb",
-  "updated_at": "2026-10-18T12:48:24.243004+00:00",
+  "updated_at": "2026-10-18T13:12:46.139449+00:00",
   "automation": {
     "id": "1800-a",
     "kind": "heartbeat",
@@ -8591,7 +8591,7 @@
     },
     "A07": {
       "task_id": "A07",
-      "status": "INTEGRATED_WITH_OPEN_FINDING",
+      "status": "REWORK_AUTHORIZED",
       "scope": "Fixed B Q1 observed source to A-only offline six-frame plan and simulated receipt; no platform or joint B acceptance",
       "base_commit": "2e71462dda8d225e4f41e8c6cd03a9ce7b88046a",
       "b_commit": "ef6ba4dd083e7fd5378e80123b2b038dd11d7052",
@@ -8606,7 +8606,7 @@
       "review_cursor": "65496636-3236-4063-9ba6-c8ca5d3c3561:3",
       "max_frozen_implementation_candidates": 2,
       "used_candidates": 1,
-      "next_dependency": "Bounded correction of ordinary-option Q to W and independent rule-based delta validation; no new execution quota dispatched",
+      "next_dependency": "Author fixed F01 correction, raw manifest and release; then one independent delta trial",
       "created_at": "2026-10-18T19:50:26.791435+08:00",
       "retired_task_replay_authorized": false,
       "platform_actions_authorized": false,
@@ -8739,6 +8739,30 @@
         "product_changed": false,
         "dispatch_result": "NONE_STATIC_FINDING_ONLY",
         "automation_updated": true
+      },
+      "role_correction": {
+        "finding_id": "A07-F01",
+        "status": "EXECUTION_DISPATCH_INTENT",
+        "authority": "docs/approvals/A07-F01-role-correction-approval.json",
+        "authority_sha256": "7c6c2e9ceaa2abfb5d6379498d859c3411d13f60e89fed2914e999788fa32b8e",
+        "task_document": "docs/tasks/A07-F01-role-correction.md",
+        "base_commit": "f0ff0fae1cc58e35187877d1dfdee674c979892c",
+        "execution_thread_id": "01a14edd-f319-7b70-8993-62e04de3a2d4",
+        "review_thread_id": "01a14edb-bdc9-7370-890c-3b301b6ea414",
+        "execution_cursor": "511a4b4f-1ba7-4a71-9ac5-2ba69534cf9f:3",
+        "review_cursor": "65496636-3236-4063-9ba6-c8ca5d3c3561:3",
+        "additional_limits": {
+          "execution_normal_attempts": 1,
+          "review_normal_attempts": 1
+        },
+        "consumption": {
+          "execution_normal_attempts": 0,
+          "review_normal_attempts": 0
+        },
+        "preserve_previous_consumption": true,
+        "pushed": false,
+        "platform_actions": 0,
+        "at": "2026-10-18T13:12:46.139449+00:00"
       }
     }
   },
@@ -11048,23 +11072,36 @@
       "sent_at": "2026-10-18T20:18:33.693932+08:00",
       "returned_thread_id": "01a14edb-bdc9-7370-890c-3b301b6ea414",
       "workflow_commit": "505bac6195186a5dda45fb6bc56ec97f901ae4ab"
+    },
+    {
+      "dispatch_key": "A07:F01:execution:role-correction:f0ff0fae",
+      "task_id": "A07",
+      "finding_id": "A07-F01",
+      "role": "execution",
+      "action": "send_message_to_thread",
+      "thread_id": "01a14edd-f319-7b70-8993-62e04de3a2d4",
+      "host_id": "local",
+      "status": "INTENT_RECORDED",
+      "at": "2026-10-18T13:12:46.139449+00:00",
+      "base_commit": "f0ff0fae1cc58e35187877d1dfdee674c979892c",
+      "task_document": "docs/tasks/A07-F01-role-correction.md",
+      "thinking": "xhigh",
+      "acceptance_scope": "Only four option roles Q to W; six frames/content/coordinates unchanged; each side one offline delta trial",
+      "next_dependency": "Fixed author delivery and release"
     }
   ],
   "last_action": {
-    "at": "2026-10-18T20:18:33.693932+08:00",
-    "action": "A07_FIXED_INDEPENDENT_REVIEW_DISPATCHED",
+    "at": "2026-10-18T13:12:46.139449+00:00",
+    "action": "A07_F01_EXPLICIT_AUTHORITY_AND_DISPATCH_INTENT",
     "task_ids": [
       "A07"
     ],
-    "thread_id": "01a14edb-bdc9-7370-890c-3b301b6ea414",
-    "version": "d2e710c817cf85505ac4fad4919dd51d1062d33a",
-    "candidate_commit": "6dad9b9a40a10989c102d91cf7b54f19c012015f",
-    "scope": "Fixed B Q1 observed source to A-only offline six-frame plan and simulated receipt; no platform or joint B acceptance",
-    "dispatch_result": "SENT_TO_EXISTING_REGISTERED_REVIEW",
-    "next_dependency": "Fixed independent report, raw manifest and own process release; then coordinator bounded acceptance and scoped local integration",
-    "cursor": "65496636-3236-4063-9ba6-c8ca5d3c3561:2",
-    "automation_updated": true,
-    "review_active_confirmed": true
+    "version": "f0ff0fae1cc58e35187877d1dfdee674c979892c",
+    "thread_id": "01a14edd-f319-7b70-8993-62e04de3a2d4",
+    "cursor": "511a4b4f-1ba7-4a71-9ac5-2ba69534cf9f:3",
+    "scope": "Four option roles only; one offline delta each side",
+    "dispatch_result": "INTENT_RECORDED",
+    "next_dependency": "Author fixed F01 correction, raw manifest and release; then one independent delta trial"
   },
   "limitations": [
     "Current route uses mock B artifacts until independently agreed interface/artifact versions exist.",
@@ -11764,7 +11801,7 @@
       "A06",
       "A07"
     ],
-    "status": "A07_OPEN_ROLE_MAPPING_FINDING",
+    "status": "A07_F01_AUTHORIZED_CORRECTION",
     "active_execution_or_review_threads": [],
     "open_external_dependencies": [
       "B joint adoption remains unconfirmed",
@@ -11776,7 +11813,7 @@
     "whole_project_complete": false,
     "automatic_new_task_authorized_now": false,
     "publication_commit": "37089f9e0229da76ae1c45461b7e63929590be56",
-    "next_preparable_scope": "Bounded A07 role-mapping correction; not dispatched"
+    "next_preparable_scope": "Existing A07 F01 correction; no new task"
   },
   "publication_stage2": {
     "task_id": "A-PUBLISH-02",
