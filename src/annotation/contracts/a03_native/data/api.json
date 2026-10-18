@@ -1,0 +1,52 @@
+{
+  "M_adoption": {
+    "converter": "LEGACY_INITIAL_ONLY",
+    "decision": "4fa7237d1114ed2c89f65cbb28579a8956812062",
+    "hold_transition": "readonly POST_HOLD candidate -> final read/CAS clear -> genuinely new INITIAL PRE/planner",
+    "language": "1..3 questions, one 32x32 PGM and stem/answer per question",
+    "migration": "NOT_IMPLEMENTED_BLOCKED",
+    "readonly_entry": "unique book/plan/action; persistent count <=3; no retry/reset/new entry for same action",
+    "record_hold_candidate": [
+      "registration_id",
+      "bundle",
+      "plan_ref",
+      "config",
+      "hold_id",
+      "owner_id",
+      "generation",
+      "expected_head"
+    ],
+    "unattempted_request": [
+      "registration_id",
+      "plan_ref",
+      "action_id",
+      "action_digest",
+      "expected_event_head",
+      "entry_id",
+      "parent_call_id",
+      "read_fault(optional)"
+    ]
+  },
+  "adoption_scope": "A_INTERNAL_FIXED_SYNTHETIC_ONLY",
+  "exchange_version": "a03-exchange-4-proposal",
+  "field_reset_probe": "NOT_EXECUTED_NO_RERUN_VARIANT_OR_DELEGATION",
+  "profile_id": "a03-native-synthetic-1-PROPOSAL",
+  "registry": [
+    "SourceBundle",
+    "EvidenceBundle",
+    "QuestionGraph",
+    "PlatformSnapshot",
+    "CheckReport",
+    "ApplyPlan",
+    "ExecutionReceipt",
+    "ReviewPatch",
+    "BatchReport",
+    "WriteIntent",
+    "ExecutionProgress",
+    "ReconciliationResult"
+  ],
+  "roles": [
+    "CURRENT"
+  ],
+  "version": "1.4.0-a03-native-proposal"
+}
