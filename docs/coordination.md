@@ -1,6 +1,6 @@
 # A 侧开发调度与验收
 
-2026-10-18 当前推进点：T1 取证/六例及 [T2 固定 C12/H1](tasks/A03-T2-coordinator-acceptance.md) 已有限 ACCEPTED；T3 计划 C1–C4 已接受，组合 K=`62a023a1c88c20d884a61f38d1ad995b0908b74c` 仅集成已接受 capture 工具。调度采用 D-CONV=LEGACY_INITIAL_ONLY 与 [D-M 完整实现包](tasks/A03-T3-M-implementation-handoff.md)。T3 已冻结交付 `3f39a117b1b98e85c5a449a07f13b3490ef77e18` 并释放，M1 在45秒上限后停止，实际两次dispatch，第三动作RESERVED，其余四例NOT_RUN，功能状态REWORK；现有独立T3对话进行[一次静态超时复核](tasks/A03-T3-M-timeout-review-handoff.md)，不增时限、不重跑业务。L/G/F 尚未执行，A03 整体 REWORK、I01 未释放；历史失败及元数据缺口原样保留。派发实际回执见 coordination-state.json。
+2026-10-18 当前推进点：T1 取证/六例及 [T2 固定 C12/H1](tasks/A03-T2-coordinator-acceptance.md) 已有限 ACCEPTED；T3 计划 C1–C4 已接受，组合 K=`62a023a1c88c20d884a61f38d1ad995b0908b74c` 仅集成已接受 capture 工具。调度采用 D-CONV=LEGACY_INITIAL_ONLY 与 [D-M 完整实现包](tasks/A03-T3-M-implementation-handoff.md)。T3 冻结交付 `3f39a117b1b98e85c5a449a07f13b3490ef77e18` 已释放：M1 在45秒上限后停止，实际两次dispatch，其余四例NOT_RUN。[独立静态复核](tasks/A03-T3-M-timeout-review-report.md)已完成，定位至第三动作prepared-before落盘后、intent提交前，根因仍未证；调度采用[一次有界计时/线程栈诊断](tasks/A03-T3-M1-diagnostic-handoff.md)，只加驱动探针、最多一个新起点/三次dispatch、原45/90秒不变，诊断后停止交付，不自动修产品或续跑M2/M3。L/G/F 尚未执行，A03 整体 REWORK、I01 未释放；历史失败及元数据缺口原样保留。派发实际回执见 coordination-state.json。
 
 2026-10-18 用户新增指令：[A03 停止原对话并拆分交接](tasks/A03-redispatch-2026-10-18.md)。原 A03 执行/验收只完成交接，此后由新建 A03-T1（取证与异常读回）、T2（历史回执与报告）、T3（剩余矩阵与集成）执行和独立验收对话接手。旧文的原对话续派安排被本条替代；新对话与cursor以调度JSON登记为准，唯一写入者和依赖见新任务单。原A03手动推理设置例外保留，新对话默认xhigh。整体A03/I01状态不因交接自动通过。
 

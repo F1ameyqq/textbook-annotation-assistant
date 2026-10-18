@@ -1,0 +1,171 @@
+{
+  "at": "2026-10-18T12:58:16.726539+08:00",
+  "scope": "STATIC_TIMEOUT_BOUNDARY_AND_DIAGNOSTIC_ADOPTION_ONLY",
+  "target_commit": "3f39a117b1b98e85c5a449a07f13b3490ef77e18",
+  "candidate_commit": "c73070884476dc2edcb952d88e4f6ed356b74ae8",
+  "review_report": "docs/tasks/A03-T3-M-timeout-review-report.md",
+  "review_report_sha256": "538fdea9afed67640149ee83b8406725086f7e36d266a56b9fa118a619feb85a",
+  "review_evidence": [
+    {
+      "path": "docs/evidence/A03/T3/review-M-timeout/read-record.json",
+      "sha256": "d96aff2324301ec447579c85792d91afb9fb0f9847e9241d5f974b966d1d63dd"
+    },
+    {
+      "path": "docs/evidence/A03/T3/review-M-timeout/timeline.json",
+      "sha256": "cc389000ff0eb5f8ead9d62e19feecee0ef0d80ae6c8d7bc05b17d3ec078bbfa"
+    }
+  ],
+  "selected_raw_git_references_verified": [
+    {
+      "commit": "c73070884476dc2edcb952d88e4f6ed356b74ae8",
+      "path": "examples/a03/T3-closure/run.py",
+      "blob": "9876ce039e9391bcd608a92c7c19e8449655a28e",
+      "bytes": 24465,
+      "sha256": "bc35b0831a1b20c7afa42322c6ede15d4cd26e6bb55c84b2276669e390f7fe11",
+      "read_ranges": [
+        [
+          30,
+          49
+        ],
+        [
+          122,
+          147
+        ],
+        [
+          162,
+          270
+        ],
+        [
+          345,
+          369
+        ]
+      ]
+    },
+    {
+      "commit": "c73070884476dc2edcb952d88e4f6ed356b74ae8",
+      "path": "src/annotation/runtime/storage/__init__.py",
+      "blob": "4a53243ac900a36690cd137f16456de7016bc027",
+      "bytes": 77664,
+      "sha256": "e493065083293a826d7ac872666246282e9b664b762d84df2145fda90689eda8",
+      "read_ranges": [
+        [
+          142,
+          201
+        ],
+        [
+          405,
+          466
+        ],
+        [
+          701,
+          853
+        ],
+        [
+          730,
+          834
+        ],
+        [
+          619,
+          669
+        ],
+        [
+          109,
+          111
+        ],
+        [
+          509,
+          521
+        ],
+        [
+          595,
+          617
+        ],
+        [
+          836,
+          864
+        ]
+      ]
+    },
+    {
+      "commit": "3f39a117b1b98e85c5a449a07f13b3490ef77e18",
+      "path": "docs/evidence/A03/T3/execution/M/validation/author-01/cases/M1/processes/execute/completed.json",
+      "blob": "a75358b2cb7f70186ea36f4b0250b09f98cca410",
+      "bytes": 132,
+      "sha256": "04c29e10c30e87b5ff702ceb3ac9392e3bdca222dbc312e5ea3db2329935af8c"
+    },
+    {
+      "commit": "3f39a117b1b98e85c5a449a07f13b3490ef77e18",
+      "path": "docs/evidence/A03/T3/execution/M/validation/author-01/cases/M1/captures/after-cleanup-release-02/SQL.json",
+      "blob": "76f46d1b32a627477750f6390ba93556f5c3b26f",
+      "bytes": 133529,
+      "sha256": "6dfa41ebe3c4408f7de63c29421af8b60a1299f444989c7e8015ed515466399d"
+    },
+    {
+      "commit": "c73070884476dc2edcb952d88e4f6ed356b74ae8",
+      "path": "src/annotation/delivery/mock/persistent.py",
+      "blob": "903fc17703ced5e0f9129786afc7dc323e25332b",
+      "bytes": 44562,
+      "sha256": "8af1f8de7a4ec08966dc10d7180060f89a47aad1eddce19c3c45bacd953d2487",
+      "read_ranges": [
+        [
+          127,
+          181
+        ],
+        [
+          522,
+          635
+        ],
+        [
+          113,
+          125
+        ],
+        [
+          689,
+          706
+        ]
+      ]
+    },
+    {
+      "commit": "3f39a117b1b98e85c5a449a07f13b3490ef77e18",
+      "path": "docs/evidence/A03/T3/execution/M/validation/author-01/cases/M1/runtime/packages/afea151a6295ac047a7e2a532c8fe2eb68008cf106df20c9af9f80a175aac874/assets/runtime/607f608edbd244d2363e18dc5cce5d217e6ff50f1cf0432eae130c0d3eed8faa.json",
+      "blob": "f0b38dace165b2a6655cfba1e7969a24b138a9ee",
+      "bytes": 11976,
+      "sha256": "607f608edbd244d2363e18dc5cce5d217e6ff50f1cf0432eae130c0d3eed8faa"
+    }
+  ],
+  "git_batch_process": {
+    "pid": 61920,
+    "exit_code": 0,
+    "waited": true,
+    "stderr_empty": true
+  },
+  "checks": [
+    "Report SHA matches reviewer final and read-record.",
+    "Six fixed raw Git blobs match read-record SHA.",
+    "Manual source review execute_api 209-231, prepare 531-575, commit_intent 619-665.",
+    "Third prepared-before resource contains two APPLIED effects; binding matches action/read sequence in reviewer report.",
+    "Existing worker completion confirms timeout45.031, exit1, alivefalse.",
+    "Cleanup SQL blob identity verified only; no new SQL or crash recovery.",
+    "T3 HEAD unchanged and worktree clean before dispatch."
+  ],
+  "boundary": "THIRD_PREPARED_BEFORE_WRITTEN_TO_THIRD_INTENT_NOT_COMMITTED",
+  "root_cause": "UNPROVEN",
+  "decision": "STATIC_REVIEW_COMPLETED_REWORK_SINGLE_DIAGNOSTIC_ADOPTED",
+  "business_runs": 0,
+  "product_imports": 0,
+  "SQL_connections": 0,
+  "product_acceptance": false,
+  "root_product_integrated": false,
+  "diagnostic_budget": {
+    "fresh_targets": 1,
+    "dispatch": 3,
+    "effects": 3,
+    "reconcile": 0,
+    "child_seconds": 45,
+    "parent_seconds": 90,
+    "product_changes": 0,
+    "business_retry": 0
+  },
+  "nonproduct_read_error": "Initial combined read attempted root reviewer evidence path under author cwd; missing-path read only. Corrected by reading D:/1800. No business or product effect.",
+  "coordinator_metadata_write_correction": "First state write used Path.write_text(newline=), unavailable on Python3.9; failed before state was written. Corrected to open(newline=). No product/business action."
+}
