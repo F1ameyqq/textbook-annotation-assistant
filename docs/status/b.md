@@ -1,12 +1,17 @@
 # B 侧状态
 
-更新时间：2026-10-17，Asia/Shanghai。负责人：xiaoshanqingpro 一侧。
+更新时间：2026-10-18，Asia/Shanghai。负责人：xiaoshanqingpro 一侧。
 
 - 前轮离线复核增量基线：`fecc008f46fdb3b40844d53b7a6b671a53123cc7`（来源区域重建）。此前区域增量基线为 `2934a43`，内容修订为 `1ca40d6`。分支 `b-side/readonly-book-46007447`；前轮 PR #2 已合并到 `codex/automation-architecture`，当前来源/交接准备在 PR #3。代码版本以本页所在提交及对应 PR head 为准。
 - 公共 `contracts-v1.md` 仍为设计草案。原始证据0.2及恢复视图/图谱/检查0.3保留；数学/图像/组合标题为B trial0.1，附区域的续接证明为trial0.2、续接图谱0.4、呈现区域trial0.1；行内附件图谱/质检为trial0.5，单片段内容修订图谱/质检为trial0.6，新区域计划0.2生成图谱/质检trial0.7。均未宣称公共合同兼容或冻结。
 - 已读取定稿需求，继续 B 离线识别、配答、质量检查；平台规则不再重复请求确认。没有网站标注修改或提交。
 
 
+
+## 2026-10-17 八图观察来源集中对账
+
+- 原章节观察清单只含六图，现另建v2八图清单与可搬运来源包，旧记录保留。原图SHA/尺寸逐项匹配，实际prepare_chapter_scope和load_source均读到8资产；仅PARTIAL/HOLD，INVENTORY_NOT_FROZEN未关闭，整章题/答/材料分母全为null。印刷26含后续章内容、旧目录快照及22节点非分母等限制明确随包。
+- 当前新增来源仍0、浏览器停止；这是已存资产的集中对账，不是新采集或将八图当整章。包内保留原图/范围声明/来源描述符/历史目录/报告，精确SHA见 `evaluation/book-46007447-chapter-observed-v2.json`。旧六资产内容图谱未改。2026-10-18已归档[独立包复核](../reviews/B-46007447-observed-eight-sources-v2-independent-report.md)：14清单条目、8原图来源字节及固定65139f4代码离线重放通过；仅来源包一致性通过，整章仍PARTIAL/HOLD。
 
 ## 2026-10-17 第5页布局补丁独立拒绝记录
 
