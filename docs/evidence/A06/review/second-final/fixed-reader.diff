@@ -1,0 +1,69 @@
+diff --git a/src/annotation/source/b_handoff/reader.py b/src/annotation/source/b_handoff/reader.py
+index 5c3bf767..9690add4 100644
+--- a/src/annotation/source/b_handoff/reader.py
++++ b/src/annotation/source/b_handoff/reader.py
+@@ -19,6 +19,23 @@ HISTORY_REF = {"artifact_id": "b-evidence-18e2d1ee2a22288f585513f0", "revision":
+                "content_hash": "a2e53e1fc5ddee5ed0eaa57102af074a9b20b7815aa065116464446b9be7a8da"}
+ CURRENT = {"EvidenceBundleTrial": "b-evidence-trial/0.3",
+            "QuestionGraphTrial": "b-graph-trial/0.7", "CheckReportTrial": "b-check-trial/0.7"}
++# Observed result envelopes for this fixed pipeline, not current top-level support.
++_STAGE_RESULT_TYPES = {
++    "evidence": ("EvidenceBundleTrial", "b-evidence-trial/0.2"),
++    "recover": ("EvidenceBundleTrial", "b-evidence-trial/0.3"),
++    "assemble": ("QuestionGraphTrial", "b-graph-trial/0.3"),
++    "recovery_review": ("RecoveryReviewTrial", "b-recovery-review-trial/0.1"),
++    "quality": ("CheckReportTrial", "b-check-trial/0.3"),
++    "continuation_prepare": ("ContinuationScopeTrial", "b-continuation-scope-trial/0.1"),
++    "continuation_proof": ("ContinuationProofStageTrial", "b-continuation-proof-stage-trial/0.1"),
++    "continuation_apply": ("ContinuationApplyStageTrial", "b-continuation-apply-stage-trial/0.1"),
++    "continuation_quality": ("CheckReportTrial", "b-check-trial/0.4"),
++    "inline_prepare": ("InlinePreparationTrial", "b-inline-preparation-trial/0.1"),
++    "inline_apply": ("InlineApplyStageTrial", "b-inline-apply-stage-trial/0.1"),
++    "inline_quality": ("CheckReportTrial", "b-check-trial/0.5"),
++    "content_apply": ("ContentRevisionApplicationTrial", "b-content-revision-application-trial/0.2"),
++    "content_quality": ("CheckReportTrial", "b-check-trial/0.7"),
++}
+ 
+ 
+ class HandoffError(ValueError):
+@@ -96,6 +113,22 @@ def version_policy(schema_version, *, kind, location, bound_archive=False, path=
+     return "READ_ONLY_HOLD"
+ 
+ 
++def _validate_stage_result(stage_id, result, path):
++    expected = _STAGE_RESULT_TYPES.get(stage_id)
++    if expected is None:
++        fail("UNSUPPORTED_STAGE_RESULT", path, f"unregistered stage {stage_id}", "VERSION")
++    kind, version = expected
++    if result.get("kind") != kind:
++        fail("UNSUPPORTED_KIND", path + "/kind",
++             f"stage={stage_id}; expected={kind}; observed={result.get('kind')}; schema_version={result.get('schema_version')}", "VERSION")
++    if result.get("schema_version") != version:
++        fail("UNSUPPORTED_VERSION", path + "/schema_version",
++             f"stage={stage_id}; kind={kind}; expected={version}; observed={result.get('schema_version')}", "VERSION")
++    return {"path": path, "kind": kind, "schema_version": version, "validated": True,
++            "context": "FIXED_STAGE_DIAGNOSTIC_ONLY", "grants_current_top_level_support": False,
++            "business_acceptance": False}
++
++
+ def safe_member(name, path):
+     if (not isinstance(name, str) or not name or "\\" in name or ":" in name or
+             any(ord(c) < 32 for c in name) or name.startswith("/") or
+@@ -304,6 +337,7 @@ def _receive_package(package_path, *, expected_sha256, expected_manifest_sha256=
+             fail("UNSUPPORTED_VERSION", name, str(wrapper.get("schema_version")), "VERSION")
+         exact(output["artifact_ref"], wrapper, loc + "/output/artifact_ref")
+         result = wrapper["payload"]["result"]
++        result_version_check = _validate_stage_result(stage["stage_id"], result, name + "#/payload/result")
+         exact(stage["result_ref"], result, loc + "/result_ref")
+         if (stage["state"] != "DONE" or stage["current_run_receipt"]["run_id"] != RUN_ID or
+                 wrapper["payload"]["stage_id"] != stage["stage_id"] or wrapper.get("book_id") != "46007447" or
+@@ -325,7 +359,8 @@ def _receive_package(package_path, *, expected_sha256, expected_manifest_sha256=
+             final_route = {"final_output": key, "path": name + "#/payload/result" + ("/" + "/".join(route) if route else "")}
+         stage_bindings.append({"stage_id": stage["stage_id"], "wrapper_path": name,
+                                "wrapper_ref": ref(wrapper), "result_ref": ref(result),
+-                               "run_receipt": stage["current_run_receipt"], "final_route": final_route})
++                               "run_receipt": stage["current_run_receipt"], "final_route": final_route,
++                               "result_version_check": result_version_check})
+     if bound_results != set(finals):
+         fail("UNBOUND_FINAL_OUTPUT", "artifacts/pipeline-report.json", str(sorted(bound_results)), "CURRENT_BINDING")
+ 

@@ -1,0 +1,521 @@
+{
+  "additionalProperties": false,
+  "properties": {
+    "binding": {
+      "additionalProperties": false,
+      "properties": {
+        "action_digest": {
+          "pattern": "^[0-9a-f]{64}$",
+          "type": "string"
+        },
+        "action_id": {
+          "minLength": 1,
+          "type": "string"
+        },
+        "entry_id": {
+          "minLength": 1,
+          "type": "string"
+        },
+        "fence_token": {
+          "minLength": 1,
+          "type": "string"
+        },
+        "generation": {
+          "minimum": 1,
+          "type": "integer"
+        },
+        "ledger_id": {
+          "minLength": 1,
+          "type": "string"
+        },
+        "owner_id": {
+          "minLength": 1,
+          "type": "string"
+        },
+        "parent_call_id": {
+          "minLength": 1,
+          "type": "string"
+        },
+        "plan_ref": {
+          "additionalProperties": false,
+          "properties": {
+            "artifact_id": {
+              "minLength": 1,
+              "type": "string"
+            },
+            "content_hash": {
+              "pattern": "^[0-9a-f]{64}$",
+              "type": "string"
+            },
+            "kind": {
+              "minLength": 1,
+              "type": "string"
+            },
+            "revision": {
+              "minimum": 1,
+              "type": "integer"
+            }
+          },
+          "required": [
+            "artifact_id",
+            "revision",
+            "kind",
+            "content_hash"
+          ],
+          "type": "object"
+        },
+        "readonly_session_id": {
+          "minLength": 1,
+          "type": "string"
+        },
+        "registration_id": {
+          "minLength": 1,
+          "type": "string"
+        },
+        "scope_id": {
+          "minLength": 1,
+          "type": "string"
+        },
+        "source_ref": {
+          "additionalProperties": false,
+          "properties": {
+            "artifact_id": {
+              "minLength": 1,
+              "type": "string"
+            },
+            "content_hash": {
+              "pattern": "^[0-9a-f]{64}$",
+              "type": "string"
+            },
+            "kind": {
+              "minLength": 1,
+              "type": "string"
+            },
+            "revision": {
+              "minimum": 1,
+              "type": "integer"
+            }
+          },
+          "required": [
+            "artifact_id",
+            "revision",
+            "kind",
+            "content_hash"
+          ],
+          "type": "object"
+        },
+        "target_key": {
+          "additionalProperties": false,
+          "properties": {
+            "book_id": {
+              "minLength": 1,
+              "type": "string"
+            },
+            "platform_namespace": {
+              "minLength": 1,
+              "type": "string"
+            },
+            "target_id": {
+              "minLength": 1,
+              "type": "string"
+            }
+          },
+          "required": [
+            "book_id",
+            "platform_namespace",
+            "target_id"
+          ],
+          "type": "object"
+        },
+        "target_session_id": {
+          "minLength": 1,
+          "type": "string"
+        },
+        "target_store_id": {
+          "minLength": 1,
+          "type": "string"
+        }
+      },
+      "required": [
+        "ledger_id",
+        "readonly_session_id",
+        "entry_id",
+        "parent_call_id",
+        "owner_id",
+        "generation",
+        "registration_id",
+        "target_store_id",
+        "target_session_id",
+        "target_key",
+        "plan_ref",
+        "scope_id",
+        "action_id",
+        "action_digest",
+        "fence_token",
+        "source_ref"
+      ],
+      "type": "object"
+    },
+    "busy_seconds": {
+      "const": 1
+    },
+    "comparison": {
+      "const": "ABSENT"
+    },
+    "complete_uncalled_prefix": {
+      "additionalProperties": false,
+      "properties": {
+        "media_type": {
+          "minLength": 1,
+          "type": "string"
+        },
+        "origin": {
+          "const": "SYNTHETIC"
+        },
+        "path": {
+          "minLength": 1,
+          "type": "string"
+        },
+        "sha256": {
+          "pattern": "^[0-9a-f]{64}$",
+          "type": "string"
+        }
+      },
+      "required": [
+        "path",
+        "sha256",
+        "media_type",
+        "origin"
+      ],
+      "type": "object"
+    },
+    "entry_deadline": {
+      "type": "number"
+    },
+    "entry_seconds": {
+      "const": 8
+    },
+    "expected_event_head": {
+      "additionalProperties": false,
+      "properties": {
+        "hash": {
+          "pattern": "^[0-9a-f]{64}$",
+          "type": "string"
+        },
+        "sequence": {
+          "minimum": 0,
+          "type": "integer"
+        }
+      },
+      "required": [
+        "sequence",
+        "hash"
+      ],
+      "type": "object"
+    },
+    "fact_key": {
+      "pattern": "^[0-9a-f]{64}$",
+      "type": "string"
+    },
+    "format_version": {
+      "const": "a03-unattempted-basis-M1"
+    },
+    "gate_binding": {
+      "additionalProperties": false,
+      "properties": {
+        "action_digest": {
+          "pattern": "^[0-9a-f]{64}$",
+          "type": "string"
+        },
+        "action_id": {
+          "minLength": 1,
+          "type": "string"
+        },
+        "entry_id": {
+          "minLength": 1,
+          "type": "string"
+        },
+        "fence_token": {
+          "minLength": 1,
+          "type": "string"
+        },
+        "generation": {
+          "minimum": 1,
+          "type": "integer"
+        },
+        "ledger_id": {
+          "minLength": 1,
+          "type": "string"
+        },
+        "owner_id": {
+          "minLength": 1,
+          "type": "string"
+        },
+        "parent_call_id": {
+          "minLength": 1,
+          "type": "string"
+        },
+        "plan_ref": {
+          "additionalProperties": false,
+          "properties": {
+            "artifact_id": {
+              "minLength": 1,
+              "type": "string"
+            },
+            "content_hash": {
+              "pattern": "^[0-9a-f]{64}$",
+              "type": "string"
+            },
+            "kind": {
+              "minLength": 1,
+              "type": "string"
+            },
+            "revision": {
+              "minimum": 1,
+              "type": "integer"
+            }
+          },
+          "required": [
+            "artifact_id",
+            "revision",
+            "kind",
+            "content_hash"
+          ],
+          "type": "object"
+        },
+        "readonly_session_id": {
+          "minLength": 1,
+          "type": "string"
+        },
+        "registration_id": {
+          "minLength": 1,
+          "type": "string"
+        },
+        "scope_id": {
+          "minLength": 1,
+          "type": "string"
+        },
+        "source_ref": {
+          "additionalProperties": false,
+          "properties": {
+            "artifact_id": {
+              "minLength": 1,
+              "type": "string"
+            },
+            "content_hash": {
+              "pattern": "^[0-9a-f]{64}$",
+              "type": "string"
+            },
+            "kind": {
+              "minLength": 1,
+              "type": "string"
+            },
+            "revision": {
+              "minimum": 1,
+              "type": "integer"
+            }
+          },
+          "required": [
+            "artifact_id",
+            "revision",
+            "kind",
+            "content_hash"
+          ],
+          "type": "object"
+        },
+        "target_key": {
+          "additionalProperties": false,
+          "properties": {
+            "book_id": {
+              "minLength": 1,
+              "type": "string"
+            },
+            "platform_namespace": {
+              "minLength": 1,
+              "type": "string"
+            },
+            "target_id": {
+              "minLength": 1,
+              "type": "string"
+            }
+          },
+          "required": [
+            "book_id",
+            "platform_namespace",
+            "target_id"
+          ],
+          "type": "object"
+        },
+        "target_session_id": {
+          "minLength": 1,
+          "type": "string"
+        },
+        "target_store_id": {
+          "minLength": 1,
+          "type": "string"
+        }
+      },
+      "required": [
+        "ledger_id",
+        "readonly_session_id",
+        "entry_id",
+        "parent_call_id",
+        "owner_id",
+        "generation",
+        "registration_id",
+        "target_store_id",
+        "target_session_id",
+        "target_key",
+        "plan_ref",
+        "scope_id",
+        "action_id",
+        "action_digest",
+        "fence_token",
+        "source_ref"
+      ],
+      "type": "object"
+    },
+    "gate_seconds": {
+      "const": 5
+    },
+    "initial_event_head": {
+      "additionalProperties": false,
+      "properties": {
+        "hash": {
+          "pattern": "^[0-9a-f]{64}$",
+          "type": "string"
+        },
+        "sequence": {
+          "minimum": 0,
+          "type": "integer"
+        }
+      },
+      "required": [
+        "sequence",
+        "hash"
+      ],
+      "type": "object"
+    },
+    "lease_seconds": {
+      "const": 10
+    },
+    "observations": {
+      "items": {
+        "additionalProperties": false,
+        "properties": {
+          "media_type": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "origin": {
+            "const": "SYNTHETIC"
+          },
+          "path": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "sha256": {
+            "pattern": "^[0-9a-f]{64}$",
+            "type": "string"
+          }
+        },
+        "required": [
+          "path",
+          "sha256",
+          "media_type",
+          "origin"
+        ],
+        "type": "object"
+      },
+      "maxItems": 3,
+      "minItems": 3,
+      "type": "array"
+    },
+    "observer_calls": {
+      "const": 2
+    },
+    "parent_deadline": {
+      "type": "number"
+    },
+    "parent_seconds": {
+      "const": 60
+    },
+    "plan_status": {
+      "const": "INTERRUPTED"
+    },
+    "readonly_prepared_ref": {
+      "additionalProperties": false,
+      "properties": {
+        "media_type": {
+          "minLength": 1,
+          "type": "string"
+        },
+        "origin": {
+          "const": "SYNTHETIC"
+        },
+        "path": {
+          "minLength": 1,
+          "type": "string"
+        },
+        "sha256": {
+          "pattern": "^[0-9a-f]{64}$",
+          "type": "string"
+        }
+      },
+      "required": [
+        "path",
+        "sha256",
+        "media_type",
+        "origin"
+      ],
+      "type": "object"
+    },
+    "readonly_session_id": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "renew_seconds": {
+      "const": 2
+    },
+    "retries": {
+      "const": 0
+    },
+    "single_read_seconds": {
+      "const": 2
+    },
+    "total_read_calls": {
+      "const": 3
+    },
+    "used_count": {
+      "const": 3
+    }
+  },
+  "required": [
+    "format_version",
+    "binding",
+    "readonly_session_id",
+    "gate_binding",
+    "initial_event_head",
+    "expected_event_head",
+    "complete_uncalled_prefix",
+    "readonly_prepared_ref",
+    "observations",
+    "observer_calls",
+    "total_read_calls",
+    "used_count",
+    "retries",
+    "single_read_seconds",
+    "entry_seconds",
+    "parent_seconds",
+    "busy_seconds",
+    "gate_seconds",
+    "lease_seconds",
+    "renew_seconds",
+    "parent_deadline",
+    "entry_deadline",
+    "fact_key",
+    "plan_status",
+    "comparison"
+  ],
+  "type": "object"
+}
