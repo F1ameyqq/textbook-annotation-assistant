@@ -1,5 +1,7 @@
 # A 侧开发调度与验收
 
+2026-10-18 16:49 最新调度结论：A03-R1 原有限离线范围已完成独立与调度接受，并在 `a1c3c3b2d452ecbdf5c57a8b7372e7d53de0f8d8` 本地集成，见[集成记录](tasks/A03-R1-local-integration.md)。I01-A 固定交付 `3fdc5d37e221fc73410f197605f5d7b8878182d5` 与 A06 固定交付 `761d9afed8b9d3d33851ad3d79b0bee7c294089d` 已通过交付预检及释放核对，分别按 [I01-A 派发](tasks/I01-A-review-dispatch.md)、[A06 派发](tasks/A06-review-dispatch.md)启动现有独立验收；当前均 REVIEW，尚未接受或集成。下方 A03 REWORK/等待验收段落保留历史时点，不能据此重启旧任务或撤销已记录结论；实时状态及 cursor 以调度 JSON 为准。A06 只读 HOLD 接收不等于 B 真实输出的可执行映射，后者仍待共同字段/必要引用确认、执行准入及合格单题样例。未推送或向 B 发送新材料。
+
 2026-10-18 当前固定交付：A03-R1 最终候选 `19ab03c849bfab3dcde2dc86be37c59f3add1ebe`，运行冻结 `9992cd8aba10987d25dd0dc0d0874abec02b27ef`，产品 `6097a06d` 原字节不变。作者报告本轮2目标/3dispatch及释放；经调度交付预检后按[最终差量独立验收](tasks/A03-R1-final-delta-review-dispatch.md)续派现有验收对话，确切状态/cursor见JSON。M/L1有限接受保留，整体仍REWORK、未集成、I01未释放。作者不再修后重跑、无第三整包；最终验收仍缺证则固定收口向用户报告，不自动另派额度。
 
 2026-10-18 最新收口：[A03-R1 首包 M/L1 及实测依赖拒绝有限接受](tasks/A03-R1-coordinator-acceptance.md)，整体 REWORK、未集成、I01 未释放。现按[最终整合纠正](tasks/A03-R1-final-bounded-correction.md)向同一作者一次续派第二次且最终整包；保留原产品 bytes，补 L2 输入及原 L/G/F 余量，不重跑 M/L1、不重置旧驱动次数。新候选冻结后失败不改后重跑，无第三整包。验收只在固定交付释放后审本次差量；此段和调度 JSON 优先于下方历史时点。
