@@ -4,7 +4,7 @@
 
 ## 固定基线、输入与写入范围
 
-- A 集成基线：`a1c3c3b2d452ecbdf5c57a8b7372e7d53de0f8d8`，由调度替换为确切提交后才启动实现；执行者不得自行取浮动 HEAD。独立分支使用 `codex/` 前缀，执行目录 `D:/1800-worktrees/a06`。
+- A 集成基线：`a1c3c3b2d452ecbdf5c57a8b7372e7d53de0f8d8`，调度已固定并释放执行；执行者不得自行取浮动 HEAD。独立分支使用 `codex/` 前缀，执行目录 `D:/1800-worktrees/a06`。
 - B 包提交：`0e5434f0ecf57152ec03f66bd7d0cf48b7c0700f`；包说明中的代码基线 `c3cc2df7a0be24c125c83681c0499c0d328d78f6`。本任务只使用已存在的本地包，不 fetch、拉取或借最新分支补对象。
 - 输入：`D:/1800/.local/stages/coordinator/b-handoff-0e5434f/B-46007447-Q16-offline-HOLD-2026-10-17.zip`；SHA256 `b2bed674f87cde7fb2df4fdf31dec9ede08f494fc6190f654abda51dd4dae89d`，11,681,712 bytes。内含 104 成员，即 103 清单文件与 manifest；manifest SHA256 `3952a42e5ea966a0ec039564c71dc1db242c061af807aa730ac1f7f015e8189f`。
 - 包格式 `b-handoff-package-trial/0.1`，固定 run `pipeline-run-0a2c03e193694ef88953f3ca08b8cde2`。保留原 ZIP 原字节，只在自有新副本生成测试变体；不以重新导出或重建 B 流水线替换输入。
