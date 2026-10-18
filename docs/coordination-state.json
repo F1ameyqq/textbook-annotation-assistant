@@ -8019,7 +8019,7 @@
     },
     "A03-R1": {
       "status": "REWORK",
-      "phase": "FINAL_BOUNDED_CORRECTION_DISPATCH_INTENT",
+      "phase": "FINAL_BOUNDED_CORRECTION_RUNNING",
       "parent_task": "A03",
       "user_authorization": "2026-10-18 user: 开始执行; same-function replacement described immediately before.",
       "base_commit": "d5f777590e72eb070af0497afdb144d60c61b95d",
@@ -8030,27 +8030,27 @@
       "worktree": "D:/1800-worktrees/a03-r1",
       "execution": {
         "thread_id": "01a14da3-8798-75c0-af50-ca8fec19b48c",
-        "status": "DISPATCH_INTENT_FINAL_CORRECTION",
+        "status": "RUNNING_FINAL_CORRECTION",
         "thinking": "xhigh",
         "dispatch_key": "A03-R1:execution:final-correction:54e86adf",
         "host_id": "local",
         "created_at": "2026-10-18T06:12:29.602456+00:00",
-        "workflow_commit": "0476257d",
+        "workflow_commit": "b9f2b496",
         "task_document": "docs/tasks/A03-R1-final-bounded-correction.md",
         "expected_report": "docs/tasks/A03-R1-final-correction-report.md",
-        "cursor": "b1048ea3-80d3-4361-bed1-9b4e3a39f600:6",
-        "turn_status": "completed",
-        "observed_thread_status": "idle",
-        "turn_id": "01a14da3-8d31-72e2-8586-f4d51778c451",
-        "last_checked_at": "2026-10-18T06:45:41.203848+00:00",
-        "last_progress": "Frozen REWORK delivery: M five and L1 completed; L2 raw fixture/CRLF RESOURCE_HASH before registration; remaining L/G/F incomplete. Owner/keepers/processes released, pending/hold preserved.",
+        "cursor": "b1048ea3-80d3-4361-bed1-9b4e3a39f600:7",
+        "turn_status": "inProgress",
+        "observed_thread_status": "active",
+        "turn_id": "01a14dd5-1c81-77a3-a5e4-19ee650c7b22",
+        "last_checked_at": "2026-10-18T07:07:49.431942+00:00",
+        "last_progress": "Final bounded correction dispatched and active; preserve product source, accepted M/L1 and consumed L attempts. Fixed final delta delivery pending.",
         "observed_head": "54e86adfaf144093a688b62fe0dad5190ceb2fa6",
         "working_tree_clean": true,
-        "observed_report_present": true,
+        "observed_report_present": false,
         "last_completed_turn_id": "01a14da3-8d31-72e2-8586-f4d51778c451",
         "target_commit": "54e86adfaf144093a688b62fe0dad5190ceb2fa6",
         "candidate_commit": "6097a06de937fee8876feccedf46920510850b83",
-        "session_released": true,
+        "session_released": false,
         "report": "docs/tasks/A03-R1-execution-report.md",
         "report_sha256": "f0a8f282194b9a3b8ea84ce2eeaa3472be99c1c1119e0579b24574f2a3d76f6c",
         "delivery_preflight": "docs/evidence/coordinator/heartbeat-20261018-0629/delivery-preflight.json",
@@ -8065,11 +8065,15 @@
             "cursor": "b1048ea3-80d3-4361-bed1-9b4e3a39f600:6"
           }
         ],
-        "next_dependency": "Freeze final correction with unchanged product source, run only bounded remaining L/G/F and release; no retry after frozen failure."
+        "next_dependency": "Freeze final correction with unchanged product source, run only bounded remaining L/G/F and release; no retry after frozen failure.",
+        "dispatch_result": "SENT_EXISTING_THREAD",
+        "dispatch_returned_thread_id": "01a14da3-8798-75c0-af50-ca8fec19b48c",
+        "dispatched_at": "2026-10-18T07:06:15.268274+00:00",
+        "base_commit": "54e86adfaf144093a688b62fe0dad5190ceb2fa6"
       },
       "review": {
         "thread_id": "01a14da3-e8f3-7991-9b05-4a3fc38e2362",
-        "status": "COMPLETED_REWORK_WITH_FINITE_ACCEPTANCE",
+        "status": "WAITING_FINAL_CORRECTION_FIXED_DELIVERY",
         "thinking": "xhigh",
         "dispatch_key": "A03-R1:review:54e86adf",
         "host_id": "local",
@@ -8086,7 +8090,7 @@
         "phase": "FIXED_CANDIDATE_INDEPENDENT_REVIEW",
         "pending_target_commit": null,
         "handoff_document": "docs/tasks/A03-R1-review-dispatch-2026-10-18.md",
-        "next_dependency": "Review fixed product and M/L1 evidence, finite independent checks and consolidated existing-matrix remaining gaps.",
+        "next_dependency": "Only final-correction delta after author freezes and releases; accepted M/L1 not rerun without real impact.",
         "dispatch_result": "SENT_EXISTING_THREAD",
         "dispatch_returned_thread_id": "01a14da3-e8f3-7991-9b05-4a3fc38e2362",
         "dispatched_at": "2026-10-18T06:34:26.197250+00:00",
@@ -8125,18 +8129,15 @@
       },
       "max_frozen_business_candidates": 2,
       "workflow_commit": "0476257d",
-      "last_checked_at": "2026-10-18T06:45:41.203848+00:00",
+      "last_checked_at": "2026-10-18T07:07:49.431942+00:00",
       "last_observation": {
-        "at": "2026-10-18T06:45:41.203848+00:00",
-        "head": "54e86adfaf144093a688b62fe0dad5190ceb2fa6",
-        "status_porcelain": [],
-        "author_delivery_ready": true,
-        "author_status": "REWORK",
-        "review_status": "IN_PROGRESS_FINAL_REPORT_PENDING",
-        "review_dispatch_result": "NO_REPEAT_EXISTING_REVIEW_ACTIVE",
-        "review_report_present": false,
-        "unsealed_review_artifacts_present": true,
-        "new_product_acceptance": false
+        "at": "2026-10-18T07:07:49.431942+00:00",
+        "author_source_head_before_continuation": "54e86adfaf144093a688b62fe0dad5190ceb2fa6",
+        "author_status": "ACTIVE_FINAL_CORRECTION",
+        "review_status": "WAITING_FIXED_DELTA",
+        "review_report_present": true,
+        "new_product_acceptance": "FINITE_M_L1_AND_REVIEWED_DEPENDENCY_REJECTIONS",
+        "integrated": false
       },
       "budget_interpretation_pending_review": {
         "product_source_candidates_observed": 1,
@@ -8161,7 +8162,8 @@
         "independent_dispatch": 10,
         "coordinator_retained_assertions_passed": 5,
         "coordinator_business_runs": 0,
-        "integrated": false
+        "integrated": false,
+        "archive_commit": "b9f2b496"
       },
       "candidate_budget_decision": {
         "at": "2026-10-18T07:05:41.914886+00:00",
@@ -10291,13 +10293,18 @@
       "dispatch_key": "A03-R1:execution:final-correction:54e86adf",
       "base_commit": "54e86adfaf144093a688b62fe0dad5190ceb2fa6",
       "task_document": "docs/tasks/A03-R1-final-bounded-correction.md",
-      "status": "INTENT_RECORDED"
+      "status": "SENT",
+      "sent_at": "2026-10-18T07:06:15.268274+00:00",
+      "returned_thread_id": "01a14da3-8798-75c0-af50-ca8fec19b48c",
+      "workflow_commit": "b9f2b496"
     }
   ],
   "last_action": {
-    "at": "2026-10-18T07:05:41.914886+00:00",
+    "at": "2026-10-18T07:06:15.268274+00:00",
     "task_id": "A03-R1",
-    "action": "Accepted finite M/L1 and reviewed dependency checks; allocated one final bounded remaining-work package and recorded continuation intent.",
+    "action": "Finite M/L1 accepted and archived; final second-package correction sent to existing author with unchanged product source, no M/L1 reruns, max 3 new native targets/4 dispatch and zero post-freeze retries.",
+    "execution_thread_id": "01a14da3-8798-75c0-af50-ca8fec19b48c",
+    "workflow_commit": "b9f2b496",
     "product_acceptance": "FINITE_ONLY",
     "integration": false,
     "next_dependency": "Final consolidated author correction within allocated second-package budget; freeze/release then existing independent delta review, coordinator accept/integrate, then I01-A."
@@ -10308,27 +10315,28 @@
     "Platform test is single-book serial, no book submission, no unbudgeted paid models."
   ],
   "last_check": {
-    "at": "2026-10-18T06:45:41.203848+00:00",
-    "trigger": "2026-10-18T06:44:54.117Z",
-    "coordinator_head": "a67337b82aa431f3da324eb6a5a53bee694f1eaa",
-    "scope": "Reread current AGENTS, coordination, development plan and state; actual root/author Git; compact registered execution/review snapshots with saved cursors. Unsealed reviewer evidence not consumed for acceptance.",
+    "at": "2026-10-18T07:07:49.431942+00:00",
+    "trigger": "2026-10-18T06:59:54.359Z",
+    "coordinator_head": "b9f2b496",
+    "scope": "Required docs and actual Git/cursors refreshed; completed independent review verified at 1204 manifest members, coordinator retained M5/L1 assertions reproduced, release audited; finite acceptance archived and final bounded correction sent.",
     "task_id": "A03-R1",
     "execution_thread_id": "01a14da3-8798-75c0-af50-ca8fec19b48c",
-    "execution_cursor": "b1048ea3-80d3-4361-bed1-9b4e3a39f600:6",
+    "execution_cursor": "b1048ea3-80d3-4361-bed1-9b4e3a39f600:7",
+    "execution_turn_id": "01a14dd5-1c81-77a3-a5e4-19ee650c7b22",
+    "execution_turn_status": "inProgress",
     "review_thread_id": "01a14da3-e8f3-7991-9b05-4a3fc38e2362",
-    "review_cursor": "9f41c9c7-380d-4189-b49b-805a2b10a792:3",
-    "review_turn_id": "01a14db7-86ce-7643-9ba7-aca57c3cf695",
-    "review_turn_status": "inProgress",
-    "target_commit": "54e86adfaf144093a688b62fe0dad5190ceb2fa6",
+    "review_cursor": "9f41c9c7-380d-4189-b49b-805a2b10a792:4",
+    "review_turn_status": "completed",
+    "accepted_delivery": "54e86adfaf144093a688b62fe0dad5190ceb2fa6",
     "candidate_commit": "6097a06de937fee8876feccedf46920510850b83",
-    "review_report_present": false,
-    "tests_run": false,
+    "coordinator_checks": "docs/evidence/coordinator/heartbeat-20261018-0659/coordinator-checks.json",
+    "retained_assertion_tests_passed": 5,
     "business_reruns": 0,
     "SQL_calls": 0,
     "new_threads": 0,
-    "new_dispatches": 0,
+    "existing_execution_continuations": 1,
     "product_integrated": false,
-    "next_dependency": "Existing independent reviewer fixed-delivery judgment; then one bounded consolidated correction decision within A03-R1 scope, not automatic retries or I01 release."
+    "next_dependency": "Final consolidated author correction within allocated second-package budget; freeze/release then existing independent delta review, coordinator accept/integrate, then I01-A."
   },
   "prepared_next_batch": {
     "status": "DISPATCHED",
@@ -10675,11 +10683,16 @@
     }
   ],
   "last_heartbeat": {
-    "at": "2026-10-18T06:45:41.203848+00:00",
-    "trigger": "2026-10-18T06:44:54.117Z",
+    "at": "2026-10-18T07:06:15.268274+00:00",
+    "trigger": "2026-10-18T06:59:54.359Z",
     "automation_id": "1800-a",
-    "decision": "DONT_NOTIFY",
-    "reason": "Registered independent review remains active; partial M/L1 observations do not establish final acceptance. No new failure, completed milestone, dispatch or user decision."
+    "decision": "NOTIFY",
+    "reason": "Independent M/L1 finite acceptance verified by coordinator; final bounded consolidated remaining-work package dispatched. Whole A03/I01 still not accepted or integrated.",
+    "automation_updated": {
+      "status": "ACTIVE",
+      "prompt_sha256": "1e84a3fe5e77e6586029940f23e20c78b1c3b1fd40556a98e2d5757b8455a023",
+      "reason": "Preserve final second-package limit and finite acceptance; prevent stale first-delivery redispatch or renewed T3 work."
+    }
   },
   "interactive_progress_history": [
     {

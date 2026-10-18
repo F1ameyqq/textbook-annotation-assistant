@@ -1,5 +1,7 @@
 # A 侧开发调度与验收
 
+2026-10-18 最新收口：[A03-R1 首包 M/L1 及实测依赖拒绝有限接受](tasks/A03-R1-coordinator-acceptance.md)，整体 REWORK、未集成、I01 未释放。现按[最终整合纠正](tasks/A03-R1-final-bounded-correction.md)向同一作者一次续派第二次且最终整包；保留原产品 bytes，补 L2 输入及原 L/G/F 余量，不重跑 M/L1、不重置旧驱动次数。新候选冻结后失败不改后重跑，无第三整包。验收只在固定交付释放后审本次差量；此段和调度 JSON 优先于下方历史时点。
+
 2026-10-18 最新用户决定：已批准[A03-R1等价内部替代](tasks/A03-R1-equivalent-runtime.md)直接实施及[独立验收](tasks/A03-R1-independent-review.md)。保留SQLite账本、delivery和公共业务合同，重构内部验证与状态转换。起点 `d5f777590e72eb070af0497afdb144d60c61b95d`，T3已冻结释放；其旧验收仅只读收口，不再派产品补丁。新执行/验收对话及隔离目录见调度JSON。原28项及M/L/G/F有限映射保持，45秒是旧单题看门狗而非业务SLA，新任务分开验证功能与耗时，内层守卫不放宽。A03整体仍REWORK，完成独立验收及调度集成后才释放I01-A。下段为此前时点记录，本段优先。
 
 2026-10-18 当前推进点：T1取证/六例及T2固定C12/H1有限ACCEPTED，T3计划C1–C4及capture组合K保留。固定诊断F=`7b9245eaa55bad1699ee40baf71be09dd6df8371`已通过独立复核并由[调度接受](tasks/A03-T3-M1-diagnostic-coordinator-acceptance.md)，仅ACCEPTED_DIAGNOSTIC_ONLY：44.015秒内主线程CPU42.234375秒，固定代码确认同次native完整校验重复。现在采用[最小产品修复及M复验](tasks/A03-T3-M-validation-R1-handoff.md)：两个实现文件加真实pins，公开重验/运行守卫保持；有限负控后fresh M1，成功才继续M2/M3四例，最多5起点/11dispatch，45/90秒不放宽。历史两起点/四实际dispatch及诊断pending=1保留，不追加诊断。产品尚未修复或接受；L/G/F与I01仍按实际证据释放，A03整体REWORK。派发实际回执见coordination-state.json。
