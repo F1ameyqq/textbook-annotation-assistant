@@ -9060,7 +9060,7 @@
     },
     "A09": {
       "task_id": "A09",
-      "status": "DELIVERY_PREFLIGHT_PASSED",
+      "status": "REVIEW",
       "scope": "Fixed first-lesson Q4 observed source to one-question four-frame offline simulation; Q/image,Q/text,Q/text,A/text; other cases HOLD",
       "base_commit": "846662f4aab08a75d6ad0482edeced4550e1a1ab",
       "execution_document": "docs/tasks/A09-Q4-offline-simulation.md",
@@ -9074,9 +9074,9 @@
       "execution_thread_id": "01a153b4-0943-7dd0-92e2-859d26e49934",
       "review_thread_id": "01a153af-3a4c-7a80-bb57-2e98af01dcd2",
       "execution_cursor": "2c65d315-b9ec-4b6c-bc10-fadbb6eb9924:5",
-      "review_cursor": "73f25b56-94d6-40bc-b6d0-f5b7182c1c78:2",
+      "review_cursor": "73f25b56-94d6-40bc-b6d0-f5b7182c1c78:3",
       "execution_status": "FIXED_DELIVERY_RELEASED",
-      "review_status": "READY_TO_DISPATCH_FIXED_CANDIDATE",
+      "review_status": "ACTIVE_FIXED_CANDIDATE_1",
       "max_frozen_implementation_candidates": 2,
       "max_normal_attempts_per_side": 2,
       "max_successes_per_side": 1,
@@ -9086,7 +9086,7 @@
       "push_authorized": false,
       "B_messages_authorized": false,
       "created_at": "2026-10-19T18:21:36.789563+08:00",
-      "next_dependency": "Send fixed A09 candidate 1 review dispatch to registered independent conversation; then wait for fixed review and release",
+      "next_dependency": "Wait for fixed independent review commit, raw manifests and release; then coordinator verification and bounded local integration",
       "dispatch_intents": [
         {
           "role": "execution",
@@ -9176,20 +9176,17 @@
         "writes": 0,
         "approval_and_proposal_raw_sha_matched": true
       },
-      "last_snapshot_at": "2026-10-19T19:13:50.002691+08:00",
+      "last_snapshot_at": "2026-10-19T19:17:20.925674+08:00",
       "automation_update": {
         "id": "1800-a",
         "status": "ACTIVE",
-        "prompt_scope": "A09 approved Q4 bounded offline implementation and independent review",
-        "updated_at": "2026-10-19T18:29:41.849062+08:00"
+        "prompt_scope": "A09 fixed candidate 1 independent review active; author released",
+        "updated_at": "2026-10-19T19:17:20.925674+08:00"
       },
-      "last_snapshot_note": "Author final delivery frozen and released; independent still waiting; coordinator fixed-byte and release preflight in progress",
-      "observed_execution_head": "29c82b0997be3080f53dfde2afbb1d7457b04197",
+      "last_snapshot_note": "Author fixed/released and preflight passed; independent review ACTIVE on exact candidate 1; no coordinator business runs",
+      "observed_execution_head": "439423ebf4277e3825aba24fed6f56546ef66a2b",
       "author_progress_report_unverified": {
-        "stage": "PREPARING_FIRST_FROZEN_CANDIDATE",
-        "reported_preapply": "Five gates PASS in narrow checks",
-        "reported_negative": "Legally resealed image-to-text reaches PRE_APPLY semantic rejection after C01",
-        "reported_existing_raw_files_checked": 956,
+        "stage": "FIXED_DELIVERY_PREFLIGHT_VERIFIED",
         "independently_accepted": false
       },
       "product_commit": "29c82b0997be3080f53dfde2afbb1d7457b04197",
@@ -9236,7 +9233,7 @@
       "review_runtime_workdir": "D:\\1800-worktrees\\a09-q4-review-run",
       "review_dispatch_intent": {
         "at": "2026-10-19T11:15:31.069992+00:00",
-        "status": "INTENT_RECORDED",
+        "status": "ACTIVE_CONFIRMED",
         "thread_id": "01a153af-3a4c-7a80-bb57-2e98af01dcd2",
         "dispatch_document": "docs/tasks/A09-Q4-review-dispatch.md",
         "product": "29c82b0997be3080f53dfde2afbb1d7457b04197",
@@ -9244,8 +9241,20 @@
         "normal_attempts_authorized_this_dispatch": 1,
         "max_successes_this_dispatch": 1,
         "original_refusals": 10,
-        "scope": "Original A09 fixed Q4 offline candidate 1 only"
-      }
+        "scope": "Original A09 fixed Q4 offline candidate 1 only",
+        "workflow_commit": "1cb8768000ed1dc2828a469b91fffa30e401d6ad"
+      },
+      "review_dispatch_receipt": {
+        "at": "2026-10-19T19:16:27.868158+08:00",
+        "thread_id": "01a153af-3a4c-7a80-bb57-2e98af01dcd2",
+        "workflow_commit": "1cb8768000ed1dc2828a469b91fffa30e401d6ad",
+        "tool_result": "threadId returned; message sent",
+        "product": "29c82b0997be3080f53dfde2afbb1d7457b04197",
+        "delivery": "439423ebf4277e3825aba24fed6f56546ef66a2b",
+        "normal_attempts_authorized": 1,
+        "scope": "Original fixed Q4 normal plus ten refusals"
+      },
+      "execution_report": "docs/tasks/A09-Q4-execution-report.md"
     }
   },
   "route": [
@@ -11658,14 +11667,17 @@
     }
   ],
   "last_action": {
-    "at": "2026-10-19T11:15:31.069992+00:00",
+    "at": "2026-10-19T19:16:27.868158+08:00",
     "task_id": "A09",
-    "action": "Delivery preflight and separate review checkouts complete; independent dispatch intent recorded",
+    "action": "Dispatched fixed candidate 1 independent review after preflight and release",
+    "workflow_commit": "1cb8768000ed1dc2828a469b91fffa30e401d6ad",
+    "review_thread_id": "01a153af-3a4c-7a80-bb57-2e98af01dcd2",
     "execution_delivery": "439423ebf4277e3825aba24fed6f56546ef66a2b",
     "product": "29c82b0997be3080f53dfde2afbb1d7457b04197",
-    "review_thread_id": "01a153af-3a4c-7a80-bb57-2e98af01dcd2",
     "scope": "Fixed first-lesson Q4 observed source to one-question four-frame offline simulation; Q/image,Q/text,Q/text,A/text; other cases HOLD",
-    "next_dependency": "Send fixed A09 candidate 1 review dispatch to registered independent conversation; then wait for fixed review and release"
+    "next_dependency": "Wait for fixed independent review commit, raw manifests and release; then coordinator verification and bounded local integration",
+    "review_status": "ACTIVE_FIXED_CANDIDATE_1",
+    "review_cursor": "73f25b56-94d6-40bc-b6d0-f5b7182c1c78:3"
   },
   "limitations": [
     "Current route uses mock B artifacts until independently agreed interface/artifact versions exist.",
@@ -12245,19 +12257,21 @@
   ],
   "last_heartbeat": {
     "automation_id": "1800-a",
-    "trigger_at": "2026-10-19T10:39:23.435Z",
-    "checked_at": "2026-10-19T18:40:06.678900+08:00",
+    "trigger_at": "2026-10-19T11:09:23.861Z",
+    "checked_at": "2026-10-19T19:17:20.925674+08:00",
     "task_id": "A09",
     "execution_thread_id": "01a153b4-0943-7dd0-92e2-859d26e49934",
     "review_thread_id": "01a153af-3a4c-7a80-bb57-2e98af01dcd2",
-    "execution_cursor": "2c65d315-b9ec-4b6c-bc10-fadbb6eb9924:4",
-    "review_cursor": "73f25b56-94d6-40bc-b6d0-f5b7182c1c78:2",
-    "observed_execution_head": "29c82b0997be3080f53dfde2afbb1d7457b04197",
-    "state": "ACTIVE_REVIEW_WAITING",
-    "next_dependency": "Author fixed product and delivery commits, raw manifests and release; then coordinator preflight and dispatch existing reviewer in an isolated checkout",
-    "dispatch_result": "NO_DISPATCH_AUTHOR_STILL_ACTIVE",
+    "execution_cursor": "2c65d315-b9ec-4b6c-bc10-fadbb6eb9924:5",
+    "review_cursor": "73f25b56-94d6-40bc-b6d0-f5b7182c1c78:3",
+    "product": "29c82b0997be3080f53dfde2afbb1d7457b04197",
+    "delivery": "439423ebf4277e3825aba24fed6f56546ef66a2b",
+    "scope": "Fixed first-lesson Q4 observed source to one-question four-frame offline simulation; Q/image,Q/text,Q/text,A/text; other cases HOLD",
+    "state": "REVIEW",
+    "next_dependency": "Wait for fixed independent review commit, raw manifests and release; then coordinator verification and bounded local integration",
+    "dispatch_result": "FIXED_CANDIDATE_1_REVIEW_SENT_AND_ACTIVE",
     "new_business_runs": 0,
-    "new_tests": 0
+    "new_product_tests": 0
   },
   "interactive_progress_history": [
     {
@@ -12446,8 +12460,10 @@
       "A07",
       "A08"
     ],
-    "status": "A09_REVIEW_DISPATCH_READY",
-    "active_execution_or_review_threads": [],
+    "status": "A09_INDEPENDENT_REVIEW",
+    "active_execution_or_review_threads": [
+      "01a153af-3a4c-7a80-bb57-2e98af01dcd2"
+    ],
     "open_external_dependencies": [
       "Other three answer-only cases remain HOLD without invented question relationships",
       "Complete external G0.8/Check0.8/plan0.3 not loaded or accepted",
