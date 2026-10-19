@@ -24,3 +24,9 @@
 - 独立检查仅审固定新代码/旧Job字节及差量、脱敏、依赖绑定、单次预算和固定归档释放，零网络。此次读到HTTP状态只证明该API代理路径有响应，不等于原浏览器问题已根治或登录/书籍/业务通过。
 
 本轮结束后依据首个结果更新路线；无法确认时保留结果并停止，不在此任务扩展无界故障矩阵。
+
+## Explicit coordinator engineering-limit revision
+
+Candidate 6966509b consumed one startup and failed before Job construction, Popen, GO or GET. Python -I excludes the script directory; the sibling owned_job import failed. Preserve startup-failure evidence and cleanup_proven=false. The static review missed launcher compatibility. No original candidate retry.
+
+Under existing user continue-and-connect authority, the coordinator explicitly revises its own one-candidate engineering limit: one additional local-import-only candidate and startup, cumulative two candidates/starts, still at most one GET across both. This is not a separate user approval or restoration of old A10 budgets. Load only the hash-bound sibling by absolute file spec; keep isolation, TLS, request, classifier, Job and timeout policy unchanged. One zero-network import check before freeze, independent fixed delta/archive review before startup. Preserve old code and markers in a separate directory. If this fails, seal and stop; no third candidate.
