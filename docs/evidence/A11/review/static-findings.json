@@ -1,0 +1,41 @@
+{
+  "product_commit": "ea5b62fd593041c29c00831ddb0eb453b0230307",
+  "author_final": "c580ca63ada9e452fd5ee71e5272cf0d047d4574",
+  "review_decision": "REWORK_STATIC_GAPS_WITH_FIXED_SUITE_PASS",
+  "suite_status": "17/17 PASS",
+  "new_case_execution_for_findings": false,
+  "findings": [
+    {
+      "id": "A11-R01",
+      "priority": 1,
+      "title": "The ordinary-choice gate does not enforce the single-choice boundary",
+      "path": "src/annotation/quality/live_pilot.py",
+      "start": 103,
+      "end": 121,
+      "basis": ["docs/tasks/A11-limited-live-runner-offline-core.md: fixed scope ordinary single choice only", "项目交接说明.md:88-90", "src/annotation/contracts/models.py:226-235"],
+      "static_trace": "ordinary_choice covers the generic choice family. Six frames and one selected answer fragment do not constrain the number of selected answer letters. Nonempty answer BC, or a stem explicitly marked multiple choice, can have the same six semantic roles and exact approval/hash closure. Every A11 predicate remains satisfied; no downstream check narrows this to one choice.",
+      "impact": "The limited offline admission can accept a four-option multiple-choice question even though only single-choice questions are in scope. This is distinct from changing an already approved answer, which the frozen suite checks.",
+      "fix_direction_for_future_authorized_work": "Add an explicit source-and-approval-bound single-choice proof or conservative supported answer check; reject multiple-choice or indeterminate classification before planning or intent. Do not broaden ordinary_choice to bypass the fixed scope.",
+      "execution_status": "STATIC_ONLY_NOT_RUN"
+    },
+    {
+      "id": "A11-R02",
+      "priority": 2,
+      "title": "Read-only reconciliation release failures are hidden by the returned result and report",
+      "path": "src/annotation/runtime/live_pilot/runner.py",
+      "start": 102,
+      "end": 110,
+      "related_location": "src/annotation/runtime/live_pilot/journal.py:142-145",
+      "basis": ["docs/tasks/A11-limited-live-runner-offline-core.md: report frame/content/independent/release/platform facts separately", "docs/evidence/coordinator/72h-live-runner/implementation-scope.md: T8 release unproven requires HOLD", "docs/live-pilot-runbook.md:27"],
+      "static_trace": "After a completed apply whose last RELEASE says released=true, reconcile_readonly may compute MATCH/ABSENT and then close may raise or return released=false. The exception is caught, only RECONCILE_RELEASE stores released=false, and the returned reconciliation result omits release/status. Journal.report filters only RELEASE and still returns the older released=true. The current failed release remains visible only by manually examining the raw event stream.",
+      "impact": "The public local report can affirm an obsolete release while the most recent read-only session is unproven. Prior UNKNOWN and no-resend remain preserved, so this is a release reporting/hold defect rather than an observed resend.",
+      "fix_direction_for_future_authorized_work": "Expose reconciliation release independently in result/report and surface an unproven current release as HOLD without rewriting the old UNKNOWN result or creating new sending authority.",
+      "execution_status": "STATIC_ONLY_NOT_RUN"
+    }
+  ],
+  "closed_for_this_review": true,
+  "product_changes": 0,
+  "additional_suite_or_test_runs": 0,
+  "third_candidate_authorized": false,
+  "integration_decision_owner": "A-side coordinator"
+}

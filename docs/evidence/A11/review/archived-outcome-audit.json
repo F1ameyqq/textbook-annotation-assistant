@@ -1,0 +1,639 @@
+{
+  "at": "2026-10-19T15:57:28.597934+00:00",
+  "kind": "POST_RUN_STATIC_EVIDENCE_AUDIT_NOT_NEW_CASES",
+  "suite_invocations": 1,
+  "run_raw_file_count": 412,
+  "run_raw_bytes": 2556387,
+  "runtime_source_members_unchanged": 111,
+  "case_results": {
+    "test_live_pilot_admission.AdmissionTests.test_T1_valid_and_bound_source": "PASS",
+    "test_live_pilot_admission.AdmissionTests.test_T1_manifest_scope": "PASS",
+    "test_live_pilot_admission.AdmissionTests.test_T2_resealed_stale_option_roles": "PASS",
+    "test_live_pilot_admission.AdmissionTests.test_T2_unsupported_shapes": "PASS",
+    "test_live_pilot_admission.AdmissionTests.test_T3_c01_integrity_and_observed_relabel": "PASS",
+    "test_live_pilot_admission.AdmissionTests.test_T3_capability_and_real_block": "PASS",
+    "test_live_pilot_admission.AdmissionTests.test_T4_global_order_and_target_changes": "PASS",
+    "test_live_pilot_admission.AdmissionTests.test_T8_forbidden_commands_and_cli": "PASS",
+    "test_live_pilot_journal.JournalTests.test_T5_crash_points_and_new_process_restart": "PASS",
+    "test_live_pilot_journal.JournalTests.test_T5_two_process_one_claim": "PASS",
+    "test_live_pilot_journal.JournalTests.test_T5_same_content_and_corrupt_ledger": "PASS",
+    "test_live_pilot_journal.JournalTests.test_T6_unknown_readonly_match_absent_conflict": "PASS",
+    "test_live_pilot_readback.ReadbackTests.test_T7_normal_two_question_strict_readback": "PASS",
+    "test_live_pilot_readback.ReadbackTests.test_T6_response_frame_and_read_failure": "PASS",
+    "test_live_pilot_readback.ReadbackTests.test_T7_text_and_independent_readback_rejections": "PASS",
+    "test_live_pilot_readback.ReadbackTests.test_T4_old_state_preservation": "PASS",
+    "test_live_pilot_readback.ReadbackTests.test_T8_release_error_and_history_text_pending": "PASS"
+  },
+  "normal_semantic_rule_source": "raw author baseline 项目交接说明.md:71-74,87-90,97-100",
+  "normal": [
+    {
+      "question_id": "a11-new-alpha",
+      "plan_roles": [
+        "Q",
+        "W",
+        "W",
+        "W",
+        "W",
+        "A"
+      ],
+      "approved_and_observed_text": [
+        "OFFLINE: 1 + 1 = ?",
+        "A. 1",
+        "B. 2",
+        "C. 3",
+        "D. 4",
+        "B"
+      ],
+      "plan_order": 10,
+      "phases": [
+        "get",
+        "refresh",
+        "reopen"
+      ],
+      "source_refs": [
+        "offline-read-4",
+        "offline-read-5",
+        "offline-read-6"
+      ],
+      "session_ids": [
+        "offline-session-1",
+        "offline-session-1",
+        "offline-session-2"
+      ],
+      "reopen_predecessor": "offline-session-1",
+      "old_state_preserved_in_archived_reads": true
+    },
+    {
+      "question_id": "a11-new-beta",
+      "plan_roles": [
+        "Q",
+        "W",
+        "W",
+        "W",
+        "W",
+        "A"
+      ],
+      "approved_and_observed_text": [
+        "OFFLINE: 1 + 1 = ?",
+        "A. 1",
+        "B. 2",
+        "C. 3",
+        "D. 4",
+        "B"
+      ],
+      "plan_order": 11,
+      "phases": [
+        "get",
+        "refresh",
+        "reopen"
+      ],
+      "source_refs": [
+        "offline-read-9",
+        "offline-read-10",
+        "offline-read-11"
+      ],
+      "session_ids": [
+        "offline-session-3",
+        "offline-session-3",
+        "offline-session-4"
+      ],
+      "reopen_predecessor": "offline-session-3",
+      "old_state_preserved_in_archived_reads": true
+    }
+  ],
+  "retained_backend_counts": [
+    {
+      "path": "runtime/test_T4_old_state_preservation/old_directory/backend/fake-backend.json",
+      "sends": 1,
+      "fake_session_closed": true
+    },
+    {
+      "path": "runtime/test_T4_old_state_preservation/old_frame/backend/fake-backend.json",
+      "sends": 1,
+      "fake_session_closed": true
+    },
+    {
+      "path": "runtime/test_T4_old_state_preservation/old_order/backend/fake-backend.json",
+      "sends": 1,
+      "fake_session_closed": true
+    },
+    {
+      "path": "runtime/test_T4_old_state_preservation/old_text/backend/fake-backend.json",
+      "sends": 1,
+      "fake_session_closed": true
+    },
+    {
+      "path": "runtime/test_T4_old_state_preservation/prewrite_drift/backend/fake-backend.json",
+      "sends": 0,
+      "fake_session_closed": true
+    },
+    {
+      "path": "runtime/test_T5_crash_points_and_new_process_restart/after_claim/backend/fake-backend.json",
+      "sends": 0,
+      "fake_session_closed": false
+    },
+    {
+      "path": "runtime/test_T5_crash_points_and_new_process_restart/after_effect/backend/fake-backend.json",
+      "sends": 1,
+      "fake_session_closed": false
+    },
+    {
+      "path": "runtime/test_T5_crash_points_and_new_process_restart/after_intent/backend/fake-backend.json",
+      "sends": 0,
+      "fake_session_closed": false
+    },
+    {
+      "path": "runtime/test_T5_crash_points_and_new_process_restart/before_intent/backend/fake-backend.json",
+      "sends": 0,
+      "fake_session_closed": false
+    },
+    {
+      "path": "runtime/test_T5_crash_points_and_new_process_restart/before_receipt/backend/fake-backend.json",
+      "sends": 1,
+      "fake_session_closed": false
+    },
+    {
+      "path": "runtime/test_T5_two_process_one_claim/backend/fake-backend.json",
+      "sends": 0,
+      "fake_session_closed": false
+    },
+    {
+      "path": "runtime/test_T6_response_frame_and_read_failure/get_timeout/backend/fake-backend.json",
+      "sends": 1,
+      "fake_session_closed": true
+    },
+    {
+      "path": "runtime/test_T6_response_frame_and_read_failure/http_only/backend/fake-backend.json",
+      "sends": 1,
+      "fake_session_closed": true
+    },
+    {
+      "path": "runtime/test_T6_response_frame_and_read_failure/partial/backend/fake-backend.json",
+      "sends": 1,
+      "fake_session_closed": true
+    },
+    {
+      "path": "runtime/test_T6_response_frame_and_read_failure/truncated/backend/fake-backend.json",
+      "sends": 1,
+      "fake_session_closed": true
+    },
+    {
+      "path": "runtime/test_T6_unknown_readonly_match_absent_conflict/ABSENT/backend/fake-backend.json",
+      "sends": 1,
+      "fake_session_closed": true
+    },
+    {
+      "path": "runtime/test_T6_unknown_readonly_match_absent_conflict/CONFLICT/backend/fake-backend.json",
+      "sends": 1,
+      "fake_session_closed": true
+    },
+    {
+      "path": "runtime/test_T6_unknown_readonly_match_absent_conflict/MATCH/backend/fake-backend.json",
+      "sends": 1,
+      "fake_session_closed": true
+    },
+    {
+      "path": "runtime/test_T7_normal_two_question_strict_readback/backend/fake-backend.json",
+      "sends": 2,
+      "fake_session_closed": true
+    },
+    {
+      "path": "runtime/test_T7_text_and_independent_readback_rejections/plan_copy/backend/fake-backend.json",
+      "sends": 1,
+      "fake_session_closed": true
+    },
+    {
+      "path": "runtime/test_T7_text_and_independent_readback_rejections/same_reopen/backend/fake-backend.json",
+      "sends": 1,
+      "fake_session_closed": true
+    },
+    {
+      "path": "runtime/test_T7_text_and_independent_readback_rejections/text_answer/backend/fake-backend.json",
+      "sends": 1,
+      "fake_session_closed": true
+    },
+    {
+      "path": "runtime/test_T7_text_and_independent_readback_rejections/text_order/backend/fake-backend.json",
+      "sends": 1,
+      "fake_session_closed": true
+    },
+    {
+      "path": "runtime/test_T7_text_and_independent_readback_rejections/text_pending/backend/fake-backend.json",
+      "sends": 1,
+      "fake_session_closed": true
+    },
+    {
+      "path": "runtime/test_T7_text_and_independent_readback_rejections/text_symbol/backend/fake-backend.json",
+      "sends": 1,
+      "fake_session_closed": true
+    },
+    {
+      "path": "runtime/test_T8_release_error_and_history_text_pending/backend/fake-backend.json",
+      "sends": 1,
+      "fake_session_closed": true
+    }
+  ],
+  "journal_outcomes": [
+    {
+      "path": "runtime/test_T4_old_state_preservation/old_directory/journal",
+      "results": [
+        {
+          "content": "PENDING",
+          "frames": "UNAVAILABLE",
+          "question_id": "a11-new-alpha",
+          "reason": "OLD_DIRECTORY_OR_SOURCE_CHANGED",
+          "state": "UNKNOWN"
+        }
+      ],
+      "readbacks": [],
+      "reconciliations": []
+    },
+    {
+      "path": "runtime/test_T4_old_state_preservation/old_frame/journal",
+      "results": [
+        {
+          "content": "PENDING",
+          "frames": "UNAVAILABLE",
+          "question_id": "a11-new-alpha",
+          "reason": "OLD_FRAMES_CHANGED",
+          "state": "UNKNOWN"
+        }
+      ],
+      "readbacks": [],
+      "reconciliations": []
+    },
+    {
+      "path": "runtime/test_T4_old_state_preservation/old_order/journal",
+      "results": [
+        {
+          "content": "PENDING",
+          "frames": "UNAVAILABLE",
+          "question_id": "a11-new-alpha",
+          "reason": "OLD_QUESTIONS_CHANGED",
+          "state": "UNKNOWN"
+        }
+      ],
+      "readbacks": [],
+      "reconciliations": []
+    },
+    {
+      "path": "runtime/test_T4_old_state_preservation/old_text/journal",
+      "results": [
+        {
+          "content": "PENDING",
+          "frames": "UNAVAILABLE",
+          "question_id": "a11-new-alpha",
+          "reason": "OLD_QUESTION_CONTENT_CHANGED",
+          "state": "UNKNOWN"
+        }
+      ],
+      "readbacks": [],
+      "reconciliations": []
+    },
+    {
+      "path": "runtime/test_T4_old_state_preservation/prewrite_drift/journal",
+      "results": [
+        {
+          "content": "PENDING",
+          "frames": "UNAVAILABLE",
+          "question_id": "a11-new-alpha",
+          "reason": "TARGET_CHANGED",
+          "state": "HOLD"
+        }
+      ],
+      "readbacks": [],
+      "reconciliations": []
+    },
+    {
+      "path": "runtime/test_T5_crash_points_and_new_process_restart/after_claim/journal",
+      "results": [],
+      "readbacks": [],
+      "reconciliations": []
+    },
+    {
+      "path": "runtime/test_T5_crash_points_and_new_process_restart/after_effect/journal",
+      "results": [],
+      "readbacks": [],
+      "reconciliations": []
+    },
+    {
+      "path": "runtime/test_T5_crash_points_and_new_process_restart/after_intent/journal",
+      "results": [],
+      "readbacks": [],
+      "reconciliations": []
+    },
+    {
+      "path": "runtime/test_T5_crash_points_and_new_process_restart/before_intent/journal",
+      "results": [],
+      "readbacks": [],
+      "reconciliations": []
+    },
+    {
+      "path": "runtime/test_T5_crash_points_and_new_process_restart/before_receipt/journal",
+      "results": [],
+      "readbacks": [],
+      "reconciliations": []
+    },
+    {
+      "path": "runtime/test_T5_same_content_and_corrupt_ledger/journal",
+      "results": [],
+      "readbacks": [],
+      "reconciliations": []
+    },
+    {
+      "path": "runtime/test_T5_two_process_one_claim/journal",
+      "results": [],
+      "readbacks": [],
+      "reconciliations": []
+    },
+    {
+      "path": "runtime/test_T6_response_frame_and_read_failure/get_timeout/journal",
+      "results": [
+        {
+          "content": "PENDING",
+          "frames": "UNAVAILABLE",
+          "question_id": "a11-new-alpha",
+          "reason": "TimeoutError",
+          "state": "UNKNOWN"
+        }
+      ],
+      "readbacks": [],
+      "reconciliations": []
+    },
+    {
+      "path": "runtime/test_T6_response_frame_and_read_failure/http_only/journal",
+      "results": [
+        {
+          "content": "PENDING",
+          "frames": "UNAVAILABLE",
+          "question_id": "a11-new-alpha",
+          "reason": "BUSINESS_RECEIPT_UNKNOWN",
+          "state": "UNKNOWN"
+        }
+      ],
+      "readbacks": [],
+      "reconciliations": []
+    },
+    {
+      "path": "runtime/test_T6_response_frame_and_read_failure/partial/journal",
+      "results": [
+        {
+          "content": "PENDING",
+          "frames": "UNAVAILABLE",
+          "question_id": "a11-new-alpha",
+          "reason": "FRAME_CONFLICT",
+          "state": "UNKNOWN"
+        }
+      ],
+      "readbacks": [],
+      "reconciliations": []
+    },
+    {
+      "path": "runtime/test_T6_response_frame_and_read_failure/truncated/journal",
+      "results": [
+        {
+          "content": "PENDING",
+          "frames": "UNAVAILABLE",
+          "question_id": "a11-new-alpha",
+          "reason": "FULL_TARGET_REQUIRED",
+          "state": "UNKNOWN"
+        }
+      ],
+      "readbacks": [],
+      "reconciliations": []
+    },
+    {
+      "path": "runtime/test_T6_unknown_readonly_match_absent_conflict/ABSENT/journal",
+      "results": [
+        {
+          "content": "PENDING",
+          "frames": "UNAVAILABLE",
+          "question_id": "a11-new-alpha",
+          "reason": "TimeoutError",
+          "state": "UNKNOWN"
+        }
+      ],
+      "readbacks": [],
+      "reconciliations": [
+        {
+          "question_id": "a11-new-alpha",
+          "effect_match": "ABSENT",
+          "resend_allowed": false
+        }
+      ]
+    },
+    {
+      "path": "runtime/test_T6_unknown_readonly_match_absent_conflict/CONFLICT/journal",
+      "results": [
+        {
+          "content": "PENDING",
+          "frames": "UNAVAILABLE",
+          "question_id": "a11-new-alpha",
+          "reason": "TimeoutError",
+          "state": "UNKNOWN"
+        }
+      ],
+      "readbacks": [],
+      "reconciliations": [
+        {
+          "question_id": "a11-new-alpha",
+          "effect_match": "CONFLICT",
+          "resend_allowed": false
+        }
+      ]
+    },
+    {
+      "path": "runtime/test_T6_unknown_readonly_match_absent_conflict/MATCH/journal",
+      "results": [
+        {
+          "content": "PENDING",
+          "frames": "UNAVAILABLE",
+          "question_id": "a11-new-alpha",
+          "reason": "TimeoutError",
+          "state": "UNKNOWN"
+        }
+      ],
+      "readbacks": [],
+      "reconciliations": [
+        {
+          "question_id": "a11-new-alpha",
+          "effect_match": "MATCH",
+          "resend_allowed": false
+        }
+      ]
+    },
+    {
+      "path": "runtime/test_T7_normal_two_question_strict_readback/journal",
+      "results": [
+        {
+          "content": "VERIFIED",
+          "frames": "PASS",
+          "independent_acceptance": "PENDING",
+          "platform_fact": "OFFLINE_ONLY",
+          "question_id": "a11-new-alpha",
+          "state": "APPLIED_OFFLINE"
+        },
+        {
+          "content": "VERIFIED",
+          "frames": "PASS",
+          "independent_acceptance": "PENDING",
+          "platform_fact": "OFFLINE_ONLY",
+          "question_id": "a11-new-beta",
+          "state": "APPLIED_OFFLINE"
+        }
+      ],
+      "readbacks": [
+        {
+          "question_id": "a11-new-alpha",
+          "phase": "get"
+        },
+        {
+          "question_id": "a11-new-alpha",
+          "phase": "refresh"
+        },
+        {
+          "question_id": "a11-new-alpha",
+          "phase": "reopen"
+        },
+        {
+          "question_id": "a11-new-beta",
+          "phase": "get"
+        },
+        {
+          "question_id": "a11-new-beta",
+          "phase": "refresh"
+        },
+        {
+          "question_id": "a11-new-beta",
+          "phase": "reopen"
+        }
+      ],
+      "reconciliations": []
+    },
+    {
+      "path": "runtime/test_T7_text_and_independent_readback_rejections/plan_copy/journal",
+      "results": [
+        {
+          "content": "PENDING",
+          "frames": "UNAVAILABLE",
+          "question_id": "a11-new-alpha",
+          "reason": "READBACK_NOT_INDEPENDENT",
+          "state": "UNKNOWN"
+        }
+      ],
+      "readbacks": [],
+      "reconciliations": []
+    },
+    {
+      "path": "runtime/test_T7_text_and_independent_readback_rejections/same_reopen/journal",
+      "results": [
+        {
+          "content": "PENDING",
+          "frames": "UNAVAILABLE",
+          "question_id": "a11-new-alpha",
+          "reason": "REOPEN_CHAIN",
+          "state": "UNKNOWN"
+        }
+      ],
+      "readbacks": [
+        {
+          "question_id": "a11-new-alpha",
+          "phase": "get"
+        },
+        {
+          "question_id": "a11-new-alpha",
+          "phase": "refresh"
+        }
+      ],
+      "reconciliations": []
+    },
+    {
+      "path": "runtime/test_T7_text_and_independent_readback_rejections/text_answer/journal",
+      "results": [
+        {
+          "content": "PENDING",
+          "frames": "UNAVAILABLE",
+          "question_id": "a11-new-alpha",
+          "reason": "CONTENT_MISMATCH",
+          "state": "UNKNOWN"
+        }
+      ],
+      "readbacks": [],
+      "reconciliations": []
+    },
+    {
+      "path": "runtime/test_T7_text_and_independent_readback_rejections/text_order/journal",
+      "results": [
+        {
+          "content": "PENDING",
+          "frames": "UNAVAILABLE",
+          "question_id": "a11-new-alpha",
+          "reason": "CONTENT_MISMATCH",
+          "state": "UNKNOWN"
+        }
+      ],
+      "readbacks": [],
+      "reconciliations": []
+    },
+    {
+      "path": "runtime/test_T7_text_and_independent_readback_rejections/text_pending/journal",
+      "results": [
+        {
+          "content": "PENDING",
+          "frames": "UNAVAILABLE",
+          "question_id": "a11-new-alpha",
+          "reason": "OLD_CONTENT_INCOMPLETE",
+          "state": "UNKNOWN"
+        }
+      ],
+      "readbacks": [],
+      "reconciliations": []
+    },
+    {
+      "path": "runtime/test_T7_text_and_independent_readback_rejections/text_symbol/journal",
+      "results": [
+        {
+          "content": "PENDING",
+          "frames": "UNAVAILABLE",
+          "question_id": "a11-new-alpha",
+          "reason": "CONTENT_MISMATCH",
+          "state": "UNKNOWN"
+        }
+      ],
+      "readbacks": [],
+      "reconciliations": []
+    },
+    {
+      "path": "runtime/test_T8_release_error_and_history_text_pending/journal",
+      "results": [
+        {
+          "content": "VERIFIED",
+          "frames": "PASS",
+          "independent_acceptance": "PENDING",
+          "platform_fact": "OFFLINE_ONLY",
+          "question_id": "a11-new-alpha",
+          "release": "UNPROVEN",
+          "state": "HOLD_RELEASE"
+        }
+      ],
+      "readbacks": [
+        {
+          "question_id": "a11-new-alpha",
+          "phase": "get"
+        },
+        {
+          "question_id": "a11-new-alpha",
+          "phase": "refresh"
+        },
+        {
+          "question_id": "a11-new-alpha",
+          "phase": "reopen"
+        }
+      ],
+      "reconciliations": []
+    }
+  ],
+  "fake_sends": 22,
+  "real_sends": 0,
+  "submission_status": "NOT_SUBMITTED"
+}
