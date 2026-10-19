@@ -1,0 +1,21 @@
+{
+  "schema_version": 1,
+  "task_id": "A10",
+  "delta_id": "OWNED_HANDLE_CLEANUP",
+  "date": "2026-10-19",
+  "user_statement": "允许这一次清理差量修复与验证",
+  "proposal": "docs/tasks/A10-owned-handle-cleanup-correction-proposal.md",
+  "base_candidate": "5543aba6fdcc146a5b1439a539ba0046e5f11cda",
+  "authorized_scope": "Split stdout, stderr and own Popen handle cleanup so every close is attempted; any close failure still rejects. Preserve old evidence and all other behavior.",
+  "author_frozen_delta_candidates": 1,
+  "author_offline_delta_runs": 1,
+  "independent_offline_delta_runs": 1,
+  "finite_cases": ["all_close_success", "stdout_close_failure", "stderr_close_failure", "handle_close_failure", "both_stream_close_failure"],
+  "actual_process_probes_in_delta": 0,
+  "profile_browser_platform_operations_in_delta": 0,
+  "after_pass": "Coordinator verification, then continue the original unused one-round read-only platform preflight; no new annotation writes.",
+  "old_budgets_reset": false,
+  "old_evidence_preserved": true,
+  "platform_connection_permission_remains_valid": true,
+  "book_id": "46007447"
+}
