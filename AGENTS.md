@@ -1,5 +1,7 @@
 # 项目开发约定
 
+- 2026-10-19 最新A09收口优先：固定产品 `29c82b09`、作者交付 `439423eb`、独立交付 `25fcf217` 已完成独立及调度有限接受，并在 `4fdfebd80f6efc3097e3d92c2659f3055d48f55b` 本地集成，见 `docs/tasks/A09-Q4-local-integration.md` 与调度JSON。固定第4题实际四框Q/image、Q/text、Q/text、A/text与批准内容/坐标/顺序一致，作者和独立各1正常尝试/1成功/1dispatch、各10拒绝零新增变更，均释放且成功额度耗尽，不重派/复跑。189新增路径、29,733旧主线路径原bytes保全；其他三例HOLD，原B HOLD/proposal false分开保留。A08/Q4/A09仅本地、未推送/发送B/连接平台，B对Q4共同采用与A04真实阻断保持。下方实施或REVIEW描述为历史。
+
 - 2026-10-19 最新A09授权优先：用户对固定第4题核准页回复“确认”，本题内容/关系/四框政策及离线模拟已批准，见 `docs/approvals/A09-Q4-offline-business-approval.json` 和 `docs/tasks/A09-Q4-offline-simulation.md`。按Q:image/Q:text/Q:text/A:text四框新建执行与独立验收；旧proposal/B HOLD原件保持，新授权单独引用。其他三例仍HOLD，不沿用Q1，不重跑A08，不推送/连接平台。下方第4题待核准为历史；实际派发/版本/cursor以调度JSON为准。
 
 - 2026-10-19 最新A08收口优先：固定候选 `04762d78`、作者交付 `83f119fa`、独立交付 `c4b75758` 已完成有限独立验收及调度接受，并在 `abc45f49532d8001be8441b54cedefab32c91e87` 本地集成。见 `docs/tasks/A08-local-integration.md` 和调度JSON。作者/独立各1原包+11负例已释放，不重复接收、补测或派发。122新增路径、29,586旧路径原bytes保全；四例仍HOLD，完整外部G/Check/plan未加载。第4题内容/图形边界/关系/分框及政策、专门模拟授权与适配仍待明确，4题片段+1答案来源区不等于执行框数，不沿用Q1。新资料未推送、未向B发送、未连接平台；下方实施/REVIEW描述为历史。
