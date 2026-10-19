@@ -10,6 +10,7 @@
 - 不使用浏览器、profile、storage_state、http_credentials或本地登录配置；不读取代理设置、凭据、token、cookie、环境值，不改变TLS/系统代理或安装依赖。API实现可能接收响应，但不得调用读取、保存或散列响应body/headers/Location的方法。
 - 结果只允许固定阶段、异常类型、明确白名单错误码或UNKNOWN、HTTP状态、时间/计数、精确自有进程与释放状态。不得输出自由文本异常、堆栈、URL/IP/头/正文/证书主体。捕获异常原字符串只可在内存匹配固定码/固定证书短语后丢弃。
 - 首个状态或异常即停止；零第二请求、fallback或修改后重跑。该诊断不能证明原浏览器导航、登录、书籍状态或业务通过。
+- worker使用固定最小环境及 `NODE_TLS_REJECT_UNAUTHORIZED=1`，不读取或复制父进程环境，不携带NODE_OPTIONS/DEBUG/代理/凭据变量；这是该新自有进程的配置，不改全局。与旧ambient transport不完全等价须随结果说明，不能把新错误直接归因为旧A10相同根因。依赖在此环境不能启动则0 GET失败并停止，不回退。
 
 ## 交付与执行
 
