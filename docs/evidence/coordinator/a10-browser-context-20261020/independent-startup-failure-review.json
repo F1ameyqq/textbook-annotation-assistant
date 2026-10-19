@@ -1,0 +1,276 @@
+{
+  "schema_version": 1,
+  "review_kind": "A10_SYSTEM_PROXY_STARTUP_FAILURE_ARCHIVE_ONLY",
+  "reviewed_at_utc": "2026-10-19T23:21:30.597498+00:00",
+  "reviewer": "/root/a10_system_proxy_review",
+  "fixed_archive_commit": "0376a08e32508b85d3d6c44e05dfbb0679a59599",
+  "candidate_commit": "6966509b5cab3a65c7341fd0b1793a1384faf314",
+  "archive_manifest_sha256": "e0731ec43ab05e181f29beaa909c19d62ece7606c66c7925d1b1c923dbf981a5",
+  "archive_review_decision": "PASS_FAILURE_ARCHIVE_ONLY",
+  "candidate_effective_status": "HOLD_STARTUP_INCOMPATIBILITY",
+  "release_chain_acceptance": "NOT_PROVEN",
+  "platform_acceptance": "NOT_PROVEN",
+  "network_path_hypothesis": "UNTESTED_NO_GET",
+  "archive_files": {
+    "failure-report.json": {
+      "size": 798,
+      "sha256": "11621ac16190fb532b73968faf4eaa35589d98253bf8913f1f408abec8a6ef8c"
+    },
+    "raw-manifest.json": {
+      "size": 398,
+      "sha256": "e0731ec43ab05e181f29beaa909c19d62ece7606c66c7925d1b1c923dbf981a5"
+    },
+    "run-once-marker.json": {
+      "size": 323,
+      "sha256": "432775d1bc140611415c214f44c719f02ea83cd8a4228abad5dcfef167374caa"
+    },
+    "supervisor-release.json": {
+      "size": 675,
+      "sha256": "6639ba34a6e4db2ffdf2d272364f2a91837dcd330b4621a4b014ee4cf805319b"
+    }
+  },
+  "original_candidate_files": [
+    {
+      "path": "docs/evidence/A10/system-proxy-observation/candidate-raw-manifest.json",
+      "size": 755,
+      "sha256": "6bbefa8c061e49940f7cc1ee4e93176f88bd20242d6ae5d751ec2480513a0cf2",
+      "raw_preserved": true
+    },
+    {
+      "path": "docs/evidence/A10/system-proxy-observation/input-bindings.json",
+      "size": 3814,
+      "sha256": "e452a9e986f7574408b54c443c7ece17e74b62666ccc27dd2815a12647dce589",
+      "raw_preserved": true
+    },
+    {
+      "path": "docs/evidence/A10/system-proxy-observation/owned_job.py",
+      "size": 4316,
+      "sha256": "bb82e070589ee6dcea19f5b82da8cb330fa31a04f43434412404149db9503443",
+      "raw_preserved": true
+    },
+    {
+      "path": "docs/evidence/A10/system-proxy-observation/preparation-report.md",
+      "size": 1219,
+      "sha256": "e16ba9cc0189b732a248baee7246aba6dbd8a58efe0814f1ee8c5799ea5f5cd8",
+      "raw_preserved": true
+    },
+    {
+      "path": "docs/evidence/A10/system-proxy-observation/probe.py",
+      "size": 12928,
+      "sha256": "2ab7b92156ab368595fdec1c1193999c01cd2644a95663c6aeb76cdd940bf769",
+      "raw_preserved": true
+    },
+    {
+      "path": "docs/evidence/A10/system-proxy-observation/static-check.json",
+      "size": 206,
+      "sha256": "8084d411a4958d07e9362448fbc439e150a06c2e137b3145a37f321b8c263742",
+      "raw_preserved": true
+    }
+  ],
+  "checks": [
+    {
+      "id": "archive_raw_manifest",
+      "status": "PASS",
+      "facts": [
+        "Fixed archive contains exactly four files: the manifest and its three members.",
+        "Expected manifest SHA256 and all member sizes/SHA256 values match raw Git bytes.",
+        "All original six candidate files remain byte-for-byte identical to 6966509b."
+      ]
+    },
+    {
+      "id": "startup_identity",
+      "status": "PASS",
+      "evidence": [
+        {
+          "commit": "0376a08e32508b85d3d6c44e05dfbb0679a59599",
+          "path": "docs/evidence/A10/system-proxy-observation/startup-failure/run-once-marker.json",
+          "lines": "2-7"
+        },
+        {
+          "commit": "0376a08e32508b85d3d6c44e05dfbb0679a59599",
+          "path": "docs/evidence/coordinator/a10-browser-context-20261020/launch-intent.json",
+          "lines": "2-11"
+        }
+      ],
+      "facts": [
+        "The exclusive startup marker binds the fixed candidate, expected manifest and workflow.",
+        "The failure report and fixed coordinator state record one consumed startup, not a successful GET.",
+        "This review does not reset any consumed attempt."
+      ]
+    },
+    {
+      "id": "first_error_and_no_get",
+      "status": "PASS",
+      "evidence": [
+        {
+          "commit": "0376a08e32508b85d3d6c44e05dfbb0679a59599",
+          "path": "docs/evidence/A10/system-proxy-observation/startup-failure/supervisor-release.json",
+          "lines": "2-27"
+        },
+        {
+          "commit": "0376a08e32508b85d3d6c44e05dfbb0679a59599",
+          "path": "docs/evidence/A10/system-proxy-observation/startup-failure/failure-report.json",
+          "lines": "2-18"
+        }
+      ],
+      "facts": [
+        "Exactly one recorded error is ModuleNotFoundError at OWNED_JOB_SETUP, sanitized code UNKNOWN.",
+        "get_invocations_reserved=0, gate_sent=false, first_outcome_sealed=false; no get-started, first-outcome or worker-release artifact is present in the fixed archive.",
+        "The observed 0.172 seconds and within_60_seconds=true do not establish a successful cleanup chain."
+      ]
+    },
+    {
+      "id": "static_import_failure_location",
+      "status": "SUPPORTED_STATIC_DIAGNOSIS",
+      "evidence": [
+        {
+          "commit": "6966509b5cab3a65c7341fd0b1793a1384faf314",
+          "path": "docs/evidence/A10/system-proxy-observation/probe.py",
+          "lines": "159-180"
+        },
+        {
+          "commit": "6966509b5cab3a65c7341fd0b1793a1384faf314",
+          "path": "docs/evidence/A10/system-proxy-observation/owned_job.py",
+          "lines": "1-8"
+        },
+        {
+          "commit": "0376a08e32508b85d3d6c44e05dfbb0679a59599",
+          "path": "docs/evidence/A10/system-proxy-observation/startup-failure/failure-report.json",
+          "lines": "8-11"
+        },
+        {
+          "commit": "0376a08e32508b85d3d6c44e05dfbb0679a59599",
+          "path": "docs/tasks/A10-browser-context-diagnosis-2026-10-20.md",
+          "lines": "28-32"
+        }
+      ],
+      "facts": [
+        "Python isolated mode -I omits the script directory from the module search path.",
+        "The supervisor performs bare sibling import from owned_job import OwnedJob at probe.py:176, without inserting a path or loading that hash-bound file by absolute spec.",
+        "That import precedes OwnedJob construction at line 177, Job creation at line 178, Popen at line 180 and GO at lines 190-191.",
+        "The reported isolated launch therefore has a concrete startup incompatibility, consistent with the recorded ModuleNotFoundError.",
+        "No validation launch or import test was performed by this reviewer."
+      ],
+      "limits": [
+        "The fixed launch-intent and runtime JSON do not include the literal outer argv or missing module name. The -I launch detail is supported by the fixed failure report/task record and parent-provided context, not an independently captured argv. This review does not claim traceback-level localization beyond that evidence."
+      ]
+    },
+    {
+      "id": "no_owned_runtime_resources_created",
+      "status": "PASS_SCOPED_ABSENCE",
+      "evidence": [
+        {
+          "commit": "6966509b5cab3a65c7341fd0b1793a1384faf314",
+          "path": "docs/evidence/A10/system-proxy-observation/probe.py",
+          "lines": "166-180,203-255"
+        },
+        {
+          "commit": "0376a08e32508b85d3d6c44e05dfbb0679a59599",
+          "path": "docs/evidence/A10/system-proxy-observation/startup-failure/supervisor-release.json",
+          "lines": "14-27"
+        }
+      ],
+      "facts": [
+        "Source initializes child=job=None before the failing sibling import.",
+        "The recorded import failure occurs before assigning an OwnedJob instance or constructing any Job/Popen.",
+        "owned_identity=null, job_assigned=false, gate_sent=false and worker_exit_code=null agree with no owned worker/Job creation.",
+        "No close-related errors are recorded, and all close/exit/active-count evidence flags remain false.",
+        "Scope is the probe-created Job and Popen worker; the outer Python supervisor itself necessarily existed. No claim is made that no OS processes existed or that global processes were scanned."
+      ]
+    },
+    {
+      "id": "preserve_cleanup_false",
+      "status": "PASS",
+      "evidence": [
+        {
+          "commit": "6966509b5cab3a65c7341fd0b1793a1384faf314",
+          "path": "docs/evidence/A10/system-proxy-observation/probe.py",
+          "lines": "247-255"
+        },
+        {
+          "commit": "0376a08e32508b85d3d6c44e05dfbb0679a59599",
+          "path": "docs/evidence/A10/system-proxy-observation/startup-failure/supervisor-release.json",
+          "lines": "2,16-27"
+        }
+      ],
+      "facts": [
+        "cleanup_proven=false is retained exactly.",
+        "No worker-exit, Job-zero or handle-close proof exists for an owned runtime because startup never created it.",
+        "The archive can close the failed attempt, but cannot qualify the release chain, proxy transport, platform navigation, login, book access or business operations."
+      ]
+    },
+    {
+      "id": "correct_previous_static_review",
+      "status": "FINDING_RECORDED",
+      "evidence": [
+        {
+          "commit": "0376a08e32508b85d3d6c44e05dfbb0679a59599",
+          "path": "docs/evidence/coordinator/a10-browser-context-20261020/independent-static-review.json",
+          "sha256": "8531ffe7fdeb409cda75beefc371d0029115bb62ca988e8c4248a6c566af9e90"
+        },
+        {
+          "commit": "6966509b5cab3a65c7341fd0b1793a1384faf314",
+          "path": "docs/evidence/A10/system-proxy-observation/probe.py",
+          "lines": "176-180"
+        }
+      ],
+      "facts": [
+        "My previous static PASS checked narrow deltas, byte preservation, API parameters and modeled release flow but omitted compatibility between the actual isolated supervisor launch and bare sibling module import.",
+        "Hash equality and unchanged inherited Job code do not establish launcher compatibility.",
+        "The previous report remains unchanged as historical evidence; it must not be used as proof this candidate can start.",
+        "Effective candidate status is HOLD_STARTUP_INCOMPATIBILITY. The present decision accepts only the fixed failure archive and scoped non-creation facts."
+      ]
+    }
+  ],
+  "original_release_record": {
+    "cleanup_proven": false,
+    "elapsed_seconds": 0.172,
+    "errors": [
+      {
+        "codes": [
+          "UNKNOWN"
+        ],
+        "exception_type": "ModuleNotFoundError",
+        "stage": "OWNED_JOB_SETUP"
+      }
+    ],
+    "first_outcome_sealed": false,
+    "gate_sent": false,
+    "get_invocations_reserved": 0,
+    "job_active_zero_observed": false,
+    "job_assigned": false,
+    "job_handle_closed": false,
+    "owned_identity": null,
+    "process_handle_closed": false,
+    "stage": "OWNED_RELEASE",
+    "stdin_closed": false,
+    "termination_requested": false,
+    "utc": "2026-10-19T23:17:19.058370+00:00",
+    "within_60_seconds": true,
+    "worker_exit_code": null,
+    "worker_exit_observed": false
+  },
+  "budget_facts": {
+    "candidate_starts_consumed": 1,
+    "candidate_get_intents_consumed": 0,
+    "original_candidate_retry_allowed": false,
+    "old_attempts_restored": false,
+    "new_correction_reviewed": false,
+    "new_correction_executed": false
+  },
+  "limits": [
+    "No probe, browser, network, old driver, business action, import test or test suite was run.",
+    "No registry, credentials, profile or ambient environment values were read.",
+    "No floating correction was inspected; the explicitly bounded next-candidate revision is context only and is not accepted by this report.",
+    "Outer shell exit code 1 is retained as reported; it is not relabeled as the supervisor Python return code.",
+    "No historical evidence or prior static report was edited; only the uniquely requested local review JSON was written."
+  ],
+  "review_release": {
+    "status": "RELEASED",
+    "all_review_commands_completed": true,
+    "retained_background_sessions": 0,
+    "owned_probe_runtime_created": false,
+    "further_action_without_dispatch": false
+  },
+  "output_path": "D:/1800/.local/reviews/A10-system-proxy-startup-failure-review.json"
+}
