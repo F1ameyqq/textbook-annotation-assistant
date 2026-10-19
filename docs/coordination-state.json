@@ -2,7 +2,7 @@
   "schema_version": 1,
   "project": "D:\\1800",
   "coordinator_thread_id": "01a13f26-7567-75e1-99ee-c9d2194e78bb",
-  "updated_at": "2026-10-19T18:21:36.789563+08:00",
+  "updated_at": "2026-10-19T18:22:46.671592+08:00",
   "automation": {
     "id": "1800-a",
     "kind": "heartbeat",
@@ -9060,7 +9060,7 @@
     },
     "A09": {
       "task_id": "A09",
-      "status": "DISPATCH_INTENT",
+      "status": "DISPATCHED",
       "scope": "Fixed first-lesson Q4 observed source to one-question four-frame offline simulation; Q/image,Q/text,Q/text,A/text; other cases HOLD",
       "base_commit": "846662f4aab08a75d6ad0482edeced4550e1a1ab",
       "execution_document": "docs/tasks/A09-Q4-offline-simulation.md",
@@ -9071,12 +9071,12 @@
       "proposal_sha256": "e8146fc7a4fe2e16c1fc1194d49de1caa1fe029dd6907848bbaa6c9082dc0bbe",
       "b_commit": "a76e5a925fec76f20818dfdefa4145aa132ec8a8",
       "input_sha256": "b646fad9008e03e79a3dddfb4ead912d7ceadefbcee331c2e2af2415abf6f673",
-      "execution_thread_id": null,
-      "review_thread_id": null,
+      "execution_thread_id": "01a153b4-0943-7dd0-92e2-859d26e49934",
+      "review_thread_id": "01a153af-3a4c-7a80-bb57-2e98af01dcd2",
       "execution_cursor": null,
-      "review_cursor": null,
-      "execution_status": "PENDING_CREATE",
-      "review_status": "PENDING_CREATE_PREPARATION_ONLY",
+      "review_cursor": "73f25b56-94d6-40bc-b6d0-f5b7182c1c78:2",
+      "execution_status": "CREATED_PENDING_SNAPSHOT",
+      "review_status": "WAITING_FOR_FIXED_CANDIDATE",
       "max_frozen_implementation_candidates": 2,
       "max_normal_attempts_per_side": 2,
       "max_successes_per_side": 1,
@@ -9086,25 +9086,96 @@
       "push_authorized": false,
       "B_messages_authorized": false,
       "created_at": "2026-10-19T18:21:36.789563+08:00",
-      "next_dependency": "Create isolated author worktree and separate author/reviewer conversations; reviewer waits for fixed delivery",
+      "next_dependency": "Author fixed product and delivery commits, raw manifests and release; then coordinator preflight and dispatch existing reviewer in an isolated checkout",
       "dispatch_intents": [
         {
           "role": "execution",
           "action": "create_thread",
-          "status": "INTENT_RECORDED",
+          "status": "CREATED",
           "at": "2026-10-19T18:21:36.789563+08:00",
-          "deduplication_key": "A09-execution-846662f4aab08a75d6ad0482edeced4550e1a1ab"
+          "deduplication_key": "A09-execution-846662f4aab08a75d6ad0482edeced4550e1a1ab",
+          "thread_id": "01a153b4-0943-7dd0-92e2-859d26e49934"
         },
         {
           "role": "review",
           "action": "create_thread",
-          "status": "INTENT_RECORDED",
+          "status": "CREATED",
           "at": "2026-10-19T18:21:36.789563+08:00",
-          "deduplication_key": "A09-review-846662f4aab08a75d6ad0482edeced4550e1a1ab"
+          "deduplication_key": "A09-review-846662f4aab08a75d6ad0482edeced4550e1a1ab",
+          "thread_id": "01a153af-3a4c-7a80-bb57-2e98af01dcd2"
         }
       ],
-      "dispatch_results": [],
-      "scope_preflight_agent": "/root/a09_q4_scope_preflight"
+      "dispatch_results": [
+        {
+          "role": "review",
+          "action": "create_thread",
+          "status": "CREATED",
+          "at": "2026-10-19T18:22:46.671592+08:00",
+          "thread_id": "01a153af-3a4c-7a80-bb57-2e98af01dcd2",
+          "host_id": "local",
+          "workflow_commit": "0a9c634d160ac7b39f68a1fb3555f409dd408f49",
+          "scope": "Preparation only, no business; await fixed author delivery"
+        },
+        {
+          "role": "execution",
+          "action": "create_thread",
+          "status": "CREATED",
+          "at": "2026-10-19T18:28:04.819541+08:00",
+          "thread_id": "01a153b4-0943-7dd0-92e2-859d26e49934",
+          "host_id": "local",
+          "workflow_commit": "0a9c634d160ac7b39f68a1fb3555f409dd408f49",
+          "workdir": "D:\\1800-worktrees\\a09-q4",
+          "scope": "Fixed first-lesson Q4 observed source to one-question four-frame offline simulation; Q/image,Q/text,Q/text,A/text; other cases HOLD"
+        }
+      ],
+      "scope_preflight_agent": "/root/a09_q4_scope_preflight",
+      "workflow_commit": "0a9c634d160ac7b39f68a1fb3555f409dd408f49",
+      "scope_preflight_result": "STATIC_COMPATIBLE_NEW_PATHS_ONLY",
+      "scope_preflight_notes": [
+        "C01 free_response preserves proposal fill_blank in provenance",
+        "Q:image supported; actual type read from memory frame_projections",
+        "No old source/contract edits required"
+      ],
+      "worktree_creation": {
+        "status": "READY_CLI_SPARSE",
+        "path": "D:\\1800-worktrees\\a09-q4",
+        "branch": "codex/a09-q4-offline",
+        "ref": "0a9c634d160ac7b39f68a1fb3555f409dd408f49",
+        "sparse_paths": [
+          "config",
+          "docs/approvals",
+          "docs/tasks",
+          "docs/reviews/q4-first-lesson",
+          "examples",
+          "src",
+          "tests"
+        ],
+        "checked_raw_files": 956,
+        "checkout_eol_restored_paths": 152,
+        "dirty_tracked_paths": 0,
+        "no_old_evidence_removed": true,
+        "at": "2026-10-19T18:27:13.928157+08:00",
+        "setup_note": "Empty initial index materialized via read-tree; Git-normalized clean checkout restored from raw blobs before any author work."
+      },
+      "review_host_id": "local",
+      "worktree_creation_attempts": [
+        {
+          "status": "FAILED_WINDOWS_LONG_PATH_CHECKOUT",
+          "name": "a09-q4-offline",
+          "ref": "0a9c634d160ac7b39f68a1fb3555f409dd408f49",
+          "operation_id": "c9cc129e-02b1-4ab6-ad31-9153fc81e87d",
+          "reason": "Managed full checkout failed in old nested A03 evidence; worktree list confirms no A09 registration; no old evidence removed."
+        }
+      ],
+      "execution_workdir": "D:\\1800-worktrees\\a09-q4",
+      "execution_branch": "codex/a09-q4-offline",
+      "execution_host_id": "local",
+      "review_preparation": {
+        "released": true,
+        "business_runs": 0,
+        "writes": 0,
+        "approval_and_proposal_raw_sha_matched": true
+      }
     }
   },
   "route": [
@@ -11517,11 +11588,13 @@
     }
   ],
   "last_action": {
-    "at": "2026-10-19T18:21:36.789563+08:00",
-    "action": "RECORDED_Q4_USER_APPROVAL_AND_A09_DISPATCH_INTENT",
+    "at": "2026-10-19T18:28:04.819541+08:00",
     "task_id": "A09",
-    "approval_sha256": "5c73af50262f6bd7e48e2b0d46148026c1c3a953d1ee93c8262e356733d99010",
-    "next_dependency": "Create isolated author worktree and separate author/reviewer conversations; reviewer waits for fixed delivery"
+    "action": "Created separate author and independent reviewer; independent prep complete, author dispatched",
+    "workflow_commit": "0a9c634d160ac7b39f68a1fb3555f409dd408f49",
+    "execution_thread_id": "01a153b4-0943-7dd0-92e2-859d26e49934",
+    "review_thread_id": "01a153af-3a4c-7a80-bb57-2e98af01dcd2",
+    "next_dependency": "Author fixed product and delivery commits, raw manifests and release; then coordinator preflight and dispatch existing reviewer in an isolated checkout"
   },
   "limitations": [
     "Current route uses mock B artifacts until independently agreed interface/artifact versions exist.",
@@ -12302,8 +12375,10 @@
       "A07",
       "A08"
     ],
-    "status": "A09_Q4_AUTHORIZED_DISPATCH_PREPARATION",
-    "active_execution_or_review_threads": [],
+    "status": "A09_Q4_DISPATCHED_REVIEW_WAITING",
+    "active_execution_or_review_threads": [
+      "01a153b4-0943-7dd0-92e2-859d26e49934"
+    ],
     "open_external_dependencies": [
       "Other three answer-only cases remain HOLD without invented question relationships",
       "Complete external G0.8/Check0.8/plan0.3 not loaded or accepted",
