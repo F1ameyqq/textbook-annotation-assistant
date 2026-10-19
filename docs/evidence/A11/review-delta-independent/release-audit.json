@@ -1,0 +1,50 @@
+{
+  "worker": {
+    "created": {
+      "pid": 48008,
+      "supervisor_pid": 71948,
+      "product_commit": "8ff44619b955983cc84041525c7b9176d45660f2",
+      "timeout_seconds": 180,
+      "created_at": "2026-10-19T16:24:31.913284+00:00",
+      "handle_owner": "this supervisor retains original Popen until communicate/wait completes"
+    },
+    "released": {
+      "pid": 48008,
+      "returncode": 0,
+      "timed_out": false,
+      "original_popen_wait_completed": true,
+      "stdout_pipe_closed": true,
+      "stderr_pipe_closed": true,
+      "owned_process_only": true,
+      "released_at": "2026-10-19T16:24:36.185648+00:00"
+    }
+  },
+  "supervisor": {
+    "created": {
+      "at": "2026-10-19T16:24:31.689920+00:00",
+      "pid": 71948,
+      "wrapper_pid": 76164,
+      "source": "this wrapper owns original Popen object",
+      "command": [
+        "C:\\Users\\ASUS\\AppData\\Local\\Programs\\Python\\Python39\\python.exe",
+        "docs/evidence/A11/review-delta-execution/run-delta.py",
+        "docs/evidence/A11/review-delta-execution/independent-attempt-1"
+      ],
+      "cwd": "D:\\1800-worktrees\\a11-delta-run"
+    },
+    "released": {
+      "at": "2026-10-19T16:24:36.200624+00:00",
+      "pid": 71948,
+      "returncode": 0,
+      "original_popen_wait_completed": true,
+      "stdout_pipe_closed": true,
+      "stderr_pipe_closed": true,
+      "retry_performed": false
+    }
+  },
+  "evidence_basis": "same original Popen objects waited by communicate, no posthoc PID absence used",
+  "scope": "worker and supervisor processes; synthetic release failures are retained evidence, not live browser sessions",
+  "new_process_probes": 0,
+  "foreign_processes_terminated": 0,
+  "lock_files_deleted": 0
+}
