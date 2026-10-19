@@ -1,0 +1,245 @@
+{
+  "format_version": "coordinator-live-pilot-scope-draft-1",
+  "created_on": "2026-10-19",
+  "base_commit": "404199fbbd7ef97b5837ba3d0555e91e5175e1cd",
+  "status": "DRAFT_STATIC_SCOPE_READY",
+  "implementation": "NOT_STARTED",
+  "offline_implementation_can_start": true,
+  "platform_execution": "BLOCKED",
+  "is_write_authorization": false,
+  "book_id": "46007447",
+  "max_candidate_questions": 5,
+  "fixed_question_ids": null,
+  "approved_write_budget": null,
+  "forbidden_replay_platform_orders": [
+    22
+  ],
+  "supported_question_type": "ordinary_choice",
+  "required_frame_roles": [
+    "Q",
+    "W",
+    "W",
+    "W",
+    "W",
+    "A"
+  ],
+  "a10_status": {
+    "source": "parent coordinator message, fixed evidence not independently read",
+    "result": "NAVIGATION_TRANSPORT_FAILED",
+    "round_consumed": true,
+    "business_writes": 0,
+    "login_submitted": false,
+    "release": "AUTHOR_REPORTED_PENDING_FROZEN_REVIEW",
+    "current_source_verified": false,
+    "current_session_verified": false,
+    "current_coordinates_verified": false
+  },
+  "known_api_facts": {
+    "provenance": "historical bounded A05 only",
+    "commit_endpoint": "/qieti/api/annotate_pic/commit_unified_submit",
+    "historical_commit_count": 1,
+    "historical_frames": [
+      "Q",
+      "A"
+    ],
+    "historical_ocr_submissions": [],
+    "historical_content_check_status": "PENDING",
+    "current_wire_profile_verified": false,
+    "text_persistence_verified": false,
+    "choice_W_live_verified": false
+  },
+  "proposed_new_files": [
+    "src/annotation/quality/live_pilot.py",
+    "src/annotation/delivery/live_pilot/__init__.py",
+    "src/annotation/delivery/live_pilot/plan.py",
+    "src/annotation/delivery/live_pilot/usense.py",
+    "src/annotation/runtime/live_pilot/__init__.py",
+    "src/annotation/runtime/live_pilot/__main__.py",
+    "src/annotation/runtime/live_pilot/journal.py",
+    "src/annotation/runtime/live_pilot/runner.py",
+    "tests/test_live_pilot_admission.py",
+    "tests/test_live_pilot_journal.py",
+    "tests/test_live_pilot_readback.py",
+    "tests/fixtures/live_pilot/fixture-catalog.json",
+    "docs/live-pilot-runbook.md"
+  ],
+  "fixture_rule": "Only new paths predeclared in fixture-catalog.json; no existing files modified",
+  "existing_files_mutable": [],
+  "reuse_allowlist": [
+    "annotation.contracts: seal_artifact, validate_bundle, assert_plan_ready, content_digest, exact references",
+    "annotation.quality.targetcheck: projection_frames only after independent role validation",
+    "annotation.delivery.planner: frame_facts, compare_action_effect as frame-level helper only",
+    "annotation.delivery.mock.persistent: BookEffectGate only",
+    "annotation.runtime.storage.common: canonical, digest, exclusive_bytes only"
+  ],
+  "do_not_reuse_as_live": [
+    "A02 make_artifact/analyze_target/create_plan/verify_generated_plan",
+    "A02 directory-local action_facts as global order or sufficient ABSENT proof",
+    "RuntimeStore SIMULATED intent/receipt and SYNTHETIC evidence factories",
+    "A05 old session.py/command queue and Q22 constants"
+  ],
+  "offline_work_packages": [
+    "Pure admission, true global TARGET and one-question PLATFORM plan builder",
+    "Durable append-only journal and serial runner with injected fake transport",
+    "Historical response codecs, text DTO and unknown-wire rejection",
+    "Independent negative controls and raw-byte preservation review"
+  ],
+  "blocking_evidence": [
+    "Fixed new question list and real write budget",
+    "Complete exact source/graph/check inputs and content approval",
+    "Current observed book/directory/frames/original mapping/coordinates",
+    "Current session/frame-readback capability evidence for selected session mode",
+    "Exact joint-confirmed platform execution policy; offline Q1/Q4 adoption insufficient",
+    "Verified text/choice payload schema, content readback and crop-upload scope",
+    "Independent frozen A10 failure/release audit and separately scoped new platform work"
+  ],
+  "test_groups": [
+    "T1 authority/source identity",
+    "T2 independent role semantics including stale Q mapping",
+    "T3 C01 observed chain and genuine policy/capability basis",
+    "T4 global append and baseline protection",
+    "T5 crash/restart/exclusive once-only send",
+    "T6 UNKNOWN reconcile-only and successor NOT_RUN",
+    "T7 business receipt/content/refresh/reopen readback",
+    "T8 shutdown/release/prohibited request guards"
+  ],
+  "freeze_requirements": [
+    "Exact candidate commit and baseline",
+    "New-path allowlist and raw SHA-256 manifest",
+    "Preserve every old raw tracked path",
+    "Declared fixtures with independent expectations",
+    "New finite test commands/results and explicit live gaps",
+    "Author REVIEW then independent offline review; no self-acceptance"
+  ],
+  "execution_invariants": [
+    "Intent and irreversible send claim durable before any send",
+    "At most one send per approved question; no automatic retry",
+    "Unknown, mismatch or release uncertainty stops successors",
+    "Readback derived from actual GET not expected plan",
+    "Original UNKNOWN remains immutable; reconcile appends only",
+    "Same canonical platform/book lock across runs/profiles",
+    "Old question/directory fields protected",
+    "Content PENDING is never successful complete entry",
+    "No OCR/service calls/submission outside exact new authority"
+  ],
+  "task_activity": {
+    "platform_access": 0,
+    "network_access": 0,
+    "profile_or_credential_reads": 0,
+    "business_runs": 0,
+    "test_runs": 0,
+    "source_modifications": 0,
+    "coordination_json_modifications": 0,
+    "messages_to_B": 0,
+    "spawned_agents": 0
+  },
+  "source_raw_blobs": [
+    {
+      "path": "docs/delivery-72h-plan-2026-10-19.md",
+      "commit": "404199fbbd7ef97b5837ba3d0555e91e5175e1cd",
+      "raw_sha256": "2f8ff2b98b1e97dfdfe811f0124bcc0940549fde1a8f16f7b99b49ff8effd860",
+      "bytes": 6657
+    },
+    {
+      "path": "docs/tasks/A10-platform-readiness-preflight.md",
+      "commit": "404199fbbd7ef97b5837ba3d0555e91e5175e1cd",
+      "raw_sha256": "ea55468b1fffaaa918f81ec78aef20b220c8a8efbb2775dcfe960ab034620b60",
+      "bytes": 3373
+    },
+    {
+      "path": "docs/tasks/A05-execution-report.md",
+      "commit": "404199fbbd7ef97b5837ba3d0555e91e5175e1cd",
+      "raw_sha256": "aa7389c538d10a2106ef49b1d5fd8081e6714bc3d8bb3c27211a337a0a5b8481",
+      "bytes": 11512
+    },
+    {
+      "path": "docs/tasks/A05-review-report.md",
+      "commit": "404199fbbd7ef97b5837ba3d0555e91e5175e1cd",
+      "raw_sha256": "8ac18fedd63504afa6446c3f4a6a79df5c317ff49461125ceb4b4fb151f4ef85",
+      "bytes": 11292
+    },
+    {
+      "path": "docs/evidence/A05/execution/code-version.json",
+      "commit": "404199fbbd7ef97b5837ba3d0555e91e5175e1cd",
+      "raw_sha256": "2fb2c8da7853368bae4178de2a03ad84d9e3c67317452bb18e697dc64d184df3",
+      "bytes": 1158
+    },
+    {
+      "path": "docs/evidence/A05/execution/commit-preflight.json",
+      "commit": "404199fbbd7ef97b5837ba3d0555e91e5175e1cd",
+      "raw_sha256": "67d365a417789dd4d3c9994f066f09f20d271ee47a016535a132da256f863fbf",
+      "bytes": 2176
+    },
+    {
+      "path": "docs/evidence/A05/execution/commit-receipt.json",
+      "commit": "404199fbbd7ef97b5837ba3d0555e91e5175e1cd",
+      "raw_sha256": "6a4b312165b4f395d221c4822664932ffce90e45624cd676e9f1e0b9240986de",
+      "bytes": 302
+    },
+    {
+      "path": "src/annotation/contracts/models.py",
+      "commit": "404199fbbd7ef97b5837ba3d0555e91e5175e1cd",
+      "raw_sha256": "993c6d5081dcb6dad0b20107ed68860564acee8390e65285fb5a36761cbc19b9",
+      "bytes": 22216
+    },
+    {
+      "path": "src/annotation/contracts/validation.py",
+      "commit": "404199fbbd7ef97b5837ba3d0555e91e5175e1cd",
+      "raw_sha256": "6b98eefe7c1a308f3846ba2f3acce1ffae5c64ec0b5c4d3675ee5872f055a0f7",
+      "bytes": 47800
+    },
+    {
+      "path": "src/annotation/quality/targetcheck/__init__.py",
+      "commit": "404199fbbd7ef97b5837ba3d0555e91e5175e1cd",
+      "raw_sha256": "a88d99f1f81fe33ce99a22a48e84585be663087e2eaeac27fa239ec9ccaedb3a",
+      "bytes": 16661
+    },
+    {
+      "path": "src/annotation/delivery/planner/__init__.py",
+      "commit": "404199fbbd7ef97b5837ba3d0555e91e5175e1cd",
+      "raw_sha256": "78c4242c48730eb7b8fec5e7c13b0164a111a6475383c5a4cc4e9fb22c0bdfb4",
+      "bytes": 26611
+    },
+    {
+      "path": "src/annotation/delivery/mock/persistent.py",
+      "commit": "404199fbbd7ef97b5837ba3d0555e91e5175e1cd",
+      "raw_sha256": "8af1f8de7a4ec08966dc10d7180060f89a47aad1eddce19c3c45bacd953d2487",
+      "bytes": 44562
+    },
+    {
+      "path": "src/annotation/runtime/storage/__init__.py",
+      "commit": "404199fbbd7ef97b5837ba3d0555e91e5175e1cd",
+      "raw_sha256": "e493065083293a826d7ac872666246282e9b664b762d84df2145fda90689eda8",
+      "bytes": 77664
+    },
+    {
+      "path": "src/annotation/runtime/storage/common.py",
+      "commit": "404199fbbd7ef97b5837ba3d0555e91e5175e1cd",
+      "raw_sha256": "d110b02d445df6618081390faa11a36dae645f2bca829996dbc31ae7a6e9c063",
+      "bytes": 3972
+    }
+  ],
+  "local_reference": {
+    "path": ".local/stages/A05/session.py",
+    "verified_sha256": "bba7998f8279fd3403420765cccee53a2ecaba73a23b864fb945059e7b99c9d7",
+    "read_scope": "guard source lines and digest only; never executed"
+  },
+  "scope_markdown": {
+    "path": "implementation-scope.md",
+    "sha256": "669cce278071eb0cef568702dc7ef250d150ef9324c418564ab6461763cd2be7"
+  },
+  "memory_refs": [
+    {
+      "path": "MEMORY.md",
+      "lines": [
+        83,
+        126
+      ],
+      "use": "route to A05 bounded persistence evidence; relevant claims reverified against current frozen blobs",
+      "rollout_ids": [
+        "01a14454-a318-72d1-ad1d-62243d475888",
+        "01a14454-610f-75f0-8baa-225518a51136"
+      ]
+    }
+  ]
+}
