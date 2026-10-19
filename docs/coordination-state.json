@@ -2,7 +2,7 @@
   "schema_version": 1,
   "project": "D:\\1800",
   "coordinator_thread_id": "01a13f26-7567-75e1-99ee-c9d2194e78bb",
-  "updated_at": "2026-10-19T12:45:59.360673+00:00",
+  "updated_at": "2026-10-19T13:19:26.487160+00:00",
   "automation": {
     "id": "1800-a",
     "kind": "heartbeat",
@@ -9305,6 +9305,18 @@
         "scope": "Fixed accepted source and frozen evidence only; no new execution authority"
       },
       "push_authorization_scope": "Completed A-PUBLISH-04 only; future changes require their own scope"
+    },
+    "A10": {
+      "status": "DISPATCH_INTENT",
+      "task": "docs/tasks/A10-platform-readiness-preflight.md",
+      "approval": "docs/approvals/A10-platform-readonly-approval.json",
+      "scope": "One round <=15min read-only book46007447; at most viewer10/14/15/173; no business writes or old task rerun",
+      "execution_agent": null,
+      "review_agent": null,
+      "execution_runs_limit": 1,
+      "live_independent_runs_limit": 0,
+      "next_dependency": "Register single execution agent, then frozen archive-only independent review",
+      "dispatch_result": "INTENT_RECORDED"
     }
   },
   "route": [
@@ -11717,14 +11729,11 @@
     }
   ],
   "last_action": {
-    "at": "2026-10-19T12:42:15.251481+00:00",
-    "action": "ASSESS_REMAINING_DELIVERY_SCOPE_AND_CONDITIONAL_ESTIMATE",
-    "coordinator_thread_id": "01a13f26-7567-75e1-99ee-c9d2194e78bb",
-    "state": "NO_NEW_IMPLEMENTATION_DISPATCH",
-    "scope": "Current published A08/A09 and original M1-M4 roadmap",
-    "next_dependency": "B Q4 technical adoption or explicit bounded user follow-up; no platform authorization",
-    "business_runs": 0,
-    "platform_actions": 0
+    "at": "2026-10-19T13:19:26.487160+00:00",
+    "action": "RECORD_PLATFORM_CONNECTION_CLARIFICATION_AND_A10_INTENT",
+    "state": "READY_TO_DISPATCH_READONLY",
+    "scope": "One round <=15min read-only book46007447; at most viewer10/14/15/173; no business writes or old task rerun",
+    "next_dependency": "Register single execution agent, then frozen archive-only independent review"
   },
   "limitations": [
     "Current route uses mock B artifacts until independently agreed interface/artifact versions exist.",
@@ -11786,13 +11795,13 @@
   },
   "platform_session": {
     "book_id": "46007447",
-    "reservation_task": null,
-    "reservation_stage": null,
-    "status": "RELEASED_NO_ONLINE_RESERVATION",
+    "reservation_task": "A10",
+    "reservation_stage": "READONLY_PREFLIGHT",
+    "status": "RESERVED_PENDING_LOCAL_EXCLUSIVITY_CHECK",
     "actual_process_and_lock_check_required": true,
     "review_must_wait_release": true,
-    "operations": "Read only; no frame edits, OCR, save, review or delivery.",
-    "reservation_thread_id": null,
+    "operations": "Newly authorized bounded read-only preflight only; no annotation writes",
+    "reservation_thread_id": "01a13f26-7567-75e1-99ee-c9d2194e78bb",
     "last_observed_at": "2026-10-17T05:05:41.884825+00:00",
     "release_evidence": {
       "commit": "a86eca6ec87ced20dc3a8bcc8f2c87d329e87c39",
@@ -12972,5 +12981,34 @@
       "estimated_completion_date": null,
       "platform_authorized_now": false
     }
-  ]
+  ],
+  "deadline_delivery_plan": {
+    "recorded_at": "2026-10-19T13:16:43.254829+00:00",
+    "user_deadline_days": 3,
+    "deadline_basis": "72 hours from this decision; target 2026-10-22 same local time; exact handover clock not specified",
+    "user_selected_delivery": "必须包含：优先争取限定题型、小批量的平台试用版",
+    "status": "READONLY_PREFLIGHT_AUTHORIZED_PREPARING_DISPATCH",
+    "plan": "docs/delivery-72h-plan-2026-10-19.md",
+    "plan_sha256": "e1ef74b70acb9b71e498d0659a6a8115cbd572cc82185dbaf60aa16f17743a24",
+    "proposed_book_id": "46007447",
+    "proposed_batch_size": 5,
+    "proposed_priority_type": "ordinary_single_choice",
+    "exact_question_list_fixed": false,
+    "platform_access_authorized": true,
+    "platform_writes_authorized": false,
+    "first_readonly_scope": "One round <=15 minutes, book46007447, up to viewer10/14/15/173 with actual identity verification; no writes, OCR, Q22 replay or automatic retries",
+    "other_three_cases": "HOLD",
+    "old_closed_tasks_reopened": false,
+    "prior_success_budgets_restored": false,
+    "new_business_runs": 0,
+    "new_platform_actions": 0,
+    "new_product_dispatches": 0,
+    "B_messages": 0,
+    "planning_agent": "/root/three_day_scope_check",
+    "next_dependency": "Run one newly authorized bounded read-only preflight, then fix fresh-question write scope and qualified B inputs",
+    "full_original_scope_completed_or_cancelled": false,
+    "committed_success_guarantee": false,
+    "authorization_clarification": "一直允许连接平台",
+    "first_readonly_task": "docs/tasks/A10-platform-readiness-preflight.md"
+  }
 }
