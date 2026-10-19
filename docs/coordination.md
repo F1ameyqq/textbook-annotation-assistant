@@ -1,5 +1,7 @@
 # A 侧开发调度与验收
 
+2026-10-20最新：A10公开GET诊断固定 `fc81de1b` 失败原因仍UNKNOWN，归档/精确自有释放已核，原尝试不复跑。A11独立固定 `1522d1b6` 的17项PASS保留，单选资格和对账释放报告两项静态缺口整体REWORK；已按[一次差量纠正](tasks/A11-review-findings-correction.md)、工作流73ded167向原作者续派并获接单确认。只修两缺口、六项离线检查，固定后才独立；原suite不重跑，真实平台仍未通过。平台当前访问上下文待用户回复既有问题；连接许可不再索取。三天路线继续首题→最多五题→独立交接，其他三例HOLD。
+
 2026-10-19 三天路线正在推进：A10唯一平台轮固定7dbe786d因首次NAVIGATION/TRANSPORT停止，自有释放已独立核对，原轮数耗尽；按[公开入口诊断](tasks/A10-public-transport-diagnostic.md)另行准备一次无登录GET定位。并行[A11](tasks/A11-limited-live-runner-offline-core.md)已在独立目录实现小批录入内核，先离线冻结验收，真实目标与文本wire仍需核实。B已明确采用固定Q4离线技术口径，其他三例HOLD。后续以JSON、固定证据和[三天路线](delivery-72h-plan-2026-10-19.md)为准，不重复询问平台许可或重开旧成功任务。
 
 2026-10-19 最新B接收：固定 `2455fa4f` 已明确采用A发布edf12596的Q4离线三项技术口径，等待本项确认已关闭；新Q16有题ID及未选定候选关系，其他三例仍HOLD。两新ZIP本轮未取得，未声称包内验证。见 [接收记录](tasks/B-Q4-adoption-source-update-reception-2026-10-19.md)。A10清理差量已接受，正准备固定新只读driver，0新平台轮；旧等待Q4/本地纠正中的描述为历史。
