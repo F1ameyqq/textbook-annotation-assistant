@@ -1,0 +1,293 @@
+{
+  "schema_version": 1,
+  "review_kind": "A10_SYSTEM_PROXY_IMPORT_FIX_FROZEN_STATIC_DELTA_REVIEW",
+  "reviewed_at_utc": "2026-10-19T23:23:46.591544+00:00",
+  "reviewer": "/root/a10_system_proxy_review",
+  "candidate_commit": "72cb7d6dbe12a7f41f10e258d6febf538b244f55",
+  "baseline_candidate_commit": "6966509b5cab3a65c7341fd0b1793a1384faf314",
+  "preserved_failure_commit": "0376a08e32508b85d3d6c44e05dfbb0679a59599",
+  "manifest_sha256": "6c7711a7be545569d3df7c8caa96c731f15e4e658002adfba9428c870c437630",
+  "decision": "PASS_STATIC_IMPORT_DELTA_ONLY",
+  "blocking_findings": [],
+  "launch_compatibility_scope": "The known bare-sibling-import incompatibility with the proposed Python39 -I -B invocation is corrected. The full supervisor/Job/worker/network execution has not been tested by this review.",
+  "proposed_argv": [
+    "C:\\Users\\ASUS\\AppData\\Local\\Programs\\Python\\Python39\\python.exe",
+    "-I",
+    "-B",
+    "D:/1800-a10-system-proxy-import-fix/probe.py",
+    "--run-once-after-coordinator-review",
+    "72cb7d6dbe12a7f41f10e258d6febf538b244f55",
+    "6c7711a7be545569d3df7c8caa96c731f15e4e658002adfba9428c870c437630"
+  ],
+  "files": {
+    "candidate-raw-manifest.json": {
+      "size": 754,
+      "sha256": "6c7711a7be545569d3df7c8caa96c731f15e4e658002adfba9428c870c437630"
+    },
+    "input-bindings.json": {
+      "size": 3814,
+      "sha256": "e452a9e986f7574408b54c443c7ece17e74b62666ccc27dd2815a12647dce589"
+    },
+    "owned_job.py": {
+      "size": 4316,
+      "sha256": "bb82e070589ee6dcea19f5b82da8cb330fa31a04f43434412404149db9503443"
+    },
+    "preparation-report.md": {
+      "size": 540,
+      "sha256": "ae730024987faafc144593fea60d62d0ec8e9b659d5b4df48d15312a83b09aac"
+    },
+    "probe.py": {
+      "size": 13294,
+      "sha256": "bdc6b8310f3828471c19d0a35f0668af794d993653d158c814b1995116470e4f"
+    },
+    "static-check.json": {
+      "size": 514,
+      "sha256": "68921b980623ef6ec6339991eda8c6979156de87efd52069100c84254fb97f33"
+    }
+  },
+  "checks": [
+    {
+      "id": "fixed_raw_manifest",
+      "status": "PASS",
+      "facts": [
+        "Exactly six fixed candidate files; expected manifest SHA256 and all five member byte sizes/hashes match.",
+        "input-bindings.json is byte-for-byte unchanged from the preceding candidate."
+      ]
+    },
+    {
+      "id": "single_import_block_delta",
+      "status": "PASS",
+      "evidence": [
+        {
+          "commit": "72cb7d6dbe12a7f41f10e258d6febf538b244f55",
+          "path": "docs/evidence/A10/system-proxy-observation-import-fix/probe.py",
+          "lines": "176-182"
+        }
+      ],
+      "facts": [
+        "Exactly one seven-line replacement of the original bare sibling import.",
+        "Replacing that new block with the original line reconstructs the complete original probe text exactly.",
+        "All other functions, constants, worker command/environment, budgets and error handling are byte-preserved."
+      ],
+      "unchanged_function_asts": [
+        "utc",
+        "save_new",
+        "safe_error",
+        "worker",
+        "verify_inputs",
+        "main"
+      ]
+    },
+    {
+      "id": "absolute_loading_with_isolated_launcher",
+      "status": "PASS",
+      "evidence": [
+        {
+          "commit": "72cb7d6dbe12a7f41f10e258d6febf538b244f55",
+          "path": "docs/evidence/A10/system-proxy-observation-import-fix/probe.py",
+          "lines": "12,132-165,176-186,264-271"
+        }
+      ],
+      "facts": [
+        "HERE derives from the resolved absolute __file__ parent, so the sibling spec path is absolute for the proposed exported script.",
+        "spec_from_file_location plus module_from_spec and exec_module loads the selected source directly; it does not depend on the script directory being on sys.path.",
+        "No sys.path mutation, environment fallback, normal-mode fallback or package-name sibling search is added.",
+        "Missing spec/loader raises ImportError and falls through the unchanged sanitized stop path.",
+        "verify_inputs validates the hash-bound owned_job.py and other candidate/dependency bytes before the exclusive start marker and before module execution.",
+        "The proposed Python executable matches the binding; -I and -B remain enabled; the flag plus 40/64-hex arguments satisfy the unchanged main dispatch shape.",
+        "This removes the identified sibling import defect, but does not constitute proof that later OS, Job, dependency startup or transport stages will succeed."
+      ]
+    },
+    {
+      "id": "coordinator_offline_import_check_binding",
+      "status": "PASS_STATIC_EVIDENCE_REVIEW",
+      "evidence": [
+        {
+          "commit": "72cb7d6dbe12a7f41f10e258d6febf538b244f55",
+          "path": "docs/evidence/coordinator/a10-browser-context-20261020/import-fix-check.py",
+          "size": 1342,
+          "sha256": "8dc59d8f7c519ca125943746de26f5316ac42f4e5e92b77f7f179df91b9b96fe",
+          "lines": "3-16"
+        },
+        {
+          "commit": "72cb7d6dbe12a7f41f10e258d6febf538b244f55",
+          "path": "docs/evidence/A10/system-proxy-observation-import-fix/static-check.json",
+          "lines": "2-14"
+        }
+      ],
+      "facts": [
+        "The frozen check script parses the candidate supervisor and extracts exactly the six AST statements from importlib.util import through OwnedJob class binding.",
+        "The selected block ends before OwnedJob() construction and invokes neither supervise nor worker.",
+        "The unchanged owned_job module top level imports ctypes/wintypes and defines the class; WinDLL/Job functions are only invoked later by methods.",
+        "The check asserts isolated mode and absence of its source directory from sys.path; recorded PASS binds both exact frozen source hashes.",
+        "The check used the source preparation directory; runtime export compatibility is established statically by the absolute __file__/HERE path mechanism, not by replaying a full startup.",
+        "This reviewer inspected the script and result only and did not execute the check again."
+      ],
+      "selected_import_statement_count": 6,
+      "recorded_result": {
+        "status": "PASS_LOCAL_IMPORT_ONLY",
+        "checks": [
+          "isolated_mode_active",
+          "script_directory_not_in_sys_path",
+          "exact_new_import_block_loads_bound_OwnedJob_class"
+        ],
+        "job_constructed": false,
+        "child_started": false,
+        "probe_worker_or_supervise_called": false,
+        "network": 0,
+        "browser_profile_login_business": 0,
+        "probe_sha256": "bdc6b8310f3828471c19d0a35f0668af794d993653d158c814b1995116470e4f",
+        "owned_job_sha256": "bb82e070589ee6dcea19f5b82da8cb330fa31a04f43434412404149db9503443"
+      }
+    },
+    {
+      "id": "owned_job_and_network_policy_preserved",
+      "status": "PASS",
+      "evidence": [
+        {
+          "commit": "72cb7d6dbe12a7f41f10e258d6febf538b244f55",
+          "path": "docs/evidence/A10/system-proxy-observation-import-fix/owned_job.py",
+          "sha256": "bb82e070589ee6dcea19f5b82da8cb330fa31a04f43434412404149db9503443"
+        },
+        {
+          "commit": "72cb7d6dbe12a7f41f10e258d6febf538b244f55",
+          "path": "docs/evidence/A10/system-proxy-observation-import-fix/probe.py",
+          "lines": "58-129,186-261"
+        }
+      ],
+      "facts": [
+        "owned_job.py remains byte-for-byte identical.",
+        "The worker is unchanged: precondition guard, explicit loopback proxy, strict TLS, one GET call site, 30-second timeout, zero redirects/retries/fallback and status-only probe access.",
+        "The 10/50/57/60-second supervisor policy, original-handle identity/Job gate, minimal child environment and durable markers are unchanged.",
+        "No browser/profile/login/business operation is added."
+      ]
+    },
+    {
+      "id": "error_and_archive_policy_preserved",
+      "status": "PASS",
+      "evidence": [
+        {
+          "commit": "72cb7d6dbe12a7f41f10e258d6febf538b244f55",
+          "path": "docs/evidence/A10/system-proxy-observation-import-fix/probe.py",
+          "lines": "15-55,103-129,209-261,275-281"
+        }
+      ],
+      "facts": [
+        "Allowlisted error types/codes, UNKNOWN fallback and suppression of raw error text/tracebacks are unchanged.",
+        "No error retry, broader diagnosis loop or second candidate path is added.",
+        "Missing loader/spec raises already-supported ImportError; no new free-text exception retention is introduced.",
+        "Actual release and first-outcome evidence remain required after any later authorized run."
+      ]
+    },
+    {
+      "id": "old_failure_raw_preservation",
+      "status": "PASS",
+      "facts": [
+        "All six prior candidate files and all four fixed startup-failure archive files are byte-for-byte preserved.",
+        "The prior run-once marker and original cleanup_proven=false remain intact.",
+        "The original failed candidate is not retried; this new directory does not erase its consumed startup or manufacture release/platform success."
+      ],
+      "preserved_path_count": 10
+    }
+  ],
+  "preserved_old_files": [
+    {
+      "source_commit": "6966509b5cab3a65c7341fd0b1793a1384faf314",
+      "path": "docs/evidence/A10/system-proxy-observation/candidate-raw-manifest.json",
+      "size": 755,
+      "sha256": "6bbefa8c061e49940f7cc1ee4e93176f88bd20242d6ae5d751ec2480513a0cf2"
+    },
+    {
+      "source_commit": "6966509b5cab3a65c7341fd0b1793a1384faf314",
+      "path": "docs/evidence/A10/system-proxy-observation/input-bindings.json",
+      "size": 3814,
+      "sha256": "e452a9e986f7574408b54c443c7ece17e74b62666ccc27dd2815a12647dce589"
+    },
+    {
+      "source_commit": "6966509b5cab3a65c7341fd0b1793a1384faf314",
+      "path": "docs/evidence/A10/system-proxy-observation/owned_job.py",
+      "size": 4316,
+      "sha256": "bb82e070589ee6dcea19f5b82da8cb330fa31a04f43434412404149db9503443"
+    },
+    {
+      "source_commit": "6966509b5cab3a65c7341fd0b1793a1384faf314",
+      "path": "docs/evidence/A10/system-proxy-observation/preparation-report.md",
+      "size": 1219,
+      "sha256": "e16ba9cc0189b732a248baee7246aba6dbd8a58efe0814f1ee8c5799ea5f5cd8"
+    },
+    {
+      "source_commit": "6966509b5cab3a65c7341fd0b1793a1384faf314",
+      "path": "docs/evidence/A10/system-proxy-observation/probe.py",
+      "size": 12928,
+      "sha256": "2ab7b92156ab368595fdec1c1193999c01cd2644a95663c6aeb76cdd940bf769"
+    },
+    {
+      "source_commit": "6966509b5cab3a65c7341fd0b1793a1384faf314",
+      "path": "docs/evidence/A10/system-proxy-observation/static-check.json",
+      "size": 206,
+      "sha256": "8084d411a4958d07e9362448fbc439e150a06c2e137b3145a37f321b8c263742"
+    },
+    {
+      "source_commit": "0376a08e32508b85d3d6c44e05dfbb0679a59599",
+      "path": "docs/evidence/A10/system-proxy-observation/startup-failure/failure-report.json",
+      "size": 798,
+      "sha256": "11621ac16190fb532b73968faf4eaa35589d98253bf8913f1f408abec8a6ef8c"
+    },
+    {
+      "source_commit": "0376a08e32508b85d3d6c44e05dfbb0679a59599",
+      "path": "docs/evidence/A10/system-proxy-observation/startup-failure/raw-manifest.json",
+      "size": 398,
+      "sha256": "e0731ec43ab05e181f29beaa909c19d62ece7606c66c7925d1b1c923dbf981a5"
+    },
+    {
+      "source_commit": "0376a08e32508b85d3d6c44e05dfbb0679a59599",
+      "path": "docs/evidence/A10/system-proxy-observation/startup-failure/run-once-marker.json",
+      "size": 323,
+      "sha256": "432775d1bc140611415c214f44c719f02ea83cd8a4228abad5dcfef167374caa"
+    },
+    {
+      "source_commit": "0376a08e32508b85d3d6c44e05dfbb0679a59599",
+      "path": "docs/evidence/A10/system-proxy-observation/startup-failure/supervisor-release.json",
+      "size": 675,
+      "sha256": "6639ba34a6e4db2ffdf2d272364f2a91837dcd330b4621a4b014ee4cf805319b"
+    }
+  ],
+  "budget_boundary": {
+    "new_candidate_maximum": 1,
+    "new_startup_maximum": 1,
+    "coordinator_offline_import_checks_recorded": 1,
+    "reviewer_import_checks": 0,
+    "cumulative_candidates_or_starts_maximum": 2,
+    "cumulative_get_intents_maximum": 1,
+    "old_startup_consumed": 1,
+    "old_get_intents": 0,
+    "third_candidate_allowed": false
+  },
+  "limitations": [
+    "Only the fixed candidate and recorded offline import evidence were reviewed. No floating runtime copy or correction was inspected.",
+    "The recorded import check is coordinator evidence, not an independently repeated execution. It covers class loading only, not Job construction or full startup.",
+    "Local dependency pins are unchanged; this delta review does not claim a fresh dependency execution. The preserved verify_inputs revalidates them before any launch.",
+    "The parent-provided proposed argv is a launch plan, not evidence that a launch occurred.",
+    "Static PASS applies to this import-only correction. A later fixed execution archive must independently establish outcome and resource release.",
+    "Previous startup failure and the earlier review omission remain preserved. No causal platform conclusion, login/book/business acceptance or restoration of old A10 budgets is implied."
+  ],
+  "review_execution": {
+    "probe_runs": 0,
+    "import_check_runs": 0,
+    "network_calls": 0,
+    "browser_profile_runs": 0,
+    "business_operations": 0,
+    "registry_queries": 0,
+    "ambient_environment_value_reads": 0,
+    "product_or_evidence_edits": 0,
+    "git_mode": "raw Git bytes; GIT_NO_LAZY_FETCH=1; -c core.longpaths=true"
+  },
+  "release": {
+    "status": "RELEASED",
+    "all_review_commands_completed": true,
+    "retained_background_sessions": 0,
+    "owned_probe_runtime_created": false,
+    "automatic_followup_execution": false
+  },
+  "output_path": "D:/1800/.local/reviews/A10-system-proxy-import-fix-static-review.json"
+}
