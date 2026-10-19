@@ -9060,7 +9060,7 @@
     },
     "A09": {
       "task_id": "A09",
-      "status": "ACTIVE",
+      "status": "DELIVERY_PREFLIGHT_PASSED",
       "scope": "Fixed first-lesson Q4 observed source to one-question four-frame offline simulation; Q/image,Q/text,Q/text,A/text; other cases HOLD",
       "base_commit": "846662f4aab08a75d6ad0482edeced4550e1a1ab",
       "execution_document": "docs/tasks/A09-Q4-offline-simulation.md",
@@ -9073,20 +9073,20 @@
       "input_sha256": "b646fad9008e03e79a3dddfb4ead912d7ceadefbcee331c2e2af2415abf6f673",
       "execution_thread_id": "01a153b4-0943-7dd0-92e2-859d26e49934",
       "review_thread_id": "01a153af-3a4c-7a80-bb57-2e98af01dcd2",
-      "execution_cursor": "2c65d315-b9ec-4b6c-bc10-fadbb6eb9924:2",
+      "execution_cursor": "2c65d315-b9ec-4b6c-bc10-fadbb6eb9924:5",
       "review_cursor": "73f25b56-94d6-40bc-b6d0-f5b7182c1c78:2",
-      "execution_status": "ACTIVE",
-      "review_status": "WAITING_FOR_FIXED_CANDIDATE",
+      "execution_status": "FIXED_DELIVERY_RELEASED",
+      "review_status": "READY_TO_DISPATCH_FIXED_CANDIDATE",
       "max_frozen_implementation_candidates": 2,
       "max_normal_attempts_per_side": 2,
       "max_successes_per_side": 1,
-      "used_candidates": 0,
-      "business_attempts": 0,
+      "used_candidates": 1,
+      "business_attempts": 1,
       "platform_actions_authorized": false,
       "push_authorized": false,
       "B_messages_authorized": false,
       "created_at": "2026-10-19T18:21:36.789563+08:00",
-      "next_dependency": "Author fixed product and delivery commits, raw manifests and release; then coordinator preflight and dispatch existing reviewer in an isolated checkout",
+      "next_dependency": "Send fixed A09 candidate 1 review dispatch to registered independent conversation; then wait for fixed review and release",
       "dispatch_intents": [
         {
           "role": "execution",
@@ -9130,7 +9130,7 @@
       ],
       "scope_preflight_agent": "/root/a09_q4_scope_preflight",
       "workflow_commit": "0a9c634d160ac7b39f68a1fb3555f409dd408f49",
-      "scope_preflight_result": "STATIC_COMPATIBLE_NEW_PATHS_ONLY",
+      "scope_preflight_result": "PASS_TO_DISPATCH_STATIC_ONLY",
       "scope_preflight_notes": [
         "C01 free_response preserves proposal fill_blank in provenance",
         "Q:image supported; actual type read from memory frame_projections",
@@ -9176,12 +9176,75 @@
         "writes": 0,
         "approval_and_proposal_raw_sha_matched": true
       },
-      "last_snapshot_at": "2026-10-19T18:29:41.849062+08:00",
+      "last_snapshot_at": "2026-10-19T19:13:50.002691+08:00",
       "automation_update": {
         "id": "1800-a",
         "status": "ACTIVE",
         "prompt_scope": "A09 approved Q4 bounded offline implementation and independent review",
         "updated_at": "2026-10-19T18:29:41.849062+08:00"
+      },
+      "last_snapshot_note": "Author final delivery frozen and released; independent still waiting; coordinator fixed-byte and release preflight in progress",
+      "observed_execution_head": "29c82b0997be3080f53dfde2afbb1d7457b04197",
+      "author_progress_report_unverified": {
+        "stage": "PREPARING_FIRST_FROZEN_CANDIDATE",
+        "reported_preapply": "Five gates PASS in narrow checks",
+        "reported_negative": "Legally resealed image-to-text reaches PRE_APPLY semantic rejection after C01",
+        "reported_existing_raw_files_checked": 956,
+        "independently_accepted": false
+      },
+      "product_commit": "29c82b0997be3080f53dfde2afbb1d7457b04197",
+      "execution_delivery_commit": "439423ebf4277e3825aba24fed6f56546ef66a2b",
+      "execution_successes": 1,
+      "execution_dispatches": 1,
+      "execution_refusals": 10,
+      "preflight": {
+        "path": "docs/evidence/coordinator/a09-preflight-20261019/preflight.json",
+        "status": "PREFLIGHT_PASS_NOT_ACCEPTANCE",
+        "scope_agent": "/root/a09_q4_scope_preflight",
+        "scope_result": "PASS_TO_DISPATCH",
+        "new_business_runs": 0
+      },
+      "review_checkout_intent": {
+        "at": "2026-10-19T11:13:54.788837+00:00",
+        "delivery_dir": "D:\\1800-worktrees\\a09-q4-review",
+        "runtime_dir": "D:\\1800-worktrees\\a09-q4-review-run",
+        "delivery": "439423ebf4277e3825aba24fed6f56546ef66a2b",
+        "product": "29c82b0997be3080f53dfde2afbb1d7457b04197",
+        "status": "READY"
+      },
+      "review_checkouts": [
+        {
+          "path": "D:\\1800-worktrees\\a09-q4-review",
+          "head": "439423ebf4277e3825aba24fed6f56546ef66a2b",
+          "branch": "codex/a09-q4-review",
+          "raw_files_checked": 1052,
+          "raw_eol_restored": 0,
+          "tracked_diff_paths": 0,
+          "product_runs": 0
+        },
+        {
+          "path": "D:\\1800-worktrees\\a09-q4-review-run",
+          "head": "29c82b0997be3080f53dfde2afbb1d7457b04197",
+          "branch": null,
+          "raw_files_checked": 972,
+          "raw_eol_restored": 0,
+          "tracked_diff_paths": 0,
+          "product_runs": 0
+        }
+      ],
+      "review_workdir": "D:\\1800-worktrees\\a09-q4-review",
+      "review_runtime_workdir": "D:\\1800-worktrees\\a09-q4-review-run",
+      "review_dispatch_intent": {
+        "at": "2026-10-19T11:15:31.069992+00:00",
+        "status": "INTENT_RECORDED",
+        "thread_id": "01a153af-3a4c-7a80-bb57-2e98af01dcd2",
+        "dispatch_document": "docs/tasks/A09-Q4-review-dispatch.md",
+        "product": "29c82b0997be3080f53dfde2afbb1d7457b04197",
+        "delivery": "439423ebf4277e3825aba24fed6f56546ef66a2b",
+        "normal_attempts_authorized_this_dispatch": 1,
+        "max_successes_this_dispatch": 1,
+        "original_refusals": 10,
+        "scope": "Original A09 fixed Q4 offline candidate 1 only"
       }
     }
   },
@@ -11595,16 +11658,14 @@
     }
   ],
   "last_action": {
-    "at": "2026-10-19T18:28:04.819541+08:00",
+    "at": "2026-10-19T11:15:31.069992+00:00",
     "task_id": "A09",
-    "action": "Created separate author and independent reviewer; independent prep complete, author dispatched",
-    "workflow_commit": "0a9c634d160ac7b39f68a1fb3555f409dd408f49",
-    "execution_thread_id": "01a153b4-0943-7dd0-92e2-859d26e49934",
+    "action": "Delivery preflight and separate review checkouts complete; independent dispatch intent recorded",
+    "execution_delivery": "439423ebf4277e3825aba24fed6f56546ef66a2b",
+    "product": "29c82b0997be3080f53dfde2afbb1d7457b04197",
     "review_thread_id": "01a153af-3a4c-7a80-bb57-2e98af01dcd2",
-    "next_dependency": "Author fixed product and delivery commits, raw manifests and release; then coordinator preflight and dispatch existing reviewer in an isolated checkout",
-    "execution_status": "ACTIVE",
-    "review_status": "WAITING_FOR_FIXED_CANDIDATE",
-    "automation_updated_at": "2026-10-19T18:29:41.849062+08:00"
+    "scope": "Fixed first-lesson Q4 observed source to one-question four-frame offline simulation; Q/image,Q/text,Q/text,A/text; other cases HOLD",
+    "next_dependency": "Send fixed A09 candidate 1 review dispatch to registered independent conversation; then wait for fixed review and release"
   },
   "limitations": [
     "Current route uses mock B artifacts until independently agreed interface/artifact versions exist.",
@@ -12183,20 +12244,20 @@
     }
   ],
   "last_heartbeat": {
-    "at": "2026-10-18T20:19:26.676991+08:00",
-    "trigger_at": "2026-10-18T12:13:29.248Z",
     "automation_id": "1800-a",
-    "task_id": "A07",
-    "status": "REVIEW",
-    "thread_id": "01a14edb-bdc9-7370-890c-3b301b6ea414",
-    "version": "d2e710c817cf85505ac4fad4919dd51d1062d33a",
-    "candidate_commit": "6dad9b9a40a10989c102d91cf7b54f19c012015f",
-    "scope": "Fixed B Q1 observed source to A-only offline six-frame plan and simulated receipt; no platform or joint B acceptance",
-    "cursor": "65496636-3236-4063-9ba6-c8ca5d3c3561:2",
-    "dispatch_result": "EXISTING_REVIEW_RESUMED_AND_ACTIVE",
-    "next_dependency": "Fixed independent report, raw manifest and own process release; then coordinator bounded acceptance and scoped local integration",
-    "coordinator_business_runs": 0,
-    "decision": "NOTIFY"
+    "trigger_at": "2026-10-19T10:39:23.435Z",
+    "checked_at": "2026-10-19T18:40:06.678900+08:00",
+    "task_id": "A09",
+    "execution_thread_id": "01a153b4-0943-7dd0-92e2-859d26e49934",
+    "review_thread_id": "01a153af-3a4c-7a80-bb57-2e98af01dcd2",
+    "execution_cursor": "2c65d315-b9ec-4b6c-bc10-fadbb6eb9924:4",
+    "review_cursor": "73f25b56-94d6-40bc-b6d0-f5b7182c1c78:2",
+    "observed_execution_head": "29c82b0997be3080f53dfde2afbb1d7457b04197",
+    "state": "ACTIVE_REVIEW_WAITING",
+    "next_dependency": "Author fixed product and delivery commits, raw manifests and release; then coordinator preflight and dispatch existing reviewer in an isolated checkout",
+    "dispatch_result": "NO_DISPATCH_AUTHOR_STILL_ACTIVE",
+    "new_business_runs": 0,
+    "new_tests": 0
   },
   "interactive_progress_history": [
     {
@@ -12385,10 +12446,8 @@
       "A07",
       "A08"
     ],
-    "status": "A09_Q4_ACTIVE_REVIEW_WAITING",
-    "active_execution_or_review_threads": [
-      "01a153b4-0943-7dd0-92e2-859d26e49934"
-    ],
+    "status": "A09_REVIEW_DISPATCH_READY",
+    "active_execution_or_review_threads": [],
     "open_external_dependencies": [
       "Other three answer-only cases remain HOLD without invented question relationships",
       "Complete external G0.8/Check0.8/plan0.3 not loaded or accepted",
@@ -12683,5 +12742,19 @@
     "approval_record": "docs/approvals/A09-Q4-offline-business-approval.json",
     "approval_sha256": "5c73af50262f6bd7e48e2b0d46148026c1c3a953d1ee93c8262e356733d99010",
     "next_task_id": "A09"
+  },
+  "delivery_readiness_snapshot": {
+    "at": "2026-10-19T18:33:00.956422+08:00",
+    "scope": "A-side verified status and written M1-M4 roadmap; not a B internal progress assessment",
+    "current": "Fixed Q1 offline accepted and adopted; Q4 A09 implementation active; A08 batch reception HOLD only",
+    "remaining": [
+      "Complete Q4 implementation, fixed independent review and bounded integration",
+      "Bounded real-platform read/write/readback/restart/unknown and content acceptance",
+      "Representative real complex cases and exception correction",
+      "Small-batch metrics, deployment and recovery handoff"
+    ],
+    "overall_complete": false,
+    "estimated_completion_date": null,
+    "platform_authorized_now": false
   }
 }
