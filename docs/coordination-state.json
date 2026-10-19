@@ -2,7 +2,7 @@
   "schema_version": 1,
   "project": "D:\\1800",
   "coordinator_thread_id": "01a13f26-7567-75e1-99ee-c9d2194e78bb",
-  "updated_at": "2026-10-19T14:14:16.276358+00:00",
+  "updated_at": "2026-10-19T14:15:08.293602+00:00",
   "automation": {
     "id": "1800-a",
     "kind": "heartbeat",
@@ -9307,7 +9307,7 @@
       "push_authorization_scope": "Completed A-PUBLISH-04 only; future changes require their own scope"
     },
     "A10": {
-      "status": "OWNED_HANDLE_CLEANUP_DELTA_DISPATCH_INTENT",
+      "status": "OWNED_HANDLE_CLEANUP_DELTA_ACTIVE",
       "task": "docs/tasks/A10-platform-readiness-preflight.md",
       "approval": "docs/approvals/A10-platform-readonly-approval.json",
       "scope": "One round <=15min read-only book46007447; at most viewer10/14/15/173; no business writes or old task rerun",
@@ -9377,17 +9377,28 @@
         "author_agent": "/root/a10_local_guard_diagnosis"
       },
       "correction_review": {
-        "status": "ACTIVE",
+        "status": "HOLD_OWNED_HANDLE_CLEANUP",
         "agent": "/root/a10_preflight_archive_review",
         "candidate": "5543aba6fdcc146a5b1439a539ba0046e5f11cda",
         "scope": "Fixed correction source/raw manifest and one finite offline suite; no live process/profile/platform",
         "dispatch_result": "FOLLOWUP_TASK_CONFIRMED",
         "cursor": null,
         "next_dependency": "Fixed independent findings and release; no live launch until coordinator decision",
-        "dispatched_at": "2026-10-19T14:07:25.777212+00:00"
+        "dispatched_at": "2026-10-19T14:07:25.777212+00:00",
+        "delivery_commit": "1df8d7dbf0e9d01f38277a66932f983e6c24efee",
+        "released": true,
+        "normal_offline_suite_runs": 1,
+        "tests_passed": 23,
+        "finding": "A10-LC-R01: stdout/stderr close exception skips later resource close attempts; fails closed but cleanup incomplete",
+        "coordinator_raw_verified": {
+          "members": 7,
+          "member_bytes": 19176,
+          "manifest_sha256": "30fe08354d60a71194fb6a0a232b4c68c252039c484c18dbab677120a760f116",
+          "new_runs": 0
+        }
       },
       "cleanup_delta": {
-        "status": "DISPATCH_INTENT",
+        "status": "ACTIVE",
         "approval": "docs/approvals/A10-owned-handle-cleanup-delta-approval.json",
         "approval_sha256": "84f5d1207c89e6db6a317eefcf13f63fa04fd09f5a25faebb031c1791ce5b2d0",
         "task": "docs/tasks/A10-owned-handle-cleanup-delta.md",
@@ -9399,8 +9410,10 @@
         "candidate_limit": 1,
         "scope": "Only independent stdout/stderr/owned handle cleanup; five fake-resource cases; no OS/profile/platform",
         "cursor": null,
-        "dispatch_result": "PENDING",
-        "at": "2026-10-19T14:14:16.276358+00:00"
+        "dispatch_result": "FOLLOWUP_TASK_CONFIRMED",
+        "at": "2026-10-19T14:14:16.276358+00:00",
+        "dispatched_at": "2026-10-19T14:15:08.293602+00:00",
+        "workflow_commit": "9ce6cba6a1d95a9e62c965504358c5ef871f018f"
       }
     }
   },
@@ -12407,7 +12420,7 @@
     "checked_at": "2026-10-19T14:10:57.696279+00:00",
     "task_id": "A10",
     "coordinator_thread_id": "01a13f26-7567-75e1-99ee-c9d2194e78bb",
-    "state": "LOCAL_GUARD_CORRECTION_REVIEW",
+    "state": "OWNED_HANDLE_CLEANUP_DELTA_ACTIVE",
     "verified_local_head": "09e2b16772c00d6a5da7d950742c1a98e33d2eff",
     "candidate": "5543aba6fdcc146a5b1439a539ba0046e5f11cda",
     "execution_agent": "/root/a10_local_guard_diagnosis",
@@ -12417,14 +12430,14 @@
     "cursor": null,
     "cursor_note": "Collaboration agent messages/status; closed app-thread cursors retained without polling",
     "scope": "Fixed correction source/raw manifest and one finite offline suite; no live process/profile/platform",
-    "dispatch_result": "FOLLOWUP_TASK_CONFIRMED",
-    "next_dependency": "Fixed independent correction review and release, then coordinator decision on the unused bounded read-only platform round",
+    "dispatch_result": "AUTHORIZED_CLEANUP_DELTA_FOLLOWUP_CONFIRMED",
+    "next_dependency": "Authorized cleanup delta fixed author delivery and one finite independent delta; no live launch before acceptance",
     "new_business_runs": 0,
     "new_product_tests": 0,
     "new_platform_rounds": 0,
     "new_pushes": 0,
     "B_messages": 0,
-    "automation_update": "CONFIRMED_ACTIVE_CURRENT_CORRECTION_REVIEW",
+    "automation_update": "ACTIVE_PROMPT_UPDATED_CLEANUP_DELTA",
     "notification": "NOTIFY"
   },
   "interactive_progress_history": [
@@ -12710,7 +12723,7 @@
     "checked_at": "2026-10-19T14:10:57.696279+00:00",
     "task_id": "A10",
     "coordinator_thread_id": "01a13f26-7567-75e1-99ee-c9d2194e78bb",
-    "state": "LOCAL_GUARD_CORRECTION_REVIEW",
+    "state": "OWNED_HANDLE_CLEANUP_DELTA_ACTIVE",
     "verified_local_head": "09e2b16772c00d6a5da7d950742c1a98e33d2eff",
     "candidate": "5543aba6fdcc146a5b1439a539ba0046e5f11cda",
     "execution_agent": "/root/a10_local_guard_diagnosis",
@@ -12720,14 +12733,14 @@
     "cursor": null,
     "cursor_note": "Collaboration agent messages/status; closed app-thread cursors retained without polling",
     "scope": "Fixed correction source/raw manifest and one finite offline suite; no live process/profile/platform",
-    "dispatch_result": "FOLLOWUP_TASK_CONFIRMED",
-    "next_dependency": "Fixed independent correction review and release, then coordinator decision on the unused bounded read-only platform round",
+    "dispatch_result": "AUTHORIZED_CLEANUP_DELTA_FOLLOWUP_CONFIRMED",
+    "next_dependency": "Authorized cleanup delta fixed author delivery and one finite independent delta; no live launch before acceptance",
     "new_business_runs": 0,
     "new_product_tests": 0,
     "new_platform_rounds": 0,
     "new_pushes": 0,
     "B_messages": 0,
-    "automation_update": "CONFIRMED_ACTIVE_CURRENT_CORRECTION_REVIEW",
+    "automation_update": "ACTIVE_PROMPT_UPDATED_CLEANUP_DELTA",
     "notification": "NOTIFY"
   },
   "publication_a07": {
@@ -13075,7 +13088,7 @@
     "user_deadline_days": 3,
     "deadline_basis": "72 hours from this decision; target 2026-10-22 same local time; exact handover clock not specified",
     "user_selected_delivery": "必须包含：优先争取限定题型、小批量的平台试用版",
-    "status": "A10_OWNED_HANDLE_CLEANUP_DELTA_DISPATCH_INTENT",
+    "status": "A10_OWNED_HANDLE_CLEANUP_DELTA_ACTIVE",
     "plan": "docs/delivery-72h-plan-2026-10-19.md",
     "plan_sha256": "2f8ff2b98b1e97dfdfe811f0124bcc0940549fde1a8f16f7b99b49ff8effd860",
     "proposed_book_id": "46007447",
