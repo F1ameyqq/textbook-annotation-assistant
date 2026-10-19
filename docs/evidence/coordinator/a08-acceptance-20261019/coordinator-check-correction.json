@@ -1,0 +1,22 @@
+{
+  "task_id": "A08",
+  "kind": "COORDINATOR_CHECK_CORRECTION_NOT_PRODUCT_FAILURE",
+  "failed_check": "Current same-number PID start compared with final review turn completion",
+  "observed": {
+    "pid": 60224,
+    "owned_case": "R4-invented-q9-question",
+    "owned_started_at": "2026-10-19T13:10:47.27592+08:00",
+    "owned_elapsed_seconds": 1.516,
+    "owned_exit_code": 2,
+    "owned_joined": true,
+    "current_process_name": "msedge",
+    "current_process_started_at_utc": "2026-10-19T05:14:08.4549443Z",
+    "review_turn_completed_at_utc": "2026-10-19T05:16:56Z"
+  },
+  "correction": "Compare each current PID start with its original owned child start plus recorded elapsed duration; reuse can occur before the review report is finished",
+  "original_assertion_preserved": "AssertionError at verify_saved_review.py old line126: current start > review turn finish",
+  "rerun_scope": "Archive-only checker; no receiver, business or product tests",
+  "other_processes_stopped": 0,
+  "new_receiver_calls": 0,
+  "product_failure": false
+}
