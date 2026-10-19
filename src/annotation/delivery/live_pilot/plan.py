@@ -41,7 +41,7 @@ def create_live_plan(admission, request, question_id, observation):
                   ("platform_frame_id", "platform_question_id", "box", "platform_role")} for f in target["frames"]])
     snapshot = envelope("PlatformSnapshot", "a11-snapshot-" + token, admission, sp, [source])
     target_report = envelope("CheckReport", "a11-target-" + token, admission,
-        {"stage": "TARGET", "subject": artifact_ref(graph), "graph": artifact_ref(graph),
+        {"stage": "TARGET", "subject": artifact_ref(snapshot), "graph": artifact_ref(graph),
          "policy": policy_ref(admission.policy), "snapshot": artifact_ref(snapshot), "receipt": None,
          "coverage": pre.payload.coverage.model_dump(mode="json"),
          "checks": [{"check_id": key, "outcome": "PASS", "evidence_refs": sp["evidence_refs"],
