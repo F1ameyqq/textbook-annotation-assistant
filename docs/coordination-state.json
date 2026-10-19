@@ -9307,7 +9307,7 @@
       "push_authorization_scope": "Completed A-PUBLISH-04 only; future changes require their own scope"
     },
     "A10": {
-      "status": "PUBLIC_TRANSPORT_DIAGNOSTIC_PREPARATION_INTENT",
+      "status": "BLOCKED_PLATFORM_ACCESS_CAUSE_UNKNOWN_FIXED_ATTEMPTS_CLOSED",
       "task": "docs/tasks/A10-platform-readiness-preflight.md",
       "approval": "docs/approvals/A10-platform-readonly-approval.json",
       "scope": "One round <=15min read-only book46007447; at most viewer10/14/15/173; no business writes or old task rerun",
@@ -9522,19 +9522,19 @@
         "coordinator_review_at": "2026-10-19T15:28:59.093097+00:00"
       },
       "transport_diagnostic": {
-        "status": "ONE_FIXED_DIAGNOSTIC_DISPATCHED",
+        "status": "CLOSED_FAILED_GET_UNKNOWN_RELEASE_VERIFIED",
         "task": "docs/tasks/A10-public-transport-diagnostic.md",
         "agent": "/root/a10_local_guard_diagnosis",
         "base_commit": "dfbe20becbbc3519b12b28d2c5fe68f2cd3f2a83",
         "static_diagnosis": "docs/evidence/coordinator/a10-native-preflight-20261019/transport-static-diagnosis.md",
         "static_diagnosis_sha256": "d6d2a49b65f55614bf8c57f90929d3e4bc6eff8b7e86e37d725e0e93739e41f0",
         "request_limit": 1,
-        "requests_used": 0,
+        "requests_used": 1,
         "preparation_network_access": false,
         "browser_profile_login_access": false,
         "dispatch_result": "FOLLOWUP_TASK_CONFIRMED",
         "cursor": null,
-        "next_dependency": "One frozen GET invocation then final report/raw/owned release; no automatic retries",
+        "next_dependency": "Ordinary-browser context or new concrete diagnosis; no same probe retry, platform cause remains unestablished",
         "at": "2026-10-19T15:36:27.523680+00:00",
         "workflow_commit": "77eed5fbd6d20732283c4b87b1f3c7250812f70f",
         "dispatched_at": "2026-10-19T15:37:25.638792+00:00",
@@ -9550,16 +9550,41 @@
         "execution_workflow": "c26a8e7866f6474b51f44d13c68c9fae75b6c6a7",
         "execution_dispatched_at": "2026-10-19T15:48:05.787236+00:00",
         "startup_reservations": 1,
-        "actual_request_count_status": "AWAITING_FIXED_RESULT"
+        "actual_request_count_status": "GET_INTENT_ONE_EXACT_WIRE_COUNT_NOT_PROVEN",
+        "delivery_commit": "fc81de1bf8e3ee10e4d9f9da1aa99f34afbe5f23",
+        "execution_manifest_sha256": "c8ed5cba20f9aacd7e21be84231871b2702e01f700fec2e4b8cb9a406a71227e",
+        "remaining_startups": 0,
+        "outcome": {
+          "stage": "GET",
+          "exception_type": "Error",
+          "codes": [
+            "UNKNOWN"
+          ],
+          "http_status": null,
+          "elapsed_seconds": 2.328
+        },
+        "release_reported": true,
+        "review_agent": "/root/a10_preflight_archive_review",
+        "review_dispatch_result": "FOLLOWUP_TASK_CONFIRMED_ARCHIVE_ONLY",
+        "review_cursor": null,
+        "effective_acceptance": "ACCEPT_FAILED_DIAGNOSTIC_ARCHIVE_SCOPE_AND_OWNED_RELEASE_ONLY",
+        "archive_review": "docs/evidence/coordinator/a10-native-preflight-20261019/public-transport-independent-archive-review.json",
+        "archive_review_sha256": "ea9ddca5b8197bdf62f880ab2a33f5c5459e8042f4037fcf91bd7299dff49995",
+        "archive_review_released": true,
+        "execution_released": true,
+        "coordinator_review_at": "2026-10-19T16:02:26.767328+00:00",
+        "coordinator_raw_members_verified": 12,
+        "coordinator_raw_bytes_verified": 32373,
+        "coordinator_new_runs": 0
       }
     },
     "A11": {
-      "status": "FIXED_DELIVERY_REVIEW_DISPATCH_INTENT",
+      "status": "REWORK_DELTA_DISPATCH_INTENT",
       "task": "docs/tasks/A11-limited-live-runner-offline-core.md",
       "product_base": "404199fbbd7ef97b5837ba3d0555e91e5175e1cd",
       "scope": "All-new bounded ordinary-choice live runner offline core; real platform adapter remains blocked without current facts and text wire profile",
       "author_agent": "/root/a11_live_runner_execution",
-      "review_agent": null,
+      "review_agent": "/root/a11_live_runner_review",
       "dispatch_result": "SPAWN_CONFIRMED",
       "cursor": null,
       "author_candidate_limit": 2,
@@ -9568,7 +9593,7 @@
       "review_candidate_suite_limit": 2,
       "review_success_limit": 1,
       "platform_access": false,
-      "next_dependency": "Fixed author product/final report/raw manifests/release before independent review",
+      "next_dependency": "Fixed corrected product/final/raw inputs and resource release then independent delta",
       "created_at": "2026-10-19T15:26:30.254838+00:00",
       "workflow_commit": "87f55ff636e463053f0b3c3ec97b0692511a06d0",
       "dispatched_at": "2026-10-19T15:27:39.955646+00:00",
@@ -9602,7 +9627,55 @@
       "raw_member_bytes": 8905388,
       "author_released": true,
       "author_success_remaining": 0,
-      "review_dispatch_result": "PENDING"
+      "review_dispatch_result": "SPAWN_CONFIRMED",
+      "review_workflow": "6080aa6fea5dc9a9e8397ad97aef099e81848f70",
+      "review_workspace": "D:/1800-worktrees/a11-r",
+      "review_branch": "codex/a11-live-pilot-review",
+      "review_run_workspace": "D:/1800-worktrees/a11-rr",
+      "review_run_head": "ea5b62fd593041c29c00831ddb0eb453b0230307",
+      "review_acknowledged": true,
+      "review_cursor": null,
+      "effective_acceptance": "REWORK_STATIC_GAPS_WITH_FIXED_SUITE_PASS",
+      "independent_delivery": "1522d1b612ba35f441a046706e46eabf97fe4a8d",
+      "review_released": true,
+      "independent_manifest_sha256": "836ff588150195d5779af4164e31e18acac7e53bad2b52e8e1020dd7747d5aac",
+      "independent_raw_members": 431,
+      "independent_raw_bytes": 2849691,
+      "independent_suite_runs": 1,
+      "independent_suite_successes": 1,
+      "findings": [
+        {
+          "id": "A11-R01",
+          "status": "OPEN",
+          "basis": "STATIC_ONLY",
+          "summary": "Single-choice qualification is not enforced independently from six frame/one answer fragment/approval equality"
+        },
+        {
+          "id": "A11-R02",
+          "status": "OPEN",
+          "basis": "STATIC_ONLY",
+          "summary": "Reconciliation release failure is omitted from returned result and standard report"
+        }
+      ],
+      "review_delta": {
+        "status": "DISPATCH_INTENT",
+        "task": "docs/tasks/A11-review-findings-correction.md",
+        "author_agent": "/root/a11_live_runner_execution",
+        "review_agent": "/root/a11_live_runner_review",
+        "authorization_basis": "User ongoing instruction to plan and continue route; coordinator revises its own engineering cap for two routine in-scope offline defects; no new human quota reply is claimed",
+        "original_author_candidates_used": 2,
+        "original_author_suites_used": 2,
+        "additional_author_candidate_limit": 1,
+        "additional_author_delta_runs_limit": 1,
+        "additional_independent_delta_runs_limit": 1,
+        "cases": 6,
+        "old_suite_rerun": false,
+        "platform_calls": 0,
+        "cursor": null,
+        "dispatch_result": "INTENT_RECORDED_BEFORE_FOLLOWUP",
+        "at": "2026-10-19T16:08:12.237684+00:00",
+        "next_dependency": "Fixed corrected product/final/raw inputs and resource release then independent delta"
+      }
     }
   },
   "route": [
@@ -13275,9 +13348,9 @@
     "user_deadline_days": 3,
     "deadline_basis": "72 hours from this decision; target 2026-10-22 same local time; exact handover clock not specified",
     "user_selected_delivery": "必须包含：优先争取限定题型、小批量的平台试用版",
-    "status": "A10_BOUNDED_TRANSPORT_DIAGNOSTIC_AND_A11_OFFLINE_CORE_ACTIVE",
+    "status": "A11_REWORK_BOUNDED_CORRECTION_PLATFORM_DIAGNOSIS_BLOCKED",
     "plan": "docs/delivery-72h-plan-2026-10-19.md",
-    "plan_sha256": "bfadb10cf257188e190ca989dd0c3dc8072fa7fe0677895cfba813098986abf2",
+    "plan_sha256": "d0ffea7be9bed8ced0e08a681cee7b2f31234a94ddcde2870dca5472097bfbb6",
     "proposed_book_id": "46007447",
     "proposed_batch_size": 5,
     "proposed_priority_type": "ordinary_single_choice",
@@ -13293,7 +13366,7 @@
     "new_product_dispatches": 0,
     "B_messages": 0,
     "planning_agent": "/root/three_day_scope_check",
-    "next_dependency": "Fixed network-failure diagnosis and concrete bounded diagnostic action; parallel fixed A11 author delivery then independent review",
+    "next_dependency": "A11 one six-case correction and independent delta; ordinary-browser reachability context, then current platform/source and exact first question scope",
     "full_original_scope_completed_or_cancelled": false,
     "committed_success_guarantee": false,
     "authorization_clarification": "User clarified 一直允许连接平台; do not ask platform-connection/book permission again.",
@@ -13330,7 +13403,38 @@
       "platform_access": false,
       "next_dependency": "Concrete bounded new-path implementation task and finite test matrix"
     },
-    "first_day_blocker": "NAVIGATION/TRANSPORT during first platform open; cause not established; not login credentials diagnosis"
+    "first_day_blocker": "Browser navigation failed; separate unauthenticated GET also Error/UNKNOWN without HTTP status. Cause unestablished, no login or business; awaiting ordinary-browser context while code independent review proceeds.",
+    "ordinary_browser_question": {
+      "status": "OPTIONAL_USER_CONTEXT_PENDING",
+      "question": "Can the usual browser currently open the platform?",
+      "reason": "Distinguish site access from automation environment; not a renewed connection-permission request",
+      "at": "2026-10-19T15:53:15.061507+00:00"
+    },
+    "followup": {
+      "automation_id": "1800-a",
+      "status": "ACTIVE",
+      "active_task_interval_minutes": 10,
+      "original_interval_minutes": 30,
+      "restore_when": "All active tasks closed and only external input pending",
+      "notification_policy": "Only meaningful completion/failure/dispatch/decision; silent unchanged",
+      "updated_at": "2026-10-19T15:55:13.548742+00:00"
+    },
+    "current_observed_counts": {
+      "A10_native_browser_rounds": 1,
+      "public_API_diagnostic_startups": 1,
+      "A11_author_suites": 2,
+      "A11_author_successes": 1,
+      "platform_business_writes": 0,
+      "login_submissions": 0
+    },
+    "browser_inventory_attempt": {
+      "at": "2026-10-19T16:02:26.767328+00:00",
+      "tool": "cua.getState",
+      "result": "Local browser use is disabled in Work settings",
+      "visible_browsers": 0,
+      "platform_requests": 0,
+      "interpretation": "Browser-tool availability only, not evidence of platform availability; no alternate path used to bypass this setting"
+    }
   },
   "b_update_reception_latest": {
     "task_id": "A-B-Q4-ADOPTION-SOURCE-RECEPTION-20261019",
