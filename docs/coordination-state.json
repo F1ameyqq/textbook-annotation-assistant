@@ -2,7 +2,7 @@
   "schema_version": 1,
   "project": "D:\\1800",
   "coordinator_thread_id": "01a13f26-7567-75e1-99ee-c9d2194e78bb",
-  "updated_at": "2026-10-19T15:15:36.107466+00:00",
+  "updated_at": "2026-10-19T15:18:09.744482+00:00",
   "automation": {
     "id": "1800-a",
     "kind": "heartbeat",
@@ -9307,7 +9307,7 @@
       "push_authorization_scope": "Completed A-PUBLISH-04 only; future changes require their own scope"
     },
     "A10": {
-      "status": "NATIVE_PREFLIGHT_START_AUTHORIZED_DISPATCH_INTENT",
+      "status": "NATIVE_READONLY_RUNNING",
       "task": "docs/tasks/A10-platform-readiness-preflight.md",
       "approval": "docs/approvals/A10-platform-readonly-approval.json",
       "scope": "One round <=15min read-only book46007447; at most viewer10/14/15/173; no business writes or old task rerun",
@@ -9465,7 +9465,7 @@
         "finding_R01": "CLOSED_IN_FIXED_DELTA"
       },
       "native_preflight": {
-        "status": "START_AUTHORIZED_DISPATCH_INTENT",
+        "status": "RUNNING_UNIQUE_INVOCATION",
         "agent": "/root/a10_platform_preflight",
         "task": "docs/tasks/A10-native-readonly-preflight.md",
         "corrected_product": "1341fec30eca224019b432e57e73ad51dfcaabc4",
@@ -9484,9 +9484,11 @@
         "independent_static_review": "docs/evidence/coordinator/a10-native-preflight-20261019/independent-static-review.json",
         "launch_id": "a10-native-36072ae378cb4ae687dfca77d9a1a881",
         "coordinator_start_sha256": "1742a5e286e18b8637304c06386fc12720063fe6199d1f7b81beea6b5c743c82",
-        "launch_dispatch_result": "PENDING",
+        "launch_dispatch_result": "FOLLOWUP_TASK_CONFIRMED",
         "startup_scope": "One invocation of frozen driver, <=900s, no retry even if local failure; no business writes",
-        "next_dependency": "Unique authorized invocation and fixed report/manifest/release; independent archive-only review"
+        "next_dependency": "Unique authorized invocation and fixed report/manifest/release; independent archive-only review",
+        "launched_instruction_at": "2026-10-19T15:18:09.744482+00:00",
+        "launch_workflow": "404199fbbd7ef97b5837ba3d0555e91e5175e1cd"
       }
     }
   },
@@ -12660,8 +12662,8 @@
     "whole_project_complete": false
   },
   "current_handoff_status": {
-    "at": "2026-10-19T15:05:03.196916+00:00",
-    "status": "A10_NATIVE_PREFLIGHT_PREPARATION_ACTIVE_B_Q4_OFFLINE_ADOPTION_CONFIRMED",
+    "at": "2026-10-19T15:18:09.744482+00:00",
+    "status": "THREE_DAY_PILOT_PARALLEL_READONLY_AND_ENGINEERING_SCOPE",
     "publication_commit": "edf125961be9cdc1642652c038d99872b1c8cdc7",
     "A08_A09_push_authorized": true,
     "A09_integration_commit": "4fdfebd80f6efc3097e3d92c2659f3055d48f55b",
@@ -12669,7 +12671,7 @@
     "platform_authorized": true,
     "other_three_cases": "HOLD",
     "message_sent_to_B": false,
-    "next_dependency": "Fixed new read-only driver/raw inputs and static preparation; coordinator then registers sole launch",
+    "next_dependency": "Parallel minimal real runner scope then bounded offline implementation and independent review",
     "whole_project_complete": false,
     "platform_authorized_scope": "Connection allowed; current correction phase is local-only, no new annotation-write scope fixed",
     "new_annotation_write_scope_fixed": false,
@@ -13158,9 +13160,9 @@
     "user_deadline_days": 3,
     "deadline_basis": "72 hours from this decision; target 2026-10-22 same local time; exact handover clock not specified",
     "user_selected_delivery": "必须包含：优先争取限定题型、小批量的平台试用版",
-    "status": "A10_NATIVE_PREFLIGHT_START_AUTHORIZED",
+    "status": "A10_LIVE_READONLY_AND_MINIMAL_RUNNER_SCOPE_PARALLEL",
     "plan": "docs/delivery-72h-plan-2026-10-19.md",
-    "plan_sha256": "2f8ff2b98b1e97dfdfe811f0124bcc0940549fde1a8f16f7b99b49ff8effd860",
+    "plan_sha256": "8cf271aa8f99b6d930170715255799550cacae1f19c02b97312b8f42b539c450",
     "proposed_book_id": "46007447",
     "proposed_batch_size": 5,
     "proposed_priority_type": "ordinary_single_choice",
@@ -13196,6 +13198,22 @@
         "Exact fresh question list, complete qualified input, current global append order"
       ],
       "actual_live_writer_proven": false
+    },
+    "current_route": [
+      "A10 unique readonly current platform observation and release",
+      "Parallel minimal real runner scope then bounded offline implementation and independent review",
+      "Fix one fresh ordinary-choice question then at most five approved questions",
+      "Real save plus refresh/reopen readback, UNKNOWN stop/reconcile",
+      "Day3 independent acceptance and deliver fixed runnable pilot"
+    ],
+    "engineering_scope": {
+      "agent": "/root/pilot_live_runner_scope",
+      "status": "ACTIVE_STATIC_SCOPE_ONLY",
+      "dispatch_result": "SPAWN_CONFIRMED",
+      "base_commit": "404199fbbd7ef97b5837ba3d0555e91e5175e1cd",
+      "output": ".local/stages/coordinator/72h-live-runner-scope/implementation-scope.md",
+      "platform_access": false,
+      "next_dependency": "Concrete bounded new-path implementation task and finite test matrix"
     }
   },
   "b_update_reception_latest": {
