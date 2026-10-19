@@ -2,7 +2,7 @@
   "schema_version": 1,
   "project": "D:\\1800",
   "coordinator_thread_id": "01a13f26-7567-75e1-99ee-c9d2194e78bb",
-  "updated_at": "2026-10-19T14:45:59.100798+00:00",
+  "updated_at": "2026-10-19T15:05:03.196916+00:00",
   "automation": {
     "id": "1800-a",
     "kind": "heartbeat",
@@ -9307,7 +9307,7 @@
       "push_authorization_scope": "Completed A-PUBLISH-04 only; future changes require their own scope"
     },
     "A10": {
-      "status": "NATIVE_PREFLIGHT_PREPARATION_DISPATCH_INTENT",
+      "status": "NATIVE_PREFLIGHT_PREPARATION_ACTIVE",
       "task": "docs/tasks/A10-platform-readiness-preflight.md",
       "approval": "docs/approvals/A10-platform-readonly-approval.json",
       "scope": "One round <=15min read-only book46007447; at most viewer10/14/15/173; no business writes or old task rerun",
@@ -9465,17 +9465,19 @@
         "finding_R01": "CLOSED_IN_FIXED_DELTA"
       },
       "native_preflight": {
-        "status": "PREPARATION_DISPATCH_INTENT",
+        "status": "PREPARATION_ACTIVE",
         "agent": "/root/a10_platform_preflight",
         "task": "docs/tasks/A10-native-readonly-preflight.md",
         "corrected_product": "1341fec30eca224019b432e57e73ad51dfcaabc4",
         "independent_delta_review": "de5a8e988aceb15406391d62d9c670c8fb9b38c9",
         "scope": "Prepare and freeze new driver only; 0 live/profile/OS until separate launch registration; then original at most one read-only round book46007447",
-        "dispatch_result": "PENDING",
+        "dispatch_result": "FOLLOWUP_TASK_CONFIRMED",
         "cursor": null,
         "previous_local_attempts": 1,
         "platform_rounds_used": 0,
-        "platform_round_limit": 1
+        "platform_round_limit": 1,
+        "workflow_commit": "65e1b56f52f2ee642fae5f35f23116df3a058600",
+        "dispatched_at": "2026-10-19T14:57:16.045996+00:00"
       }
     }
   },
@@ -11889,15 +11891,10 @@
     }
   ],
   "last_action": {
-    "at": "2026-10-19T13:33:48.453031+00:00",
-    "action": "DISPATCH_A10_LOCAL_GUARD_CORRECTION_AFTER_FIXED_PRE_PLATFORM_FAILURE",
-    "task_id": "A10",
-    "state": "ACTIVE_LOCAL_ONLY",
-    "agent": "/root/a10_local_guard_diagnosis",
-    "workflow_commit": "0851593b6614ec6dbbc5501b093b6f0ca4fafc33",
+    "at": "2026-10-19T15:05:03.196916+00:00",
+    "action": "Verified fixed B Q4 adoption and latest Q16 candidate metadata; accepted cleanup delta and dispatched native preflight preparation",
     "new_platform_rounds": 0,
-    "new_business_writes": 0,
-    "next_dependency": "Fixed one-candidate local correction and archive review; then decide the still-unused bounded platform round"
+    "B_messages": 0
   },
   "limitations": [
     "Current route uses mock B artifacts until independently agreed interface/artifact versions exist.",
@@ -12654,19 +12651,21 @@
     "whole_project_complete": false
   },
   "current_handoff_status": {
-    "at": "2026-10-19T13:33:48.453031+00:00",
-    "status": "THREE_DAY_LIVE_PILOT_LOCAL_GUARD_CORRECTION_ACTIVE",
+    "at": "2026-10-19T15:05:03.196916+00:00",
+    "status": "A10_NATIVE_PREFLIGHT_PREPARATION_ACTIVE_B_Q4_OFFLINE_ADOPTION_CONFIRMED",
     "publication_commit": "edf125961be9cdc1642652c038d99872b1c8cdc7",
     "A08_A09_push_authorized": true,
     "A09_integration_commit": "4fdfebd80f6efc3097e3d92c2659f3055d48f55b",
-    "B_Q4_joint_adoption_proven": false,
+    "B_Q4_joint_adoption_proven": true,
     "platform_authorized": true,
     "other_three_cases": "HOLD",
     "message_sent_to_B": false,
-    "next_dependency": "Fixed one-candidate local correction and archive review; then decide the still-unused bounded platform round",
+    "next_dependency": "Fixed new read-only driver/raw inputs and static preparation; coordinator then registers sole launch",
     "whole_project_complete": false,
     "platform_authorized_scope": "Connection allowed; current correction phase is local-only, no new annotation-write scope fixed",
-    "new_annotation_write_scope_fixed": false
+    "new_annotation_write_scope_fixed": false,
+    "B_Q4_adoption_scope": "FIXED_Q4_OFFLINE_TECHNICAL_TERMS_ONLY",
+    "B_Q4_adoption_commit": "186330f5045ef41e575d9ca8cbec77ac448e4df4"
   },
   "current_batch_closure": {
     "at": "2026-10-19T11:49:48.663351+00:00",
@@ -13150,7 +13149,7 @@
     "user_deadline_days": 3,
     "deadline_basis": "72 hours from this decision; target 2026-10-22 same local time; exact handover clock not specified",
     "user_selected_delivery": "必须包含：优先争取限定题型、小批量的平台试用版",
-    "status": "A10_NATIVE_PREFLIGHT_PREPARATION_DISPATCH_INTENT",
+    "status": "A10_NATIVE_PREFLIGHT_PREPARATION_ACTIVE",
     "plan": "docs/delivery-72h-plan-2026-10-19.md",
     "plan_sha256": "2f8ff2b98b1e97dfdfe811f0124bcc0940549fde1a8f16f7b99b49ff8effd860",
     "proposed_book_id": "46007447",
@@ -13189,5 +13188,44 @@
       ],
       "actual_live_writer_proven": false
     }
+  },
+  "b_update_reception_latest": {
+    "task_id": "A-B-Q4-ADOPTION-SOURCE-RECEPTION-20261019",
+    "checked_at": "2026-10-19T15:05:03.196916+00:00",
+    "b_commit": "2455fa4f1c0738981967ab4bfb3ebe3a61be421c",
+    "adoption_commit": "186330f5045ef41e575d9ca8cbec77ac448e4df4",
+    "a_commit": "edf125961be9cdc1642652c038d99872b1c8cdc7",
+    "status": "FIXED_Q4_OFFLINE_TECHNICAL_ADOPTION_CONFIRMED_Q16_CANDIDATE_HOLD",
+    "report": "docs/tasks/B-Q4-adoption-source-update-reception-2026-10-19.md",
+    "raw_metadata_members": 12,
+    "independent_static_checks": 62,
+    "helper_agent": "/root/b_update_static_audit",
+    "helper_status": "COMPLETED_RELEASED",
+    "cursor": null,
+    "dispatch_result": "SPAWN_CONFIRMED_READONLY_STATIC_COMPLETE",
+    "zip_status": "NOT_ACQUIRED_NOT_MEMBER_VERIFIED",
+    "q4_joint_offline_technical_adoption": true,
+    "public_or_platform_contract_approved": false,
+    "q16": {
+      "question_id": "q-457f1973a1426d29587d5752",
+      "answer_id": "a-7302d4870826c53aea0bcd16",
+      "source_question_available_at_B": true,
+      "relationship_status": "CANDIDATE_NOT_SELECTED",
+      "decision": "HOLD",
+      "old_stage_rewritten": false,
+      "business_approved": false
+    },
+    "source_requests": [
+      "Q9 问题解决策略 反思 complete question page and figures",
+      "Chapter first/last question and answer page boundaries, directory and 周测 scope",
+      "Only missing originals after reconciliation with eight existing assets"
+    ],
+    "other_three_cases": "HOLD",
+    "next_dependency": "A10 current bounded platform readiness then define new read-only sourcing / exact live pilot scope; no expansion from B document alone",
+    "B_scripts_executed": 0,
+    "new_business_runs": 0,
+    "platform_actions": 0,
+    "pushes": 0,
+    "message_sent_to_B": false
   }
 }
