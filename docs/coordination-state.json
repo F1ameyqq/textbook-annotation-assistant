@@ -2,7 +2,7 @@
   "schema_version": 1,
   "project": "D:\\1800",
   "coordinator_thread_id": "01a13f26-7567-75e1-99ee-c9d2194e78bb",
-  "updated_at": "2026-10-19T12:31:50.460428+00:00",
+  "updated_at": "2026-10-19T12:42:15.251481+00:00",
   "automation": {
     "id": "1800-a",
     "kind": "heartbeat",
@@ -11717,16 +11717,12 @@
     }
   ],
   "last_action": {
-    "at": "2026-10-19T12:29:30.346207+00:00",
-    "task_id": "A-PUBLISH-04",
-    "action": "PUBLISH_A08_A09_FIXED_HANDOFF",
-    "commit": "edf125961be9cdc1642652c038d99872b1c8cdc7",
-    "ref": "refs/heads/codex/a08-a09-q4-handoff",
+    "at": "2026-10-19T12:42:15.251481+00:00",
+    "action": "ASSESS_REMAINING_DELIVERY_SCOPE_AND_CONDITIONAL_ESTIMATE",
     "coordinator_thread_id": "01a13f26-7567-75e1-99ee-c9d2194e78bb",
-    "review_agent": "/root/a08_a09_publication_review",
-    "scope": "A08 fixed read-only receiver and A09 approved fixed Q4 offline source plus frozen author/reviewer/coordinator evidence, no new business",
-    "dispatch_result": "USER_AUTHORIZED_NON_FORCE_SINGLE_REF_PUSH_VERIFIED",
-    "next_dependency": "Await B fixed-Q4 technical adoption or explicit bounded follow-up; no other-case execution or platform",
+    "state": "NO_NEW_IMPLEMENTATION_DISPATCH",
+    "scope": "Current published A08/A09 and original M1-M4 roadmap",
+    "next_dependency": "B Q4 technical adoption or explicit bounded user follow-up; no platform authorization",
     "business_runs": 0,
     "platform_actions": 0
   },
@@ -12800,18 +12796,60 @@
     "next_task_id": "A09"
   },
   "delivery_readiness_snapshot": {
-    "at": "2026-10-19T18:33:00.956422+08:00",
-    "scope": "A-side verified status and written M1-M4 roadmap; not a B internal progress assessment",
-    "current": "Fixed Q1 offline accepted and adopted; Q4 A09 implementation active; A08 batch reception HOLD only",
+    "at": "2026-10-19T12:42:15.251481+00:00",
+    "scope": "A-side assessment against written M1-M4; not B internal progress or committed schedule",
+    "current": "Fixed Q1 and Q4 offline paths accepted, locally integrated and published; Q1 adopted by B, Q4 adoption pending; A08 readonly four-case acceptance only",
     "remaining": [
-      "Complete Q4 implementation, fixed independent review and bounded integration",
-      "Bounded real-platform read/write/readback/restart/unknown and content acceptance",
-      "Representative real complex cases and exception correction",
-      "Small-batch metrics, deployment and recovery handoff"
+      "Full real B artifact compatibility/admission and supported ordinary-question batch flow; Q4 technical adoption pending",
+      "Bounded live-platform source/read/write/readback/content/restart/UNKNOWN and handover acceptance; A04 live still blocked",
+      "Representative real complex cases, multi-fragment handling and patch continuation; other three cases HOLD pending their own complete inputs and scope",
+      "Small-batch quality/cost/human-time evaluation with agreed numeric thresholds, deployable package, cross-machine delivery checks and recovery documentation"
     ],
     "overall_complete": false,
     "estimated_completion_date": null,
-    "platform_authorized_now": false
+    "planning_estimate": {
+      "basis": "New coordinator low-confidence engineering judgement, not derived from measured remaining effort or an existing schedule",
+      "limited_first_release": {
+        "effective_workdays": [
+          5,
+          10
+        ],
+        "scope": "Single book, explicitly supported ordinary questions, small batch live save/readback and basic exception handover; not all difficult cases"
+      },
+      "original_M1_M4_delivery": {
+        "effective_workdays": [
+          15,
+          30
+        ],
+        "approx_workweeks": [
+          3,
+          6
+        ]
+      },
+      "conditions": [
+        "B confirms relevant interfaces and supplies compatible complete outputs/samples in time",
+        "User later grants specific platform and new-case scopes",
+        "Platform/session available",
+        "No major architecture or quality failure requiring replanning"
+      ],
+      "excluded": [
+        "B internal development duration",
+        "Waiting for B/user/input approval",
+        "External service downtime"
+      ],
+      "confidence": "LOW",
+      "committed_deadline": false,
+      "reestimate_after": "First bounded live-platform closed-loop acceptance and fixed small-batch acceptance scope"
+    },
+    "platform_authorized_now": false,
+    "new_business_runs": 0,
+    "new_dispatches": 0,
+    "source_documents": [
+      "docs/development-plan.md",
+      "docs/tasks/A04-coordinate-R3-coordinator-acceptance.md",
+      "docs/a08-a09-q4-handoff.md"
+    ],
+    "read_only_assessment_agent": "/root/delivery_gap_assessment"
   },
   "publication_a08_a09": {
     "task_id": "A-PUBLISH-04",
@@ -12905,5 +12943,21 @@
     "automation_update": "ACTIVE_PROMPT_UPDATED_TO_PUBLISHED_A08_A09",
     "automation_updated": true,
     "automation_status": "ACTIVE"
-  }
+  },
+  "delivery_readiness_history": [
+    {
+      "at": "2026-10-19T18:33:00.956422+08:00",
+      "scope": "A-side verified status and written M1-M4 roadmap; not a B internal progress assessment",
+      "current": "Fixed Q1 offline accepted and adopted; Q4 A09 implementation active; A08 batch reception HOLD only",
+      "remaining": [
+        "Complete Q4 implementation, fixed independent review and bounded integration",
+        "Bounded real-platform read/write/readback/restart/unknown and content acceptance",
+        "Representative real complex cases and exception correction",
+        "Small-batch metrics, deployment and recovery handoff"
+      ],
+      "overall_complete": false,
+      "estimated_completion_date": null,
+      "platform_authorized_now": false
+    }
+  ]
 }
