@@ -2,14 +2,14 @@
   "schema_version": 1,
   "project": "D:\\1800",
   "coordinator_thread_id": "01a13f26-7567-75e1-99ee-c9d2194e78bb",
-  "updated_at": "2026-10-19T05:28:58.807907+00:00",
+  "updated_at": "2026-10-19T05:31:30.975569+00:00",
   "automation": {
     "id": "1800-a",
     "kind": "heartbeat",
     "status": "ACTIVE",
-    "interval_minutes": 15,
-    "routing_update": "A07_F01_INTEGRATED_NO_ACTIVE_TASKS",
-    "routing_updated_at": "2026-10-18T13:37:36.542966+00:00"
+    "interval_minutes": 30,
+    "routing_update": "A08_INTEGRATED_NO_ACTIVE_TASKS",
+    "routing_updated_at": "2026-10-19T05:30:27.327777+00:00"
   },
   "managed_side": "A",
   "authority": {
@@ -8889,7 +8889,7 @@
     },
     "A08": {
       "task_id": "A08",
-      "status": "ACCEPTED",
+      "status": "INTEGRATED",
       "scope": "Fixed four-case stage package read-only reception, priority first-lesson Q4; all cases HOLD; no Q1 approval transfer or simulation/platform",
       "base_commit": "e37606d74d7e538052c563d02df11c6c961b742f",
       "b_commit": "a76e5a925fec76f20818dfdefa4145aa132ec8a8",
@@ -8909,7 +8909,7 @@
       "business_attempts": 0,
       "platform_actions_authorized": false,
       "push_authorized": false,
-      "next_dependency": "Scoped local integration of 122 reviewed additions and static/import checks; no receiver or business rerun",
+      "next_dependency": "Q4 concrete content/figure boundary/relation/frame policy approval and separately bounded offline adapter/review authorization; other three cases HOLD",
       "created_at": "2026-10-19T04:48:06.252122+00:00",
       "dispatch_results": [
         {
@@ -8949,6 +8949,17 @@
           "at": "2026-10-19T05:28:58.807907+00:00",
           "review_thread_id": "01a1527d-a541-76c2-949a-00818e322499",
           "review_commit": "c4b7575841ee1bed1320eb6351b90e4dcc25f092",
+          "new_receiver_runs": 0
+        },
+        {
+          "role": "coordinator",
+          "action": "scope_local_integration",
+          "status": "INTEGRATED",
+          "at": "2026-10-19T05:30:27.327777+00:00",
+          "integration_commit": "abc45f49532d8001be8441b54cedefab32c91e87",
+          "source_commit": "c4b7575841ee1bed1320eb6351b90e4dcc25f092",
+          "added_paths": 122,
+          "old_paths_preserved": 29586,
           "new_receiver_runs": 0
         }
       ],
@@ -9016,7 +9027,7 @@
       "review_dispatch_workflow": "88c89cf3d855f4d01b13e6e3c98079fc9827e8ad",
       "review_dispatched_at": "2026-10-19T05:07:31.892242+00:00",
       "review_active_confirmed": false,
-      "review_progress_claim": "Independent frozen checkout byte preflight; resolving Git line-ending representation flags before receiver calls",
+      "review_progress_claim": "Fixed independent delivery verified and locally integrated; reviewer released",
       "automation_updated_after_review_dispatch": true,
       "effective_acceptance": "ACCEPTED_FIXED_BATCH_READONLY_HOLD_ONLY",
       "review_delivery_commit": "c4b7575841ee1bed1320eb6351b90e4dcc25f092",
@@ -9029,7 +9040,23 @@
       },
       "coordinator_report": "docs/tasks/A08-coordinator-acceptance.md",
       "coordinator_check": "docs/evidence/coordinator/a08-acceptance-20261019/saved-review-check.json",
-      "accepted_at": "2026-10-19T05:28:58.807907+00:00"
+      "accepted_at": "2026-10-19T05:28:58.807907+00:00",
+      "integration_commit": "abc45f49532d8001be8441b54cedefab32c91e87",
+      "coordinator_acceptance_commit": "32c6e2cd18fec01b46260361533f1a327d758589",
+      "integration_report": "docs/tasks/A08-local-integration.md",
+      "integration_check": "docs/evidence/coordinator/a08-acceptance-20261019/integration-check.json",
+      "integrated_at": "2026-10-19T05:30:27.327777+00:00",
+      "review_decision": "PASS_INDEPENDENT_FINITE_READONLY",
+      "closed_for_execution": true,
+      "coordinator_new_receiver_runs": 0,
+      "coordinator_new_business_runs": 0,
+      "automation_updated_after_integration": true,
+      "automation_update_result": {
+        "at": "2026-10-19T05:31:30.975569+00:00",
+        "status": "ACTIVE",
+        "rrule": "RRULE:FREQ=MINUTELY;INTERVAL=30",
+        "no_active_task_polling": true
+      }
     }
   },
   "route": [
@@ -11442,10 +11469,11 @@
     }
   ],
   "last_action": {
-    "at": "2026-10-19T05:28:58.807907+00:00",
+    "at": "2026-10-19T05:30:27.327777+00:00",
     "task_id": "A08",
-    "action": "ACCEPTED_FIXED_READONLY_REVIEW",
-    "next_dependency": "Scoped local integration of 122 reviewed additions and static/import checks; no receiver or business rerun"
+    "action": "INTEGRATED_FIXED_READONLY_HOLD_ONLY",
+    "commit": "abc45f49532d8001be8441b54cedefab32c91e87",
+    "next_dependency": "Q4 concrete content/figure boundary/relation/frame policy approval and separately bounded offline adapter/review authorization; other three cases HOLD"
   },
   "limitations": [
     "Current route uses mock B artifacts until independently agreed interface/artifact versions exist.",
@@ -12184,13 +12212,8 @@
     "message_document_sha256": "468ac5bd14cd7724f0403a075dd781fafcfb2d39f7a65f9e2209f64a1ca35d28"
   },
   "automation_route_update": {
-    "at": "2026-10-19T04:51:45.319173+00:00",
-    "automation_id": "1800-a",
-    "status": "ACTIVE",
-    "route": "A08 readonly execution then fixed independent review",
-    "execution_thread_id": "01a1527e-9649-7e53-8ee5-d25c06ce1683",
-    "review_thread_id": "01a1527d-a541-76c2-949a-00818e322499",
-    "schedule_preserved": "RRULE:FREQ=MINUTELY;INTERVAL=30"
+    "at": "2026-10-19T05:30:27.327777+00:00",
+    "route": "A08 finite readonly scope closed; wait for concrete Q4 followup; no old task polling or replay"
   },
   "current_handoff_status": {
     "at": "2026-10-19T04:38:13.673763+00:00",
@@ -12223,17 +12246,20 @@
     "new_batch_status": "RECEIVED_HOLD_N01_N08_SCOPE_PENDING"
   },
   "current_batch_closure": {
-    "at": "2026-10-19T05:28:58.807907+00:00",
+    "at": "2026-10-19T05:30:27.327777+00:00",
     "tasks": [
       "A03-R1",
       "I01-A",
       "A06",
-      "A07"
+      "A07",
+      "A08"
     ],
-    "status": "A08_ACCEPTED_PENDING_LOCAL_INTEGRATION",
+    "status": "A08_INTEGRATED_NO_ACTIVE_TASKS",
     "active_execution_or_review_threads": [],
     "open_external_dependencies": [
-      "Per-case content/region/policy approval remains absent for all four cases",
+      "Q4 content/figure boundary/relation/frame policy and its own offline simulation approval remain pending",
+      "Other three answer-only cases remain HOLD without invented question relationships",
+      "Complete external G0.8/Check0.8/plan0.3 not loaded or accepted",
       "A04 live remains BLOCKED"
     ],
     "other_route_blockers": [
@@ -12242,7 +12268,7 @@
     "whole_project_complete": false,
     "automatic_new_task_authorized_now": false,
     "publication_commit": "e37606d74d7e538052c563d02df11c6c961b742f",
-    "next_preparable_scope": "A08 fixed read-only receiver only; no positive simulation authorization"
+    "next_preparable_scope": "Q4 concrete bounded content/region/frame policy proposal; no simulation or platform authority"
   },
   "publication_stage2": {
     "task_id": "A-PUBLISH-02",
@@ -12330,23 +12356,17 @@
     "next_confirmation_document_sha256": "162343381469b1a827f0de6f611b8cdf504666caa06f79e1d8ea9c8a14dd32f2"
   },
   "last_heartbeat_check": {
-    "at": "2026-10-19T04:53:19.133926+00:00",
+    "at": "2026-10-19T05:30:27.327777+00:00",
+    "automation_id": "1800-a",
     "task_id": "A08",
-    "execution_thread_id": "01a1527e-9649-7e53-8ee5-d25c06ce1683",
-    "execution_cursor": "556d95c2-55a6-4cda-8672-401f26822c62:2",
-    "review_thread_id": "01a1527d-a541-76c2-949a-00818e322499",
-    "review_status": "WAITING_FOR_FIXED_CANDIDATE_NOT_POLLED",
-    "status": "IMPLEMENTING",
-    "main_head": "6d1098c27dc6540f545e5b0e6c057aaffdd62687",
-    "execution_head": "6fac939cf6cae0df88fab12d9669090c325897fc",
-    "acceptance_scope": "R0-R7 finite new readonly receiver; no full G0.8/Check0.8/plan0.3 acceptance",
-    "fixed_delivery_available": false,
-    "dispatch_result": "NONE_ALREADY_ACTIVE",
-    "next_dependency": "Fixed author implementation/report/raw manifest/release, then existing independent review R0-R7",
-    "new_tests": 0,
+    "status": "INTEGRATED",
+    "review_cursor": "0f912764-c056-44c3-8503-8aa1ed831724:3",
+    "execution_cursor": "556d95c2-55a6-4cda-8672-401f26822c62:3",
+    "review_commit": "c4b7575841ee1bed1320eb6351b90e4dcc25f092",
+    "integration_commit": "abc45f49532d8001be8441b54cedefab32c91e87",
+    "new_receiver_runs": 0,
     "new_business_runs": 0,
-    "platform_actions": 0,
-    "notification": "DONT_NOTIFY"
+    "notification": "Stage complete; Q4 simulation admission remains pending"
   },
   "publication_a07": {
     "task_id": "A-PUBLISH-03",
