@@ -2,7 +2,7 @@
   "schema_version": 1,
   "project": "D:\\1800",
   "coordinator_thread_id": "01a13f26-7567-75e1-99ee-c9d2194e78bb",
-  "updated_at": "2026-10-19T13:22:08.964596+00:00",
+  "updated_at": "2026-10-19T13:32:33.841475+00:00",
   "automation": {
     "id": "1800-a",
     "kind": "heartbeat",
@@ -9307,19 +9307,55 @@
       "push_authorization_scope": "Completed A-PUBLISH-04 only; future changes require their own scope"
     },
     "A10": {
-      "status": "ACTIVE",
+      "status": "LOCAL_SETUP_FAILED_CORRECTION_PREPARED",
       "task": "docs/tasks/A10-platform-readiness-preflight.md",
       "approval": "docs/approvals/A10-platform-readonly-approval.json",
       "scope": "One round <=15min read-only book46007447; at most viewer10/14/15/173; no business writes or old task rerun",
       "execution_agent": "/root/a10_platform_preflight",
-      "review_agent": null,
+      "review_agent": "/root/a10_preflight_archive_review",
       "execution_runs_limit": 1,
       "live_independent_runs_limit": 0,
-      "next_dependency": "Fixed preflight report/raw manifest and session release; then archive-only independent review",
+      "next_dependency": "Fixed one-candidate local correction and archive review; then decide the still-unused bounded platform round",
       "dispatch_result": "SPAWN_CONFIRMED",
       "workflow_commit": "6dcea351b4be4608d4d2a185a4721b4daf6ba286",
       "dispatched_at": "2026-10-19T13:20:38.630524+00:00",
-      "planning_support_agent": "/root/three_day_live_bridge_scope"
+      "planning_support_agent": "/root/three_day_live_bridge_scope",
+      "last_progress": {
+        "at": "2026-10-19T13:28:26.003743+00:00",
+        "message": "First local setup failed in PROCESS_CHECK_FAILED before browser/login/network; live_start null and platform rounds0. Executor sealing immutable failure and incomplete PID identity evidence. No repair/relaunch performed.",
+        "source": "Execution-agent report; fixed report pending",
+        "platform_rounds_started": 0,
+        "local_driver_attempts": 1
+      },
+      "local_diagnostic_agent": "/root/a10_local_guard_diagnosis",
+      "delivery_commit": "04a513c7e0a310b758d1c15ae8156c0108d6fb93",
+      "report": "docs/tasks/A10-platform-readiness-execution-report.md",
+      "output_manifest": "docs/evidence/A10/execution/output-raw-manifest.json",
+      "output_manifest_sha256": "1e3a4fd2df3d143a5190c71a153b3b05a9e9557cde21960a33242c49786b966e",
+      "local_driver_attempts": 1,
+      "platform_rounds": 0,
+      "execution_released": "NO_RESOURCES_ACQUIRED_PROFILE_IDLE_UNPROVEN",
+      "correction_task": "docs/tasks/A10-local-process-check-correction.md",
+      "correction_scope": "Local-only native process checker and non-CIM owned process evidence; no new platform launch in this phase",
+      "archive_review": {
+        "agent": "/root/a10_preflight_archive_review",
+        "at": "2026-10-19T13:32:33.841475+00:00",
+        "commit": "04a513c7e0a310b758d1c15ae8156c0108d6fb93",
+        "decision": "ACCEPTED_FAILURE_ARCHIVE_INTEGRITY_ONLY",
+        "added_paths": 11,
+        "preserved_parent_paths": 29940,
+        "output_members_verified": 10,
+        "input_git_members_verified": 38,
+        "owned_pid_identity_gap_preserved": true,
+        "profile_idle_proven": false,
+        "functional_acceptance": false,
+        "live_runs": 0
+      },
+      "correction_dispatch": {
+        "status": "INTENT_RECORDED",
+        "agent": "/root/a10_local_guard_diagnosis",
+        "scope": "Local-only correction, frozen candidate and offline tests; no live launch"
+      }
     }
   },
   "route": [
@@ -11802,13 +11838,13 @@
   },
   "platform_session": {
     "book_id": "46007447",
-    "reservation_task": "A10",
-    "reservation_stage": "READONLY_PREFLIGHT",
-    "status": "RESERVED_PENDING_LOCAL_EXCLUSIVITY_CHECK",
+    "reservation_task": null,
+    "reservation_stage": null,
+    "status": "NO_RESOURCES_ACQUIRED_PROFILE_IDLE_UNPROVEN",
     "actual_process_and_lock_check_required": true,
     "review_must_wait_release": true,
     "operations": "Newly authorized bounded read-only preflight only; no annotation writes",
-    "reservation_thread_id": "01a13f26-7567-75e1-99ee-c9d2194e78bb",
+    "reservation_thread_id": null,
     "last_observed_at": "2026-10-17T05:05:41.884825+00:00",
     "release_evidence": {
       "commit": "a86eca6ec87ced20dc3a8bcc8f2c87d329e87c39",
@@ -11834,7 +11870,7 @@
     ],
     "reserved_at": "2026-10-17T04:46:57.383802+00:00",
     "current_release_verification": "FROZEN_COORDINATE_R1_RELEASE_RECORD_VERIFIED_NO_NEW_LIVE_CHECK",
-    "reservation_agent": "/root/a10_platform_preflight"
+    "reservation_agent": null
   },
   "next_stage_preparation": {
     "task": "A03",
@@ -12997,9 +13033,9 @@
     "user_deadline_days": 3,
     "deadline_basis": "72 hours from this decision; target 2026-10-22 same local time; exact handover clock not specified",
     "user_selected_delivery": "必须包含：优先争取限定题型、小批量的平台试用版",
-    "status": "READONLY_PREFLIGHT_DISPATCHED",
+    "status": "A10_LOCAL_GUARD_CORRECTION_DISPATCH_INTENT",
     "plan": "docs/delivery-72h-plan-2026-10-19.md",
-    "plan_sha256": "e1ef74b70acb9b71e498d0659a6a8115cbd572cc82185dbaf60aa16f17743a24",
+    "plan_sha256": "2f8ff2b98b1e97dfdfe811f0124bcc0940549fde1a8f16f7b99b49ff8effd860",
     "proposed_book_id": "46007447",
     "proposed_batch_size": 5,
     "proposed_priority_type": "ordinary_single_choice",
@@ -13015,11 +13051,26 @@
     "new_product_dispatches": 0,
     "B_messages": 0,
     "planning_agent": "/root/three_day_scope_check",
-    "next_dependency": "Fixed preflight report/raw manifest and session release; then archive-only independent review",
+    "next_dependency": "Fixed one-candidate local correction and archive review; then decide the still-unused bounded platform round",
     "full_original_scope_completed_or_cancelled": false,
     "committed_success_guarantee": false,
     "authorization_clarification": "User clarified 一直允许连接平台; do not ask platform-connection/book permission again.",
     "first_readonly_task": "docs/tasks/A10-platform-readiness-preflight.md",
-    "new_preflight_dispatches": 1
+    "new_preflight_dispatches": 1,
+    "static_bridge_findings": {
+      "reviewer": "/root/three_day_live_bridge_scope",
+      "contract_supports": [
+        "PLATFORM",
+        "PLATFORM_OBSERVED"
+      ],
+      "new_bounded_live_path_needed": true,
+      "existing_mock_guards_unchanged": true,
+      "dependencies": [
+        "Jointly adopted platform-execution policy for the bounded new scope",
+        "Current OBSERVED source and VERIFIED session/frame-readback capabilities",
+        "Exact fresh question list, complete qualified input, current global append order"
+      ],
+      "actual_live_writer_proven": false
+    }
   }
 }
