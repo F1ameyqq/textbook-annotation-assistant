@@ -1,5 +1,7 @@
 # A 侧开发调度与验收
 
+- 2026-10-19 最新A08/A09发布优先：用户明确授权的代码和验收材料已非强制单引用推送 `codex/a08-a09-q4-handoff`，远端 `edf125961be9cdc1642652c038d99872b1c8cdc7` 已独立核实。入口 `docs/a08-a09-q4-handoff.md`、回执 `docs/tasks/A08-A09-publication-receipt.md`、转发消息 `docs/handoff/a08-a09-q4/message-to-b.md`。固定来源929ca1cb、唯一父已发布A07 e37606d；361新增/3元数据更新/0删除，四冻结清单307成员保全，独立静态发布审查通过。0新业务/0平台，main/B/架构/stage1/stage2/A07本次均不变。A未发送B消息，B对固定Q4版本/映射/单题政策/C01回执共同采用仍待确认；其他三例HOLD，A04真实阻断保持。下方A08/A09仅本地/无推送授权为历史时点，不重复推送、派发或恢复额度。
+
 - 2026-10-19 最新A09收口优先：固定产品 `29c82b09`、作者交付 `439423eb`、独立交付 `25fcf217` 已完成独立及调度有限接受，并在 `4fdfebd80f6efc3097e3d92c2659f3055d48f55b` 本地集成，见 `docs/tasks/A09-Q4-local-integration.md` 与调度JSON。固定第4题实际四框Q/image、Q/text、Q/text、A/text与批准内容/坐标/顺序一致，作者和独立各1正常尝试/1成功/1dispatch、各10拒绝零新增变更，均释放且成功额度耗尽，不重派/复跑。189新增路径、29,733旧主线路径原bytes保全；其他三例HOLD，原B HOLD/proposal false分开保留。A08/Q4/A09仅本地、未推送/发送B/连接平台，B对Q4共同采用与A04真实阻断保持。下方实施或REVIEW描述为历史。
 
 - 2026-10-19 最新A09授权优先：用户对固定第4题核准页回复“确认”，本题内容/关系/四框政策及离线模拟已批准，见 `docs/approvals/A09-Q4-offline-business-approval.json` 和 `docs/tasks/A09-Q4-offline-simulation.md`。按Q:image/Q:text/Q:text/A:text四框新建执行与独立验收；旧proposal/B HOLD原件保持，新授权单独引用。其他三例仍HOLD，不沿用Q1，不重跑A08，不推送/连接平台。下方第4题待核准为历史；实际派发/版本/cursor以调度JSON为准。

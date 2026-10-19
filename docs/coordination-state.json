@@ -2,14 +2,14 @@
   "schema_version": 1,
   "project": "D:\\1800",
   "coordinator_thread_id": "01a13f26-7567-75e1-99ee-c9d2194e78bb",
-  "updated_at": "2026-10-19T11:51:20.387868+00:00",
+  "updated_at": "2026-10-19T12:31:50.460428+00:00",
   "automation": {
     "id": "1800-a",
     "kind": "heartbeat",
     "status": "ACTIVE",
     "interval_minutes": 30,
-    "routing_update": "A08_INTEGRATED_NO_ACTIVE_TASKS",
-    "routing_updated_at": "2026-10-19T05:30:27.327777+00:00"
+    "routing_update": "A08_A09_PUBLISHED_WAIT_B_Q4_TECHNICAL_ADOPTION",
+    "routing_updated_at": "2026-10-19T12:31:50.460428+00:00"
   },
   "managed_side": "A",
   "authority": {
@@ -8908,8 +8908,8 @@
       "acceptance_scope": "R0-R7 finite new readonly receiver; no full G0.8/Check0.8/plan0.3 acceptance",
       "business_attempts": 0,
       "platform_actions_authorized": false,
-      "push_authorized": false,
-      "next_dependency": "User approval of this fixed Q4 content/geometry/relation/case policy; then concrete bounded adapter and independent review task, with no Q1 authority transfer",
+      "push_authorized": true,
+      "next_dependency": "Fixed task closed; await B Q4 technical adoption or explicit bounded new work. Q4 approval completed; no business reruns or platform.",
       "created_at": "2026-10-19T04:48:06.252122+00:00",
       "dispatch_results": [
         {
@@ -9056,7 +9056,15 @@
         "status": "ACTIVE",
         "rrule": "RRULE:FREQ=MINUTELY;INTERVAL=30",
         "no_active_task_polling": true
-      }
+      },
+      "publication": {
+        "task_id": "A-PUBLISH-04",
+        "status": "PUBLISHED",
+        "commit": "edf125961be9cdc1642652c038d99872b1c8cdc7",
+        "ref": "refs/heads/codex/a08-a09-q4-handoff",
+        "scope": "Fixed accepted source and frozen evidence only; no new execution authority"
+      },
+      "push_authorization_scope": "Completed A-PUBLISH-04 only; future changes require their own scope"
     },
     "A09": {
       "task_id": "A09",
@@ -9083,10 +9091,10 @@
       "used_candidates": 1,
       "business_attempts": 1,
       "platform_actions_authorized": false,
-      "push_authorized": false,
+      "push_authorized": true,
       "B_messages_authorized": false,
       "created_at": "2026-10-19T18:21:36.789563+08:00",
-      "next_dependency": "Await explicit sharing request, B adoption of fixed Q4 technical scope, or new bounded user scope; no platform/push or other-case execution authorized",
+      "next_dependency": "Fixed task closed; await B Q4 technical adoption or explicit bounded new work. Q4 approval completed; no business reruns or platform.",
       "dispatch_intents": [
         {
           "role": "execution",
@@ -9288,7 +9296,15 @@
       "integration_check": "docs/evidence/coordinator/a09-acceptance-20261019/integration-check.json",
       "independent_accepted": true,
       "coordinator_new_business_runs": 0,
-      "new_product_tests": 0
+      "new_product_tests": 0,
+      "publication": {
+        "task_id": "A-PUBLISH-04",
+        "status": "PUBLISHED",
+        "commit": "edf125961be9cdc1642652c038d99872b1c8cdc7",
+        "ref": "refs/heads/codex/a08-a09-q4-handoff",
+        "scope": "Fixed accepted source and frozen evidence only; no new execution authority"
+      },
+      "push_authorization_scope": "Completed A-PUBLISH-04 only; future changes require their own scope"
     }
   },
   "route": [
@@ -11701,22 +11717,18 @@
     }
   ],
   "last_action": {
-    "at": "2026-10-19T11:49:48.663351+00:00",
-    "task_id": "A09",
-    "action": "FINITE_LOCAL_INTEGRATION_COMPLETED",
-    "execution_thread_id": "01a153b4-0943-7dd0-92e2-859d26e49934",
-    "review_thread_id": "01a153af-3a4c-7a80-bb57-2e98af01dcd2",
-    "execution_cursor": "2c65d315-b9ec-4b6c-bc10-fadbb6eb9924:5",
-    "review_cursor": "73f25b56-94d6-40bc-b6d0-f5b7182c1c78:4",
-    "product": "29c82b0997be3080f53dfde2afbb1d7457b04197",
-    "author_delivery": "439423ebf4277e3825aba24fed6f56546ef66a2b",
-    "review_delivery": "25fcf2171df87bd7da97528efbe5bc24399d336a",
-    "acceptance_commit": "76a6b4cee0d667131139499400b973611abfffc2",
-    "integration_commit": "4fdfebd80f6efc3097e3d92c2659f3055d48f55b",
-    "scope": "Fixed first-lesson Q4 observed source to one-question four-frame offline simulation; Q/image,Q/text,Q/text,A/text; other cases HOLD",
-    "next_dependency": "Await explicit sharing request, B adoption of fixed Q4 technical scope, or new bounded user scope; no platform/push or other-case execution authorized",
-    "dispatch_result": "NO_NEW_DISPATCH; both registered conversations complete and released",
-    "new_business_runs": 0
+    "at": "2026-10-19T12:29:30.346207+00:00",
+    "task_id": "A-PUBLISH-04",
+    "action": "PUBLISH_A08_A09_FIXED_HANDOFF",
+    "commit": "edf125961be9cdc1642652c038d99872b1c8cdc7",
+    "ref": "refs/heads/codex/a08-a09-q4-handoff",
+    "coordinator_thread_id": "01a13f26-7567-75e1-99ee-c9d2194e78bb",
+    "review_agent": "/root/a08_a09_publication_review",
+    "scope": "A08 fixed read-only receiver and A09 approved fixed Q4 offline source plus frozen author/reviewer/coordinator evidence, no new business",
+    "dispatch_result": "USER_AUTHORIZED_NON_FORCE_SINGLE_REF_PUSH_VERIFIED",
+    "next_dependency": "Await B fixed-Q4 technical adoption or explicit bounded follow-up; no other-case execution or platform",
+    "business_runs": 0,
+    "platform_actions": 0
   },
   "limitations": [
     "Current route uses mock B artifacts until independently agreed interface/artifact versions exist.",
@@ -12468,14 +12480,16 @@
     "whole_project_complete": false
   },
   "current_handoff_status": {
-    "at": "2026-10-19T11:49:48.663351+00:00",
-    "status": "A09_LOCAL_INTEGRATED_NOT_SHARED",
-    "A08_A09_push_authorized": false,
+    "at": "2026-10-19T12:29:30.346207+00:00",
+    "status": "A08_A09_PUBLISHED_WAITING_B_Q4_TECHNICAL_ADOPTION",
+    "publication_commit": "edf125961be9cdc1642652c038d99872b1c8cdc7",
+    "A08_A09_push_authorized": true,
     "A09_integration_commit": "4fdfebd80f6efc3097e3d92c2659f3055d48f55b",
     "B_Q4_joint_adoption_proven": false,
     "platform_authorized": false,
     "other_three_cases": "HOLD",
-    "next_dependency": "Await explicit sharing request, B adoption of fixed Q4 technical scope, or new bounded user scope; no platform/push or other-case execution authorized",
+    "message_sent_to_B": false,
+    "next_dependency": "Await B fixed-Q4 technical adoption or explicit bounded follow-up; no other-case execution or platform",
     "whole_project_complete": false
   },
   "current_batch_closure": {
@@ -12798,5 +12812,98 @@
     "overall_complete": false,
     "estimated_completion_date": null,
     "platform_authorized_now": false
+  },
+  "publication_a08_a09": {
+    "task_id": "A-PUBLISH-04",
+    "status": "PUBLISHED",
+    "requested_by_user": true,
+    "at": "2026-10-19T11:58:12.998010+00:00",
+    "branch": "codex/a08-a09-q4-handoff",
+    "source_commit": "929ca1cb198b87a5efdd2723946f7bb69f316a1c",
+    "parent_published_commit": "e37606d74d7e538052c563d02df11c6c961b742f",
+    "coordinator_thread_id": "01a13f26-7567-75e1-99ee-c9d2194e78bb",
+    "scope": "A08 fixed read-only receiver and A09 approved fixed Q4 offline source plus frozen author/reviewer/coordinator evidence, no new business",
+    "review_agents": [
+      "/root/a08_a09_publication_review"
+    ],
+    "push_authorized": true,
+    "platform_actions": 0,
+    "business_runs": 0,
+    "message_sent_to_B": false,
+    "next_dependency": "Await B fixed-Q4 technical adoption or explicit bounded follow-up; no other-case execution or platform",
+    "candidate_commit": "edf125961be9cdc1642652c038d99872b1c8cdc7",
+    "candidate_tree": "58bd1ff202d70ffacf1b9fbb90121e0cbfa70ef3",
+    "manifest": "docs/handoff/a08-a09-q4/manifest.json",
+    "source_members": 356,
+    "generated_members": 7,
+    "frozen_manifest_members": 307,
+    "new_paths": 361,
+    "updated_metadata_paths": 3,
+    "deleted_paths": 0,
+    "remote_branch_absent_before": true,
+    "review_resume": {
+      "at": "2026-10-19T12:17:20.517920+00:00",
+      "agent": "/root/a08_a09_publication_review",
+      "previous_result": "INTERRUPTED_USAGE_LIMIT_NOT_A_REVIEW_RESULT",
+      "dispatch_result": "RESUMED_SAME_FIXED_CANDIDATE_AFTER_USER_CONTINUE",
+      "business_runs": 0
+    },
+    "independent_static_review": "docs/evidence/coordinator/a08-a09-publication-20261019/independent-publication-review.json",
+    "push_intent": {
+      "at": "2026-10-19T12:26:44.574197+00:00",
+      "ref": "refs/heads/codex/a08-a09-q4-handoff",
+      "commit": "edf125961be9cdc1642652c038d99872b1c8cdc7",
+      "force": false,
+      "ref_count": 1
+    },
+    "commit": "edf125961be9cdc1642652c038d99872b1c8cdc7",
+    "tree": "58bd1ff202d70ffacf1b9fbb90121e0cbfa70ef3",
+    "parent_commit": "e37606d74d7e538052c563d02df11c6c961b742f",
+    "ref": "refs/heads/codex/a08-a09-q4-handoff",
+    "force": false,
+    "ref_count": 1,
+    "push_exit_code": 0,
+    "remote_before": {
+      "refs/heads/b-side/readonly-book-46007447": "a76e5a925fec76f20818dfdefa4145aa132ec8a8",
+      "refs/heads/codex/a-stage1-handoff": "a15301ef3532aca25dcd527aae1c680c1e220e9f",
+      "refs/heads/codex/a-stage2-handoff": "37089f9e0229da76ae1c45461b7e63929590be56",
+      "refs/heads/codex/a07-q1-handoff": "e37606d74d7e538052c563d02df11c6c961b742f",
+      "refs/heads/codex/automation-architecture": "aac335bcee72005dcebf02fe9131db8a0d463e37",
+      "refs/heads/main": "561ca5a2fa11026f6667e1c7a897782dd3a205f4"
+    },
+    "new_business_runs": 0,
+    "remote_after": {
+      "refs/heads/b-side/readonly-book-46007447": "a76e5a925fec76f20818dfdefa4145aa132ec8a8",
+      "refs/heads/codex/a-stage1-handoff": "a15301ef3532aca25dcd527aae1c680c1e220e9f",
+      "refs/heads/codex/a-stage2-handoff": "37089f9e0229da76ae1c45461b7e63929590be56",
+      "refs/heads/codex/a07-q1-handoff": "e37606d74d7e538052c563d02df11c6c961b742f",
+      "refs/heads/codex/a08-a09-q4-handoff": "edf125961be9cdc1642652c038d99872b1c8cdc7",
+      "refs/heads/codex/automation-architecture": "aac335bcee72005dcebf02fe9131db8a0d463e37",
+      "refs/heads/main": "561ca5a2fa11026f6667e1c7a897782dd3a205f4"
+    },
+    "remote_verified": true,
+    "protected_refs_unchanged": {
+      "refs/heads/b-side/readonly-book-46007447": true,
+      "refs/heads/codex/a-stage1-handoff": true,
+      "refs/heads/codex/a-stage2-handoff": true,
+      "refs/heads/codex/a07-q1-handoff": true,
+      "refs/heads/codex/automation-architecture": true,
+      "refs/heads/main": true
+    },
+    "verified_at": "2026-10-19T12:28:09.077561+00:00",
+    "remote_push": true,
+    "handoff": "docs/a08-a09-q4-handoff.md",
+    "forwardable_message": "docs/handoff/a08-a09-q4/message-to-b.md",
+    "receipt": "docs/tasks/A08-A09-publication-receipt.md",
+    "audit": "docs/evidence/coordinator/a08-a09-publication-20261019/audit.json",
+    "archive_check": "docs/evidence/coordinator/a08-a09-publication-20261019/archive-check.json",
+    "review_result": "PASS_STATIC_PUBLICATION_SCOPE_ONLY",
+    "dispatch_result": "USER_AUTHORIZED_NON_FORCE_SINGLE_REF_PUSH_VERIFIED",
+    "B_Q4_joint_adoption": "NOT_CONFIRMED",
+    "other_three_cases": "HOLD",
+    "whole_project_complete": false,
+    "automation_update": "ACTIVE_PROMPT_UPDATED_TO_PUBLISHED_A08_A09",
+    "automation_updated": true,
+    "automation_status": "ACTIVE"
   }
 }
