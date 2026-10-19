@@ -2,7 +2,7 @@
   "schema_version": 1,
   "project": "D:\\1800",
   "coordinator_thread_id": "01a13f26-7567-75e1-99ee-c9d2194e78bb",
-  "updated_at": "2026-10-19T04:51:45.319173+00:00",
+  "updated_at": "2026-10-19T05:06:01.591716+00:00",
   "automation": {
     "id": "1800-a",
     "kind": "heartbeat",
@@ -8889,7 +8889,7 @@
     },
     "A08": {
       "task_id": "A08",
-      "status": "IMPLEMENTING",
+      "status": "REVIEW_READY",
       "scope": "Fixed four-case stage package read-only reception, priority first-lesson Q4; all cases HOLD; no Q1 approval transfer or simulation/platform",
       "base_commit": "e37606d74d7e538052c563d02df11c6c961b742f",
       "b_commit": "a76e5a925fec76f20818dfdefa4145aa132ec8a8",
@@ -8901,15 +8901,15 @@
       "review_document": "docs/tasks/A08-independent-review.md",
       "execution_thread_id": "01a1527e-9649-7e53-8ee5-d25c06ce1683",
       "review_thread_id": "01a1527d-a541-76c2-949a-00818e322499",
-      "execution_cursor": "556d95c2-55a6-4cda-8672-401f26822c62:1",
+      "execution_cursor": "556d95c2-55a6-4cda-8672-401f26822c62:3",
       "review_cursor": "0f912764-c056-44c3-8503-8aa1ed831724:1",
       "max_frozen_implementation_candidates": 2,
-      "used_candidates": 0,
+      "used_candidates": 1,
       "acceptance_scope": "R0-R7 finite new readonly receiver; no full G0.8/Check0.8/plan0.3 acceptance",
       "business_attempts": 0,
       "platform_actions_authorized": false,
       "push_authorized": false,
-      "next_dependency": "Fixed author implementation/report/raw manifest/release, then existing independent review R0-R7",
+      "next_dependency": "Independent fixed candidate 1 R0-R7 review",
       "created_at": "2026-10-19T04:48:06.252122+00:00",
       "dispatch_results": [
         {
@@ -8959,8 +8959,8 @@
       "branch": "codex/a08-batch-readonly",
       "execution_start_commit": "6fac939cf6cae0df88fab12d9669090c325897fc",
       "execution_host_id": "local",
-      "execution_status": "ACTIVE",
-      "last_snapshot_at": "2026-10-19T04:50:44.333145+00:00",
+      "execution_status": "FIXED_DELIVERY_RELEASED",
+      "last_snapshot_at": "2026-10-19T04:53:19.133926+00:00",
       "review_preparation": {
         "completed": true,
         "receiver_runs": 0,
@@ -8969,7 +8969,31 @@
         "released": true
       },
       "automation_updated": true,
-      "automation_status": "ACTIVE"
+      "automation_status": "ACTIVE",
+      "execution_progress_claim": "Structure mapped: one Q4 candidate plus three answer-only cases; Q9 10 text/23 image fragments, Q16 11 LaTeX runs; external references stay unloaded",
+      "product_candidate_commit": "04762d78eae18449d7fcf3c0de20aec23b1f6881",
+      "delivery_commit": "83f119fae8e84b30332ac50288b74049514c9b4e",
+      "author_released": true,
+      "execution_report": "docs/tasks/A08-execution-report.md",
+      "author_consumption": {
+        "original_receives": 1,
+        "negative_receives": 11,
+        "business_runs": 0
+      },
+      "preflight": "docs/evidence/coordinator/a08-preflight-20261019/preflight.json",
+      "preflight_result": "PASS_FIXED_DELIVERY_PREFLIGHT_NOT_ACCEPTANCE",
+      "review_worktree_creation": {
+        "operation_id": "cf7ce2f6-e7b1-4a19-a916-0583d37b3a1d",
+        "status": "COMPLETED",
+        "base_commit": "83f119fae8e84b30332ac50288b74049514c9b4e",
+        "path": "C:/Users/ASUS/.codex/worktrees/a08-readonly-review/1800",
+        "raw_product_checked": true,
+        "clean": true
+      },
+      "review_worktree": "C:/Users/ASUS/.codex/worktrees/a08-readonly-review/1800",
+      "review_branch": "codex/a08-readonly-review",
+      "review_start_commit": "83f119fae8e84b30332ac50288b74049514c9b4e",
+      "review_dispatch_document": "docs/tasks/A08-review-dispatch.md"
     }
   },
   "route": [
@@ -11361,18 +11385,28 @@
       "workflow_commit": "265b7d61fc6916fda835bb10d3cb372898b106a3",
       "returned_thread_id": "01a1527d-a541-76c2-949a-00818e322499",
       "created_at": "2026-10-19T04:48:57.991717+00:00"
+    },
+    {
+      "dispatch_key": "A08:review:candidate1:04762d78",
+      "task_id": "A08",
+      "role": "review",
+      "action": "send_message_to_thread",
+      "thread_id": "01a1527d-a541-76c2-949a-00818e322499",
+      "status": "READY_TO_SEND",
+      "at": "2026-10-19T05:06:01.591716+00:00",
+      "candidate_commit": "04762d78eae18449d7fcf3c0de20aec23b1f6881",
+      "delivery_commit": "83f119fae8e84b30332ac50288b74049514c9b4e",
+      "acceptance_scope": "R0-R7 finite new readonly receiver; no full G0.8/Check0.8/plan0.3 acceptance",
+      "next_dependency": "Isolated fixed checkout and review dispatch",
+      "review_worktree": "C:/Users/ASUS/.codex/worktrees/a08-readonly-review/1800",
+      "task_document": "docs/tasks/A08-review-dispatch.md"
     }
   ],
   "last_action": {
-    "at": "2026-10-19T04:50:27.717969+00:00",
+    "at": "2026-10-19T05:06:01.591716+00:00",
     "task_id": "A08",
-    "action": "NEW_EXECUTION_AND_INDEPENDENT_PREPARATION_DISPATCHED",
-    "status": "IMPLEMENTING",
-    "next_dependency": "Fixed author implementation/report/raw manifest/release, then existing independent review R0-R7",
-    "thread_ids": [
-      "01a1527e-9649-7e53-8ee5-d25c06ce1683",
-      "01a1527d-a541-76c2-949a-00818e322499"
-    ]
+    "action": "AUTHOR_PREFLIGHT_PASS_REVIEW_PREPARING",
+    "next_dependency": "Independent fixed candidate 1 R0-R7 review"
   },
   "limitations": [
     "Current route uses mock B artifacts until independently agreed interface/artifact versions exist.",
@@ -11380,27 +11414,23 @@
     "Platform test is single-book serial, no book submission, no unbudgeted paid models."
   ],
   "last_check": {
-    "at": "2026-10-18T19:59:25.696887+08:00",
-    "trigger_at": "2026-10-18T11:58:29.019Z",
-    "automation_id": "1800-a",
-    "task_id": "A07",
-    "thread_id": "01a14edd-f319-7b70-8993-62e04de3a2d4",
-    "status": "EXECUTING",
-    "version": "b1c84db9d1d5603a4fd6aa5487d7c45ec6fca50a",
-    "root_head": "60b6ef79697f27e08fd01389a2c3e552957e3cdb",
-    "scope": "Fixed B Q1 observed source to A-only offline six-frame plan and simulated receipt; no platform or joint B acceptance",
-    "cursor": "511a4b4f-1ba7-4a71-9ac5-2ba69534cf9f:2",
-    "author_report_present": false,
-    "fixed_delivery_ready": false,
-    "observed_new_paths": [
-      "config/policies/a07-q1-offline-v1.json",
-      "src/annotation/source/b_q1/"
-    ],
-    "floating_code_reviewed": false,
-    "tests_run": 0,
-    "dispatch_result": "NO_DUPLICATE_DISPATCH_AUTHOR_RUNNING_REVIEW_WAITING",
-    "next_dependency": "Author fixed candidate, report, raw manifest and own process release; then continue registered independent review",
-    "decision": "DONT_NOTIFY"
+    "at": "2026-10-19T04:53:19.133926+00:00",
+    "task_id": "A08",
+    "execution_thread_id": "01a1527e-9649-7e53-8ee5-d25c06ce1683",
+    "execution_cursor": "556d95c2-55a6-4cda-8672-401f26822c62:2",
+    "review_thread_id": "01a1527d-a541-76c2-949a-00818e322499",
+    "review_status": "WAITING_FOR_FIXED_CANDIDATE_NOT_POLLED",
+    "status": "IMPLEMENTING",
+    "main_head": "6d1098c27dc6540f545e5b0e6c057aaffdd62687",
+    "execution_head": "6fac939cf6cae0df88fab12d9669090c325897fc",
+    "acceptance_scope": "R0-R7 finite new readonly receiver; no full G0.8/Check0.8/plan0.3 acceptance",
+    "fixed_delivery_available": false,
+    "dispatch_result": "NONE_ALREADY_ACTIVE",
+    "next_dependency": "Fixed author implementation/report/raw manifest/release, then existing independent review R0-R7",
+    "new_tests": 0,
+    "new_business_runs": 0,
+    "platform_actions": 0,
+    "notification": "DONT_NOTIFY"
   },
   "prepared_next_batch": {
     "status": "DISPATCHED",
@@ -12308,59 +12338,23 @@
     "next_confirmation_document_sha256": "162343381469b1a827f0de6f611b8cdf504666caa06f79e1d8ea9c8a14dd32f2"
   },
   "last_heartbeat_check": {
-    "task_id": "A07",
-    "status": "INTEGRATED",
-    "effective_acceptance": "ACCEPTED_FIXED_Q1_OFFLINE_ROLE_CORRECTED",
-    "open_finding": null,
-    "execution_thread_id": "01a14edd-f319-7b70-8993-62e04de3a2d4",
-    "review_thread_id": "01a14edb-bdc9-7370-890c-3b301b6ea414",
-    "execution_cursor": "511a4b4f-1ba7-4a71-9ac5-2ba69534cf9f:15",
-    "review_cursor": "65496636-3236-4063-9ba6-c8ca5d3c3561:18",
-    "product_candidate": "3d22524ff626fc7b0376b7312be6fe75f2e73aab",
-    "execution_delivery": "6f8f1d6fa4c8db9678738673a54fa862df9a666e",
-    "review_delivery": "71bf89251a3225a7e0defe5fc6feb84d0628dd85",
-    "integration_commit": "0a0b3ed5ae044706b633ff767f1b7bd6211a9039",
-    "at": "2026-10-19T04:24:53.031474+00:00",
-    "trigger": "2026-10-19T04:21:47.627Z",
-    "automation_id": "1800-a",
-    "head_checked": "8bf8bd2eeb4d32530f33bfaa8a19cb58153f5b68",
-    "publication_status": "PUBLISHED",
-    "published_commit": "e37606d74d7e538052c563d02df11c6c961b742f",
-    "published_tree": "1790b851c8015ad98aa2e91dd1ac9fea9e60a8af",
-    "scope": "Lightweight current document/state and raw Git identity check only; fixed Q1 Q/W/W/W/W/A remains accepted and published, without new validation or platform activity",
-    "artifact_identity_checks": [
-      {
-        "path": "src/annotation/source/b_q1/reader.py",
-        "raw_blob": "dcb029d3e680b0391b28a3e548a96613827a8d21",
-        "unchanged_since_previous_check": true
-      },
-      {
-        "path": "src/annotation/quality/q1_offline.py",
-        "raw_blob": "41aaded7639f16f2469b1ecc3fe4799285567931",
-        "unchanged_since_previous_check": true
-      }
-    ],
-    "active_dependent_threads": [],
-    "closed_threads_polled": false,
-    "tests_run": 0,
-    "business_runs": 0,
+    "at": "2026-10-19T04:53:19.133926+00:00",
+    "task_id": "A08",
+    "execution_thread_id": "01a1527e-9649-7e53-8ee5-d25c06ce1683",
+    "execution_cursor": "556d95c2-55a6-4cda-8672-401f26822c62:2",
+    "review_thread_id": "01a1527d-a541-76c2-949a-00818e322499",
+    "review_status": "WAITING_FOR_FIXED_CANDIDATE_NOT_POLLED",
+    "status": "IMPLEMENTING",
+    "main_head": "6d1098c27dc6540f545e5b0e6c057aaffdd62687",
+    "execution_head": "6fac939cf6cae0df88fab12d9669090c325897fc",
+    "acceptance_scope": "R0-R7 finite new readonly receiver; no full G0.8/Check0.8/plan0.3 acceptance",
+    "fixed_delivery_available": false,
+    "dispatch_result": "NONE_ALREADY_ACTIVE",
+    "next_dependency": "Fixed author implementation/report/raw manifest/release, then existing independent review R0-R7",
+    "new_tests": 0,
+    "new_business_runs": 0,
     "platform_actions": 0,
-    "pushes_this_check": 0,
-    "dispatch_result": "NONE_PUBLISHED_CLOSED_TASKS_UNCHANGED",
-    "next_dependency": "B joint adoption of fixed Q1 version, roles, relation, single-question policy, C01 and simulated receipt, or new explicit bounded user scope; A04 real-platform block remains",
-    "notification": "DONT_NOTIFY",
-    "whole_project_complete": false,
-    "tracked_diff_before_record": [
-      "docs/coordination-state.json"
-    ],
-    "preserved_untracked": [
-      "mermaid-diagram.png"
-    ],
-    "document_sha256": {
-      "AGENTS.md": "75e690659faa4de80593e3593e5ab475a523b4540e6cff1cce2ede0fb7bffe85",
-      "docs/coordination.md": "88ee433e2890a930ed07551b262b2fe4abfd6f44522b2e6ca9f1ddc71a6adb59",
-      "docs/development-plan.md": "e0ba73227b5fa5de4063bf6916b11901b5089e9b5134902571cc5da10522f744"
-    }
+    "notification": "DONT_NOTIFY"
   },
   "publication_a07": {
     "task_id": "A-PUBLISH-03",
