@@ -1,9 +1,13 @@
 """A11 pure admission and readback checks. No session, network, or mutation."""
 from dataclasses import dataclass
 from datetime import datetime, timezone
+import hashlib
 import json
+from pathlib import Path
+import re
 
 from annotation.contracts import artifact_ref, policy_ref, validate_bundle
+from annotation.contracts.integrity import unique_object
 from annotation.quality.targetcheck import projection_frames, resolve_artifact, resolve_policy
 from annotation.delivery.planner import compare_action_effect
 from annotation.runtime.storage.common import digest
@@ -49,6 +53,49 @@ def question_facts(bundle, graph, question, policy, bindings):
             "bindings": bindings, "relations": relations, "frames": projection,
             "parts": [{"fragment_id": p["fragment_id"], "role": fragments[p["fragment_id"]].role,
                        "text": regions[p["region_id"]].text} for p in projection]}
+
+
+def check_single_choice(source, question, fact, approved, asset_root):
+    """Require explicit source-and-approval-bound classification, not ordinary_choice alone.
+
+    The classification is a hash-checked SourceBundle history resource. Its exact
+    resource reference and value must also be approved for this question. The
+    original frame/content facts bind the resource back to the actual source.
+    This local closure is not a replacement for the missing live fact registry.
+    """
+    qualification = approved.get("choice_qualification")
+    require(isinstance(qualification, dict) and
+            set(qualification) == {"resource", "classification"}, "CHOICE_CLASSIFICATION_REQUIRED")
+    history = [item for item in source.payload.history
+               if item.resource.model_dump(mode="json") == qualification["resource"]]
+    require(len(history) == 1 and history[0].quality == "REVIEWED" and
+            history[0].resource.media_type == "application/json" and asset_root is not None,
+            "CHOICE_CLASSIFICATION_SOURCE_BINDING")
+    # C01 has already checked resource path containment and exact file SHA256.
+    root = Path(asset_root).resolve()
+    path = (root / history[0].resource.path).resolve()
+    require(root in path.parents, "CHOICE_CLASSIFICATION_SOURCE_BINDING")
+    raw = path.read_bytes()
+    require(hashlib.sha256(raw).hexdigest() == history[0].resource.sha256,
+            "CHOICE_CLASSIFICATION_SOURCE_BINDING")
+    classification = json.loads(raw, object_pairs_hook=unique_object)
+    require(isinstance(classification, dict) and
+            classification.get("schema") == "a11-choice-classification-1" and
+            classification.get("book_id") == BOOK and
+            classification.get("question_id") == question.question_id and
+            classification.get("source_frames_hash") == digest(fact["frames"]) and
+            classification.get("source_parts_hash") == digest(fact["parts"]) and
+            classification.get("classification") == qualification["classification"],
+            "CHOICE_CLASSIFICATION_SOURCE_BINDING")
+    require(classification["classification"] == "SINGLE_CHOICE", "SINGLE_CHOICE_REQUIRED")
+    require(not re.search(r"多选|多项选择|不定项选择|select\s+all|multiple\s+answers",
+                          fact["parts"][0]["text"], re.IGNORECASE), "EXPLICIT_MULTIPLE_CHOICE")
+    labels = []
+    for part in fact["parts"][1:5]:
+        match = re.match(r"^([A-D])(?:[.．、)）]|\s)", part["text"])
+        labels.append(match.group(1) if match else None)
+    require(labels == ["A", "B", "C", "D"], "EXPLICIT_OPTION_LABELS_REQUIRED")
+    require(fact["parts"][-1]["text"] in labels, "SINGLE_ANSWER_LABEL_REQUIRED")
 
 
 def check_input(request, asset_root, *, offline=False, at=None):
@@ -119,6 +166,7 @@ def check_input(request, asset_root, *, offline=False, at=None):
                 "ANSWER_RELATION")
         require(entry.get("input_hash") == digest(fact) and entry.get("approved_parts") == fact["parts"] and
                 entry.get("answer_relation") == fact["relations"][0], "APPROVAL_CONTENT_BINDING")
+        check_single_choice(source, question, fact, entry, asset_root)
         require(request.get("directory_map", {}).get(question.directory_id), "DIRECTORY_MAPPING")
         facts.append(fact)
     if offline:

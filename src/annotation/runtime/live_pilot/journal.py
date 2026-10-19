@@ -139,7 +139,25 @@ class Journal:
                 questions[data["question_id"]].update(state="UNKNOWN")
             if event["kind"] == "RESULT":
                 questions[data["question_id"]].update(data)
-        releases = [e["data"] for e in events if e["kind"] == "RELEASE"]
-        return {"status": "REVIEW", "mode": "OFFLINE" if self.offline else "PLATFORM", "questions": questions,
-                "independent_acceptance": "PENDING", "release": releases[-1] if releases else {"released": False},
+        apply_releases = [e for e in events if e["kind"] == "RELEASE"]
+        reconcile_releases = [e for e in events if e["kind"] == "RECONCILE_RELEASE"]
+        all_releases = [e for e in events if e["kind"] in ("RELEASE", "RECONCILE_RELEASE")]
+        failed = [e for e in all_releases if e["data"].get("released") is not True]
+        apply_release = apply_releases[-1]["data"] if apply_releases else {"released": False}
+        reconcile_release = reconcile_releases[-1]["data"] if reconcile_releases else None
+        current_release = all_releases[-1]["data"] if all_releases else {"released": False}
+        # A crash after readonly claim is not covered by an earlier apply release.
+        claims = [e for e in events if e["kind"] == "RECONCILE_CLAIM"]
+        pending = bool(claims and (not reconcile_releases or
+                       claims[-1]["sequence"] > reconcile_releases[-1]["sequence"]))
+        if pending:
+            current_release = {"released": False, "reason": "RECONCILE_RELEASE_PENDING"}
+        elif failed:
+            current_release = dict(failed[-1]["data"], reason="UNRESOLVED_RELEASE_FAILURE")
+        release_hold = current_release.get("released") is not True
+        return {"status": "HOLD" if release_hold else "REVIEW", "mode": "OFFLINE" if self.offline else "PLATFORM",
+                "questions": questions, "resend_allowed": False,
+                "independent_acceptance": "PENDING", "release": current_release,
+                "apply_release": apply_release, "reconcile_release": reconcile_release,
+                "release_failures": [{"sequence": e["sequence"], "kind": e["kind"], "release": e["data"]} for e in failed],
                 "submission_status": "NOT_SUBMITTED", "platform_fact": "NOT_PROVED", "event_count": len(events)}

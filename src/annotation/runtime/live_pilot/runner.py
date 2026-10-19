@@ -102,9 +102,19 @@ def reconcile_readonly(journal, transport, question_id):
         finally:
             try:
                 release = transport.close()
-                require(release.get("released") is True, "RELEASE_UNPROVEN")
+                if not isinstance(release, dict):
+                    release = {"released": False, "reason": "RELEASE_UNPROVEN"}
+                elif release.get("released") is not True:
+                    release = dict(release, released=False)
+                    release.setdefault("reason", "RELEASE_UNPROVEN")
             except Exception as exc:
                 release = {"released": False, "reason": getattr(exc, "code", type(exc).__name__)}
+            release = dict(release, question_id=question_id)
             journal.append("RECONCILE_RELEASE", release)
+        apply_releases = [event["data"] for event in events if event["kind"] == "RELEASE"]
+        result.update(apply_release=apply_releases[-1] if apply_releases else {"released": False},
+                      reconcile_release=release, release=release,
+                      status="REVIEW" if release["released"] is True else "HOLD",
+                      write_disposition="HOLD", resend_allowed=False)
         journal.append("RECONCILIATION", result)
         return result

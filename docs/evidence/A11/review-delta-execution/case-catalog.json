@@ -1,0 +1,21 @@
+{
+  "task_commit": "73ded167",
+  "author_base": "c580ca63ada9e452fd5ee71e5272cf0d047d4574",
+  "independent_basis": "1522d1b612ba35f441a046706e46eabf97fe4a8d",
+  "scope": "A11 R01/R02 fixed offline delta, author candidate 3; no rerun of old 17-case suite",
+  "max_frozen_candidates_this_delta": 1,
+  "max_attempts_this_delta": 1,
+  "outer_timeout_seconds": 180,
+  "first_unexpected_failure": "STOP; all successors NOT_RUN",
+  "cases": [
+    {"id": "test_live_pilot_review_delta.ReviewDeltaTests.test_D01_bound_single_choice", "expected": "source+approval bound SINGLE_CHOICE accepted, exact original six frames/text/coordinates retained; 0 plan/intent/send"},
+    {"id": "test_live_pilot_review_delta.ReviewDeltaTests.test_D02_resealed_BC", "expected": "valid resealed C01 and approval, answer BC rejected at SINGLE_ANSWER_LABEL_REQUIRED; 0 plan/intent/send"},
+    {"id": "test_live_pilot_review_delta.ReviewDeltaTests.test_D03_explicit_multiple_with_B", "expected": "valid resealed C01 and approval, explicit MULTIPLE_CHOICE with B rejected at SINGLE_CHOICE_REQUIRED; 0 plan/intent/send"},
+    {"id": "test_live_pilot_review_delta.ReviewDeltaTests.test_D04_reconcile_close_exception", "expected": "raw archive copy, close exception gives return/report HOLD with reconcile release false and original apply release true; old UNKNOWN/NOT_RUN bytes retained; 0 new send"},
+    {"id": "test_live_pilot_review_delta.ReviewDeltaTests.test_D05_reconcile_close_false", "expected": "independent raw archive copy, returned released=false retained in return/report HOLD; old UNKNOWN/NOT_RUN bytes retained; 0 new send"},
+    {"id": "test_live_pilot_review_delta.ReviewDeltaTests.test_D06_reconcile_close_normal", "expected": "independent raw archive copy, normal readonly release shown separately; old UNKNOWN/NOT_RUN retained, resend_allowed=false; 0 new send"}
+  ],
+  "archive_source_commit": "c580ca63ada9e452fd5ee71e5272cf0d047d4574",
+  "archive_source_path": "docs/evidence/A11/execution/attempt-2/runtime/test_T6_response_frame_and_read_failure/http_only",
+  "forbidden": ["apply execution", "old suite", "success replay", "platform", "network", "browser", "profile", "SQLite", "B message", "push"]
+}
