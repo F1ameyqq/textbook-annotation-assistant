@@ -1,0 +1,52 @@
+{
+  "marker": "A11_SYNTHETIC_OFFLINE_ONLY",
+  "fail_fast": true,
+  "case_ids": [
+    "test_live_pilot_admission.AdmissionTests.test_T1_valid_and_bound_source",
+    "test_live_pilot_admission.AdmissionTests.test_T1_manifest_scope",
+    "test_live_pilot_admission.AdmissionTests.test_T2_resealed_stale_option_roles",
+    "test_live_pilot_admission.AdmissionTests.test_T2_unsupported_shapes",
+    "test_live_pilot_admission.AdmissionTests.test_T3_c01_integrity_and_observed_relabel",
+    "test_live_pilot_admission.AdmissionTests.test_T3_capability_and_real_block",
+    "test_live_pilot_admission.AdmissionTests.test_T4_global_order_and_target_changes",
+    "test_live_pilot_admission.AdmissionTests.test_T8_forbidden_commands_and_cli",
+    "test_live_pilot_journal.JournalTests.test_T5_crash_points_and_new_process_restart",
+    "test_live_pilot_journal.JournalTests.test_T5_two_process_one_claim",
+    "test_live_pilot_journal.JournalTests.test_T5_same_content_and_corrupt_ledger",
+    "test_live_pilot_journal.JournalTests.test_T6_unknown_readonly_match_absent_conflict",
+    "test_live_pilot_readback.ReadbackTests.test_T7_normal_two_question_strict_readback",
+    "test_live_pilot_readback.ReadbackTests.test_T6_response_frame_and_read_failure",
+    "test_live_pilot_readback.ReadbackTests.test_T7_text_and_independent_readback_rejections",
+    "test_live_pilot_readback.ReadbackTests.test_T4_old_state_preservation",
+    "test_live_pilot_readback.ReadbackTests.test_T8_release_error_and_history_text_pending"
+  ],
+  "test_files": [
+    "test_live_pilot_admission",
+    "test_live_pilot_journal",
+    "test_live_pilot_readback"
+  ],
+  "author_max_candidates": 2,
+  "author_max_attempts": 2,
+  "author_max_successes": 1,
+  "rule_source": "87f55ff:项目交接说明.md:72,97-99",
+  "groups": "T1-T8 fixed cases only",
+  "expectations": {
+    "T1_valid_and_bound_source": "two synthetic questions accepted locally; sha256/width/viewer/save mapping, approval identity/hash rejected",
+    "T1_manifest_scope": "0 or 6 entries, Q22, existing platform mapping, old Q1 approval rejected",
+    "T2_resealed_stale_option_roles": "well-formed resealed C01 with stale Q options and agreeing copied role arrays rejected AUTHORITATIVE_OPTION_ROLE",
+    "T2_unsupported_shapes": "seven_choice, combination, free_response, shared stem, explanation stem, five-option roles rejected",
+    "T3_c01_integrity_and_observed_relabel": "hash mutation, resealed image-header dimension mismatch, observed relabel of synthetic evidence rejected by C01",
+    "T3_capability_and_real_block": "missing frame/session, old version, unproved VERIFIED rejected; fabricated real wire profile cannot send/read",
+    "T4_global_order_and_target_changes": "local max 2 and global max 9 produces order 10; duplicate order, directory drift, existing internal binding rejected",
+    "T8_forbidden_commands_and_cli": "OCR/submit/old delete/other book/unknown upload/UPDATE rejected; all five local CLI entrypoints bounded; apply/reconcile BLOCKED with zero calls",
+    "T5_crash_points_and_new_process_restart": "before_intent, after_intent, after_claim, after_effect, before_receipt exit 73; fresh process BOOK_ALREADY_STARTED and sends [0,0,0,1,1]; successors NOT_RUN",
+    "T5_two_process_one_claim": "two owned processes, one claim and zero sends; both exit, fixed book lock common to all journal directories",
+    "T5_same_content_and_corrupt_ledger": "same content exclusive file and repeated claim denied; hash-chain tamper blocked",
+    "T6_unknown_readonly_match_absent_conflict": "response loss UNKNOWN; reconcile MATCH/ABSENT/CONFLICT preserves prior results, no resend, successor NOT_RUN, second reconcile denied",
+    "T7_normal_two_question_strict_readback": "two new synthetic questions appended at 10/11; six get/refresh/reopen reads, strict content and old-state match; releases true; independent PENDING",
+    "T6_response_frame_and_read_failure": "HTTP-only, partial frames, GET timeout, truncation each UNKNOWN/one send/successor NOT_RUN/released",
+    "T7_text_and_independent_readback_rejections": "pending text, changed symbol, wrong answer, option-order change, expected projection origin, same-session reopen each UNKNOWN and successor NOT_RUN",
+    "T4_old_state_preservation": "old frame/text/directory/order mutations UNKNOWN after one send; prewrite drift HOLD before zero sends",
+    "T8_release_error_and_history_text_pending": "close exception HOLD_RELEASE and successor NOT_RUN; A05 shape remains CONTENT_PENDING and live ineligible"
+  }
+}

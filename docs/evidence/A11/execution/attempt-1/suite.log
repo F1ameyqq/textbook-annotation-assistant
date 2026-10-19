@@ -1,0 +1,32 @@
+test_T1_valid_and_bound_source (test_live_pilot_admission.AdmissionTests) ... ok
+test_T1_manifest_scope (test_live_pilot_admission.AdmissionTests) ... ok
+test_T2_resealed_stale_option_roles (test_live_pilot_admission.AdmissionTests) ... ok
+test_T2_unsupported_shapes (test_live_pilot_admission.AdmissionTests) ... ok
+test_T3_c01_integrity_and_observed_relabel (test_live_pilot_admission.AdmissionTests) ... ok
+test_T3_capability_and_real_block (test_live_pilot_admission.AdmissionTests) ... ok
+test_T4_global_order_and_target_changes (test_live_pilot_admission.AdmissionTests) ... ERROR
+
+======================================================================
+ERROR: test_T4_global_order_and_target_changes (test_live_pilot_admission.AdmissionTests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "D:\1800-worktrees\a11-live-pilot\tests\test_live_pilot_admission.py", line 115, in test_T4_global_order_and_target_changes
+    plan = create_live_plan(adm, req, "a11-new-alpha", req["observation"])
+  File "D:\1800-worktrees\a11-live-pilot\src\annotation\delivery\live_pilot\plan.py", line 73, in create_live_plan
+    checked = validate_bundle(data)
+  File "D:\1800-worktrees\a11-live-pilot\src\annotation\contracts\__init__.py", line 32, in validate_bundle
+    return _legacy_validate_bundle(bundle, asset_root=asset_root)
+  File "D:\1800-worktrees\a11-live-pilot\src\annotation\contracts\validation.py", line 650, in validate_bundle
+    return _validate_c01_context(_Context(_parse_c01(bundle)), asset_root)
+  File "D:\1800-worktrees\a11-live-pilot\src\annotation\contracts\validation.py", line 704, in _validate_c01_context
+    handlers[artifact.kind](ctx, artifact, path)
+  File "D:\1800-worktrees\a11-live-pilot\src\annotation\contracts\validation.py", line 411, in _check
+    fail(path + ".subject", "CHECK_SUBJECT", "stage subject must match graph/snapshot/receipt respectively")
+  File "D:\1800-worktrees\a11-live-pilot\src\annotation\contracts\validation.py", line 19, in fail
+    raise ContractError([{"path": path, "code": code, "message": message}])
+annotation.contracts.validation.ContractError: $.artifacts[6].payload.subject: [CHECK_SUBJECT] stage subject must match graph/snapshot/receipt respectively
+
+----------------------------------------------------------------------
+Ran 7 tests in 0.169s
+
+FAILED (errors=1)
