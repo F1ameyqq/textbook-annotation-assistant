@@ -2,7 +2,7 @@
   "schema_version": 1,
   "project": "D:\\1800",
   "coordinator_thread_id": "01a15768-1e2d-7781-b29f-1f7376270216",
-  "updated_at": "2026-10-20T11:47:34.367Z",
+  "updated_at": "2026-10-20T11:59:35.705671+00:00",
   "automation": {
     "id": "1800-a",
     "kind": "heartbeat",
@@ -10788,28 +10788,30 @@
       "at": "2026-10-20T11:04:16.687655+00:00",
       "task": "A17",
       "dispatch_key": "A17:excluded-static:003f8620:new-formal-pair",
-      "status": "R01_CORRECTION_ACTIVE",
+      "status": "R01_BOUNDED_PREFLIGHT_DISPATCH_PREPARED",
       "base_commit": "003f862065a2d630e666323c0d158e33bcee91e9",
       "execution": {
         "thread_id": "01a158fd-281c-7282-a3b4-db876697686c",
         "host_id": "local",
-        "cursor": "b92e1f43-e01a-4b82-86b0-c466dba3623e:6",
+        "cursor": "b92e1f43-e01a-4b82-86b0-c466dba3623e:13",
         "workspace": "D:/1800-worktrees/a17-static-exclusion",
         "branch": "codex/a17-static-exclusion",
-        "status": "R01_CORRECTION_ACTIVE",
+        "status": "R01_FIXED_RELEASED",
         "created_at": "2026-10-20T11:06:05.834705+00:00",
         "acknowledged": true,
         "turn_id": "01a15921-78e2-7593-b9cf-a611f16cb9b5",
-        "product_commit": "e7ee24245ffaf4d4b81cbddae8b3720aac214c1b",
-        "final_commit": "1d2ba3766558fe9cc911756666d962184cc1de57",
-        "released": false
+        "product_commit": "1168a75eb35f319c3ced270b6c515adbdb38603f",
+        "final_commit": "8bffd88dacc146fc3f061ed0863b299fa5dabd30",
+        "released": true,
+        "completed_at": 1792497133,
+        "duration_ms": 405230
       },
       "review": {
         "thread_id": "01a158fd-cbeb-7a31-a3e6-661c7d4c95d4",
         "host_id": "local",
         "cursor": "779af964-e370-4f38-843a-a16207705e3d:6",
-        "workspace": "D:/1800-worktrees/a17-independent-fixed",
-        "status": "REWORK_RELEASED_WAITING_NEW_FIXED_DELIVERY",
+        "workspace": "D:\\1800-worktrees\\a17-first-cause-r1-review",
+        "status": "R01_FIXED_BOUNDED_PREFLIGHT_DISPATCH_PREPARED",
         "created_at": "2026-10-20T11:06:51.908035+00:00",
         "acknowledged": true,
         "turn_id": "01a15915-7fd4-77c1-b5de-8fb286374c6e",
@@ -10852,7 +10854,7 @@
       "live_used": 0,
       "live_activated": false,
       "scope_notes": "Observed CDN Script is denied before send, not allowed. At most 16 combined guard exclusion events; all required navigation/auth/book/data gates remain.",
-      "next_dependency": "New fixed A17-R01 correction product/final/raw/new delta/release, then same formal independent review in new raw isolation",
+      "next_dependency": "Same formal independent bounded read-only preflight; prepare concrete A17 TLS proposal on acceptance",
       "workflow_commit": "811c3ac9e5913812bc71d74bc665eded96e23aa3",
       "auxiliary_boundary_preparation": {
         "path": ".local/stages/coordinator/a17-excluded-static-preparation/notes.md",
@@ -11093,6 +11095,65 @@
         "path": ".local/stages/coordinator/a17-first-cause-preparation/notes.md",
         "sha256": "a3c192072bc1b01726d7b0f5edd8174b1d802008f9bc0fc8b21fd5a4d419108d",
         "status": "COMPLETE_RELEASED_STATIC_AUXILIARY_ONLY"
+      },
+      "revision_delivery": {
+        "at": "2026-10-20T11:54:18.188846+00:00",
+        "status": "MECHANICAL_PASS_ONLY_PENDING_INDEPENDENT_REVIEW",
+        "base": "1d2ba3766558fe9cc911756666d962184cc1de57",
+        "product": "1168a75eb35f319c3ced270b6c515adbdb38603f",
+        "final": "8bffd88dacc146fc3f061ed0863b299fa5dabd30",
+        "candidate_sha256": "4ed38cb1f703c3d0b5e94d601f2f267c05ead871b9a26004e2e44e5d6eeb31dd",
+        "delivery_sha256": "27adc7048d817c2fee523636bd89cc2b45705cb5e77399733a03656b5f962e98",
+        "report_sha256": "aeeb2eaf0d6aece01c18482e30dd78537dfc267cb16b0920f897bb03bd10622d",
+        "release_sha256": "d7ee5aa6ec884ef780788b53e6e58bb7b090cb0539d439ba2ddd85c49e1b0443",
+        "candidate_members": 18,
+        "delivery_members": 42,
+        "delivery_plus_self": 43,
+        "raw_members": 56,
+        "isolation": "D:\\1800-worktrees\\a17-first-cause-r1-review",
+        "input_manifest_sha256": "2b503c83d7c5f050ac52e2b85a5f77719f3f5e5e5280c225a6435347d01ecd53",
+        "old_members": 31529,
+        "unchanged_old_members": 31527,
+        "modified": [
+          "src/annotation/source/usense/current_readonly/gate.py",
+          "tools/a16_current_state_probe.py"
+        ],
+        "added": 45,
+        "deleted": 0,
+        "old_evidence_preserved": 30306,
+        "coordinator_product_runs": 0,
+        "live": 0,
+        "aux_mechanical_sha256": "1e9646954a1f8f8f445f498aca8e040c446eb8ec7cf9d0b3fdbcc49b2aa2e05b"
+      },
+      "revision_review_dispatch": {
+        "at": "2026-10-20T11:59:35.705671+00:00",
+        "key": "A17:r1-practical-readonly:8bffd88d:4ed38cb1",
+        "status": "PREPARED_BEFORE_SEND",
+        "thread_id": "01a158fd-cbeb-7a31-a3e6-661c7d4c95d4",
+        "host_id": "local",
+        "author_released": true,
+        "product": "1168a75eb35f319c3ced270b6c515adbdb38603f",
+        "final": "8bffd88dacc146fc3f061ed0863b299fa5dabd30",
+        "candidate_sha256": "4ed38cb1f703c3d0b5e94d601f2f267c05ead871b9a26004e2e44e5d6eeb31dd",
+        "product_workflow": "d137a1bba49550f661b110ee14c9541a1dc4fb19",
+        "task": "docs/tasks/A17-practical-readonly-preflight-disposition.md",
+        "task_sha256": "4bac1b884cee0602458469aa05f8676ba391853dbf7f3df8759ca50b575362ac",
+        "raw_directory": "D:\\1800-worktrees\\a17-first-cause-r1-review",
+        "input_manifest_sha256": "2b503c83d7c5f050ac52e2b85a5f77719f3f5e5e5280c225a6435347d01ecd53",
+        "acceptance_scope": "BOUNDED_READONLY_PREFLIGHT",
+        "user_steering": "不要太保守",
+        "report_only_gap_may_be_retained_if_raw_cause_and_safe_stop_preserved": true,
+        "old_21_NOT_RUN_history_unchanged": true,
+        "old_suites": 0,
+        "tls_live_authorized": false
+      },
+      "acceptance_disposition": {
+        "task": "docs/tasks/A17-practical-readonly-preflight-disposition.md",
+        "basis": "Latest direct user steering to avoid excessive conservatism",
+        "reporting_only_gaps": "May remain if complete raw cause and correct denial/ERROR retained",
+        "safety_and_scope": "Required",
+        "old_21_NOT_RUN": "Historical state retained; no mandatory duplicate dynamic suite",
+        "tls_live": "Still unapproved"
       }
     }
   },
@@ -13506,8 +13567,8 @@
     }
   ],
   "last_action": {
-    "at": "2026-10-20T11:47:34.367Z",
-    "action": "Same formal A17 author acknowledged narrow first-cause correction; reviewer released waiting fixed delivery; unique heartbeat prompt verified"
+    "at": "2026-10-20T11:59:35.705671+00:00",
+    "action": "User requested less conservatism; fixed A17-R01 bounded preflight prepared without redundant full-suite requirements"
   },
   "limitations": [
     "Current route uses mock B artifacts until independently agreed interface/artifact versions exist.",
