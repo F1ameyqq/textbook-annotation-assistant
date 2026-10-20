@@ -1,0 +1,19 @@
+# A10 browser-context diagnosis closure
+
+Fixed execution archive: `0f7777ca87e27443331ae65bae9c54b2dd6090f8`.
+Corrected runtime candidate: `72cb7d6dbe12a7f41f10e258d6febf538b244f55`.
+Independent reviewer: `/root/a10_proxy_archive_completion`.
+
+The coordinator accepts **failure archive integrity and exact owned resource release only**. The observation itself remains **FAILED_OBSERVATION: GET / Error / UNKNOWN / http=null**. No platform connectivity, historical root cause, login, book readiness, business write, or real readback is accepted.
+
+The frozen execution manifest has six members / 3210 bytes plus the manifest itself, SHA256 `11424211362d84be14c3ae53bb96e725cba0a3a776090fab41892297be2854c0`. The independent report is 13226 bytes, SHA256 `a60736cf83ba156c94786523534dfc669c3f4a0b5d4cf812b370daa184bf2f79`. See [independent review](../evidence/coordinator/a10-browser-context-20261020/independent-execution-archive-review.json) and [coordinator raw check](../evidence/coordinator/a10-browser-context-20261020/closure-check.json).
+
+The fixed records and source bind worker PID 26908 with creation FILETIME 134369258556477498 to the original Popen handle and owned Job. Worker exit 70, Job active zero, stdin/process/Job handles closed, and request context/runtime disposed/stopped are recorded. Elapsed time was 1.922 seconds; cleanup_proven=true. Supervisor-release.utc is its initialization timestamp, not completion time. This is archived evidence, not a new process survey. No current PID was opened or terminated.
+
+Original candidate 6966509b failed its isolated sibling import before Job/Popen/GO/GET; its cleanup_proven=false remains. A single explicitly recorded coordinator engineering revision allowed the import-only second candidate; no separate human budget approval was claimed. Cumulative proxy starts=2, GET intents=1; precise wire count is UNKNOWN. All remaining candidates, starts and GETs are zero. No new runtime/test/import/network execution occurred during this closure.
+
+The original pending archive reviewer was absent from the live agent registry and its requested report was missing. A replacement independent reviewer completed only that same fixed archive review. It reported no retained background resources. The reviewer corrected a display-only encoding suspicion; raw Git UTF-8 was intact, and no frozen source was repaired.
+
+The user reports the ordinary browser can open the platform and has now enabled the local-browser preference. The installed static UI route is [recorded separately](../evidence/coordinator/a10-browser-context-20261020/browser-setting-location.json); live availability still must be observed. The subsequent Playwright tab-list request timed out at the tool layer after 120 seconds. Its internal resource outcome is unknown. Computer Use listed the existing Edge window, returned no accessibility text, then stopped the turn because it could not determine the current browser URL confidently enough to enforce policy. No URL, platform page, screenshot, navigation, login or business write was obtained/performed through that attempt. No input, activation, browser launch or workaround followed the stop. See [tool-state record](../evidence/coordinator/a10-browser-context-20261020/browser-tool-stop.json).
+
+The user was asked to bring the existing Usense tab to the foreground and reply continue. That contextual action remains pending; do not reask connection permission or the already answered browser/settings questions, and do not treat a heartbeat as confirmation. No new probe or browser attempt is started by this closure. A11 remains accepted only for its finite offline scope; actual source/target/policy, first-question list, write limits and real content readback remain outstanding. Other three cases remain HOLD. No push or B message.
