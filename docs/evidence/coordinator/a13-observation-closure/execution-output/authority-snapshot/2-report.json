@@ -1,0 +1,630 @@
+{
+  "at": "2026-10-20T13:18:25.131030+08:00",
+  "author_driver_commit": "d45ed25a98361002ddb28985c1d27687c4421a17",
+  "authority_accounting": {
+    "independent_deltas_remaining": 0,
+    "independent_deltas_used": 1,
+    "independent_protocol_children_remaining": 0,
+    "independent_protocol_children_used": 1,
+    "new_author_candidates_used": 1,
+    "new_author_deltas_used": 1,
+    "new_live_start_limit": 0,
+    "new_live_starts": 0,
+    "old_limits_restored": false,
+    "original_author_candidates_used": 1,
+    "original_browser_suites_used": 1,
+    "repair_retry_extra_candidate_authority": false
+  },
+  "candidate_manifest_sha256": "38eb3f836f14b44db77ce516f461bd4f3934df71807c1fac962560603a210920",
+  "checks": [
+    {
+      "conclusion": "31 added paths within author allowlist; all 31,181 old members and 22 original A12 raw files preserved. Candidate/final and delivery identities match.",
+      "evidence": [
+        "raw-preflight.json",
+        "postrun-integrity.json"
+      ],
+      "id": "C01",
+      "item": "Fixed raw identity and preservation",
+      "status": "PASS"
+    },
+    {
+      "conclusion": "Only MANIFEST assignment changes. NativePolicy/open_owned/close_owned/profile_binding/OwnedJob/supervise/worker_main and Fetch/child/install methods equal original AST. Route/WS exception changes route through first-error retention; stopped assignments add terminal-state bookkeeping. Original TLS, allowlist, original shared LIVE_OUT/markers, profile and Job boundaries remain.",
+      "evidence": [
+        "independent-product-delta.diff",
+        "raw-preflight.json:ast_same/ast_changed",
+        "postrun-integrity.json"
+      ],
+      "id": "C02",
+      "item": "R01/R02-only product scope and unchanged gates",
+      "status": "PASS_STATIC"
+    },
+    {
+      "conclusion": "Actual Windows Python3.9.13 binary PIPE emits canonical 12-byte LF record via unchanged frozen product emit function; same product parent acceptance function accepts zero. Exactly eight independent malformed/error cases reject. Actual occupancy scan remains unexecuted.",
+      "evidence": [
+        "run/D1-protocol-raw.json",
+        "run/D2-rejects.json",
+        "run/protocol-child-release.json"
+      ],
+      "id": "C03",
+      "item": "R01 Windows framing and eight rejects",
+      "status": "PASS_FINITE_OFFLINE"
+    },
+    {
+      "conclusion": "External objects are memory fakes only; real NativeGuard/observe_page/record_observation_error/finalize_observation/close_owned/save_new are used without monkeypatching. D3 clean shutdown-only stopped remains authenticated; D4 login required has zero login actions. D5 stopped without failure during password await ends ERROR. D6 viewer-await first failure survives later close failure. D7 preexisting failure prevents navigation/DOM and retains original error. D8 first failure during close after provisional success changes serialized result to ERROR; second shutdown failure cannot overwrite it.",
+      "evidence": [
+        "run/D3-observation.json",
+        "run/D4-observation.json",
+        "run/D5-trace.json",
+        "run/D6-trace.json",
+        "run/D7-trace.json",
+        "run/D8-trace.json",
+        "run/suite-result.json"
+      ],
+      "id": "C04",
+      "item": "R02 shared production observation and finalization",
+      "status": "PASS_FINITE_OFFLINE"
+    },
+    {
+      "conclusion": "Independent driver and exact eight reject inputs frozen before behavior. One run 562ms, one synthetic child, no unexpected failure. Fixed output directory created before import. No postfreeze changes, matrix expansion, author-driver run or second independent run.",
+      "evidence": [
+        "independent-freeze.json",
+        "run/suite-started.json",
+        "command-result.json",
+        "run/suite-result.json"
+      ],
+      "id": "C05",
+      "item": "Freeze, one run, bounded counts and no retries",
+      "status": "PASS_FINITE_RECORD"
+    },
+    {
+      "conclusion": "Original N1-N3 fixed records and their original independent findings remain provenance for unchanged native policy/interception semantics only. New first-error bookkeeping does not establish new live network coverage. Zero original suite/browser/server replay.",
+      "evidence": [
+        "raw-preflight.json",
+        "independent-product-delta.diff",
+        "../docs/evidence/A12/native-reuse-probe/suite-run/suite-result.json"
+      ],
+      "id": "C06",
+      "item": "Original network evidence remains bounded",
+      "status": "PASS_FINITE_SCOPE_NOT_REPLAYED"
+    },
+    {
+      "conclusion": "Sole child PID70780 has creation FILETIME134369469928825883 before/after, exit0 observed; exact retained handle and both output pipes closed. Fake contexts/runtimes closed once each. No real browser/profile resources acquired. All 53 inputs and frozen review files remain unchanged.",
+      "evidence": [
+        "run/independent-release.json",
+        "run/protocol-child-release.json",
+        "postrun-integrity.json"
+      ],
+      "id": "C07",
+      "item": "Exact owned release and input immutability",
+      "status": "PASS"
+    }
+  ],
+  "command_result": {
+    "chunk_id": "df36cc",
+    "command": "python -B D:\\1800-worktrees\\a12-r1-independent\\review-output\\independent_suite.py --freeze-sha256 e1570981a0e99395df55683aa396bced6e3b795976457d72f9978e8fe7e87898",
+    "cwd": "D:\\1800-worktrees\\a12-r1-independent",
+    "exit_code": 0,
+    "original_token_count": 55,
+    "output": "{\"status\": \"PASS_FINITE_OFFLINE_DELTA\", \"duration_ms\": 562, \"cases\": {\"D1\": \"PASS\", \"D2\": \"PASS\", \"D3\": \"PASS\", \"D4\": \"PASS\", \"D5\": \"PASS\", \"D6\": \"PASS\", \"D7\": \"PASS\", \"D8\": \"PASS\"}, \"first_unexpected_failure\": null}\r\n",
+    "wall_time_seconds": 1.2386063
+  },
+  "counters": {
+    "author_driver_runs": 0,
+    "browser_launches": 0,
+    "business_writes": 0,
+    "external_messages": 0,
+    "fixture_servers": 0,
+    "independent_delta_runs": 1,
+    "login_actions": 0,
+    "original_suite_runs": 0,
+    "platform_requests": 0,
+    "product_modifications": 0,
+    "profile_or_credential_accesses": 0,
+    "protocol_children": 1,
+    "real_occupancy_scans": 0
+  },
+  "delivery_manifest_sha256": "b615681648be2ce5c35c5e7e6502733b135c26be4d0e070b5c6838eb4094ded7",
+  "final_commit": "81fab23e3e7e9e32a36d3857a253afc69b5bd3e1",
+  "findings": [],
+  "first_unexpected_failure": null,
+  "host_id": "local",
+  "identity_verification": {
+    "candidate_members": 21,
+    "delivery_nonself_members": 30,
+    "input_and_driver_hashes_unchanged_after_run": true,
+    "lineage": "0c30b365 -> d45ed25a -> 81fab23e",
+    "method": "Independent ls-tree -rz mode/type/OID comparison; each of 53 local raw files equals final cat-file blob; SHA/size/tree checks; no lazy fetch.",
+    "new_paths": 31,
+    "old_changed": 0,
+    "old_members_preserved": 31181,
+    "original_A12_files": 22,
+    "original_baseline_members": 31159,
+    "raw_inputs": 53
+  },
+  "independent_case_results": {
+    "D1": {
+      "accepted_zero": 0,
+      "exit_code": 0,
+      "release": {
+        "after": {
+          "created_filetime": 134369469928825883,
+          "exit_code": 0,
+          "exit_observed": true,
+          "exited_filetime": 134369469933706186,
+          "pid": 70780
+        },
+        "before": {
+          "created_filetime": 134369469928825883,
+          "exit_code": null,
+          "exit_observed": false,
+          "exited_filetime": null,
+          "pid": 70780
+        },
+        "handle_closed": true,
+        "pipes_closed": true,
+        "same_pid_and_creation": true,
+        "state": "RELEASED"
+      },
+      "status": "PASS",
+      "stderr_hex": "",
+      "stdout_hex": "7b22636f756e74223a307d0a"
+    },
+    "D2": {
+      "fixed_inputs": 8,
+      "observations": [
+        {
+          "exit_code": 0,
+          "name": "nonzero_count",
+          "observed_error": "PROFILE_OCCUPANCY_UNPROVEN",
+          "result": "REJECTED",
+          "stderr_hex": "",
+          "stdout_hex": "7b22636f756e74223a377d0a"
+        },
+        {
+          "exit_code": 0,
+          "name": "negative_count",
+          "observed_error": "PROFILE_OCCUPANCY_UNPROVEN",
+          "result": "REJECTED",
+          "stderr_hex": "",
+          "stdout_hex": "7b22636f756e74223a2d337d0a"
+        },
+        {
+          "exit_code": 0,
+          "name": "boolean_count",
+          "observed_error": "PROFILE_OCCUPANCY_UNPROVEN",
+          "result": "REJECTED",
+          "stderr_hex": "",
+          "stdout_hex": "7b22636f756e74223a747275657d0a"
+        },
+        {
+          "exit_code": 0,
+          "name": "extra_field",
+          "observed_error": "PROFILE_OCCUPANCY_UNPROVEN",
+          "result": "REJECTED",
+          "stderr_hex": "",
+          "stdout_hex": "7b22636f756e74223a302c22756e75736564223a317d0a"
+        },
+        {
+          "exit_code": 0,
+          "name": "multiple_records",
+          "observed_error": "PROFILE_OCCUPANCY_UNPROVEN",
+          "result": "REJECTED",
+          "stderr_hex": "",
+          "stdout_hex": "7b22636f756e74223a307d0a7b22636f756e74223a307d0a"
+        },
+        {
+          "exit_code": 0,
+          "name": "trailing_garbage",
+          "observed_error": "PROFILE_OCCUPANCY_UNPROVEN",
+          "result": "REJECTED",
+          "stderr_hex": "",
+          "stdout_hex": "7b22636f756e74223a307d0a5a"
+        },
+        {
+          "exit_code": 0,
+          "name": "stderr",
+          "observed_error": "PROFILE_OCCUPANCY_UNPROVEN",
+          "result": "REJECTED",
+          "stderr_hex": "53594e5448455449435f4552524f52",
+          "stdout_hex": "7b22636f756e74223a307d0a"
+        },
+        {
+          "exit_code": 9,
+          "name": "nonzero_exit",
+          "observed_error": "PROFILE_OCCUPANCY_UNPROVEN",
+          "result": "REJECTED",
+          "stderr_hex": "",
+          "stdout_hex": "7b22636f756e74223a307d0a"
+        }
+      ],
+      "status": "PASS"
+    },
+    "D3": {
+      "at_serialization": {
+        "failure": null,
+        "pending_tasks": 0,
+        "shutdown_started": true,
+        "stopped": true,
+        "terminal_stopped": false
+      },
+      "calls": {
+        "goto": 1,
+        "login_actions": 0,
+        "password": 1,
+        "viewer": 1
+      },
+      "context_close_calls": 1,
+      "error": null,
+      "exit_code": 0,
+      "final_outcome": "AUTHENTICATED_VIEWER_OBSERVED",
+      "guard_failure": null,
+      "observation_sha256": "5b53aa6d86e2ea1cf7cd980476cd1db119eda57c7526c236048a57c81df94707",
+      "pre_shutdown": {
+        "failure": null,
+        "pending_tasks": 0,
+        "shutdown_started": false,
+        "stopped": false,
+        "terminal_stopped": false
+      },
+      "production_functions": [
+        "NativeGuard",
+        "observe_page",
+        "record_observation_error (if exception)",
+        "finalize_observation",
+        "close_owned",
+        "save_new"
+      ],
+      "provisional_outcome": "AUTHENTICATED_VIEWER_OBSERVED",
+      "runtime_stop_calls": 1,
+      "status": "PASS"
+    },
+    "D4": {
+      "at_serialization": {
+        "failure": null,
+        "pending_tasks": 0,
+        "shutdown_started": true,
+        "stopped": true,
+        "terminal_stopped": false
+      },
+      "calls": {
+        "goto": 1,
+        "login_actions": 0,
+        "password": 1,
+        "viewer": 0
+      },
+      "context_close_calls": 1,
+      "error": null,
+      "exit_code": 0,
+      "final_outcome": "LOGIN_REQUIRED",
+      "guard_failure": null,
+      "observation_sha256": "5a647adb84a1638af7632dc6b84a4e5ed8ab769c74a334b4ef2b0d527a9fe3a7",
+      "pre_shutdown": {
+        "failure": null,
+        "pending_tasks": 0,
+        "shutdown_started": false,
+        "stopped": false,
+        "terminal_stopped": false
+      },
+      "production_functions": [
+        "NativeGuard",
+        "observe_page",
+        "record_observation_error (if exception)",
+        "finalize_observation",
+        "close_owned",
+        "save_new"
+      ],
+      "provisional_outcome": "LOGIN_REQUIRED",
+      "runtime_stop_calls": 1,
+      "status": "PASS"
+    },
+    "D5": {
+      "at_serialization": {
+        "failure": null,
+        "pending_tasks": 0,
+        "shutdown_started": true,
+        "stopped": true,
+        "terminal_stopped": true
+      },
+      "calls": {
+        "goto": 1,
+        "login_actions": 0,
+        "password": 1,
+        "viewer": 0
+      },
+      "context_close_calls": 1,
+      "error": {
+        "codes": [
+          "NETWORK_GUARD_STOPPED"
+        ],
+        "exception_type": "StopProbe"
+      },
+      "exit_code": 2,
+      "final_outcome": "ERROR",
+      "guard_failure": null,
+      "observation_sha256": "0ca4122f79ffd2986ed2c92cf41beb71c4623e97c0f1e11ba18dbb01bf18d7c7",
+      "pre_shutdown": {
+        "failure": null,
+        "pending_tasks": 0,
+        "shutdown_started": false,
+        "stopped": true,
+        "terminal_stopped": true
+      },
+      "production_functions": [
+        "NativeGuard",
+        "observe_page",
+        "record_observation_error (if exception)",
+        "finalize_observation",
+        "close_owned",
+        "save_new"
+      ],
+      "provisional_outcome": "ERROR",
+      "runtime_stop_calls": 1,
+      "status": "PASS"
+    },
+    "D6": {
+      "at_serialization": {
+        "failure": {
+          "codes": [
+            "REVIEW_VIEWER_FIRST_FAILURE"
+          ],
+          "exception_type": "StopProbe"
+        },
+        "pending_tasks": 0,
+        "shutdown_started": true,
+        "stopped": true,
+        "terminal_stopped": true
+      },
+      "calls": {
+        "goto": 1,
+        "login_actions": 0,
+        "password": 1,
+        "viewer": 1
+      },
+      "context_close_calls": 1,
+      "error": {
+        "codes": [
+          "REVIEW_VIEWER_FIRST_FAILURE"
+        ],
+        "exception_type": "StopProbe"
+      },
+      "exit_code": 2,
+      "final_outcome": "ERROR",
+      "guard_failure": {
+        "codes": [
+          "REVIEW_VIEWER_FIRST_FAILURE"
+        ],
+        "exception_type": "StopProbe"
+      },
+      "observation_sha256": "1f6e7f4bd00fb989b3bca04a38c925d9795c709012315dfe3f2750b1b53ce7ef",
+      "pre_shutdown": {
+        "failure": {
+          "codes": [
+            "REVIEW_VIEWER_FIRST_FAILURE"
+          ],
+          "exception_type": "StopProbe"
+        },
+        "pending_tasks": 0,
+        "shutdown_started": false,
+        "stopped": true,
+        "terminal_stopped": true
+      },
+      "production_functions": [
+        "NativeGuard",
+        "observe_page",
+        "record_observation_error (if exception)",
+        "finalize_observation",
+        "close_owned",
+        "save_new"
+      ],
+      "provisional_outcome": "ERROR",
+      "runtime_stop_calls": 1,
+      "status": "PASS"
+    },
+    "D7": {
+      "at_serialization": {
+        "failure": {
+          "codes": [
+            "REVIEW_PREEXISTING_FIRST_FAILURE"
+          ],
+          "exception_type": "StopProbe"
+        },
+        "pending_tasks": 0,
+        "shutdown_started": true,
+        "stopped": true,
+        "terminal_stopped": true
+      },
+      "calls": {
+        "goto": 0,
+        "login_actions": 0,
+        "password": 0,
+        "viewer": 0
+      },
+      "context_close_calls": 1,
+      "error": {
+        "codes": [
+          "REVIEW_PREEXISTING_FIRST_FAILURE"
+        ],
+        "exception_type": "StopProbe"
+      },
+      "exit_code": 2,
+      "final_outcome": "ERROR",
+      "guard_failure": {
+        "codes": [
+          "REVIEW_PREEXISTING_FIRST_FAILURE"
+        ],
+        "exception_type": "StopProbe"
+      },
+      "observation_sha256": "d5373e264d9ba3ae9a218e7cc353779c1c298acb7afb8c1d11834cefc49079d8",
+      "pre_shutdown": {
+        "failure": {
+          "codes": [
+            "REVIEW_PREEXISTING_FIRST_FAILURE"
+          ],
+          "exception_type": "StopProbe"
+        },
+        "pending_tasks": 0,
+        "shutdown_started": false,
+        "stopped": true,
+        "terminal_stopped": true
+      },
+      "production_functions": [
+        "NativeGuard",
+        "observe_page",
+        "record_observation_error (if exception)",
+        "finalize_observation",
+        "close_owned",
+        "save_new"
+      ],
+      "provisional_outcome": "ERROR",
+      "runtime_stop_calls": 1,
+      "status": "PASS"
+    },
+    "D8": {
+      "at_serialization": {
+        "failure": {
+          "codes": [
+            "REVIEW_SHUTDOWN_FIRST_FAILURE"
+          ],
+          "exception_type": "StopProbe"
+        },
+        "pending_tasks": 0,
+        "shutdown_started": true,
+        "stopped": true,
+        "terminal_stopped": true
+      },
+      "calls": {
+        "goto": 1,
+        "login_actions": 0,
+        "password": 1,
+        "viewer": 1
+      },
+      "context_close_calls": 1,
+      "error": {
+        "codes": [
+          "REVIEW_SHUTDOWN_FIRST_FAILURE"
+        ],
+        "exception_type": "StopProbe"
+      },
+      "exit_code": 2,
+      "final_outcome": "ERROR",
+      "guard_failure": {
+        "codes": [
+          "REVIEW_SHUTDOWN_FIRST_FAILURE"
+        ],
+        "exception_type": "StopProbe"
+      },
+      "observation_sha256": "7278d69c952be410a0a0fb5e41c219577b48f876f0bd2b471237622125e657a0",
+      "pre_shutdown": {
+        "failure": null,
+        "pending_tasks": 0,
+        "shutdown_started": false,
+        "stopped": false,
+        "terminal_stopped": false
+      },
+      "production_functions": [
+        "NativeGuard",
+        "observe_page",
+        "record_observation_error (if exception)",
+        "finalize_observation",
+        "close_owned",
+        "save_new"
+      ],
+      "provisional_outcome": "AUTHENTICATED_VIEWER_OBSERVED",
+      "runtime_stop_calls": 1,
+      "status": "PASS"
+    }
+  },
+  "independent_driver_sha256": "6a512ed978897cee212f4b00cc22f22be29454a5c02ddbdc94213660b0a5b544",
+  "independent_duration_ms": 562,
+  "independent_freeze_sha256": "e1570981a0e99395df55683aa396bced6e3b795976457d72f9978e8fe7e87898",
+  "input_raw_manifest": "raw-preflight.json",
+  "live_authorized_by_this_review": false,
+  "next_authority": "STOPPED and released. Only coordinator may separately register the same at-most-one unused reuse-only observation after actual profile binding, occupancy, durable markers and precise deadlines. This review does not start live, restore old budgets, authorize login/writes, or allow another candidate/delta. Other three cases HOLD; Q22 no replay; zero B messages.",
+  "not_verified": [
+    "Actual dedicated profile identity, occupancy, credentials, or authenticated session.",
+    "Real Usense transport or book46007447, source/frame content, saving, readback or submission.",
+    "All child target, iframe, popup, worker and service-worker dynamic variants.",
+    "Forced navigation/worker/deadline expiration, blocking native/filesystem/fsync operations, or exceptional Job/context cleanup branches.",
+    "Exhaustive asynchronous callback/cancellation interleavings or pending-task branches; only task-defined D3-D8 memory interleavings ran.",
+    "Unchanged full native occupancy scanner behavior; D1 only emitted synthetic zero through actual Windows pipe.",
+    "B adoption, integration, deployment, or platform root cause.",
+    "Author packaging/seal helpers behavior (raw identity only, not executed)."
+  ],
+  "original_findings_disposition": {
+    "R01": "CLOSED_FOR_FIXED_R1_FINITE_OFFLINE_SCOPE",
+    "R02": "CLOSED_FOR_FIXED_R1_FINITE_OFFLINE_SCOPE",
+    "old_product_and_final": "Remain historical REWORK; no original report edited or live qualification restored."
+  },
+  "output_raw_manifest": "raw-output-manifest.json",
+  "output_root": "D:\\1800-worktrees\\a12-r1-independent\\review-output",
+  "platform_acceptance": false,
+  "pre_execution_utility_events": [
+    "An inline read-only metadata display expected a members key on delivery manifest and raised KeyError; no product import/run or file write occurred. Correct members_excluding_this_manifest key used by independent raw checker.",
+    "Static review adjusted the unfrozen independent driver to ignore preexisting supervisor asyncio tasks when checking for newly leaked fake tasks; no behavior run occurred."
+  ],
+  "product_commit": "d45ed25a98361002ddb28985c1d27687c4421a17",
+  "protocol_child_driver_sha256": "5e92d2b12e66d8a3c1a9608753b02c2f7a81ec80b4c6f9f79cf889adffe835ff",
+  "qualification_scope": "R01/R02 fixed-candidate finite offline preparation only",
+  "raw_root": "D:\\1800-worktrees\\a12-r1-independent",
+  "release": {
+    "at": "2026-10-20T05:16:33.434396+00:00",
+    "fake_resources": {
+      "D3": {
+        "context_close_calls": 1,
+        "runtime_stop_calls": 1
+      },
+      "D4": {
+        "context_close_calls": 1,
+        "runtime_stop_calls": 1
+      },
+      "D5": {
+        "context_close_calls": 1,
+        "runtime_stop_calls": 1
+      },
+      "D6": {
+        "context_close_calls": 1,
+        "runtime_stop_calls": 1
+      },
+      "D7": {
+        "context_close_calls": 1,
+        "runtime_stop_calls": 1
+      },
+      "D8": {
+        "context_close_calls": 1,
+        "runtime_stop_calls": 1
+      }
+    },
+    "further_action": "STOPPED_NO_RETRY_NO_LIVE",
+    "protocol_child": {
+      "after": {
+        "created_filetime": 134369469928825883,
+        "exit_code": 0,
+        "exit_observed": true,
+        "exited_filetime": 134369469933706186,
+        "pid": 70780
+      },
+      "before": {
+        "created_filetime": 134369469928825883,
+        "exit_code": null,
+        "exit_observed": false,
+        "exited_filetime": null,
+        "pid": 70780
+      },
+      "handle_closed": true,
+      "pipes_closed": true,
+      "same_pid_and_creation": true,
+      "state": "RELEASED"
+    },
+    "real_browser_platform_profile_resources": 0,
+    "remaining_independent_delta_runs": 0,
+    "remaining_protocol_children": 0,
+    "state": "RELEASED"
+  },
+  "review_thread_id": "01a157a5-495a-7bf3-bc17-299ad85c48a7",
+  "schema_version": 1,
+  "source_final_commit": "0c30b365ed18b006bcab32bed4acb60869ff9f92",
+  "source_product_commit": "7f3d42e31be29782f0e09e6c01cc8e277387747c",
+  "status": "ACCEPTED_PREPARATION_FOR_ONE_REUSE_ONLY_OBSERVATION",
+  "task": "A12-R1 formal independent finite offline acceptance",
+  "workflow_commit": "4e300c8d7c544a0f802425827906783efb1344e8"
+}

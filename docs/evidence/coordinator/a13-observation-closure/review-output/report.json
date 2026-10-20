@@ -1,0 +1,445 @@
+{
+  "acceptance_scope": "Single frozen failed A13 observation archive and recorded owned-resource release only; wrapper self OS exit identity remains UNKNOWN.",
+  "at_local": "2026-10-20T13:54:17.155795+08:00",
+  "at_utc": "2026-10-20T05:54:17.155795+00:00",
+  "authority": {
+    "B_messages": 0,
+    "Q22": "NO_REPLAY",
+    "business_write_authority": false,
+    "live_remaining": 0,
+    "login_authority": false,
+    "new_runtime_or_platform_authority": false,
+    "old_budgets_restored": false,
+    "other_three_cases": "HOLD",
+    "repair_retry_authority": false
+  },
+  "blocking_findings": [],
+  "candidate_manifest_sha256": "38eb3f836f14b44db77ce516f461bd4f3934df71807c1fac962560603a210920",
+  "checks": [
+    {
+      "conclusion": "All83 isolated files match supplied inventory:53 original raw inputs plus29 execution outputs and manifest. SHA256/size and original53 Git blob OIDs independently recomputed. Candidate21, delivery30 and inherited22 nested member hashes match. No missing/extra/reparse/symlink inputs.",
+      "evidence": [
+        "execution-output/raw-output-manifest.json",
+        "execution-output/raw-input-verification.json",
+        "execution-output/postrun-integrity.json",
+        "docs/evidence/A12/review-delta/candidate-manifest.json",
+        "docs/evidence/A12/review-delta/delivery-raw-manifest.json",
+        "docs/evidence/A12/review-delta/inherited-raw-manifest.json"
+      ],
+      "id": "C01",
+      "item": "Fixed identities and raw closure",
+      "status": "PASS_STATIC_RAW"
+    },
+    {
+      "conclusion": "Authority snapshots, actual execution thread and command/intent/wrapper hashes agree. Preparation and wrapper use exclusive xb creation and initial absence checks; product mkdir(exist_ok=False) binds original shared directory. No marker reset/delete path or replay is evidenced. Global historical absence/retention is supported by fixed records and coordinator attestation, not a new filesystem observation.",
+      "evidence": [
+        "execution-output/authority-snapshot/0-A13-single-reuse-observation.md",
+        "execution-output/authority-snapshot/4-intent.json",
+        "execution-output/preparation-started.json",
+        "execution-output/launch-intent.json",
+        "execution-output/launch-started.json",
+        "execution-output/prepare_once.py:33",
+        "execution-output/launch_once.py:35",
+        "tools/headless_native_reuse_probe_r1.py:675"
+      ],
+      "id": "C02",
+      "item": "Authority, single launch and exclusive markers",
+      "status": "PASS_STATIC_FINITE_RECORDS"
+    },
+    {
+      "conclusion": "Preparation has one candidate call and one metadata-only profile_binding call. Fingerprint agrees across intent/start/binding/report. Frozen worker invokes occupancy once before observe_live/open_owned. Occupancy PID75784 has exact held identity, matching_processes0, exit0,4-second limit,no timeout,closed handle. Its OS exit05:42:41.415218 UTC precedes observation/context entry05:42:41.425030 and first audited navigation05:42:44.700815. No reviewer profile access/rescan.",
+      "evidence": [
+        "execution-output/prepare_once.py:86",
+        "tools/headless_native_reuse_probe_r1.py:315",
+        "tools/headless_native_reuse_probe_r1.py:351",
+        "tools/headless_native_reuse_probe_r1.py:624",
+        "execution-output/live-records/profile-binding.json",
+        "execution-output/live-records/occupancy.json"
+      ],
+      "id": "C03",
+      "item": "Metadata binding and occupancy before browser work",
+      "status": "PASS_STATIC_FINITE_RECORDS"
+    },
+    {
+      "conclusion": "Frozen source has one Edge headless persistent context,offline startup with one about:blank,guards before enabling network,service_workers blocked,ignore_https_errors=False and no certificate-ignore argument. One page.goto(TARGET),navigation_intents1. Two GET/NAVIGATION ALLOW audits are Fetch Request-stage/context views of that one intent,not two starts; neither redirected. Original HTTPS/origin/path/method/session-only allowlist,WS and related-target boundaries remain fixed. No observed book/source/frame/write request.",
+      "evidence": [
+        "tools/headless_native_reuse_probe_r1.py:104",
+        "tools/headless_native_reuse_probe_r1.py:187",
+        "tools/headless_native_reuse_probe_r1.py:220",
+        "tools/headless_native_reuse_probe_r1.py:242",
+        "tools/headless_native_reuse_probe_r1.py:256",
+        "tools/headless_native_reuse_probe_r1.py:421",
+        "execution-output/live-records/observation.json"
+      ],
+      "id": "C04",
+      "item": "One navigation, strict TLS and original request boundaries",
+      "status": "PASS_STATIC_FINITE_RECORDS"
+    },
+    {
+      "conclusion": "ERROR preserves ERR_CERT_COMMON_NAME_INVALID in both error and observation_error. Guard failure=null,pending_tasks0; running pre-shutdown and final shutdown-only stopped=true/terminal_stopped=false match frozen finalization. Failure occurs before password/viewer predicates,so neither AUTHENTICATED_VIEWER_OBSERVED nor LOGIN_REQUIRED was established. HTTP status unrecorded. Login/book/read/save/readback/submission successors NOT_RUN; root cause UNKNOWN.",
+      "evidence": [
+        "execution-output/live-records/observation.json",
+        "execution-output/report.json",
+        "tools/headless_native_reuse_probe_r1.py:412",
+        "tools/headless_native_reuse_probe_r1.py:421",
+        "tools/headless_native_reuse_probe_r1.py:448"
+      ],
+      "id": "C05",
+      "item": "First TLS error, final guard and successors",
+      "status": "PASS_STATIC_FAILURE_ARCHIVE"
+    },
+    {
+      "conclusion": "Product Popen PID75280 and worker PID16076 each have matching PID/creation FILETIME before/after with observed exit2. Occupancy PID75784 exact exit0. Product pipes/handle and worker handle closed; fixed source supports worker three-pipe closure. Assigned Job activity goes1 to0 and Job closes. Context/runtime close with no errors. Outer10391ms and worker supervisor9672ms,no timeout; these differ from OS process lifetimes. Wrapper PID31208 has creation identity only: exact OS exit UNKNOWN. Tool shell exit1 distinct from product exit2; source-expected wrapper exit2 is not an observed held-handle exit.",
+      "evidence": [
+        "execution-output/outer-process-created.json",
+        "execution-output/outer-release.json",
+        "execution-output/live-records/worker-release.json",
+        "execution-output/live-records/occupancy.json",
+        "execution-output/execution-release.json",
+        "execution-output/launch-started.json",
+        "execution-output/command-result.json",
+        "execution-output/launch_once.py:67",
+        "tools/headless_native_reuse_probe_r1.py:552",
+        "docs/evidence/A12/native-reuse-probe/reviewed-native/native_windows.py:78"
+      ],
+      "id": "C06",
+      "item": "Exact recorded owned-resource release",
+      "status": "PASS_FOR_HELD_OWNED_RESOURCES_WITH_WRAPPER_LIMITATION"
+    },
+    {
+      "conclusion": "Copied accepted R1 report/receipt identify fixed d45ed25a/final81fab23e,R01/R02 finite closure,D1-D8 pass562ms and release. Independent R1 output manifest hash inherited from accepted receipt; absent30 R1 output files not newly verified. No N1-N3,D1-D8,author driver,wrapper or product execution in this review. Live used1/remaining0,old budgets not restored,other three HOLD,Q22 NO_REPLAY,0B/contact messages.",
+      "evidence": [
+        "execution-output/authority-snapshot/2-report.json",
+        "execution-output/authority-snapshot/3-coordinator-receipt.json",
+        "execution-output/report.json",
+        "execution-output/execution-release.json"
+      ],
+      "id": "C07",
+      "item": "Earlier finite R1 evidence and exhausted authority",
+      "status": "PASS_STATIC_SCOPE"
+    },
+    {
+      "conclusion": "All29 execution nonself members and6 copied live JSON hashes match manifest. Original shared files equality/retention attested by coordinator; reviewer only hashed fixed copies. Packaging error event/original seal source retained; final seal source differs solely by UTF-8 declaration. Packaging source only seals existing evidence without product launch/import. Encoding-failure cause not reproduced. Six live records contain no credential/profile child directory/response body/full-page text. Product stdout/stderr raw text withheld; only length/hash available.",
+      "evidence": [
+        "execution-output/raw-output-manifest.json",
+        "execution-output/packaging-event.json",
+        "execution-output/seal_execution.original.py",
+        "execution-output/seal_execution.py",
+        "execution-output/live-records/observation.json",
+        "execution-output/outer-release.json"
+      ],
+      "id": "C08",
+      "item": "Packaging preservation and redaction boundary",
+      "status": "PASS_STATIC_PACKAGING_ONLY"
+    }
+  ],
+  "execution_thread_id": "01a157d2-caed-7162-8c48-06ad7117bd90",
+  "final_commit": "81fab23e3e7e9e32a36d3857a253afc69b5bd3e1",
+  "first_observed_failure": {
+    "code": "ERR_CERT_COMMON_NAME_INVALID",
+    "exception_type": "Error",
+    "http_status": null,
+    "root_cause": "UNKNOWN",
+    "stage": "SOLE_ANNOTATE_UNIFIED_NAVIGATION"
+  },
+  "fixed_execution_manifest_sha256": "58477a26586e43dd726c52124603e435c9cd0bf659f96e6756715aeaa24743dd",
+  "guard_final_state": {
+    "failure": null,
+    "pending_tasks": 0,
+    "shutdown_started": true,
+    "stopped": true,
+    "terminal_stopped": false
+  },
+  "host_id": "local",
+  "identity_method": "Read-only SHA256/size and original53 Git blob SHA1 recomputation. SHA-bound execution manifest closure checked against supplied coordinator inventory. No Git command, original execution root, .local, profile or live session access.",
+  "independent_static_crosschecks": {
+    "authority_snapshots_match": true,
+    "checks": {
+      "candidate_bound": true,
+      "command_bound": true,
+      "context_runtime_released": true,
+      "exhausted": true,
+      "first_error": true,
+      "fixed_final": true,
+      "fixed_product": true,
+      "input_lists_equal": true,
+      "intent_bound": true,
+      "observed_deadlines": true,
+      "occupancy_zero": true,
+      "ordering": true,
+      "packaging_only_header_change": true,
+      "post_preservation_matches": true,
+      "prior_review_accepted": true,
+      "product_bound": true,
+      "product_exact_release": true,
+      "profile_fingerprint_bound": true,
+      "release_evidence_equal": true,
+      "shell_distinct": true,
+      "single_navigation_audit": true,
+      "successors_not_run": true,
+      "terminal_guard": true,
+      "worker_exact_release": true,
+      "wrapper_bound": true
+    },
+    "execution_nonself": {
+      "members": 29,
+      "mismatches": []
+    },
+    "false_checks": [],
+    "fixed_inputs": {
+      "members": 53,
+      "mismatches": []
+    },
+    "nested": {
+      "docs/evidence/A12/review-delta/candidate-manifest.json": {
+        "members": 21,
+        "mismatches": []
+      },
+      "docs/evidence/A12/review-delta/delivery-raw-manifest.json": {
+        "members": 30,
+        "mismatches": []
+      },
+      "docs/evidence/A12/review-delta/inherited-raw-manifest.json": {
+        "members": 22,
+        "mismatches": []
+      }
+    },
+    "occupancy_exit_utc": "2026-10-20T05:42:41.415218+00:00",
+    "occupancy_os_lifetime_ms": 874.6611,
+    "product_os_lifetime_ms": 10394.1831,
+    "source_ast_only": {
+      "execution-output/launch_once.py": 21,
+      "execution-output/prepare_once.py": 22,
+      "execution-output/seal_execution.py": 15,
+      "tools/headless_native_reuse_probe_r1.py": 59
+    },
+    "worker_os_lifetime_ms": 9635.2659,
+    "wrapper_identity": {
+      "created_filetime": 134369485586597970,
+      "exit_code": null,
+      "exit_observed": false,
+      "exited_filetime": null,
+      "pid": 31208
+    }
+  },
+  "initial_coordinator_inventory_check": {
+    "extra": [],
+    "hash_mismatches": [],
+    "inputs": 83,
+    "missing": []
+  },
+  "input_count": 83,
+  "input_groups": {
+    "execution_manifest": 1,
+    "execution_nonself_outputs": 29,
+    "original_fixed_product_inputs": 53
+  },
+  "input_root": "D:\\1800-worktrees\\a13-observation-review",
+  "limitations": [
+    {
+      "detail": "Wrapper PID31208 creation FILETIME134369485586597964 is fixed; exact held-handle after/exit identity absent. Accept release only for recorded owned product/worker/occupancy handles,Job,context/runtime; no shell/session-wide all-processes-exited assertion.",
+      "id": "L01",
+      "status": "UNKNOWN_WRAPPER_OS_EXIT_IDENTITY"
+    },
+    {
+      "detail": "Coordinator attests six .local originals equal fixed copies and markers retained. Reviewer did not read original .local/profile/session or query processes; copies/manifest identity directly checked.",
+      "id": "L02",
+      "status": "UPSTREAM_ATTESTATION_FOR_SHARED_ORIGINALS"
+    },
+    {
+      "detail": "First sole navigation failed TLS. HTTP status,authenticated viewer,LOGIN_REQUIRED state,book46007447 source/target,text wire,question/frame save/readback and submission unproved. Root cause UNKNOWN.",
+      "id": "L03",
+      "status": "NO_AUTHENTICATION_OR_PLATFORM_ACCEPTANCE"
+    },
+    {
+      "detail": "Observed timing covers this run only. Forced timeout/OS blocking/exceptional cleanup not run; no universal hard deadline guarantee. Raw product stdout withheld; length/hash and exact product exit code only.",
+      "id": "L04",
+      "status": "FINITE_TIMING_AND_REDACTED_OUTPUT_ONLY"
+    },
+    {
+      "detail": "Prior accepted report/receipt present and hash-bound; independent R1 30-output package outside83 inputs not newly reverified. Old N1-N3/D1-D8 not rerun.",
+      "id": "L05",
+      "status": "EARLIER_R1_LEDGER_INHERITED"
+    }
+  ],
+  "next_dependency": "Coordinator may consume fixed static report. No observation replay,login,TLS bypass,book read,business save/readback or new runtime authorized.",
+  "observation_status": "BLOCKED",
+  "observed_counts": {
+    "audit_interpretation": "Two layers of one navigation; not two starts.",
+    "book_source_frame_interface_reads": 0,
+    "business_writes": 0,
+    "live_starts_remaining": 0,
+    "live_starts_used": 1,
+    "login_submissions": 0,
+    "navigation_intents": 1,
+    "network_audit_events": 2,
+    "retries_reloads": 0
+  },
+  "output_manifest": "raw-output-manifest.json",
+  "prior_R1_independent_manifest_sha256": "59d23a1dbe6e20abe92e7abf0ac89ba13834d6c6d90a01bcfae073e6072b72e7",
+  "product_commit": "d45ed25a98361002ddb28985c1d27687c4421a17",
+  "product_sha256": "3f1e4a425e18ed0e2a28893989f31677ba6b9b7f4b9c3da2800bc925443999c9",
+  "release_evidence": {
+    "context_runtime": {
+      "context_close_attempted": true,
+      "context_closed": true,
+      "context_created": true,
+      "errors": [],
+      "runtime_stop_attempted": true,
+      "runtime_stopped": true,
+      "state": "RELEASED"
+    },
+    "interpretation": "Accepted for recorded owned handles/Job/context only; no all-processes/session-wide release claim.",
+    "occupancy_exact_held_child": {
+      "after": {
+        "created_filetime": 134369485605405574,
+        "exit_code": 0,
+        "exit_observed": true,
+        "exited_filetime": 134369485614152185,
+        "pid": 75784
+      },
+      "before": {
+        "created_filetime": 134369485605405574,
+        "exit_code": null,
+        "exit_observed": false,
+        "exited_filetime": null,
+        "pid": 75784
+      },
+      "handle_closed": true,
+      "limit_seconds": 4,
+      "matching_processes": 0,
+      "timeout": false
+    },
+    "product_exact_held_popen": {
+      "after": {
+        "created_filetime": 134369485591032016,
+        "exit_code": 2,
+        "exit_observed": true,
+        "exited_filetime": 134369485694973847,
+        "pid": 75280
+      },
+      "before": {
+        "created_filetime": 134369485591032016,
+        "exit_code": null,
+        "exit_observed": false,
+        "exited_filetime": null,
+        "pid": 75280
+      },
+      "cleanup_duration_ms": 0,
+      "cleanup_limit_seconds": 2,
+      "duration_ms": 10391,
+      "errors": [],
+      "exact_popen_handle_retained": true,
+      "finished_at": "2026-10-20T05:42:49.506768+00:00",
+      "handle_closed": true,
+      "pipes_closed": true,
+      "returncode": 2,
+      "same_pid_and_creation": true,
+      "started_at": "2026-10-20T05:42:39.101517+00:00",
+      "state": "RELEASED",
+      "stderr": {
+        "bytes": 0,
+        "raw_text_withheld": true,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "stdout": {
+        "bytes": 125,
+        "raw_text_withheld": true,
+        "sha256": "baa35180e1bb910ddd4e3f620fa80b20f8cb6baa1c87db68d695aa856d7d94b3"
+      },
+      "timeout": false,
+      "wait_limit_seconds": 88
+    },
+    "worker_and_exact_job": {
+      "after": {
+        "created_filetime": 134369485598174402,
+        "exit_code": 2,
+        "exit_observed": true,
+        "exited_filetime": 134369485694527061,
+        "pid": 16076
+      },
+      "before": {
+        "created_filetime": 134369485598174402,
+        "exit_code": null,
+        "exit_observed": false,
+        "exited_filetime": null,
+        "pid": 16076
+      },
+      "duration_ms": 9672,
+      "errors": [],
+      "finished_at": "2026-10-20T05:42:49.485740+00:00",
+      "gated_before_job_assignment": true,
+      "hard_limit_seconds": 85,
+      "job_active_before_final_cleanup": 1,
+      "job_active_final": 0,
+      "job_assigned": true,
+      "job_closed": true,
+      "limit_seconds": 75,
+      "started_at": "2026-10-20T05:42:39.814830+00:00",
+      "state": "RELEASED",
+      "stderr_bytes": 0,
+      "stdout_bytes": 0,
+      "worker_handle_closed": true
+    },
+    "wrapper_self": {
+      "after": null,
+      "before": {
+        "created_filetime": 134369485586597964,
+        "exit_code": null,
+        "exit_observed": false,
+        "exited_filetime": null,
+        "pid": 31208
+      },
+      "os_exit_identity_status": "UNKNOWN",
+      "product_exact_handle_exit_code": 2,
+      "source_expected_exit_is_not_observed_exit_proof": true,
+      "tool_reported_shell_exit_code": 1,
+      "wrapper_source_expected_exit_code": 2
+    }
+  },
+  "review_thread_id": "01a157d3-48d4-70e0-8b77-b3bb6d00fcea",
+  "reviewer_counters": {
+    "browser_launches": 0,
+    "business_writes": 0,
+    "external_messages": 0,
+    "git_commands": 0,
+    "login_actions": 0,
+    "old_suite_runs": 0,
+    "platform_requests": 0,
+    "product_imports": 0,
+    "product_runs": 0,
+    "profile_or_credential_accesses": 0,
+    "real_occupancy_scans": 0,
+    "real_process_queries": 0,
+    "static_hash_json_ast_work_only": true,
+    "wrapper_runs": 0
+  },
+  "reviewer_release": {
+    "further_action": "STOPPED_NO_RETRY_NO_RUNTIME_NO_PLATFORM_NO_MESSAGES",
+    "input_files_modified": 0,
+    "owned_product_browser_profile_resources_acquired": 0,
+    "state": "RELEASED"
+  },
+  "schema_version": 1,
+  "static_utility_events": [
+    {
+      "action": "Corrected report-generation orchestration only; no execution evidence modified.",
+      "event": "Report-generation functions.exec source rejected with SyntaxError before any nested tool invocation or file write.",
+      "input_mutation": false,
+      "product_import_or_run": false
+    }
+  ],
+  "status": "ACCEPTED_FAILURE_ARCHIVE_AND_EXACT_OWNED_RELEASE_ONLY",
+  "unproved_and_not_run": {
+    "authentication": "NOT_PROVEN",
+    "book_source_target_read": "NOT_RUN",
+    "first_question_save": "NOT_RUN",
+    "integration_or_B_acceptance": "NOT_PROVEN",
+    "login_required": "NOT_ESTABLISHED",
+    "refresh_reopen_content_frame_readback": "NOT_RUN",
+    "root_cause": "UNKNOWN",
+    "submission": "NOT_RUN",
+    "text_wire": "NOT_RUN"
+  },
+  "workflow_commit": "abd6a03141cf89a756d9c1ceec70080fc1b86a6f"
+}

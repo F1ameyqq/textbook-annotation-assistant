@@ -2,7 +2,7 @@
   "schema_version": 1,
   "project": "D:\\1800",
   "coordinator_thread_id": "01a15768-1e2d-7781-b29f-1f7376270216",
-  "updated_at": "2026-10-20T13:41:08.520255+08:00",
+  "updated_at": "2026-10-20T13:59:29.061169+08:00",
   "automation": {
     "id": "1800-a",
     "kind": "heartbeat",
@@ -10118,7 +10118,7 @@
     },
     "A13": {
       "at": "2026-10-20T13:39:03.766880+08:00",
-      "status": "FORMAL_EXECUTION_DISPATCHED_REVIEW_PREPARATION",
+      "status": "CLOSED_ACCEPTED_FAILURE_ARCHIVE_RELEASE_ONLY",
       "coordinator_thread_id": "01a15768-1e2d-7781-b29f-1f7376270216",
       "execution_thread_id": "01a157d2-caed-7162-8c48-06ad7117bd90",
       "review_thread_id": "01a157d3-48d4-70e0-8b77-b3bb6d00fcea",
@@ -10133,7 +10133,7 @@
       "candidate_manifest_sha256": "38eb3f836f14b44db77ce516f461bd4f3934df71807c1fac962560603a210920",
       "raw_input_manifest": "docs/evidence/coordinator/a12-r1-independent-accepted/coordinator-receipt.json",
       "live_starts_limit": 1,
-      "live_starts_used": 0,
+      "live_starts_used": 1,
       "navigation_limit": 1,
       "login_limit": 0,
       "business_write_limit": 0,
@@ -10148,17 +10148,54 @@
       "execution": {
         "thread_id": "01a157d2-caed-7162-8c48-06ad7117bd90",
         "host_id": "local",
-        "status": "DISPATCHED",
-        "cursor": null,
-        "released": false
+        "status": "BLOCKED_FIXED_RELEASED",
+        "cursor": "411f3ba0-7c06-4e8e-82f3-a124a958d131:11",
+        "released": true,
+        "acknowledged": true
       },
       "review": {
         "thread_id": "01a157d3-48d4-70e0-8b77-b3bb6d00fcea",
         "host_id": "local",
-        "status": "PREPARATION_DISPATCHED",
-        "cursor": null,
-        "released": false
-      }
+        "status": "ACCEPTED_FAILURE_ARCHIVE_AND_EXACT_OWNED_RELEASE_ONLY",
+        "cursor": "ccf22063-5592-4660-a91a-ded776537f82:9",
+        "released": true,
+        "preparation_complete": true,
+        "workspace": "D:\\1800-worktrees\\a13-observation-review",
+        "output_allowlist": "D:\\1800-worktrees\\a13-observation-review\\review-output",
+        "report": "docs/evidence/coordinator/a13-observation-closure/review-output/report.json",
+        "manifest_sha256": "e192b17ec3d474b8652b0e11773a0f0726c3ecb1e14f42d13cae0f743464b498"
+      },
+      "next_dependency": "A14 new public TLS certificate evidence; no repeat browser observation.",
+      "live_starts_remaining": 0,
+      "observation_outcome": "ERROR",
+      "observed_error": "ERR_CERT_COMMON_NAME_INVALID",
+      "root_cause": "UNKNOWN",
+      "execution_manifest_sha256": "58477a26586e43dd726c52124603e435c9cd0bf659f96e6756715aeaa24743dd",
+      "raw_preflight": "docs/evidence/coordinator/a13-reuse-dispatch/observation-preflight.json",
+      "coordinator_acceptance": "docs/evidence/coordinator/a13-observation-closure/coordinator-receipt.json",
+      "wrapper_os_exit_identity": "UNKNOWN"
+    },
+    "A14": {
+      "at": "2026-10-20T13:59:29.061169+08:00",
+      "status": "PREPARED_BEFORE_CHAT_CREATION",
+      "coordinator_thread_id": "01a15768-1e2d-7781-b29f-1f7376270216",
+      "execution_thread_id": null,
+      "review_thread_id": null,
+      "host_id": "local",
+      "dedup_execution": "A14+public-tls-certificate+after-A13-cert-name-failure",
+      "dedup_review": "A14+static-tls-record-review",
+      "task": "docs/tasks/A14-single-tls-certificate-diagnostic.md",
+      "review_task": "docs/tasks/A14-independent-tls-review.md",
+      "workspace": "D:\\1800-worktrees\\a14-tls-diagnostic",
+      "new_tls_handshake_limit": 1,
+      "target_http_requests_limit": 0,
+      "browser_profile_login_business_limit": 0,
+      "old_budgets_restored": false,
+      "strict_verify": true,
+      "certificate_ignore_authority": false,
+      "basis": "New concrete A13 TLS name error under standing platform-connect and continuation authority; diagnostic only, not repeat navigation or old GET.",
+      "thinking": "xhigh",
+      "model": "inherit"
     }
   },
   "route": [
@@ -12571,8 +12608,8 @@
     }
   ],
   "last_action": {
-    "at": "2026-10-20T13:41:08.520255+08:00",
-    "action": "Created distinct A13 execution and review chats, exact IDs registered; old quotas unchanged."
+    "at": "2026-10-20T13:59:29.061169+08:00",
+    "action": "Closed A13 fixed TLS failure and exact proven release; prepared new one-shot public-certificate diagnostic."
   },
   "limitations": [
     "Current route uses mock B artifacts until independently agreed interface/artifact versions exist.",
@@ -13819,7 +13856,7 @@
     "user_deadline_days": 3,
     "deadline_basis": "72 hours from this decision; target 2026-10-22 same local time; exact handover clock not specified",
     "user_selected_delivery": "必须包含：优先争取限定题型、小批量的平台试用版",
-    "status": "A13_SINGLE_REUSE_OBSERVATION_DISPATCHED",
+    "status": "A13_TLS_BLOCKED_A14_CERT_DIAGNOSTIC_PREPARED",
     "plan": "docs/delivery-72h-plan-2026-10-19.md",
     "plan_sha256": "6bfc3d379ec700556b6fec7438b85126c428c7ce4ae58ba9c727982b00ab94f7",
     "proposed_book_id": "46007447",
@@ -13837,7 +13874,7 @@
     "new_product_dispatches": 0,
     "B_messages": 0,
     "planning_agent": "/root/three_day_scope_check",
-    "next_dependency": "One formal execution of fixed reuse-only probe, then new formal static review of frozen observation and release.",
+    "next_dependency": "Single strict public TLS certificate diagnostic through validated loopback proxy; no credentials/target HTTP/browser.",
     "full_original_scope_completed_or_cancelled": false,
     "committed_success_guarantee": false,
     "authorization_clarification": "User clarified 一直允许连接平台; do not ask platform-connection/book permission again.",
@@ -13874,7 +13911,7 @@
       "platform_access": false,
       "next_dependency": "Concrete bounded new-path implementation task and finite test matrix"
     },
-    "first_day_blocker": "Existing extension MCP now works on Default login page; dedicated-headless authenticated book/source/target still unobserved.",
+    "first_day_blocker": "Dedicated headless single navigation failed ERR_CERT_COMMON_NAME_INVALID; root cause UNKNOWN; prior MCP login-only works.",
     "ordinary_browser_question": {
       "status": "ANSWERED_USER_REPORT_CAN_OPEN",
       "question": "Can the usual browser currently open the platform?",
