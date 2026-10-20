@@ -1,5 +1,7 @@
 # 模块化开发计划与两人分工
 
+2026-10-20 A16已进入正式独立离线验收：作者产品2a604c2d/final4fe417d5，最新33/33 PASS（516ms）并释放；调度核47新增白名单、31259旧成员保全，导出49raw至D:/1800-worktrees/a16-independent-fixed。原独立01a15841-0d44-7272-9740-40d013839869已按docs/tasks/A16-fixed-offline-review-dispatch.md接单，当前尚未接受。run01/run05完整traceback不在包内、CRLF/LF原失败等限制保留。0新live，A16的TLS决定/激活仍待固定验收结果；不唤醒作者重跑旧任务。下方“开发/标准准备”为历史。
+
 2026-10-20 A15已独立及调度有限收口：唯一live已耗1/剩0，final49e5ab4e，ORIGIN_BLOCKED后NETWORK_GUARD_STOPPED；只接受固定失败及已证自有释放，认证未证明、阻断域名未记录、launcher自身OS退出身份UNKNOWN保留。74作者raw及11独立raw核证，见docs/evidence/coordinator/a15-live-independent-closure/。A16合并当前书籍/source/target/接口和一道普通单选准备，已新建执行01a15840-7766-7533-818d-cc016aa0a60b、独立01a15841-0d44-7272-9740-40d013839869，均xhigh/model沿用且已接单，任务docs/tasks/A16-current-book-source-target-readonly.md。当前A16只离线开发/标准准备，允许必要的新代码修正和相关纯离线验证并保留失败，不重跑旧suite或恢复旧额度。A15证书例外不转移，A16新live未激活；先准备完整可审查方案，再落实本阶段TLS边界。其他三例HOLD、Q22不重放、0B消息。
 
 2026-10-20 A15离线预检已独立及调度有限接受：产品bef02045/final7432122b，作者E1-E4 4/4（16ms）、独立4/4（32ms），双方额度耗尽并释放。47作者raw、27独立清单成员及旧成员保全；报告见docs/evidence/coordinator/a15-independent-closure/。本次唯一live已绑定批准/候选/独立报告/原专用profile指纹，窗口07:16:59至07:31:59 UTC，见docs/evidence/coordinator/a15-live-dispatch/。仅本次专用context证书例外、1context/1导航、0登录/业务，等待实际结果；原失败保留、旧额度不恢复。
