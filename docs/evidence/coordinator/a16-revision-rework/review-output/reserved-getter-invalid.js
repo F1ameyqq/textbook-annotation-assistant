@@ -1,0 +1,4 @@
+async function if(b,n){const net=await fetch('/qieti/api/annotate_pic/get_manual_annotations_unified_by_order_in_level/'+b+'/'+n,{method:'GET'});const payload=await net.json();return payload.data;}
+async function infoRead(b,n){const net=await fetch('/qieti/api/annotate_pic/get_question_info/'+b+'/'+n,{method:'GET'});const payload=await net.json();return payload.data;}
+async function bodyRead(b,n,k){const net=await fetch('/qieti/api/verify_annotation/get-ocr-annotation?file_id='+b+'&question_order='+n+'&zone='+k,{method:'GET'});const payload=await net.json();return {success:payload.data.success,ocr_result:payload.data.ocr_result,rect_ids:payload.data.rect_ids};}
+async function readSet(b,n){const fs=await if(b,n);const qi=await infoRead(b,n);const a=await bodyRead(b,n,'answer');const q=await bodyRead(b,n,'question');const c=await bodyRead(b,n,'choice');return {fs,qi,a,q,c};}

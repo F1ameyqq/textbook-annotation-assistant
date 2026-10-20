@@ -1,0 +1,36 @@
+{
+  "task": "A16",
+  "candidate_manifest_sha256": "071340237c76a7159bd90485e17a774c2f870114baef0199172a2fc5f9547efc",
+  "result": "REWORK",
+  "findings": [
+    {
+      "id": "A16-R1-R02-01",
+      "priority": 2,
+      "result": "CONFIRMED_NEW_REVISION_COUNTEREXAMPLE",
+      "title": "Reject reserved keywords in declaration/call binding positions",
+      "file": "src/annotation/source/usense/current_readonly/js_wire.py",
+      "start_line": 112,
+      "end_line": 119,
+      "related": [
+        "src/annotation/source/usense/current_readonly/js_wire.py:235",
+        "src/annotation/source/usense/current_readonly/decode.py:327",
+        "src/annotation/source/usense/current_readonly/policy.py:67"
+      ],
+      "requirement": "Unsupported source must remain UNKNOWN and must not register/request sample APIs or yield available/known-empty content.",
+      "input": "reserved-getter-invalid.js: otherwise matching narrow native fetch module, with function frameRead renamed to reserved keyword if and caller await if(b,n).",
+      "independent_syntax_evidence": "Node --check exits1: SyntaxError Unexpected token if. Valid paired source exits0. Neither file executed as JS.",
+      "actual": "Actual new collect accepts binding_proof.complete=true, CURRENT_CODE_CONFIRMED; registers sample3; makes11 synthetic business GETs and yields question/choice/answer AVAILABLE; outcome READONLY_REVIEW.",
+      "cause": "lex classifies any identifier-shaped word as id; functions and call_chain accept kind=id for function/parameter/local/call names, without binding-position reserved-word validation.",
+      "expected": "Invalid/out-of-supported-grammar source stays UNKNOWN; only six fixed GETs, zero sample registration/GET, no AVAILABLE/KNOWN_EMPTY sample.",
+      "correction_scope": "Validate legal supported JS binding identifiers/grammar; reject invalid reserved words. This does not require supporting more JS forms or executing script code.",
+      "evidence": [
+        "independent-controls-result.json#R2_RESERVED_GETTER_SYNTAX",
+        "reserved-getter-counterexample.actual.json",
+        "invalid-js-syntax.stderr.raw.txt",
+        "independent-command-results.json",
+        "independent-input-freeze.json"
+      ],
+      "limits": "Synthetic transport/UI/original/file boundaries; actual new parser/current_code/register_sample/collect/frame/content binding used. Current frontend applicability and real platform behavior remain unproved."
+    }
+  ]
+}

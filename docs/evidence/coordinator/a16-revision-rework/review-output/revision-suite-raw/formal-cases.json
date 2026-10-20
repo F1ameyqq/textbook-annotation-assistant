@@ -1,0 +1,1571 @@
+[
+  {
+    "finding": "R03",
+    "case": "full_jpeg_decode_and_exact_save",
+    "sha256": "82a6e37c75675e58f3d765e2c99156ea3fb2b9d32417dbd90a68dddf292ccb01",
+    "size": 2824,
+    "dimensions": [
+      64,
+      64
+    ],
+    "saved_same_bytes": true
+  },
+  {
+    "finding": "R03",
+    "case": "header_readable_truncated_jpeg",
+    "sha256": "b66be95687d1439ef200189d4c89976340cb0e9af6e9947698d63635e152a5ec",
+    "size": 2804,
+    "header_readable": true,
+    "new_decoder_rejected": true,
+    "save_called": false,
+    "old_C14": "NOT_RUN_UNCHANGED"
+  },
+  {
+    "finding": "R04",
+    "case": "after_check_exception",
+    "record": {
+      "started_at": "2026-10-20T09:19:14.709112+00:00",
+      "limit_seconds": 20,
+      "hard_limit_seconds": 890,
+      "gated_before_job_assignment": true,
+      "errors": [
+        {
+          "exception_type": "OSError",
+          "codes": [
+            "UNKNOWN"
+          ]
+        }
+      ],
+      "job_assigned": true,
+      "job_active_final": 0,
+      "worker_handle_closed": true,
+      "job_closed": true,
+      "creation_identity_match": false,
+      "before": {
+        "pid": 7,
+        "created_filetime": 100
+      },
+      "stdout_bytes": 0,
+      "stderr_bytes": 0,
+      "job_active_before_final_cleanup": 0,
+      "duration_ms": 30,
+      "hard_deadline_exceeded": false,
+      "finished_at": "2026-10-20T09:19:14.709112+00:00",
+      "state": "UNKNOWN"
+    },
+    "actual_native_api": false,
+    "actual_process": false,
+    "parent_accepts": false
+  },
+  {
+    "finding": "R04",
+    "case": "before_check_exception",
+    "record": {
+      "started_at": "2026-10-20T09:19:14.710112+00:00",
+      "limit_seconds": 20,
+      "hard_limit_seconds": 890,
+      "gated_before_job_assignment": true,
+      "errors": [
+        {
+          "exception_type": "OSError",
+          "codes": [
+            "UNKNOWN"
+          ]
+        },
+        {
+          "exception_type": "Stop",
+          "codes": [
+            "OWNED_WORKER_IDENTITY_UNPROVEN"
+          ]
+        }
+      ],
+      "job_assigned": false,
+      "job_active_final": 0,
+      "worker_handle_closed": true,
+      "job_closed": true,
+      "creation_identity_match": false,
+      "after": {
+        "pid": 7,
+        "created_filetime": 100,
+        "exit_observed": true,
+        "exit_code": 0
+      },
+      "job_active_before_final_cleanup": 0,
+      "duration_ms": 20,
+      "hard_deadline_exceeded": false,
+      "finished_at": "2026-10-20T09:19:14.710112+00:00",
+      "state": "UNKNOWN"
+    },
+    "actual_native_api": false,
+    "actual_process": false,
+    "parent_accepts": false
+  },
+  {
+    "finding": "R04",
+    "case": "consistent",
+    "record": {
+      "started_at": "2026-10-20T09:19:14.710112+00:00",
+      "limit_seconds": 20,
+      "hard_limit_seconds": 890,
+      "gated_before_job_assignment": true,
+      "errors": [],
+      "job_assigned": true,
+      "job_active_final": 0,
+      "worker_handle_closed": true,
+      "job_closed": true,
+      "creation_identity_match": true,
+      "before": {
+        "pid": 7,
+        "created_filetime": 100
+      },
+      "stdout_bytes": 0,
+      "stderr_bytes": 0,
+      "after": {
+        "pid": 7,
+        "created_filetime": 100,
+        "exit_observed": true,
+        "exit_code": 0
+      },
+      "job_active_before_final_cleanup": 0,
+      "duration_ms": 30,
+      "hard_deadline_exceeded": false,
+      "finished_at": "2026-10-20T09:19:14.710112+00:00",
+      "state": "RELEASED"
+    },
+    "actual_native_api": false,
+    "actual_process": false,
+    "parent_accepts": true
+  },
+  {
+    "finding": "R04",
+    "case": "creation_mismatch",
+    "record": {
+      "started_at": "2026-10-20T09:19:14.710112+00:00",
+      "limit_seconds": 20,
+      "hard_limit_seconds": 890,
+      "gated_before_job_assignment": true,
+      "errors": [
+        {
+          "exception_type": "Stop",
+          "codes": [
+            "OWNED_WORKER_IDENTITY_MISMATCH"
+          ]
+        }
+      ],
+      "job_assigned": true,
+      "job_active_final": 0,
+      "worker_handle_closed": true,
+      "job_closed": true,
+      "creation_identity_match": false,
+      "before": {
+        "pid": 7,
+        "created_filetime": 100
+      },
+      "stdout_bytes": 0,
+      "stderr_bytes": 0,
+      "after": {
+        "pid": 7,
+        "created_filetime": 101,
+        "exit_observed": true,
+        "exit_code": 0
+      },
+      "job_active_before_final_cleanup": 0,
+      "duration_ms": 30,
+      "hard_deadline_exceeded": false,
+      "finished_at": "2026-10-20T09:19:14.710112+00:00",
+      "state": "UNKNOWN"
+    },
+    "actual_native_api": false,
+    "actual_process": false,
+    "parent_accepts": false
+  },
+  {
+    "finding": "R04",
+    "case": "missing_creation",
+    "record": {
+      "started_at": "2026-10-20T09:19:14.711112+00:00",
+      "limit_seconds": 20,
+      "hard_limit_seconds": 890,
+      "gated_before_job_assignment": true,
+      "errors": [
+        {
+          "exception_type": "Stop",
+          "codes": [
+            "OWNED_WORKER_IDENTITY_UNPROVEN"
+          ]
+        }
+      ],
+      "job_assigned": true,
+      "job_active_final": 0,
+      "worker_handle_closed": true,
+      "job_closed": true,
+      "creation_identity_match": false,
+      "before": {
+        "pid": 7
+      },
+      "stdout_bytes": 0,
+      "stderr_bytes": 0,
+      "after": {
+        "pid": 7,
+        "exit_observed": true,
+        "exit_code": 0
+      },
+      "job_active_before_final_cleanup": 0,
+      "duration_ms": 30,
+      "hard_deadline_exceeded": false,
+      "finished_at": "2026-10-20T09:19:14.711112+00:00",
+      "state": "UNKNOWN"
+    },
+    "actual_native_api": false,
+    "actual_process": false,
+    "parent_accepts": false
+  },
+  {
+    "finding": "R04",
+    "case": "pid_mismatch",
+    "record": {
+      "started_at": "2026-10-20T09:19:14.711112+00:00",
+      "limit_seconds": 20,
+      "hard_limit_seconds": 890,
+      "gated_before_job_assignment": true,
+      "errors": [
+        {
+          "exception_type": "Stop",
+          "codes": [
+            "OWNED_WORKER_IDENTITY_MISMATCH"
+          ]
+        }
+      ],
+      "job_assigned": true,
+      "job_active_final": 0,
+      "worker_handle_closed": true,
+      "job_closed": true,
+      "creation_identity_match": false,
+      "before": {
+        "pid": 7,
+        "created_filetime": 100
+      },
+      "stdout_bytes": 0,
+      "stderr_bytes": 0,
+      "after": {
+        "pid": 8,
+        "created_filetime": 100,
+        "exit_observed": true,
+        "exit_code": 0
+      },
+      "job_active_before_final_cleanup": 0,
+      "duration_ms": 30,
+      "hard_deadline_exceeded": false,
+      "finished_at": "2026-10-20T09:19:14.711112+00:00",
+      "state": "UNKNOWN"
+    },
+    "actual_native_api": false,
+    "actual_process": false,
+    "parent_accepts": false
+  },
+  {
+    "finding": "R04",
+    "case": "worker_output_failure_preserved",
+    "record": {
+      "started_at": "2026-10-20T09:19:14.711112+00:00",
+      "limit_seconds": 20,
+      "hard_limit_seconds": 890,
+      "gated_before_job_assignment": true,
+      "errors": [
+        {
+          "codes": [
+            "UNEXPECTED_WORKER_OUTPUT"
+          ],
+          "reported_error": null
+        }
+      ],
+      "job_assigned": true,
+      "job_active_final": 0,
+      "worker_handle_closed": true,
+      "job_closed": true,
+      "creation_identity_match": true,
+      "before": {
+        "pid": 7,
+        "created_filetime": 100
+      },
+      "stdout_bytes": 15,
+      "stderr_bytes": 0,
+      "after": {
+        "pid": 7,
+        "created_filetime": 100,
+        "exit_observed": true,
+        "exit_code": 0
+      },
+      "job_active_before_final_cleanup": 0,
+      "duration_ms": 30,
+      "hard_deadline_exceeded": false,
+      "finished_at": "2026-10-20T09:19:14.711112+00:00",
+      "state": "RELEASED"
+    },
+    "actual_native_api": false,
+    "actual_process": false,
+    "parent_accepts": false
+  },
+  {
+    "finding": "R02",
+    "case": "complete_bound_proof",
+    "proof": {
+      "schema": "A16-fetch-getter-bindings/v1",
+      "bindings": {
+        "sample_frames": {
+          "kind": "sample_frames",
+          "name": "frameGetter",
+          "url_atoms": [
+            "/qieti/api/annotate_pic/get_manual_annotations_unified_by_order_in_level/",
+            0,
+            "/",
+            1
+          ],
+          "getter_range": {
+            "start": 8,
+            "end": 278
+          },
+          "url_range": {
+            "start": 92,
+            "end": 195
+          },
+          "field_refs": {
+            "data": {
+              "start": 263,
+              "end": 275,
+              "response_flow": "response.json() -> payload.data",
+              "code_sha256": "f97cb8dfa28cd23d3b62548ffe22a3e4971fde2ebab2e10cf7162f1aa8fb66e5"
+            }
+          },
+          "zone": null,
+          "call_range": {
+            "start": 972,
+            "end": 1030
+          },
+          "caller": "readSample",
+          "caller_params": [
+            "file_id",
+            "question_order"
+          ],
+          "result_variable": "frames",
+          "asset_ref": "SYNTHETIC_REVISION.js",
+          "asset_sha256": "4fcfd189afcbcf25c850c758f92a8fa9c13dd260e80be73a4bcbff65974e5f4f"
+        },
+        "sample_info": {
+          "kind": "sample_info",
+          "name": "infoGetter",
+          "url_atoms": [
+            "/qieti/api/annotate_pic/get_question_info/",
+            0,
+            "/",
+            1
+          ],
+          "getter_range": {
+            "start": 286,
+            "end": 524
+          },
+          "url_range": {
+            "start": 369,
+            "end": 441
+          },
+          "field_refs": {
+            "data": {
+              "start": 509,
+              "end": 521,
+              "response_flow": "response.json() -> payload.data",
+              "code_sha256": "f97cb8dfa28cd23d3b62548ffe22a3e4971fde2ebab2e10cf7162f1aa8fb66e5"
+            }
+          },
+          "zone": null,
+          "call_range": {
+            "start": 1032,
+            "end": 1087
+          },
+          "caller": "readSample",
+          "caller_params": [
+            "file_id",
+            "question_order"
+          ],
+          "result_variable": "info",
+          "asset_ref": "SYNTHETIC_REVISION.js",
+          "asset_sha256": "4fcfd189afcbcf25c850c758f92a8fa9c13dd260e80be73a4bcbff65974e5f4f"
+        },
+        "content_question": {
+          "kind": "content",
+          "name": "contentGetter",
+          "url_atoms": [
+            "/qieti/api/verify_annotation/get-ocr-annotation?file_id=",
+            0,
+            "&question_order=",
+            1,
+            "&zone=",
+            2
+          ],
+          "getter_range": {
+            "start": 532,
+            "end": 910
+          },
+          "url_range": {
+            "start": 624,
+            "end": 738
+          },
+          "field_refs": {
+            "success": {
+              "start": 816,
+              "end": 836,
+              "response_flow": "response.json() -> payload.data.success",
+              "code_sha256": "1983e4a77f98dcc87cd0b23aa6dd761ad82a832a9cf82761a36f9354a5db2250"
+            },
+            "ocr_result": {
+              "start": 850,
+              "end": 873,
+              "response_flow": "response.json() -> payload.data.ocr_result",
+              "code_sha256": "ce32ab99dbcaf47c654614283efde9ffa4f91d1342fe516bcd84361228c7c8d0"
+            },
+            "rect_ids": {
+              "start": 885,
+              "end": 906,
+              "response_flow": "response.json() -> payload.data.rect_ids",
+              "code_sha256": "4c36cc09899d7aabb412b281fd768eaac22299fd46c34fea616827b9763311d4"
+            }
+          },
+          "zone": "question",
+          "call_range": {
+            "start": 1089,
+            "end": 1163
+          },
+          "caller": "readSample",
+          "caller_params": [
+            "file_id",
+            "question_order"
+          ],
+          "result_variable": "question",
+          "asset_ref": "SYNTHETIC_REVISION.js",
+          "asset_sha256": "4fcfd189afcbcf25c850c758f92a8fa9c13dd260e80be73a4bcbff65974e5f4f"
+        },
+        "content_choice": {
+          "kind": "content",
+          "name": "contentGetter",
+          "url_atoms": [
+            "/qieti/api/verify_annotation/get-ocr-annotation?file_id=",
+            0,
+            "&question_order=",
+            1,
+            "&zone=",
+            2
+          ],
+          "getter_range": {
+            "start": 532,
+            "end": 910
+          },
+          "url_range": {
+            "start": 624,
+            "end": 738
+          },
+          "field_refs": {
+            "success": {
+              "start": 816,
+              "end": 836,
+              "response_flow": "response.json() -> payload.data.success",
+              "code_sha256": "1983e4a77f98dcc87cd0b23aa6dd761ad82a832a9cf82761a36f9354a5db2250"
+            },
+            "ocr_result": {
+              "start": 850,
+              "end": 873,
+              "response_flow": "response.json() -> payload.data.ocr_result",
+              "code_sha256": "ce32ab99dbcaf47c654614283efde9ffa4f91d1342fe516bcd84361228c7c8d0"
+            },
+            "rect_ids": {
+              "start": 885,
+              "end": 906,
+              "response_flow": "response.json() -> payload.data.rect_ids",
+              "code_sha256": "4c36cc09899d7aabb412b281fd768eaac22299fd46c34fea616827b9763311d4"
+            }
+          },
+          "zone": "choice",
+          "call_range": {
+            "start": 1165,
+            "end": 1235
+          },
+          "caller": "readSample",
+          "caller_params": [
+            "file_id",
+            "question_order"
+          ],
+          "result_variable": "choice",
+          "asset_ref": "SYNTHETIC_REVISION.js",
+          "asset_sha256": "4fcfd189afcbcf25c850c758f92a8fa9c13dd260e80be73a4bcbff65974e5f4f"
+        },
+        "content_answer": {
+          "kind": "content",
+          "name": "contentGetter",
+          "url_atoms": [
+            "/qieti/api/verify_annotation/get-ocr-annotation?file_id=",
+            0,
+            "&question_order=",
+            1,
+            "&zone=",
+            2
+          ],
+          "getter_range": {
+            "start": 532,
+            "end": 910
+          },
+          "url_range": {
+            "start": 624,
+            "end": 738
+          },
+          "field_refs": {
+            "success": {
+              "start": 816,
+              "end": 836,
+              "response_flow": "response.json() -> payload.data.success",
+              "code_sha256": "1983e4a77f98dcc87cd0b23aa6dd761ad82a832a9cf82761a36f9354a5db2250"
+            },
+            "ocr_result": {
+              "start": 850,
+              "end": 873,
+              "response_flow": "response.json() -> payload.data.ocr_result",
+              "code_sha256": "ce32ab99dbcaf47c654614283efde9ffa4f91d1342fe516bcd84361228c7c8d0"
+            },
+            "rect_ids": {
+              "start": 885,
+              "end": 906,
+              "response_flow": "response.json() -> payload.data.rect_ids",
+              "code_sha256": "4c36cc09899d7aabb412b281fd768eaac22299fd46c34fea616827b9763311d4"
+            }
+          },
+          "zone": "answer",
+          "call_range": {
+            "start": 1237,
+            "end": 1307
+          },
+          "caller": "readSample",
+          "caller_params": [
+            "file_id",
+            "question_order"
+          ],
+          "result_variable": "answer",
+          "asset_ref": "SYNTHETIC_REVISION.js",
+          "asset_sha256": "4fcfd189afcbcf25c850c758f92a8fa9c13dd260e80be73a4bcbff65974e5f4f"
+        }
+      },
+      "complete": true,
+      "supported_shape": "DECLARATION_ONLY_ASYNC_FETCH_JSON_GETTERS_AND_STRAIGHT_CALL_CHAIN",
+      "source_position_unit": "ZERO_BASED_UNICODE_CODEPOINT_HALF_OPEN",
+      "asset_sha256": "4fcfd189afcbcf25c850c758f92a8fa9c13dd260e80be73a4bcbff65974e5f4f",
+      "rejected_functions": [
+        {
+          "function": "readSample",
+          "reason": "UNSUPPORTED_FUNCTION_SHAPE"
+        }
+      ]
+    },
+    "sample_registered": true,
+    "business_gets": 11
+  },
+  {
+    "finding": "R02",
+    "case": "caller_omits_bound_result",
+    "status": "UNKNOWN",
+    "script_sha256": "078c55035eb08163cad3ac256709bf4c19b393e8598432fdbe4209dcd24c4bfb",
+    "sample_registered": false,
+    "business_gets": 6,
+    "body_statuses_produced": [],
+    "binding_analysis": {
+      "schema": "A16-fetch-getter-bindings/v1",
+      "complete": false,
+      "reason": "NO_COMPLETE_BOUND_CALL_CHAIN",
+      "partial_getters": [
+        {
+          "kind": "sample_frames",
+          "name": "frameGetter",
+          "url_atoms": [
+            "/qieti/api/annotate_pic/get_manual_annotations_unified_by_order_in_level/",
+            0,
+            "/",
+            1
+          ],
+          "getter_range": {
+            "start": 8,
+            "end": 278
+          },
+          "url_range": {
+            "start": 92,
+            "end": 195
+          },
+          "field_refs": {
+            "data": {
+              "start": 263,
+              "end": 275,
+              "response_flow": "response.json() -> payload.data"
+            }
+          }
+        },
+        {
+          "kind": "sample_info",
+          "name": "infoGetter",
+          "url_atoms": [
+            "/qieti/api/annotate_pic/get_question_info/",
+            0,
+            "/",
+            1
+          ],
+          "getter_range": {
+            "start": 286,
+            "end": 524
+          },
+          "url_range": {
+            "start": 369,
+            "end": 441
+          },
+          "field_refs": {
+            "data": {
+              "start": 509,
+              "end": 521,
+              "response_flow": "response.json() -> payload.data"
+            }
+          }
+        },
+        {
+          "kind": "content",
+          "name": "contentGetter",
+          "url_atoms": [
+            "/qieti/api/verify_annotation/get-ocr-annotation?file_id=",
+            0,
+            "&question_order=",
+            1,
+            "&zone=",
+            2
+          ],
+          "getter_range": {
+            "start": 532,
+            "end": 910
+          },
+          "url_range": {
+            "start": 624,
+            "end": 738
+          },
+          "field_refs": {
+            "success": {
+              "start": 816,
+              "end": 836,
+              "response_flow": "response.json() -> payload.data.success"
+            },
+            "ocr_result": {
+              "start": 850,
+              "end": 873,
+              "response_flow": "response.json() -> payload.data.ocr_result"
+            },
+            "rect_ids": {
+              "start": 885,
+              "end": 906,
+              "response_flow": "response.json() -> payload.data.rect_ids"
+            }
+          }
+        }
+      ],
+      "rejected_functions": [
+        {
+          "function": "readSample",
+          "reason": "UNSUPPORTED_FUNCTION_SHAPE"
+        }
+      ]
+    }
+  },
+  {
+    "finding": "R02",
+    "case": "comment_field_names_not_decoder",
+    "status": "UNKNOWN",
+    "script_sha256": "9936109b7350c444bb7d136c9b2c98b5ff67fda18dabaec9021c3e86dac1a6ad",
+    "sample_registered": false,
+    "business_gets": 6,
+    "body_statuses_produced": [],
+    "binding_analysis": {
+      "schema": "A16-fetch-getter-bindings/v1",
+      "complete": false,
+      "reason": "NO_COMPLETE_BOUND_CALL_CHAIN",
+      "partial_getters": [
+        {
+          "kind": "sample_frames",
+          "name": "frameGetter",
+          "url_atoms": [
+            "/qieti/api/annotate_pic/get_manual_annotations_unified_by_order_in_level/",
+            0,
+            "/",
+            1
+          ],
+          "getter_range": {
+            "start": 8,
+            "end": 278
+          },
+          "url_range": {
+            "start": 92,
+            "end": 195
+          },
+          "field_refs": {
+            "data": {
+              "start": 263,
+              "end": 275,
+              "response_flow": "response.json() -> payload.data"
+            }
+          }
+        },
+        {
+          "kind": "sample_info",
+          "name": "infoGetter",
+          "url_atoms": [
+            "/qieti/api/annotate_pic/get_question_info/",
+            0,
+            "/",
+            1
+          ],
+          "getter_range": {
+            "start": 286,
+            "end": 524
+          },
+          "url_range": {
+            "start": 369,
+            "end": 441
+          },
+          "field_refs": {
+            "data": {
+              "start": 509,
+              "end": 521,
+              "response_flow": "response.json() -> payload.data"
+            }
+          }
+        }
+      ],
+      "rejected_functions": [
+        {
+          "function": "contentGetter",
+          "reason": "GETTER_RESPONSE_MAPPING_UNPROVEN"
+        },
+        {
+          "function": "readSample",
+          "reason": "UNSUPPORTED_FUNCTION_SHAPE"
+        }
+      ]
+    }
+  },
+  {
+    "finding": "R02",
+    "case": "comments_only_full_valid_decoy",
+    "status": "UNKNOWN",
+    "script_sha256": "87e938439242fb8a1d0af6f21dd47857a49863456ce072da2f52598d5af70e85",
+    "sample_registered": false,
+    "business_gets": 6,
+    "body_statuses_produced": [],
+    "binding_analysis": {
+      "schema": "A16-fetch-getter-bindings/v1",
+      "complete": false,
+      "reason": "NO_COMPLETE_BOUND_CALL_CHAIN",
+      "partial_getters": [],
+      "rejected_functions": []
+    }
+  },
+  {
+    "finding": "R02",
+    "case": "duplicate_zone_calls",
+    "status": "UNKNOWN",
+    "script_sha256": "0e9a2e408296de68f6e131e738eefcb7443c9b9bfe3593b3922604e81826d123",
+    "sample_registered": false,
+    "business_gets": 6,
+    "body_statuses_produced": [],
+    "binding_analysis": {
+      "schema": "A16-fetch-getter-bindings/v1",
+      "complete": false,
+      "reason": "NO_COMPLETE_BOUND_CALL_CHAIN",
+      "partial_getters": [
+        {
+          "kind": "sample_frames",
+          "name": "frameGetter",
+          "url_atoms": [
+            "/qieti/api/annotate_pic/get_manual_annotations_unified_by_order_in_level/",
+            0,
+            "/",
+            1
+          ],
+          "getter_range": {
+            "start": 8,
+            "end": 278
+          },
+          "url_range": {
+            "start": 92,
+            "end": 195
+          },
+          "field_refs": {
+            "data": {
+              "start": 263,
+              "end": 275,
+              "response_flow": "response.json() -> payload.data"
+            }
+          }
+        },
+        {
+          "kind": "sample_info",
+          "name": "infoGetter",
+          "url_atoms": [
+            "/qieti/api/annotate_pic/get_question_info/",
+            0,
+            "/",
+            1
+          ],
+          "getter_range": {
+            "start": 286,
+            "end": 524
+          },
+          "url_range": {
+            "start": 369,
+            "end": 441
+          },
+          "field_refs": {
+            "data": {
+              "start": 509,
+              "end": 521,
+              "response_flow": "response.json() -> payload.data"
+            }
+          }
+        },
+        {
+          "kind": "content",
+          "name": "contentGetter",
+          "url_atoms": [
+            "/qieti/api/verify_annotation/get-ocr-annotation?file_id=",
+            0,
+            "&question_order=",
+            1,
+            "&zone=",
+            2
+          ],
+          "getter_range": {
+            "start": 532,
+            "end": 910
+          },
+          "url_range": {
+            "start": 624,
+            "end": 738
+          },
+          "field_refs": {
+            "success": {
+              "start": 816,
+              "end": 836,
+              "response_flow": "response.json() -> payload.data.success"
+            },
+            "ocr_result": {
+              "start": 850,
+              "end": 873,
+              "response_flow": "response.json() -> payload.data.ocr_result"
+            },
+            "rect_ids": {
+              "start": 885,
+              "end": 906,
+              "response_flow": "response.json() -> payload.data.rect_ids"
+            }
+          }
+        }
+      ],
+      "rejected_functions": [
+        {
+          "function": "readSample",
+          "reason": "UNSUPPORTED_FUNCTION_SHAPE"
+        }
+      ]
+    }
+  },
+  {
+    "finding": "R02",
+    "case": "only_partial_interfaces",
+    "status": "UNKNOWN",
+    "script_sha256": "5aea2d666c5bf3e469ee150e4db116e1adfdfa1a767b3a88bb54abec00f6fa67",
+    "sample_registered": false,
+    "business_gets": 6,
+    "body_statuses_produced": [],
+    "binding_analysis": {
+      "schema": "A16-fetch-getter-bindings/v1",
+      "complete": false,
+      "reason": "NO_COMPLETE_BOUND_CALL_CHAIN",
+      "partial_getters": [
+        {
+          "kind": "sample_frames",
+          "name": "frameGetter",
+          "url_atoms": [
+            "/qieti/api/annotate_pic/get_manual_annotations_unified_by_order_in_level/",
+            0,
+            "/",
+            1
+          ],
+          "getter_range": {
+            "start": 8,
+            "end": 278
+          },
+          "url_range": {
+            "start": 92,
+            "end": 195
+          },
+          "field_refs": {
+            "data": {
+              "start": 263,
+              "end": 275,
+              "response_flow": "response.json() -> payload.data"
+            }
+          }
+        },
+        {
+          "kind": "sample_info",
+          "name": "infoGetter",
+          "url_atoms": [
+            "/qieti/api/annotate_pic/get_question_info/",
+            0,
+            "/",
+            1
+          ],
+          "getter_range": {
+            "start": 286,
+            "end": 524
+          },
+          "url_range": {
+            "start": 369,
+            "end": 441
+          },
+          "field_refs": {
+            "data": {
+              "start": 509,
+              "end": 521,
+              "response_flow": "response.json() -> payload.data"
+            }
+          }
+        }
+      ],
+      "rejected_functions": []
+    }
+  },
+  {
+    "finding": "R02",
+    "case": "post_is_not_get",
+    "status": "UNKNOWN",
+    "script_sha256": "26f9ce17186ab7eb8d2a84d37f5e6a50595bf02bcdb76ed48489b22084472663",
+    "sample_registered": false,
+    "business_gets": 6,
+    "body_statuses_produced": [],
+    "binding_analysis": {
+      "schema": "A16-fetch-getter-bindings/v1",
+      "complete": false,
+      "reason": "NO_COMPLETE_BOUND_CALL_CHAIN",
+      "partial_getters": [
+        {
+          "kind": "sample_info",
+          "name": "infoGetter",
+          "url_atoms": [
+            "/qieti/api/annotate_pic/get_question_info/",
+            0,
+            "/",
+            1
+          ],
+          "getter_range": {
+            "start": 287,
+            "end": 525
+          },
+          "url_range": {
+            "start": 370,
+            "end": 442
+          },
+          "field_refs": {
+            "data": {
+              "start": 510,
+              "end": 522,
+              "response_flow": "response.json() -> payload.data"
+            }
+          }
+        },
+        {
+          "kind": "content",
+          "name": "contentGetter",
+          "url_atoms": [
+            "/qieti/api/verify_annotation/get-ocr-annotation?file_id=",
+            0,
+            "&question_order=",
+            1,
+            "&zone=",
+            2
+          ],
+          "getter_range": {
+            "start": 533,
+            "end": 911
+          },
+          "url_range": {
+            "start": 625,
+            "end": 739
+          },
+          "field_refs": {
+            "success": {
+              "start": 817,
+              "end": 837,
+              "response_flow": "response.json() -> payload.data.success"
+            },
+            "ocr_result": {
+              "start": 851,
+              "end": 874,
+              "response_flow": "response.json() -> payload.data.ocr_result"
+            },
+            "rect_ids": {
+              "start": 886,
+              "end": 907,
+              "response_flow": "response.json() -> payload.data.rect_ids"
+            }
+          }
+        }
+      ],
+      "rejected_functions": [
+        {
+          "function": "frameGetter",
+          "reason": "NOT_A_GET_GETTER"
+        },
+        {
+          "function": "readSample",
+          "reason": "UNSUPPORTED_FUNCTION_SHAPE"
+        }
+      ]
+    }
+  },
+  {
+    "finding": "R02",
+    "case": "shadowed_fetch",
+    "status": "UNKNOWN",
+    "script_sha256": "631cc154c448260f2f439e9442105e1e8e68af1346021ce92bf39a3403abc0d9",
+    "sample_registered": false,
+    "business_gets": 6,
+    "body_statuses_produced": [],
+    "binding_analysis": {
+      "complete": false,
+      "reason": "SHADOWED_NATIVE_FETCH"
+    }
+  },
+  {
+    "finding": "R02",
+    "case": "swapped_call_arguments",
+    "status": "UNKNOWN",
+    "script_sha256": "a36176bb853f3173508d1380636bb328a2fc497f9dde12ae3e41a5824a311650",
+    "sample_registered": false,
+    "business_gets": 6,
+    "body_statuses_produced": [],
+    "binding_analysis": {
+      "schema": "A16-fetch-getter-bindings/v1",
+      "complete": false,
+      "reason": "NO_COMPLETE_BOUND_CALL_CHAIN",
+      "partial_getters": [
+        {
+          "kind": "sample_frames",
+          "name": "frameGetter",
+          "url_atoms": [
+            "/qieti/api/annotate_pic/get_manual_annotations_unified_by_order_in_level/",
+            0,
+            "/",
+            1
+          ],
+          "getter_range": {
+            "start": 8,
+            "end": 278
+          },
+          "url_range": {
+            "start": 92,
+            "end": 195
+          },
+          "field_refs": {
+            "data": {
+              "start": 263,
+              "end": 275,
+              "response_flow": "response.json() -> payload.data"
+            }
+          }
+        },
+        {
+          "kind": "sample_info",
+          "name": "infoGetter",
+          "url_atoms": [
+            "/qieti/api/annotate_pic/get_question_info/",
+            0,
+            "/",
+            1
+          ],
+          "getter_range": {
+            "start": 286,
+            "end": 524
+          },
+          "url_range": {
+            "start": 369,
+            "end": 441
+          },
+          "field_refs": {
+            "data": {
+              "start": 509,
+              "end": 521,
+              "response_flow": "response.json() -> payload.data"
+            }
+          }
+        },
+        {
+          "kind": "content",
+          "name": "contentGetter",
+          "url_atoms": [
+            "/qieti/api/verify_annotation/get-ocr-annotation?file_id=",
+            0,
+            "&question_order=",
+            1,
+            "&zone=",
+            2
+          ],
+          "getter_range": {
+            "start": 532,
+            "end": 910
+          },
+          "url_range": {
+            "start": 624,
+            "end": 738
+          },
+          "field_refs": {
+            "success": {
+              "start": 816,
+              "end": 836,
+              "response_flow": "response.json() -> payload.data.success"
+            },
+            "ocr_result": {
+              "start": 850,
+              "end": 873,
+              "response_flow": "response.json() -> payload.data.ocr_result"
+            },
+            "rect_ids": {
+              "start": 885,
+              "end": 906,
+              "response_flow": "response.json() -> payload.data.rect_ids"
+            }
+          }
+        }
+      ],
+      "rejected_functions": [
+        {
+          "function": "readSample",
+          "reason": "UNSUPPORTED_FUNCTION_SHAPE"
+        }
+      ]
+    }
+  },
+  {
+    "finding": "R02",
+    "case": "unrelated_function_field_names",
+    "status": "UNKNOWN",
+    "script_sha256": "49faa83be63d24510b85eff6cb0fde54747488253ea7bbe5de1866c56ecd66cd",
+    "sample_registered": false,
+    "business_gets": 6,
+    "body_statuses_produced": [],
+    "binding_analysis": {
+      "schema": "A16-fetch-getter-bindings/v1",
+      "complete": false,
+      "reason": "NO_COMPLETE_BOUND_CALL_CHAIN",
+      "partial_getters": [
+        {
+          "kind": "sample_frames",
+          "name": "frameGetter",
+          "url_atoms": [
+            "/qieti/api/annotate_pic/get_manual_annotations_unified_by_order_in_level/",
+            0,
+            "/",
+            1
+          ],
+          "getter_range": {
+            "start": 8,
+            "end": 278
+          },
+          "url_range": {
+            "start": 92,
+            "end": 195
+          },
+          "field_refs": {
+            "data": {
+              "start": 263,
+              "end": 275,
+              "response_flow": "response.json() -> payload.data"
+            }
+          }
+        },
+        {
+          "kind": "sample_info",
+          "name": "infoGetter",
+          "url_atoms": [
+            "/qieti/api/annotate_pic/get_question_info/",
+            0,
+            "/",
+            1
+          ],
+          "getter_range": {
+            "start": 286,
+            "end": 524
+          },
+          "url_range": {
+            "start": 369,
+            "end": 441
+          },
+          "field_refs": {
+            "data": {
+              "start": 509,
+              "end": 521,
+              "response_flow": "response.json() -> payload.data"
+            }
+          }
+        }
+      ],
+      "rejected_functions": [
+        {
+          "function": "contentGetter",
+          "reason": "GETTER_RESPONSE_MAPPING_UNPROVEN"
+        },
+        {
+          "function": "readSample",
+          "reason": "UNSUPPORTED_FUNCTION_SHAPE"
+        },
+        {
+          "function": "unrelated",
+          "reason": "GETTER_URL_PARAMETER_MAPPING_UNPROVEN"
+        }
+      ]
+    }
+  },
+  {
+    "finding": "R02",
+    "case": "wrong_field_object",
+    "status": "UNKNOWN",
+    "script_sha256": "886675803b0ed8b7b0c55654fd7c822e1eef9f2d737e94653d7c9743a4d3676b",
+    "sample_registered": false,
+    "business_gets": 6,
+    "body_statuses_produced": [],
+    "binding_analysis": {
+      "schema": "A16-fetch-getter-bindings/v1",
+      "complete": false,
+      "reason": "NO_COMPLETE_BOUND_CALL_CHAIN",
+      "partial_getters": [
+        {
+          "kind": "sample_frames",
+          "name": "frameGetter",
+          "url_atoms": [
+            "/qieti/api/annotate_pic/get_manual_annotations_unified_by_order_in_level/",
+            0,
+            "/",
+            1
+          ],
+          "getter_range": {
+            "start": 8,
+            "end": 278
+          },
+          "url_range": {
+            "start": 92,
+            "end": 195
+          },
+          "field_refs": {
+            "data": {
+              "start": 263,
+              "end": 275,
+              "response_flow": "response.json() -> payload.data"
+            }
+          }
+        },
+        {
+          "kind": "sample_info",
+          "name": "infoGetter",
+          "url_atoms": [
+            "/qieti/api/annotate_pic/get_question_info/",
+            0,
+            "/",
+            1
+          ],
+          "getter_range": {
+            "start": 286,
+            "end": 524
+          },
+          "url_range": {
+            "start": 369,
+            "end": 441
+          },
+          "field_refs": {
+            "data": {
+              "start": 509,
+              "end": 521,
+              "response_flow": "response.json() -> payload.data"
+            }
+          }
+        }
+      ],
+      "rejected_functions": [
+        {
+          "function": "contentGetter",
+          "reason": "UNSUPPORTED_FUNCTION_SHAPE"
+        },
+        {
+          "function": "readSample",
+          "reason": "UNSUPPORTED_FUNCTION_SHAPE"
+        }
+      ]
+    }
+  },
+  {
+    "finding": "R02",
+    "case": "wrong_response_json_origin",
+    "status": "UNKNOWN",
+    "script_sha256": "6b7b26c5dfae8c5bafae2582765c8018e00e4525f7813b19d1929ba3fcb9ff15",
+    "sample_registered": false,
+    "business_gets": 6,
+    "body_statuses_produced": [],
+    "binding_analysis": {
+      "schema": "A16-fetch-getter-bindings/v1",
+      "complete": false,
+      "reason": "NO_COMPLETE_BOUND_CALL_CHAIN",
+      "partial_getters": [
+        {
+          "kind": "sample_frames",
+          "name": "frameGetter",
+          "url_atoms": [
+            "/qieti/api/annotate_pic/get_manual_annotations_unified_by_order_in_level/",
+            0,
+            "/",
+            1
+          ],
+          "getter_range": {
+            "start": 8,
+            "end": 278
+          },
+          "url_range": {
+            "start": 92,
+            "end": 195
+          },
+          "field_refs": {
+            "data": {
+              "start": 263,
+              "end": 275,
+              "response_flow": "response.json() -> payload.data"
+            }
+          }
+        },
+        {
+          "kind": "sample_info",
+          "name": "infoGetter",
+          "url_atoms": [
+            "/qieti/api/annotate_pic/get_question_info/",
+            0,
+            "/",
+            1
+          ],
+          "getter_range": {
+            "start": 286,
+            "end": 524
+          },
+          "url_range": {
+            "start": 369,
+            "end": 441
+          },
+          "field_refs": {
+            "data": {
+              "start": 509,
+              "end": 521,
+              "response_flow": "response.json() -> payload.data"
+            }
+          }
+        }
+      ],
+      "rejected_functions": [
+        {
+          "function": "contentGetter",
+          "reason": "UNSUPPORTED_FUNCTION_SHAPE"
+        },
+        {
+          "function": "readSample",
+          "reason": "UNSUPPORTED_FUNCTION_SHAPE"
+        }
+      ]
+    }
+  },
+  {
+    "finding": "R02",
+    "case": "wrong_url_parameter_mapping",
+    "status": "UNKNOWN",
+    "script_sha256": "9b641815eff01fa7e6cc7831cc1793acd9483671bdb35d67bcbaeb8b562841dd",
+    "sample_registered": false,
+    "business_gets": 6,
+    "body_statuses_produced": [],
+    "binding_analysis": {
+      "schema": "A16-fetch-getter-bindings/v1",
+      "complete": false,
+      "reason": "NO_COMPLETE_BOUND_CALL_CHAIN",
+      "partial_getters": [
+        {
+          "kind": "sample_frames",
+          "name": "frameGetter",
+          "url_atoms": [
+            "/qieti/api/annotate_pic/get_manual_annotations_unified_by_order_in_level/",
+            0,
+            "/",
+            1
+          ],
+          "getter_range": {
+            "start": 8,
+            "end": 278
+          },
+          "url_range": {
+            "start": 92,
+            "end": 195
+          },
+          "field_refs": {
+            "data": {
+              "start": 263,
+              "end": 275,
+              "response_flow": "response.json() -> payload.data"
+            }
+          }
+        },
+        {
+          "kind": "sample_info",
+          "name": "infoGetter",
+          "url_atoms": [
+            "/qieti/api/annotate_pic/get_question_info/",
+            0,
+            "/",
+            1
+          ],
+          "getter_range": {
+            "start": 286,
+            "end": 524
+          },
+          "url_range": {
+            "start": 369,
+            "end": 441
+          },
+          "field_refs": {
+            "data": {
+              "start": 509,
+              "end": 521,
+              "response_flow": "response.json() -> payload.data"
+            }
+          }
+        }
+      ],
+      "rejected_functions": [
+        {
+          "function": "contentGetter",
+          "reason": "GETTER_URL_PARAMETER_MAPPING_UNPROVEN"
+        },
+        {
+          "function": "readSample",
+          "reason": "UNSUPPORTED_FUNCTION_SHAPE"
+        }
+      ]
+    }
+  },
+  {
+    "finding": "R02",
+    "case": "wrong_zone_argument",
+    "status": "UNKNOWN",
+    "script_sha256": "2167333be829b5099fe6d6c83c6568e0017c91963fb480ac53e9531fe0264762",
+    "sample_registered": false,
+    "business_gets": 6,
+    "body_statuses_produced": [],
+    "binding_analysis": {
+      "schema": "A16-fetch-getter-bindings/v1",
+      "complete": false,
+      "reason": "NO_COMPLETE_BOUND_CALL_CHAIN",
+      "partial_getters": [
+        {
+          "kind": "sample_frames",
+          "name": "frameGetter",
+          "url_atoms": [
+            "/qieti/api/annotate_pic/get_manual_annotations_unified_by_order_in_level/",
+            0,
+            "/",
+            1
+          ],
+          "getter_range": {
+            "start": 8,
+            "end": 278
+          },
+          "url_range": {
+            "start": 92,
+            "end": 195
+          },
+          "field_refs": {
+            "data": {
+              "start": 263,
+              "end": 275,
+              "response_flow": "response.json() -> payload.data"
+            }
+          }
+        },
+        {
+          "kind": "sample_info",
+          "name": "infoGetter",
+          "url_atoms": [
+            "/qieti/api/annotate_pic/get_question_info/",
+            0,
+            "/",
+            1
+          ],
+          "getter_range": {
+            "start": 286,
+            "end": 524
+          },
+          "url_range": {
+            "start": 369,
+            "end": 441
+          },
+          "field_refs": {
+            "data": {
+              "start": 509,
+              "end": 521,
+              "response_flow": "response.json() -> payload.data"
+            }
+          }
+        },
+        {
+          "kind": "content",
+          "name": "contentGetter",
+          "url_atoms": [
+            "/qieti/api/verify_annotation/get-ocr-annotation?file_id=",
+            0,
+            "&question_order=",
+            1,
+            "&zone=",
+            2
+          ],
+          "getter_range": {
+            "start": 532,
+            "end": 910
+          },
+          "url_range": {
+            "start": 624,
+            "end": 738
+          },
+          "field_refs": {
+            "success": {
+              "start": 816,
+              "end": 836,
+              "response_flow": "response.json() -> payload.data.success"
+            },
+            "ocr_result": {
+              "start": 850,
+              "end": 873,
+              "response_flow": "response.json() -> payload.data.ocr_result"
+            },
+            "rect_ids": {
+              "start": 885,
+              "end": 906,
+              "response_flow": "response.json() -> payload.data.rect_ids"
+            }
+          }
+        }
+      ],
+      "rejected_functions": [
+        {
+          "function": "readSample",
+          "reason": "UNSUPPORTED_FUNCTION_SHAPE"
+        }
+      ]
+    }
+  }
+]

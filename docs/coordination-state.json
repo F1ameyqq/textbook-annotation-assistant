@@ -2,7 +2,7 @@
   "schema_version": 1,
   "project": "D:\\1800",
   "coordinator_thread_id": "01a15768-1e2d-7781-b29f-1f7376270216",
-  "updated_at": "2026-10-20T09:40:17.502149+00:00",
+  "updated_at": "2026-10-20T09:47:07.991977+00:00",
   "automation": {
     "id": "1800-a",
     "kind": "heartbeat",
@@ -10317,7 +10317,7 @@
     },
     "A16": {
       "at": "2026-10-20T07:34:24.473472+00:00",
-      "status": "REAL_EVIDENCE_FIRST_SCOPE_REVISION_DISPATCH_READY",
+      "status": "OBSERVATION_ONLY_SCOPE_REVISION_ACTIVE",
       "task": "docs/tasks/A16-current-book-source-target-readonly.md",
       "task_sha256": "d472860d3699acc3f2629abbb104c595c0adbf4a33bd59bc481caf21e34eeda2",
       "review_task": "docs/tasks/A16-independent-current-readonly-review.md",
@@ -10344,28 +10344,39 @@
       "worktree_creation": "No suitable attached worktree; known managed long-path failure preserved; explicit longpaths short directory created from fixed 7432122b without rerunning managed setup.",
       "next_dependency": "Same-stage observation-only fixed candidate, with schema auto-qualification/sample GET disabled; independent safety/scope review then concrete A16 TLS decision; no live before activation.",
       "execution_host_id": "local",
-      "execution_cursor": "9e646293-db4c-4df5-ad60-154ad1ffafe8:18",
+      "execution_cursor": "9e646293-db4c-4df5-ad60-154ad1ffafe8:19",
       "review_host_id": "local",
-      "review_cursor": "54109698-8e67-431c-b756-da2abb21b362:24",
+      "review_cursor": "54109698-8e67-431c-b756-da2abb21b362:25",
       "workflow_commit": "386353f91eb2bf8d9d75d909c3bf5e2c132d1ac5",
       "acknowledged_at": "2026-10-20T07:41:56.909245+00:00",
       "execution": {
         "thread_id": "01a15840-7766-7533-818d-cc016aa0a60b",
         "host_id": "local",
-        "cursor": "9e646293-db4c-4df5-ad60-154ad1ffafe8:18",
-        "status": "REVISION_FIXED_OFFLINE_RELEASED",
+        "cursor": "9e646293-db4c-4df5-ad60-154ad1ffafe8:19",
+        "status": "OBSERVATION_ONLY_SCOPE_REVISION_ACTIVE",
         "acknowledged": true
       },
       "review": {
         "thread_id": "01a15841-0d44-7272-9740-40d013839869",
         "host_id": "local",
-        "cursor": "54109698-8e67-431c-b756-da2abb21b362:24",
-        "status": "REVISION_REWORK_CONFIRMED_SEALING",
+        "cursor": "54109698-8e67-431c-b756-da2abb21b362:25",
+        "status": "REVISION_REWORK_RELEASED",
         "candidate_manifest_sha256": "071340237c76a7159bd90485e17a774c2f870114baef0199172a2fc5f9547efc",
         "last_completed_result": "REWORK_ORIGINAL_PRESERVED",
         "acknowledged": true,
         "confirmed_finding": "R02 invalid async function if(...) accepted as CURRENT_CODE_CONFIRMED; sample interfaces registered and body AVAILABLE. Formal report still sealing.",
-        "formal_report_fixed": false
+        "formal_report_fixed": true,
+        "result": "REWORK",
+        "report_sha256": "0779d6030752e01824a6b129c1fc805c4822ce004aef0369eca0c47b05d59d92",
+        "manifest_sha256": "4f7d35c301412ea8877bb4ca1db94a74ea201003856b34417e47000a91735795",
+        "raw_members_verified": 40,
+        "dispositions": {
+          "R01": "VERIFIED_CORRECTION_OFFLINE_LIMITED",
+          "R02": "REWORK_RESERVED_IDENTIFIER_PROOF_GAP",
+          "R03": "VERIFIED_CORRECTION_OFFLINE_LIMITED",
+          "R04": "VERIFIED_CORRECTION_OFFLINE_LIMITED"
+        },
+        "intake": "docs/evidence/coordinator/a16-revision-rework/intake.json"
       },
       "first_save_readiness_aux": {
         "agent": "/root/a14_dispatch_boundary_aux",
@@ -10492,13 +10503,14 @@
         "task": "docs/tasks/A16-real-evidence-first-disposition.md",
         "task_sha256": "a8720e70b822e72c66ad06c0a8e3672a9dc43072d6e716d08262a963a400539f",
         "intent": "docs/evidence/coordinator/a16-real-evidence-first/dispatch-intent.json",
-        "status": "DISPATCH_READY",
+        "status": "ACKNOWLEDGED_ACTIVE",
         "base_final": "8ab0944116b5230b8e69c2f129b635435c243d55",
         "sample_request_limit": 0,
         "fixed_business_GETs": 6,
         "original_images": 2,
         "live_permission_changed": false,
-        "tls_approved": false
+        "tls_approved": false,
+        "workflow_commit": "afed9807c77f33d5363d706d5341acb1fd172baf"
       }
     }
   },
@@ -12912,8 +12924,8 @@
     }
   ],
   "last_action": {
-    "at": "2026-10-20T09:40:17.502149+00:00",
-    "action": "Confirmed revised R02 counterexample from formal reviewer; prepared same-stage observation-only candidate while reviewer seals fixed REWORK."
+    "at": "2026-10-20T09:47:07.991977+00:00",
+    "action": "Received fixed second A16 REWORK report, 40 raw verified; R01/R03/R04 limited offline corrections verified, R02 unresolved. Original author acknowledged observation-only scope revision; live0."
   },
   "limitations": [
     "Current route uses mock B artifacts until independently agreed interface/artifact versions exist.",
