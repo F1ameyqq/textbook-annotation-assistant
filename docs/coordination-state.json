@@ -2,7 +2,7 @@
   "schema_version": 1,
   "project": "D:\\1800",
   "coordinator_thread_id": "01a15768-1e2d-7781-b29f-1f7376270216",
-  "updated_at": "2026-10-20T13:14:10.210497+00:00",
+  "updated_at": "2026-10-20T13:18:00.587454+00:00",
   "automation": {
     "id": "1800-a",
     "kind": "heartbeat",
@@ -11506,7 +11506,7 @@
     "A18": {
       "at": "2026-10-20T12:40:28.542722+00:00",
       "task": "A18",
-      "status": "SINGLE_LIVE_AUTHOR_REPORTED_FAILED_AWAITING_FIXED_DELIVERY",
+      "status": "ACTUAL_FAILURE_FIXED_INDEPENDENT_DISPATCH_PENDING",
       "dispatch_key": "A18:current-frontend-readonly:new-formal-execution-and-review",
       "project_id": "4488a042-3ec7-4f9e-8880-cbc8f4e02a51",
       "host_id": "local",
@@ -11517,22 +11517,22 @@
         "thread_id": "01a15954-3ca1-76a3-a984-13229a985976",
         "workspace": "D:/1800-worktrees/a18-current-frontend",
         "branch": "codex/a18-current-frontend",
-        "status": "ACTIVE_PACKAGING_ACTUAL_RESULT",
+        "status": "ACTUAL_FIXED_RELEASED",
         "host_id": "local",
         "created_at": "2026-10-20T12:41:48.983766+00:00",
-        "cursor": "784858a6-e2d0-44a7-b149-760c30d0ee17:24",
+        "cursor": "784858a6-e2d0-44a7-b149-760c30d0ee17:31",
         "turn_id": "01a1596f-858c-7c01-a826-a17ad07e55d0",
         "acknowledged": true,
-        "released": false,
+        "released": true,
         "product_commit": "45174e312ad23af349b3345be23eadb7f6a5e498",
-        "final_commit": "a1dae2efb49f39700194f912bf4ce8404950699b",
-        "completed_at": 1792500909,
-        "duration_ms": 852634
+        "final_commit": "35ad2ef50088373435f48f530efe32b59824da8e",
+        "completed_at": 1792502175,
+        "duration_ms": 332230
       },
       "review": {
         "thread_id": "01a15954-997c-7af2-9645-a4e2c2b25e76",
-        "workspace": "D:/1800-worktrees/a18-independent-fixed",
-        "status": "ACCEPTED_OFFLINE_ONLY_RELEASED",
+        "workspace": "D:/1800-worktrees/a18-live-review",
+        "status": "ACTUAL_REVIEW_DISPATCH_PENDING",
         "host_id": "local",
         "created_at": "2026-10-20T12:41:48.983766+00:00",
         "cursor": "e91d81b9-5408-48a3-b44b-1148ed428083:11",
@@ -11557,7 +11557,7 @@
       "scope": "CURRENT_BOOK_SOURCE_INVENTORY_CURRENT_FRONTEND_READONLY",
       "offline_only": false,
       "standing_tls_permission_reference": "docs/approvals/A17-excluded-static-user-decision.json",
-      "next_dependency": "Fixed A18 actual failure raw/final/release; then same independent actual-result review",
+      "next_dependency": "Same independent static actual-failure/release review; no retry",
       "new_live_reserved_limit": 1,
       "new_live_authorized": true,
       "workflow_commit": "bb163ba162f32857202b6a068e9fc050ed4ad9f4",
@@ -11707,6 +11707,27 @@
         "originals": 0,
         "version_or_exclusion_events": 0,
         "independently_verified": false
+      },
+      "actual_delivery": {
+        "at": "2026-10-20T13:18:00.587454+00:00",
+        "status": "MECHANICAL_PASS_PENDING_ACTUAL_INDEPENDENT_REVIEW",
+        "final": "35ad2ef50088373435f48f530efe32b59824da8e",
+        "base": "a1dae2efb49f39700194f912bf4ce8404950699b",
+        "old_members_preserved": 31655,
+        "added": 22,
+        "modified": 0,
+        "deleted": 0,
+        "candidate_members": 22,
+        "delivery_members": 21,
+        "raw_members": 45,
+        "input_manifest_sha256": "116c65b8ec1497d1e05a65a8c88139f76252162c08360239e163d36c407708fd",
+        "delivery_manifest_sha256": "0fe6579613308291a5da6c7b2ae9863ee4b7a45a92ff4e168e608df34bb6f5fb",
+        "author_report_sha256": "6ef3e2d208abafd9af0078ba454b829db5b03bb1688dcdb1d80d102caaeadb5e",
+        "release_sha256": "bf00081b27a134c976d80c6de7218fe687b1ab478fb3b54c6ebafc227499ab89",
+        "isolation": "D:/1800-worktrees/a18-live-review",
+        "coordinator_product_runs": 0,
+        "live_used": 1,
+        "live_remaining": 0
       }
     }
   },
@@ -14120,8 +14141,8 @@
     }
   ],
   "last_action": {
-    "at": "2026-10-20T13:14:10.210497+00:00",
-    "action": "A18 one actual launch completed with navigation failure per author; no retry"
+    "at": "2026-10-20T13:18:00.587454+00:00",
+    "action": "Received unique A18 actual failure and prepared isolated independent review"
   },
   "limitations": [
     "Current route uses mock B artifacts until independently agreed interface/artifact versions exist.",
