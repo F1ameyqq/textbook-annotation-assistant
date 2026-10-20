@@ -2,7 +2,7 @@
   "schema_version": 1,
   "project": "D:\\1800",
   "coordinator_thread_id": "01a15768-1e2d-7781-b29f-1f7376270216",
-  "updated_at": "2026-10-20T13:00:58.658827+00:00",
+  "updated_at": "2026-10-20T13:03:39.727655+00:00",
   "automation": {
     "id": "1800-a",
     "kind": "heartbeat",
@@ -11506,7 +11506,7 @@
     "A18": {
       "at": "2026-10-20T12:40:28.542722+00:00",
       "task": "A18",
-      "status": "FIXED_DELIVERY_VERIFIED_INDEPENDENT_DISPATCH_PENDING",
+      "status": "FIXED_INDEPENDENT_PREFLIGHT_ACTIVE",
       "dispatch_key": "A18:current-frontend-readonly:new-formal-execution-and-review",
       "project_id": "4488a042-3ec7-4f9e-8880-cbc8f4e02a51",
       "host_id": "local",
@@ -11532,18 +11532,19 @@
       "review": {
         "thread_id": "01a15954-997c-7af2-9645-a4e2c2b25e76",
         "workspace": "D:/1800-worktrees/a18-independent-fixed",
-        "status": "FIXED_REVIEW_DISPATCH_PENDING",
+        "status": "ACTIVE",
         "host_id": "local",
         "created_at": "2026-10-20T12:41:48.983766+00:00",
-        "cursor": "e91d81b9-5408-48a3-b44b-1148ed428083:2",
-        "turn_id": "01a15954-9fae-7a91-97c6-fd199c692219",
+        "cursor": "e91d81b9-5408-48a3-b44b-1148ed428083:3",
+        "turn_id": "01a15967-0941-7502-9d61-b73594707de3",
         "acknowledged": true,
-        "released": true,
+        "released": false,
         "completed_at": 1792500272,
         "duration_ms": 191755,
         "preparation_intake": "D:\\1800\\docs\\evidence\\coordinator\\a18-independent-preparation",
         "preparation_manifest_sha256": "836c5229214406592f62af7126c31f47cc2889c3e110b6278d55a921c28b9681",
-        "preparation_member_count": 4
+        "preparation_member_count": 4,
+        "dispatch_workflow": "dbb3122383e5138fb1be8d053bf956c32928f970"
       },
       "task_document": "docs/tasks/A18-current-frontend-readonly-adaptation.md",
       "task_sha256": "9f4f4f625ac5fda385c8f550d3ea6e55fbcb9f27f33c86bc5d5625abebaf87dd",
@@ -11606,7 +11607,13 @@
         "live": 0
       },
       "fixed_review_task": "D:/1800/docs/tasks/A18-fixed-current-frontend-independent-review.md",
-      "fixed_review_task_sha256": "f77bee32246b848121b9657fa5a0a4b894e6670ad5c6db23dfc5f25552af11cd"
+      "fixed_review_task_sha256": "f77bee32246b848121b9657fa5a0a4b894e6670ad5c6db23dfc5f25552af11cd",
+      "activation_preparation": {
+        "status": "AUXILIARY_DRAFT_ONLY",
+        "directory": "D:/1800/.local/stages/coordinator/a18-activation-preparation",
+        "formal_acceptance": false,
+        "live": 0
+      }
     }
   },
   "route": [
@@ -14019,8 +14026,8 @@
     }
   ],
   "last_action": {
-    "at": "2026-10-20T13:00:58.658827+00:00",
-    "action": "Received frozen A18 delivery and prepared formal isolated review"
+    "at": "2026-10-20T13:03:39.727655+00:00",
+    "action": "Formal A18 independent acknowledged; unique heartbeat updated to fixed-review dependency"
   },
   "limitations": [
     "Current route uses mock B artifacts until independently agreed interface/artifact versions exist.",
