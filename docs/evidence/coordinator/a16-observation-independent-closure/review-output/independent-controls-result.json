@@ -1,0 +1,1699 @@
+{
+  "task": "A16",
+  "candidate_manifest_sha256": "e66e9f96197871f7123ebe2ed981a587262c50fb3f6e62cdc300f8e96be5a63f",
+  "scope": "CURRENT_BOOK_SOURCE_INVENTORY_STATIC_OBSERVATION_ONLY",
+  "cases": [
+    {
+      "case": "NO_SAMPLE_REGISTRATION_OR_CACHE_BYPASS",
+      "status": "PASS",
+      "actual": {
+        "register_rejections": [
+          "SAMPLE_DISABLED_OBSERVATION_ONLY",
+          "SAMPLE_DISABLED_OBSERVATION_ONLY",
+          "SAMPLE_DISABLED_OBSERVATION_ONLY",
+          "SAMPLE_DISABLED_OBSERVATION_ONLY"
+        ],
+        "forged_map_original_cache_paths_blocked": 10,
+        "requests_sent": 0
+      }
+    },
+    {
+      "case": "BOTH_GUARDS_HARD_DENY",
+      "status": "PASS",
+      "actual": {
+        "sample_family_guards": [
+          {
+            "path_family": "/qieti/api/annotate_pic/get_manual_annotations_unified_by_order_in_level/46007447",
+            "native_block": true,
+            "context_block": true
+          },
+          {
+            "path_family": "/qieti/api/annotate_pic/get_question_info/46007447",
+            "native_block": true,
+            "context_block": true
+          },
+          {
+            "path_family": "/qieti/api/verify_annotation",
+            "native_block": true,
+            "context_block": true
+          },
+          {
+            "path_family": "/qieti/api/verify_annotation",
+            "native_block": true,
+            "context_block": true
+          },
+          {
+            "path_family": "/qieti/api/verify_annotation",
+            "native_block": true,
+            "context_block": true
+          }
+        ],
+        "server_connections": 0
+      }
+    },
+    {
+      "case": "COLLECT_NO_PARSER_NO_SAMPLES",
+      "status": "PASS",
+      "actual": {
+        "collects": [
+          {
+            "script_sha256": "6869975eb3c3d824a5b5a89abee530d61a7ea404907e9b16f591d9a4e7abad2d",
+            "calls": [
+              "/qieti/api/claim_book/books?page=1&pageSize=10&id=46007447",
+              "/qieti/api/annotate_ocr/directory/get?file_id=46007447",
+              "/qieti/api/annotate_pic/get_manual_annotations_unified/46007447",
+              "/qieti/api/annotate_pic/pre_annotation_source/46007447?annotationType=mr_pre",
+              "/qieti/api/annotate_pic/pre_annotation/46007447?pageNum=14&annotationType=mr_pre",
+              "/qieti/api/annotate_pic/pre_annotation/46007447?pageNum=173&annotationType=mr_pre"
+            ],
+            "result": {
+              "task": "A16",
+              "run_id": "A16-current-readonly-01a15840-7766-7533-818d-cc016aa0a60b",
+              "outcome": "READONLY_REVIEW_WITH_GAPS",
+              "steps": {
+                "navigation": "DONE",
+                "book": "DONE",
+                "directory": "DONE",
+                "frames": "DONE",
+                "source": "DONE",
+                "page14": "DONE",
+                "original14": "DONE",
+                "mapping14": "DONE",
+                "page173": "DONE",
+                "original173": "DONE",
+                "mapping173": "DONE",
+                "sample_frames": "NOT_RUN",
+                "sample_info": "NOT_RUN",
+                "content_question": "NOT_RUN",
+                "content_choice": "NOT_RUN",
+                "content_answer": "NOT_RUN"
+              },
+              "sources": [
+                {
+                  "original": {
+                    "viewer": 14,
+                    "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+                  },
+                  "mapping": {
+                    "viewer": 14,
+                    "zone": 0
+                  }
+                },
+                {
+                  "original": {
+                    "viewer": 173,
+                    "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+                  },
+                  "mapping": {
+                    "viewer": 173,
+                    "zone": 1
+                  }
+                }
+              ],
+              "gaps": [
+                "BODY_UNKNOWN_SAMPLE_DISABLED",
+                "READ_SCHEMA_UNVERIFIED",
+                "NEW_QUESTION_CONTENT_DIRECTORY_GEOMETRY_UNVERIFIED"
+              ],
+              "error": null,
+              "business_writes": 0,
+              "login_submissions": 0,
+              "started_at": "2026-10-20T10:18:31.006550+00:00",
+              "production_ready": false,
+              "write_eligible": false,
+              "scope": "CURRENT_BOOK_SOURCE_INVENTORY_STATIC_OBSERVATION_ONLY",
+              "sample_limit": 0,
+              "automatic_schema_confirmation": false,
+              "sample": {
+                "status": "NOT_RUN",
+                "reason": "OBSERVATION_ONLY_SCOPE",
+                "content_acceptable": false
+              },
+              "body_status": "UNKNOWN",
+              "schema_status": "UNKNOWN",
+              "book": {
+                "id": "46007447",
+                "title": "SYNTHETIC_OBSERVATION",
+                "question_count": 2
+              },
+              "target": {
+                "book_id": "46007447",
+                "inventory_coverage": "FULL",
+                "content_coverage": "UNKNOWN",
+                "write_preservation_baseline": false,
+                "question_count_reported": 2,
+                "question_count_observed": 2,
+                "frame_count": 12,
+                "global_max_observed": 22,
+                "append_after_order": 22,
+                "questions": [
+                  {
+                    "id": "q3",
+                    "order": 3,
+                    "directory_id": "d",
+                    "label": null,
+                    "frames": [
+                      {
+                        "rect_id": "3-0",
+                        "type": "question",
+                        "file_id": "46007447",
+                        "order_in_level": 3,
+                        "image_order_in_annotation_zone": 0,
+                        "rect_bbox": "1,2,3,4",
+                        "page_index": 14,
+                        "directory_id": "d"
+                      },
+                      {
+                        "rect_id": "3-1",
+                        "type": "choice",
+                        "file_id": "46007447",
+                        "order_in_level": 3,
+                        "image_order_in_annotation_zone": 1,
+                        "rect_bbox": "1,2,3,4",
+                        "page_index": 14,
+                        "directory_id": "d"
+                      },
+                      {
+                        "rect_id": "3-2",
+                        "type": "choice",
+                        "file_id": "46007447",
+                        "order_in_level": 3,
+                        "image_order_in_annotation_zone": 2,
+                        "rect_bbox": "1,2,3,4",
+                        "page_index": 14,
+                        "directory_id": "d"
+                      },
+                      {
+                        "rect_id": "3-3",
+                        "type": "choice",
+                        "file_id": "46007447",
+                        "order_in_level": 3,
+                        "image_order_in_annotation_zone": 3,
+                        "rect_bbox": "1,2,3,4",
+                        "page_index": 14,
+                        "directory_id": "d"
+                      },
+                      {
+                        "rect_id": "3-4",
+                        "type": "choice",
+                        "file_id": "46007447",
+                        "order_in_level": 3,
+                        "image_order_in_annotation_zone": 4,
+                        "rect_bbox": "1,2,3,4",
+                        "page_index": 14,
+                        "directory_id": "d"
+                      },
+                      {
+                        "rect_id": "3-5",
+                        "type": "answer",
+                        "file_id": "46007447",
+                        "order_in_level": 3,
+                        "image_order_in_annotation_zone": 5,
+                        "rect_bbox": "1,2,3,4",
+                        "page_index": 173,
+                        "directory_id": "d"
+                      }
+                    ],
+                    "content": {
+                      "status": "UNKNOWN",
+                      "reason": "NOT_FETCHED",
+                      "text": null
+                    }
+                  },
+                  {
+                    "id": "q22",
+                    "order": 22,
+                    "directory_id": "d",
+                    "label": null,
+                    "frames": [
+                      {
+                        "rect_id": "22-0",
+                        "type": "question",
+                        "file_id": "46007447",
+                        "order_in_level": 22,
+                        "image_order_in_annotation_zone": 0,
+                        "rect_bbox": "1,2,3,4",
+                        "page_index": 14,
+                        "directory_id": "d"
+                      },
+                      {
+                        "rect_id": "22-1",
+                        "type": "choice",
+                        "file_id": "46007447",
+                        "order_in_level": 22,
+                        "image_order_in_annotation_zone": 1,
+                        "rect_bbox": "1,2,3,4",
+                        "page_index": 14,
+                        "directory_id": "d"
+                      },
+                      {
+                        "rect_id": "22-2",
+                        "type": "choice",
+                        "file_id": "46007447",
+                        "order_in_level": 22,
+                        "image_order_in_annotation_zone": 2,
+                        "rect_bbox": "1,2,3,4",
+                        "page_index": 14,
+                        "directory_id": "d"
+                      },
+                      {
+                        "rect_id": "22-3",
+                        "type": "choice",
+                        "file_id": "46007447",
+                        "order_in_level": 22,
+                        "image_order_in_annotation_zone": 3,
+                        "rect_bbox": "1,2,3,4",
+                        "page_index": 14,
+                        "directory_id": "d"
+                      },
+                      {
+                        "rect_id": "22-4",
+                        "type": "choice",
+                        "file_id": "46007447",
+                        "order_in_level": 22,
+                        "image_order_in_annotation_zone": 4,
+                        "rect_bbox": "1,2,3,4",
+                        "page_index": 14,
+                        "directory_id": "d"
+                      },
+                      {
+                        "rect_id": "22-5",
+                        "type": "answer",
+                        "file_id": "46007447",
+                        "order_in_level": 22,
+                        "image_order_in_annotation_zone": 5,
+                        "rect_bbox": "1,2,3,4",
+                        "page_index": 173,
+                        "directory_id": "d"
+                      }
+                    ],
+                    "content": {
+                      "status": "UNKNOWN",
+                      "reason": "NOT_FETCHED",
+                      "text": null
+                    }
+                  }
+                ],
+                "directories": [
+                  {
+                    "id": "d",
+                    "label": null,
+                    "parent": null
+                  }
+                ],
+                "orphan_frames": [],
+                "q22_in_inventory": true,
+                "q22_sample_or_navigation": false
+              },
+              "static_assets": [
+                {
+                  "ref": "static-assets/synthetic.bin",
+                  "sha256": "6869975eb3c3d824a5b5a89abee530d61a7ea404907e9b16f591d9a4e7abad2d",
+                  "size": 82,
+                  "source_url_sha256": "d17a0ad3d38b0c82060d123cc02249ea68a3923ed889e0dddd1acb0f9b91f13f",
+                  "loaded_origin": {},
+                  "http_status": 200,
+                  "executed_by_collector": false
+                }
+              ],
+              "first_question_status": "HOLD_CONTENT_DIRECTORY_GEOMETRY_AND_SAVE_READBACK_REQUIRED",
+              "guard_pre_shutdown": {
+                "stopped": false,
+                "shutdown_started": false,
+                "terminal_stopped": false,
+                "failure": null,
+                "pending_tasks": 0
+              },
+              "network_audit": [],
+              "guard_at_serialization": {
+                "stopped": true,
+                "shutdown_started": true,
+                "terminal_stopped": false,
+                "failure": null,
+                "pending_tasks": 0
+              },
+              "release": {
+                "context_created": false,
+                "context_close_attempted": false,
+                "context_closed": false,
+                "runtime_stop_attempted": false,
+                "runtime_stopped": false,
+                "errors": [],
+                "state": "RELEASED"
+              },
+              "finished_at": "2026-10-20T10:18:31.010731+00:00"
+            },
+            "saved_names": [
+              "target-inventory.json",
+              "response-schemas.json",
+              "source-metadata.json",
+              "source-response-viewer14.json",
+              "source-response-viewer173.json",
+              "static-assets-observation.json",
+              "current-state.json"
+            ]
+          },
+          {
+            "script_sha256": "6de0d2df03e8228477c2161cb7b69dbede5cae6b9cff34f29638519f639ad3a0",
+            "calls": [
+              "/qieti/api/claim_book/books?page=1&pageSize=10&id=46007447",
+              "/qieti/api/annotate_ocr/directory/get?file_id=46007447",
+              "/qieti/api/annotate_pic/get_manual_annotations_unified/46007447",
+              "/qieti/api/annotate_pic/pre_annotation_source/46007447?annotationType=mr_pre",
+              "/qieti/api/annotate_pic/pre_annotation/46007447?pageNum=14&annotationType=mr_pre",
+              "/qieti/api/annotate_pic/pre_annotation/46007447?pageNum=173&annotationType=mr_pre"
+            ],
+            "result": {
+              "task": "A16",
+              "run_id": "A16-current-readonly-01a15840-7766-7533-818d-cc016aa0a60b",
+              "outcome": "READONLY_REVIEW_WITH_GAPS",
+              "steps": {
+                "navigation": "DONE",
+                "book": "DONE",
+                "directory": "DONE",
+                "frames": "DONE",
+                "source": "DONE",
+                "page14": "DONE",
+                "original14": "DONE",
+                "mapping14": "DONE",
+                "page173": "DONE",
+                "original173": "DONE",
+                "mapping173": "DONE",
+                "sample_frames": "NOT_RUN",
+                "sample_info": "NOT_RUN",
+                "content_question": "NOT_RUN",
+                "content_choice": "NOT_RUN",
+                "content_answer": "NOT_RUN"
+              },
+              "sources": [
+                {
+                  "original": {
+                    "viewer": 14,
+                    "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+                  },
+                  "mapping": {
+                    "viewer": 14,
+                    "zone": 0
+                  }
+                },
+                {
+                  "original": {
+                    "viewer": 173,
+                    "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+                  },
+                  "mapping": {
+                    "viewer": 173,
+                    "zone": 1
+                  }
+                }
+              ],
+              "gaps": [
+                "BODY_UNKNOWN_SAMPLE_DISABLED",
+                "READ_SCHEMA_UNVERIFIED",
+                "NEW_QUESTION_CONTENT_DIRECTORY_GEOMETRY_UNVERIFIED"
+              ],
+              "error": null,
+              "business_writes": 0,
+              "login_submissions": 0,
+              "started_at": "2026-10-20T10:18:31.015389+00:00",
+              "production_ready": false,
+              "write_eligible": false,
+              "scope": "CURRENT_BOOK_SOURCE_INVENTORY_STATIC_OBSERVATION_ONLY",
+              "sample_limit": 0,
+              "automatic_schema_confirmation": false,
+              "sample": {
+                "status": "NOT_RUN",
+                "reason": "OBSERVATION_ONLY_SCOPE",
+                "content_acceptable": false
+              },
+              "body_status": "UNKNOWN",
+              "schema_status": "UNKNOWN",
+              "book": {
+                "id": "46007447",
+                "title": "SYNTHETIC_OBSERVATION",
+                "question_count": 2
+              },
+              "target": {
+                "book_id": "46007447",
+                "inventory_coverage": "FULL",
+                "content_coverage": "UNKNOWN",
+                "write_preservation_baseline": false,
+                "question_count_reported": 2,
+                "question_count_observed": 2,
+                "frame_count": 12,
+                "global_max_observed": 22,
+                "append_after_order": 22,
+                "questions": [
+                  {
+                    "id": "q3",
+                    "order": 3,
+                    "directory_id": "d",
+                    "label": null,
+                    "frames": [
+                      {
+                        "rect_id": "3-0",
+                        "type": "question",
+                        "file_id": "46007447",
+                        "order_in_level": 3,
+                        "image_order_in_annotation_zone": 0,
+                        "rect_bbox": "1,2,3,4",
+                        "page_index": 14,
+                        "directory_id": "d"
+                      },
+                      {
+                        "rect_id": "3-1",
+                        "type": "choice",
+                        "file_id": "46007447",
+                        "order_in_level": 3,
+                        "image_order_in_annotation_zone": 1,
+                        "rect_bbox": "1,2,3,4",
+                        "page_index": 14,
+                        "directory_id": "d"
+                      },
+                      {
+                        "rect_id": "3-2",
+                        "type": "choice",
+                        "file_id": "46007447",
+                        "order_in_level": 3,
+                        "image_order_in_annotation_zone": 2,
+                        "rect_bbox": "1,2,3,4",
+                        "page_index": 14,
+                        "directory_id": "d"
+                      },
+                      {
+                        "rect_id": "3-3",
+                        "type": "choice",
+                        "file_id": "46007447",
+                        "order_in_level": 3,
+                        "image_order_in_annotation_zone": 3,
+                        "rect_bbox": "1,2,3,4",
+                        "page_index": 14,
+                        "directory_id": "d"
+                      },
+                      {
+                        "rect_id": "3-4",
+                        "type": "choice",
+                        "file_id": "46007447",
+                        "order_in_level": 3,
+                        "image_order_in_annotation_zone": 4,
+                        "rect_bbox": "1,2,3,4",
+                        "page_index": 14,
+                        "directory_id": "d"
+                      },
+                      {
+                        "rect_id": "3-5",
+                        "type": "answer",
+                        "file_id": "46007447",
+                        "order_in_level": 3,
+                        "image_order_in_annotation_zone": 5,
+                        "rect_bbox": "1,2,3,4",
+                        "page_index": 173,
+                        "directory_id": "d"
+                      }
+                    ],
+                    "content": {
+                      "status": "UNKNOWN",
+                      "reason": "NOT_FETCHED",
+                      "text": null
+                    }
+                  },
+                  {
+                    "id": "q22",
+                    "order": 22,
+                    "directory_id": "d",
+                    "label": null,
+                    "frames": [
+                      {
+                        "rect_id": "22-0",
+                        "type": "question",
+                        "file_id": "46007447",
+                        "order_in_level": 22,
+                        "image_order_in_annotation_zone": 0,
+                        "rect_bbox": "1,2,3,4",
+                        "page_index": 14,
+                        "directory_id": "d"
+                      },
+                      {
+                        "rect_id": "22-1",
+                        "type": "choice",
+                        "file_id": "46007447",
+                        "order_in_level": 22,
+                        "image_order_in_annotation_zone": 1,
+                        "rect_bbox": "1,2,3,4",
+                        "page_index": 14,
+                        "directory_id": "d"
+                      },
+                      {
+                        "rect_id": "22-2",
+                        "type": "choice",
+                        "file_id": "46007447",
+                        "order_in_level": 22,
+                        "image_order_in_annotation_zone": 2,
+                        "rect_bbox": "1,2,3,4",
+                        "page_index": 14,
+                        "directory_id": "d"
+                      },
+                      {
+                        "rect_id": "22-3",
+                        "type": "choice",
+                        "file_id": "46007447",
+                        "order_in_level": 22,
+                        "image_order_in_annotation_zone": 3,
+                        "rect_bbox": "1,2,3,4",
+                        "page_index": 14,
+                        "directory_id": "d"
+                      },
+                      {
+                        "rect_id": "22-4",
+                        "type": "choice",
+                        "file_id": "46007447",
+                        "order_in_level": 22,
+                        "image_order_in_annotation_zone": 4,
+                        "rect_bbox": "1,2,3,4",
+                        "page_index": 14,
+                        "directory_id": "d"
+                      },
+                      {
+                        "rect_id": "22-5",
+                        "type": "answer",
+                        "file_id": "46007447",
+                        "order_in_level": 22,
+                        "image_order_in_annotation_zone": 5,
+                        "rect_bbox": "1,2,3,4",
+                        "page_index": 173,
+                        "directory_id": "d"
+                      }
+                    ],
+                    "content": {
+                      "status": "UNKNOWN",
+                      "reason": "NOT_FETCHED",
+                      "text": null
+                    }
+                  }
+                ],
+                "directories": [
+                  {
+                    "id": "d",
+                    "label": null,
+                    "parent": null
+                  }
+                ],
+                "orphan_frames": [],
+                "q22_in_inventory": true,
+                "q22_sample_or_navigation": false
+              },
+              "static_assets": [
+                {
+                  "ref": "static-assets/synthetic.bin",
+                  "sha256": "6de0d2df03e8228477c2161cb7b69dbede5cae6b9cff34f29638519f639ad3a0",
+                  "size": 35,
+                  "source_url_sha256": "d17a0ad3d38b0c82060d123cc02249ea68a3923ed889e0dddd1acb0f9b91f13f",
+                  "loaded_origin": {},
+                  "http_status": 200,
+                  "executed_by_collector": false
+                }
+              ],
+              "first_question_status": "HOLD_CONTENT_DIRECTORY_GEOMETRY_AND_SAVE_READBACK_REQUIRED",
+              "guard_pre_shutdown": {
+                "stopped": false,
+                "shutdown_started": false,
+                "terminal_stopped": false,
+                "failure": null,
+                "pending_tasks": 0
+              },
+              "network_audit": [],
+              "guard_at_serialization": {
+                "stopped": true,
+                "shutdown_started": true,
+                "terminal_stopped": false,
+                "failure": null,
+                "pending_tasks": 0
+              },
+              "release": {
+                "context_created": false,
+                "context_close_attempted": false,
+                "context_closed": false,
+                "runtime_stop_attempted": false,
+                "runtime_stopped": false,
+                "errors": [],
+                "state": "RELEASED"
+              },
+              "finished_at": "2026-10-20T10:18:31.017589+00:00"
+            },
+            "saved_names": [
+              "target-inventory.json",
+              "response-schemas.json",
+              "source-metadata.json",
+              "source-response-viewer14.json",
+              "source-response-viewer173.json",
+              "static-assets-observation.json",
+              "current-state.json"
+            ]
+          },
+          {
+            "script_sha256": "e04f0f9919309650d1ba87a802b80fecf28388714e386f82cfc7142b543e5a09",
+            "calls": [
+              "/qieti/api/claim_book/books?page=1&pageSize=10&id=46007447",
+              "/qieti/api/annotate_ocr/directory/get?file_id=46007447",
+              "/qieti/api/annotate_pic/get_manual_annotations_unified/46007447",
+              "/qieti/api/annotate_pic/pre_annotation_source/46007447?annotationType=mr_pre",
+              "/qieti/api/annotate_pic/pre_annotation/46007447?pageNum=14&annotationType=mr_pre",
+              "/qieti/api/annotate_pic/pre_annotation/46007447?pageNum=173&annotationType=mr_pre"
+            ],
+            "result": {
+              "task": "A16",
+              "run_id": "A16-current-readonly-01a15840-7766-7533-818d-cc016aa0a60b",
+              "outcome": "READONLY_REVIEW_WITH_GAPS",
+              "steps": {
+                "navigation": "DONE",
+                "book": "DONE",
+                "directory": "DONE",
+                "frames": "DONE",
+                "source": "DONE",
+                "page14": "DONE",
+                "original14": "DONE",
+                "mapping14": "DONE",
+                "page173": "DONE",
+                "original173": "DONE",
+                "mapping173": "DONE",
+                "sample_frames": "NOT_RUN",
+                "sample_info": "NOT_RUN",
+                "content_question": "NOT_RUN",
+                "content_choice": "NOT_RUN",
+                "content_answer": "NOT_RUN"
+              },
+              "sources": [
+                {
+                  "original": {
+                    "viewer": 14,
+                    "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+                  },
+                  "mapping": {
+                    "viewer": 14,
+                    "zone": 0
+                  }
+                },
+                {
+                  "original": {
+                    "viewer": 173,
+                    "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+                  },
+                  "mapping": {
+                    "viewer": 173,
+                    "zone": 1
+                  }
+                }
+              ],
+              "gaps": [
+                "BODY_UNKNOWN_SAMPLE_DISABLED",
+                "READ_SCHEMA_UNVERIFIED",
+                "NEW_QUESTION_CONTENT_DIRECTORY_GEOMETRY_UNVERIFIED"
+              ],
+              "error": null,
+              "business_writes": 0,
+              "login_submissions": 0,
+              "started_at": "2026-10-20T10:18:31.022009+00:00",
+              "production_ready": false,
+              "write_eligible": false,
+              "scope": "CURRENT_BOOK_SOURCE_INVENTORY_STATIC_OBSERVATION_ONLY",
+              "sample_limit": 0,
+              "automatic_schema_confirmation": false,
+              "sample": {
+                "status": "NOT_RUN",
+                "reason": "OBSERVATION_ONLY_SCOPE",
+                "content_acceptable": false
+              },
+              "body_status": "UNKNOWN",
+              "schema_status": "UNKNOWN",
+              "book": {
+                "id": "46007447",
+                "title": "SYNTHETIC_OBSERVATION",
+                "question_count": 2
+              },
+              "target": {
+                "book_id": "46007447",
+                "inventory_coverage": "FULL",
+                "content_coverage": "UNKNOWN",
+                "write_preservation_baseline": false,
+                "question_count_reported": 2,
+                "question_count_observed": 2,
+                "frame_count": 12,
+                "global_max_observed": 22,
+                "append_after_order": 22,
+                "questions": [
+                  {
+                    "id": "q3",
+                    "order": 3,
+                    "directory_id": "d",
+                    "label": null,
+                    "frames": [
+                      {
+                        "rect_id": "3-0",
+                        "type": "question",
+                        "file_id": "46007447",
+                        "order_in_level": 3,
+                        "image_order_in_annotation_zone": 0,
+                        "rect_bbox": "1,2,3,4",
+                        "page_index": 14,
+                        "directory_id": "d"
+                      },
+                      {
+                        "rect_id": "3-1",
+                        "type": "choice",
+                        "file_id": "46007447",
+                        "order_in_level": 3,
+                        "image_order_in_annotation_zone": 1,
+                        "rect_bbox": "1,2,3,4",
+                        "page_index": 14,
+                        "directory_id": "d"
+                      },
+                      {
+                        "rect_id": "3-2",
+                        "type": "choice",
+                        "file_id": "46007447",
+                        "order_in_level": 3,
+                        "image_order_in_annotation_zone": 2,
+                        "rect_bbox": "1,2,3,4",
+                        "page_index": 14,
+                        "directory_id": "d"
+                      },
+                      {
+                        "rect_id": "3-3",
+                        "type": "choice",
+                        "file_id": "46007447",
+                        "order_in_level": 3,
+                        "image_order_in_annotation_zone": 3,
+                        "rect_bbox": "1,2,3,4",
+                        "page_index": 14,
+                        "directory_id": "d"
+                      },
+                      {
+                        "rect_id": "3-4",
+                        "type": "choice",
+                        "file_id": "46007447",
+                        "order_in_level": 3,
+                        "image_order_in_annotation_zone": 4,
+                        "rect_bbox": "1,2,3,4",
+                        "page_index": 14,
+                        "directory_id": "d"
+                      },
+                      {
+                        "rect_id": "3-5",
+                        "type": "answer",
+                        "file_id": "46007447",
+                        "order_in_level": 3,
+                        "image_order_in_annotation_zone": 5,
+                        "rect_bbox": "1,2,3,4",
+                        "page_index": 173,
+                        "directory_id": "d"
+                      }
+                    ],
+                    "content": {
+                      "status": "UNKNOWN",
+                      "reason": "NOT_FETCHED",
+                      "text": null
+                    }
+                  },
+                  {
+                    "id": "q22",
+                    "order": 22,
+                    "directory_id": "d",
+                    "label": null,
+                    "frames": [
+                      {
+                        "rect_id": "22-0",
+                        "type": "question",
+                        "file_id": "46007447",
+                        "order_in_level": 22,
+                        "image_order_in_annotation_zone": 0,
+                        "rect_bbox": "1,2,3,4",
+                        "page_index": 14,
+                        "directory_id": "d"
+                      },
+                      {
+                        "rect_id": "22-1",
+                        "type": "choice",
+                        "file_id": "46007447",
+                        "order_in_level": 22,
+                        "image_order_in_annotation_zone": 1,
+                        "rect_bbox": "1,2,3,4",
+                        "page_index": 14,
+                        "directory_id": "d"
+                      },
+                      {
+                        "rect_id": "22-2",
+                        "type": "choice",
+                        "file_id": "46007447",
+                        "order_in_level": 22,
+                        "image_order_in_annotation_zone": 2,
+                        "rect_bbox": "1,2,3,4",
+                        "page_index": 14,
+                        "directory_id": "d"
+                      },
+                      {
+                        "rect_id": "22-3",
+                        "type": "choice",
+                        "file_id": "46007447",
+                        "order_in_level": 22,
+                        "image_order_in_annotation_zone": 3,
+                        "rect_bbox": "1,2,3,4",
+                        "page_index": 14,
+                        "directory_id": "d"
+                      },
+                      {
+                        "rect_id": "22-4",
+                        "type": "choice",
+                        "file_id": "46007447",
+                        "order_in_level": 22,
+                        "image_order_in_annotation_zone": 4,
+                        "rect_bbox": "1,2,3,4",
+                        "page_index": 14,
+                        "directory_id": "d"
+                      },
+                      {
+                        "rect_id": "22-5",
+                        "type": "answer",
+                        "file_id": "46007447",
+                        "order_in_level": 22,
+                        "image_order_in_annotation_zone": 5,
+                        "rect_bbox": "1,2,3,4",
+                        "page_index": 173,
+                        "directory_id": "d"
+                      }
+                    ],
+                    "content": {
+                      "status": "UNKNOWN",
+                      "reason": "NOT_FETCHED",
+                      "text": null
+                    }
+                  }
+                ],
+                "directories": [
+                  {
+                    "id": "d",
+                    "label": null,
+                    "parent": null
+                  }
+                ],
+                "orphan_frames": [],
+                "q22_in_inventory": true,
+                "q22_sample_or_navigation": false
+              },
+              "static_assets": [
+                {
+                  "ref": "static-assets/synthetic.bin",
+                  "sha256": "e04f0f9919309650d1ba87a802b80fecf28388714e386f82cfc7142b543e5a09",
+                  "size": 29,
+                  "source_url_sha256": "d17a0ad3d38b0c82060d123cc02249ea68a3923ed889e0dddd1acb0f9b91f13f",
+                  "loaded_origin": {},
+                  "http_status": 200,
+                  "executed_by_collector": false
+                }
+              ],
+              "first_question_status": "HOLD_CONTENT_DIRECTORY_GEOMETRY_AND_SAVE_READBACK_REQUIRED",
+              "guard_pre_shutdown": {
+                "stopped": false,
+                "shutdown_started": false,
+                "terminal_stopped": false,
+                "failure": null,
+                "pending_tasks": 0
+              },
+              "network_audit": [],
+              "guard_at_serialization": {
+                "stopped": true,
+                "shutdown_started": true,
+                "terminal_stopped": false,
+                "failure": null,
+                "pending_tasks": 0
+              },
+              "release": {
+                "context_created": false,
+                "context_close_attempted": false,
+                "context_closed": false,
+                "runtime_stop_attempted": false,
+                "runtime_stopped": false,
+                "errors": [],
+                "state": "RELEASED"
+              },
+              "finished_at": "2026-10-20T10:18:31.025030+00:00"
+            },
+            "saved_names": [
+              "target-inventory.json",
+              "response-schemas.json",
+              "source-metadata.json",
+              "source-response-viewer14.json",
+              "source-response-viewer173.json",
+              "static-assets-observation.json",
+              "current-state.json"
+            ]
+          }
+        ],
+        "parser_qualification_or_selection_calls": 0,
+        "fixed_GETs_per_collect": 6,
+        "originals_per_collect": 2
+      }
+    },
+    {
+      "case": "STATIC_EXACT_PRIVATE_PUBLIC_SANITIZED",
+      "status": "PASS",
+      "actual": {
+        "assets": [
+          {
+            "ref": "static-assets/1-6869975eb3c3d824a5b5a89abee530d61a7ea404907e9b16f591d9a4e7abad2d.bin",
+            "sha256": "6869975eb3c3d824a5b5a89abee530d61a7ea404907e9b16f591d9a4e7abad2d",
+            "size": 82,
+            "source_url_sha256": "ea2e9926a8321d66ef46e84a1e64627dd1735e36a73949a9e24179974a4d3b25",
+            "loaded_origin": {
+              "scheme": "https",
+              "hostname": "www.usense.com",
+              "port": 443,
+              "resource_type": "Script",
+              "category": "STATIC",
+              "decision": "ALLOW",
+              "source": "CURRENT_RESPONSE",
+              "redirect_hop": false,
+              "main_navigation": false,
+              "business_read": false,
+              "expected_passive_denial": false
+            },
+            "http_status": 200,
+            "executed_by_collector": false
+          },
+          {
+            "ref": "static-assets/2-c857b1c2afab08a9b843f2bf1125c1f1c654c3a9a1eb50bca159048b693335cf.bin",
+            "sha256": "c857b1c2afab08a9b843f2bf1125c1f1c654c3a9a1eb50bca159048b693335cf",
+            "size": 90,
+            "source_url_sha256": "c22ca635d28db41233dfecbb3e5fee89fef9029beb67c190921d81e33599c668",
+            "loaded_origin": {
+              "scheme": "https",
+              "hostname": "www.usense.com",
+              "port": 443,
+              "resource_type": "Script",
+              "category": "STATIC",
+              "decision": "ALLOW",
+              "source": "CURRENT_RESPONSE",
+              "redirect_hop": false,
+              "main_navigation": false,
+              "business_read": false,
+              "expected_passive_denial": false
+            },
+            "http_status": 200,
+            "executed_by_collector": false
+          }
+        ],
+        "exact_raw_bytes_saved": true,
+        "exact_source_private": true,
+        "public_sanitized": true,
+        "collector_eval_or_execute": false,
+        "real_static_data_used": false
+      }
+    },
+    {
+      "case": "UNAPPROVED_STATIC_NOT_READ",
+      "status": "PASS",
+      "actual": {
+        "excluded_response_bodies_not_read": 6,
+        "login_response_stopped": true
+      }
+    },
+    {
+      "case": "SIX_FIXED_CACHE_SCOPE",
+      "status": "PASS",
+      "actual": {
+        "six_fixed_captured_GETs_consumed_without_resend": true,
+        "additional_fetches": 0,
+        "unknown_book_page_API_write_blocked": true,
+        "total_HTTP_cap_claimed": false,
+        "note": "Original allowed same-origin session/static helper resources remain; six+two does not mean all HTTP limited to8."
+      }
+    },
+    {
+      "case": "FIRST_READ_FAILURE_AND_LATE_GUARD",
+      "status": "PASS",
+      "actual": {
+        "failed_fixed_read": {
+          "task": "A16",
+          "run_id": "A16-current-readonly-01a15840-7766-7533-818d-cc016aa0a60b",
+          "outcome": "ERROR",
+          "steps": {
+            "navigation": "DONE",
+            "book": "DONE",
+            "directory": "DONE",
+            "frames": "DONE",
+            "source": "FAILED",
+            "page14": "NOT_RUN",
+            "original14": "NOT_RUN",
+            "mapping14": "NOT_RUN",
+            "page173": "NOT_RUN",
+            "original173": "NOT_RUN",
+            "mapping173": "NOT_RUN",
+            "sample_frames": "NOT_RUN",
+            "sample_info": "NOT_RUN",
+            "content_question": "NOT_RUN",
+            "content_choice": "NOT_RUN",
+            "content_answer": "NOT_RUN"
+          },
+          "sources": [],
+          "gaps": [],
+          "error": {
+            "exception_type": "Stop",
+            "codes": [
+              "BUSINESS_READ_FAILED"
+            ]
+          },
+          "business_writes": 0,
+          "login_submissions": 0,
+          "started_at": "2026-10-20T10:18:31.097817+00:00",
+          "production_ready": false,
+          "write_eligible": false,
+          "scope": "CURRENT_BOOK_SOURCE_INVENTORY_STATIC_OBSERVATION_ONLY",
+          "sample_limit": 0,
+          "automatic_schema_confirmation": false,
+          "sample": {
+            "status": "NOT_RUN",
+            "reason": "OBSERVATION_ONLY_SCOPE",
+            "content_acceptable": false
+          },
+          "body_status": "UNKNOWN",
+          "schema_status": "UNKNOWN",
+          "book": {
+            "id": "46007447",
+            "title": "SYNTHETIC_OBSERVATION",
+            "question_count": 2
+          },
+          "target": {
+            "book_id": "46007447",
+            "inventory_coverage": "FULL",
+            "content_coverage": "UNKNOWN",
+            "write_preservation_baseline": false,
+            "question_count_reported": 2,
+            "question_count_observed": 2,
+            "frame_count": 12,
+            "global_max_observed": 22,
+            "append_after_order": 22,
+            "questions": [
+              {
+                "id": "q3",
+                "order": 3,
+                "directory_id": "d",
+                "label": null,
+                "frames": [
+                  {
+                    "rect_id": "3-0",
+                    "type": "question",
+                    "file_id": "46007447",
+                    "order_in_level": 3,
+                    "image_order_in_annotation_zone": 0,
+                    "rect_bbox": "1,2,3,4",
+                    "page_index": 14,
+                    "directory_id": "d"
+                  },
+                  {
+                    "rect_id": "3-1",
+                    "type": "choice",
+                    "file_id": "46007447",
+                    "order_in_level": 3,
+                    "image_order_in_annotation_zone": 1,
+                    "rect_bbox": "1,2,3,4",
+                    "page_index": 14,
+                    "directory_id": "d"
+                  },
+                  {
+                    "rect_id": "3-2",
+                    "type": "choice",
+                    "file_id": "46007447",
+                    "order_in_level": 3,
+                    "image_order_in_annotation_zone": 2,
+                    "rect_bbox": "1,2,3,4",
+                    "page_index": 14,
+                    "directory_id": "d"
+                  },
+                  {
+                    "rect_id": "3-3",
+                    "type": "choice",
+                    "file_id": "46007447",
+                    "order_in_level": 3,
+                    "image_order_in_annotation_zone": 3,
+                    "rect_bbox": "1,2,3,4",
+                    "page_index": 14,
+                    "directory_id": "d"
+                  },
+                  {
+                    "rect_id": "3-4",
+                    "type": "choice",
+                    "file_id": "46007447",
+                    "order_in_level": 3,
+                    "image_order_in_annotation_zone": 4,
+                    "rect_bbox": "1,2,3,4",
+                    "page_index": 14,
+                    "directory_id": "d"
+                  },
+                  {
+                    "rect_id": "3-5",
+                    "type": "answer",
+                    "file_id": "46007447",
+                    "order_in_level": 3,
+                    "image_order_in_annotation_zone": 5,
+                    "rect_bbox": "1,2,3,4",
+                    "page_index": 173,
+                    "directory_id": "d"
+                  }
+                ],
+                "content": {
+                  "status": "UNKNOWN",
+                  "reason": "NOT_FETCHED",
+                  "text": null
+                }
+              },
+              {
+                "id": "q22",
+                "order": 22,
+                "directory_id": "d",
+                "label": null,
+                "frames": [
+                  {
+                    "rect_id": "22-0",
+                    "type": "question",
+                    "file_id": "46007447",
+                    "order_in_level": 22,
+                    "image_order_in_annotation_zone": 0,
+                    "rect_bbox": "1,2,3,4",
+                    "page_index": 14,
+                    "directory_id": "d"
+                  },
+                  {
+                    "rect_id": "22-1",
+                    "type": "choice",
+                    "file_id": "46007447",
+                    "order_in_level": 22,
+                    "image_order_in_annotation_zone": 1,
+                    "rect_bbox": "1,2,3,4",
+                    "page_index": 14,
+                    "directory_id": "d"
+                  },
+                  {
+                    "rect_id": "22-2",
+                    "type": "choice",
+                    "file_id": "46007447",
+                    "order_in_level": 22,
+                    "image_order_in_annotation_zone": 2,
+                    "rect_bbox": "1,2,3,4",
+                    "page_index": 14,
+                    "directory_id": "d"
+                  },
+                  {
+                    "rect_id": "22-3",
+                    "type": "choice",
+                    "file_id": "46007447",
+                    "order_in_level": 22,
+                    "image_order_in_annotation_zone": 3,
+                    "rect_bbox": "1,2,3,4",
+                    "page_index": 14,
+                    "directory_id": "d"
+                  },
+                  {
+                    "rect_id": "22-4",
+                    "type": "choice",
+                    "file_id": "46007447",
+                    "order_in_level": 22,
+                    "image_order_in_annotation_zone": 4,
+                    "rect_bbox": "1,2,3,4",
+                    "page_index": 14,
+                    "directory_id": "d"
+                  },
+                  {
+                    "rect_id": "22-5",
+                    "type": "answer",
+                    "file_id": "46007447",
+                    "order_in_level": 22,
+                    "image_order_in_annotation_zone": 5,
+                    "rect_bbox": "1,2,3,4",
+                    "page_index": 173,
+                    "directory_id": "d"
+                  }
+                ],
+                "content": {
+                  "status": "UNKNOWN",
+                  "reason": "NOT_FETCHED",
+                  "text": null
+                }
+              }
+            ],
+            "directories": [
+              {
+                "id": "d",
+                "label": null,
+                "parent": null
+              }
+            ],
+            "orphan_frames": [],
+            "q22_in_inventory": true,
+            "q22_sample_or_navigation": false
+          },
+          "guard_pre_shutdown": {
+            "stopped": false,
+            "shutdown_started": false,
+            "terminal_stopped": false,
+            "failure": null,
+            "pending_tasks": 0
+          },
+          "network_audit": [],
+          "guard_at_serialization": {
+            "stopped": true,
+            "shutdown_started": true,
+            "terminal_stopped": false,
+            "failure": null,
+            "pending_tasks": 0
+          },
+          "release": {
+            "context_created": false,
+            "context_close_attempted": false,
+            "context_closed": false,
+            "runtime_stop_attempted": false,
+            "runtime_stopped": false,
+            "errors": [],
+            "state": "RELEASED"
+          },
+          "static_assets": [],
+          "finished_at": "2026-10-20T10:18:31.100232+00:00"
+        },
+        "late_guard": {
+          "task": "A16",
+          "run_id": "A16-current-readonly-01a15840-7766-7533-818d-cc016aa0a60b",
+          "outcome": "ERROR",
+          "steps": {
+            "navigation": "DONE",
+            "book": "DONE",
+            "directory": "DONE",
+            "frames": "DONE",
+            "source": "DONE",
+            "page14": "DONE",
+            "original14": "DONE",
+            "mapping14": "DONE",
+            "page173": "DONE",
+            "original173": "DONE",
+            "mapping173": "DONE",
+            "sample_frames": "NOT_RUN",
+            "sample_info": "NOT_RUN",
+            "content_question": "NOT_RUN",
+            "content_choice": "NOT_RUN",
+            "content_answer": "NOT_RUN"
+          },
+          "sources": [
+            {
+              "original": {
+                "viewer": 14,
+                "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+              },
+              "mapping": {
+                "viewer": 14,
+                "zone": 0
+              }
+            },
+            {
+              "original": {
+                "viewer": 173,
+                "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+              },
+              "mapping": {
+                "viewer": 173,
+                "zone": 1
+              }
+            }
+          ],
+          "gaps": [
+            "BODY_UNKNOWN_SAMPLE_DISABLED",
+            "READ_SCHEMA_UNVERIFIED",
+            "NEW_QUESTION_CONTENT_DIRECTORY_GEOMETRY_UNVERIFIED"
+          ],
+          "error": {
+            "exception_type": "Stop",
+            "codes": [
+              "LATE_GUARD_FAILURE"
+            ]
+          },
+          "business_writes": 0,
+          "login_submissions": 0,
+          "started_at": "2026-10-20T10:18:31.104285+00:00",
+          "production_ready": false,
+          "write_eligible": false,
+          "scope": "CURRENT_BOOK_SOURCE_INVENTORY_STATIC_OBSERVATION_ONLY",
+          "sample_limit": 0,
+          "automatic_schema_confirmation": false,
+          "sample": {
+            "status": "NOT_RUN",
+            "reason": "OBSERVATION_ONLY_SCOPE",
+            "content_acceptable": false
+          },
+          "body_status": "UNKNOWN",
+          "schema_status": "UNKNOWN",
+          "book": {
+            "id": "46007447",
+            "title": "SYNTHETIC_OBSERVATION",
+            "question_count": 2
+          },
+          "target": {
+            "book_id": "46007447",
+            "inventory_coverage": "FULL",
+            "content_coverage": "UNKNOWN",
+            "write_preservation_baseline": false,
+            "question_count_reported": 2,
+            "question_count_observed": 2,
+            "frame_count": 12,
+            "global_max_observed": 22,
+            "append_after_order": 22,
+            "questions": [
+              {
+                "id": "q3",
+                "order": 3,
+                "directory_id": "d",
+                "label": null,
+                "frames": [
+                  {
+                    "rect_id": "3-0",
+                    "type": "question",
+                    "file_id": "46007447",
+                    "order_in_level": 3,
+                    "image_order_in_annotation_zone": 0,
+                    "rect_bbox": "1,2,3,4",
+                    "page_index": 14,
+                    "directory_id": "d"
+                  },
+                  {
+                    "rect_id": "3-1",
+                    "type": "choice",
+                    "file_id": "46007447",
+                    "order_in_level": 3,
+                    "image_order_in_annotation_zone": 1,
+                    "rect_bbox": "1,2,3,4",
+                    "page_index": 14,
+                    "directory_id": "d"
+                  },
+                  {
+                    "rect_id": "3-2",
+                    "type": "choice",
+                    "file_id": "46007447",
+                    "order_in_level": 3,
+                    "image_order_in_annotation_zone": 2,
+                    "rect_bbox": "1,2,3,4",
+                    "page_index": 14,
+                    "directory_id": "d"
+                  },
+                  {
+                    "rect_id": "3-3",
+                    "type": "choice",
+                    "file_id": "46007447",
+                    "order_in_level": 3,
+                    "image_order_in_annotation_zone": 3,
+                    "rect_bbox": "1,2,3,4",
+                    "page_index": 14,
+                    "directory_id": "d"
+                  },
+                  {
+                    "rect_id": "3-4",
+                    "type": "choice",
+                    "file_id": "46007447",
+                    "order_in_level": 3,
+                    "image_order_in_annotation_zone": 4,
+                    "rect_bbox": "1,2,3,4",
+                    "page_index": 14,
+                    "directory_id": "d"
+                  },
+                  {
+                    "rect_id": "3-5",
+                    "type": "answer",
+                    "file_id": "46007447",
+                    "order_in_level": 3,
+                    "image_order_in_annotation_zone": 5,
+                    "rect_bbox": "1,2,3,4",
+                    "page_index": 173,
+                    "directory_id": "d"
+                  }
+                ],
+                "content": {
+                  "status": "UNKNOWN",
+                  "reason": "NOT_FETCHED",
+                  "text": null
+                }
+              },
+              {
+                "id": "q22",
+                "order": 22,
+                "directory_id": "d",
+                "label": null,
+                "frames": [
+                  {
+                    "rect_id": "22-0",
+                    "type": "question",
+                    "file_id": "46007447",
+                    "order_in_level": 22,
+                    "image_order_in_annotation_zone": 0,
+                    "rect_bbox": "1,2,3,4",
+                    "page_index": 14,
+                    "directory_id": "d"
+                  },
+                  {
+                    "rect_id": "22-1",
+                    "type": "choice",
+                    "file_id": "46007447",
+                    "order_in_level": 22,
+                    "image_order_in_annotation_zone": 1,
+                    "rect_bbox": "1,2,3,4",
+                    "page_index": 14,
+                    "directory_id": "d"
+                  },
+                  {
+                    "rect_id": "22-2",
+                    "type": "choice",
+                    "file_id": "46007447",
+                    "order_in_level": 22,
+                    "image_order_in_annotation_zone": 2,
+                    "rect_bbox": "1,2,3,4",
+                    "page_index": 14,
+                    "directory_id": "d"
+                  },
+                  {
+                    "rect_id": "22-3",
+                    "type": "choice",
+                    "file_id": "46007447",
+                    "order_in_level": 22,
+                    "image_order_in_annotation_zone": 3,
+                    "rect_bbox": "1,2,3,4",
+                    "page_index": 14,
+                    "directory_id": "d"
+                  },
+                  {
+                    "rect_id": "22-4",
+                    "type": "choice",
+                    "file_id": "46007447",
+                    "order_in_level": 22,
+                    "image_order_in_annotation_zone": 4,
+                    "rect_bbox": "1,2,3,4",
+                    "page_index": 14,
+                    "directory_id": "d"
+                  },
+                  {
+                    "rect_id": "22-5",
+                    "type": "answer",
+                    "file_id": "46007447",
+                    "order_in_level": 22,
+                    "image_order_in_annotation_zone": 5,
+                    "rect_bbox": "1,2,3,4",
+                    "page_index": 173,
+                    "directory_id": "d"
+                  }
+                ],
+                "content": {
+                  "status": "UNKNOWN",
+                  "reason": "NOT_FETCHED",
+                  "text": null
+                }
+              }
+            ],
+            "directories": [
+              {
+                "id": "d",
+                "label": null,
+                "parent": null
+              }
+            ],
+            "orphan_frames": [],
+            "q22_in_inventory": true,
+            "q22_sample_or_navigation": false
+          },
+          "static_assets": [],
+          "first_question_status": "HOLD_CONTENT_DIRECTORY_GEOMETRY_AND_SAVE_READBACK_REQUIRED",
+          "guard_pre_shutdown": {
+            "stopped": false,
+            "shutdown_started": false,
+            "terminal_stopped": false,
+            "failure": null,
+            "pending_tasks": 0
+          },
+          "network_audit": [],
+          "guard_at_serialization": {
+            "stopped": true,
+            "shutdown_started": true,
+            "terminal_stopped": true,
+            "failure": {
+              "exception_type": "Stop",
+              "codes": [
+                "LATE_GUARD_FAILURE"
+              ]
+            },
+            "pending_tasks": 0
+          },
+          "release": {
+            "context_created": false,
+            "context_close_attempted": false,
+            "context_closed": false,
+            "runtime_stop_attempted": false,
+            "runtime_stopped": false,
+            "errors": [],
+            "state": "RELEASED"
+          },
+          "finished_at": "2026-10-20T10:18:31.105768+00:00"
+        },
+        "successors_respected": true
+      }
+    },
+    {
+      "case": "SCOPE_GATE_TYPED_BINDINGS",
+      "status": "PASS",
+      "actual": {
+        "pure_synthetic_scope_approval_only": true,
+        "scope_mutation_rejections": [
+          {
+            "document": 0,
+            "field": "scope",
+            "code": "ACTIVATION_BINDING_MISMATCH"
+          },
+          {
+            "document": 0,
+            "field": "sample_limit",
+            "code": "ACTIVATION_BINDING_MISMATCH"
+          },
+          {
+            "document": 0,
+            "field": "automatic_schema_confirmation",
+            "code": "ACTIVATION_BINDING_MISMATCH"
+          },
+          {
+            "document": 0,
+            "field": "fixed_business_get_count",
+            "code": "ACTIVATION_BINDING_MISMATCH"
+          },
+          {
+            "document": 0,
+            "field": "original_get_count",
+            "code": "ACTIVATION_BINDING_MISMATCH"
+          },
+          {
+            "document": 0,
+            "field": "workflow_commit",
+            "code": "ACTIVATION_BINDING_MISMATCH"
+          },
+          {
+            "document": 0,
+            "field": "candidate_manifest_sha256",
+            "code": "ACTIVATION_BINDING_MISMATCH"
+          },
+          {
+            "document": 1,
+            "field": "scope",
+            "code": "OBSERVATION_SCOPE_BINDING_REQUIRED"
+          },
+          {
+            "document": 1,
+            "field": "sample_limit",
+            "code": "OBSERVATION_SCOPE_BINDING_REQUIRED"
+          },
+          {
+            "document": 1,
+            "field": "automatic_schema_confirmation",
+            "code": "OBSERVATION_SCOPE_BINDING_REQUIRED"
+          },
+          {
+            "document": 1,
+            "field": "fixed_business_get_count",
+            "code": "OBSERVATION_SCOPE_BINDING_REQUIRED"
+          },
+          {
+            "document": 1,
+            "field": "original_get_count",
+            "code": "OBSERVATION_SCOPE_BINDING_REQUIRED"
+          },
+          {
+            "document": 1,
+            "field": "workflow_commit",
+            "code": "OBSERVATION_SCOPE_BINDING_REQUIRED"
+          },
+          {
+            "document": 1,
+            "field": "candidate_manifest_sha256",
+            "code": "OBSERVATION_SCOPE_BINDING_REQUIRED"
+          },
+          {
+            "document": 2,
+            "field": "scope",
+            "code": "OBSERVATION_SCOPE_BINDING_REQUIRED"
+          },
+          {
+            "document": 2,
+            "field": "sample_limit",
+            "code": "OBSERVATION_SCOPE_BINDING_REQUIRED"
+          },
+          {
+            "document": 2,
+            "field": "automatic_schema_confirmation",
+            "code": "OBSERVATION_SCOPE_BINDING_REQUIRED"
+          },
+          {
+            "document": 2,
+            "field": "fixed_business_get_count",
+            "code": "OBSERVATION_SCOPE_BINDING_REQUIRED"
+          },
+          {
+            "document": 2,
+            "field": "original_get_count",
+            "code": "OBSERVATION_SCOPE_BINDING_REQUIRED"
+          },
+          {
+            "document": 2,
+            "field": "workflow_commit",
+            "code": "OBSERVATION_SCOPE_BINDING_REQUIRED"
+          },
+          {
+            "document": 2,
+            "field": "candidate_manifest_sha256",
+            "code": "OBSERVATION_SCOPE_BINDING_REQUIRED"
+          }
+        ],
+        "missing_scope_typed_sample0_unapproved_TLS_expiry_rejected": true,
+        "marker_value_only_no_real_marker_created": true,
+        "live_authorized_by_review": false
+      }
+    },
+    {
+      "case": "TEMPLATE_AND_NO_ENABLE_SWITCH",
+      "status": "PASS",
+      "actual": {
+        "candidate_digest": "e66e9f96197871f7123ebe2ed981a587262c50fb3f6e62cdc300f8e96be5a63f",
+        "scope": "CURRENT_BOOK_SOURCE_INVENTORY_STATIC_OBSERVATION_ONLY",
+        "sample_limit": 0,
+        "automatic_schema_confirmation": false,
+        "templates_not_executable": true,
+        "formal_gate_report_compatible_result": "ACCEPTED_OFFLINE_ONLY with exact restricted scope; separate limited review result required",
+        "original_R02": "REWORK_NOT_REPAIRED"
+      }
+    }
+  ],
+  "result": "ALL_NEW_CONTROLS_PASS",
+  "first_failure": null,
+  "resource_attempts": [],
+  "parser_qualification_calls": [],
+  "duration_ms": 250,
+  "old_suites_or_parser_replayed": false,
+  "real_browser_network_profile_native_or_occupancy": false,
+  "harness_boundary": "New18 Harness transport/UI/image/file boundary fakes; actual new collect, policy, guards, get_once, capture, gate executed."
+}

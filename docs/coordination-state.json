@@ -2,14 +2,14 @@
   "schema_version": 1,
   "project": "D:\\1800",
   "coordinator_thread_id": "01a15768-1e2d-7781-b29f-1f7376270216",
-  "updated_at": "2026-10-20T10:18:10.396441+00:00",
+  "updated_at": "2026-10-20T10:29:06.143950+00:00",
   "automation": {
     "id": "1800-a",
     "kind": "heartbeat",
     "status": "ACTIVE",
     "interval_minutes": 30,
-    "routing_update": "A16_OBSERVATION_ONLY_INDEPENDENT_ACTIVE",
-    "routing_updated_at": "2026-10-20T10:18:10.396441+00:00",
+    "routing_update": "A16_OBSERVATION_ONLY_ACCEPTED_WAITING_TLS_DECISION",
+    "routing_updated_at": "2026-10-20T10:29:06.143950+00:00",
     "pause_reason": null,
     "paused_at": "2026-10-20T11:38:10.407716+08:00",
     "target_thread_id": "01a15768-1e2d-7781-b29f-1f7376270216",
@@ -10317,7 +10317,7 @@
     },
     "A16": {
       "at": "2026-10-20T07:34:24.473472+00:00",
-      "status": "OBSERVATION_ONLY_INDEPENDENT_ACTIVE",
+      "status": "OBSERVATION_ONLY_ACCEPTED_WAITING_TLS_DECISION",
       "task": "docs/tasks/A16-current-book-source-target-readonly.md",
       "task_sha256": "d472860d3699acc3f2629abbb104c595c0adbf4a33bd59bc481caf21e34eeda2",
       "review_task": "docs/tasks/A16-independent-current-readonly-review.md",
@@ -10342,11 +10342,11 @@
       "old_budgets_restored": false,
       "offline_iteration_policy": "Normal necessary pure offline development and relevant tests; retain failures and freeze exact deliveries; no old suites or live budget restoration.",
       "worktree_creation": "No suitable attached worktree; known managed long-path failure preserved; explicit longpaths short directory created from fixed 7432122b without rerunning managed setup.",
-      "next_dependency": "Formal observation-only independent fixed report and release; coordinator verification, then concrete A16 TLS decision and one live activation. No old suites or budgets restored.",
+      "next_dependency": "Explicit user decision on fixed A16 observation-only TLS proposal; then bind decision/report/candidate/profile/window and dispatch one live observation. No activation before decision.",
       "execution_host_id": "local",
       "execution_cursor": "9e646293-db4c-4df5-ad60-154ad1ffafe8:21",
       "review_host_id": "local",
-      "review_cursor": "54109698-8e67-431c-b756-da2abb21b362:28",
+      "review_cursor": "54109698-8e67-431c-b756-da2abb21b362:29",
       "workflow_commit": "386353f91eb2bf8d9d75d909c3bf5e2c132d1ac5",
       "acknowledged_at": "2026-10-20T07:41:56.909245+00:00",
       "execution": {
@@ -10359,12 +10359,33 @@
       "review": {
         "thread_id": "01a15841-0d44-7272-9740-40d013839869",
         "host_id": "local",
-        "cursor": "54109698-8e67-431c-b756-da2abb21b362:28",
-        "status": "OBSERVATION_ONLY_INDEPENDENT_ACTIVE",
+        "cursor": "54109698-8e67-431c-b756-da2abb21b362:29",
+        "status": "ACCEPTED_OFFLINE_OBSERVATION_ONLY_RELEASED",
         "candidate_manifest_sha256": "e66e9f96197871f7123ebe2ed981a587262c50fb3f6e62cdc300f8e96be5a63f",
         "acknowledged": true,
-        "formal_report_fixed": false,
-        "turn_id": "01a158ca-3cc6-7ab1-8b8a-e36a6df75562"
+        "formal_report_fixed": true,
+        "turn_id": "01a158ca-3cc6-7ab1-8b8a-e36a6df75562",
+        "result": "ACCEPTED_OFFLINE_ONLY",
+        "limited_result": "ACCEPTED_OFFLINE_OBSERVATION_ONLY",
+        "report_sha256": "42f7572eb9972e34b1945a00f84ab6cca361f29c37d9992da0ab974eac0e1962",
+        "review_result_sha256": "d536d9b2552586a0e1838384a1b2775df1b14023d3e7ad901ac1a2b991e06a0c",
+        "manifest_sha256": "19c2be4f37d97b5ebd77ca0264a723cfa440a86cfd52ac7cac8bb56926a236ba",
+        "raw_members_verified": 38,
+        "intake": "docs/evidence/coordinator/a16-observation-independent-closure/intake.json",
+        "new_suite": {
+          "tests": 18,
+          "failures": 0,
+          "errors": 0,
+          "duration_ms": 500,
+          "shell_exit": 0
+        },
+        "independent_controls": {
+          "groups": 9,
+          "pass": 9,
+          "fail": 0,
+          "duration_ms": 250,
+          "shell_exit": 0
+        }
       },
       "first_save_readiness_aux": {
         "agent": "/root/a14_dispatch_boundary_aux",
@@ -10520,7 +10541,7 @@
         "task": "docs/tasks/A16-real-evidence-first-disposition.md",
         "task_sha256": "a8720e70b822e72c66ad06c0a8e3672a9dc43072d6e716d08262a963a400539f",
         "intent": "docs/evidence/coordinator/a16-real-evidence-first/dispatch-intent.json",
-        "status": "OBSERVATION_ONLY_INDEPENDENT_ACTIVE",
+        "status": "ACCEPTED_OFFLINE_OBSERVATION_ONLY",
         "base_final": "8ab0944116b5230b8e69c2f129b635435c243d55",
         "sample_request_limit": 0,
         "fixed_business_GETs": 6,
@@ -10592,6 +10613,53 @@
         "product_tests_run": 0,
         "formal_acceptance": false,
         "tls_approved": false,
+        "live_activated": false
+      },
+      "coordinator_observation_acceptance": {
+        "at": "2026-10-20T10:26:22.115563+00:00",
+        "result": "ACCEPTED_OFFLINE_OBSERVATION_ONLY",
+        "candidate_manifest_sha256": "e66e9f96197871f7123ebe2ed981a587262c50fb3f6e62cdc300f8e96be5a63f",
+        "product_commit": "dd22193a30e969aaf90043365f31f84a5a50df59",
+        "final_commit": "2453c71c070c153a22a49b772bb2696b3858f5d4",
+        "review_thread_id": "01a15841-0d44-7272-9740-40d013839869",
+        "review_cursor": "54109698-8e67-431c-b756-da2abb21b362:29",
+        "raw_members_verified": 38,
+        "raw_manifest_sha256": "19c2be4f37d97b5ebd77ca0264a723cfa440a86cfd52ac7cac8bb56926a236ba",
+        "review_result_sha256": "d536d9b2552586a0e1838384a1b2775df1b14023d3e7ad901ac1a2b991e06a0c",
+        "report_sha256": "42f7572eb9972e34b1945a00f84ab6cca361f29c37d9992da0ab974eac0e1962",
+        "release_sha256": "684c83592f03704d559b255bae03b6176064f7bc26411a7ff02d239e0699d37c",
+        "preserved_input_raw": 59,
+        "new_suite": {
+          "tests": 18,
+          "failures": 0,
+          "errors": 0,
+          "duration_ms": 500,
+          "shell_exit": 0
+        },
+        "independent_controls": {
+          "groups": 9,
+          "pass": 9,
+          "fail": 0,
+          "duration_ms": 250,
+          "shell_exit": 0
+        },
+        "coordinator_product_tests": 0,
+        "old_R02": "REWORK_UNCHANGED_CAPABILITY_DISABLED",
+        "pending_real_resources": 0,
+        "os_creation_identity": "NOT_HELD_NOT_CLAIMED",
+        "TLS_approved": false,
+        "live_activated": false,
+        "old_budgets_restored": false
+      },
+      "tls_decision_proposal": {
+        "status": "PENDING_EXPLICIT_THIS_RUN_USER_DECISION",
+        "path": "docs/tasks/A16-observation-only-tls-decision-proposal.md",
+        "sha256": "103d036a730cbacc72043ed87b92ffcb8ed5731cdbcf9ae108e05b372c70b849",
+        "candidate_manifest_sha256": "e66e9f96197871f7123ebe2ed981a587262c50fb3f6e62cdc300f8e96be5a63f",
+        "independent_report_sha256": "d536d9b2552586a0e1838384a1b2775df1b14023d3e7ad901ac1a2b991e06a0c",
+        "profile_fingerprint_reference": "b4620cd9fe064121a916062126321b7bba3862185d8919bf228f1399097a0d00",
+        "current_profile_accessed": false,
+        "certificate_exception_authorized": false,
         "live_activated": false
       }
     }
