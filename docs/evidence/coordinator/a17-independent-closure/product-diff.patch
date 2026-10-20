@@ -1,0 +1,65 @@
+diff --git a/src/annotation/source/usense/current_readonly/gate.py b/src/annotation/source/usense/current_readonly/gate.py
+index 41934a16..cfd581cf 100644
+--- a/src/annotation/source/usense/current_readonly/gate.py
++++ b/src/annotation/source/usense/current_readonly/gate.py
+@@ -6,7 +6,7 @@ import json
+ import re
+ 
+ TASK = 'A17'
+-WORKFLOW = '811c3ac9e5913812bc71d74bc665eded96e23aa3'
++WORKFLOW = 'd137a1bba49550f661b110ee14c9541a1dc4fb19'
+ SCOPE = 'CURRENT_BOOK_SOURCE_INVENTORY_EXCLUDED_STATIC_OBSERVATION_ONLY'
+ OWNER = '01a158fd-281c-7282-a3b4-db876697686c'
+ COORDINATOR = '01a15768-1e2d-7781-b29f-1f7376270216'
+diff --git a/tools/a16_current_state_probe.py b/tools/a16_current_state_probe.py
+index e35eba7a..fd4897b7 100644
+--- a/tools/a16_current_state_probe.py
++++ b/tools/a16_current_state_probe.py
+@@ -38,7 +38,7 @@ from annotation.source.usense.current_readonly.decode import (
+ 
+ LIVE_OUT = Path(OUTPUT)
+ ACTIVATION_FILE = Path(ACTIVATION)
+-MANIFEST = ROOT / 'docs/evidence/A17/excluded-static/candidate-manifest.json'
++MANIFEST = ROOT / 'docs/evidence/A17/revisions/first-cause-r1/candidate-manifest.json'
+ TOTAL_SECONDS, WORKER_SECONDS, HARD_SECONDS = 900, 870, 890
+ StopProbe, OwnedJob, load_native = Stop, native.OwnedJob, native.load_native
+ utc, save_new, require_plain_path = native.utc, native.save_new, native.require_plain_path
+@@ -685,20 +685,25 @@ async def observe_live(profile, approval):
+         'scope': SCOPE, 'sample_limit': 0, 'automatic_schema_confirmation': False,
+         'sample': {'status': 'NOT_RUN', 'reason': 'OBSERVATION_ONLY_SCOPE', 'content_acceptable': False},
+         'body_status': 'UNKNOWN', 'schema_status': 'UNKNOWN'}
++    def first_error(fallback):
++        recorded = result['error'] if result['error'] is not None else fallback
++        guard = state.get('guard')
++        if (guard is not None and guard.failure is not None and
++                (recorded is None or recorded == safe_error(Stop('NETWORK_GUARD_STOPPED')))):
++            return guard.failure
++        return recorded
+     try:
+         page, guard = await open_owned(profile, approval, state)
+         await collect(page, guard, result)
+     except BaseException as error:
+-        guard = state.get('guard')
+-        result['outcome'], result['error'] = 'ERROR', (guard.failure if guard and guard.failure else safe_error(error))
++        result['outcome'], result['error'] = 'ERROR', first_error(safe_error(error))
+     finally:
+         guard = state.get('guard')
+         if guard:
+             try:
+                 await drain(guard)
+             except BaseException as error:
+-                if result['error'] is None:
+-                    result['outcome'], result['error'] = 'ERROR', safe_error(error)
++                result['outcome'], result['error'] = 'ERROR', first_error(safe_error(error))
+             result['guard_pre_shutdown'] = native.guard_snapshot(guard)
+             guard.begin_shutdown()
+         await native.close_owned(state)
+@@ -710,7 +715,7 @@ async def observe_live(profile, approval):
+             result['guard_at_serialization'] = native.guard_snapshot(guard)
+             if guard.terminal_stopped or guard.failure:
+                 result['outcome'] = 'ERROR'
+-                result['error'] = result['error'] or guard.failure or safe_error(Stop('NETWORK_GUARD_STOPPED'))
++                result['error'] = first_error(safe_error(Stop('NETWORK_GUARD_STOPPED')))
+         result['release'] = state['release']
+         if state['release']['state'] != 'RELEASED':
+             result['outcome'] = 'ERROR'
