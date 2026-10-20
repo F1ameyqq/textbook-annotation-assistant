@@ -1,3 +1,5 @@
+2026-10-20 A18已冻结交付并完成调度raw核证，产品45174e31/finala1dae2ef，22候选依赖/59交付+self，67去重raw；旧30374证据保全、仅四获准产品路径修改。作者新20/20及raw20/20，首环境失败保持。原独立按docs/tasks/A18-fixed-current-frontend-independent-review.md在D:/1800-worktrees/a18-independent-fixed做有限预检；尚未接受/live0，通过后沿用“一直批准”同类TLS许可直接绑定本阶段唯一轮，不重复询问。确切状态/cursor见JSON。
+
 # A 侧开发调度与验收
 
 2026-10-20 A18新阶段已先落盘去重意图：基线5aec2457，任务docs/tasks/A18-current-frontend-readonly-adaptation.md。依据当前真实脚本准入精确version.json静态GET一次；未准入同源非API GET XHR/Fetch仍拒绝发送，只在限定条件下继续，和CDN共用16排除事件。API/登录/样题/写方法/导航重定向/身份异常等仍停止。先新正式执行与独立准备，确切ID/cursor见JSON；0新live，独立及调度预检后沿用用户“一直批准”的同类TLS许可绑定A18自己的唯一轮，不再逐轮询问。旧A17失败及额度保留。
