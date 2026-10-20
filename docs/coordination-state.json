@@ -2,14 +2,14 @@
   "schema_version": 1,
   "project": "D:\\1800",
   "coordinator_thread_id": "01a15768-1e2d-7781-b29f-1f7376270216",
-  "updated_at": "2026-10-20T10:29:06.143950+00:00",
+  "updated_at": "2026-10-20T10:38:36.915309+00:00",
   "automation": {
     "id": "1800-a",
     "kind": "heartbeat",
     "status": "ACTIVE",
     "interval_minutes": 30,
-    "routing_update": "A16_OBSERVATION_ONLY_ACCEPTED_WAITING_TLS_DECISION",
-    "routing_updated_at": "2026-10-20T10:29:06.143950+00:00",
+    "routing_update": "A16_APPROVED_SINGLE_LIVE_ACTIVE",
+    "routing_updated_at": "2026-10-20T10:38:36.915309+00:00",
     "pause_reason": null,
     "paused_at": "2026-10-20T11:38:10.407716+08:00",
     "target_thread_id": "01a15768-1e2d-7781-b29f-1f7376270216",
@@ -10317,7 +10317,7 @@
     },
     "A16": {
       "at": "2026-10-20T07:34:24.473472+00:00",
-      "status": "OBSERVATION_ONLY_TLS_APPROVED_PREPARING_SINGLE_ACTIVATION",
+      "status": "APPROVED_SINGLE_LIVE_ACTIVE",
       "task": "docs/tasks/A16-current-book-source-target-readonly.md",
       "task_sha256": "d472860d3699acc3f2629abbb104c595c0adbf4a33bd59bc481caf21e34eeda2",
       "review_task": "docs/tasks/A16-independent-current-readonly-review.md",
@@ -10336,7 +10336,7 @@
       "scope_now": "OFFLINE_DEVELOPMENT_AND_REVIEW_ONLY",
       "platform_access_now": false,
       "certificate_exception_authorized": true,
-      "live_activated": false,
+      "live_activated": true,
       "proposed_live_limit": 1,
       "live_used": 0,
       "old_budgets_restored": false,
@@ -10344,7 +10344,7 @@
       "worktree_creation": "No suitable attached worktree; known managed long-path failure preserved; explicit longpaths short directory created from fixed 7432122b without rerunning managed setup.",
       "next_dependency": "Bind one 900-second activation and dispatch the approved fixed A16 live once; no retry.",
       "execution_host_id": "local",
-      "execution_cursor": "9e646293-db4c-4df5-ad60-154ad1ffafe8:21",
+      "execution_cursor": "9e646293-db4c-4df5-ad60-154ad1ffafe8:22",
       "review_host_id": "local",
       "review_cursor": "54109698-8e67-431c-b756-da2abb21b362:29",
       "workflow_commit": "386353f91eb2bf8d9d75d909c3bf5e2c132d1ac5",
@@ -10352,9 +10352,10 @@
       "execution": {
         "thread_id": "01a15840-7766-7533-818d-cc016aa0a60b",
         "host_id": "local",
-        "cursor": "9e646293-db4c-4df5-ad60-154ad1ffafe8:21",
-        "status": "OBSERVATION_ONLY_REVIEW_RELEASED",
-        "acknowledged": true
+        "cursor": "9e646293-db4c-4df5-ad60-154ad1ffafe8:22",
+        "status": "APPROVED_SINGLE_LIVE_ACTIVE",
+        "acknowledged": true,
+        "turn_id": "01a158e1-f635-7a30-a215-0b052479380a"
       },
       "review": {
         "thread_id": "01a15841-0d44-7272-9740-40d013839869",
@@ -10385,7 +10386,8 @@
           "fail": 0,
           "duration_ms": 250,
           "shell_exit": 0
-        }
+        },
+        "next": "Wait fixed live delivery before actual-result review; no new run or browser access."
       },
       "first_save_readiness_aux": {
         "agent": "/root/a14_dispatch_boundary_aux",
@@ -10669,7 +10671,18 @@
         "new_live_limit": 1,
         "old_budgets_restored": false
       },
-      "live_dispatch_task": "docs/tasks/A16-observation-only-single-live-dispatch.md"
+      "live_dispatch_task": "docs/tasks/A16-observation-only-single-live-dispatch.md",
+      "live_reserved": 1,
+      "live_dispatch": "docs/evidence/coordinator/a16-observation-live-dispatch/dispatch-intent.json",
+      "live_activation": {
+        "activation_file": "D:/1800/.local/stages/a16-current-readonly-activation.json",
+        "activation_sha256": "f4893ca664e181118a7a347eadbdbcea724483d3626e9cecf4cde8ba6efe86a7",
+        "not_before": "2026-10-20T10:35:37.215014+00:00",
+        "expires_at": "2026-10-20T10:50:37.215014+00:00",
+        "decision_sha256": "01ee143549fa0c047ba0a939d3b9164ebaef2cb93b5e438c135b5d881093c022",
+        "independent_report_sha256": "d536d9b2552586a0e1838384a1b2775df1b14023d3e7ad901ac1a2b991e06a0c",
+        "workspace": "D:/1800-worktrees/a16-current-state/docs/evidence/A16/current-readonly/revisions/observation-only/raw-checkout"
+      }
     }
   },
   "route": [

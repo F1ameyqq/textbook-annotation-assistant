@@ -1,5 +1,7 @@
 # 模块化开发计划与两人分工
 
+2026-10-20 A16本轮已获用户直接批准“批准，仅此轮有界只读观测”，决定docs/approvals/A16-observation-only-tls-user-decision.json。唯一activation窗口10:35:37.215014—10:50:37.215014 UTC，原执行已按tasks/A16-observation-only-single-live-dispatch.md接单；实际启动和结果待固定报告，勿据预留当成功。只一次固定launcher，无重试/延期/换目录/清标记；0样题、登录提交、业务。原独立等固定结果再核证。下方“等待本轮TLS决定”已关闭，不重复询问。
+
 2026-10-20 A16只读观测版已正式独立及调度有限接受：产品dd22193a/final2453c71c，机器结论ACCEPTED_OFFLINE_ONLY仅限observation-only/sample0。独立新18/18（500ms）及9组控制（250ms）通过；38报告成员+清单、59输入raw核证，见docs/evidence/coordinator/a16-observation-independent-closure/。作者/独立均释放，原R02仍REWORK而能力停用，旧证据保全，真实平台仍NOT_RUN。具体本轮TLS提案tasks/A16-observation-only-tls-decision-proposal.md已固定，待用户直接决定；仅1原专用context/1导航/900秒、六GET/两图/0样题，包含获准OSS同受例外影响，0登录提交/业务。未答前0activation/live，不借用A15批准或重跑旧任务。
 
 2026-10-20 A16只读观测版已固定交原独立验收：产品dd22193a/final2453c71c，候选SHAe66e9f96197871f7123ebe2ed981a587262c50fb3f6e62cdc300f8e96be5a63f。作者新18项及raw18项通过，调度核50交付成员/16依赖，59去重raw导出D:/1800-worktrees/a16-observation-review，31259旧成员及136旧A16证据保全；仅机械通过。正式独立01a15841-0d44-7272-9740-40d013839869按tasks/A16-observation-only-fixed-independent-review.md已接单，原作者释放。sample0、六业务GET/两图范围不扩大，R02未修复而能力停用；旧8ab09441正式REWORK已封存40成员。当前独立尚未接受，A16 TLS未批准/live0；新的observation-only TLS草稿待固定验收后定稿。下方“原独立正封存/作者修订中”为历史。
