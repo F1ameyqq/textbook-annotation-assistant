@@ -1,5 +1,7 @@
 # 模块化开发计划与两人分工
 
+2026-10-20 A15唯一live已耗1/剩0，final49e5ab4e，ORIGIN_BLOCKED后NETWORK_GUARD_STOPPED；认证未证明，阻断域名未记录，74raw已核，正式独立静态收口中。新增A16合并当前书籍/source/target/接口和一道普通单选准备，见docs/tasks/A16-current-book-source-target-readonly.md，分别新建正式执行/验收，ID以JSON为准。当前A16只离线开发/验收，允许必要的新代码修正和相关纯离线验证并保留失败，不重跑旧suite或恢复旧额度。A15证书例外不转移，A16新live未激活；先准备完整可审查方案，再落实本阶段TLS边界。其他三例HOLD、Q22不重放、0B消息。
+
 2026-10-20 A15离线预检已独立及调度有限接受：产品bef02045/final7432122b，作者E1-E4 4/4（16ms）、独立4/4（32ms），双方额度耗尽并释放。47作者raw、27独立清单成员及旧成员保全；报告见docs/evidence/coordinator/a15-independent-closure/。本次唯一live已绑定批准/候选/独立报告/原专用profile指纹，窗口07:16:59至07:31:59 UTC，见docs/evidence/coordinator/a15-live-dispatch/。仅本次专用context证书例外、1context/1导航、0登录/业务，等待实际结果；原失败保留、旧额度不恢复。
 
 2026-10-20 最新调度调整：B PR3/分支新head 6d3d29f1已只读接收22文本raw，42题索引、8份答案证据及18项待核清单可供后续内容准备；ZIP未取得，其他三例HOLD，不改变普通单选首题主线，见docs/tasks/B-update-usefulness-reception-2026-10-20.md。A15产品bef02045/final25f9083b在原始diff空白诊断后停止，E1-E4实际0次；31raw/31212旧成员保全通过。调度已明确有限处置正常diff上下文空行，保留原失败和未知检查退出码，续派同候选原未用的首次E1-E4，独立并行只读固定raw，见docs/tasks/A15-packaging-disposition-first-delta.md。不新增候选/恢复旧额度，live仍未激活。按用户关于过度保守的纠正，减少诊断与元数据串行等待，后续集中核当前源目标及接口并同步准备首题；真实保存UNKNOWN停书及首题读回门槛保持。
