@@ -1,5 +1,7 @@
 # A 侧开发调度与验收
 
+2026-10-20 A15离线预检已独立及调度有限接受：产品bef02045/final7432122b，作者E1-E4 4/4（16ms）、独立4/4（32ms），双方额度耗尽并释放。47作者raw、27独立清单成员及旧成员保全；报告见docs/evidence/coordinator/a15-independent-closure/。本次唯一live已绑定批准/候选/独立报告/原专用profile指纹，窗口07:16:59至07:31:59 UTC，见docs/evidence/coordinator/a15-live-dispatch/。仅本次专用context证书例外、1context/1导航、0登录/业务，等待实际结果；原失败保留、旧额度不恢复。
+
 2026-10-20 最新调度调整：B PR3/分支新head 6d3d29f1已只读接收22文本raw，42题索引、8份答案证据及18项待核清单可供后续内容准备；ZIP未取得，其他三例HOLD，不改变普通单选首题主线，见docs/tasks/B-update-usefulness-reception-2026-10-20.md。A15产品bef02045/final25f9083b在原始diff空白诊断后停止，E1-E4实际0次；31raw/31212旧成员保全通过。调度已明确有限处置正常diff上下文空行，保留原失败和未知检查退出码，续派同候选原未用的首次E1-E4，独立并行只读固定raw，见docs/tasks/A15-packaging-disposition-first-delta.md。不新增候选/恢复旧额度，live仍未激活。按用户关于过度保守的纠正，减少诊断与元数据串行等待，后续集中核当前源目标及接口并同步准备首题；真实保存UNKNOWN停书及首题读回门槛保持。
 
 2026-10-20 A14已独立有限收口：公开证书SAN不覆盖www.usense.com且已过期，根因UNKNOWN；仅接受本次失败/公开字段及两项已证自有释放，A14-TIMING-01通用截止守卫不接受。A13/A14各1次均耗尽。用户现明确批准A15新有界只读阶段：仅本次专用context证书例外，新增1候选、双方各1纯离线门禁差量、通过后另固定至多1新复用观测；0登录提交/业务，旧额度不恢复。先新建正式执行/验收，独立预检及调度激活前0新live，见docs/tasks/A15-certificate-exception-reuse.md和JSON。首题保存读回仍NOT_RUN，其他三例HOLD、Q22不重放、0B消息。

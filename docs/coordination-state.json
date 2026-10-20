@@ -2,7 +2,7 @@
   "schema_version": 1,
   "project": "D:\\1800",
   "coordinator_thread_id": "01a15768-1e2d-7781-b29f-1f7376270216",
-  "updated_at": "2026-10-20T07:01:39.435765+00:00",
+  "updated_at": "2026-10-20T07:16:59.690400+00:00",
   "automation": {
     "id": "1800-a",
     "kind": "heartbeat",
@@ -10230,7 +10230,7 @@
       "committed_raw_files_verified": 27
     },
     "A15": {
-      "status": "AUTHOR_FIRST_UNSPENT_DELTA_AND_INDEPENDENT_STATIC_ACTIVE",
+      "status": "OFFLINE_ACCEPTED_LIVE_ACTIVATED_PENDING_DISPATCH",
       "task": "docs/tasks/A15-certificate-exception-reuse.md",
       "task_sha256": "f7bdf3f43b0fb467dcb43e37ae97dfc77f69894292e54d2f16ab6d252590b4a6",
       "execution_thread_id": "01a157fd-c8e7-71e1-881a-7f766b4af082",
@@ -10242,7 +10242,7 @@
       "basis": "Current certificate exception requires explicit current-run user decision under AGENTS; A13 and A14 exhausted.",
       "user_decision": "docs/approvals/A15-certificate-exception-user-decision.json",
       "user_decision_sha256": "36ffcbb42c030192313773b510c69598651b2c2ffe5fb54162c46b8041e40763",
-      "live_activated": false,
+      "live_activated": true,
       "execution_task": "docs/tasks/A15-certificate-exception-reuse.md",
       "review_task": "docs/tasks/A15-independent-certificate-exception-review.md",
       "at": "2026-10-20T06:24:31.820840+00:00",
@@ -10266,20 +10266,20 @@
       "execution": {
         "thread_id": "01a157fd-c8e7-71e1-881a-7f766b4af082",
         "host_id": "local",
-        "status": "ACTIVE_FIRST_UNSPENT_E1_E4",
-        "cursor": "45f4be41-1f28-464f-bde6-76d5ceb1c355:12",
+        "status": "REVIEW_FIXED_RELEASED",
+        "cursor": "45f4be41-1f28-464f-bde6-76d5ceb1c355:14",
         "acknowledged": true
       },
       "review": {
         "thread_id": "01a157fe-5cc9-7d91-8bbe-73b376cbe2a5",
         "host_id": "local",
-        "status": "ACTIVE_STATIC_PREFLIGHT_ZERO_SUITE",
-        "cursor": "e1ece8f9-4e9e-4f26-9171-b1211de1c05e:7",
+        "status": "REVIEW_FIXED_RELEASED_OFFLINE_ACCEPTED",
+        "cursor": "e1ece8f9-4e9e-4f26-9171-b1211de1c05e:20",
         "preparation_complete": true
       },
       "review_task_sha256": "012c0e4b173216e4585d3fb235f8144d872c0700c59a9da1689344c75a0006b7",
       "proposal_task": "docs/tasks/A15-certificate-exception-observation-proposal.md",
-      "next_dependency": "Same-candidate first unspent author E1-E4, parallel fixed static independent preflight; then independent unique delta and activation decision.",
+      "next_dependency": "Send fixed single live observation to existing execution chat; independent then reads fixed result only.",
       "product_commit": "bef0204541eedd86e1fab849e8002a83f432cd7b",
       "failed_delivery_final": "25f9083b2c8183196a7b2d7671efd40d2ef78713",
       "packaging_disposition": "docs/tasks/A15-packaging-disposition-first-delta.md",
@@ -10287,8 +10287,23 @@
       "raw_preflight": "docs/evidence/coordinator/a15-packaging-disposition/raw-preflight.json",
       "raw_isolation": "D:/1800-worktrees/a15-independent-fixed",
       "candidate_used": 1,
-      "author_delta_executed": 0,
-      "packaging_disposition_workflow": "077e6a6eda23d617d18bac835870d69aa3a75ee4"
+      "author_delta_executed": 1,
+      "packaging_disposition_workflow": "077e6a6eda23d617d18bac835870d69aa3a75ee4",
+      "author_final": "7432122b9fd5602785ebfb2b3f24e407fdf76eda",
+      "author_manifest_sha256": "ef39744d3f0b22a54a24341e70d0e15d445383086000d8253d7454c5d41e7267",
+      "author_delta_remaining": 0,
+      "author_delta_result": "4/4 PASS 16ms",
+      "author_raw_preflight": "docs/evidence/coordinator/a15-offline-author-delivery/raw-preflight.json",
+      "independent_report_sha256": "a26530da782df64e29afce5f0749ec54e62f991926487fed70b28603c8fd94f9",
+      "independent_manifest_sha256": "b5638f3a4287b945276a09c17b0bc9f183266e1616ce546248f806cf8fa8c3cb",
+      "independent_delta_executed": 1,
+      "independent_delta_remaining": 0,
+      "independent_result": "ACCEPTED_OFFLINE_ONLY; E1-E4 4/4 32ms",
+      "coordinator_acceptance": "docs/evidence/coordinator/a15-independent-closure/coordinator-acceptance.json",
+      "live_activation_file": "D:/1800/.local/stages/a15-cert-reuse-activation.json",
+      "live_activation_sha256": "45d418b27b55f5b3230ec431fbbe74d5ce99064440f6d35005cd72876135d3b2",
+      "live_activation_expires_at": "2026-10-20T07:31:59.690400+00:00",
+      "live_dispatch": "docs/evidence/coordinator/a15-live-dispatch/dispatch-intent.json"
     }
   },
   "route": [
@@ -12875,7 +12890,14 @@
       "remote_push": false
     },
     "execution_thread_id": "01a145aa-2fea-7942-97f9-ad260acf4e30",
-    "review_thread_id": "01a145aa-8d59-7c70-8d81-731712103a9a"
+    "review_thread_id": "01a145aa-8d59-7c70-8d81-731712103a9a",
+    "A16_grouped_readonly_scope_draft": {
+      "path": "D:/1800/.local/stages/coordinator/a16-current-state-first-question-scope/draft.md",
+      "sha256": "0c91183e44315fc4654dab8c37a9ed86f87ddf69f11d5e8d3f32d7e0c02eccb5",
+      "status": "DRAFT_ONLY_NO_DISPATCH_NO_PLATFORM",
+      "candidate": "section2 printed1, answer C, pending current source/target and approval",
+      "scope": "One combined current book/source/target/wire observation and first-question preparation; no complex cases; A15 TLS authority not transferred"
+    }
   },
   "offline_preparation": {
     "task": "D01",
@@ -13949,7 +13971,7 @@
     "user_deadline_days": 3,
     "deadline_basis": "72 hours from this decision; target 2026-10-22 same local time; exact handover clock not specified",
     "user_selected_delivery": "必须包含：优先争取限定题型、小批量的平台试用版",
-    "status": "A15_FIRST_UNSPENT_DELTA_AND_PARALLEL_STATIC_PREFLIGHT",
+    "status": "A15_SINGLE_APPROVED_OBSERVATION_ACTIVATED",
     "plan": "docs/delivery-72h-plan-2026-10-19.md",
     "plan_sha256": "6bfc3d379ec700556b6fec7438b85126c428c7ce4ae58ba9c727982b00ab94f7",
     "proposed_book_id": "46007447",
@@ -13967,7 +13989,7 @@
     "new_product_dispatches": 0,
     "B_messages": 0,
     "planning_agent": "/root/three_day_scope_check",
-    "next_dependency": "Same-candidate first unspent author E1-E4, parallel fixed static independent preflight; then independent unique delta and activation decision.",
+    "next_dependency": "Send fixed single live observation to existing execution chat; independent then reads fixed result only.",
     "full_original_scope_completed_or_cancelled": false,
     "committed_success_guarantee": false,
     "authorization_clarification": "User clarified 一直允许连接平台; do not ask platform-connection/book permission again.",
