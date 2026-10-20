@@ -2,7 +2,7 @@
   "schema_version": 1,
   "project": "D:\\1800",
   "coordinator_thread_id": "01a15768-1e2d-7781-b29f-1f7376270216",
-  "updated_at": "2026-10-20T13:49:27.656312+00:00",
+  "updated_at": "2026-10-20T13:49:46.731156+00:00",
   "automation": {
     "id": "1800-a",
     "kind": "heartbeat",
@@ -11758,7 +11758,7 @@
     "A19": {
       "at": "2026-10-20T13:24:25.249907+00:00",
       "task": "A19",
-      "status": "ACCEPTED_OFFLINE_ONLY_READY_TO_BIND_UNIQUE_LIVE",
+      "status": "APPROVED_SINGLE_LIVE_DISPATCH_READY",
       "dispatch_key": "A19:navigation-evidence-current-state:new-formal-execution-review",
       "project_id": "4488a042-3ec7-4f9e-8880-cbc8f4e02a51",
       "host_id": "local",
@@ -11803,14 +11803,14 @@
       "review_task_document": "docs/tasks/A19-independent-navigation-evidence-review.md",
       "review_task_sha256": "5e63b94eec6fe84dab61cc105742ce9e6e19856dfa1f90055a796f75cd3430c9",
       "dedup_checked_no_A19": true,
-      "live_activated": false,
+      "live_activated": true,
       "live_used": 0,
       "scope": "CURRENT_BOOK_SOURCE_INVENTORY_NAVIGATION_EVIDENCE_READONLY",
-      "offline_only": true,
+      "offline_only": false,
       "new_live_reserved_limit": 1,
-      "new_live_authorized": false,
+      "new_live_authorized": true,
       "standing_tls_permission_reference": "docs/approvals/A17-excluded-static-user-decision.json",
-      "next_dependency": "Bind own A19 window under standing same-kind TLS permission and dispatch original execution",
+      "next_dependency": "One actual A19 fixed delivery/release; same independent actual-result review",
       "workflow_commit": "c4cfdb2012b36f47f13e633a24dafad6c3daa8ab",
       "heartbeat_prompt_sha256": "d7e205f95e11296f6f646f24ae04446512279dec777dfebc6a52952d1637dd0c",
       "delivery": {
@@ -11872,6 +11872,64 @@
           "Full baseline tree preservation is coordinator evidence, not rerun by reviewer",
           "Historical A18 failure/UNKNOWN/spent budget and launcher own OS identity remain unchanged"
         ]
+      },
+      "tls_exception_authorized": true,
+      "live_dispatch": {
+        "task": "A19",
+        "status": "READY_TO_SEND",
+        "at": "2026-10-20T13:49:46.731156+00:00",
+        "dispatch_key": "A19:navigation-evidence:approved-single-live",
+        "thread_id": "01a1597c-8eb9-7692-8279-685c4d9d105d",
+        "host_id": "local",
+        "task_document": "docs/tasks/A19-approved-single-live-dispatch.md",
+        "task_sha256": "025effc24443c726aca98429a5262fb53653b01e92b397a1565c4778adad12ab",
+        "product_commit": "13067ff38ea8c0fbeae1c896d415c79238443b0e",
+        "final_commit": "e999f4e753cd5f1e44a19ab55dd776d2fa589389",
+        "candidate_sha256": "2e94be09ff3d733bcf65b7fa556187280deb09574134866b110e3575dd233f7f",
+        "product_workflow": "c4cfdb2012b36f47f13e633a24dafad6c3daa8ab",
+        "standing_permission_sha256": "f5ceacf9028f773ead882f3e6601004c2c3e28171be31abb85c5be99a1d67b46",
+        "decision_sha256": "aa36c2596d4876163d4f8f49fb6ba9960efb565426b09226ce02f16c070d4ab9",
+        "independent_report_sha256": "958e0722c04ff86a5f9b3aff94472fce96eff9e82dee3129626bf15a81096b8b",
+        "coordinator_verification_sha256": "41cbb335b99b4844ba326b52db66d012493b14bcd103088bea31570d534317aa",
+        "author_release_sha256": "a33b79ab2a660de5e1c71dc50eea50a5ba39b2b3451b9db71c9ce3015f452d9d",
+        "activation_sha256": "590f6a5cd0af8199db1e68b5493ccb465568821172392586afa0290ab9a12987",
+        "not_before": "2026-10-20T13:49:46.731156+00:00",
+        "expires_at": "2026-10-20T14:04:46.731156+00:00",
+        "cwd": "D:/1800-worktrees/a19-navigation-evidence/docs/evidence/A19/navigation-evidence/raw-checkout",
+        "argv": [
+          "python",
+          "-B",
+          "tools/a16_current_state_launcher.py",
+          "--live",
+          "--certificate-exception",
+          "--activation-file",
+          "D:/1800/.local/stages/a19-navigation-evidence-activation.json",
+          "--activation-sha256",
+          "590f6a5cd0af8199db1e68b5493ccb465568821172392586afa0290ab9a12987",
+          "--candidate-sha256",
+          "2e94be09ff3d733bcf65b7fa556187280deb09574134866b110e3575dd233f7f",
+          "--profile-fingerprint",
+          "b4620cd9fe064121a916062126321b7bba3862185d8919bf228f1399097a0d00",
+          "--decision-file",
+          "D:/1800/docs/approvals/A19-navigation-evidence-user-decision.json",
+          "--report-file",
+          "D:/1800/docs/evidence/coordinator/a19-independent-closure/independent-result.json"
+        ],
+        "environment": {
+          "PYTHONIOENCODING": "utf-8"
+        },
+        "raw_dependencies_verified": 20,
+        "profile_fingerprint": "b4620cd9fe064121a916062126321b7bba3862185d8919bf228f1399097a0d00",
+        "launch_limit": 1,
+        "retry_limit": 0,
+        "navigation_evidence": "PASSIVE_ORIGINAL_NAVIGATION_ONLY",
+        "success_continuation": "SAME_CONTEXT_ALL_APPROVED_BOOK_SOURCE_READS",
+        "failure_continuation": "STOP_NO_RETRY_SUCCESSORS_NOT_RUN"
+      },
+      "user_decision": {
+        "path": "D:/1800/docs/approvals/A19-navigation-evidence-user-decision.json",
+        "sha256": "aa36c2596d4876163d4f8f49fb6ba9960efb565426b09226ce02f16c070d4ab9",
+        "basis": "Standing direct user permission; no repeated question"
       }
     }
   },
@@ -14285,8 +14343,8 @@
     }
   ],
   "last_action": {
-    "at": "2026-10-20T13:49:27.656312+00:00",
-    "action": "Accepted finite A19 independent navigation preflight"
+    "at": "2026-10-20T13:49:46.731156+00:00",
+    "action": "Bound standing permission and unique A19 navigation-evidence live window after formal acceptance"
   },
   "limitations": [
     "Current route uses mock B artifacts until independently agreed interface/artifact versions exist.",
