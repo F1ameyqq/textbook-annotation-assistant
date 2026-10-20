@@ -1,5 +1,7 @@
 # A 侧开发调度与验收
 
+2026-10-20 用户对固定A17提案直接回复“一直批准”。本轮及后续同类专用context临时TLS例外持续获准，不再逐轮询问；不扩展登录/写入/新来源或恢复旧额度。A17唯一activation及派发意图已固定，见docs/tasks/A17-approved-single-live-dispatch.md、docs/evidence/coordinator/a17-live-dispatch/dispatch-intent.json；原执行承接一次真实只读，原独立等待固定结果。18候选依赖与候选raw一致，范围1context/1导航/900秒、六GET+两原图、sample0/0登录写入不变；下方等待TLS决定为历史。实际启动与结果以JSON及固定交付为准。
+
 2026-10-20 A17修订版已正式独立及调度有限接受，产品1168a75e/final8bffd88d，候选4ed38cb1…；结论ACCEPTED_OFFLINE_ONLY/BOUNDED_READONLY_PREFLIGHT。新11/11、两个小控制无阻断失败，19报告成员+清单及56输入核证，见evidence/coordinator/a17-independent-closure/。R01保留顶层fallback归因残留，不全关闭；原21组NOT_RUN和旧REWORK保持。依用户“不要太保守”不为此再开修订。具体本轮提案tasks/A17-bounded-readonly-tls-decision-proposal.md已固定：1原专用context/1导航/900秒、六GET+两原图各一次、排除CDN事件16、0样题登录写入。仅待本轮适用TLS直接决定；原A16“仅此轮”已用，不能借用。当前无decision/activation/live；作者和独立均释放，原scope/记录/Edge与profile保持。
 
 2026-10-20 用户最新要求“不要太保守”，按tasks/A17-practical-readonly-preflight-disposition.md缩减本次独立预检：重点核不误写/不越界/有界停止及绑定；具体首因原件仍在且正确拒绝/ERROR的顶层报告差异可保留限制，不再单独阻断真实只读。A17-R01已冻结产品1168a75e/final8bffd88d，作者新11/11、1328ms；18依赖/42交付+self去重56raw至D:/1800-worktrees/a17-first-cause-r1-review，31529旧成员和30306旧evidence核证，仅probe/gate变化。原独立复核新差量及必要安全事实，可明确引用未改源码的原有限证据，不为把历史21个NOT_RUN刷成PASS重造全套测试。原报告/失败保留，0TLS决定/activation/live；派发状态和cursor见JSON。

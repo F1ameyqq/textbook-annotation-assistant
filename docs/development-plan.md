@@ -1,5 +1,7 @@
 # 模块化开发计划与两人分工
 
+2026-10-20 用户对固定A17提案直接回复“一直批准”。本轮及后续同类专用context临时TLS例外持续获准，不再逐轮询问；不扩展登录/写入/新来源或恢复旧额度。A17唯一activation及派发意图已固定，见docs/tasks/A17-approved-single-live-dispatch.md、docs/evidence/coordinator/a17-live-dispatch/dispatch-intent.json；原执行承接一次真实只读，原独立等待固定结果。18候选依赖与候选raw一致，范围1context/1导航/900秒、六GET+两原图、sample0/0登录写入不变；下方等待TLS决定为历史。实际启动与结果以JSON及固定交付为准。
+
 2026-10-20 A17有限只读预检已通过，不再因R01非阻断报告残留或历史21组NOT_RUN追加离线修订。固定版本1168a75e/8bffd88d，新11项及两个小控制完成，正式材料见evidence/coordinator/a17-independent-closure/。本轮具体context证书例外方案已就绪，见tasks/A17-bounded-readonly-tls-decision-proposal.md；收到适用直接决定即固定15分钟窗口并派原执行做唯一真实只读轮，原独立核固定结果。接着用实际书源库存集中首题接线/内容政策次数、保存及刷新重开独立读回，最多5题、2026-10-22日晚目标保持。当前0新live。
 
 2026-10-20 依用户“不要太保守”调整：A17固定修订1168a75e/8bffd88d只做实际只读所需的有限独立预检，见tasks/A17-practical-readonly-preflight-disposition.md。不误写、不越界、正确停止、有界释放和实际绑定仍须核实；错误名称不够细但原始原因完整的报告缺口作为已知限制，不再另开修订轮。原11项新差量及必要小控制结合未改代码的历史有限证据；原21组NOT_RUN保持历史，不要求重复完整测试。通过后立即落实本轮具体TLS决定并取真实当前事实，再推进首题保存/刷新重开读回，截止和最多5题目标不变。

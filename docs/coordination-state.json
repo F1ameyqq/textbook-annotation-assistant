@@ -2,7 +2,7 @@
   "schema_version": 1,
   "project": "D:\\1800",
   "coordinator_thread_id": "01a15768-1e2d-7781-b29f-1f7376270216",
-  "updated_at": "2026-10-20T12:09:49.396Z",
+  "updated_at": "2026-10-20T12:19:01.709237+00:00",
   "automation": {
     "id": "1800-a",
     "kind": "heartbeat",
@@ -10788,7 +10788,7 @@
       "at": "2026-10-20T11:04:16.687655+00:00",
       "task": "A17",
       "dispatch_key": "A17:excluded-static:003f8620:new-formal-pair",
-      "status": "BOUNDED_PREFLIGHT_ACCEPTED_AWAITING_TLS_DECISION",
+      "status": "APPROVED_SINGLE_LIVE_DISPATCH_READY",
       "base_commit": "003f862065a2d630e666323c0d158e33bcee91e9",
       "execution": {
         "thread_id": "01a158fd-281c-7282-a3b4-db876697686c",
@@ -10844,17 +10844,17 @@
       "review_task_document": "docs/tasks/A17-independent-excluded-static-review.md",
       "review_task_sha256": "7cfe7f469d9f9d4bf6e9d6c3c49062ffb308e4238e29eb9309b03931c160106d",
       "scope": "CURRENT_BOOK_SOURCE_INVENTORY_EXCLUDED_STATIC_OBSERVATION_ONLY",
-      "offline_only": true,
-      "new_live_authorized": false,
-      "tls_exception_authorized": false,
+      "offline_only": false,
+      "new_live_authorized": true,
+      "tls_exception_authorized": true,
       "A16_used": 1,
       "A16_remaining": 0,
       "dedup_checked_no_prior_A17": true,
       "worktree_method": "Explicit short path with core.longpaths after previously preserved managed long-path creation failure; no retry of that failed managed path",
       "live_used": 0,
-      "live_activated": false,
+      "live_activated": true,
       "scope_notes": "Observed CDN Script is denied before send, not allowed. At most 16 combined guard exclusion events; all required navigation/auth/book/data gates remain.",
-      "next_dependency": "Direct decision on fixed A17 one-context TLS proposal; no further report-only correction or old-suite rerun",
+      "next_dependency": "Fixed actual live delivery and release, then same formal independent review",
       "workflow_commit": "811c3ac9e5913812bc71d74bc665eded96e23aa3",
       "auxiliary_boundary_preparation": {
         "path": ".local/stages/coordinator/a17-excluded-static-preparation/notes.md",
@@ -11321,9 +11321,80 @@
       "tls_proposal": {
         "path": "docs/tasks/A17-bounded-readonly-tls-decision-proposal.md",
         "sha256": "1a5cec9f697bb6add5347e4b2f8e2386fa65c5c4d8f370a87001b8be2a6b3698",
-        "status": "READY_FOR_EXPLICIT_THIS_ROUND_USER_DECISION",
+        "status": "USER_APPROVED",
         "previous_A16_decision_transferable": false,
-        "activation_created": false
+        "activation_created": true
+      },
+      "live_dispatch": {
+        "task": "A17",
+        "role": "execution",
+        "action": "send_message_to_thread",
+        "dispatch_key": "A17:first-cause-r1:approved-single-live",
+        "status": "READY_TO_SEND",
+        "created_at": "2026-10-20T12:19:01.709237+00:00",
+        "coordinator_head_before": "14c61f2d703a005b542795555eaba1118117b794",
+        "thread_id": "01a158fd-281c-7282-a3b4-db876697686c",
+        "host_id": "local",
+        "task_document": "docs/tasks/A17-approved-single-live-dispatch.md",
+        "task_sha256": "eaa3742fecd1c7b4717f440fd792c2ae4c2dd91dd589bb3433b2e87e112ba12f",
+        "product_commit": "1168a75eb35f319c3ced270b6c515adbdb38603f",
+        "final_commit": "8bffd88dacc146fc3f061ed0863b299fa5dabd30",
+        "candidate_sha256": "4ed38cb1f703c3d0b5e94d601f2f267c05ead871b9a26004e2e44e5d6eeb31dd",
+        "product_workflow": "d137a1bba49550f661b110ee14c9541a1dc4fb19",
+        "proposal_sha256": "1a5cec9f697bb6add5347e4b2f8e2386fa65c5c4d8f370a87001b8be2a6b3698",
+        "decision_sha256": "f5ceacf9028f773ead882f3e6601004c2c3e28171be31abb85c5be99a1d67b46",
+        "activation_sha256": "20fd7317bedd70b6e9685a0de44d930f5da85cd45fdffeea386f26fa440c63be",
+        "report_sha256": "8973892de754b4a28f506ab76b53a0eb3df1494e9b95f42f9e4bd8347f474b51",
+        "not_before": "2026-10-20T12:19:01.709237+00:00",
+        "expires_at": "2026-10-20T12:34:01.709237+00:00",
+        "cwd": "D:/1800-worktrees/a17-static-exclusion/docs/evidence/A17/revisions/first-cause-r1/raw-checkout",
+        "argv": [
+          "python",
+          "-B",
+          "tools/a16_current_state_launcher.py",
+          "--live",
+          "--certificate-exception",
+          "--activation-file",
+          "D:/1800/.local/stages/a17-excluded-static-activation.json",
+          "--activation-sha256",
+          "20fd7317bedd70b6e9685a0de44d930f5da85cd45fdffeea386f26fa440c63be",
+          "--candidate-sha256",
+          "4ed38cb1f703c3d0b5e94d601f2f267c05ead871b9a26004e2e44e5d6eeb31dd",
+          "--profile-fingerprint",
+          "b4620cd9fe064121a916062126321b7bba3862185d8919bf228f1399097a0d00",
+          "--decision-file",
+          "D:/1800/docs/approvals/A17-excluded-static-user-decision.json",
+          "--report-file",
+          "D:/1800/docs/evidence/coordinator/a17-independent-closure/independent-result.json"
+        ],
+        "environment": {
+          "PYTHONIOENCODING": "utf-8"
+        },
+        "raw_dependencies_verified": 18,
+        "candidate_raw_verified": true,
+        "profile_fingerprint": "b4620cd9fe064121a916062126321b7bba3862185d8919bf228f1399097a0d00",
+        "dispatch_limit": 1,
+        "launch_limit": 1,
+        "retry_limit": 0,
+        "next_dependency": "Fixed actual live delivery and release, then same formal independent review"
+      },
+      "user_decision": {
+        "path": "D:/1800/docs/approvals/A17-excluded-static-user-decision.json",
+        "sha256": "f5ceacf9028f773ead882f3e6601004c2c3e28171be31abb85c5be99a1d67b46",
+        "reply": "一直批准",
+        "standing_tls_permission": {
+          "source": "Direct human answer to the fixed A17 certificate-exception question",
+          "interpretation": "Approve this A17 round and continuing same-kind bounded dedicated-context TLS exceptions without repeated questions",
+          "covers": "Dedicated original headless profile, approved platform and approved original-image origins, explicitly scoped bounded readonly observation",
+          "does_not_expand": [
+            "login submission",
+            "business writes",
+            "new origins",
+            "old spent rounds",
+            "global or default TLS settings"
+          ],
+          "future_binding": "Bind each concrete authorized stage to this standing permission and its own scope/version/budget; no per-round TLS question"
+        }
       }
     }
   },
@@ -13737,8 +13808,8 @@
     }
   ],
   "last_action": {
-    "at": "2026-10-20T12:09:49.396Z",
-    "action": "Accepted A17 bounded preflight and fixed one-round TLS proposal; no new live or decision object"
+    "at": "2026-10-20T12:19:01.709237+00:00",
+    "action": "Recorded direct and continuing TLS permission; fixed unique A17 live activation and dispatch"
   },
   "limitations": [
     "Current route uses mock B artifacts until independently agreed interface/artifact versions exist.",
@@ -15221,5 +15292,23 @@
       "pushes": 0,
       "message_sent_to_B": false
     }
-  ]
+  ],
+  "standing_readonly_tls_permission": {
+    "path": "D:/1800/docs/approvals/A17-excluded-static-user-decision.json",
+    "sha256": "f5ceacf9028f773ead882f3e6601004c2c3e28171be31abb85c5be99a1d67b46",
+    "reply": "一直批准",
+    "standing_tls_permission": {
+      "source": "Direct human answer to the fixed A17 certificate-exception question",
+      "interpretation": "Approve this A17 round and continuing same-kind bounded dedicated-context TLS exceptions without repeated questions",
+      "covers": "Dedicated original headless profile, approved platform and approved original-image origins, explicitly scoped bounded readonly observation",
+      "does_not_expand": [
+        "login submission",
+        "business writes",
+        "new origins",
+        "old spent rounds",
+        "global or default TLS settings"
+      ],
+      "future_binding": "Bind each concrete authorized stage to this standing permission and its own scope/version/budget; no per-round TLS question"
+    }
+  }
 }
