@@ -2,7 +2,7 @@
   "schema_version": 1,
   "project": "D:\\1800",
   "coordinator_thread_id": "01a15768-1e2d-7781-b29f-1f7376270216",
-  "updated_at": "2026-10-20T13:13:41.726871+08:00",
+  "updated_at": "2026-10-20T13:39:03.766880+08:00",
   "automation": {
     "id": "1800-a",
     "kind": "heartbeat",
@@ -10037,7 +10037,7 @@
     },
     "A12-R1": {
       "at": "2026-10-20T12:48:41.995817+08:00",
-      "status": "FORMAL_INDEPENDENT_DELTA_RUNNING",
+      "status": "ACCEPTED_FINITE_PREPARATION_RELEASED",
       "coordinator_thread_id": "01a15768-1e2d-7781-b29f-1f7376270216",
       "task": "docs/tasks/A12-R1-review-findings-correction.md",
       "review_task": "docs/tasks/A12-R1-independent-review.md",
@@ -10072,21 +10072,23 @@
       "review": {
         "thread_id": "01a157a5-495a-7bf3-bc17-299ad85c48a7",
         "host_id": "local",
-        "status": "FORMAL_INDEPENDENT_DELTA_RUNNING",
-        "cursor": "ea809424-eea7-4a73-8d4b-3b8e2cb5f402:2",
+        "status": "ACCEPTED_FINITE_PREPARATION_RELEASED",
+        "cursor": "ea809424-eea7-4a73-8d4b-3b8e2cb5f402:3",
         "preparation_complete": true,
-        "released": false,
-        "product_reads_or_runs": 0,
-        "delta_runs": 0,
+        "released": true,
+        "product_reads_or_runs": "ONE_BOUNDED_D1_D8",
+        "delta_runs": 1,
         "workspace": "D:/1800-worktrees/a12-r1-independent",
         "output_allowlist": [
           "D:/1800-worktrees/a12-r1-independent/review-output/"
         ],
         "dispatch_intent": "docs/evidence/coordinator/a12-review-delta-dispatch/independent-run-intent.json",
         "dispatched_at": "2026-10-20T13:11:53.189637+08:00",
-        "acknowledged": true
+        "acknowledged": true,
+        "report": "docs/evidence/coordinator/a12-r1-independent-accepted/report.json",
+        "manifest_sha256": "59d23a1dbe6e20abe92e7abf0ac89ba13834d6c6d90a01bcfae073e6072b72e7"
       },
-      "next_dependency": "Formal independent frozen raw and its single D1-D8 delta; no live before coordinator disposition.",
+      "next_dependency": "A13 new formal execution/review for the previously unused single reuse-only observation.",
       "product_commit": "d45ed25a98361002ddb28985c1d27687c4421a17",
       "final_commit": "81fab23e3e7e9e32a36d3857a253afc69b5bd3e1",
       "candidate_manifest_sha256": "38eb3f836f14b44db77ce516f461bd4f3934df71807c1fac962560603a210920",
@@ -10107,7 +10109,40 @@
         "release_pid": 57848,
         "released": true,
         "product_or_suite_runs": 0
-      }
+      },
+      "semantic_preparation_accepted": true,
+      "independent_result": "D1-D8 8/8 PASS,562ms",
+      "independent_delta_runs_used": 1,
+      "independent_delta_remaining": 0,
+      "coordinator_acceptance": "docs/evidence/coordinator/a12-r1-independent-accepted/coordinator-receipt.json"
+    },
+    "A13": {
+      "at": "2026-10-20T13:39:03.766880+08:00",
+      "status": "PREPARED_BEFORE_CHAT_CREATION",
+      "coordinator_thread_id": "01a15768-1e2d-7781-b29f-1f7376270216",
+      "execution_thread_id": null,
+      "review_thread_id": null,
+      "host_id": "local",
+      "dedup_execution": "A13+single-reuse-observation+81fab23e",
+      "dedup_review": "A13+single-observation-static-review+81fab23e",
+      "task": "docs/tasks/A13-single-reuse-observation.md",
+      "review_task": "docs/tasks/A13-independent-observation-review.md",
+      "workspace": "D:\\1800-worktrees\\a13-reuse-observation",
+      "product_commit": "d45ed25a98361002ddb28985c1d27687c4421a17",
+      "final_commit": "81fab23e3e7e9e32a36d3857a253afc69b5bd3e1",
+      "candidate_manifest_sha256": "38eb3f836f14b44db77ce516f461bd4f3934df71807c1fac962560603a210920",
+      "raw_input_manifest": "docs/evidence/coordinator/a12-r1-independent-accepted/coordinator-receipt.json",
+      "live_starts_limit": 1,
+      "live_starts_used": 0,
+      "navigation_limit": 1,
+      "login_limit": 0,
+      "business_write_limit": 0,
+      "old_budgets_restored": false,
+      "live_output": "D:/1800/.local/stages/a12-native-reuse-live",
+      "thinking": "xhigh",
+      "model": "inherit",
+      "authority": "User explicitly asked to proceed with the previously unused one observation after independent pass.",
+      "profile_binding": "Execution must bind metadata fingerprint before sole launch; actual occupancy only inside frozen product."
     }
   },
   "route": [
@@ -12520,9 +12555,8 @@
     }
   ],
   "last_action": {
-    "at": "2026-10-20T13:11:53.189637+08:00",
-    "action": "Verified fixed A12-R1 author raw/preservation/release; dispatched unique formal independent delta.",
-    "evidence": "docs/evidence/coordinator/a12-review-delta-dispatch/independent-run-intent.json"
+    "at": "2026-10-20T13:39:03.766880+08:00",
+    "action": "Accepted fixed R1 finite preparation and prepared A13 sole observation; no live launched."
   },
   "limitations": [
     "Current route uses mock B artifacts until independently agreed interface/artifact versions exist.",
@@ -13769,7 +13803,7 @@
     "user_deadline_days": 3,
     "deadline_basis": "72 hours from this decision; target 2026-10-22 same local time; exact handover clock not specified",
     "user_selected_delivery": "必须包含：优先争取限定题型、小批量的平台试用版",
-    "status": "A12_R1_FORMAL_INDEPENDENT_DELTA_RUNNING",
+    "status": "A12_R1_PREPARATION_ACCEPTED_A13_LIVE_PREPARED",
     "plan": "docs/delivery-72h-plan-2026-10-19.md",
     "plan_sha256": "6bfc3d379ec700556b6fec7438b85126c428c7ce4ae58ba9c727982b00ab94f7",
     "proposed_book_id": "46007447",
@@ -13787,7 +13821,7 @@
     "new_product_dispatches": 0,
     "B_messages": 0,
     "planning_agent": "/root/three_day_scope_check",
-    "next_dependency": "Formal independent frozen raw and its single D1-D8 delta; no live before coordinator disposition.",
+    "next_dependency": "A13 sole reuse-only observation and static independent evidence check.",
     "full_original_scope_completed_or_cancelled": false,
     "committed_success_guarantee": false,
     "authorization_clarification": "User clarified 一直允许连接平台; do not ask platform-connection/book permission again.",

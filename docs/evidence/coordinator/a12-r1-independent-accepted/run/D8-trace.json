@@ -1,0 +1,58 @@
+[
+  {
+    "event": "goto.await"
+  },
+  {
+    "event": "password.await.begin"
+  },
+  {
+    "event": "password.await.end"
+  },
+  {
+    "event": "viewer.await.begin"
+  },
+  {
+    "event": "viewer.await.end"
+  },
+  {
+    "event": "observe.complete",
+    "outcome": "AUTHENTICATED_VIEWER_OBSERVED"
+  },
+  {
+    "event": "context.close.await.begin",
+    "shutdown_started": true
+  },
+  {
+    "event": "context.close.first_guard_error",
+    "failure": {
+      "codes": [
+        "REVIEW_SHUTDOWN_FIRST_FAILURE"
+      ],
+      "exception_type": "StopProbe"
+    }
+  },
+  {
+    "event": "context.close.await.end"
+  },
+  {
+    "event": "runtime.stop.await.begin"
+  },
+  {
+    "event": "runtime.stop.second_guard_error",
+    "failure": {
+      "codes": [
+        "REVIEW_SHUTDOWN_FIRST_FAILURE"
+      ],
+      "exception_type": "StopProbe"
+    }
+  },
+  {
+    "event": "runtime.stop.await.end"
+  },
+  {
+    "event": "serialized",
+    "exit_code": 2,
+    "observation_sha256": "7278d69c952be410a0a0fb5e41c219577b48f876f0bd2b471237622125e657a0",
+    "outcome": "ERROR"
+  }
+]

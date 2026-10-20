@@ -1,0 +1,67 @@
+[
+  {
+    "event": "goto.await"
+  },
+  {
+    "event": "password.await.begin"
+  },
+  {
+    "event": "password.await.end"
+  },
+  {
+    "event": "viewer.await.begin"
+  },
+  {
+    "event": "viewer.await.guard.record_failure",
+    "failure": {
+      "codes": [
+        "REVIEW_VIEWER_FIRST_FAILURE"
+      ],
+      "exception_type": "StopProbe"
+    }
+  },
+  {
+    "event": "viewer.await.end"
+  },
+  {
+    "event": "observe.exception",
+    "sanitized": {
+      "codes": [
+        "NETWORK_GUARD_STOPPED"
+      ],
+      "exception_type": "StopProbe"
+    }
+  },
+  {
+    "event": "observe.complete",
+    "outcome": "ERROR"
+  },
+  {
+    "event": "context.close.await.begin",
+    "shutdown_started": true
+  },
+  {
+    "event": "context.close.later_guard_error",
+    "failure": {
+      "codes": [
+        "REVIEW_VIEWER_FIRST_FAILURE"
+      ],
+      "exception_type": "StopProbe"
+    }
+  },
+  {
+    "event": "context.close.await.end"
+  },
+  {
+    "event": "runtime.stop.await.begin"
+  },
+  {
+    "event": "runtime.stop.await.end"
+  },
+  {
+    "event": "serialized",
+    "exit_code": 2,
+    "observation_sha256": "1f6e7f4bd00fb989b3bca04a38c925d9795c709012315dfe3f2750b1b53ce7ef",
+    "outcome": "ERROR"
+  }
+]
