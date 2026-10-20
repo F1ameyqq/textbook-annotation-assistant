@@ -2,14 +2,14 @@
   "schema_version": 1,
   "project": "D:\\1800",
   "coordinator_thread_id": "01a15768-1e2d-7781-b29f-1f7376270216",
-  "updated_at": "2026-10-20T11:04:16.687655+00:00",
+  "updated_at": "2026-10-20T11:10:20.957363+00:00",
   "automation": {
     "id": "1800-a",
     "kind": "heartbeat",
     "status": "ACTIVE",
     "interval_minutes": 30,
-    "routing_update": "A16_SINGLE_LIVE_SPENT_FIXED_FAILURE_REVIEW_ACTIVE",
-    "routing_updated_at": "2026-10-20T10:48:36.029550+00:00",
+    "routing_update": "A16_CLOSED_A17_OFFLINE_ACTIVE",
+    "routing_updated_at": "2026-10-20T11:10:20.957363+00:00",
     "pause_reason": null,
     "paused_at": "2026-10-20T11:38:10.407716+08:00",
     "target_thread_id": "01a15768-1e2d-7781-b29f-1f7376270216",
@@ -10748,11 +10748,11 @@
         "released": true
       },
       "next_adaptation_preparation": {
-        "status": "FORMAL_A17_TASKS_FIXED_PENDING_CREATION",
+        "status": "FORMAL_A17_DISPATCHED_OFFLINE_ONLY",
         "path": ".local/stages/coordinator/a17-excluded-static-preparation/dispatch-draft.md",
-        "sha256": "e0f28492fb6412c8e836b588737f8165be913ff19639751164789c736ad39b8e",
+        "sha256": "9d56a292474e8f1b974994eb5e89d46feda606fc3f2c33dce9da9669873600e1",
         "approach": "Keep observed CDN Script blocked before send; consider explicit bounded exclusion without classifying it as passive or proven unnecessary. All downstream identity/data/failure gates remain.",
-        "formal_stage_dispatched": false,
+        "formal_stage_dispatched": true,
         "new_live_authorized": false,
         "tls_exception_authorized": false
       },
@@ -10788,22 +10788,28 @@
       "at": "2026-10-20T11:04:16.687655+00:00",
       "task": "A17",
       "dispatch_key": "A17:excluded-static:003f8620:new-formal-pair",
-      "status": "PREPARED_NEW_FORMAL_CHATS",
+      "status": "FORMAL_OFFLINE_EXECUTION_AND_REVIEW_PREPARATION_ACTIVE",
       "base_commit": "003f862065a2d630e666323c0d158e33bcee91e9",
       "execution": {
-        "thread_id": null,
+        "thread_id": "01a158fd-281c-7282-a3b4-db876697686c",
         "host_id": "local",
-        "cursor": null,
+        "cursor": "b92e1f43-e01a-4b82-86b0-c466dba3623e:2",
         "workspace": "D:/1800-worktrees/a17-static-exclusion",
         "branch": "codex/a17-static-exclusion",
-        "status": "NOT_CREATED"
+        "status": "ACTIVE_OFFLINE",
+        "created_at": "2026-10-20T11:06:05.834705+00:00",
+        "acknowledged": true,
+        "turn_id": "01a158fd-2e98-7de2-bed3-041f29842de1"
       },
       "review": {
-        "thread_id": null,
+        "thread_id": "01a158fd-cbeb-7a31-a3e6-661c7d4c95d4",
         "host_id": "local",
-        "cursor": null,
+        "cursor": "779af964-e370-4f38-843a-a16207705e3d:2",
         "workspace": "D:/1800-worktrees/a17-review-preparation",
-        "status": "NOT_CREATED"
+        "status": "ACTIVE_PREPARATION_ONLY",
+        "created_at": "2026-10-20T11:06:51.908035+00:00",
+        "acknowledged": true,
+        "turn_id": "01a158fd-d230-72c0-a791-2a140f958e36"
       },
       "thinking": "xhigh",
       "model": "INHERIT_OMIT_PARAMETER",
@@ -10822,7 +10828,14 @@
       "live_used": 0,
       "live_activated": false,
       "scope_notes": "Observed CDN Script is denied before send, not allowed. At most 16 combined guard exclusion events; all required navigation/auth/book/data gates remain.",
-      "next_dependency": "Create distinct formal executor and independent review; offline implementation and preparation only"
+      "next_dependency": "Fixed author product/final/raw/release then coordinator input check and independent review",
+      "workflow_commit": "811c3ac9e5913812bc71d74bc665eded96e23aa3",
+      "auxiliary_boundary_preparation": {
+        "path": ".local/stages/coordinator/a17-excluded-static-preparation/notes.md",
+        "sha256": "0d5701d4b9f944a5f819e9048fc635a08a9936c474d91664d18aecb128cb507c",
+        "status": "COMPLETE_RELEASED_AUXILIARY_ONLY",
+        "formal_acceptance": false
+      }
     }
   },
   "route": [
@@ -13235,8 +13248,8 @@
     }
   ],
   "last_action": {
-    "at": "2026-10-20T11:04:16.687655+00:00",
-    "action": "Accepted A16 fixed failure and proven own releases only; new A17 offline scope and separate formal chat creation intent fixed."
+    "at": "2026-10-20T11:10:20.957363+00:00",
+    "action": "A16 fixed failure closed. A17 separate formal executor/reviewer created and acknowledged, offline only; unique heartbeat updated."
   },
   "limitations": [
     "Current route uses mock B artifacts until independently agreed interface/artifact versions exist.",
@@ -14129,15 +14142,14 @@
     "next_confirmation_document_sha256": "162343381469b1a827f0de6f611b8cdf504666caa06f79e1d8ea9c8a14dd32f2"
   },
   "last_heartbeat_check": {
-    "at": "2026-10-20T10:56:40.473704+00:00",
-    "task": "A16",
-    "status": "LIVE_FAILURE_INDEPENDENT_ACTIVE",
-    "review_cursor": "54109698-8e67-431c-b756-da2abb21b362:33",
-    "new_fixed_delivery": false,
-    "actual_live_used": 1,
-    "remaining": 0,
+    "at": "2026-10-20T11:10:20.957363+00:00",
+    "task": "A17",
+    "status": "FORMAL_OFFLINE_EXECUTION_AND_REVIEW_PREPARATION_ACTIVE",
+    "execution_cursor": "b92e1f43-e01a-4b82-86b0-c466dba3623e:2",
+    "review_cursor": "779af964-e370-4f38-843a-a16207705e3d:2",
     "new_live_started": false,
-    "auxiliary_preparation": "CDN reference absence fixed; A17 exclusion draft and auxiliary static review only"
+    "new_formal_chats": 2,
+    "A16_live_spent": true
   },
   "publication_a07": {
     "task_id": "A-PUBLISH-03",
@@ -14484,7 +14496,7 @@
     "user_deadline_days": 3,
     "deadline_basis": "72 hours from this decision; target 2026-10-22 same local time; exact handover clock not specified",
     "user_selected_delivery": "必须包含：优先争取限定题型、小批量的平台试用版",
-    "status": "A16_FAILED_CLOSED_A17_OFFLINE_PREPARED",
+    "status": "A16_FAILED_CLOSED_A17_FORMAL_OFFLINE_ACTIVE",
     "plan": "docs/delivery-72h-plan-2026-10-19.md",
     "plan_sha256": "6bfc3d379ec700556b6fec7438b85126c428c7ce4ae58ba9c727982b00ab94f7",
     "proposed_book_id": "46007447",

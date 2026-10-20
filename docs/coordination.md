@@ -1,5 +1,7 @@
 # A 侧开发调度与验收
 
+2026-10-20 A16实际失败已独立及调度有限收口，18报告成员+清单及42输入原bytes核证，见evidence/coordinator/a16-live-independent-closure/。只接受失败归档及已证自有释放，不证明认证/书源库存；live1/0及UNKNOWN保持。下一A17已分别新建正式执行01a158fd-281c-7282-a3b4-db876697686c、独立01a158fd-cbeb-7a31-a3e6-661c7d4c95d4，xhigh/model沿用，按tasks/A17-excluded-static-readonly-adaptation.md和tasks/A17-independent-excluded-static-review.md，workflow811c3ac9推进。执行短目录a17-static-exclusion/base003f8620；独立a17-review-preparation只准备标准，待固定交付再给raw。只离线实现“精确已观察CDN Script始终拒绝、最多16双层事件排除后继续”，不放行CDN、不假称素材非必要；native主框身份、回调结清和后到fatal集中覆盖。允许本阶段正常必要新离线迭代，保留失败，不重跑旧suite、不恢复旧live。当前无A17 TLS决定/activation/live，旧A16一次批准已用。正式ID/cursor见JSON，其他三例HOLD、Q22不重放、0B消息。
+
 2026-10-20 A16唯一live已耗1/余0，final003f8620已固定释放：18:37:27—18:37:37北京时间，一次启动/context/导航尝试，首个阻断为https cdn.bootcdn.net:443 Script ORIGIN_BLOCKED，后NETWORK_GUARD_STOPPED；业务GET/原图/样题0、后继NOT_RUN、认证未证明。调度核24成员+自身/31454旧成员保全，42raw隔离D:/1800-worktrees/a16-live-review；同正式独立按tasks/A16-single-live-fixed-independent-review.md已接单核失败与释放，尚未接受实际结果。8审计不等于请求数、辅助发送总数UNKNOWN、launcher OS创建身份UNKNOWN保持。不重启/延期/清标记，原本轮批准已用；下一适配须依据新证据另明确范围。
 
 2026-10-20 A16本轮已获用户直接批准“批准，仅此轮有界只读观测”，决定docs/approvals/A16-observation-only-tls-user-decision.json。唯一activation窗口10:35:37.215014—10:50:37.215014 UTC，原执行已按tasks/A16-observation-only-single-live-dispatch.md接单；实际启动和结果待固定报告，勿据预留当成功。只一次固定launcher，无重试/延期/换目录/清标记；0样题、登录提交、业务。原独立等固定结果再核证。下方“等待本轮TLS决定”已关闭，不重复询问。
