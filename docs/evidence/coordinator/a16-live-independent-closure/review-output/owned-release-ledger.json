@@ -1,0 +1,87 @@
+{
+  "task": "A16",
+  "scope": "Fixed records plus exact retained source cleanup; no new resource check",
+  "context_runtime": {
+    "record": {
+      "context_close_attempted": true,
+      "context_closed": true,
+      "context_created": true,
+      "errors": [],
+      "runtime_stop_attempted": true,
+      "runtime_stopped": true,
+      "state": "RELEASED"
+    },
+    "acceptance": "ACCEPTED_OWN_CONTEXT_AND_RUNTIME_CLOSE"
+  },
+  "held_processes": [
+    {
+      "resource": "occupancy",
+      "pid": 64472,
+      "created_filetime_exact": "134369662489331243",
+      "exited_filetime_exact": "134369662496425509",
+      "creation_identity_match": true,
+      "exit_observed": true,
+      "exit_code": 0,
+      "handle_closed": true,
+      "process_lifetime_seconds_exact": "0.7094266",
+      "streams_closed": "Derived from fixed cleanup continuation before handle_closed flag; no separate per-stream runtime bool",
+      "acceptance": "ACCEPTED_EXACT_HELD_CHILD_RELEASE_ONLY"
+    },
+    {
+      "resource": "worker",
+      "pid": 28560,
+      "created_filetime_exact": "134369662482697759",
+      "exited_filetime_exact": "134369662575718951",
+      "creation_identity_match": true,
+      "exit_observed": true,
+      "exit_code": 2,
+      "handle_closed": true,
+      "process_lifetime_seconds_exact": "9.3021192",
+      "streams_closed": "Derived from fixed cleanup continuation before handle_closed flag; no separate per-stream runtime bool",
+      "acceptance": "ACCEPTED_EXACT_HELD_CHILD_RELEASE_ONLY"
+    },
+    {
+      "resource": "product",
+      "pid": 34812,
+      "created_filetime_exact": "134369662477193440",
+      "exited_filetime_exact": "134369662576253157",
+      "creation_identity_match": true,
+      "exit_observed": true,
+      "exit_code": 2,
+      "handle_closed": true,
+      "process_lifetime_seconds_exact": "9.9059717",
+      "streams_closed": "Derived from fixed cleanup continuation before handle_closed flag; no separate per-stream runtime bool",
+      "acceptance": "ACCEPTED_EXACT_HELD_CHILD_RELEASE_ONLY"
+    }
+  ],
+  "jobs": [
+    {
+      "owner": "product→worker",
+      "active_before_final_cleanup": 1,
+      "active_final": 0,
+      "job_closed": true
+    },
+    {
+      "owner": "launcher→product",
+      "active_before_final_cleanup": 1,
+      "active_final": 0,
+      "job_closed": true
+    }
+  ],
+  "job_scope": "Fixed OwnedJob assigns only gated held Popen child and descendants; KILL_ON_JOB_CLOSE and owned TerminateJobObject, no global kill",
+  "outer_launcher": {
+    "pid": 69228,
+    "wait_completed": true,
+    "exit_code": 2,
+    "OS_creation_identity": "UNKNOWN_NOT_CAPTURED"
+  },
+  "prior_occupancy_matching_processes": 0,
+  "post_run_or_global_process_absence": "NOT_CHECKED_NOT_PROVEN",
+  "source_refs": [
+    "tools/a16_current_state_probe.py:occupancy/supervise",
+    "tools/a16_current_state_launcher.py:finally",
+    "docs/evidence/A15/certificate-exception/reviewed-native/native_windows.py:held_identity",
+    "docs/evidence/A16/current-readonly/dependencies/a15_native_reference.py:OwnedJob/close_owned"
+  ],
+  "raw_child_stdout_limit": "Product stdout90bytes/hash retained by parent; its raw stream not separately archived. Outer author stdout135bytes/hash verified; worker stdout/stderr0."
+}

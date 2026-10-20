@@ -1,0 +1,75 @@
+{
+  "task": "A16",
+  "result": "ACCEPTED_FIXED_FAILURE_AND_OWN_RELEASE_ONLY",
+  "candidate_manifest_sha256": "e66e9f96197871f7123ebe2ed981a587262c50fb3f6e62cdc300f8e96be5a63f",
+  "checks": [
+    {
+      "id": "L01_FIXED_INPUT_BINDINGS",
+      "result": "ACCEPTED_ARCHIVE_ONLY",
+      "evidence": [
+        "raw-preservation.json",
+        "authorization-and-single-call.json"
+      ],
+      "proved": "42 raw final blobs;24 delivery+manifest,16 candidate dependencies+candidate manifest. Decision/activation/preflight/markers/cwd/argv agree; actual1 call and wait/exit2.",
+      "limits": "Dispatch READY_TO_SEND and pre-call0 retain earlier timepoint. No author active directory or .local read; fingerprint is not authentication."
+    },
+    {
+      "id": "L02_WINDOW_TIMELINE",
+      "result": "ACCEPTED_RECORDED_WINDOW_ONLY",
+      "evidence": [
+        "timeline.json"
+      ],
+      "proved": "All retained start/audit/release/wait timestamps and held FILETIMEs inside900-second approval window; exact fractional parsing, source strings unchanged.",
+      "limits": "10469ms is author reported duration, clock source not specified there. Wall timestamps differ10472.598ms;3.598ms discrepancy cause UNKNOWN, no forced normalization/cross-process monotonic comparison."
+    },
+    {
+      "id": "L03_FIRST_FAILURE",
+      "result": "ACCEPTED_FIXED_FAILURE_ONLY",
+      "evidence": [
+        "network-and-counts.json",
+        "runtime-raw/current-state.json"
+      ],
+      "proved": "First BLOCK is event5, https cdn.bootcdn.net443 Script GET, FETCH_REQUEST_STAGE ORIGIN_BLOCKED, not passive/redirect. First guard failure stays ORIGIN_BLOCKED; final NETWORK_GUARD_STOPPED.",
+      "limits": "Current candidate origin policy refusal, not evidence of DNS/TLS/site outage or whole-platform root cause; no CDN permission or success-after-removal inference."
+    },
+    {
+      "id": "L04_COUNTS_AND_SUCCESSORS",
+      "result": "ACCEPTED_LIMITED_COUNTS_WITH_UNKNOWNS",
+      "evidence": [
+        "network-and-counts.json"
+      ],
+      "proved": "Recorded one launcher/context/navigation attempt. Navigation FAILED; all15 later steps NOT_RUN. No allowed business/original/sample event; counts0 match source/asset absence and author records.",
+      "limits": "8 audit events5 native+3 context are not8 requests. HTTP status and auxiliary real send total UNKNOWN. NOT_RUN alone is not a claim of no earlier automatic UI request."
+    },
+    {
+      "id": "L05_OWN_RELEASE",
+      "result": "ACCEPTED_PROVEN_OWN_RELEASE_ONLY",
+      "evidence": [
+        "owned-release-ledger.json"
+      ],
+      "proved": "Context/runtime closed without errors;3 held children pid+creation time equal and exit observed(occupancy0,worker2,product2), handles closed;2 assigned ownJobs active1→0/closed.",
+      "limits": "Streams closure inferred from exact cleanup path and later closed-handle flags, not separate runtime bools. Outer launcher69228 wait/exit2 only; OS creation identity UNKNOWN. No global/post-run scan."
+    },
+    {
+      "id": "L06_CONTENT_AND_COVERAGE",
+      "result": "NOT_RUN_NOT_ACCEPTED",
+      "evidence": [
+        "runtime-raw/current-state.json",
+        "review-result.json"
+      ],
+      "proved": "Authentication not proven; book/directory/frames/source/two pages/originals/mapping not run; no static original saved. Body/schema UNKNOWN, sample NOT_RUN, ready/eligible false.",
+      "limits": "No current book/source/target/schema or first-save qualification; original R02 remains REWORK and disabled."
+    },
+    {
+      "id": "L07_PRESERVATION_SCOPE",
+      "result": "ACCEPTED_RAW_PRESERVATION_ONLY",
+      "evidence": [
+        "raw-preservation.json"
+      ],
+      "proved": "31454 previous Git members mode/type/blob preserved,25 additions only in live-delivery. Runtime12 bytes verified; no actual JS/bin/image/video/source sidecar among additions.",
+      "limits": "Only fixed inspected output fields/data; no scan of .local or protected files; no new product/suite/launcher/import/native/network action."
+    }
+  ],
+  "raw_refs_base": "../current-readonly/revisions/observation-only/live-delivery/",
+  "author_summary_matches_fixed_raw_fields": true
+}
