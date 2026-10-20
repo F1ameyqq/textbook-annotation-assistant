@@ -2,7 +2,7 @@
   "schema_version": 1,
   "project": "D:\\1800",
   "coordinator_thread_id": "01a15768-1e2d-7781-b29f-1f7376270216",
-  "updated_at": "2026-10-20T06:37:18.619373+00:00",
+  "updated_at": "2026-10-20T06:57:17.915879+00:00",
   "automation": {
     "id": "1800-a",
     "kind": "heartbeat",
@@ -10230,7 +10230,7 @@
       "committed_raw_files_verified": 27
     },
     "A15": {
-      "status": "FORMAL_CHATS_DISPATCHED_OFFLINE_ONLY",
+      "status": "PACKAGING_DISPOSITION_FIRST_UNSPENT_DELTA_INTENT",
       "task": "docs/tasks/A15-certificate-exception-reuse.md",
       "task_sha256": "f7bdf3f43b0fb467dcb43e37ae97dfc77f69894292e54d2f16ab6d252590b4a6",
       "execution_thread_id": "01a157fd-c8e7-71e1-881a-7f766b4af082",
@@ -10266,8 +10266,8 @@
       "execution": {
         "thread_id": "01a157fd-c8e7-71e1-881a-7f766b4af082",
         "host_id": "local",
-        "status": "ACTIVE_OFFLINE_PREPARATION",
-        "cursor": "45f4be41-1f28-464f-bde6-76d5ceb1c355:7",
+        "status": "STOPPED_RELEASED_PACKAGING_FAILURE_DISPOSITION_READY",
+        "cursor": "45f4be41-1f28-464f-bde6-76d5ceb1c355:11",
         "acknowledged": true
       },
       "review": {
@@ -10279,7 +10279,15 @@
       },
       "review_task_sha256": "012c0e4b173216e4585d3fb235f8144d872c0700c59a9da1689344c75a0006b7",
       "proposal_task": "docs/tasks/A15-certificate-exception-observation-proposal.md",
-      "next_dependency": "Author fixed new candidate, unique offline E1-E4 raw and release; then coordinator raw preflight and the already-created independent chat. Live inactive."
+      "next_dependency": "Same-candidate first unspent author E1-E4, parallel fixed static independent preflight; then independent unique delta and activation decision.",
+      "product_commit": "bef0204541eedd86e1fab849e8002a83f432cd7b",
+      "failed_delivery_final": "25f9083b2c8183196a7b2d7671efd40d2ef78713",
+      "packaging_disposition": "docs/tasks/A15-packaging-disposition-first-delta.md",
+      "packaging_disposition_sha256": "1513fa552dd25e1f51dc3ada1d28be936b67c22d96c3fa1165230e30399ab8a7",
+      "raw_preflight": "docs/evidence/coordinator/a15-packaging-disposition/raw-preflight.json",
+      "raw_isolation": "D:/1800-worktrees/a15-independent-fixed",
+      "candidate_used": 1,
+      "author_delta_executed": 0
     }
   },
   "route": [
@@ -12692,8 +12700,8 @@
     }
   ],
   "last_action": {
-    "at": "2026-10-20T06:27:46.388176+00:00",
-    "action": "Created new separate formal A15 execution and independent review chats; actual live not activated."
+    "at": "2026-10-20T06:57:17.915879+00:00",
+    "action": "Received B fixed text delta for future content use; classified A15 raw-diff packaging issue and recorded same-candidate first-unspent-delta continuation intent."
   },
   "limitations": [
     "Current route uses mock B artifacts until independently agreed interface/artifact versions exist.",
@@ -13940,7 +13948,7 @@
     "user_deadline_days": 3,
     "deadline_basis": "72 hours from this decision; target 2026-10-22 same local time; exact handover clock not specified",
     "user_selected_delivery": "必须包含：优先争取限定题型、小批量的平台试用版",
-    "status": "A15_USER_APPROVED_OFFLINE_PREPARATION",
+    "status": "A15_FIRST_UNSPENT_DELTA_AND_PARALLEL_STATIC_PREFLIGHT",
     "plan": "docs/delivery-72h-plan-2026-10-19.md",
     "plan_sha256": "6bfc3d379ec700556b6fec7438b85126c428c7ce4ae58ba9c727982b00ab94f7",
     "proposed_book_id": "46007447",
@@ -13958,7 +13966,7 @@
     "new_product_dispatches": 0,
     "B_messages": 0,
     "planning_agent": "/root/three_day_scope_check",
-    "next_dependency": "Separate formal A15 candidate and independent gate review, then explicitly activated one new certificate-exception reuse observation.",
+    "next_dependency": "Same-candidate first unspent author E1-E4, parallel fixed static independent preflight; then independent unique delta and activation decision.",
     "full_original_scope_completed_or_cancelled": false,
     "committed_success_guarantee": false,
     "authorization_clarification": "User clarified 一直允许连接平台; do not ask platform-connection/book permission again.",
@@ -14042,46 +14050,77 @@
       "visible_browsers": 0,
       "platform_requests": 0,
       "interpretation": "Browser-tool availability only, not evidence of platform availability; no alternate path used to bypass this setting"
+    },
+    "scheduling_adjustment": {
+      "at": "2026-10-20T06:57:17.915879+00:00",
+      "basis": "User asked whether the route is too conservative",
+      "decision": "Shorten diagnostic and metadata serialization; preserve formal execution/review and actual live/write boundaries.",
+      "next_bounded_stage_combines": [
+        "current authenticated book and source identity",
+        "target inventory",
+        "read-only save/readback interface observation",
+        "specific ordinary-choice candidate preparation"
+      ],
+      "A15_scope_unchanged": true,
+      "complex_B_cases_on_critical_path": false,
+      "routine_metadata_failures_do_not_create_new_formal_stage": true
     }
   },
   "b_update_reception_latest": {
-    "task_id": "A-B-Q4-ADOPTION-SOURCE-RECEPTION-20261019",
-    "checked_at": "2026-10-19T15:05:03.196916+00:00",
-    "b_commit": "2455fa4f1c0738981967ab4bfb3ebe3a61be421c",
-    "adoption_commit": "186330f5045ef41e575d9ca8cbec77ac448e4df4",
-    "a_commit": "edf125961be9cdc1642652c038d99872b1c8cdc7",
-    "status": "FIXED_Q4_OFFLINE_TECHNICAL_ADOPTION_CONFIRMED_Q16_CANDIDATE_HOLD",
-    "report": "docs/tasks/B-Q4-adoption-source-update-reception-2026-10-19.md",
-    "raw_metadata_members": 12,
-    "independent_static_checks": 62,
-    "helper_agent": "/root/b_update_static_audit",
-    "helper_status": "COMPLETED_RELEASED",
-    "cursor": null,
-    "dispatch_result": "SPAWN_CONFIRMED_READONLY_STATIC_COMPLETE",
-    "zip_status": "NOT_ACQUIRED_NOT_MEMBER_VERIFIED",
-    "q4_joint_offline_technical_adoption": true,
-    "public_or_platform_contract_approved": false,
-    "q16": {
-      "question_id": "q-457f1973a1426d29587d5752",
-      "answer_id": "a-7302d4870826c53aea0bcd16",
-      "source_question_available_at_B": true,
-      "relationship_status": "CANDIDATE_NOT_SELECTED",
-      "decision": "HOLD",
-      "old_stage_rewritten": false,
-      "business_approved": false
+    "at": "2026-10-20T06:57:17.915879+00:00",
+    "task": "B-UPDATE-USEFULNESS-20261020",
+    "base": "2455fa4f1c0738981967ab4bfb3ebe3a61be421c",
+    "head": "6d3d29f16e20f1521a3ff17239ce2830bec903c3",
+    "branch_and_pr3_head_verified_equal": true,
+    "raw_nonzip_members_verified": 22,
+    "changed_paths": 24,
+    "added": 21,
+    "modified": 3,
+    "scope": "STATIC_SOURCE_USEFULNESS_AND_RAW_TEXT_RECEIPT_ONLY",
+    "report": "docs/tasks/B-update-usefulness-reception-2026-10-20.md",
+    "archive_status": "NOT_ACQUIRED_NOT_MEMBER_VERIFIED",
+    "archive_fetch": {
+      "blob": "900046c5f86732ab6a8d10b3d5ce0b6dccc595f9",
+      "attempts": 1,
+      "session_id": 55457,
+      "outcome": "ORIGINAL_EXEC_INTERRUPTED_AFTER_PROLONGED_NO_PROGRESS",
+      "exit_code": 1,
+      "known_fetch_pids_absent_afterward": [
+        26772,
+        81864,
+        11000
+      ],
+      "old_pack_files_modified_or_removed": false,
+      "retry": false
     },
-    "source_requests": [
-      "Q9 问题解决策略 反思 complete question page and figures",
-      "Chapter first/last question and answer page boundaries, directory and 周测 scope",
-      "Only missing originals after reconciliation with eight existing assets"
+    "useful": [
+      "42-question source index",
+      "8 source-bound answer-evidence candidates from 14 rows",
+      "18-item content review queue",
+      "Q1/Q4 adoption and demo capability inventory"
     ],
-    "other_three_cases": "HOLD",
-    "next_dependency": "A10 current bounded platform readiness then define new read-only sourcing / exact live pilot scope; no expansion from B document alone",
+    "reported_counts": {
+      "questions": 42,
+      "legacy_answers": 66,
+      "unassigned_old_rows": 19,
+      "missing_question_identity_rows": 14,
+      "content_review_items": 18,
+      "human_approved": 0
+    },
+    "B_claimed_tests_not_rerun": 45,
     "B_scripts_executed": 0,
+    "new_selected_relations": 0,
     "new_business_runs": 0,
     "platform_actions": 0,
+    "merges": 0,
     "pushes": 0,
-    "message_sent_to_B": false
+    "B_messages": 0,
+    "other_three_cases": "HOLD",
+    "Q22_replayed": false,
+    "public_contract_approved": false,
+    "platform_qualification": false,
+    "helper": "/root/b_20261020_scope_audit",
+    "helper_scope": "STATIC_ONLY_NOT_FORMAL_ACCEPTANCE"
   },
   "coordinator_handoff": {
     "status": "TAKEN_OVER",
@@ -14104,5 +14143,46 @@
     "completed_at": "2026-10-20T11:41:19.490738+08:00",
     "taken_over_at": "2026-10-20T12:02:53.429+08:00",
     "successor_report": "docs/tasks/A10-successor-mcp-session-recovery.md"
-  }
+  },
+  "b_update_reception_history": [
+    {
+      "task_id": "A-B-Q4-ADOPTION-SOURCE-RECEPTION-20261019",
+      "checked_at": "2026-10-19T15:05:03.196916+00:00",
+      "b_commit": "2455fa4f1c0738981967ab4bfb3ebe3a61be421c",
+      "adoption_commit": "186330f5045ef41e575d9ca8cbec77ac448e4df4",
+      "a_commit": "edf125961be9cdc1642652c038d99872b1c8cdc7",
+      "status": "FIXED_Q4_OFFLINE_TECHNICAL_ADOPTION_CONFIRMED_Q16_CANDIDATE_HOLD",
+      "report": "docs/tasks/B-Q4-adoption-source-update-reception-2026-10-19.md",
+      "raw_metadata_members": 12,
+      "independent_static_checks": 62,
+      "helper_agent": "/root/b_update_static_audit",
+      "helper_status": "COMPLETED_RELEASED",
+      "cursor": null,
+      "dispatch_result": "SPAWN_CONFIRMED_READONLY_STATIC_COMPLETE",
+      "zip_status": "NOT_ACQUIRED_NOT_MEMBER_VERIFIED",
+      "q4_joint_offline_technical_adoption": true,
+      "public_or_platform_contract_approved": false,
+      "q16": {
+        "question_id": "q-457f1973a1426d29587d5752",
+        "answer_id": "a-7302d4870826c53aea0bcd16",
+        "source_question_available_at_B": true,
+        "relationship_status": "CANDIDATE_NOT_SELECTED",
+        "decision": "HOLD",
+        "old_stage_rewritten": false,
+        "business_approved": false
+      },
+      "source_requests": [
+        "Q9 问题解决策略 反思 complete question page and figures",
+        "Chapter first/last question and answer page boundaries, directory and 周测 scope",
+        "Only missing originals after reconciliation with eight existing assets"
+      ],
+      "other_three_cases": "HOLD",
+      "next_dependency": "A10 current bounded platform readiness then define new read-only sourcing / exact live pilot scope; no expansion from B document alone",
+      "B_scripts_executed": 0,
+      "new_business_runs": 0,
+      "platform_actions": 0,
+      "pushes": 0,
+      "message_sent_to_B": false
+    }
+  ]
 }
