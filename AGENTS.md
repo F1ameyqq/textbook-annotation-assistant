@@ -1,5 +1,7 @@
 # 项目开发约定
 
+2026-10-20 A16 首次正式独立已 REWORK 并释放，31 raw 成员及清单核证，报告见 docs/evidence/coordinator/a16-independent-rework/。已复现 R01 样题同 ID 改角色/顺序仍接受；静态 R02 schema 词汇共现不足、R03 原图未完整解码为阻断，R04 释放状态缺创建身份条件需修正。补件后的作者 suite 33/33，独立 12 PASS/1 FAIL/3 NOT_RUN，初次父包导入失败及原结果保留。原执行01a15840-7766-7533-818d-cc016aa0a60b已开始同阶段修订，正式补充任务 docs/tasks/A16-formal-findings-correction-supplement.md；原独立等待新固定交付，不重建聊天。允许本阶段必要纯离线迭代，不重跑旧任务或恢复旧额度。A16 TLS未批准、live0，待新候选独立接受后再固定具体决定与激活。
+
 2026-10-20 A16已进入正式独立离线验收：作者产品2a604c2d/final4fe417d5，最新33/33 PASS（516ms）并释放；调度核47新增白名单、31259旧成员保全，导出49raw至D:/1800-worktrees/a16-independent-fixed。原独立01a15841-0d44-7272-9740-40d013839869已按docs/tasks/A16-fixed-offline-review-dispatch.md接单，当前尚未接受。run01/run05完整traceback不在包内、CRLF/LF原失败等限制保留。0新live，A16的TLS决定/激活仍待固定验收结果；不唤醒作者重跑旧任务。下方“开发/标准准备”为历史。
 
 2026-10-20 A15已独立及调度有限收口：唯一live已耗1/剩0，final49e5ab4e，ORIGIN_BLOCKED后NETWORK_GUARD_STOPPED；只接受固定失败及已证自有释放，认证未证明、阻断域名未记录、launcher自身OS退出身份UNKNOWN保留。74作者raw及11独立raw核证，见docs/evidence/coordinator/a15-live-independent-closure/。A16合并当前书籍/source/target/接口和一道普通单选准备，已新建执行01a15840-7766-7533-818d-cc016aa0a60b、独立01a15841-0d44-7272-9740-40d013839869，均xhigh/model沿用且已接单，任务docs/tasks/A16-current-book-source-target-readonly.md。当前A16只离线开发/标准准备，允许必要的新代码修正和相关纯离线验证并保留失败，不重跑旧suite或恢复旧额度。A15证书例外不转移，A16新live未激活；先准备完整可审查方案，再落实本阶段TLS边界。其他三例HOLD、Q22不重放、0B消息。
