@@ -10317,7 +10317,7 @@
     },
     "A16": {
       "at": "2026-10-20T07:34:24.473472+00:00",
-      "status": "OBSERVATION_ONLY_ACCEPTED_WAITING_TLS_DECISION",
+      "status": "OBSERVATION_ONLY_TLS_APPROVED_PREPARING_SINGLE_ACTIVATION",
       "task": "docs/tasks/A16-current-book-source-target-readonly.md",
       "task_sha256": "d472860d3699acc3f2629abbb104c595c0adbf4a33bd59bc481caf21e34eeda2",
       "review_task": "docs/tasks/A16-independent-current-readonly-review.md",
@@ -10335,14 +10335,14 @@
       "review_dedup_key": "A16+independent-current-readonly",
       "scope_now": "OFFLINE_DEVELOPMENT_AND_REVIEW_ONLY",
       "platform_access_now": false,
-      "certificate_exception_authorized": false,
+      "certificate_exception_authorized": true,
       "live_activated": false,
       "proposed_live_limit": 1,
       "live_used": 0,
       "old_budgets_restored": false,
       "offline_iteration_policy": "Normal necessary pure offline development and relevant tests; retain failures and freeze exact deliveries; no old suites or live budget restoration.",
       "worktree_creation": "No suitable attached worktree; known managed long-path failure preserved; explicit longpaths short directory created from fixed 7432122b without rerunning managed setup.",
-      "next_dependency": "Explicit user decision on fixed A16 observation-only TLS proposal; then bind decision/report/candidate/profile/window and dispatch one live observation. No activation before decision.",
+      "next_dependency": "Bind one 900-second activation and dispatch the approved fixed A16 live once; no retry.",
       "execution_host_id": "local",
       "execution_cursor": "9e646293-db4c-4df5-ad60-154ad1ffafe8:21",
       "review_host_id": "local",
@@ -10652,16 +10652,24 @@
         "old_budgets_restored": false
       },
       "tls_decision_proposal": {
-        "status": "PENDING_EXPLICIT_THIS_RUN_USER_DECISION",
+        "status": "APPROVED_EXPLICIT_THIS_RUN",
         "path": "docs/tasks/A16-observation-only-tls-decision-proposal.md",
         "sha256": "103d036a730cbacc72043ed87b92ffcb8ed5731cdbcf9ae108e05b372c70b849",
         "candidate_manifest_sha256": "e66e9f96197871f7123ebe2ed981a587262c50fb3f6e62cdc300f8e96be5a63f",
         "independent_report_sha256": "d536d9b2552586a0e1838384a1b2775df1b14023d3e7ad901ac1a2b991e06a0c",
         "profile_fingerprint_reference": "b4620cd9fe064121a916062126321b7bba3862185d8919bf228f1399097a0d00",
         "current_profile_accessed": false,
-        "certificate_exception_authorized": false,
+        "certificate_exception_authorized": true,
         "live_activated": false
-      }
+      },
+      "tls_user_decision": {
+        "path": "docs/approvals/A16-observation-only-tls-user-decision.json",
+        "sha256": "01ee143549fa0c047ba0a939d3b9164ebaef2cb93b5e438c135b5d881093c022",
+        "scope": "CURRENT_BOOK_SOURCE_INVENTORY_STATIC_OBSERVATION_ONLY",
+        "new_live_limit": 1,
+        "old_budgets_restored": false
+      },
+      "live_dispatch_task": "docs/tasks/A16-observation-only-single-live-dispatch.md"
     }
   },
   "route": [
