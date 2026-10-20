@@ -1,3 +1,5 @@
+2026-10-20 A20有限独立及调度接受后，具体本轮提案已固定：docs/tasks/A20-bounded-authenticated-source-decision-proposal.md。最多1原context/2固定导航/1次官方UI登录提交/900秒，登录后同context读取六GET/两图，0业务写入上传OCR。因新增在context TLS例外中发送本机已有凭据，须本次直接决定；原“一直批准”只读许可不代用。作者/独立已释放，当前0真实凭据/登录/decision/activation/live，不得未答先执行、重复询问或恢复旧额度。精确提案hash及问询状态见JSON。
+
 2026-10-20 A20已正式独立及调度有限接受：产品28203196/finalb41e88d7，ACCEPTED_OFFLINE_ONLY；独立新35/35 2250ms、5控制641ms，25报告成员+self及114输入原bytes核证，完整39项scope绑定通过。见docs/evidence/coordinator/a20-independent-closure/。作者/独立均释放；下一步固定本次准确凭据发送提案，再由用户作直接决定。原同类只读TLS许可不扩展为登录提交；当前0真实凭据/登录/activation/live。封存工具首次解码失败及旧失败/UNKNOWN保持，真实认证/书源/首题仍未证明。
 
 2026-10-20 A20已冻结释放交正式独立预检：产品28203196/finalb41e88d7，作者新35/35及raw35/35；27候选依赖/113交付+self、114去重raw，31754基线仅4获准路径修改，30522旧证据保全。原独立按docs/tasks/A20-fixed-authenticated-source-independent-review.md在D:/1800-worktrees/a20-independent-fixed核单次UI登录与凭据保密/两导航/同context读取及完整门禁；旧失败与首次包装缺路径保留。当前0真实凭据/登录/live，有限预检后根再落实具体凭据提交决定，既有只读TLS许可不扩展。确切状态/cursor见JSON。

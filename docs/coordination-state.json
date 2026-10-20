@@ -2,7 +2,7 @@
   "schema_version": 1,
   "project": "D:\\1800",
   "coordinator_thread_id": "01a15768-1e2d-7781-b29f-1f7376270216",
-  "updated_at": "2026-10-20T15:09:07.053000+00:00",
+  "updated_at": "2026-10-20T15:12:18.902331+00:00",
   "automation": {
     "id": "1800-a",
     "kind": "heartbeat",
@@ -12010,7 +12010,7 @@
     "A20": {
       "at": "2026-10-20T14:14:25.286698+00:00",
       "task": "A20",
-      "status": "ACCEPTED_OFFLINE_ONLY_PENDING_CONCRETE_CREDENTIAL_DECISION",
+      "status": "ACCEPTED_OFFLINE_ONLY_AWAITING_DIRECT_CREDENTIAL_DECISION",
       "dispatch_key": "A20:authenticated-source-recovery:new-formal-execution-review",
       "project_id": "4488a042-3ec7-4f9e-8880-cbc8f4e02a51",
       "host_id": "local",
@@ -12070,7 +12070,7 @@
       "login_submission_authorized": false,
       "credential_tls_exception_authorized": false,
       "standing_tls_permission_reference": "docs/approvals/A17-excluded-static-user-decision.json",
-      "next_dependency": "Complete bound A20 proposal and obtain direct credential-transmission/TLS decision; then own one live activation",
+      "next_dependency": "Direct human A20 credential transmission/context TLS decision; no live before answer",
       "workflow_commit": "52be34a72c43a7331976aba4b286138b9183856b",
       "source_analysis": {
         "at": "2026-10-20T14:17:53.155343+00:00",
@@ -12186,6 +12186,20 @@
           "Authentication, current book source inventory, current mapping and first question save/readback are NOT_PROVEN/NOT_RUN. R02 remains unfixed and disabled; body/schema UNKNOWN; write_eligible=false.",
           "A17 standing readonly TLS permission does not authorize this credential transmission. Coordinator must obtain the concrete A20 direct decision after this preflight, then separately bind/activate its one live round."
         ]
+      },
+      "concrete_proposal": "D:/1800/docs/tasks/A20-bounded-authenticated-source-decision-proposal.md",
+      "concrete_proposal_sha256": "828db3f6f07597673db32649ec193de2d4912548661ce7dd10477bd81f2623f9",
+      "user_decision_request": {
+        "path": "D:/1800/docs/evidence/coordinator/a20-user-decision-request/request-intent.json",
+        "sha256": "c506a9ac5c3abb89ee3d6e0162548c8c5cbc4d24e51dbbefed7f63315bff3a49",
+        "state": "READY_TO_ASK_DIRECT_USER_DECISION_NOT_AUTHORIZATION",
+        "question": "A20 已通过有限独立预检。是否批准已固定的本轮方案（D:/1800/docs/tasks/A20-bounded-authenticated-source-decision-proposal.md）：在原专用无头会话临时忽略 HTTPS 证书校验，直接使用本机已有配置，最多提交一次官方登录表单；登录后同一会话读取书46007447当前书源，最多2次固定导航、15分钟含释放，0业务写入/上传/OCR，异常或未知即停止、不重试？本次会发送已有用户名和密码；证书不能可靠确认服务端身份。此前“一直批准”覆盖同类只读，未包含这次凭据提交，因此需要本轮具体决定；无需提供密码。",
+        "direct_answer": null
+      },
+      "closure_mechanical_auxiliary": {
+        "path": "D:/1800/.local/stages/coordinator/a20-independent-closure-aux/notes.json",
+        "sha256": "eeeeb494e4e83fcd36bb128461669a21797e447c263a2f5ffb37d91e303eb4a5",
+        "released": true
       }
     }
   },
@@ -14599,8 +14613,8 @@
     }
   ],
   "last_action": {
-    "at": "2026-10-20T15:09:07.053000+00:00",
-    "action": "Accepted finite A20 independent authentication preflight"
+    "at": "2026-10-20T15:12:18.902331+00:00",
+    "action": "Fixed complete A20 decision proposal after independent acceptance"
   },
   "limitations": [
     "Current route uses mock B artifacts until independently agreed interface/artifact versions exist.",
