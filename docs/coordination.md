@@ -1,5 +1,8 @@
 # A 侧开发调度与验收
 
+2026-10-20 A18新阶段已先落盘去重意图：基线5aec2457，任务docs/tasks/A18-current-frontend-readonly-adaptation.md。依据当前真实脚本准入精确version.json静态GET一次；未准入同源非API GET XHR/Fetch仍拒绝发送，只在限定条件下继续，和CDN共用16排除事件。API/登录/样题/写方法/导航重定向/身份异常等仍停止。先新正式执行与独立准备，确切ID/cursor见JSON；0新live，独立及调度预检后沿用用户“一直批准”的同类TLS许可绑定A18自己的唯一轮，不再逐轮询问。旧A17失败及额度保留。
+
+
 2026-10-20 A17唯一live已耗1/余0并完成独立及调度有限收口，final5aec2457；一次CDN预期拒绝后，同源GET XHR PATH_BLOCKED，业务GET/两图0、认证未证明。见docs/evidence/coordinator/a17-live-independent-closure/：7报告成员+self及44输入原bytes核证，只接受固定失败和已证自有释放；launcher OS身份及阻断路径/用途UNKNOWN、68.671ms计时差精确分解UNKNOWN保持。作者/独立均释放，不重派旧A17。用户“一直批准”的同类TLS持续许可已登记，不再重复询问。已捕获1份同源脚本供下一阶段离线具体适配；其他三例HOLD、Q22不重放、0B消息。
 
 
