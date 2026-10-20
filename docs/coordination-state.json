@@ -2,7 +2,7 @@
   "schema_version": 1,
   "project": "D:\\1800",
   "coordinator_thread_id": "01a15768-1e2d-7781-b29f-1f7376270216",
-  "updated_at": "2026-10-20T14:07:43.827964+00:00",
+  "updated_at": "2026-10-20T14:14:25.286698+00:00",
   "automation": {
     "id": "1800-a",
     "kind": "heartbeat",
@@ -11811,7 +11811,7 @@
       "new_live_reserved_limit": 1,
       "new_live_authorized": true,
       "standing_tls_permission_reference": "docs/approvals/A17-excluded-static-user-decision.json",
-      "next_dependency": "Use fixed login-path comparison to prepare authentication recovery and current book source route; no A19 retry",
+      "next_dependency": "A20 targeted authentication recovery/current source preparation; A19 remains closed and spent",
       "workflow_commit": "c4cfdb2012b36f47f13e633a24dafad6c3daa8ab",
       "heartbeat_prompt_sha256": "d7e205f95e11296f6f646f24ae04446512279dec777dfebc6a52952d1637dd0c",
       "delivery": {
@@ -11982,6 +11982,43 @@
         "root_cause": "UNKNOWN",
         "accepted_scope": "Fixed failure and recorded own resources only; no platform/authentication/book/save pass"
       }
+    },
+    "A20": {
+      "at": "2026-10-20T14:14:25.286698+00:00",
+      "task": "A20",
+      "status": "INTENT_RECORDED_BEFORE_CREATE",
+      "dispatch_key": "A20:authenticated-source-recovery:new-formal-execution-review",
+      "project_id": "4488a042-3ec7-4f9e-8880-cbc8f4e02a51",
+      "host_id": "local",
+      "base_commit": "38e86a1c153eb0ad68ebd22d4403602ffaa6852b",
+      "thinking": "xhigh",
+      "model": "INHERIT_USER_DEFAULT",
+      "execution": {
+        "thread_id": null,
+        "workspace": "D:/1800-worktrees/a20-authenticated-source",
+        "branch": "codex/a20-authenticated-source",
+        "status": "CREATE_NOT_CALLED"
+      },
+      "review": {
+        "thread_id": null,
+        "workspace": "D:/1800-worktrees/a20-review-preparation",
+        "status": "CREATE_NOT_CALLED"
+      },
+      "task_document": "docs/tasks/A20-authenticated-source-recovery.md",
+      "task_sha256": "179fe3f36e3adaf32e657485a83e4aebf508cd71f2a9ab85be20d8f3611190d1",
+      "review_task_document": "docs/tasks/A20-independent-authenticated-source-review.md",
+      "review_task_sha256": "2939e98da7544240d3f2de59bde93bb0bd164b996b0bf2f17a609c42602d0a05",
+      "dedup_checked_no_A20": true,
+      "live_activated": false,
+      "live_used": 0,
+      "scope": "AUTHENTICATION_RECOVERY_AND_CURRENT_BOOK_SOURCE",
+      "offline_only": true,
+      "new_live_reserved_limit": 1,
+      "new_live_authorized": false,
+      "login_submission_authorized": false,
+      "credential_tls_exception_authorized": false,
+      "standing_tls_permission_reference": "docs/approvals/A17-excluded-static-user-decision.json",
+      "next_dependency": "New formal offline implementation and independent preparation; freeze and review before specific credential-submission decision"
     }
   },
   "route": [
@@ -14394,8 +14431,8 @@
     }
   ],
   "last_action": {
-    "at": "2026-10-20T14:07:43.827964+00:00",
-    "action": "Closed A19 actual failure and recorded own release after independent verification"
+    "at": "2026-10-20T14:14:25.286698+00:00",
+    "action": "Recorded A20 deduplicated formal execution/review creation intent"
   },
   "limitations": [
     "Current route uses mock B artifacts until independently agreed interface/artifact versions exist.",

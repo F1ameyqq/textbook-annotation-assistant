@@ -1,3 +1,5 @@
+2026-10-20 A20新阶段去重意图已落盘，基线38e86a1c，任务docs/tasks/A20-authenticated-source-recovery.md。A19固定阻断hash与已捕获脚本明确/qieti/login匹配，触发原因未证明；A20集中专用登录态恢复和同context书源读取，先新正式执行/独立离线准备。拟1context/900秒、最多1登录提交/2固定主导航、0业务写入；当前0凭据读取/网络/live/activation。先完成可审查候选及独立预检，再落实覆盖凭据发送的本阶段具体决定；既有只读TLS许可不自动扩大。旧任务/额度/原件保持，具体ID/cursor见JSON，0B消息。
+
 2026-10-20 A19实际失败已正式独立及调度有限收口，final38e86a1c，6报告含清单及45输入原bytes核证，见docs/evidence/coordinator/a19-live-independent-closure/。原导航HTTP200/DCL；较早NAVIGATION_BLOCKED、后readiness超时，六GET/两图0、认证未证明。主框归属仅固定代码分支推断，不冒充落盘frame ID比较。三个持有身份进程、两个Job及context/runtime释放有限接受，launcher自身OS身份/目的用途/触发根因仍按原报告UNKNOWN。作者/独立均释放，live1已耗尽，不再派旧A19。辅助已知登录路径hash比对单独准备，不回写正式结论或扩展登录授权。
 
 2026-10-20 A19唯一live已耗1/余0并固定释放，实际final38e86a1c：原导航HTTP200/DCL，随后Document NAVIGATION_BLOCKED，readiness超时；认证/书源未证明，六GET/两图0。调度23交付+self、20依赖、45raw及31730旧成员保全；同独立按docs/tasks/A19-single-live-fixed-independent-review.md静态核实际失败与释放，不能仅凭Document字段确认主框。打包CRLF比较失败原件保持；不重试/延期/清标记，旧live关闭。具体路径用途与触发原因UNKNOWN待既有固定证据分析。
