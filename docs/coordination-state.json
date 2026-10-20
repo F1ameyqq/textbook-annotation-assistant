@@ -2,7 +2,7 @@
   "schema_version": 1,
   "project": "D:\\1800",
   "coordinator_thread_id": "01a15768-1e2d-7781-b29f-1f7376270216",
-  "updated_at": "2026-10-20T15:12:18.902331+00:00",
+  "updated_at": "2026-10-20T15:13:32.128382+00:00",
   "automation": {
     "id": "1800-a",
     "kind": "heartbeat",
@@ -12192,9 +12192,14 @@
       "user_decision_request": {
         "path": "D:/1800/docs/evidence/coordinator/a20-user-decision-request/request-intent.json",
         "sha256": "c506a9ac5c3abb89ee3d6e0162548c8c5cbc4d24e51dbbefed7f63315bff3a49",
-        "state": "READY_TO_ASK_DIRECT_USER_DECISION_NOT_AUTHORIZATION",
+        "state": "ASKED_WAITING_DIRECT_HUMAN_ANSWER",
         "question": "A20 已通过有限独立预检。是否批准已固定的本轮方案（D:/1800/docs/tasks/A20-bounded-authenticated-source-decision-proposal.md）：在原专用无头会话临时忽略 HTTPS 证书校验，直接使用本机已有配置，最多提交一次官方登录表单；登录后同一会话读取书46007447当前书源，最多2次固定导航、15分钟含释放，0业务写入/上传/OCR，异常或未知即停止、不重试？本次会发送已有用户名和密码；证书不能可靠确认服务端身份。此前“一直批准”覆盖同类只读，未包含这次凭据提交，因此需要本轮具体决定；无需提供密码。",
-        "direct_answer": null
+        "direct_answer": null,
+        "tool": "functions.request_user_input_async",
+        "tool_result_accepted": true,
+        "dispatched_at": "2026-10-20T15:13:32.128382+00:00",
+        "dispatch_record": "D:/1800/docs/evidence/coordinator/a20-user-decision-request/request-dispatched.json",
+        "dispatch_record_sha256": "4a47d54c981f804a021aa5338cb2376662a53dd5cebcf36d721b2c411ec74ff0"
       },
       "closure_mechanical_auxiliary": {
         "path": "D:/1800/.local/stages/coordinator/a20-independent-closure-aux/notes.json",
@@ -14613,8 +14618,8 @@
     }
   ],
   "last_action": {
-    "at": "2026-10-20T15:12:18.902331+00:00",
-    "action": "Fixed complete A20 decision proposal after independent acceptance"
+    "at": "2026-10-20T15:13:32.128382+00:00",
+    "action": "Asked one concrete A20 credential decision; waiting for direct answer"
   },
   "limitations": [
     "Current route uses mock B artifacts until independently agreed interface/artifact versions exist.",
