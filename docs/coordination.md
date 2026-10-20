@@ -1,3 +1,5 @@
+2026-10-20 A19实际失败已正式独立及调度有限收口，final38e86a1c，6报告含清单及45输入原bytes核证，见docs/evidence/coordinator/a19-live-independent-closure/。原导航HTTP200/DCL；较早NAVIGATION_BLOCKED、后readiness超时，六GET/两图0、认证未证明。主框归属仅固定代码分支推断，不冒充落盘frame ID比较。三个持有身份进程、两个Job及context/runtime释放有限接受，launcher自身OS身份/目的用途/触发根因仍按原报告UNKNOWN。作者/独立均释放，live1已耗尽，不再派旧A19。辅助已知登录路径hash比对单独准备，不回写正式结论或扩展登录授权。
+
 2026-10-20 A19唯一live已耗1/余0并固定释放，实际final38e86a1c：原导航HTTP200/DCL，随后Document NAVIGATION_BLOCKED，readiness超时；认证/书源未证明，六GET/两图0。调度23交付+self、20依赖、45raw及31730旧成员保全；同独立按docs/tasks/A19-single-live-fixed-independent-review.md静态核实际失败与释放，不能仅凭Document字段确认主框。打包CRLF比较失败原件保持；不重试/延期/清标记，旧live关闭。具体路径用途与触发原因UNKNOWN待既有固定证据分析。
 
 2026-10-20 A19正式独立与调度有限接受后，已引用用户“一直批准”同类TLS持续许可绑定本轮。产品13067ff3/finale999f4e7、20依赖原bytes已核；任务docs/tasks/A19-approved-single-live-dispatch.md，意图docs/evidence/coordinator/a19-live-dispatch/dispatch-intent.json。仅原导航新增被动证据；成功在同context继续全部已准书源读取，失败首错停止不重试。1context/1导航/900秒、六GET+两图各一次、version至多1、共享排除16、0样题登录写入；实际窗口/启动/结果见JSON，旧额度不恢复。原执行承接，同独立等待固定实际结果。下方预检中状态为历史。

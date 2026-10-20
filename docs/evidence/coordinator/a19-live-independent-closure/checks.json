@@ -1,0 +1,252 @@
+{
+  "task": "A19",
+  "result": "PASS_FIXED_FAILURE_ARCHIVE_AND_OWN_RELEASE_CHECKS",
+  "mode": "STATIC_ONLY_NO_PRODUCT_IMPORT",
+  "input_members_verified": 45,
+  "candidate_members_verified": 20,
+  "author_delivery_members_verified": 23,
+  "source_raw_members_verified": 10,
+  "input_manifest_sha256": "3f559cb87bf793820d406dc2d08d1b031a957a85e1ea9c1ce6cc7c7c7c10bb05",
+  "author_manifest_sha256": "c7fe4fa4ee3278b76115593c97aeb53041c7cb5807aee3a489c3b13d1775c965",
+  "projections_match_original_raw": true,
+  "markers_and_dispatch_binding_match": true,
+  "window_seconds": 900,
+  "launcher_within_window": true,
+  "baseline_preservation": {
+    "base": "e999f4e753cd5f1e44a19ab55dd776d2fa589389",
+    "actual_final": "38e86a1c153eb0ad68ebd22d4403602ffaa6852b",
+    "coordinator_verified_old_members": 31730,
+    "coordinator_verified_additions": 24,
+    "coordinator_verified_modified_or_deleted": 0,
+    "reviewer_full_tree_comparison_rerun": false,
+    "basis": "Formal fixed live review dispatch plus fixed preservation metadata; reviewer verifies 45 supplied raw and 20 unchanged candidate dependencies."
+  },
+  "navigation": {
+    "association": "ORIGINAL_MAIN_DOCUMENT_NETWORK_ID",
+    "clock": "OWN_PROCESS_MONOTONIC",
+    "domcontentloaded_elapsed_ms": 15391.0,
+    "domcontentloaded_observed": true,
+    "goto": {
+      "elapsed_ms": 15391.0,
+      "error": null,
+      "http_status": 200,
+      "response_returned": true,
+      "state": "DONE",
+      "timeout_ms": 45000,
+      "wait_until": "domcontentloaded"
+    },
+    "loading_failed": {
+      "observed": false
+    },
+    "phase": "READINESS",
+    "readiness": {
+      "elapsed_ms": 30172.0,
+      "error": {
+        "codes": [
+          "UNKNOWN"
+        ],
+        "exception_type": "TimeoutError"
+      },
+      "state": "FAILED",
+      "timeout_ms": 30000,
+      "wait_until": "VISIBLE_CONTAINER"
+    },
+    "response_received": {
+      "elapsed_ms": 2281.0,
+      "http_status": 200,
+      "lifecycle": "RUNNING",
+      "observed": true
+    },
+    "root_cause": "UNKNOWN"
+  },
+  "top_level_error": {
+    "codes": [
+      "UNKNOWN"
+    ],
+    "exception_type": "TimeoutError"
+  },
+  "first_fatal_guard_event": {
+    "business_read": false,
+    "category": "NAVIGATION_BLOCKED",
+    "decision": "BLOCK",
+    "expected_excluded_path_denial": false,
+    "expected_excluded_static_denial": false,
+    "expected_excluded_version_repeat": false,
+    "expected_passive_denial": false,
+    "hostname": "www.usense.com",
+    "known_route": "UNKNOWN",
+    "main_navigation": true,
+    "method": "GET",
+    "path_sha256": "55d900e6fc7524cac0de130ea2e6c249426846e56af5165e9b0ddbcaed4d746d",
+    "path_template": null,
+    "port": 443,
+    "query_names_redacted": 0,
+    "query_parameter_names": [],
+    "redirect_hop": false,
+    "resource_type": "Document",
+    "scheme": "https",
+    "source": "FETCH_REQUEST_STAGE",
+    "time": "2026-10-20T13:50:39.712394+00:00"
+  },
+  "document_frame_attribution": {
+    "main_navigation_flag_alone": "DOCUMENT_TYPE_ONLY_NOT_FRAME_PROOF",
+    "conclusion": "SUPPORTED_BOUND_MAIN_FRAME_BY_FIXED_NATIVE_CLASSIFIER_BRANCH",
+    "evidence_kind": "STATIC_CONTROL_FLOW_INFERENCE_FROM_FIXED_CODE_AND_AUDIT_NOT_RECORDED_RAW_ID_COMPARISON",
+    "chain": [
+      "install binds nonempty parentless Page.getFrameTree ID before traffic (probe 316-326)",
+      "paused computes owned by equality to that bound ID (probe 472-476)",
+      "classify replaces any unowned category with UNOWNED_TARGET_BLOCKED before returning policy result (probe 346-365)",
+      "recorded FETCH_REQUEST_STAGE NAVIGATION_BLOCKED survives that override; paused emits this audit then selects failRequest path (probe 511-519)"
+    ],
+    "raw_frame_ids": "NOT_PERSISTED",
+    "destination_path_or_purpose": "UNKNOWN_HASH_ONLY",
+    "HTTP_redirect_chain": "NOT_PROVEN; redirect_hop=false means the recorded CDP request was not classified redirected",
+    "login_route_or_invalid_credentials": "NOT_INFERRED"
+  },
+  "error_chronology": {
+    "earlier_guard_event_at": "2026-10-20T13:50:39.712394+00:00",
+    "earlier_guard_code": "NAVIGATION_BLOCKED",
+    "later_top_error": {
+      "codes": [
+        "UNKNOWN"
+      ],
+      "exception_type": "TimeoutError"
+    },
+    "readiness_elapsed_ms": 30172,
+    "exact_timeout_UTC": "NOT_RECORDED",
+    "interpretation": "Guard denial precedes the final readiness TimeoutError in fixed actual trace; do not promote top-level timeout to chronological first error. Existing wait did not stop immediately; no successor book/source step ran.",
+    "first_error_reporting_limitation_preserved": true
+  },
+  "audit_counts": {
+    "task": "A19",
+    "audit_events": 14,
+    "initial_navigation_allow_events": 2,
+    "later_document_block_events": 1,
+    "business_get_audit_events": 0,
+    "original_get_audit_events": 0,
+    "version_native_send_reservations": 1,
+    "version_context_pass_reservations": 1,
+    "version_http_success": "UNKNOWN",
+    "excluded_events": 1,
+    "completed_denial_calls": 1,
+    "session_permissions_allow_events": 2,
+    "total_HTTP_sends": "UNKNOWN",
+    "auxiliary_HTTP_sends": "UNKNOWN",
+    "initial_navigation_HTTP_status": 200,
+    "counts_basis": "Guard audit events and native reservations, not an HTTP request counter"
+  },
+  "clocks": [
+    {
+      "process": "launcher",
+      "wall_elapsed_ms": 48700.958,
+      "own_monotonic_recorded_ms": 48765,
+      "monotonic_minus_wall_ms": 64.042,
+      "difference_cause": "UNKNOWN"
+    },
+    {
+      "process": "worker",
+      "wall_elapsed_ms": 48306.919,
+      "own_monotonic_recorded_ms": 48297,
+      "monotonic_minus_wall_ms": -9.919,
+      "difference_cause": "UNKNOWN"
+    }
+  ],
+  "owned_processes_verified": [
+    {
+      "role": "product",
+      "pid": 87356,
+      "created_filetime": 134369778214762609,
+      "exited_filetime": 134369778701360471,
+      "exit_code": 2,
+      "creation_identity_match": true,
+      "held_handle_closed": true
+    },
+    {
+      "role": "worker",
+      "pid": 39024,
+      "created_filetime": 134369778218072478,
+      "exited_filetime": 134369778700737804,
+      "exit_code": 2,
+      "creation_identity_match": true,
+      "held_handle_closed": true
+    },
+    {
+      "role": "occupancy",
+      "pid": 56460,
+      "created_filetime": 134369778222054488,
+      "exited_filetime": 134369778226208430,
+      "exit_code": 0,
+      "creation_identity_match": true,
+      "held_handle_closed": true
+    }
+  ],
+  "owned_jobs_verified_final_zero_closed": 2,
+  "context_closed_runtime_stopped": true,
+  "pending_tasks_and_callbacks": 0,
+  "tool_exit_code": 1,
+  "held_product_exit_code": 2,
+  "held_worker_exit_code": 2,
+  "launcher_own_OS_creation_exit_identity": "UNKNOWN",
+  "binding_originals_not_reopened": {
+    "activation_decision_offline_report": "Only fixed dispatch/binding hashes and matching markers reviewed; originals outside the 45-member isolation were not reopened."
+  },
+  "unknowns_preserved": [
+    "Authentication",
+    "Current book identity/inventory/directory/frame coverage/source mapping",
+    "Body/schema",
+    "Main navigation transport root cause",
+    "Blocked destination purpose and credential/session failure cause",
+    "Version and SESSION_PERMISSIONS HTTP success",
+    "Total and auxiliary HTTP sends",
+    "DNS/TCP/TLS activity for denied requests",
+    "Launcher own OS creation/exit identity",
+    "Wall versus monotonic discrepancy cause",
+    "Exact readiness-timeout UTC"
+  ],
+  "script_metadata_only": [
+    {
+      "executed_by_collector": false,
+      "http_status": 200,
+      "loaded_origin": {
+        "business_read": false,
+        "category": "STATIC",
+        "decision": "ALLOW",
+        "expected_excluded_path_denial": false,
+        "expected_excluded_static_denial": false,
+        "expected_excluded_version_repeat": false,
+        "expected_passive_denial": false,
+        "hostname": "www.usense.com",
+        "known_route": "UNKNOWN",
+        "main_navigation": false,
+        "path_sha256": "ac49b1937af3531a9dbe648b2fd9960de463425327db2317d269d065b8b18190",
+        "path_template": null,
+        "port": 443,
+        "query_names_redacted": 0,
+        "query_parameter_names": [],
+        "redirect_hop": false,
+        "resource_type": "Script",
+        "scheme": "https",
+        "source": "CURRENT_RESPONSE"
+      },
+      "ref": "static-assets/1-d0a5ebce18bc92d7643662ecec2d078bb295214111e7cb32688f0b88e05bed41.bin",
+      "sha256": "d0a5ebce18bc92d7643662ecec2d078bb295214111e7cb32688f0b88e05bed41",
+      "size": 3065996,
+      "source_url_sha256": "0a4b93531366e43426c4371a7e538a1ee5e0af81c2c6eb3c047b8b3ffb46a341"
+    }
+  ],
+  "script_or_source_sidecar_read_or_copied": false,
+  "packaging_failure_preserved": {
+    "operation": "Initial offline dependency preservation verification",
+    "tool_exit_code": 1,
+    "observed_error": "Traceback (most recent call last): File <stdin>, line 20, in <module>; AssertionError",
+    "failed_comparison": "Compared normal Windows worktree dependency bytes against raw-Git-bound candidate hashes",
+    "cause_scope": "Normal checkout line endings may differ; raw Git bytes are authoritative. Identify mismatched checkouts and verify fixed Git blobs plus frozen raw-checkout instead.",
+    "live_retry": false,
+    "product_changed": false,
+    "original_outputs_changed": false,
+    "evidence_checks_or_manifest_created_before_failure": false
+  },
+  "reviewer_product_imports_or_runs": 0,
+  "reviewer_suites": 0,
+  "reviewer_live_or_network_or_native_or_occupancy": 0
+}
