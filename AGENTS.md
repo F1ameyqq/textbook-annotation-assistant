@@ -1,5 +1,8 @@
 # 项目开发约定
 
+2026-10-20 A17唯一live已耗1/余0并完成独立及调度有限收口，final5aec2457；一次CDN预期拒绝后，同源GET XHR PATH_BLOCKED，业务GET/两图0、认证未证明。见docs/evidence/coordinator/a17-live-independent-closure/：7报告成员+self及44输入原bytes核证，只接受固定失败和已证自有释放；launcher OS身份及阻断路径/用途UNKNOWN、68.671ms计时差精确分解UNKNOWN保持。作者/独立均释放，不重派旧A17。用户“一直批准”的同类TLS持续许可已登记，不再重复询问。已捕获1份同源脚本供下一阶段离线具体适配；其他三例HOLD、Q22不重放、0B消息。
+
+
 2026-10-20 用户对固定A17提案直接回复“一直批准”。本轮及后续同类专用context临时TLS例外持续获准，不再逐轮询问；不扩展登录/写入/新来源或恢复旧额度。A17唯一activation及派发意图已固定，见docs/tasks/A17-approved-single-live-dispatch.md、docs/evidence/coordinator/a17-live-dispatch/dispatch-intent.json；原执行承接一次真实只读，原独立等待固定结果。18候选依赖与候选raw一致，范围1context/1导航/900秒、六GET+两原图、sample0/0登录写入不变；下方等待TLS决定为历史。实际启动与结果以JSON及固定交付为准。
 
 2026-10-20 A17修订版已正式独立及调度有限接受，产品1168a75e/final8bffd88d，候选4ed38cb1…；结论ACCEPTED_OFFLINE_ONLY/BOUNDED_READONLY_PREFLIGHT。新11/11、两个小控制无阻断失败，19报告成员+清单及56输入核证，见docs/evidence/coordinator/a17-independent-closure/。R01保留顶层fallback归因残留，不全关闭；原21组NOT_RUN和旧REWORK保持。依用户“不要太保守”不为此再开修订。具体本轮提案docs/tasks/A17-bounded-readonly-tls-decision-proposal.md已固定：1原专用context/1导航/900秒、六GET+两原图各一次、排除CDN事件16、0样题登录写入。仅待本轮适用TLS直接决定；原A16“仅此轮”已用，不能借用。当前无decision/activation/live；作者和独立均释放，原scope/记录/Edge与profile保持。
