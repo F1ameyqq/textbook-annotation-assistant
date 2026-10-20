@@ -1,5 +1,7 @@
 # A 侧开发调度与验收
 
+2026-10-20 正式派发流程纠正：按用户再次明确的原约定，A12已分别新建正式执行对话01a15792-ed1f-7911-b1b4-d5ed6ca9020d（固定交付接收，0重跑）及独立验收01a15794-ad3e-7653-8f77-237fe06f8898（固定raw静态核查，0suite/平台）。此前误用子代理的作者和准备记录保留，不冒称正式对话执行了原suite。产品7f3d42e3/final0c30b365已交付释放，调度raw预检21成员/22新增/31159旧成员保全通过；资格仍待正式独立结论。后续新阶段一律分别新建执行/验收对话，辅助代理不替代正式派发。
+
 2026-10-20 A12已按[专用无头复用观测任务](tasks/A12-headless-reuse-native-transport-probe.md)派发到独立目录D:/1800-worktrees/a12-native-reuse，作者/root/a12_headless_native_probe_author，workflow5e31abf7。1候选/1次N1-N3本地suite、作者0平台，固定交付释放后另派静态独立；当前无新的无头live启动。托管worktree因长路径失败保留，显式-c core.longpaths=true的短目录创建成功，不计产品/live尝试。实际回执和下一依赖以JSON为准。
 
 2026-10-20 接任最新：调度ID01a15768-1e2d-7781-b29f-1f7376270216，实际基线8f0e3eb7；唯一1800-a已转移并确认为ACTIVE/30分钟。现有MCP官方扩展选页完成后，一次标签验证17ms返回Usense登录页，服务/扩展会话已通。认证书籍和原专用无头profile仍未观测；日常Default与原专用登录态分离。见[接任与会话恢复](tasks/A10-successor-mcp-session-recovery.md)。旧两超时和本次第三超时均保留，0登录提交/业务写入/进程终止，无URL策略绕过。后续先固定新的reuse-only无头只读范围，不重跑旧driver或恢复额度，再按首题→最多五题→独立验收推进。其他三例HOLD、Q22不重放、不向B发消息；下方待接任或MCP未通为历史。

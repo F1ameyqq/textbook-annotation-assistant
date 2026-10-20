@@ -1,5 +1,7 @@
 # 项目开发约定
 
+2026-10-20 用户再次纠正：新阶段必须分别新建正式执行和验收对话，不能以当前对话子代理代替。A12此前错误使用子代理已保留历史；现正式执行01a15792-ed1f-7911-b1b4-d5ed6ca9020d仅接收固定交付，正式独立验收01a15794-ad3e-7653-8f77-237fe06f8898核固定raw，均xhigh、model沿用。产品7f3d42e3、final0c30b365，原1候选/1suite已耗尽且作者释放；创建新对话不重跑或恢复额度。后续正式阶段使用create_thread，子代理只作必要辅助。见docs/evidence/coordinator/a12-native-reuse-dispatch/formal-chat-dispatch-intent.json。
+
 2026-10-20 A12已派发：独立目录D:/1800-worktrees/a12-native-reuse、作者/root/a12_headless_native_probe_author、workflow5e31abf7，见docs/tasks/A12-headless-reuse-native-transport-probe.md。仅1新候选/1次本地三例guard suite，作者0平台。固定raw交付释放后另派静态独立，不复跑suite；证明逐跳/方法/WS守卫后主调度才可另登记最多1次reuse-only无头观测，0登录/业务。当前未启动A12平台轮。托管worktree长路径失败保留，显式longpaths短目录已成功，不是产品或live尝试。
 
 2026-10-20 接任最新：调度ID为01a15768-1e2d-7781-b29f-1f7376270216；唯一1800-a已转移至本对话、ACTIVE/30分钟。现有Playwright MCP经官方扩展人工选中Usense登录标签后，17ms标签验证通过；不再把MCP超时作为当前未解阻断。当前仅证明Default登录页，未证明认证书籍或专用无头会话；原A04/A10专用无头profile与日常Default分离。见docs/tasks/A10-successor-mcp-session-recovery.md。原两超时及本次第三超时保留，新握手后一次验证通过不恢复旧轮数；0登录提交/业务写入/进程终止。扩展chrome-extension页面工具URL策略拒绝后已停止自动操作，由用户正常选页，无绕过。下一步固定仅复用专用登录态的新有界只读观测，原native/代理driver不复跑；其他三例HOLD、Q22不重放、不向B发消息。下方交接待接任/MCP具体层UNKNOWN为历史时点。
