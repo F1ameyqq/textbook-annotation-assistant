@@ -1,0 +1,157 @@
+{
+  "status": "AUXILIARY_RELEASED_ACTUAL_STATIC_COMPARISON",
+  "formal_acceptance": false,
+  "released": true,
+  "actual_final": "38e86a1c153eb0ad68ebd22d4403602ffaa6852b",
+  "network_audit_sha256": "d66f01560587428a54327e945ec89b992ad1ee0fa2c87841dcb43d87861ab397",
+  "current_state_sha256": "7fdc9ce0f422937cceeb29698df6ff6ca473fc4e76d145c92f186645b31fbc8a",
+  "standalone_audit_equals_embedded": true,
+  "audit_event_count": 14,
+  "hash_algorithm": {
+    "source": "src/annotation/source/usense/current_readonly/policy.py",
+    "line": 102,
+    "source_sha256": "6665327d71e35e895b67bc578eec5f58165cd8e3a1713fb447112bc9abd7aea2",
+    "definition": "SHA256(urlsplit(url).path.encode('utf-8'))",
+    "origin_or_query_included": false
+  },
+  "blocked_event": {
+    "time": "2026-10-20T13:50:39.712394+00:00",
+    "source": "FETCH_REQUEST_STAGE",
+    "method": "GET",
+    "resource_type": "Document",
+    "category": "NAVIGATION_BLOCKED",
+    "decision": "BLOCK",
+    "scheme": "https",
+    "hostname": "www.usense.com",
+    "port": 443,
+    "redirect_hop": false,
+    "path_sha256": "55d900e6fc7524cac0de130ea2e6c249426846e56af5165e9b0ddbcaed4d746d",
+    "query_parameter_names": [],
+    "query_names_redacted": 0,
+    "main_frame_inference_basis": "fixed native ownership and classify override order, not main_navigation flag alone"
+  },
+  "exact_comparisons": [
+    {
+      "source": "fixed gate TARGET",
+      "path": "/qieti/annotateUnified",
+      "sha256": "87ec8139f55b0c2b54ad542b07fea420ccd00dd1020e2c758dfb82005d0a63c3",
+      "matches_blocked": false
+    },
+    {
+      "source": "fixed captured Script window.location.href assignments",
+      "path": "/qieti/login",
+      "sha256": "55d900e6fc7524cac0de130ea2e6c249426846e56af5165e9b0ddbcaed4d746d",
+      "matches_blocked": true,
+      "literal_byte_offsets": [1068568, 1069044],
+      "assignment_byte_offsets": [1068547, 1069023],
+      "static_response_401_condition_byte_offset": 1068180,
+      "actual_401_response_or_branch_proven": false
+    }
+  ],
+  "script": {
+    "sha256_verified": "d0a5ebce18bc92d7643662ecec2d078bb295214111e7cb32688f0b88e05bed41",
+    "bytes_verified": 3065996,
+    "matches_a19_fixed_asset_identity": true,
+    "route_object_byte_offset": 3062006,
+    "login_route_literal_byte_offset": 3062012,
+    "login_route_name_field_byte_offset": 3062021,
+    "executed": false
+  },
+  "actual_phase_summary": {
+    "goto": "DONE",
+    "http_status": 200,
+    "domcontentloaded_observed": true,
+    "goto_elapsed_ms": 15391.0,
+    "readiness": "FAILED",
+    "readiness_elapsed_ms": 30172.0,
+    "readiness_error": "TimeoutError/UNKNOWN",
+    "guard_first_error": "Stop/NAVIGATION_BLOCKED",
+    "book_and_successors": "NOT_RUN"
+  },
+  "conclusion": "Blocked pathname exactly matches known login navigation target",
+  "actual_initiator": "UNKNOWN",
+  "authentication_failure_reason": "UNKNOWN",
+  "automatic_login_or_second_navigation_permission": false,
+  "login_redirect_branch_details": {
+    "common_condition_offset": 1068180,
+    "common_condition": "response exists; HTTP 401; original request _retry not yet set",
+    "retry_marker_assignment_offset": 1068231,
+    "first_assignment": {
+      "offset": 1068547,
+      "response_field_names": ["detail", "message"],
+      "condition_definition_offset": 1068394,
+      "expiry_keyword_literals": ["过期", "expired", "exp"],
+      "condition": "concatenated response field strings contain none of the three expiry keywords",
+      "actual_branch_proven": false
+    },
+    "second_assignment": {
+      "offset": 1069023,
+      "try_offset": 1068601,
+      "catch_offset": 1068975,
+      "condition": "expiry branch entered, followed by refresh try/catch failure",
+      "possible_static_error_classes": [
+        "stored session record absent",
+        "stored record JSON parsing failed",
+        "awaited refresh POST rejected",
+        "subsequent synchronous processing failed"
+      ],
+      "refresh_send_proven": false,
+      "returned_original_request_promise_is_awaited": false,
+      "actual_branch_proven": false
+    },
+    "actual_session_evidence": {
+      "path_template": "/qieti/api/user_login/config/permissions",
+      "native_allow_at": "2026-10-20T13:50:39.574044+00:00",
+      "context_allow_at": "2026-10-20T13:50:39.589555+00:00",
+      "events_are_not_http_success_or_request_count": true,
+      "response_status": "NOT_RECORDED",
+      "redirect_branch": "NOT_RECORDED",
+      "refresh_failure_class": "NOT_RECORDED"
+    },
+    "minimum_missing_facts": [
+      "actual HTTP status for the known permissions request",
+      "finite login redirect branch classification",
+      "if refresh branch: local precondition, refresh response failure, or subsequent synchronous failure classification"
+    ],
+    "new_observation_authorized": false
+  },
+  "login_submission_static_only": {
+    "bundle_contains_component": true,
+    "method": "POST",
+    "same_origin_relative_path": "/qieti/api/user_login/login",
+    "json_field_names": ["username", "password"],
+    "api_prefix_definition_offset": 1067312,
+    "client_create_offset": 1067577,
+    "client_create_sets_baseURL": false,
+    "wrapper": "Pze",
+    "wrapper_offset": 1069840,
+    "post_call_offset": 1069878,
+    "component": "IFe",
+    "nonempty_input_check_offset": 1095309,
+    "component_call_offset": 1095395,
+    "response_decoder": "Hn",
+    "response_decoder_offset": 1069105,
+    "response_decoder_rule": "numeric code must be 0 or 200, then return data; other numeric codes throw; without numeric code return body",
+    "explicit_nonempty_returned_credential_check": false,
+    "local_session_write_offset": 1095416,
+    "success_router_path": "/",
+    "router_push_offset": 1095613,
+    "component_error_catch_offset": 1095625,
+    "route_component_binding_offset": 1097152,
+    "automatic_return_to_original_target_proven": false,
+    "shared_interceptor_contains_refresh_and_replay": true,
+    "server_authentication_proven": false,
+    "credential_submission_authorized_by_this_appendix": false
+  },
+  "actions": {
+    "product_import_or_run": 0,
+    "tests": 0,
+    "network": 0,
+    "browser": 0,
+    "profile_reads": 0,
+    "a19_local_live_reads": 0,
+    "source_sidecar_reads": 0,
+    "dictionary_path_guessing": 0,
+    "policy_changes": 0
+  }
+}

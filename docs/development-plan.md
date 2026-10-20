@@ -1,3 +1,5 @@
+2026-10-20 A20两新正式对话均已接单：执行01a159aa-42b4-7103-bfaa-9767969d9b8e、独立01a159ab-01ba-7093-89a6-69e7ce572c38，host local/xhigh/model沿用，cursor见JSON。作者D:/1800-worktrees/a20-authenticated-source、base38e86a1c；独立只准备标准等固定交付，不读活动作者目录。现有脚本登录路由与A19阻断hash精确匹配的根核证见docs/evidence/coordinator/a19-login-path-analysis/，不能据静态401分支推定实际会话失效原因。当前仅离线实现：真实凭据/profile/network/login/live均0；完整候选及有限独立预检后再落实本阶段一次凭据提交与TLS范围的具体决定。
+
 2026-10-20 A20新阶段去重意图已落盘，基线38e86a1c，任务docs/tasks/A20-authenticated-source-recovery.md。A19固定阻断hash与已捕获脚本明确/qieti/login匹配，触发原因未证明；A20集中专用登录态恢复和同context书源读取，先新正式执行/独立离线准备。拟1context/900秒、最多1登录提交/2固定主导航、0业务写入；当前0凭据读取/网络/live/activation。先完成可审查候选及独立预检，再落实覆盖凭据发送的本阶段具体决定；既有只读TLS许可不自动扩大。旧任务/额度/原件保持，具体ID/cursor见JSON，0B消息。
 
 2026-10-20 A19实际失败已正式独立及调度有限收口，final38e86a1c，6报告含清单及45输入原bytes核证，见docs/evidence/coordinator/a19-live-independent-closure/。原导航HTTP200/DCL；较早NAVIGATION_BLOCKED、后readiness超时，六GET/两图0、认证未证明。主框归属仅固定代码分支推断，不冒充落盘frame ID比较。三个持有身份进程、两个Job及context/runtime释放有限接受，launcher自身OS身份/目的用途/触发根因仍按原报告UNKNOWN。作者/独立均释放，live1已耗尽，不再派旧A19。辅助已知登录路径hash比对单独准备，不回写正式结论或扩展登录授权。
