@@ -1,3 +1,5 @@
+2026-10-20 A18实际失败已正式独立及调度有限收口，final35ad2ef5。6报告成员+self、45输入原bytes核证，见docs/evidence/coordinator/a18-live-independent-closure/。仅接受固定失败和三个持有身份进程/两Job/context/runtime释放；认证/HTTP状态/根因/launcher自身OS身份仍UNKNOWN，live1耗尽余0，作者独立均释放。已定位错误分类仅保留8码且缺主导航响应/失败事件记录；准备新必要适配补齐原导航证据，不改策略/超时或盲重跑。
+
 2026-10-20 A18唯一live已耗1/余0，实际final35ad2ef5已释放。首导航Error/UNKNOWN，两层同次导航ALLOW、无guard首错，六GET/两原图/version/排除均0，认证未证明。21交付+self、22依赖及31655旧成员保全，45raw至D:/1800-worktrees/a18-live-review；同独立按docs/tasks/A18-single-live-fixed-independent-review.md核失败与已证释放。工具exit1与产品/worker exit2分开保留，launcher自身OS身份/HTTP状态/根因UNKNOWN；不重试或恢复额度。
 
 2026-10-20 A18正式独立与调度有限接受后，已沿用用户“一直批准”同类TLS持续许可绑定自己的唯一真实轮。产品45174e31/finala1dae2ef，22依赖原bytes复核；任务docs/tasks/A18-approved-single-live-dispatch.md、意图docs/evidence/coordinator/a18-live-dispatch/dispatch-intent.json。1context/1导航/900秒，六GET+两图各一次、version静态GET至多1、共享排除16、0样题登录写入。实际窗口/启动/结果见JSON，不重试或恢复旧额度；原执行承接、原独立等待固定实际结果。下方预检中/live未激活为历史。
