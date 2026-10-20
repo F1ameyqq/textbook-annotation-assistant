@@ -1,5 +1,7 @@
 # 项目开发约定
 
+2026-10-20 A12-R1固定交付已到：产品d45ed25a、final81fab23e，作者D1-D8自报8/8并释放；调度raw核31新增、31181旧成员保全及精确子进程释放通过，未作语义接受。正式独立01a157a5-495a-7bf3-bc17-299ad85c48a7已接单，在D:/1800-worktrees/a12-r1-independent核固定53raw并执行唯一D1-D8纯离线差量；原N1-N3不重跑，作者额度耗尽不恢复。下一依赖为独立固定报告/原始结果/清单/释放，当前0新live/登录/业务。见docs/evidence/coordinator/a12-review-delta-dispatch/independent-run-intent.json。
+
 2026-10-20 A12正式独立验收已固定REWORK并释放：R01为Windows占用输出CRLF/LF不兼容，R02为DOM异步期间守卫停止未进入最终判定；原产品7f3d42e3/final0c30b365不得live。原三例网络suite及释放证据有限保留，旧1候选/1suite耗尽不恢复。调度已明确安排A12-R1两项纯离线差量，分别新建正式执行/验收对话；最多新增1候选、双方各1次D1-D8，0浏览器/平台/原profile，不重跑N1-N3。实际派发ID以docs/coordination-state.json为准；其他三例HOLD、Q22不重放、0B消息。
 
 2026-10-20 用户再次纠正：新阶段必须分别新建正式执行和验收对话，不能以当前对话子代理代替。A12此前错误使用子代理已保留历史；现正式执行01a15792-ed1f-7911-b1b4-d5ed6ca9020d仅接收固定交付，正式独立验收01a15794-ad3e-7653-8f77-237fe06f8898核固定raw，均xhigh、model沿用。产品7f3d42e3、final0c30b365，原1候选/1suite已耗尽且作者释放；创建新对话不重跑或恢复额度。后续正式阶段使用create_thread，子代理只作必要辅助。见docs/evidence/coordinator/a12-native-reuse-dispatch/formal-chat-dispatch-intent.json。
