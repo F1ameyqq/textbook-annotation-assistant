@@ -1,5 +1,7 @@
 # A 侧开发调度与验收
 
+2026-10-20 A16只读观测版已固定交原独立验收：产品dd22193a/final2453c71c，候选SHAe66e9f96197871f7123ebe2ed981a587262c50fb3f6e62cdc300f8e96be5a63f。作者新18项及raw18项通过，调度核50交付成员/16依赖，59去重raw导出D:/1800-worktrees/a16-observation-review，31259旧成员及136旧A16证据保全；仅机械通过。正式独立01a15841-0d44-7272-9740-40d013839869按tasks/A16-observation-only-fixed-independent-review.md已接单，原作者释放。sample0、六业务GET/两图范围不扩大，R02未修复而能力停用；旧8ab09441正式REWORK已封存40成员。当前独立尚未接受，A16 TLS未批准/live0；新的observation-only TLS草稿待固定验收后定稿。下方“原独立正封存/作者修订中”为历史。
+
 2026-10-20 用户提出先上真实平台验证再调整，调度已按docs/tasks/A16-real-evidence-first-disposition.md调整A16工程顺序：当前8ab09441复核确认R01/R03/R04相关控制通过，但R02仍把语法无效脚本认作接口证据，原独立正封存REWORK。原作者已续派同阶段observation-only候选：停用自动schema资格判定并在策略层拒绝五个样题GET，sample_limit=0；先取得书籍/目录/全量题框、viewer14/173原图映射及现有获准静态脚本真实证据。原R02不重标关闭、不继续完善通用解析器；原证据保全。新候选范围/安全复核后再固定A16 TLS决定和激活，目前仍0live/未批准TLS；不是跳过守卫或授权直接写入。
 
 2026-10-20 A16 R01–R04 修订已冻结释放并交原独立复核：产品cb26282a/final8ab09441，候选SHA071340237c76a7159bd90485e17a774c2f870114baef0199172a2fc5f9547efc。作者新修订raw suite75/75、2906ms；调度核104增改/19依赖，111去重raw已导出D:/1800-worktrees/a16-r1-review，31259基线及原39证据保全。正式独立01a15841-0d44-7272-9740-40d013839869按docs/tasks/A16-revision-fixed-independent-review.md复核，原作者已释放，不再重跑旧suite。R02仅支持窄native-fetch来源关系，当前平台适用性未证明；新旧失败及无OS创建身份的释放限制保留。当前未接受、A16 TLS未批准/live0；旧TLS草案须按新候选接受结果更新，不能直接执行。
