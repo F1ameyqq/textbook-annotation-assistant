@@ -1,0 +1,53 @@
+{
+  "task": "A10-existing-playwright-mcp-diagnosis",
+  "user_request": "Diagnose existing Playwright MCP service connection and browser session",
+  "status": "READONLY_DIAGNOSIS_COMPLETE_SESSION_TIMEOUT",
+  "baseline": "d08e506aacf23c7adaef8a0dc8b7e6beaaaf70f4",
+  "scope": [
+    "existing config nonsecret fields",
+    "process and listening socket metadata",
+    "installed MCP source",
+    "extension install and connection metadata"
+  ],
+  "prohibited": [
+    "platform navigation or requests",
+    "browser or MCP restart/kill",
+    "settings changes",
+    "credential output",
+    "old probe retry"
+  ],
+  "parallel_intent": {
+    "agent": "/root/playwright_mcp_static_path",
+    "scope": "Read installed MCP source for extension connection and browser_tabs flow; no runtime calls, no browser/network/process changes",
+    "status": "COMPLETED_RELEASED",
+    "receipt": "spawn_agent returned canonical task name",
+    "report": "independent-static-source-report.json",
+    "report_sha256": "fc21ec57d79108664d4922a7b41eb918b70074f908994e936f513aa7ab051f82"
+  },
+  "started_at": "2026-10-20T11:19:10.234926+08:00",
+  "protocol_liveness_intent": {
+    "method": "resources/list",
+    "server": "playwright",
+    "count_limit": 1,
+    "purpose": "Existing MCP JSON-RPC responsiveness only; no browser tool invocation",
+    "status": "RESPONDED_METHOD_NOT_FOUND",
+    "time": "2026-10-20T11:22:20.309285+08:00",
+    "result": "Mcp error: -32601: Method not found",
+    "calls": 1,
+    "browser_tool_called": false
+  },
+  "session_check": {
+    "authorization": "Current human request to diagnose existing Playwright MCP service and browser session",
+    "status": "TOOL_TIMEOUT",
+    "tool": "playwright.browser_tabs",
+    "action": "list",
+    "max_calls": 1,
+    "scope": "Existing MCP first-call/session diagnosis; may display its official extension connection page; no platform navigation/login/write, no settings/process restart",
+    "old_platform_probe_budgets_restored": false,
+    "reason": "Existing MCP responded immediately to protocol request; config and installed extension verified, actual session still unknown",
+    "time": "2026-10-20T11:23:40.982907+08:00",
+    "calls": 1,
+    "elapsed_ms": 120009
+  },
+  "completed_at": "2026-10-20T11:30:02.048952+08:00"
+}

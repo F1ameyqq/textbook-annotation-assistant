@@ -2,7 +2,7 @@
   "schema_version": 1,
   "project": "D:\\1800",
   "coordinator_thread_id": "01a13f26-7567-75e1-99ee-c9d2194e78bb",
-  "updated_at": "2026-10-20T03:13:12.153422+00:00",
+  "updated_at": "2026-10-20T11:27:55.651830+08:00",
   "automation": {
     "id": "1800-a",
     "kind": "heartbeat",
@@ -9307,7 +9307,7 @@
       "push_authorization_scope": "Completed A-PUBLISH-04 only; future changes require their own scope"
     },
     "A10": {
-      "status": "BLOCKED_BROWSER_URL_CONTEXT_WITH_DIAGNOSTICS_CLOSED",
+      "status": "BLOCKED_MCP_BROWSER_SESSION_TIMEOUT",
       "task": "docs/tasks/A10-platform-readiness-preflight.md",
       "approval": "docs/approvals/A10-platform-readonly-approval.json",
       "scope": "One round <=15min read-only book46007447; at most viewer10/14/15/173; no business writes or old task rerun",
@@ -9315,7 +9315,7 @@
       "review_agent": "/root/a10_preflight_archive_review",
       "execution_runs_limit": 1,
       "live_independent_runs_limit": 0,
-      "next_dependency": "Await user confirmation that Usense tab has been brought to foreground, then inspect supported tool availability in a later turn",
+      "next_dependency": "Accurately identify and reconnect only this chat MCP session; preserve user Edge/profile; then select authorized tab through official extension UI",
       "dispatch_result": "SPAWN_CONFIRMED",
       "workflow_commit": "6dcea351b4be4608d4d2a185a4721b4daf6ba286",
       "dispatched_at": "2026-10-19T13:20:38.630524+00:00",
@@ -9748,6 +9748,27 @@
         "recommended_next": "User may open supported built-in browser (Windows Ctrl+Shift+B) or connect official Edge extension via Settings > Integrations > Computer Use. Verify URL and access controls through that supported channel before any platform action.",
         "remaining_implementation_tasks": 0,
         "automatic_retry_authorized_by_research": false
+      },
+      "existing_mcp_diagnosis": {
+        "status": "READONLY_DIAGNOSIS_COMPLETE_SESSION_TIMEOUT",
+        "task": "docs/tasks/A10-existing-playwright-mcp-diagnosis.md",
+        "baseline_commit": "d08e506aacf23c7adaef8a0dc8b7e6beaaaf70f4",
+        "agent": "/root/playwright_mcp_static_path",
+        "agent_released": true,
+        "agent_receipt": "Static report fixed and completion received",
+        "agent_report_sha256": "fc21ec57d79108664d4922a7b41eb918b70074f908994e936f513aa7ab051f82",
+        "protocol_calls": 1,
+        "session_list_calls": 1,
+        "session_result": "120009 ms timeout; no tab inventory",
+        "exact_blocked_layer": "UNKNOWN",
+        "next_dependency": "Accurately identify and reconnect only this chat MCP session; preserve user Edge/profile; then select authorized tab through official extension UI",
+        "reconnect_executed": false,
+        "platform_navigation_requested": 0,
+        "business_writes": 0,
+        "process_termination": 0,
+        "old_quota_restored": false,
+        "report_sha256": "6ebbe747fb136f07a87441085417305d7bd1a35cd4b0c178e9940df96051bd62",
+        "updated_at": "2026-10-20T11:27:55.651830+08:00"
       }
     },
     "A11": {
@@ -12311,14 +12332,10 @@
     }
   ],
   "last_action": {
-    "at": "2026-10-20T03:04:26.720991+00:00",
-    "action": "Closed fixed proxy diagnostic archive and preserved browser URL policy stop; no retry",
-    "fixed_final_commit": "0f7777ca87e27443331ae65bae9c54b2dd6090f8",
-    "review_agent": "/root/a10_proxy_archive_completion",
-    "acceptance": "ACCEPT_FAILURE_ARCHIVE_AND_EXACT_OWNED_RELEASE_ONLY",
-    "new_platform_business_writes": 0,
-    "B_messages": 0,
-    "next_dependency": "Await user confirmation that Usense tab has been brought to foreground, then inspect supported tool availability in a later turn"
+    "task": "A10-existing-playwright-mcp-diagnosis",
+    "status": "READONLY_DIAGNOSIS_COMPLETE_SESSION_TIMEOUT",
+    "at": "2026-10-20T11:27:55.651830+08:00",
+    "report": "docs/tasks/A10-existing-playwright-mcp-diagnosis.md"
   },
   "limitations": [
     "Current route uses mock B artifacts until independently agreed interface/artifact versions exist.",
@@ -13556,7 +13573,7 @@
     "user_deadline_days": 3,
     "deadline_basis": "72 hours from this decision; target 2026-10-22 same local time; exact handover clock not specified",
     "user_selected_delivery": "必须包含：优先争取限定题型、小批量的平台试用版",
-    "status": "WAITING_USENSE_FOREGROUND_CONTEXT_TOOL_URL_BLOCK",
+    "status": "BLOCKED_MCP_SESSION_WITH_PROTOCOL_RESPONSE",
     "plan": "docs/delivery-72h-plan-2026-10-19.md",
     "plan_sha256": "6bfc3d379ec700556b6fec7438b85126c428c7ce4ae58ba9c727982b00ab94f7",
     "proposed_book_id": "46007447",
@@ -13574,7 +13591,7 @@
     "new_product_dispatches": 0,
     "B_messages": 0,
     "planning_agent": "/root/three_day_scope_check",
-    "next_dependency": "Await user confirmation that Usense tab has been brought to foreground, then inspect supported tool availability in a later turn",
+    "next_dependency": "Accurately identify and reconnect only this chat MCP session; preserve user Edge/profile; then select authorized tab through official extension UI",
     "full_original_scope_completed_or_cancelled": false,
     "committed_success_guarantee": false,
     "authorization_clarification": "User clarified 一直允许连接平台; do not ask platform-connection/book permission again.",
