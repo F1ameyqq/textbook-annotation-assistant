@@ -1,5 +1,7 @@
 # A 侧开发调度与验收
 
+2026-10-20 A12正式独立验收已固定REWORK并释放：R01为Windows占用输出CRLF/LF不兼容，R02为DOM异步期间守卫停止未进入最终判定；原产品7f3d42e3/final0c30b365不得live。原三例网络suite及释放证据有限保留，旧1候选/1suite耗尽不恢复。调度已明确安排A12-R1两项纯离线差量，分别新建正式执行/验收对话；最多新增1候选、双方各1次D1-D8，0浏览器/平台/原profile，不重跑N1-N3。实际派发ID以docs/coordination-state.json为准；其他三例HOLD、Q22不重放、0B消息。
+
 2026-10-20 正式派发流程纠正：按用户再次明确的原约定，A12已分别新建正式执行对话01a15792-ed1f-7911-b1b4-d5ed6ca9020d（固定交付接收，0重跑）及独立验收01a15794-ad3e-7653-8f77-237fe06f8898（固定raw静态核查，0suite/平台）。此前误用子代理的作者和准备记录保留，不冒称正式对话执行了原suite。产品7f3d42e3/final0c30b365已交付释放，调度raw预检21成员/22新增/31159旧成员保全通过；资格仍待正式独立结论。后续新阶段一律分别新建执行/验收对话，辅助代理不替代正式派发。
 
 2026-10-20 A12已按[专用无头复用观测任务](tasks/A12-headless-reuse-native-transport-probe.md)派发到独立目录D:/1800-worktrees/a12-native-reuse，作者/root/a12_headless_native_probe_author，workflow5e31abf7。1候选/1次N1-N3本地suite、作者0平台，固定交付释放后另派静态独立；当前无新的无头live启动。托管worktree因长路径失败保留，显式-c core.longpaths=true的短目录创建成功，不计产品/live尝试。实际回执和下一依赖以JSON为准。

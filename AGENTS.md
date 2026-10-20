@@ -1,5 +1,7 @@
 # 项目开发约定
 
+2026-10-20 A12正式独立验收已固定REWORK并释放：R01为Windows占用输出CRLF/LF不兼容，R02为DOM异步期间守卫停止未进入最终判定；原产品7f3d42e3/final0c30b365不得live。原三例网络suite及释放证据有限保留，旧1候选/1suite耗尽不恢复。调度已明确安排A12-R1两项纯离线差量，分别新建正式执行/验收对话；最多新增1候选、双方各1次D1-D8，0浏览器/平台/原profile，不重跑N1-N3。实际派发ID以docs/coordination-state.json为准；其他三例HOLD、Q22不重放、0B消息。
+
 2026-10-20 用户再次纠正：新阶段必须分别新建正式执行和验收对话，不能以当前对话子代理代替。A12此前错误使用子代理已保留历史；现正式执行01a15792-ed1f-7911-b1b4-d5ed6ca9020d仅接收固定交付，正式独立验收01a15794-ad3e-7653-8f77-237fe06f8898核固定raw，均xhigh、model沿用。产品7f3d42e3、final0c30b365，原1候选/1suite已耗尽且作者释放；创建新对话不重跑或恢复额度。后续正式阶段使用create_thread，子代理只作必要辅助。见docs/evidence/coordinator/a12-native-reuse-dispatch/formal-chat-dispatch-intent.json。
 
 2026-10-20 A12已派发：独立目录D:/1800-worktrees/a12-native-reuse、作者/root/a12_headless_native_probe_author、workflow5e31abf7，见docs/tasks/A12-headless-reuse-native-transport-probe.md。仅1新候选/1次本地三例guard suite，作者0平台。固定raw交付释放后另派静态独立，不复跑suite；证明逐跳/方法/WS守卫后主调度才可另登记最多1次reuse-only无头观测，0登录/业务。当前未启动A12平台轮。托管worktree长路径失败保留，显式longpaths短目录已成功，不是产品或live尝试。

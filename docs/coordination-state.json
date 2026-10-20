@@ -2,7 +2,7 @@
   "schema_version": 1,
   "project": "D:\\1800",
   "coordinator_thread_id": "01a15768-1e2d-7781-b29f-1f7376270216",
-  "updated_at": "2026-10-20T12:35:30.9121267+08:00",
+  "updated_at": "2026-10-20T12:48:41.995817+08:00",
   "automation": {
     "id": "1800-a",
     "kind": "heartbeat",
@@ -9805,11 +9805,11 @@
       }
     },
     "A12": {
-      "status": "FORMAL_STATIC_REVIEW_RUNNING_EXECUTION_RECEIVED",
+      "status": "REWORK_FORMAL_STATIC_REVIEW_COMPLETE",
       "task": "docs/tasks/A12-headless-reuse-native-transport-probe.md",
       "author_agent": "/root/a12_headless_native_probe_author",
       "historical_review_preparation_agent": "/root/a12_native_probe_independent_review",
-      "review_status": "FORMAL_CHAT_STATIC_REVIEW_RUNNING",
+      "review_status": "REWORK_R01_R02",
       "review_preparation_complete": true,
       "review_preparation_released": true,
       "review_product_reads_or_runs": 0,
@@ -9822,7 +9822,10 @@
       "dispatch_result": "SPAWN_CONFIRMED",
       "author_acknowledged": true,
       "author_acknowledged_at": "2026-10-20T12:13:18.042+08:00",
-      "environment": {"python": "3.9.13", "playwright": "1.58.0"},
+      "environment": {
+        "python": "3.9.13",
+        "playwright": "1.58.0"
+      },
       "author_reported_browser_starts_at_ack": 0,
       "author_reported_product_commit": "7f3d42e31be29782f0e09e6c01cc8e277387747c",
       "author_reported_candidate_manifest_sha256": "f900aba89ff0b4d997be227e0a1488f5e856987604f17aeeea24a41292bc31d7",
@@ -9850,29 +9853,37 @@
       "review": {
         "thread_id": "01a15794-ad3e-7653-8f77-237fe06f8898",
         "host_id": "local",
-        "status": "STATIC_RAW_REVIEW_RUNNING",
+        "status": "REWORK_RELEASED",
         "scope": "Fixed raw semantics and original evidence only; 0 suite/browser/platform replay",
         "workspace": "D:/1800-worktrees/a12-formal-review",
-        "cursor": "372323c4-2fad-47eb-aec8-4f45c9be23df:1"
+        "cursor": "372323c4-2fad-47eb-aec8-4f45c9be23df:6",
+        "released": true,
+        "report": "docs/evidence/coordinator/a12-formal-review/report.json",
+        "manifest_sha256": "d6ef539ab0579c18c1b46b57113894caf11d6c476b18ab49ecfd72e9c3d8157f"
       },
       "delivery_preflight": "docs/evidence/coordinator/a12-native-reuse-dispatch/delivery-preflight.json",
       "author_remaining_candidates": 0,
       "author_remaining_offline_suites": 0,
       "author_reported_live_starts": 0,
-      "fixed_delivery_independently_verified": false,
+      "fixed_delivery_independently_verified": true,
       "author_candidate_limit": 1,
       "author_offline_suite_limit": 1,
       "author_live_starts_limit": 0,
-      "offline_cases": ["N1", "N2", "N3"],
+      "offline_cases": [
+        "N1",
+        "N2",
+        "N3"
+      ],
       "independent_review": "NEW_STATIC_REVIEW_AFTER_FIXED_DELIVERY_AND_RELEASE",
       "independent_suite_replays": 0,
       "conditional_coordinator_live_start_limit": 1,
-      "live_gate": "Accepted native redirect/method/WebSocket guard and new exact profile/occupation/once-only-marker evidence",
+      "live_gate": "CLOSED_FOR_7f3d42e3_R01_R02",
       "login_submissions_limit": 0,
       "business_writes_limit": 0,
       "old_budgets_restored": false,
       "workspace_preparation": "docs/evidence/coordinator/a12-native-reuse-dispatch/workspace-preparation.json",
-      "next_dependency": "Wait only formal review chat fixed raw static conclusion with saved cursor; execution reception complete and released. Any later live action requires concrete coordinator dispatch and unchanged one-start cap"
+      "next_dependency": "New formal A12-R1 bounded offline correction; original author/review released and old counts unchanged.",
+      "semantic_preparation_accepted": false
     },
     "A11": {
       "status": "INTEGRATED",
@@ -10023,6 +10034,31 @@
       "integration_commit": "582257248878c91ef0f9b87d43927e312ba19eb9",
       "integration_report": "docs/tasks/A11-local-integration.md",
       "closed_at": "2026-10-19T16:35:18.226880+00:00"
+    },
+    "A12-R1": {
+      "at": "2026-10-20T12:48:41.995817+08:00",
+      "status": "PREPARED_NOT_DISPATCHED",
+      "coordinator_thread_id": "01a15768-1e2d-7781-b29f-1f7376270216",
+      "task": "docs/tasks/A12-R1-review-findings-correction.md",
+      "review_task": "docs/tasks/A12-R1-independent-review.md",
+      "dedup_execution": "A12-R1+execution+R01-R02+0c30b365",
+      "dedup_review": "A12-R1+independent+R01-R02+0c30b365",
+      "execution_thread_id": null,
+      "review_thread_id": null,
+      "host_id": "local",
+      "project_id": "4488a042-3ec7-4f9e-8880-cbc8f4e02a51",
+      "base_commit": "0c30b365ed18b006bcab32bed4acb60869ff9f92",
+      "author_workspace": "D:/1800-worktrees/a12-review-delta",
+      "author_branch": "codex/a12-review-delta",
+      "thinking": "xhigh",
+      "model": "inherit",
+      "old_candidate_used": 1,
+      "old_browser_suite_used": 1,
+      "old_budgets_restored": false,
+      "explicit_new_delta_candidate_limit": 1,
+      "explicit_new_delta_suites_per_actor": 1,
+      "new_browser_or_live_limit": 0,
+      "authority": "Coordinator explicitly revises own engineering plan under standing user continuation; not a claimed new user quota approval."
     }
   },
   "route": [
@@ -12435,9 +12471,9 @@
     }
   ],
   "last_action": {
-    "task": "A12-native-headless-reuse-probe",
-    "status": "AUTHOR_ACKNOWLEDGED_OFFLINE_IMPLEMENTATION",
-    "at": "2026-10-20T12:13:18.042+08:00"
+    "at": "2026-10-20T12:48:41.995817+08:00",
+    "action": "Verified frozen formal A12 REWORK and prepared explicit R01/R02 delta; no live.",
+    "evidence": "docs/evidence/coordinator/a12-formal-review/coordinator-receipt.json"
   },
   "limitations": [
     "Current route uses mock B artifacts until independently agreed interface/artifact versions exist.",
@@ -13684,7 +13720,7 @@
     "user_deadline_days": 3,
     "deadline_basis": "72 hours from this decision; target 2026-10-22 same local time; exact handover clock not specified",
     "user_selected_delivery": "必须包含：优先争取限定题型、小批量的平台试用版",
-    "status": "A12_OFFLINE_GUARD_IMPLEMENTATION_ACTIVE_MCP_LOGIN_ONLY",
+    "status": "A12_REWORK_R01_R02_DELTA_PREPARED_NO_LIVE",
     "plan": "docs/delivery-72h-plan-2026-10-19.md",
     "plan_sha256": "6bfc3d379ec700556b6fec7438b85126c428c7ce4ae58ba9c727982b00ab94f7",
     "proposed_book_id": "46007447",
@@ -13702,7 +13738,7 @@
     "new_product_dispatches": 0,
     "B_messages": 0,
     "planning_agent": "/root/three_day_scope_check",
-    "next_dependency": "A12 author fixed product/driver/raw manifest/one N1-N3 local guard suite and owned release; then separate static review before conditional one reuse-only live. No old native/proxy rerun.",
+    "next_dependency": "Separate formal A12-R1 execution and review; fixed 8-case pure offline delta, then coordinator disposition.",
     "full_original_scope_completed_or_cancelled": false,
     "committed_success_guarantee": false,
     "authorization_clarification": "User clarified 一直允许连接平台; do not ask platform-connection/book permission again.",

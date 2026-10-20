@@ -1,0 +1,189 @@
+{
+  "schema_version": 1,
+  "task": "A12 formal independent static review",
+  "review_thread_id": "01a15794-ad3e-7653-8f77-237fe06f8898",
+  "status": "REWORK",
+  "qualification_granted": false,
+  "coordinator_live_gate": "CLOSED_FOR_THIS_FIXED_CANDIDATE",
+  "base_commit": "5e31abf791a69333384b0154c02a77da557e7a63",
+  "workflow_commit": "5e31abf791a69333384b0154c02a77da557e7a63",
+  "product_commit": "7f3d42e31be29782f0e09e6c01cc8e277387747c",
+  "driver_commit": "7f3d42e31be29782f0e09e6c01cc8e277387747c",
+  "final_commit": "0c30b365ed18b006bcab32bed4acb60869ff9f92",
+  "raw_root": "D:/1800-worktrees/a12-formal-review",
+  "candidate_manifest_sha256": "f900aba89ff0b4d997be227e0a1488f5e856987604f17aeeea24a41292bc31d7",
+  "delivery_raw_manifest_sha256": "9a69d1dbf5913a5a566c2eae1af68fe7b4356aba0e83e942fd0eb3016a54431c",
+  "identity_verification": {
+    "raw_members": 22,
+    "delivery_manifest_members": 21,
+    "candidate_members": 9,
+    "baseline_members_checked": 31159,
+    "baseline_changed": 0,
+    "provenance_sources_checked": 4,
+    "method": "Read-only Git ls-tree -rz/cat-file, GIT_NO_LAZY_FETCH=1 and core.longpaths=true. Local raw bytes hashed without importing or executing product. Input identities are recorded in raw-output-manifest.json."
+  },
+  "findings": [
+    {
+      "id": "R01",
+      "priority": "P1",
+      "title": "Windows occupancy stdout framing rejects a normal successful zero count",
+      "classification": "STATIC_COMPATIBILITY_DEFECT",
+      "evidence": [
+        {"path": "tools/headless_native_reuse_probe.py", "start": 327, "end": 334},
+        {"path": "tools/headless_native_reuse_probe.py", "start": 561, "end": 565},
+        {"path": "tools/headless_native_reuse_probe.py", "start": 538, "end": 546},
+        {"path": "tools/headless_native_reuse_probe.py", "start": 579, "end": 586}
+      ],
+      "analysis": "The helper writes compact JSON plus a text newline using sys.stdout.write. CPython 3.9.13 initializes Windows stdout with newline=None and translates LF to CRLF, including redirected stdout. Parent Popen uses binary PIPEs and accepts only b'{\"count\":0}\\n'. Normal successful output is therefore b'{\"count\":0}\\r\\n' and is rejected as PROFILE_OCCUPANCY_UNPROVEN even with count=0 and exit=0. PYTHONIOENCODING affects encoding, not newline translation. The original suite calls open_owned directly and never exercises occupancy.",
+      "impact": "The exclusive live directory, start intent and worker claim already exist before occupancy. The candidate fails before navigation while consuming the single start. This is a fail-closed framing defect, not platform or actual profile-occupancy evidence.",
+      "required_correction": "Under separate authority, define consistent binary framing or strictly decode and validate one JSON record with explicitly permitted framing. Keep malformed output, stderr, nonzero exit and nonzero count rejected. This review authorizes no repair, candidate, suite, live run or marker reset.",
+      "proof_kind": "Frozen code plus version-specific primary CPython source; no product/helper execution.",
+      "sources": [
+        "https://raw.githubusercontent.com/python/cpython/v3.9.13/Python/pylifecycle.c",
+        "https://docs.python.org/3.9/library/io.html#io.TextIOWrapper"
+      ]
+    },
+    {
+      "id": "R02",
+      "priority": "P2",
+      "title": "Final viewer decision can ignore an asynchronous guard stop",
+      "classification": "STATIC_ASYNC_INTERLEAVING_DEFECT",
+      "evidence": [
+        {"path": "tools/headless_native_reuse_probe.py", "start": 160, "end": 172},
+        {"path": "tools/headless_native_reuse_probe.py", "start": 194, "end": 219},
+        {"path": "tools/headless_native_reuse_probe.py", "start": 365, "end": 394}
+      ],
+      "analysis": "The readiness loop checks stopped/failure only before awaited password and viewer reads. A concurrent denied request or callback failure can set terminal guard state during either await; control can then assign LOGIN_REQUIRED or AUTHENTICATED_VIEWER_OBSERVED without rechecking. Policy denial sets stopped but can leave failure=None. The final result does not serialize the pre-shutdown stopped state; finally itself sets stopped for cleanup. A normal exit0 outcome can therefore coexist with an already observed unexpected network stop. On the precheck exception path, original guard.failure is not copied because guard_failure is assigned only after a successful loop.",
+      "static_counterexample": [
+        "Iteration begins with stopped=False and failure=None.",
+        "DOM await yields; a live handler denies a request or records an error and sets stopped=True.",
+        "DOM await returns the expected viewer/route and password absence.",
+        "Current code assigns authenticated outcome without another terminal guard check."
+      ],
+      "impact": "First unexpected failure and original error retention are not authoritative at the final decision boundary. The local suite uses expected_block=True and does not exercise the live decision.",
+      "required_correction": "Under separate authority, recheck and preserve terminal guard state/first error after asynchronous reads and at serialization; distinguish shutdown-only stopping. No repair or new execution is authorized here.",
+      "proof_kind": "Static possible interleaving, not an observed platform event."
+    }
+  ],
+  "checks": [
+    {
+      "id": "C01", "status": "PASS", "item": "Raw identity, lineage, preservation and provenance",
+      "conclusion": "22 raw files match final tree mode/type/OID and local hashes; 21 delivery-manifest non-self members match size/SHA/OID. All 31,159 base tuples remain unchanged. Nine candidate members match both product and final. Four provenance copies match exact fixed source blobs. Lineage is base -> product -> final.",
+      "evidence": ["docs/evidence/A12/native-reuse-probe/candidate-manifest.json:7-55", "docs/evidence/A12/native-reuse-probe/preservation.json:14-21", "docs/evidence/A12/native-reuse-probe/source-provenance.json:2-40", "raw-output-manifest.json"]
+    },
+    {
+      "id": "C02", "status": "PASS_FINITE_RECORD", "item": "One candidate and one original suite",
+      "conclusion": "One exclusive suite intent and worker claim bind the frozen digest. Original record reports one browser launch and N1/N2/N3 in order. This is finite evidence, not a host-wide execution census. Independent runs are zero.",
+      "evidence": ["docs/evidence/A12/native-reuse-probe/offline_suite.py:220-242", "docs/evidence/A12/native-reuse-probe/suite-run/suite-started.json:1-13", "docs/evidence/A12/native-reuse-probe/suite-run/worker-claimed.json:1-5", "docs/evidence/A12/native-reuse-probe/suite-run/suite-result.json:100-107"]
+    },
+    {
+      "id": "C03", "status": "PASS_ORIGINAL_EVIDENCE", "item": "N1 actual allowed redirect",
+      "conclusion": "Entry GET at 04:23:41.873144Z, redirect-hop ALLOW at 41.875864Z, final GET at 41.883494Z. One request each and final DOM marker observed.",
+      "evidence": ["docs/evidence/A12/native-reuse-probe/offline_suite.py:117-131", "docs/evidence/A12/native-reuse-probe/suite-run/suite-result.json:108-151", "docs/evidence/A12/native-reuse-probe/suite-run/suite-result.json:242-257"]
+    },
+    {
+      "id": "C04", "status": "PASS_ORIGINAL_EVIDENCE", "item": "N2 actual denied redirect",
+      "conclusion": "Allowed entry at 41.954130Z precedes redirect-hop ORIGIN_BLOCKED at 41.956577Z. Navigation returns ERR_BLOCKED_BY_CLIENT. Final DENIED server log is empty after browser closure.",
+      "evidence": ["docs/evidence/A12/native-reuse-probe/offline_suite.py:133-149", "docs/evidence/A12/native-reuse-probe/suite-run/suite-result.json:153-189", "docs/evidence/A12/native-reuse-probe/suite-run/suite-result.json:258-274"]
+    },
+    {
+      "id": "C05", "status": "PASS_ORIGINAL_EVIDENCE", "item": "N3 actual POST and WebSocket attempts",
+      "conclusion": "Page proof records one POST fetch and one constructed WebSocket, POST settled and socket closed. POST block at 42.057054Z and WS preconnect block at 42.063573Z precede closure. Final endpoint logs have four allowed GETs only, zero POST/Upgrade; no shutdown-before-attempt shortcut.",
+      "evidence": ["docs/evidence/A12/native-reuse-probe/offline_suite.py:153-189", "docs/evidence/A12/native-reuse-probe/suite-run/suite-result.json:191-228", "docs/evidence/A12/native-reuse-probe/suite-run/suite-result.json:242-274"]
+    },
+    {
+      "id": "C06", "status": "SUPPORTED_FOR_OWNED_MAIN_PAGE", "item": "Native per-hop origin/method and WS boundaries",
+      "conclusion": "Fetch Request-stage wildcard interception checks every paused method and origin before continueRequest; denials call failRequest. Context route is explicitly an additional first-request barrier, not redirect proof. Context WS route is installed before online, closes sockets, and never connects to server. N1/N2/N3 are finite installed-implementation evidence. No route.fetch/APIRequestContext execution.",
+      "evidence": ["tools/headless_native_reuse_probe.py:104-134", "tools/headless_native_reuse_probe.py:174-240", "tools/headless_native_reuse_probe.py:259-265", "docs/evidence/A12/native-reuse-probe/suite-run/suite-result.json:2-98"]
+    },
+    {
+      "id": "C07", "status": "STATIC_DESIGN_ONLY", "item": "Worker/SW/frame/popup boundary",
+      "conclusion": "Browser starts offline, service workers blocked, extensions disabled, one about:blank page required. Unowned frames/pages fail context routing. Related targets auto-attach waiting for debugger and are closed without resume; extra page handles close. No child-target events or dedicated worker/popup cases exist in fixed suite, so exhaustive implementation coverage is unproved.",
+      "evidence": ["tools/headless_native_reuse_probe.py:174-193", "tools/headless_native_reuse_probe.py:221-265", "docs/evidence/A12/native-reuse-probe/README.md:28-30"]
+    },
+    {
+      "id": "C08", "status": "PASS_STATIC", "item": "Allowlist provenance and no business access",
+      "conclusion": "Exact Usense origin, four navigation paths, frozen A04 static regexp and three session endpoints only. Queries, unknown APIs and unregistered OSS images fail closed; only GET/HEAD allowed. No book/source/annotation API is authorized.",
+      "evidence": ["tools/headless_native_reuse_probe.py:26-37", "tools/headless_native_reuse_probe.py:92-134", "docs/evidence/A12/native-reuse-probe/reviewed-sources/a04_guard.py:149-172"]
+    },
+    {
+      "id": "C09", "status": "PASS_STATIC", "item": "Default inert mode and persistent one-shot markers",
+      "conclusion": "Default main verifies candidate only. Live requires explicit digest and profile fingerprint, exclusive fixed output directory and durable xb/fsync intent. Worker claim is exclusive. Failures do not delete/reset these paths. No frozen module was imported to verify this.",
+      "evidence": ["tools/headless_native_reuse_probe.py:48-53", "tools/headless_native_reuse_probe.py:528-550", "tools/headless_native_reuse_probe.py:553-591"]
+    },
+    {
+      "id": "C10", "status": "PASS_STATIC_NOT_OBSERVED", "item": "Dedicated profile metadata binding",
+      "conclusion": "Fixed dedicated root, exactly one existing 20-hex directory, reparse/symlink rejection and metadata digest. No credential/cookie/storage read. Reviewer did not inspect actual profile or fingerprint.",
+      "evidence": ["tools/headless_native_reuse_probe.py:302-319", "tools/headless_native_reuse_probe.py:528-546"]
+    },
+    {
+      "id": "C11", "status": "FAIL_R01", "item": "Four-second occupancy",
+      "conclusion": "communicate(timeout=4) bounds scan wait, followed by exact child cleanup. Native matcher fails closed for ambiguity. But normal Windows CRLF output cannot satisfy LF-only binary equality. Four-second wait is not an assertion that cleanup/setup cost is zero.",
+      "evidence": ["tools/headless_native_reuse_probe.py:322-351", "tools/headless_native_reuse_probe.py:561-568", "docs/evidence/A12/native-reuse-probe/reviewed-native/process_check.py:97-131"]
+    },
+    {
+      "id": "C12", "status": "STATIC_LIMITS_NOT_EXPIRY_TESTED", "item": "45-second navigation and 90-second task ceiling",
+      "conclusion": "One goto and readiness loop share a 45-second monotonic start. Parent waits at most 75 seconds then uses two-second child wait and two-second Job polling on ordinary bounded paths. HARD_SECONDS=85 is metadata, not an independent watchdog. Original 4,422 ms run does not test expiry, blocking native calls or filesystem/fsync stalls; no universal wall-clock guarantee is certified.",
+      "evidence": ["tools/headless_native_reuse_probe.py:32-34", "tools/headless_native_reuse_probe.py:354-381", "tools/headless_native_reuse_probe.py:456-524", "docs/evidence/A12/native-reuse-probe/suite-run/worker-release.json:16-30"]
+    },
+    {
+      "id": "C13", "status": "PASS_ORIGINAL_EVIDENCE_STATIC_OWNERSHIP", "item": "Windows Job, exact identity and release",
+      "conclusion": "Fresh Job has KILL_ON_JOB_CLOSE and no breakaway. Worker assigned before GO. Cleanup targets retained child handle or exact owned Job only. PID60972 has identical creation FILETIME134369438183400248 before/after, exit0 observed, Job active1 before final cleanup then0, both handles closed. Natural exit of all browser descendants is not claimed.",
+      "evidence": ["tools/headless_native_reuse_probe.py:397-453", "tools/headless_native_reuse_probe.py:464-524", "docs/evidence/A12/native-reuse-probe/reviewed-native/native_windows.py:78-94", "docs/evidence/A12/native-reuse-probe/suite-run/worker-release.json:1-30"]
+    },
+    {
+      "id": "C14", "status": "PASS_ORIGINAL_EVIDENCE", "item": "Context/runtime/fixture release",
+      "conclusion": "Context closed and runtime stopped; two fixture threads exited and temporary profile removed. Product close errors produce UNKNOWN release state. Failure cleanup branches were not executed by reviewer.",
+      "evidence": ["tools/headless_native_reuse_probe.py:269-291", "docs/evidence/A12/native-reuse-probe/offline_suite.py:197-216", "docs/evidence/A12/native-reuse-probe/suite-run/suite-result.json:231-239", "docs/evidence/A12/native-reuse-probe/suite-run/suite-result.json:277-298"]
+    },
+    {
+      "id": "C15", "status": "PARTIAL_FAIL_R02", "item": "Authentication and first guard failure",
+      "conclusion": "Actual route plus protected visible viewer plus password absence reproduces verify_viewer, not URL/HTTP200 alone. But terminal guard state can change during DOM awaits and is not rechecked before success. Original guard exception is not copied on the failed precheck path.",
+      "evidence": ["tools/headless_native_reuse_probe.py:354-394", "docs/evidence/A12/native-reuse-probe/reviewed-sources/usense_login.py:73-80"]
+    },
+    {
+      "id": "C16", "status": "PASS_STATIC_SCOPE", "item": "No login fallback, TLS change, credential or URL-policy bypass",
+      "conclusion": "Strict TLS, no login helper import/fill/click/submit, no credential JSON/cookie/storage/token or response-body APIs in new runtime. Legacy login source is provenance-only. No extension-page command or other bypass was used. Only public technical documentation was read online.",
+      "evidence": ["tools/headless_native_reuse_probe.py:243-250", "tools/headless_native_reuse_probe.py:294-299", "tools/headless_native_reuse_probe.py:354-394", "docs/evidence/A12/native-reuse-probe/source-provenance.json:36-40"]
+    },
+    {
+      "id": "C17", "status": "PASS_FINITE_SCOPE_WITH_R02", "item": "Original failures and successors preserved",
+      "conclusion": "Suite cases initialize NOT_RUN and exception exits the sequential body; original suite has no unexpected failure. Pre-freeze source/link failures and evidence-seal SyntaxError remain. No old quota restored. R02 prevents accepting live first-failure handling.",
+      "evidence": ["docs/evidence/A12/native-reuse-probe/offline_suite.py:101-106", "docs/evidence/A12/native-reuse-probe/offline_suite.py:191-196", "docs/evidence/A12/native-reuse-probe/preparation-static.json:40-48", "docs/evidence/A12/native-reuse-probe/sealing-events.json:1-18"]
+    }
+  ],
+  "independent_actions": {
+    "product_imports_or_runs": 0, "driver_imports_or_runs": 0, "suite_runs": 0,
+    "browser_launches": 0, "fixture_servers": 0, "platform_requests": 0,
+    "profile_or_credential_access": 0, "old_driver_runs": 0, "b_messages": 0,
+    "input_modifications": 0, "mainline_modifications": 0, "git_mutations": 0,
+    "dependency_installs": 0,
+    "public_reference_reads": "Python/Chromium/Playwright official technical sources only"
+  },
+  "release": {
+    "state": "NO_REVIEW_RUNTIME_RESOURCES_ACQUIRED",
+    "review_complete": true,
+    "further_actions": "STOPPED",
+    "author_release_evidence_verified": true
+  },
+  "review_packaging_event": {
+    "first_long_shell_write": "Tool rejected before process launch: blocked by policy; no output writes occurred.",
+    "recovery": "Write only the same authorized three reports with purpose-built apply_patch and short metadata sealing; no product/suite action."
+  },
+  "not_verified": [
+    "Actual dedicated profile fingerprint/occupancy/authentication",
+    "Real Usense transport, book46007447 or saving/readback",
+    "All child-target/iframe/popup/worker variants",
+    "Forced timeout and exceptional cleanup branches",
+    "B adoption, integration, platform root cause",
+    "seal_delivery.py behavior: byte identity verified only, not executed"
+  ],
+  "next_authority": "Return REWORK to coordinator. No new candidate/suite/live startup, repair, marker reset, old quota restoration or retry authorized. Other three cases HOLD, Q22 not replayed, zero B messages.",
+  "public_sources": [
+    {"url": "https://raw.githubusercontent.com/python/cpython/v3.9.13/Python/pylifecycle.c", "purpose": "Windows stdout translation at lines1728-1732; stdout creation at1872-1876"},
+    {"url": "https://docs.python.org/3.9/library/io.html#io.TextIOWrapper", "purpose": "newline=None output semantics"},
+    {"url": "https://raw.githubusercontent.com/ChromeDevTools/devtools-protocol/master/pdl/domains/Fetch.pdl", "purpose": "Request-stage pre-send interception and redirect IDs"},
+    {"url": "https://raw.githubusercontent.com/ChromeDevTools/devtools-protocol/master/pdl/domains/Target.pdl", "purpose": "Auto-attach waiting targets and recursive coverage limits"},
+    {"url": "https://playwright.dev/python/docs/api/class-websocketroute", "purpose": "Routed WS has no server connection without connect_to_server"}
+  ]
+}
