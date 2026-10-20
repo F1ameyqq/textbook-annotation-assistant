@@ -1,5 +1,7 @@
 # A 侧开发调度与验收
 
+2026-10-20 接任最新：调度ID01a15768-1e2d-7781-b29f-1f7376270216，实际基线8f0e3eb7；唯一1800-a已转移并确认为ACTIVE/30分钟。现有MCP官方扩展选页完成后，一次标签验证17ms返回Usense登录页，服务/扩展会话已通。认证书籍和原专用无头profile仍未观测；日常Default与原专用登录态分离。见[接任与会话恢复](tasks/A10-successor-mcp-session-recovery.md)。旧两超时和本次第三超时均保留，0登录提交/业务写入/进程终止，无URL策略绕过。后续先固定新的reuse-only无头只读范围，不重跑旧driver或恢复额度，再按首题→最多五题→独立验收推进。其他三例HOLD、Q22不重放、不向B发消息；下方待接任或MCP未通为历史。
+
 2026-10-20 调度交接：用户将自行新开对话接替。接任先读 docs/handoff/coordinator-20261020/HANDOFF.md 与 PROMPT.md，再核实际Git/JSON；交接前基线20ed7aa0。旧heartbeat 1800-a已暂停，项目未完成、平台许可保持；新对话登记真实ID后再接管唯一自动化。当前首要仍是现有Playwright MCP会话检查超时（具体阻塞层UNKNOWN），不是重新等待连接许可/开关/Q4确认；旧成功与失败额度不恢复。旧对话交接后不再主动推进，其他三例HOLD。
 
 2026-10-20 11:27最新：用户明确要求排查现有 Playwright MCP 服务连接和浏览器会话。本轮只读核对发现现有 MCP 能立即返回 -32601 协议响应，Edge Default 已装 Playwright 扩展0.4.0且协议2匹配；唯一新标签检查仍120秒超时，当前会话未建立。完整进程快照未观察到 MCP 本地 relay，但具体等待层仍 UNKNOWN。见 docs/tasks/A10-existing-playwright-mcp-diagnosis.md。下一步优先精确识别并单独重连本对话MCP，保留Edge登录态，尚未重连/重启/写入；不再重复询问开关或平台许可，不把此前电脑操控URL策略停止混为同一原因。其他三例HOLD。
