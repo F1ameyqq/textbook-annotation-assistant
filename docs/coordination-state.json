@@ -2,7 +2,7 @@
   "schema_version": 1,
   "project": "D:\\1800",
   "coordinator_thread_id": "01a15768-1e2d-7781-b29f-1f7376270216",
-  "updated_at": "2026-10-20T06:24:31.820840+00:00",
+  "updated_at": "2026-10-20T06:27:46.388176+00:00",
   "automation": {
     "id": "1800-a",
     "kind": "heartbeat",
@@ -10226,14 +10226,15 @@
       "root_cause": "UNKNOWN",
       "observed_result": "HOSTNAME_MISMATCH",
       "timing_limitation": "A14-TIMING-01",
-      "coordinator_acceptance": "docs/evidence/coordinator/a14-tls-closure/coordinator-receipt.json"
+      "coordinator_acceptance": "docs/evidence/coordinator/a14-tls-closure/coordinator-receipt.json",
+      "committed_raw_files_verified": 27
     },
     "A15": {
-      "status": "PREPARED_BEFORE_CHAT_CREATION",
+      "status": "FORMAL_CHATS_DISPATCHED_OFFLINE_ONLY",
       "task": "docs/tasks/A15-certificate-exception-reuse.md",
       "task_sha256": "eb6aea7ad9b01ccbcaf7710c9c45d7c5c3a80d6efcef4db857838d204d725656",
-      "execution_thread_id": null,
-      "review_thread_id": null,
+      "execution_thread_id": "01a157fd-c8e7-71e1-881a-7f766b4af082",
+      "review_thread_id": "01a157fe-5cc9-7d91-8bbe-73b376cbe2a5",
       "proposed_new_live_limit": 1,
       "live_authorized": true,
       "certificate_exception_authorized": true,
@@ -10259,7 +10260,21 @@
       "new_offline_delta_per_party": 1,
       "new_live_limit": 1,
       "new_live_used": 0,
-      "current_execution_scope": "Offline candidate and E1-E4 only; wait independent and coordinator activation before live."
+      "current_execution_scope": "Offline candidate and E1-E4 only; wait independent and coordinator activation before live.",
+      "workflow_commit": "ec69a4bfd72b64e3bd6c6435ef0ec780fd109249",
+      "dispatched_at": "2026-10-20T06:27:46.388176+00:00",
+      "execution": {
+        "thread_id": "01a157fd-c8e7-71e1-881a-7f766b4af082",
+        "host_id": "local",
+        "status": "ACTIVE_OFFLINE_PREPARATION",
+        "cursor": "45f4be41-1f28-464f-bde6-76d5ceb1c355:1"
+      },
+      "review": {
+        "thread_id": "01a157fe-5cc9-7d91-8bbe-73b376cbe2a5",
+        "host_id": "local",
+        "status": "PREPARING_STANDARDS",
+        "cursor": "e1ece8f9-4e9e-4f26-9171-b1211de1c05e:1"
+      }
     }
   },
   "route": [
@@ -12672,8 +12687,8 @@
     }
   ],
   "last_action": {
-    "at": "2026-10-20T06:24:31.820840+00:00",
-    "action": "Closed A14 limited public evidence; recorded approved A15 new-stage intent, live not activated."
+    "at": "2026-10-20T06:27:46.388176+00:00",
+    "action": "Created new separate formal A15 execution and independent review chats; actual live not activated."
   },
   "limitations": [
     "Current route uses mock B artifacts until independently agreed interface/artifact versions exist.",
