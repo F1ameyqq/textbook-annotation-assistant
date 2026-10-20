@@ -1,3 +1,5 @@
+2026-10-20 A19新阶段已先落盘去重意图，基线35ad2ef5。任务docs/tasks/A19-current-state-navigation-evidence.md：仅补原导航阶段/耗时、安全错误码和关联HTTP/loadingFailed证据，网络策略/超时/原预算保持，成功直接继续同轮集中书源读取。分别新建正式执行/独立，确切ID/cursor见JSON。当前仅离线、0新live；正式预检后沿用“一直批准”同类TLS持续许可直接绑定自己的唯一轮，不再询问。A18失败/UNKNOWN/耗尽额度保留。
+
 2026-10-20 A18实际失败已正式独立及调度有限收口，final35ad2ef5。6报告成员+self、45输入原bytes核证，见docs/evidence/coordinator/a18-live-independent-closure/。仅接受固定失败和三个持有身份进程/两Job/context/runtime释放；认证/HTTP状态/根因/launcher自身OS身份仍UNKNOWN，live1耗尽余0，作者独立均释放。已定位错误分类仅保留8码且缺主导航响应/失败事件记录；准备新必要适配补齐原导航证据，不改策略/超时或盲重跑。
 
 2026-10-20 A18唯一live已耗1/余0，实际final35ad2ef5已释放。首导航Error/UNKNOWN，两层同次导航ALLOW、无guard首错，六GET/两原图/version/排除均0，认证未证明。21交付+self、22依赖及31655旧成员保全，45raw至D:/1800-worktrees/a18-live-review；同独立按docs/tasks/A18-single-live-fixed-independent-review.md核失败与已证释放。工具exit1与产品/worker exit2分开保留，launcher自身OS身份/HTTP状态/根因UNKNOWN；不重试或恢复额度。
