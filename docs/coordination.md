@@ -1,3 +1,5 @@
+2026-10-20 A18正式独立与调度有限接受后，已沿用用户“一直批准”同类TLS持续许可绑定自己的唯一真实轮。产品45174e31/finala1dae2ef，22依赖原bytes复核；任务docs/tasks/A18-approved-single-live-dispatch.md、意图docs/evidence/coordinator/a18-live-dispatch/dispatch-intent.json。1context/1导航/900秒，六GET+两图各一次、version静态GET至多1、共享排除16、0样题登录写入。实际窗口/启动/结果见JSON，不重试或恢复旧额度；原执行承接、原独立等待固定实际结果。下方预检中/live未激活为历史。
+
 2026-10-20 A18正式独立及调度有限接受：产品45174e31/finala1dae2ef，ACCEPTED_OFFLINE_ONLY/BOUNDED_READONLY_PREFLIGHT；新20/20 937ms、有限独立4/4 219ms。12报告成员+self与67固定输入原bytes核证，见docs/evidence/coordinator/a18-independent-closure/。作者/独立释放，下一步按既有“一直批准”直接绑定本阶段唯一真实只读轮，不再TLS询问。当前尚未激活/运行；旧失败/未知/额度保持，写入资格false。
 
 2026-10-20 A18已冻结交付并完成调度raw核证，产品45174e31/finala1dae2ef，22候选依赖/59交付+self，67去重raw；旧30374证据保全、仅四获准产品路径修改。作者新20/20及raw20/20，首环境失败保持。原独立按docs/tasks/A18-fixed-current-frontend-independent-review.md在D:/1800-worktrees/a18-independent-fixed做有限预检；尚未接受/live0，通过后沿用“一直批准”同类TLS许可直接绑定本阶段唯一轮，不重复询问。确切状态/cursor见JSON。
