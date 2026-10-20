@@ -1,5 +1,7 @@
 # 模块化开发计划与两人分工
 
+2026-10-20 A17 当前只需同阶段处理已固定的首因报告缺口，见tasks/A17-first-cause-reporting-correction.md：最终ERROR及请求拒绝正确，顶层首因被通用停止包装覆盖，嵌套原始首因仍在。独立19成员+清单与61输入已核证，原34项通过不抵消反例1FAIL和后续21组NOT_RUN。原执行续修、原独立等待新冻结包，不重跑旧suite或扩大网络策略。新相关离线差量及剩余必要边界验收后，立即定稿本阶段具体只读方案及适用TLS决定，取得当前书源库存事实，继而集中普通单选首题真实接线、保存和内容/题框刷新重开独立读回。截止仍2026-10-22日晚，最多5题；当前0新activation/live，其他三例HOLD、Q22不重放、0B消息。
+
 2026-10-20关键路径已转至A17集中适配。A16真实失败及已证自有释放正式独立/调度有限收口，仍无认证书籍/源/库存证明，旧1次已耗尽。A17按tasks/A17-excluded-static-readonly-adaptation.md，分别新建正式执行01a158fd-281c-7282-a3b4-db876697686c和独立01a158fd-cbeb-7a31-a3e6-661c7d4c95d4，xhigh/model沿用且已接单。仅离线将已观察CDN Script明确排除（请求仍拒绝），集中修双层合计16事件、native框身份、回调结清与late fatal；不再先寻找未知路径后放行域名，不假定脚本非必要。固定产品和独立预检后落实本阶段具体只读提案及适用TLS决定，0当前activation/live。取得当前事实后集中完成普通单选首题适配/固定内容政策次数、真实保存及内容/题框刷新重开独立读回，再最多5题交接；截止仍2026-10-22日晚。旧suite/失败/额度保留、其他三例HOLD、Q22不重放、0B消息。
 
 2026-10-20 A16唯一live已耗1/余0，final003f8620已固定释放：18:37:27—18:37:37北京时间，一次启动/context/导航尝试，首个阻断为https cdn.bootcdn.net:443 Script ORIGIN_BLOCKED，后NETWORK_GUARD_STOPPED；业务GET/原图/样题0、后继NOT_RUN、认证未证明。调度核24成员+自身/31454旧成员保全，42raw隔离D:/1800-worktrees/a16-live-review；同正式独立按tasks/A16-single-live-fixed-independent-review.md已接单核失败与释放，尚未接受实际结果。8审计不等于请求数、辅助发送总数UNKNOWN、launcher OS创建身份UNKNOWN保持。不重启/延期/清标记，原本轮批准已用；下一适配须依据新证据另明确范围。

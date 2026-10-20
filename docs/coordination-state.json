@@ -2,7 +2,7 @@
   "schema_version": 1,
   "project": "D:\\1800",
   "coordinator_thread_id": "01a15768-1e2d-7781-b29f-1f7376270216",
-  "updated_at": "2026-10-20T11:31:35.051820+00:00",
+  "updated_at": "2026-10-20T11:45:01.252242+00:00",
   "automation": {
     "id": "1800-a",
     "kind": "heartbeat",
@@ -10788,7 +10788,7 @@
       "at": "2026-10-20T11:04:16.687655+00:00",
       "task": "A17",
       "dispatch_key": "A17:excluded-static:003f8620:new-formal-pair",
-      "status": "FIXED_DELIVERY_VERIFIED_INDEPENDENT_DISPATCH_PREPARED",
+      "status": "R01_CORRECTION_DISPATCH_PREPARED",
       "base_commit": "003f862065a2d630e666323c0d158e33bcee91e9",
       "execution": {
         "thread_id": "01a158fd-281c-7282-a3b4-db876697686c",
@@ -10796,7 +10796,7 @@
         "cursor": "b92e1f43-e01a-4b82-86b0-c466dba3623e:5",
         "workspace": "D:/1800-worktrees/a17-static-exclusion",
         "branch": "codex/a17-static-exclusion",
-        "status": "REVIEW_RELEASED",
+        "status": "R01_CORRECTION_DISPATCH_PREPARED",
         "created_at": "2026-10-20T11:06:05.834705+00:00",
         "acknowledged": true,
         "turn_id": "01a158fd-2e98-7de2-bed3-041f29842de1",
@@ -10807,22 +10807,33 @@
       "review": {
         "thread_id": "01a158fd-cbeb-7a31-a3e6-661c7d4c95d4",
         "host_id": "local",
-        "cursor": "779af964-e370-4f38-843a-a16207705e3d:3",
+        "cursor": "779af964-e370-4f38-843a-a16207705e3d:6",
         "workspace": "D:/1800-worktrees/a17-independent-fixed",
-        "status": "FIXED_DELIVERY_REVIEW_DISPATCH_PREPARED",
+        "status": "REWORK_RELEASED_WAITING_NEW_FIXED_DELIVERY",
         "created_at": "2026-10-20T11:06:51.908035+00:00",
         "acknowledged": true,
-        "turn_id": "01a158fd-d230-72c0-a791-2a140f958e36",
+        "turn_id": "01a15915-7fd4-77c1-b5de-8fb286374c6e",
         "preparation_complete": true,
-        "formal_product_review_started": false,
+        "formal_product_review_started": true,
         "preparation_reported": {
           "groups": 24,
           "manifest_members": 4,
           "product_read_or_execution": 0,
           "live": 0,
-          "evidence_basis": "Formal review chat completion; preparation package not yet mechanically received by coordinator"
+          "evidence_basis": "Preparation package independently byte-verified and archived with A17 fixed intake"
         },
-        "preparation_intake": "docs/evidence/coordinator/a17-fixed-delivery/review-preparation"
+        "preparation_intake": "docs/evidence/coordinator/a17-fixed-delivery/review-preparation",
+        "reported_finding": {
+          "classification": "FIRST_CAUSE_REPORTING_GAP",
+          "first_guard_error": "ORIGIN_BLOCKED",
+          "top_level_error": "NETWORK_GUARD_STOPPED",
+          "final_state": "ERROR",
+          "request_allowance_observed": false,
+          "basis": "Compact progress message; fixed report not yet received"
+        },
+        "released": true,
+        "completed_at": 1792496349,
+        "duration_ms": 405385
       },
       "thinking": "xhigh",
       "model": "INHERIT_OMIT_PARAMETER",
@@ -10841,7 +10852,7 @@
       "live_used": 0,
       "live_activated": false,
       "scope_notes": "Observed CDN Script is denied before send, not allowed. At most 16 combined guard exclusion events; all required navigation/auth/book/data gates remain.",
-      "next_dependency": "Formal independent fixed candidate review; no live or TLS activation",
+      "next_dependency": "Explicit A17-R01 narrow same-stage correction and new frozen delivery; no TLS/live activation",
       "workflow_commit": "811c3ac9e5913812bc71d74bc665eded96e23aa3",
       "auxiliary_boundary_preparation": {
         "path": ".local/stages/coordinator/a17-excluded-static-preparation/notes.md",
@@ -10887,7 +10898,7 @@
       "review_dispatch": {
         "at": "2026-10-20T11:31:35.051820+00:00",
         "key": "A17:fixed-independent:1d2ba376:43870eac",
-        "status": "PREPARED_BEFORE_SEND",
+        "status": "SENT_ACKNOWLEDGED_REVIEW_ACTIVE",
         "review_thread_id": "01a158fd-cbeb-7a31-a3e6-661c7d4c95d4",
         "host_id": "local",
         "author_released": true,
@@ -10904,13 +10915,182 @@
           "docs/evidence/A17/excluded-static/runs/run03/"
         ],
         "old_suites_allowed": false,
-        "live_authorized": false
+        "live_authorized": false,
+        "workflow_commit": "989600f4f8070bed7ae756bc0ecd3bcc5ba53e75",
+        "acknowledged_at": "2026-10-20T11:36:53.823241+00:00"
       },
       "tls_proposal_preparation": {
         "path": ".local/stages/coordinator/a17-tls-proposal-preparation/draft.md",
         "sha256": "f11f0260bfbd5a4268dd90f1ddb31e4af7a6a29b13eddcc57dc2589d38f124d0",
         "status": "DRAFT_NOT_APPROVED_AWAITING_FIXED_INDEPENDENT_RESULT",
         "auxiliary_released": true
+      },
+      "independent_rework": {
+        "at": "2026-10-20T11:42:25.654474+00:00",
+        "result": "FIXED_REWORK_ARCHIVE_VERIFIED_NO_PRODUCT_ACCEPTANCE",
+        "source": "D:\\1800-worktrees\\a17-independent-fixed",
+        "manifest_sha256": "d95b92c92caadd59cc60dc2eb4512e7ac306dffc07be7c18709b27637920973f",
+        "members_plus_self": 20,
+        "input_raw_count": 61,
+        "all_inputs_unchanged": true,
+        "report_sha256": "356fbc2f2dcf5e80f86c53dbe1080e00d8c50bd57bd10d03f253c0508921347d",
+        "machine_report_sha256": "4d8c2ddd115fe1b206451c288a861777e1deb93c96fa6f262d5f25a42599799e",
+        "release_sha256": "25a23885807f6046f1de007e975a0e5a7da331f13d8b547335a0d87a8548038e",
+        "members": [
+          {
+            "source_path": "docs/evidence/A17/independent-review/control-command.json",
+            "archive_path": "docs/evidence/coordinator/a17-independent-rework/review-output/control-command.json",
+            "size": 245,
+            "sha256": "cd2efa1da563a34a4a22f1a408e9da1b076812e5fec1bd4b2d6895831db5cae8"
+          },
+          {
+            "source_path": "docs/evidence/A17/independent-review/control-intent.json",
+            "archive_path": "docs/evidence/coordinator/a17-independent-rework/review-output/control-intent.json",
+            "size": 360,
+            "sha256": "7725805c26ce8717b2a233ba9103ae485317f4cf0189ebfb81642e2ecf35131c"
+          },
+          {
+            "source_path": "docs/evidence/A17/independent-review/control-result.json",
+            "archive_path": "docs/evidence/coordinator/a17-independent-rework/review-output/control-result.json",
+            "size": 3106,
+            "sha256": "91041e6f8c39c6eb742113c0263ccba9af2520a1c973a7f93e7be975bfd67403"
+          },
+          {
+            "source_path": "docs/evidence/A17/independent-review/control-stderr.txt",
+            "archive_path": "docs/evidence/coordinator/a17-independent-rework/review-output/control-stderr.txt",
+            "size": 0,
+            "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          },
+          {
+            "source_path": "docs/evidence/A17/independent-review/control-stdout.txt",
+            "archive_path": "docs/evidence/coordinator/a17-independent-rework/review-output/control-stdout.txt",
+            "size": 2215,
+            "sha256": "2e00b8db2d69e6eb22c931726a098e4ad908be4f2b4c2413b5ff7282ad1da7be"
+          },
+          {
+            "source_path": "docs/evidence/A17/independent-review/controls-status.json",
+            "archive_path": "docs/evidence/coordinator/a17-independent-rework/review-output/controls-status.json",
+            "size": 5840,
+            "sha256": "c4d92cacc888176230b998494cd008bda2790e49779e05d9a918745995ac3e1b"
+          },
+          {
+            "source_path": "docs/evidence/A17/independent-review/controls.py",
+            "archive_path": "docs/evidence/coordinator/a17-independent-rework/review-output/controls.py",
+            "size": 5419,
+            "sha256": "715a51e038b63063461823364de055070306f38a112e9693fa28771fb5954e1e"
+          },
+          {
+            "source_path": "docs/evidence/A17/independent-review/evidence-check.py",
+            "archive_path": "docs/evidence/coordinator/a17-independent-rework/review-output/evidence-check.py",
+            "size": 5233,
+            "sha256": "b63b06b3fb51a20230e8234ac750f4a41d23b8434ae64f1e0f497d4539faec52"
+          },
+          {
+            "source_path": "docs/evidence/A17/independent-review/independent-result.json",
+            "archive_path": "docs/evidence/coordinator/a17-independent-rework/review-output/independent-result.json",
+            "size": 4448,
+            "sha256": "4d8c2ddd115fe1b206451c288a861777e1deb93c96fa6f262d5f25a42599799e"
+          },
+          {
+            "source_path": "docs/evidence/A17/independent-review/input-preservation-final.json",
+            "archive_path": "docs/evidence/coordinator/a17-independent-rework/review-output/input-preservation-final.json",
+            "size": 14737,
+            "sha256": "f5b7b6f580526ed89993783a8c9e82c7f94395a1d1903906048fa0e304f79b5e"
+          },
+          {
+            "source_path": "docs/evidence/A17/independent-review/intake.json",
+            "archive_path": "docs/evidence/coordinator/a17-independent-rework/review-output/intake.json",
+            "size": 18431,
+            "sha256": "0c8d47939c7ea577371b5112f6bd629157865749f1fb2c0b58c2a0d3aa01614b"
+          },
+          {
+            "source_path": "docs/evidence/A17/independent-review/preservation.json",
+            "archive_path": "docs/evidence/coordinator/a17-independent-rework/review-output/preservation.json",
+            "size": 7199,
+            "sha256": "99610e2d4b43d473d60739b97d4afd0a426e28f16f3d6a889a0b7630584ea576"
+          },
+          {
+            "source_path": "docs/evidence/A17/independent-review/release.json",
+            "archive_path": "docs/evidence/coordinator/a17-independent-rework/review-output/release.json",
+            "size": 1463,
+            "sha256": "25a23885807f6046f1de007e975a0e5a7da331f13d8b547335a0d87a8548038e"
+          },
+          {
+            "source_path": "docs/evidence/A17/independent-review/REPORT.md",
+            "archive_path": "docs/evidence/coordinator/a17-independent-rework/review-output/REPORT.md",
+            "size": 7055,
+            "sha256": "356fbc2f2dcf5e80f86c53dbe1080e00d8c50bd57bd10d03f253c0508921347d"
+          },
+          {
+            "source_path": "docs/evidence/A17/independent-review/suite-command.json",
+            "archive_path": "docs/evidence/coordinator/a17-independent-rework/review-output/suite-command.json",
+            "size": 301,
+            "sha256": "ffdc031e85e2a5ae8678fde40c150e98f1bf44d169d18bf88af424d84b7d970b"
+          },
+          {
+            "source_path": "docs/evidence/A17/independent-review/suite-intent.json",
+            "archive_path": "docs/evidence/coordinator/a17-independent-rework/review-output/suite-intent.json",
+            "size": 1219,
+            "sha256": "d337ac9a17122f2680f2880f4b1d64c98669e8f5b2ab3e59a5ff2ed51efafefd"
+          },
+          {
+            "source_path": "docs/evidence/A17/excluded-static/runs/run03/result.json",
+            "archive_path": "docs/evidence/coordinator/a17-independent-rework/suite-run03/result.json",
+            "size": 87098,
+            "sha256": "8680ccbe28428874f379421a106273682a148a24ca3c1f09395df9792748dc23"
+          },
+          {
+            "source_path": "docs/evidence/A17/excluded-static/runs/run03/stderr.txt",
+            "archive_path": "docs/evidence/coordinator/a17-independent-rework/suite-run03/stderr.txt",
+            "size": 4169,
+            "sha256": "dcd91b14d399cb2f6d11be54711aeaeec7ba08013b7f8780ed533420c7f02a25"
+          },
+          {
+            "source_path": "docs/evidence/A17/excluded-static/runs/run03/stdout.txt",
+            "archive_path": "docs/evidence/coordinator/a17-independent-rework/suite-run03/stdout.txt",
+            "size": 0,
+            "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          },
+          {
+            "source_path": "docs/evidence/A17/independent-review/manifest.json",
+            "archive_path": "docs/evidence/coordinator/a17-independent-rework/review-output/manifest.json",
+            "size": 4027,
+            "sha256": "d95b92c92caadd59cc60dc2eb4512e7ac306dffc07be7c18709b27637920973f"
+          }
+        ],
+        "product_runs": 0,
+        "live": 0,
+        "finding": "A17-R01 primary finalizer error hides specific guard first cause; nested cause and hard stop retained",
+        "known_limits": [
+          "21 remaining independent groups NOT_RUN",
+          "No OS creation identity for test processes",
+          "Author initial buffered traceback unavailable"
+        ],
+        "auxiliary_mechanical_sha256": "b3c17f419daa791ff94cb29aaba603fb5a480d96ffd8db30b53c98a57a678a51"
+      },
+      "correction": {
+        "at": "2026-10-20T11:45:01.252242+00:00",
+        "key": "A17:first-cause-r1:1d2ba376:formal-R01",
+        "status": "PREPARED_BEFORE_SEND",
+        "thread_id": "01a158fd-281c-7282-a3b4-db876697686c",
+        "host_id": "local",
+        "review_thread_id": "01a158fd-cbeb-7a31-a3e6-661c7d4c95d4",
+        "task": "docs/tasks/A17-first-cause-reporting-correction.md",
+        "task_sha256": "34522bf4abba3d601f33022d9e01ba0bd34087625a72da7e3ad2e71e445ebdd9",
+        "base_final": "1d2ba3766558fe9cc911756666d962184cc1de57",
+        "review_manifest_sha256": "d95b92c92caadd59cc60dc2eb4512e7ac306dffc07be7c18709b27637920973f",
+        "old_author_released": true,
+        "reviewer_released": true,
+        "new_chat": false,
+        "scope": "A17-R01 first-cause selection only; new offline delta",
+        "old_suites": 0,
+        "live_authorized": false,
+        "tls_authorized": false
+      },
+      "first_cause_auxiliary": {
+        "path": ".local/stages/coordinator/a17-first-cause-preparation/notes.md",
+        "sha256": "a3c192072bc1b01726d7b0f5edd8174b1d802008f9bc0fc8b21fd5a4d419108d",
+        "status": "COMPLETE_RELEASED_STATIC_AUXILIARY_ONLY"
       }
     }
   },
@@ -13324,8 +13504,8 @@
     }
   ],
   "last_action": {
-    "at": "2026-10-20T11:31:35.051820+00:00",
-    "action": "Received released A17 product/final; 61 raw and old evidence verified; fixed formal independent dispatch prepared."
+    "at": "2026-10-20T11:45:01.252242+00:00",
+    "action": "A17-R01 fixed REWORK archived; same-stage minimal correction dispatch prepared"
   },
   "limitations": [
     "Current route uses mock B artifacts until independently agreed interface/artifact versions exist.",
@@ -14217,13 +14397,14 @@
     "next_confirmation_document_sha256": "162343381469b1a827f0de6f611b8cdf504666caa06f79e1d8ea9c8a14dd32f2"
   },
   "last_heartbeat_check": {
-    "at": "2026-10-20T11:10:20.957363+00:00",
+    "at": "2026-10-20T11:36:53.823241+00:00",
+    "trigger_at": "2026-10-20T11:19:41.337Z",
     "task": "A17",
-    "status": "FORMAL_OFFLINE_EXECUTION_AND_REVIEW_PREPARATION_ACTIVE",
-    "execution_cursor": "b92e1f43-e01a-4b82-86b0-c466dba3623e:2",
-    "review_cursor": "779af964-e370-4f38-843a-a16207705e3d:2",
+    "status": "INDEPENDENT_REWORK_ANNOUNCED_AWAITING_FIXED_REPORT",
+    "execution_cursor": "b92e1f43-e01a-4b82-86b0-c466dba3623e:5",
+    "review_cursor": "779af964-e370-4f38-843a-a16207705e3d:4",
     "new_live_started": false,
-    "new_formal_chats": 2,
+    "new_formal_chats": 0,
     "A16_live_spent": true
   },
   "publication_a07": {

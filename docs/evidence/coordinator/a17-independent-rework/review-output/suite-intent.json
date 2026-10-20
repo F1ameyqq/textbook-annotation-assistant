@@ -1,0 +1,20 @@
+{
+  "at": "2026-10-20T19:33:53.0150517+08:00",
+  "task": "A17",
+  "kind": "FORMAL_NEW_SUITE_INTENT",
+  "cwd": "D:/1800-worktrees/a17-independent-fixed",
+  "command": "python -B tests/a17_excluded_static/run.py",
+  "dispatch_workflow": "989600f4f8070bed7ae756bc0ecd3bcc5ba53e75",
+  "product_workflow": "811c3ac9e5913812bc71d74bc665eded96e23aa3",
+  "task_sha256": "c08b39ab8e739110432e75ebdf6c12f7183d63334dec21a7bfff994a32ab18e2",
+  "candidate_sha256": "43870eac7194cb10d8542826a9a81e2a3c98dde1f191241bd4c1c43f007a787b",
+  "static_review": [
+    "Runner creates only next new run directory; run03 absent before execution",
+    "Suite module import only defines pure helpers/tests; native dependency import defines APIs without constructing them",
+    "All product lifecycle calls in suite are patched with fake open/close; profile/native/occupancy/Popen/urlopen/create_connection blocked by runner",
+    "No launcher invocation; no old suite import or command",
+    "File writes in fake collect intercepted by save_new stub; other file reads confined to isolated candidate/templates"
+  ],
+  "allowed_new_output": "docs/evidence/A17/excluded-static/runs/run03/",
+  "real_resources_authorized": false
+}

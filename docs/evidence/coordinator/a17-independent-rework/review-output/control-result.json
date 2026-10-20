@@ -1,0 +1,103 @@
+{
+  "task": "A17",
+  "kind": "INDEPENDENT_IN_MEMORY_CONTROL",
+  "candidate_manifest_sha256": "43870eac7194cb10d8542826a9a81e2a3c98dde1f191241bd4c1c43f007a787b",
+  "product_commit": "e7ee24245ffaf4d4b81cbddae8b3720aac214c1b",
+  "final_commit": "1d2ba3766558fe9cc911756666d962184cc1de57",
+  "records": [
+    {
+      "case": "A17-I-A02-FIRST-FATAL-DURING-FINAL-DRAIN",
+      "scope": "Pure in-memory serialization/finalizer control only",
+      "expected": {
+        "code": 2,
+        "outcome": "ERROR",
+        "first_guard_error_codes": [
+          "ORIGIN_BLOCKED"
+        ],
+        "serialized_primary_error_equals_first_guard_error": true
+      },
+      "actual": {
+        "code": 2,
+        "outcome": "ERROR",
+        "first_guard_error": {
+          "exception_type": "Stop",
+          "codes": [
+            "ORIGIN_BLOCKED"
+          ]
+        },
+        "serialized_primary_error": {
+          "exception_type": "Stop",
+          "codes": [
+            "NETWORK_GUARD_STOPPED"
+          ]
+        },
+        "guard_pre_shutdown": {
+          "stopped": true,
+          "shutdown_started": false,
+          "terminal_stopped": true,
+          "failure": {
+            "exception_type": "Stop",
+            "codes": [
+              "ORIGIN_BLOCKED"
+            ]
+          },
+          "pending_tasks": 0
+        },
+        "guard_at_serialization": {
+          "stopped": true,
+          "shutdown_started": true,
+          "terminal_stopped": true,
+          "failure": {
+            "exception_type": "Stop",
+            "codes": [
+              "ORIGIN_BLOCKED"
+            ]
+          },
+          "pending_tasks": 0
+        },
+        "transport_calls": [
+          {
+            "method": "Fetch.failRequest",
+            "payload": {
+              "requestId": "independent-late-request",
+              "errorReason": "BlockedByClient"
+            }
+          }
+        ],
+        "network_audit": [
+          {
+            "time": "2026-10-20T11:35:21.709278+00:00",
+            "method": "GET",
+            "scheme": "https",
+            "hostname": "independent.invalid",
+            "port": 443,
+            "resource_type": "Script",
+            "category": "ORIGIN_BLOCKED",
+            "decision": "BLOCK",
+            "source": "FETCH_REQUEST_STAGE",
+            "redirect_hop": false,
+            "main_navigation": false,
+            "business_read": false,
+            "expected_passive_denial": false,
+            "expected_excluded_static_denial": false
+          }
+        ],
+        "remaining_tasks": 0,
+        "remaining_callbacks": 0
+      },
+      "observation_limit": "First guard error remains in nested snapshots; the primary result.error is replaced by its generic drain wrapper.",
+      "success": false,
+      "result": "FAIL"
+    }
+  ],
+  "tests_run": 1,
+  "pass": 0,
+  "fail": 1,
+  "duration_ms": 78,
+  "successors": "NOT_RUN_ON_FIRST_SEMANTIC_COUNTEREXAMPLE",
+  "real_native_browser_network_profile_occupancy_login_business_calls": 0,
+  "product_child_processes": 0,
+  "old_suites_run": 0,
+  "pending_synthetic_tasks": 0,
+  "pending_synthetic_callbacks": 0
+}
