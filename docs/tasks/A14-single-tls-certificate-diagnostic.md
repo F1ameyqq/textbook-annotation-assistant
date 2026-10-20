@@ -6,7 +6,7 @@
 
 ## 唯一范围和边界
 
-- 执行目录 `D:/1800-worktrees/a14-tls-diagnostic`；只新增本目录 `execution-output/`，不改产品、主线、浏览器/profile、系统代理或信任库。
+- 写入白名单仅两处：执行目录 `D:/1800-worktrees/a14-tls-diagnostic/execution-output/` 保存公开脱敏交付；`D:/1800/.local/stages/a14-tls-diagnostic` 保存不入库的私有原始流。不改产品、主线、浏览器/profile、系统代理或信任库。
 - 仅1个新的无凭据TLS诊断进程/至多1次TLS握手意图，目标严格 `www.usense.com:443`，SNI与verify_hostname均同名。不发送目标HTTP请求、不附加Cookie/Authorization，不使用任何账号/profile/登录配置。
 - 使用已有 `C:/Program Files/Git/mingw64/bin/openssl.exe`（已只读查询3.5.5）及既有 `C:/Program Files/Git/mingw64/etc/ssl/certs/ca-bundle.crt`，先固定两者size/SHA256。OpenSSL信任库与Windows/Edge不同必须注明，不能把它的链错误直接认作Edge根因。
 - 只读HKCU Internet Settings的ProxyEnable/ProxyServer/AutoConfigURL元数据；只接受已启用且无PAC、无认证的固定loopback HTTP代理（127.0.0.1、localhost或[::1]及有效port）。若分协议，只取明确https项；单一host:port按Windows固定代理语义使用。不得输出原ProxyServer串；记录脱敏类别、host/port与路径摘要即可。遇PAC、非loopback、认证、歧义或关闭则BLOCKED，0握手，不猜代理、直连或换候选。
@@ -24,7 +24,7 @@ openssl.exe s_client -connect www.usense.com:443 -servername www.usense.com -ver
 
 命令行为依据已读取的 [OpenSSL 3.5 s_client官方说明](https://docs.openssl.org/3.5/man1/openssl-s_client/)：`verify_return_error`遇验证错误中止；`showcerts`只是服务端发送证书列表，不是已验证链；非交互初始EOF可能提前关连接。`prexit`只增加退出信息，不改变验证策略。所有新增wrapper行为冻结前静态核对，不预跑网络。
 
-本轮外层最多20秒等待、2秒精确保留Popen句柄清理，总22秒。创建与退出身份/退出码、timeout和管道/句柄关闭需保留；不扫描或结束其他进程。冻结后wrapper只启动一次，首异常停，后继NOT_RUN。无预跑握手。
+采用Popen参数数组、shell=False；代理端口必须为1–65535，不能将代理字段拼接到shell。本轮总22秒包含进程启动、最多20秒等待、结果信号后EOF退出、管道排空与最多2秒精确保留Popen句柄清理；收到结果不能重新开始等待时限。创建与退出身份/退出码、timeout和管道/句柄关闭需保留；不扫描或结束其他进程。冻结后wrapper只启动一次，首异常停，后继NOT_RUN。无预跑握手。
 
 ## 证据与结论
 
