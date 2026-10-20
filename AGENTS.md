@@ -1,5 +1,7 @@
 # 项目开发约定
 
+2026-10-20 A12已派发：独立目录D:/1800-worktrees/a12-native-reuse、作者/root/a12_headless_native_probe_author、workflow5e31abf7，见docs/tasks/A12-headless-reuse-native-transport-probe.md。仅1新候选/1次本地三例guard suite，作者0平台。固定raw交付释放后另派静态独立，不复跑suite；证明逐跳/方法/WS守卫后主调度才可另登记最多1次reuse-only无头观测，0登录/业务。当前未启动A12平台轮。托管worktree长路径失败保留，显式longpaths短目录已成功，不是产品或live尝试。
+
 2026-10-20 接任最新：调度ID为01a15768-1e2d-7781-b29f-1f7376270216；唯一1800-a已转移至本对话、ACTIVE/30分钟。现有Playwright MCP经官方扩展人工选中Usense登录标签后，17ms标签验证通过；不再把MCP超时作为当前未解阻断。当前仅证明Default登录页，未证明认证书籍或专用无头会话；原A04/A10专用无头profile与日常Default分离。见docs/tasks/A10-successor-mcp-session-recovery.md。原两超时及本次第三超时保留，新握手后一次验证通过不恢复旧轮数；0登录提交/业务写入/进程终止。扩展chrome-extension页面工具URL策略拒绝后已停止自动操作，由用户正常选页，无绕过。下一步固定仅复用专用登录态的新有界只读观测，原native/代理driver不复跑；其他三例HOLD、Q22不重放、不向B发消息。下方交接待接任/MCP具体层UNKNOWN为历史时点。
 
 2026-10-20 调度交接：用户将自行新开对话接替。接任先读 docs/handoff/coordinator-20261020/HANDOFF.md 与 PROMPT.md，再核实际Git/JSON；交接前基线20ed7aa0。旧heartbeat 1800-a已暂停，项目未完成、平台许可保持；新对话登记真实ID后再接管唯一自动化。当前首要仍是现有Playwright MCP会话检查超时（具体阻塞层UNKNOWN），不是重新等待连接许可/开关/Q4确认；旧成功与失败额度不恢复。旧对话交接后不再主动推进，其他三例HOLD。

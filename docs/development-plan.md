@@ -1,5 +1,7 @@
 # 模块化开发计划与两人分工
 
+2026-10-20 当前工程推进：[A12专用无头reuse-only原生传输观测](tasks/A12-headless-reuse-native-transport-probe.md)作者已派发，先固定1候选/1次三例本地网络守卫验证，后独立静态核证，再有条件1次新只读live。此步骤直接解决专用登录态当前可用性，不重跑旧A10，不扩大登录/业务写入授权。
+
 2026-10-20 接任最新：新调度01a15768-1e2d-7781-b29f-1f7376270216已接管唯一1800-a（ACTIVE/30分钟）；现有Playwright MCP扩展连接成功、17ms标签操作通过，仅到Usense登录页。当前关键路径改为专用无头登录态和当前书籍事实→固定新普通单选/政策/次数→必要真实适配及首题内容/题框刷新重开独立读回→总量最多5题→10月22日晚独立交接。见[接任记录](tasks/A10-successor-mcp-session-recovery.md)。Default与专用profile分离，认证/真实业务仍未通过；旧失败及耗尽额度保持，不重跑旧native/代理driver。其他三例HOLD，Q22不重放。
 
 2026-10-20 调度交接：用户将自行新开对话接替。接任先读 docs/handoff/coordinator-20261020/HANDOFF.md 与 PROMPT.md，再核实际Git/JSON；交接前基线20ed7aa0。旧heartbeat 1800-a已暂停，项目未完成、平台许可保持；新对话登记真实ID后再接管唯一自动化。当前首要仍是现有Playwright MCP会话检查超时（具体阻塞层UNKNOWN），不是重新等待连接许可/开关/Q4确认；旧成功与失败额度不恢复。旧对话交接后不再主动推进，其他三例HOLD。
