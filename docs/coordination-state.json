@@ -2,7 +2,7 @@
   "schema_version": 1,
   "project": "D:\\1800",
   "coordinator_thread_id": "01a15768-1e2d-7781-b29f-1f7376270216",
-  "updated_at": "2026-10-20T10:48:36.029550+00:00",
+  "updated_at": "2026-10-20T10:56:40.473704+00:00",
   "automation": {
     "id": "1800-a",
     "kind": "heartbeat",
@@ -10360,7 +10360,7 @@
       "review": {
         "thread_id": "01a15841-0d44-7272-9740-40d013839869",
         "host_id": "local",
-        "cursor": "54109698-8e67-431c-b756-da2abb21b362:30",
+        "cursor": "54109698-8e67-431c-b756-da2abb21b362:33",
         "status": "LIVE_FAILURE_INDEPENDENT_ACTIVE",
         "author_final": "003f862065a2d630e666323c0d158e33bcee91e9",
         "formal_report_fixed": false,
@@ -10736,10 +10736,22 @@
       "live_can_run_again": false,
       "live_review_workflow": "6041eecb7ad0a7da4954d18b5a0dc871c33951bc",
       "cdn_dependency_preparation": {
-        "status": "AUXILIARY_FIXED_GIT_READONLY_ACTIVE",
+        "status": "AUXILIARY_FIXED_GIT_READONLY_COMPLETE",
         "agent": "/root/a14_dispatch_boundary_aux",
         "output_allowlist": ".local/stages/coordinator/a16-cdn-dependency-preparation/notes.md",
-        "new_live_authorized": false
+        "new_live_authorized": false,
+        "sha256": "4e74b5f4dcb662038253013da9335fa3ccc46e697f51891ff75a032033275fd9",
+        "finding": "Only blocked-origin records in the three fixed trees. Exact CDN path, source reference and necessity UNKNOWN; no origin allowlist evidence.",
+        "released": true
+      },
+      "next_adaptation_preparation": {
+        "status": "DRAFT_AWAITING_FIXED_A16_CLOSURE_AND_AUXILIARY_BOUNDARY_REVIEW",
+        "path": ".local/stages/coordinator/a17-excluded-static-preparation/dispatch-draft.md",
+        "sha256": "e0f28492fb6412c8e836b588737f8165be913ff19639751164789c736ad39b8e",
+        "approach": "Keep observed CDN Script blocked before send; consider explicit bounded exclusion without classifying it as passive or proven unnecessary. All downstream identity/data/failure gates remain.",
+        "formal_stage_dispatched": false,
+        "new_live_authorized": false,
+        "tls_exception_authorized": false
       }
     }
   },
@@ -13153,8 +13165,8 @@
     }
   ],
   "last_action": {
-    "at": "2026-10-20T09:47:07.991977+00:00",
-    "action": "Received fixed second A16 REWORK report, 40 raw verified; R01/R03/R04 limited offline corrections verified, R02 unresolved. Original author acknowledged observation-only scope revision; live0."
+    "at": "2026-10-20T10:56:40.473704+00:00",
+    "action": "Track fixed A16 actual-failure review; preserve spent run. Prepare one minimal offline exclusion adaptation without sending to CDN; no formal next stage or live activated."
   },
   "limitations": [
     "Current route uses mock B artifacts until independently agreed interface/artifact versions exist.",
@@ -14047,18 +14059,15 @@
     "next_confirmation_document_sha256": "162343381469b1a827f0de6f611b8cdf504666caa06f79e1d8ea9c8a14dd32f2"
   },
   "last_heartbeat_check": {
-    "at": "2026-10-20T09:19:41.127534+00:00",
-    "automation_id": "1800-a",
+    "at": "2026-10-20T10:56:40.473704+00:00",
     "task": "A16",
-    "status": "REVISION_FORMAL_INDEPENDENT_ACTIVE",
-    "review_cursor": "54109698-8e67-431c-b756-da2abb21b362:22",
+    "status": "LIVE_FAILURE_INDEPENDENT_ACTIVE",
+    "review_cursor": "54109698-8e67-431c-b756-da2abb21b362:33",
     "new_fixed_delivery": false,
-    "auxiliary_tls_revision_draft": "ACTIVE_NOT_READ",
-    "git_head_observed": "df2eb7de5bd0acd4ac360a200a0f9cf8c6d347af",
-    "unrelated_status_entries": 87,
-    "platform_actions": 0,
-    "new_dispatch": false,
-    "notification": "DONT_NOTIFY_UNCHANGED"
+    "actual_live_used": 1,
+    "remaining": 0,
+    "new_live_started": false,
+    "auxiliary_preparation": "CDN reference absence fixed; A17 exclusion draft and auxiliary static review only"
   },
   "publication_a07": {
     "task_id": "A-PUBLISH-03",
@@ -14405,7 +14414,7 @@
     "user_deadline_days": 3,
     "deadline_basis": "72 hours from this decision; target 2026-10-22 same local time; exact handover clock not specified",
     "user_selected_delivery": "必须包含：优先争取限定题型、小批量的平台试用版",
-    "status": "A15_CLOSED_FINITE_FAILURE_A16_OFFLINE_ACTIVE",
+    "status": "A16_LIVE_SPENT_FIXED_FAILURE_REVIEW_ACTIVE",
     "plan": "docs/delivery-72h-plan-2026-10-19.md",
     "plan_sha256": "6bfc3d379ec700556b6fec7438b85126c428c7ce4ae58ba9c727982b00ab94f7",
     "proposed_book_id": "46007447",
@@ -14423,7 +14432,7 @@
     "new_product_dispatches": 0,
     "B_messages": 0,
     "planning_agent": "/root/three_day_scope_check",
-    "next_dependency": "Close fixed A15 failure while new A16 prepares grouped current source/target/wire and one ordinary-choice candidate offline.",
+    "next_dependency": "Receive and verify formal A16 failure/release closure, then fix the minimal evidence-based offline adaptation scope; no A16 rerun.",
     "full_original_scope_completed_or_cancelled": false,
     "committed_success_guarantee": false,
     "authorization_clarification": "User clarified 一直允许连接平台; do not ask platform-connection/book permission again.",
@@ -14461,7 +14470,7 @@
       "platform_access": false,
       "next_dependency": "Concrete bounded new-path implementation task and finite test matrix"
     },
-    "first_day_blocker": "A15 single certificate-exception observation stopped ORIGIN_BLOCKED/NETWORK_GUARD_STOPPED; blocked origin/resource type unrecorded; authentication not proven. Current source/target and wire remain unverified.",
+    "first_day_blocker": "A16 one navigation stopped on https cdn.bootcdn.net:443 Script ORIGIN_BLOCKED; no current authenticated book/source/target proof. Exact script path and necessity UNKNOWN.",
     "ordinary_browser_question": {
       "status": "ANSWERED_USER_REPORT_CAN_OPEN",
       "question": "Can the usual browser currently open the platform?",
