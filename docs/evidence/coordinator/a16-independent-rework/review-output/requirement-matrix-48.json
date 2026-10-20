@@ -1,0 +1,552 @@
+{
+  "task": "A16",
+  "candidate_manifest_sha256": "2579b043d65e665263796d0922f080ad101f4d20c1e9ea500fd7894ba41d966c",
+  "result": "REWORK",
+  "prepared_cases": 48,
+  "executed_controls": 13,
+  "controls_pass": 12,
+  "controls_fail": 1,
+  "controls_not_run_after_first_failure": 3,
+  "requirements": [
+    {
+      "id": "A01",
+      "group": "activation",
+      "authoritative_rule": "Execution §1; review gate1",
+      "status": "PARTIAL_OFFLINE_VERIFIED",
+      "evidence": [
+        "C01_DEFAULT_STATIC"
+      ],
+      "actual_scope_and_limit": "Default probe verified; author suite covers internal CLI rejection; browser creation path is static only.",
+      "not_a_blanket_pass_for_all_variants": true
+    },
+    {
+      "id": "A02",
+      "group": "activation",
+      "authoritative_rule": "Execution §1: no A15 authority transfer",
+      "status": "OFFLINE_VERIFIED",
+      "evidence": [
+        "C02_GATE"
+      ],
+      "actual_scope_and_limit": "Recomputed-digest A15 task/run and wrong stage bindings rejected; no old grant file read.",
+      "not_a_blanket_pass_for_all_variants": true
+    },
+    {
+      "id": "A03",
+      "group": "activation",
+      "authoritative_rule": "Execution §1: all A16 bindings",
+      "status": "PARTIAL_OFFLINE_VERIFIED",
+      "evidence": [
+        "C02_GATE"
+      ],
+      "actual_scope_and_limit": "Fourteen independent binding variants plus author gate tests; not every field independently mutated.",
+      "not_a_blanket_pass_for_all_variants": true
+    },
+    {
+      "id": "A04",
+      "group": "activation",
+      "authoritative_rule": "Execution §1,7: fixed limits/window",
+      "status": "PARTIAL_OFFLINE_VERIFIED",
+      "evidence": [
+        "C02_GATE"
+      ],
+      "actual_scope_and_limit": "Expiry/start, typed context limit, limits and duplicate JSON covered; not all JSON/time variants executed.",
+      "not_a_blanket_pass_for_all_variants": true
+    },
+    {
+      "id": "A05",
+      "group": "activation",
+      "authoritative_rule": "Execution §1: strict TLS default; new explicit decision only",
+      "status": "OFFLINE_VERIFIED",
+      "evidence": [
+        "C01_DEFAULT_STATIC",
+        "C02_GATE"
+      ],
+      "actual_scope_and_limit": "Strict default and synthetic strict/exception separation verified; no real activation exists.",
+      "not_a_blanket_pass_for_all_variants": true
+    },
+    {
+      "id": "A06",
+      "group": "activation",
+      "authoritative_rule": "Execution §1: one-time new output/profile binding",
+      "status": "PARTIAL_STATIC",
+      "evidence": [
+        "AUTHOR:test_marker_replay_retained"
+      ],
+      "actual_scope_and_limit": "Mock FileExistsError and exclusive save_new code; full claim bytes/tamper fixture not independently executed.",
+      "not_a_blanket_pass_for_all_variants": true
+    },
+    {
+      "id": "N01",
+      "group": "network",
+      "authoritative_rule": "Execution §2,3,7: explicit same-origin restricted GET",
+      "status": "PARTIAL_OFFLINE_VERIFIED",
+      "evidence": [
+        "C03_POLICY",
+        "C08_REAL_CAPTURE_CACHE"
+      ],
+      "actual_scope_and_limit": "Six necessary fixed GET policy positives and real captured-byte cache consumption; fresh browser fetch branch is not live verified.",
+      "not_a_blanket_pass_for_all_variants": true
+    },
+    {
+      "id": "N02",
+      "group": "network",
+      "authoritative_rule": "Execution §3,7: unknown API, methods and query deny",
+      "status": "PARTIAL_OFFLINE_VERIFIED",
+      "evidence": [
+        "C03_POLICY"
+      ],
+      "actual_scope_and_limit": "Wrong page/book/query/path/method and auth-bearing URL negatives; remaining syntactic variants static.",
+      "not_a_blanket_pass_for_all_variants": true
+    },
+    {
+      "id": "N03",
+      "group": "network",
+      "authoritative_rule": "Execution §3: declared optional external passive resources",
+      "status": "OFFLINE_VERIFIED",
+      "evidence": [
+        "C03_POLICY",
+        "C09_PASSIVE_THEN_FATAL"
+      ],
+      "actual_scope_and_limit": "Declared Image/Font/Media rejected without sending; observer remains running for expected passive case.",
+      "not_a_blanket_pass_for_all_variants": true
+    },
+    {
+      "id": "N04",
+      "group": "network",
+      "authoritative_rule": "Execution §3: fatal rules take precedence over passive type",
+      "status": "PARTIAL_OFFLINE_VERIFIED",
+      "evidence": [
+        "C03_POLICY",
+        "C09_PASSIVE_THEN_FATAL"
+      ],
+      "actual_scope_and_limit": "Write method dominates Image, redirect active types fatal; full dependency-correlation matrix not executed.",
+      "not_a_blanket_pass_for_all_variants": true
+    },
+    {
+      "id": "N05",
+      "group": "network",
+      "authoritative_rule": "Execution §2,3: per-event distinction, no blanket expected_block",
+      "status": "OFFLINE_VERIFIED",
+      "evidence": [
+        "C09_PASSIVE_THEN_FATAL"
+      ],
+      "actual_scope_and_limit": "Optional Font rejection followed by POST becomes fatal and stops next GET; first failure preserved.",
+      "not_a_blanket_pass_for_all_variants": true
+    },
+    {
+      "id": "N06",
+      "group": "network",
+      "authoritative_rule": "Execution §2: every redirect hop",
+      "status": "PARTIAL_OFFLINE_VERIFIED",
+      "evidence": [
+        "C03_POLICY",
+        "AUTHOR:test_redirect_hop_and_write_stop_successors"
+      ],
+      "actual_scope_and_limit": "Redirect denial in policy and paused native handler; actual CDP browser redirects untested.",
+      "not_a_blanket_pass_for_all_variants": true
+    },
+    {
+      "id": "N07",
+      "group": "network",
+      "authoritative_rule": "Execution §2: children, service workers, WS",
+      "status": "PARTIAL_STATIC",
+      "evidence": [
+        "C09_PASSIVE_THEN_FATAL",
+        "AUTHOR:test_duplicate_inflight_guard_exception_and_child_stop"
+      ],
+      "actual_scope_and_limit": "WS fake never connects; child target fake closes; inherited install/autoattach and blocked service workers static only.",
+      "not_a_blanket_pass_for_all_variants": true
+    },
+    {
+      "id": "N08",
+      "group": "network",
+      "authoritative_rule": "Execution §3,7: first unexpected failure and terminal guard",
+      "status": "PARTIAL_OFFLINE_VERIFIED",
+      "evidence": [
+        "C10_TERMINAL",
+        "AUTHOR:test_no_business_after_first_fatal_in_collect"
+      ],
+      "actual_scope_and_limit": "Late close-await failure overrides success; not every awaited read point independently injected.",
+      "not_a_blanket_pass_for_all_variants": true
+    },
+    {
+      "id": "N09",
+      "group": "network",
+      "authoritative_rule": "Execution §7: once per fixed business GET",
+      "status": "PARTIAL_OFFLINE_VERIFIED",
+      "evidence": [
+        "C08_REAL_CAPTURE_CACHE",
+        "AUTHOR:test_query_reordering_cannot_buy_another_get"
+      ],
+      "actual_scope_and_limit": "Actual capture→cache→get_once→native local fulfill; context route fulfillment and CORS browser ordering not executed.",
+      "not_a_blanket_pass_for_all_variants": true
+    },
+    {
+      "id": "N10",
+      "group": "network",
+      "authoritative_rule": "Execution §3,6: frozen queries plus evidence-derived narrowing",
+      "status": "REWORK_STATIC",
+      "evidence": [
+        "A16-R02"
+      ],
+      "actual_scope_and_limit": "Runtime sample registration relies on unbound lexical booleans and hardcoded endpoint/zone assumptions.",
+      "not_a_blanket_pass_for_all_variants": true
+    },
+    {
+      "id": "R01",
+      "group": "redaction",
+      "authoritative_rule": "Execution §2: safe network records",
+      "status": "PARTIAL_OFFLINE_VERIFIED",
+      "evidence": [
+        "C04_REDACTION"
+      ],
+      "actual_scope_and_limit": "URL path/query/userinfo sentinels absent from diagnostic and safe error; not every output channel/shape independently fuzzed.",
+      "not_a_blanket_pass_for_all_variants": true
+    },
+    {
+      "id": "R02",
+      "group": "redaction",
+      "authoritative_rule": "Execution §2: safe failure metadata",
+      "status": "PARTIAL_OFFLINE_VERIFIED",
+      "evidence": [
+        "C04_REDACTION"
+      ],
+      "actual_scope_and_limit": "Arbitrary exception text redacted; nested response-field credential cases not independently executed.",
+      "not_a_blanket_pass_for_all_variants": true
+    },
+    {
+      "id": "R03",
+      "group": "redaction",
+      "authoritative_rule": "Execution §2; draft §3: credentials stay in protected page",
+      "status": "STATIC_ONLY",
+      "evidence": [],
+      "actual_scope_and_limit": "GET_JSON consumes auth internally, exports only status/body; no login fallback and no actual credential file access in reviewed test paths.",
+      "not_a_blanket_pass_for_all_variants": true
+    },
+    {
+      "id": "I01",
+      "group": "inventory",
+      "authoritative_rule": "Execution §4: exact book, whole-book identity/order/frames",
+      "status": "OFFLINE_VERIFIED",
+      "evidence": [
+        "C05_INVENTORY",
+        "C12_COLLECTOR_BASELINE"
+      ],
+      "actual_scope_and_limit": "Numerical whole-book max22, full inventory versus sample PARTIAL content, Q22 preserved and no write baseline.",
+      "not_a_blanket_pass_for_all_variants": true
+    },
+    {
+      "id": "I02",
+      "group": "inventory",
+      "authoritative_rule": "Execution §4: integrity instead of historic counts",
+      "status": "PARTIAL_OFFLINE_VERIFIED",
+      "evidence": [
+        "C05_INVENTORY",
+        "AUTHOR:test_mismatched_book_and_duplicate_identity"
+      ],
+      "actual_scope_and_limit": "Wrong frame book, count unknown and duplicate identities covered; pagination and bbox/extra-field validity variants not fully checked.",
+      "not_a_blanket_pass_for_all_variants": true
+    },
+    {
+      "id": "I03",
+      "group": "inventory",
+      "authoritative_rule": "Execution §4: full result not tied to A05 historical counts",
+      "status": "PARTIAL_STATIC",
+      "evidence": [
+        "C05_INVENTORY",
+        "AUTHOR:test_complete_global_inventory_and_q22_preserved"
+      ],
+      "actual_scope_and_limit": "Different synthetic counts use actual question_count, no old22/68 expectation; exact21/66 and23/70 prepared pairs not executed.",
+      "not_a_blanket_pass_for_all_variants": true
+    },
+    {
+      "id": "I04",
+      "group": "inventory",
+      "authoritative_rule": "Execution §4: preserve Q22; never navigate/replay/sample it",
+      "status": "OFFLINE_VERIFIED",
+      "evidence": [
+        "C05_INVENTORY",
+        "C12_COLLECTOR_BASELINE"
+      ],
+      "actual_scope_and_limit": "Q22 inventory retained and not selected; only-Q22 sample returns None; full sequence uses sample3.",
+      "not_a_blanket_pass_for_all_variants": true
+    },
+    {
+      "id": "I05",
+      "group": "inventory",
+      "authoritative_rule": "Execution §4 and review gate3: full preservation projection",
+      "status": "PARTIAL_STATIC",
+      "evidence": [],
+      "actual_scope_and_limit": "Projection now retains zone index and declared subset; image_path and other noncredential fields omitted; explicitly not a complete write-preservation baseline.",
+      "not_a_blanket_pass_for_all_variants": true
+    },
+    {
+      "id": "I06",
+      "group": "inventory",
+      "authoritative_rule": "Execution §4: title/DOM + book + guard consistency",
+      "status": "PARTIAL_STATIC",
+      "evidence": [
+        "AUTHOR:test_business_login_and_http200_not_sufficient"
+      ],
+      "actual_scope_and_limit": "Business401/403/nonzero code fail; DOM selected-book proof only statically read, no actual UI identity evidence.",
+      "not_a_blanket_pass_for_all_variants": true
+    },
+    {
+      "id": "C01",
+      "group": "content",
+      "authoritative_rule": "Execution §4; review gate3: three distinct content states",
+      "status": "PARTIAL_OFFLINE_VERIFIED",
+      "evidence": [
+        "C06_CONTENT"
+      ],
+      "actual_scope_and_limit": "Explicit nonempty/empty/unconfirmed success/missing result distinct; actual current schema qualification remains R02 gap.",
+      "not_a_blanket_pass_for_all_variants": true
+    },
+    {
+      "id": "C02",
+      "group": "content",
+      "authoritative_rule": "Execution §4,6: coverage per question/zone",
+      "status": "OFFLINE_VERIFIED",
+      "evidence": [
+        "C05_INVENTORY",
+        "C12_COLLECTOR_BASELINE"
+      ],
+      "actual_scope_and_limit": "One sample remains PARTIAL content and no production readiness; other questions UNKNOWN.",
+      "not_a_blanket_pass_for_all_variants": true
+    },
+    {
+      "id": "C03",
+      "group": "content",
+      "authoritative_rule": "Execution §4,6: response-bound empty semantics",
+      "status": "OFFLINE_VERIFIED",
+      "evidence": [
+        "C06_CONTENT"
+      ],
+      "actual_scope_and_limit": "success=false/missing result stays UNKNOWN and login/business errors raise.",
+      "not_a_blanket_pass_for_all_variants": true
+    },
+    {
+      "id": "C04",
+      "group": "content",
+      "authoritative_rule": "Execution §4; draft §5: do not weaken old A11 admission",
+      "status": "STATIC_AND_RAW_VERIFIED",
+      "evidence": [],
+      "actual_scope_and_limit": "All old Git members unchanged; A11 unavailable-content gate untouched; write_preservation_baseline false.",
+      "not_a_blanket_pass_for_all_variants": true
+    },
+    {
+      "id": "S01",
+      "group": "source",
+      "authoritative_rule": "Execution §5: register images only after current response binding",
+      "status": "PARTIAL_OFFLINE_VERIFIED",
+      "evidence": [
+        "C03_POLICY"
+      ],
+      "actual_scope_and_limit": "Registration enforces book/viewer/index/domain/path/ref; complete no-registration/fetch order is static.",
+      "not_a_blanket_pass_for_all_variants": true
+    },
+    {
+      "id": "S02",
+      "group": "source",
+      "authoritative_rule": "Execution §5: no viewer-minus-one assumption",
+      "status": "OFFLINE_VERIFIED",
+      "evidence": [
+        "C07_SOURCE_DRAFT"
+      ],
+      "actual_scope_and_limit": "Viewer14 resource57 kept; source index not inferred as13.",
+      "not_a_blanket_pass_for_all_variants": true
+    },
+    {
+      "id": "S03",
+      "group": "source",
+      "authoritative_rule": "Execution §5: image bytes and visible mapping closure",
+      "status": "REWORK_STATIC",
+      "evidence": [
+        "A16-R03"
+      ],
+      "actual_scope_and_limit": "Only verify(), no full pixel decode; runtime truncated-JPEG counterexample C14 NOT_RUN.",
+      "not_a_blanket_pass_for_all_variants": true
+    },
+    {
+      "id": "S04",
+      "group": "source",
+      "authoritative_rule": "Execution §5: actual new bytes compared, never replaced",
+      "status": "STATIC_ONLY",
+      "evidence": [],
+      "actual_scope_and_limit": "Actual fetched bytes determine SHA; no substitution with archived hash; changed-image visual review remains HOLD.",
+      "not_a_blanket_pass_for_all_variants": true
+    },
+    {
+      "id": "Q01",
+      "group": "sample",
+      "authoritative_rule": "Execution §6: first actual-order eligible existing sample",
+      "status": "OFFLINE_VERIFIED",
+      "evidence": [
+        "C05_INVENTORY",
+        "C12_COLLECTOR_BASELINE"
+      ],
+      "actual_scope_and_limit": "Shuffled11/22/3 selects numeric3, one sample, Q22 excluded.",
+      "not_a_blanket_pass_for_all_variants": true
+    },
+    {
+      "id": "Q02",
+      "group": "sample",
+      "authoritative_rule": "Execution §6,7: no replacement/loop",
+      "status": "PARTIAL_STATIC",
+      "evidence": [],
+      "actual_scope_and_limit": "No replacement/zone loop; type observation remains UNKNOWN_READONLY_SCHEMA_ONLY. A duoxuan sample is not declared single-choice qualification.",
+      "not_a_blanket_pass_for_all_variants": true
+    },
+    {
+      "id": "Q03",
+      "group": "sample",
+      "authoritative_rule": "Execution §6: read sample does not authorize writes",
+      "status": "STATIC_AND_OFFLINE_VERIFIED",
+      "evidence": [
+        "C12_COLLECTOR_BASELINE"
+      ],
+      "actual_scope_and_limit": "Only fixed read sequence used, save fields observed lexically; no commit/upload/signature/OCR method implementation invoked.",
+      "not_a_blanket_pass_for_all_variants": true
+    },
+    {
+      "id": "D01",
+      "group": "schema",
+      "authoritative_rule": "Execution §6; review gate4: field-level evidence grades",
+      "status": "REWORK_STATIC",
+      "evidence": [
+        "A16-R02"
+      ],
+      "actual_scope_and_limit": "Current bytes are response-derived, but lexical hits do not prove content schema applicability; C15 NOT_RUN.",
+      "not_a_blanket_pass_for_all_variants": true
+    },
+    {
+      "id": "D02",
+      "group": "schema",
+      "authoritative_rule": "Review gate4: decode exact frozen schema sample",
+      "status": "REWORK_CONFIRMED",
+      "evidence": [
+        "C13_CHANGED_SAMPLE_COUNTEREXAMPLE",
+        "A16-R01"
+      ],
+      "actual_scope_and_limit": "Actual changed sample role/zone order passes; content decoder then uses initial inventory rows.",
+      "not_a_blanket_pass_for_all_variants": true
+    },
+    {
+      "id": "D03",
+      "group": "schema",
+      "authoritative_rule": "Execution §6: choice aggregation and type evidence",
+      "status": "PARTIAL_OFFLINE_VERIFIED",
+      "evidence": [
+        "C06_CONTENT",
+        "C12_COLLECTOR_BASELINE"
+      ],
+      "actual_scope_and_limit": "One choice response binds ordered four rect_ids, reversed IDs reject; no danxuan invention or single-choice qualification from duoxuan.",
+      "not_a_blanket_pass_for_all_variants": true
+    },
+    {
+      "id": "D04",
+      "group": "schema",
+      "authoritative_rule": "Execution §6: current code bytes from actual load",
+      "status": "PARTIAL_STATIC",
+      "evidence": [],
+      "actual_scope_and_limit": "Scripts originate same-origin loaded response and bytes/hash; only lexical builder discovery and no actual current script observed.",
+      "not_a_blanket_pass_for_all_variants": true
+    },
+    {
+      "id": "F01",
+      "group": "candidate",
+      "authoritative_rule": "Execution candidate + task six-role rule; images",
+      "status": "HISTORICAL_PREPARATION_ONLY",
+      "evidence": [
+        "C07_SOURCE_DRAFT"
+      ],
+      "actual_scope_and_limit": "Historical content/roles and answerC consistent with task; punctuation and boxes remain DRAFT/HOLD, not approval.",
+      "not_a_blanket_pass_for_all_variants": true
+    },
+    {
+      "id": "F02",
+      "group": "candidate",
+      "authoritative_rule": "Execution ordinary single-choice six roles",
+      "status": "OFFLINE_VERIFIED",
+      "evidence": [
+        "C07_SOURCE_DRAFT"
+      ],
+      "actual_scope_and_limit": "Same six content/boxes with four roles Q rejects.",
+      "not_a_blanket_pass_for_all_variants": true
+    },
+    {
+      "id": "F03",
+      "group": "candidate",
+      "authoritative_rule": "Execution four W A→D order/content correspondence",
+      "status": "REWORK_CONFIRMED",
+      "evidence": [
+        "C07_SOURCE_DRAFT",
+        "C13_CHANGED_SAMPLE_COUNTEREXAMPLE"
+      ],
+      "actual_scope_and_limit": "Draft label/text swaps reject, but actual sample frame role/order drift is accepted (R01).",
+      "not_a_blanket_pass_for_all_variants": true
+    },
+    {
+      "id": "F04",
+      "group": "candidate",
+      "authoritative_rule": "Execution candidate unique identity and no replacement",
+      "status": "STATIC_ONLY",
+      "evidence": [],
+      "actual_scope_and_limit": "Draft retains current-newness/directory UNKNOWN, old approval not reused, no replacement selection implemented.",
+      "not_a_blanket_pass_for_all_variants": true
+    },
+    {
+      "id": "F05",
+      "group": "candidate",
+      "authoritative_rule": "Execution candidate bbox requires current originals",
+      "status": "HISTORICAL_PREPARATION_ONLY",
+      "evidence": [],
+      "actual_scope_and_limit": "Draft numeric bounds checked, no current pixel/crop proof or approved bbox; negative crop examples NOT_RUN.",
+      "not_a_blanket_pass_for_all_variants": true
+    },
+    {
+      "id": "L01",
+      "group": "lifecycle",
+      "authoritative_rule": "Execution §2,7: per-process local deadline, one round <=900s",
+      "status": "PARTIAL_OFFLINE_VERIFIED",
+      "evidence": [
+        "C11_LOCAL_WAIT_CLOCK"
+      ],
+      "actual_scope_and_limit": "Injected local wait clock origin7; each process uses own start+UTC remaining by static review; no real process deadline test.",
+      "not_a_blanket_pass_for_all_variants": true
+    },
+    {
+      "id": "L02",
+      "group": "lifecycle",
+      "authoritative_rule": "Execution §2: precise own Job/process release only",
+      "status": "STATIC_GAP_LIMITED_FAIL_CLOSED",
+      "evidence": [
+        "A16-R04"
+      ],
+      "actual_scope_and_limit": "Precise held handles and own Job cleanup implemented; worker release state omits identity predicate, while parent errors still fail.",
+      "not_a_blanket_pass_for_all_variants": true
+    },
+    {
+      "id": "L03",
+      "group": "lifecycle",
+      "authoritative_rule": "Execution verification: fixed delivery and retained failures",
+      "status": "RAW_VERIFIED_WITH_LIMITATIONS",
+      "evidence": [],
+      "actual_scope_and_limit": "49 raw inputs, 31259 old modes/types/blobs and37 prep members verified; same-final50 package supplement. Old failures retained, no product edits.",
+      "not_a_blanket_pass_for_all_variants": true
+    }
+  ],
+  "status_counts": {
+    "PARTIAL_OFFLINE_VERIFIED": 16,
+    "OFFLINE_VERIFIED": 11,
+    "PARTIAL_STATIC": 7,
+    "REWORK_STATIC": 3,
+    "STATIC_ONLY": 3,
+    "STATIC_AND_RAW_VERIFIED": 1,
+    "STATIC_AND_OFFLINE_VERIFIED": 1,
+    "REWORK_CONFIRMED": 2,
+    "HISTORICAL_PREPARATION_ONLY": 2,
+    "STATIC_GAP_LIMITED_FAIL_CLOSED": 1,
+    "RAW_VERIFIED_WITH_LIMITATIONS": 1
+  }
+}

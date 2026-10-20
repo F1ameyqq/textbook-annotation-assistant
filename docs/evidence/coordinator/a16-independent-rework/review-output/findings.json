@@ -1,0 +1,100 @@
+{
+  "task": "A16",
+  "result": "REWORK",
+  "findings": [
+    {
+      "id": "A16-R01",
+      "priority": 1,
+      "result": "CONFIRMED_COUNTEREXAMPLE",
+      "blocking": true,
+      "title": "Reject sample frame semantic changes before using content evidence",
+      "file": "tools/a16_current_state_probe.py",
+      "line": 512,
+      "end_line": 514,
+      "related": [
+        {
+          "file": "tools/a16_current_state_probe.py",
+          "line": 497
+        },
+        {
+          "file": "src/annotation/source/usense/current_readonly/decode.py",
+          "line": 70
+        }
+      ],
+      "requirement": "Fixed sample schema must correspond field by field to current frame ownership, role, zone/order and content; identity mismatch stops successors.",
+      "trigger": "Initial full inventory is normal. Single-sample frame response has identical rect_id/file_id/question order, but r-3-1 changes choice→answer and r-3-2 zone index changes 1→3.",
+      "actual": "collect completes all 11 business GET steps and returns READONLY_REVIEW; choice text is AVAILABLE and bound using stale initial inventory frames.",
+      "cause": "Sample response checks only an ID set and book/question identity. Its role/index/directory/page/bbox/parent/content fields are discarded. expected_frames remains the initial inventory projection.",
+      "expected": "Any unapproved semantic mismatch is a terminal sample read failure; do not execute info/content successors. If comparisons succeed, bind content to the actual validated sample rows in a proven order.",
+      "evidence": [
+        "independent-controls-result.json#C13_CHANGED_SAMPLE_COUNTEREXAMPLE",
+        "counterexample-changed-sample.actual.json"
+      ],
+      "limits": "Synthetic transport/image/UI/file stubs; actual collect/decode/selection/current_code/register_sample/bound_content/check paths used. No platform behavior or real write is asserted."
+    },
+    {
+      "id": "A16-R02",
+      "priority": 1,
+      "result": "STATIC_GAP",
+      "blocking": true,
+      "title": "Lexical token co-occurrence does not establish current getter and response schema",
+      "file": "src/annotation/source/usense/current_readonly/decode.py",
+      "line": 189,
+      "end_line": 203,
+      "related": [
+        {
+          "file": "src/annotation/source/usense/current_readonly/policy.py",
+          "line": 67
+        },
+        {
+          "file": "tools/a16_current_state_probe.py",
+          "line": 495
+        }
+      ],
+      "requirement": "Sample API paths/parameters/zones must be derived from current code/response; unknown parameters must not be probed; schema evidence must be field-bound.",
+      "actual_static": "has_read searches field words anywhere in a broad block and endpoint names/zone strings anywhere in the asset. has_content only adds global presence of ocr_result and success. register_sample then registers five hardcoded GETs from those booleans.",
+      "cause": "No proof links the tokens to the selected getter arguments, its concrete other endpoint paths, or the data.success/data.ocr_result decoder response object.",
+      "expected": "Keep lexical hits as CURRENT_CODE observations with applicability UNKNOWN until concrete getter/parameter/zone/response bindings are demonstrated. Only register the evidenced paths/parameters; supply field-level source refs.",
+      "evidence": [
+        "src/annotation/source/usense/current_readonly/decode.py:174-203",
+        "src/annotation/source/usense/current_readonly/policy.py:67-86"
+      ],
+      "limits": "C15 executable counterexample NOT_RUN after R01 stop. This is a static logic finding; no fabricated runtime output."
+    },
+    {
+      "id": "A16-R03",
+      "priority": 2,
+      "result": "STATIC_GAP",
+      "blocking": true,
+      "title": "Full original-image decoding is absent",
+      "file": "src/annotation/source/usense/current_readonly/decode.py",
+      "line": 162,
+      "end_line": 170,
+      "requirement": "Reject invalid/truncated original image bytes; dimensions/hash and source facts must describe a usable original, rather than a readable header.",
+      "actual_static": "original_info reads img.size/img.format and calls img.verify(), but never loads pixel data. There is no later byte decoder in original_once before those bytes are saved and described.",
+      "expected": "Perform a full decode/load from the exact bytes and fail closed on decode errors; retain a valid-header/truncated-JPEG negative control.",
+      "evidence": [
+        "src/annotation/source/usense/current_readonly/decode.py:162-171",
+        "tools/a16_current_state_probe.py:379-387"
+      ],
+      "limits": "C14 truncated-image runtime test NOT_RUN after R01 stop. No claim is made that a particular corrupted file was accepted in this review."
+    },
+    {
+      "id": "A16-R04",
+      "priority": 2,
+      "result": "STATIC_GAP_LIMITED_FAIL_CLOSED",
+      "blocking": false,
+      "title": "Worker release state can say RELEASED after creation-identity mismatch",
+      "file": "tools/a16_current_state_probe.py",
+      "line": 670,
+      "end_line": 672,
+      "requirement": "Exact held creation identity is part of release proof; mismatch must remain UNKNOWN.",
+      "actual_static": "The mismatch at 641-642 appends an error, but state at 670-672 checks job/handle closure and exit_observed without identity equality or absence of identity errors.",
+      "expected": "Release state explicitly requires creation identity match; otherwise UNKNOWN. Retain error and parent failure.",
+      "evidence": [
+        "tools/a16_current_state_probe.py:640-672"
+      ],
+      "limits": "The parent still returns failure because errors is nonempty, so this is not a demonstrated live admission bypass. C16 runtime check NOT_RUN."
+    }
+  ]
+}

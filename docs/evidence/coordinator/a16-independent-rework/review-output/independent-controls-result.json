@@ -1,0 +1,902 @@
+{
+  "task": "A16",
+  "candidate_manifest_sha256": "2579b043d65e665263796d0922f080ad101f4d20c1e9ea500fd7894ba41d966c",
+  "result": "REWORK",
+  "probes": [
+    {
+      "id": "C01_DEFAULT_STATIC",
+      "cases": [
+        "A01",
+        "A05",
+        "L03"
+      ],
+      "status": "PASS",
+      "actual": {
+        "default_exit": 0,
+        "strict_tls": true,
+        "candidate_actual_bytes_checked": true
+      }
+    },
+    {
+      "id": "C02_GATE",
+      "cases": [
+        "A02",
+        "A03",
+        "A04",
+        "A05"
+      ],
+      "status": "PASS",
+      "actual": {
+        "synthetic_strict_and_exception_only": true,
+        "rejections": [
+          {
+            "field": "task",
+            "rejection": "ACTIVATION_BINDING_MISMATCH"
+          },
+          {
+            "field": "workflow_commit",
+            "rejection": "ACTIVATION_BINDING_MISMATCH"
+          },
+          {
+            "field": "run_id",
+            "rejection": "ACTIVATION_BINDING_MISMATCH"
+          },
+          {
+            "field": "executor_thread_id",
+            "rejection": "ACTIVATION_BINDING_MISMATCH"
+          },
+          {
+            "field": "candidate_manifest_sha256",
+            "rejection": "ACTIVATION_BINDING_MISMATCH"
+          },
+          {
+            "field": "book_id",
+            "rejection": "ACTIVATION_BINDING_MISMATCH"
+          },
+          {
+            "field": "viewers",
+            "rejection": "ACTIVATION_BINDING_MISMATCH"
+          },
+          {
+            "field": "target",
+            "rejection": "ACTIVATION_BINDING_MISMATCH"
+          },
+          {
+            "field": "profile_fingerprint",
+            "rejection": "ACTIVATION_BINDING_MISMATCH"
+          },
+          {
+            "field": "output_directory",
+            "rejection": "ACTIVATION_BINDING_MISMATCH"
+          },
+          {
+            "field": "new_live_limit",
+            "rejection": "ACTIVATION_BINDING_MISMATCH"
+          },
+          {
+            "field": "context_limit",
+            "rejection": "ACTIVATION_BINDING_MISMATCH"
+          },
+          {
+            "field": "business_write_limit",
+            "rejection": "ACTIVATION_BINDING_MISMATCH"
+          },
+          {
+            "field": "old_budgets_restored",
+            "rejection": "ACTIVATION_BINDING_MISMATCH"
+          },
+          {
+            "time_boundary": "2026-10-20T11:59:59+00:00",
+            "rejection": "ACTIVATION_WINDOW_REJECTED"
+          },
+          {
+            "time_boundary": "2026-10-20T12:15:00+00:00",
+            "rejection": "ACTIVATION_WINDOW_REJECTED"
+          }
+        ],
+        "activation_written": false
+      }
+    },
+    {
+      "id": "C03_POLICY",
+      "cases": [
+        "N01",
+        "N02",
+        "N03",
+        "N04",
+        "N06",
+        "N10",
+        "S01"
+      ],
+      "status": "PASS",
+      "actual": {
+        "fixed_gets": 6,
+        "optional_categories": [
+          "Image",
+          "Font",
+          "Media"
+        ],
+        "source_registration": true,
+        "writes_unknown_APIs_cross_origin_active_and_redirects_rejected": true
+      }
+    },
+    {
+      "id": "C04_REDACTION",
+      "cases": [
+        "R01",
+        "R02"
+      ],
+      "status": "PASS",
+      "actual": {
+        "safe_event": {
+          "scheme": "https",
+          "hostname": "cdn.invalid",
+          "port": 443,
+          "resource_type": "Font",
+          "category": "EXPECTED_PASSIVE_DENIAL",
+          "decision": "BLOCK",
+          "source": "FIXED_SYNTHETIC",
+          "redirect_hop": false,
+          "main_navigation": false,
+          "business_read": false,
+          "expected_passive_denial": true
+        },
+        "safe_error": {
+          "exception_type": "ValueError",
+          "codes": [
+            "UNKNOWN"
+          ]
+        },
+        "sentinel_absent": true
+      }
+    },
+    {
+      "id": "C05_INVENTORY",
+      "cases": [
+        "I01",
+        "I02",
+        "I04",
+        "Q01"
+      ],
+      "status": "PASS",
+      "actual": {
+        "full_inventory": true,
+        "append": 22,
+        "selected_sample": 3,
+        "Q22_retained_not_sampled": true,
+        "content_status": "UNKNOWN",
+        "write_ready": false,
+        "partial_rejected_for_append": true
+      }
+    },
+    {
+      "id": "C06_CONTENT",
+      "cases": [
+        "C01",
+        "C02",
+        "C03",
+        "D02",
+        "D03"
+      ],
+      "status": "PASS",
+      "actual": {
+        "three_states_distinct": true,
+        "rect_order_rejection": true,
+        "login_and_bad_business_rejected": true
+      }
+    },
+    {
+      "id": "C07_SOURCE_DRAFT",
+      "cases": [
+        "S02",
+        "F01",
+        "F02",
+        "F03"
+      ],
+      "status": "PASS",
+      "actual": {
+        "source57_retained_for_viewer14": true,
+        "stale_role_and_order_controls_rejected": 4,
+        "candidate_remains_HOLD": true,
+        "exact_punctuation_not_approved": true
+      }
+    },
+    {
+      "id": "C08_REAL_CAPTURE_CACHE",
+      "cases": [
+        "N09"
+      ],
+      "status": "PASS",
+      "actual": {
+        "capture_to_get_once_to_local_replay": true,
+        "original_bytes_sha256": "44a4f86700beafc5ab16b98833fe00f5f5f24d4baff228fde4909d7a225b1626",
+        "second_network_send": false,
+        "page_evaluate_calls": 0
+      }
+    },
+    {
+      "id": "C09_PASSIVE_THEN_FATAL",
+      "cases": [
+        "N04",
+        "N05",
+        "N07"
+      ],
+      "status": "PASS",
+      "actual": {
+        "expected_passive_then_fatal_method": true,
+        "first_failure": {
+          "exception_type": "Stop",
+          "codes": [
+            "METHOD_BLOCKED"
+          ]
+        },
+        "no_successor_get": true,
+        "WS_no_connect": true
+      }
+    },
+    {
+      "id": "C10_TERMINAL",
+      "cases": [
+        "N08"
+      ],
+      "status": "PASS",
+      "actual": {
+        "real_observer_finalization_with_memory_open_close": true,
+        "outcome": "ERROR",
+        "error": {
+          "exception_type": "Stop",
+          "codes": [
+            "SYNTHETIC_LATE_FATAL"
+          ]
+        },
+        "real_live_entry_constructed": false
+      }
+    },
+    {
+      "id": "C11_LOCAL_WAIT_CLOCK",
+      "cases": [
+        "L01"
+      ],
+      "status": "PASS",
+      "actual": {
+        "local_clock_origin": 7,
+        "timeout_at": 28,
+        "resend": false,
+        "OS_Job_and_held_identity": "STATIC_ONLY_NOT_EXECUTED"
+      }
+    },
+    {
+      "id": "C12_COLLECTOR_BASELINE",
+      "cases": [
+        "I01",
+        "C02",
+        "Q01",
+        "Q03"
+      ],
+      "status": "PASS",
+      "actual": {
+        "mutate_sample_only": false,
+        "sample_changed_fields": [],
+        "thrown": null,
+        "result": {
+          "steps": {
+            "navigation": "DONE",
+            "book": "DONE",
+            "directory": "DONE",
+            "frames": "DONE",
+            "source": "DONE",
+            "page14": "DONE",
+            "original14": "DONE",
+            "mapping14": "DONE",
+            "page173": "DONE",
+            "original173": "DONE",
+            "mapping173": "DONE",
+            "sample_frames": "DONE",
+            "sample_info": "DONE",
+            "content_question": "DONE",
+            "content_choice": "DONE",
+            "content_answer": "DONE"
+          },
+          "sources": [
+            {
+              "original": {
+                "synthetic": true
+              },
+              "mapping": {
+                "synthetic": true
+              }
+            },
+            {
+              "original": {
+                "synthetic": true
+              },
+              "mapping": {
+                "synthetic": true
+              }
+            }
+          ],
+          "gaps": [],
+          "book": {
+            "id": "46007447",
+            "title": "INDEPENDENT_SYNTHETIC",
+            "question_count": 2
+          },
+          "target": {
+            "book_id": "46007447",
+            "inventory_coverage": "FULL",
+            "content_coverage": "PARTIAL",
+            "write_preservation_baseline": false,
+            "question_count_reported": 2,
+            "question_count_observed": 2,
+            "frame_count": 12,
+            "global_max_observed": 22,
+            "append_after_order": 22,
+            "questions": [
+              {
+                "id": "qid-3",
+                "order": 3,
+                "directory_id": "dir-independent",
+                "label": "fixture",
+                "frames": [
+                  {
+                    "rect_id": "r-3-0",
+                    "type": "question",
+                    "file_id": "46007447",
+                    "order_in_level": "3",
+                    "image_order_in_annotation_zone": 0,
+                    "rect_bbox": [
+                      1,
+                      2,
+                      3,
+                      4
+                    ],
+                    "page_index": 14,
+                    "parent_rect_id": null,
+                    "directory_id": "dir-independent",
+                    "content_type": "text"
+                  },
+                  {
+                    "rect_id": "r-3-1",
+                    "type": "choice",
+                    "file_id": "46007447",
+                    "order_in_level": "3",
+                    "image_order_in_annotation_zone": 0,
+                    "rect_bbox": [
+                      1,
+                      2,
+                      3,
+                      4
+                    ],
+                    "page_index": 14,
+                    "parent_rect_id": null,
+                    "directory_id": "dir-independent",
+                    "content_type": "text"
+                  },
+                  {
+                    "rect_id": "r-3-2",
+                    "type": "choice",
+                    "file_id": "46007447",
+                    "order_in_level": "3",
+                    "image_order_in_annotation_zone": 1,
+                    "rect_bbox": [
+                      1,
+                      2,
+                      3,
+                      4
+                    ],
+                    "page_index": 14,
+                    "parent_rect_id": null,
+                    "directory_id": "dir-independent",
+                    "content_type": "text"
+                  },
+                  {
+                    "rect_id": "r-3-3",
+                    "type": "choice",
+                    "file_id": "46007447",
+                    "order_in_level": "3",
+                    "image_order_in_annotation_zone": 2,
+                    "rect_bbox": [
+                      1,
+                      2,
+                      3,
+                      4
+                    ],
+                    "page_index": 14,
+                    "parent_rect_id": null,
+                    "directory_id": "dir-independent",
+                    "content_type": "text"
+                  },
+                  {
+                    "rect_id": "r-3-4",
+                    "type": "choice",
+                    "file_id": "46007447",
+                    "order_in_level": "3",
+                    "image_order_in_annotation_zone": 3,
+                    "rect_bbox": [
+                      1,
+                      2,
+                      3,
+                      4
+                    ],
+                    "page_index": 14,
+                    "parent_rect_id": null,
+                    "directory_id": "dir-independent",
+                    "content_type": "text"
+                  },
+                  {
+                    "rect_id": "r-3-5",
+                    "type": "answer",
+                    "file_id": "46007447",
+                    "order_in_level": "3",
+                    "image_order_in_annotation_zone": 0,
+                    "rect_bbox": [
+                      1,
+                      2,
+                      3,
+                      4
+                    ],
+                    "page_index": 173,
+                    "parent_rect_id": null,
+                    "directory_id": "dir-independent",
+                    "content_type": "text"
+                  }
+                ],
+                "content": {
+                  "status": "AVAILABLE",
+                  "reason": "EXPLICIT_CURRENT_SUCCESS_RESULT",
+                  "text": "SYNTHETIC_question",
+                  "rect_ids": [
+                    "r-3-0"
+                  ]
+                },
+                "sample_readback_ref": "sample-readback.json"
+              },
+              {
+                "id": "qid-22",
+                "order": 22,
+                "directory_id": "dir-independent",
+                "label": "fixture",
+                "frames": [
+                  {
+                    "rect_id": "r-22-0",
+                    "type": "question",
+                    "file_id": "46007447",
+                    "order_in_level": "22",
+                    "image_order_in_annotation_zone": 0,
+                    "rect_bbox": [
+                      1,
+                      2,
+                      3,
+                      4
+                    ],
+                    "page_index": 14,
+                    "parent_rect_id": null,
+                    "directory_id": "dir-independent",
+                    "content_type": "text"
+                  },
+                  {
+                    "rect_id": "r-22-1",
+                    "type": "choice",
+                    "file_id": "46007447",
+                    "order_in_level": "22",
+                    "image_order_in_annotation_zone": 0,
+                    "rect_bbox": [
+                      1,
+                      2,
+                      3,
+                      4
+                    ],
+                    "page_index": 14,
+                    "parent_rect_id": null,
+                    "directory_id": "dir-independent",
+                    "content_type": "text"
+                  },
+                  {
+                    "rect_id": "r-22-2",
+                    "type": "choice",
+                    "file_id": "46007447",
+                    "order_in_level": "22",
+                    "image_order_in_annotation_zone": 1,
+                    "rect_bbox": [
+                      1,
+                      2,
+                      3,
+                      4
+                    ],
+                    "page_index": 14,
+                    "parent_rect_id": null,
+                    "directory_id": "dir-independent",
+                    "content_type": "text"
+                  },
+                  {
+                    "rect_id": "r-22-3",
+                    "type": "choice",
+                    "file_id": "46007447",
+                    "order_in_level": "22",
+                    "image_order_in_annotation_zone": 2,
+                    "rect_bbox": [
+                      1,
+                      2,
+                      3,
+                      4
+                    ],
+                    "page_index": 14,
+                    "parent_rect_id": null,
+                    "directory_id": "dir-independent",
+                    "content_type": "text"
+                  },
+                  {
+                    "rect_id": "r-22-4",
+                    "type": "choice",
+                    "file_id": "46007447",
+                    "order_in_level": "22",
+                    "image_order_in_annotation_zone": 3,
+                    "rect_bbox": [
+                      1,
+                      2,
+                      3,
+                      4
+                    ],
+                    "page_index": 14,
+                    "parent_rect_id": null,
+                    "directory_id": "dir-independent",
+                    "content_type": "text"
+                  },
+                  {
+                    "rect_id": "r-22-5",
+                    "type": "answer",
+                    "file_id": "46007447",
+                    "order_in_level": "22",
+                    "image_order_in_annotation_zone": 0,
+                    "rect_bbox": [
+                      1,
+                      2,
+                      3,
+                      4
+                    ],
+                    "page_index": 173,
+                    "parent_rect_id": null,
+                    "directory_id": "dir-independent",
+                    "content_type": "text"
+                  }
+                ],
+                "content": {
+                  "status": "UNKNOWN",
+                  "reason": "NOT_FETCHED",
+                  "text": null
+                }
+              }
+            ],
+            "directories": [
+              {
+                "id": "dir-independent",
+                "label": "fixture",
+                "parent": null
+              }
+            ],
+            "orphan_frames": [],
+            "q22_in_inventory": true,
+            "q22_sample_or_navigation": false
+          },
+          "sample": {
+            "order": 3,
+            "responses": {
+              "sample_frames": {
+                "schema": {
+                  "code": "int",
+                  "data": {
+                    "type": "array",
+                    "length": 6,
+                    "item_schemas": [
+                      {
+                        "file_id": "str",
+                        "rect_id": "str",
+                        "order_in_level": "str",
+                        "directory_id": "str",
+                        "type": "str",
+                        "image_order_in_annotation_zone": "int",
+                        "page_index": "int",
+                        "rect_bbox": {
+                          "type": "array",
+                          "length": 4,
+                          "item_schemas": [
+                            "int",
+                            "int",
+                            "int",
+                            "int"
+                          ]
+                        },
+                        "content_type": "str",
+                        "parent_rect_id": "NoneType"
+                      },
+                      {
+                        "file_id": "str",
+                        "rect_id": "str",
+                        "order_in_level": "str",
+                        "directory_id": "str",
+                        "type": "str",
+                        "image_order_in_annotation_zone": "int",
+                        "page_index": "int",
+                        "rect_bbox": {
+                          "type": "array",
+                          "length": 4,
+                          "item_schemas": [
+                            "int",
+                            "int",
+                            "int",
+                            "int"
+                          ]
+                        },
+                        "content_type": "str",
+                        "parent_rect_id": "NoneType"
+                      },
+                      {
+                        "file_id": "str",
+                        "rect_id": "str",
+                        "order_in_level": "str",
+                        "directory_id": "str",
+                        "type": "str",
+                        "image_order_in_annotation_zone": "int",
+                        "page_index": "int",
+                        "rect_bbox": {
+                          "type": "array",
+                          "length": 4,
+                          "item_schemas": [
+                            "int",
+                            "int",
+                            "int",
+                            "int"
+                          ]
+                        },
+                        "content_type": "str",
+                        "parent_rect_id": "NoneType"
+                      },
+                      {
+                        "file_id": "str",
+                        "rect_id": "str",
+                        "order_in_level": "str",
+                        "directory_id": "str",
+                        "type": "str",
+                        "image_order_in_annotation_zone": "int",
+                        "page_index": "int",
+                        "rect_bbox": {
+                          "type": "array",
+                          "length": 4,
+                          "item_schemas": [
+                            "int",
+                            "int",
+                            "int",
+                            "int"
+                          ]
+                        },
+                        "content_type": "str",
+                        "parent_rect_id": "NoneType"
+                      },
+                      {
+                        "file_id": "str",
+                        "rect_id": "str",
+                        "order_in_level": "str",
+                        "directory_id": "str",
+                        "type": "str",
+                        "image_order_in_annotation_zone": "int",
+                        "page_index": "int",
+                        "rect_bbox": {
+                          "type": "array",
+                          "length": 4,
+                          "item_schemas": [
+                            "int",
+                            "int",
+                            "int",
+                            "int"
+                          ]
+                        },
+                        "content_type": "str",
+                        "parent_rect_id": "NoneType"
+                      },
+                      {
+                        "file_id": "str",
+                        "rect_id": "str",
+                        "order_in_level": "str",
+                        "directory_id": "str",
+                        "type": "str",
+                        "image_order_in_annotation_zone": "int",
+                        "page_index": "int",
+                        "rect_bbox": {
+                          "type": "array",
+                          "length": 4,
+                          "item_schemas": [
+                            "int",
+                            "int",
+                            "int",
+                            "int"
+                          ]
+                        },
+                        "content_type": "str",
+                        "parent_rect_id": "NoneType"
+                      }
+                    ]
+                  }
+                }
+              },
+              "sample_info": {
+                "schema": {
+                  "code": "int",
+                  "data": {
+                    "file_id": "str",
+                    "order_in_level": "str",
+                    "tishi": "str"
+                  }
+                }
+              },
+              "content_question": {
+                "schema": {
+                  "code": "int",
+                  "data": {
+                    "success": "bool",
+                    "ocr_result": "str",
+                    "rect_ids": {
+                      "type": "array",
+                      "length": 1,
+                      "item_schemas": [
+                        "str"
+                      ]
+                    }
+                  }
+                }
+              },
+              "content_choice": {
+                "schema": {
+                  "code": "int",
+                  "data": {
+                    "success": "bool",
+                    "ocr_result": "str",
+                    "rect_ids": {
+                      "type": "array",
+                      "length": 4,
+                      "item_schemas": [
+                        "str",
+                        "str",
+                        "str",
+                        "str"
+                      ]
+                    }
+                  }
+                }
+              },
+              "content_answer": {
+                "schema": {
+                  "code": "int",
+                  "data": {
+                    "success": "bool",
+                    "ocr_result": "str",
+                    "rect_ids": {
+                      "type": "array",
+                      "length": 1,
+                      "item_schemas": [
+                        "str"
+                      ]
+                    }
+                  }
+                }
+              }
+            },
+            "content": {
+              "question": {
+                "status": "AVAILABLE",
+                "reason": "EXPLICIT_CURRENT_SUCCESS_RESULT",
+                "text": "SYNTHETIC_question",
+                "rect_ids": [
+                  "r-3-0"
+                ]
+              },
+              "choice": {
+                "status": "AVAILABLE",
+                "reason": "EXPLICIT_CURRENT_SUCCESS_RESULT",
+                "text": "SYNTHETIC_choice",
+                "rect_ids": [
+                  "r-3-1",
+                  "r-3-2",
+                  "r-3-3",
+                  "r-3-4"
+                ]
+              },
+              "answer": {
+                "status": "AVAILABLE",
+                "reason": "EXPLICIT_CURRENT_SUCCESS_RESULT",
+                "text": "SYNTHETIC_answer",
+                "rect_ids": [
+                  "r-3-5"
+                ]
+              }
+            },
+            "question_info": {
+              "file_id": "46007447",
+              "order_in_level": "3",
+              "tishi": "xuanze",
+              "tilei": null,
+              "tixu": null,
+              "tihao": null
+            },
+            "ordinary_single_choice": "UNKNOWN_READONLY_SCHEMA_ONLY"
+          },
+          "outcome": "READONLY_REVIEW",
+          "production_ready": false,
+          "first_question_status": "HOLD_CURRENT_IMAGE_VISUAL_REVIEW_AND_NEWNESS_REQUIRED"
+        },
+        "business_GET_count": 11,
+        "saved_names": [
+          "response-schemas.json",
+          "sample-readback.json",
+          "source-metadata.json",
+          "source-response-viewer14.json",
+          "source-response-viewer173.json",
+          "target-inventory.json",
+          "wire-observation.json"
+        ],
+        "stubs": [
+          "business transport responses",
+          "image fetch/visible UI proof",
+          "file writes"
+        ],
+        "actual_product_path": [
+          "collect",
+          "inventory",
+          "sample_order",
+          "current_code",
+          "register_sample",
+          "bound_content",
+          "sample_frame_identity_check"
+        ]
+      }
+    },
+    {
+      "id": "C13_CHANGED_SAMPLE_COUNTEREXAMPLE",
+      "cases": [
+        "D02",
+        "F03"
+      ],
+      "status": "FAIL",
+      "failure": {
+        "id": "C13_CHANGED_SAMPLE_COUNTEREXAMPLE",
+        "exception_type": "AssertionError",
+        "detail": "SAME_RECT_IDS_WRONG_ROLE_AND_ORDER_ACCEPTED_AS_READONLY_REVIEW"
+      }
+    },
+    {
+      "id": "C14_TRUNCATED_JPEG",
+      "cases": [
+        "S03"
+      ],
+      "status": "NOT_RUN",
+      "reason": "FIRST_SEMANTIC_COUNTEREXAMPLE_STOP"
+    },
+    {
+      "id": "C15_LEXICAL_SCHEMA_FALSE_POSITIVE",
+      "cases": [
+        "D01",
+        "D02",
+        "D04"
+      ],
+      "status": "NOT_RUN",
+      "reason": "FIRST_SEMANTIC_COUNTEREXAMPLE_STOP"
+    },
+    {
+      "id": "C16_JOB_IDENTITY_MISMATCH",
+      "cases": [
+        "L02"
+      ],
+      "status": "NOT_RUN",
+      "reason": "FIRST_SEMANTIC_COUNTEREXAMPLE_STOP"
+    }
+  ],
+  "first_failure": {
+    "id": "C13_CHANGED_SAMPLE_COUNTEREXAMPLE",
+    "exception_type": "AssertionError",
+    "detail": "SAME_RECT_IDS_WRONG_ROLE_AND_ORDER_ACCEPTED_AS_READONLY_REVIEW"
+  },
+  "resource_attempts": [],
+  "duration_ms": 94,
+  "package_bridge": "Only frozen 49-file input modules; no missing parent initializer fetched or product file changed",
+  "real_browser_network_profile_native_or_occupancy": false,
+  "live_activation": false
+}
