@@ -1,0 +1,513 @@
+{
+  "status": "PASS_FIXED_PUBLIC_FACTS_AND_FINITE_RELEASE_WITH_DEADLINE_LIMITATION",
+  "input_count": 23,
+  "input_bytes": 101468,
+  "author_manifest_nonself": 18,
+  "extra_or_missing_inputs": [],
+  "input_reparse_or_symlinks": false,
+  "author_wrapper_imports_or_executions": 0,
+  "network_connections": 0,
+  "private_raw_reads": 0,
+  "local_PEM_parse_mode": "stdlib ssl local decode plus independent base64/DER SHA256; no external parser process",
+  "local_PEM_parses": 4,
+  "ast_results": {
+    "tls_wrapper.py": {
+      "ast_valid": true,
+      "Popen_lines": [
+        135
+      ],
+      "Popen_literal_shell_false": true,
+      "functions": {
+        "utc": 29,
+        "digest": 32,
+        "save": 36,
+        "proxy_metadata": 41,
+        "safe_env": 77,
+        "times": 82,
+        "invalid_handle": 90,
+        "main": 97
+      },
+      "lines_of_interest": [
+        {
+          "line": 37,
+          "text": "with Path(path).open('x', encoding='utf-8', newline='\\n') as f:"
+        },
+        {
+          "line": 98,
+          "text": "start = float(sys.argv[1])"
+        },
+        {
+          "line": 99,
+          "text": "deadline = start + 22.0"
+        },
+        {
+          "line": 102,
+          "text": "save(PRIVATE / 'wrapper-claim.json', {'at': utc(), 'thread_id': THREAD_ID, 'pid': os.getpid(),"
+        },
+        {
+          "line": 120,
+          "text": "if time.perf_counter() >= wait_cutoff:"
+        },
+        {
+          "line": 134,
+          "text": "result['launch_elapsed_ms'] = round((time.perf_counter() - start) * 1000, 3)"
+        },
+        {
+          "line": 172,
+          "text": "'elapsed_ms': round((time.perf_counter() - start) * 1000, 3)})"
+        },
+        {
+          "line": 191,
+          "text": "result['stdin_eof_elapsed_ms'] = round((time.perf_counter() - start) * 1000, 3)"
+        },
+        {
+          "line": 196,
+          "text": "result['stdin_eof_elapsed_ms'] = round((time.perf_counter() - start) * 1000, 3)"
+        },
+        {
+          "line": 201,
+          "text": "p.kill()"
+        },
+        {
+          "line": 203,
+          "text": "p.wait(timeout=max(0, deadline - time.perf_counter() - 0.15))"
+        },
+        {
+          "line": 219,
+          "text": "if p.poll() is None and time.perf_counter() < deadline:"
+        },
+        {
+          "line": 220,
+          "text": "p.kill()"
+        },
+        {
+          "line": 223,
+          "text": "p.wait(timeout=max(0, deadline - time.perf_counter() - 0.1))"
+        },
+        {
+          "line": 224,
+          "text": "except subprocess.TimeoutExpired:"
+        },
+        {
+          "line": 238,
+          "text": "p._handle.Close()"
+        },
+        {
+          "line": 243,
+          "text": "result['elapsed_ms_at_release'] = round((time.perf_counter() - start) * 1000, 3)"
+        }
+      ]
+    },
+    "launch_once.py": {
+      "ast_valid": true,
+      "Popen_lines": [
+        23
+      ],
+      "Popen_literal_shell_false": true,
+      "functions": {
+        "main": 9
+      },
+      "lines_of_interest": [
+        {
+          "line": 11,
+          "text": "w.save(w.PRIVATE / 'launch-claim.json', {'at': w.utc(), 'thread_id': w.THREAD_ID,"
+        },
+        {
+          "line": 29,
+          "text": "p.wait(timeout=max(0, t0 + 22 - time.perf_counter()))"
+        },
+        {
+          "line": 30,
+          "text": "except subprocess.TimeoutExpired:"
+        },
+        {
+          "line": 32,
+          "text": "record['exit_status'] = 'UNKNOWN_AT_22_SECOND_DEADLINE_NO_RESTART'"
+        },
+        {
+          "line": 38,
+          "text": "p._handle.Close()"
+        }
+      ]
+    },
+    "extract_public_evidence.py": {
+      "ast_valid": true,
+      "Popen_lines": [],
+      "Popen_literal_shell_false": true,
+      "functions": {
+        "save": 13,
+        "main": 18
+      },
+      "lines_of_interest": []
+    },
+    "seal_delivery.py": {
+      "ast_valid": true,
+      "Popen_lines": [],
+      "Popen_literal_shell_false": true,
+      "functions": {
+        "raw": 10,
+        "save": 14,
+        "main": 19
+      },
+      "lines_of_interest": []
+    }
+  },
+  "exact_tls_argv": [
+    "C:/Program Files/Git/mingw64/bin/openssl.exe",
+    "s_client",
+    "-connect",
+    "www.usense.com:443",
+    "-servername",
+    "www.usense.com",
+    "-verify_hostname",
+    "www.usense.com",
+    "-verify_return_error",
+    "-showcerts",
+    "-prexit",
+    "-CAfile",
+    "C:/Program Files/Git/mingw64/etc/ssl/certs/ca-bundle.crt",
+    "-proxy",
+    "127.0.0.1:7897",
+    "-no_ign_eof"
+  ],
+  "proxy": {
+    "enabled": true,
+    "pac_present": false,
+    "authentication_syntax_present": false,
+    "kind": "windows-single-fixed-http-proxy",
+    "host": "127.0.0.1",
+    "port": 7897,
+    "endpoint": "127.0.0.1:7897",
+    "proxy_server_sha256": "00444a0af013aab6e52e22598646969ac40a3926e1a3b38614c9723e6f86747a",
+    "registry_path_sha256": "bf3b19a94623201cde8c775f4d9776c2a2b097b0efdc046b66dffc148baf69d4"
+  },
+  "binary_CA_limit": "Fixed recorded hashes checked across intent/preflight/archive-audit and guard source; installed executable/CA bytes not in 23-input package and not reread.",
+  "certificates": [
+    {
+      "index": 1,
+      "path": "certificate-01.pem",
+      "der_sha256": "52d8642145282846969a29b97c5c3aaae4c0203c4a6bc06906478f13445e3941",
+      "pem_sha256": "22c9c2e7d35f6d9188f1d0ef5d3ec8f188c1131dd9eda70eeae15342d73f4358",
+      "subject": [
+        [
+          [
+            "commonName",
+            "qt.lingshubao.cn"
+          ]
+        ]
+      ],
+      "issuer": [
+        [
+          [
+            "countryName",
+            "US"
+          ]
+        ],
+        [
+          [
+            "organizationName",
+            "Let's Encrypt"
+          ]
+        ],
+        [
+          [
+            "commonName",
+            "YE1"
+          ]
+        ]
+      ],
+      "dns_subject_alt_names": [
+        "qt.lingshubao.cn"
+      ],
+      "not_before_utc": "2026-06-01T00:16:05+00:00",
+      "not_after_utc": "2026-08-30T00:16:04+00:00",
+      "within_validity_at_observation": false,
+      "matches_author_public_fields": true
+    },
+    {
+      "index": 2,
+      "path": "certificate-02.pem",
+      "der_sha256": "a2372d06431e9716365eeed47ec020351497d182fcc038e457e58168a03cac07",
+      "pem_sha256": "30028f6eecdb9ba45b1a2440187278be1bc08c360da6611f21b4b3e74b103981",
+      "subject": [
+        [
+          [
+            "countryName",
+            "US"
+          ]
+        ],
+        [
+          [
+            "organizationName",
+            "Let's Encrypt"
+          ]
+        ],
+        [
+          [
+            "commonName",
+            "YE1"
+          ]
+        ]
+      ],
+      "issuer": [
+        [
+          [
+            "countryName",
+            "US"
+          ]
+        ],
+        [
+          [
+            "organizationName",
+            "ISRG"
+          ]
+        ],
+        [
+          [
+            "commonName",
+            "Root YE"
+          ]
+        ]
+      ],
+      "dns_subject_alt_names": [],
+      "not_before_utc": "2025-09-03T00:00:00+00:00",
+      "not_after_utc": "2028-09-02T23:59:59+00:00",
+      "within_validity_at_observation": true,
+      "matches_author_public_fields": true
+    },
+    {
+      "index": 3,
+      "path": "certificate-03.pem",
+      "der_sha256": "0fc0901cca2bae9e9fdbb02d50d02f1094f7b36672086991b9e897626dc485f0",
+      "pem_sha256": "2681e97e939cab7cde4fad1dc733fc7c99e39a203190e8f298e1c02ab431b1e9",
+      "subject": [
+        [
+          [
+            "countryName",
+            "US"
+          ]
+        ],
+        [
+          [
+            "organizationName",
+            "ISRG"
+          ]
+        ],
+        [
+          [
+            "commonName",
+            "Root YE"
+          ]
+        ]
+      ],
+      "issuer": [
+        [
+          [
+            "countryName",
+            "US"
+          ]
+        ],
+        [
+          [
+            "organizationName",
+            "Internet Security Research Group"
+          ]
+        ],
+        [
+          [
+            "commonName",
+            "ISRG Root X2"
+          ]
+        ]
+      ],
+      "dns_subject_alt_names": [],
+      "not_before_utc": "2026-05-13T00:00:00+00:00",
+      "not_after_utc": "2032-09-02T23:59:59+00:00",
+      "within_validity_at_observation": true,
+      "matches_author_public_fields": true
+    },
+    {
+      "index": 4,
+      "path": "certificate-04.pem",
+      "der_sha256": "ee5f7abd6981bb0255632cd8f49283451b4b18844d12040b44ee00f07b8fe2c6",
+      "pem_sha256": "4dadd67f1de699b79466b1e672187e6caef5e0fdab4404d649ad8188a1b2d9a1",
+      "subject": [
+        [
+          [
+            "countryName",
+            "US"
+          ]
+        ],
+        [
+          [
+            "organizationName",
+            "Internet Security Research Group"
+          ]
+        ],
+        [
+          [
+            "commonName",
+            "ISRG Root X2"
+          ]
+        ]
+      ],
+      "issuer": [
+        [
+          [
+            "countryName",
+            "US"
+          ]
+        ],
+        [
+          [
+            "organizationName",
+            "Internet Security Research Group"
+          ]
+        ],
+        [
+          [
+            "commonName",
+            "ISRG Root X1"
+          ]
+        ]
+      ],
+      "dns_subject_alt_names": [],
+      "not_before_utc": "2026-05-13T00:00:00+00:00",
+      "not_after_utc": "2032-09-02T23:59:59+00:00",
+      "within_validity_at_observation": true,
+      "matches_author_public_fields": true
+    }
+  ],
+  "public_issuer_name_links": [
+    {
+      "from": 1,
+      "to": 2,
+      "issuer_equals_next_subject": true
+    },
+    {
+      "from": 2,
+      "to": 3,
+      "issuer_equals_next_subject": true
+    },
+    {
+      "from": 3,
+      "to": 4,
+      "issuer_equals_next_subject": true
+    }
+  ],
+  "chain_signatures_or_trust_not_verified": true,
+  "private_stream_hash_consistency": true,
+  "private_claim_contents_not_read": true,
+  "published_error_code": 62,
+  "error_code_origin": "fixed sanitized extraction; underlying private stdout/stderr not independently reopened",
+  "secret_value_scan": [
+    {
+      "path": "execution-output/archive-audit.json",
+      "secret_value_pattern_matches": 0
+    },
+    {
+      "path": "execution-output/certificate-01.pem",
+      "secret_value_pattern_matches": 0
+    },
+    {
+      "path": "execution-output/certificate-02.pem",
+      "secret_value_pattern_matches": 0
+    },
+    {
+      "path": "execution-output/certificate-03.pem",
+      "secret_value_pattern_matches": 0
+    },
+    {
+      "path": "execution-output/certificate-04.pem",
+      "secret_value_pattern_matches": 0
+    },
+    {
+      "path": "execution-output/extract_public_evidence.py",
+      "secret_value_pattern_matches": 0
+    },
+    {
+      "path": "execution-output/launch-intent.json",
+      "secret_value_pattern_matches": 0
+    },
+    {
+      "path": "execution-output/launch_once.py",
+      "secret_value_pattern_matches": 0
+    },
+    {
+      "path": "execution-output/preflight.json",
+      "secret_value_pattern_matches": 0
+    },
+    {
+      "path": "execution-output/private-raw-hash-manifest.json",
+      "secret_value_pattern_matches": 0
+    },
+    {
+      "path": "execution-output/process-result.json",
+      "secret_value_pattern_matches": 0
+    },
+    {
+      "path": "execution-output/public-certificate-results.json",
+      "secret_value_pattern_matches": 0
+    },
+    {
+      "path": "execution-output/raw-output-manifest.json",
+      "secret_value_pattern_matches": 0
+    },
+    {
+      "path": "execution-output/report.json",
+      "secret_value_pattern_matches": 0
+    },
+    {
+      "path": "execution-output/report.md",
+      "secret_value_pattern_matches": 0
+    },
+    {
+      "path": "execution-output/seal_delivery.py",
+      "secret_value_pattern_matches": 0
+    },
+    {
+      "path": "execution-output/static-review.json",
+      "secret_value_pattern_matches": 0
+    },
+    {
+      "path": "execution-output/tls_wrapper.py",
+      "secret_value_pattern_matches": 0
+    },
+    {
+      "path": "execution-output/wrapper-os-release.json",
+      "secret_value_pattern_matches": 0
+    },
+    {
+      "path": "prior-A13-review/report.json",
+      "secret_value_pattern_matches": 0
+    },
+    {
+      "path": "prior-A13-review/report.md",
+      "secret_value_pattern_matches": 0
+    },
+    {
+      "path": "standards/A14-independent-tls-review.md",
+      "secret_value_pattern_matches": 0
+    },
+    {
+      "path": "standards/A14-single-tls-certificate-diagnostic.md",
+      "secret_value_pattern_matches": 0
+    }
+  ],
+  "tls_release_metadata_accepted": true,
+  "wrapper_release_metadata_accepted": true,
+  "timing": {
+    "wrapper_os_lifetime_ms": "1136.5958",
+    "tls_os_lifetime_ms": "974.7273",
+    "parent_same_process_elapsed_ms": 1140.204,
+    "child_relative_launch_ms": -4.862,
+    "child_relative_release_ms": 974.53,
+    "finite_exit_below_22s": true,
+    "general_shared_deadline_accepted": false,
+    "outer_timeout_path": "records UNKNOWN and closes its wrapper handle; no timeout termination of wrapper/descendants",
+    "child_finally_path": "exact-child kill is conditional on local perf_counter being before inherited deadline",
+    "unexecuted_branches": "No timeout/late-cleanup negative control run; no new execution authorized"
+  },
+  "A13_wrapper_OS_exit_identity": "UNKNOWN",
+  "count_proof_boundary": "One declared frozen launch path and one exact TLS/wrapper lifetime; no independent OS/network census or private-claim content audit."
+}

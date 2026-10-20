@@ -2,7 +2,7 @@
   "schema_version": 1,
   "project": "D:\\1800",
   "coordinator_thread_id": "01a15768-1e2d-7781-b29f-1f7376270216",
-  "updated_at": "2026-10-20T06:13:28.207404+00:00",
+  "updated_at": "2026-10-20T06:24:31.820840+00:00",
   "automation": {
     "id": "1800-a",
     "kind": "heartbeat",
@@ -10177,7 +10177,7 @@
     },
     "A14": {
       "at": "2026-10-20T13:59:29.061169+08:00",
-      "status": "FIXED_TLS_FAILURE_WAITING_INDEPENDENT",
+      "status": "CLOSED_LIMITED_FAILURE_CERTIFICATE_RELEASE_ACCEPTED",
       "coordinator_thread_id": "01a15768-1e2d-7781-b29f-1f7376270216",
       "execution_thread_id": "01a157e6-628a-75d2-b685-6cb98e5fb0af",
       "review_thread_id": "01a157e7-1425-7f53-8e84-1382566ffce6",
@@ -10209,12 +10209,15 @@
       "review": {
         "thread_id": "01a157e7-1425-7f53-8e84-1382566ffce6",
         "host_id": "local",
-        "status": "ACTIVE_STATIC_REVIEW",
-        "cursor": "e098cb1d-fb63-4c25-a35d-8c44b42af26b:3",
+        "status": "ACCEPTED_FAILURE_ARCHIVE_PUBLIC_CERTIFICATE_AND_EXACT_OWNED_RELEASE_ONLY",
+        "cursor": "e098cb1d-fb63-4c25-a35d-8c44b42af26b:10",
         "acknowledged": true,
         "preparation_complete": true,
         "workspace": "D:\\1800-worktrees\\a14-tls-review",
-        "output_allowlist": "D:\\1800-worktrees\\a14-tls-review\\review-output"
+        "output_allowlist": "D:\\1800-worktrees\\a14-tls-review\\review-output",
+        "released": true,
+        "report": "docs/evidence/coordinator/a14-tls-closure/review-output/report.json",
+        "manifest_sha256": "720e9c563a8d0d051993d9d22995485a2b44e16e3501b39138092080f6f5eb4e"
       },
       "new_tls_handshake_used": 1,
       "new_tls_handshake_remaining": 0,
@@ -10222,19 +10225,41 @@
       "raw_preflight": "docs/evidence/coordinator/a14-tls-dispatch/raw-preflight.json",
       "root_cause": "UNKNOWN",
       "observed_result": "HOSTNAME_MISMATCH",
-      "timing_limitation": "A14-TIMING-01"
+      "timing_limitation": "A14-TIMING-01",
+      "coordinator_acceptance": "docs/evidence/coordinator/a14-tls-closure/coordinator-receipt.json"
     },
     "A15": {
-      "status": "PROPOSED_WAITING_EXPLICIT_CURRENT_USER_DECISION",
-      "task": "docs/tasks/A15-certificate-exception-observation-proposal.md",
+      "status": "PREPARED_BEFORE_CHAT_CREATION",
+      "task": "docs/tasks/A15-certificate-exception-reuse.md",
       "task_sha256": "eb6aea7ad9b01ccbcaf7710c9c45d7c5c3a80d6efcef4db857838d204d725656",
       "execution_thread_id": null,
       "review_thread_id": null,
       "proposed_new_live_limit": 1,
-      "live_authorized": false,
-      "certificate_exception_authorized": false,
+      "live_authorized": true,
+      "certificate_exception_authorized": true,
       "old_budgets_restored": false,
-      "basis": "Current certificate exception requires explicit current-run user decision under AGENTS; A13 and A14 exhausted."
+      "basis": "Current certificate exception requires explicit current-run user decision under AGENTS; A13 and A14 exhausted.",
+      "user_decision": "docs/approvals/A15-certificate-exception-user-decision.json",
+      "user_decision_sha256": "36ffcbb42c030192313773b510c69598651b2c2ffe5fb54162c46b8041e40763",
+      "live_activated": false,
+      "execution_task": "docs/tasks/A15-certificate-exception-reuse.md",
+      "review_task": "docs/tasks/A15-independent-certificate-exception-review.md",
+      "at": "2026-10-20T06:24:31.820840+00:00",
+      "coordinator_thread_id": "01a15768-1e2d-7781-b29f-1f7376270216",
+      "host_id": "local",
+      "dedup_execution": "A15+approved-cert-exception+one-new-candidate",
+      "dedup_review": "A15+independent-gate-then-fixed-live-review",
+      "workspace": "D:/1800-worktrees/a15-cert-reuse",
+      "branch": "codex/a15-cert-reuse",
+      "base": "81fab23e3e7e9e32a36d3857a253afc69b5bd3e1",
+      "proposal_sha256": "eb6aea7ad9b01ccbcaf7710c9c45d7c5c3a80d6efcef4db857838d204d725656",
+      "thinking": "xhigh",
+      "model": "inherit",
+      "new_candidate_limit": 1,
+      "new_offline_delta_per_party": 1,
+      "new_live_limit": 1,
+      "new_live_used": 0,
+      "current_execution_scope": "Offline candidate and E1-E4 only; wait independent and coordinator activation before live."
     }
   },
   "route": [
@@ -12647,8 +12672,8 @@
     }
   ],
   "last_action": {
-    "at": "2026-10-20T06:13:28.207404+00:00",
-    "action": "A14 author fixed and released; exported 23 raw inputs for independent static review. No second handshake."
+    "at": "2026-10-20T06:24:31.820840+00:00",
+    "action": "Closed A14 limited public evidence; recorded approved A15 new-stage intent, live not activated."
   },
   "limitations": [
     "Current route uses mock B artifacts until independently agreed interface/artifact versions exist.",
@@ -13895,7 +13920,7 @@
     "user_deadline_days": 3,
     "deadline_basis": "72 hours from this decision; target 2026-10-22 same local time; exact handover clock not specified",
     "user_selected_delivery": "必须包含：优先争取限定题型、小批量的平台试用版",
-    "status": "A14_SINGLE_PUBLIC_TLS_DIAGNOSTIC_ACTIVE",
+    "status": "A15_USER_APPROVED_OFFLINE_PREPARATION",
     "plan": "docs/delivery-72h-plan-2026-10-19.md",
     "plan_sha256": "6bfc3d379ec700556b6fec7438b85126c428c7ce4ae58ba9c727982b00ab94f7",
     "proposed_book_id": "46007447",
@@ -13913,7 +13938,7 @@
     "new_product_dispatches": 0,
     "B_messages": 0,
     "planning_agent": "/root/three_day_scope_check",
-    "next_dependency": "Single strict public TLS certificate diagnostic through validated loopback proxy; no credentials/target HTTP/browser.",
+    "next_dependency": "Separate formal A15 candidate and independent gate review, then explicitly activated one new certificate-exception reuse observation.",
     "full_original_scope_completed_or_cancelled": false,
     "committed_success_guarantee": false,
     "authorization_clarification": "User clarified 一直允许连接平台; do not ask platform-connection/book permission again.",

@@ -1,5 +1,7 @@
 # 模块化开发计划与两人分工
 
+2026-10-20 A14已独立有限收口：公开证书SAN不覆盖www.usense.com且已过期，根因UNKNOWN；仅接受本次失败/公开字段及两项已证自有释放，A14-TIMING-01通用截止守卫不接受。A13/A14各1次均耗尽。用户现明确批准A15新有界只读阶段：仅本次专用context证书例外，新增1候选、双方各1纯离线门禁差量、通过后另固定至多1新复用观测；0登录提交/业务，旧额度不恢复。先新建正式执行/验收，独立预检及调度激活前0新live，见docs/tasks/A15-certificate-exception-reuse.md和JSON。首题保存读回仍NOT_RUN，其他三例HOLD、Q22不重放、0B消息。
+
 2026-10-20 A13唯一复用观测已耗1/剩余0：首次导航ERR_CERT_COMMON_NAME_INVALID，0登录/书籍/业务，认证未证明。正式独立仅接受固定失败归档和已证自有释放，wrapper自身OS退出身份UNKNOWN保留；见docs/evidence/coordinator/a13-observation-closure/。旧轮不重跑、不忽略证书。下一步A14仅一次严格验证的公开TLS证书诊断（0目标HTTP/浏览器/profile），新正式执行/验收对话ID以JSON为准。其他三例HOLD、Q22不重放、0B消息，首题保存读回仍NOT_RUN。
 
 2026-10-20 A12-R1正式独立D1-D8 8/8、562ms已核证，R01/R02仅在固定产品d45ed25a/final81fab23e有限范围关闭；作者/独立均释放且差量耗尽。依用户本轮明确要求，按docs/tasks/A13-single-reuse-observation.md登记原尚未使用的唯一reuse-only无头观测，新阶段分别新建执行/验收对话，确切ID以JSON为准。只复用原专用profile、0登录/业务/书籍读取，首次异常或LOGIN_REQUIRED停止，原共享标记不可重置。当前还未启动live，真实认证和首题保存读回未证明。

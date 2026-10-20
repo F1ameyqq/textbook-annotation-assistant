@@ -1,0 +1,425 @@
+{
+  "schema_version": 1,
+  "task_id": "A14",
+  "review_mode": "FIXED_PUBLIC_STATIC_ONLY",
+  "status": "ACCEPTED_FAILURE_ARCHIVE_PUBLIC_CERTIFICATE_AND_EXACT_OWNED_RELEASE_ONLY",
+  "general_deadline_guard_status": "NOT_ACCEPTED_A14_TIMING_01",
+  "at_utc": "2026-10-20T06:22:07.753621+00:00",
+  "at_local": "2026-10-20T14:22:07.753621+08:00",
+  "coordinator_thread_id": "01a15768-1e2d-7781-b29f-1f7376270216",
+  "execution_thread_id": "01a157e6-628a-75d2-b685-6cb98e5fb0af",
+  "review_thread_id": "01a157e7-1425-7f53-8e84-1382566ffce6",
+  "workflow_commit": "cae8275555a7a77b303dae50fe9d8d3a3b4ce2c9",
+  "execution_id": "19f0f61a-ce73-488f-893e-0d95b5a238c9",
+  "fixed_execution_manifest_sha256": "aaf8a90ed9b82d707d6f736deb1f6ba9c409ab582c8dc2bf89cdac58d07bba8d",
+  "input_root": "D:\\1800-worktrees\\a14-tls-review",
+  "input_count": 23,
+  "input_bytes": 101468,
+  "input_groups": {
+    "execution_output_with_manifest": 19,
+    "standards": 2,
+    "prior_A13_reports": 2
+  },
+  "input_precheck": {
+    "path": "input-precheck.json",
+    "size": 4945,
+    "sha256": "8feac998ec09af81bd14dc35830dc3ffd62dd65a4afe35e7a030ce5a48394c02"
+  },
+  "independent_checks": {
+    "path": "independent-checks.json",
+    "size": 13465,
+    "sha256": "dbdbbd2798b9660204488841ebee66b93d283e46f2f5cb6995764b1a2b11f0a0"
+  },
+  "criteria": [
+    {
+      "id": "C01",
+      "status": "PASS",
+      "criterion": "Fixed inputs",
+      "evidence": "23 files / 101468 bytes; all size/SHA256 match. Author manifest has 18 nonself files plus itself. No missing/extra/reparse/symlink inputs."
+    },
+    {
+      "id": "C02",
+      "status": "PASS_STATIC_FIXED_PATH",
+      "criterion": "Strict target/argv",
+      "evidence": "connect www.usense.com:443; SNI/verify_hostname www.usense.com; verify_return_error; fixed CA; shell=False; no reconnect, weakened check, alternate target or credentials."
+    },
+    {
+      "id": "C03",
+      "status": "PASS_STATIC_FIXED_PATH",
+      "criterion": "Proxy guard",
+      "evidence": "Frozen enabled 127.0.0.1:7897, no PAC/auth syntax. Parser rejects disabled/PAC/nonloopback/auth syntax/ambiguous or missing https/invalid port. No proxy credential args; narrow environment. Registry not reread."
+    },
+    {
+      "id": "C04",
+      "status": "SUPPORTED_DECLARED_SINGLE_RUN",
+      "criterion": "Freeze and one-time scope",
+      "evidence": "One Popen site at each layer and exclusive x-mode claims. Code, standard, preflight/static-review, recorded binary/CA digests agree across fixed intent/audit. Private claim contents not reopened; no external OS/network census."
+    },
+    {
+      "id": "C05",
+      "status": "PASS_STATIC_AND_FIXED_METADATA",
+      "criterion": "No target HTTP",
+      "evidence": "TLS stdin PIPE has no write call; EOF follows explicit verification failure. Declared target HTTP0/application bytes0; necessary proxy CONNECT intent1. No claim of zero HTTP bytes everywhere."
+    },
+    {
+      "id": "C06",
+      "status": "PASS_PUBLIC_PACKAGE_ONLY",
+      "criterion": "Privacy",
+      "evidence": "Only PEM, public fields, numeric error codes and raw length/hash exported. Secret-value patterns absent from all23 fixed public inputs. No keylogfile/sess_out/trace/msg. Private raw streams/claims not read; extraction not replayed."
+    },
+    {
+      "id": "C07",
+      "status": "PASS_INDEPENDENT_PUBLIC_PEM",
+      "criterion": "Certificate facts",
+      "evidence": "Four PEMs independently decoded with matching public fields and DER/PEM hashes. Sole leaf DNS SAN qt.lingshubao.cn does not cover target. Public notAfter 2026-08-30T00:16:04Z precedes observation 2026-10-20T06:07:42.316294Z."
+    },
+    {
+      "id": "C08",
+      "status": "LIMITED_SANITIZED_FAILURE_EVIDENCE",
+      "criterion": "Error and trust",
+      "evidence": "Fixed sanitized extraction reports error/return62; explicit failure signal and exit1 agree. Private original error text not reread. Issuer/subject naming sequence is not signature/trust proof; showcerts is not a validated chain. No root-cause or Edge equivalence conclusion."
+    },
+    {
+      "id": "C09",
+      "status": "PASS_FINITE_EXACT_HANDLE_METADATA",
+      "criterion": "OpenSSL release",
+      "evidence": "PID71152 same creation FILETIME on retained-handle exit1, signaled wait; EOF/drain files closed, readers joined; pipe/process handles closed with invalid-handle result. No live process query."
+    },
+    {
+      "id": "C10",
+      "status": "PASS_FINITE_EXACT_HANDLE_METADATA",
+      "criterion": "TLS wrapper release",
+      "evidence": "PID59584 same creation FILETIME on retained-handle exit0, signaled wait, handle invalid after close, redirects closed. No session-wide/outer-ancestor OS-exit claim."
+    },
+    {
+      "id": "C11",
+      "status": "PASS_FINITE_DURATION_ONLY",
+      "criterion": "Observed duration",
+      "evidence": "Parent same-process1140.204ms; independently recomputed wrapper OS1136.5958ms and TLS OS974.7273ms, nested lifetimes. This finite run exited below22s."
+    },
+    {
+      "id": "C12",
+      "status": "NOT_ACCEPTED_GENERAL_GUARD",
+      "criterion": "20s/22s guarantee",
+      "evidence": "A14-TIMING-01: child launch-4.862ms leaves shared clock unproved. Outer timeout only records UNKNOWN and closes handle; child final kill requires being before inherited deadline. General deadline/cleanup not accepted; timeout branch not executed."
+    },
+    {
+      "id": "C13",
+      "status": "PASS_LIMITED_REPORT_SEMANTICS",
+      "criterion": "Failure semantics",
+      "evidence": "process-result first_failure=null/REVIEW means supervisor captured a result, not successful TLS. Public expiry is a separate field observation; later OpenSSL validation stages not established."
+    },
+    {
+      "id": "C14",
+      "status": "PASS_PRESERVED_HISTORY",
+      "criterion": "A13 UNKNOWN",
+      "evidence": "Prior wrapper PID31208 OS exit identity remains UNKNOWN; A14 does not repair or replace that history."
+    },
+    {
+      "id": "C15",
+      "status": "PASS_NO_SUCCESSOR_AUTHORITY",
+      "criterion": "Scope and quota",
+      "evidence": "TLS intent1/1 consumed, remaining0, old budgets not restored. Authentication/book/save/refresh/reopen NOT_RUN. Other3 HOLD; Q22 not replayed; B0; no certificate exception, repair or successor connection authorized."
+    }
+  ],
+  "findings": [
+    {
+      "id": "A14-TIMING-01",
+      "disposition": "OPEN_GENERAL_DEADLINE_GUARD_NOT_ACCEPTED",
+      "blocks_finite_failure_archive": false,
+      "blocks": [
+        "general shared 20s/22s deadline acceptance",
+        "general timeout cleanup/release guarantee"
+      ],
+      "observed_anomaly": {
+        "child_launch_elapsed_ms": -4.862,
+        "parent_same_process_elapsed_ms": 1140.204
+      },
+      "source_evidence": [
+        {
+          "path": "execution-output/launch_once.py",
+          "line": 23,
+          "end_line": 25,
+          "fact": "Passes parent perf_counter start to child."
+        },
+        {
+          "path": "execution-output/tls_wrapper.py",
+          "line": 98,
+          "end_line": 100,
+          "fact": "Child combines inherited start with its local perf_counter."
+        },
+        {
+          "path": "execution-output/launch_once.py",
+          "line": 29,
+          "end_line": 38,
+          "fact": "Outer timeout records UNKNOWN, polls and closes handle; no timeout termination of wrapper/descendant."
+        },
+        {
+          "path": "execution-output/tls_wrapper.py",
+          "line": 219,
+          "end_line": 224,
+          "fact": "Final child kill/wait is conditional on being before inherited deadline."
+        }
+      ],
+      "interpretation": "Finite fast failure and exact two observed OS exits remain accepted. Child timing and parent wait do not establish the general cleanup guarantee. No cause of the clock offset is attributed.",
+      "repair_or_rerun_performed": false,
+      "new_repair_or_execution_authority": false
+    }
+  ],
+  "accepted_scope": [
+    "Fixed sanitized single declared failure archive and four publicly decoded certificates.",
+    "Independent SAN/date/fingerprint fields; published error62 remains a sanitized record, not a private raw replay.",
+    "Finite creation/exit and owned pipe/handle metadata for OpenSSL PID71152 and TLS wrapper PID59584."
+  ],
+  "not_accepted_or_proved": [
+    "General shared 20s/22s deadline or timeout cleanup guarantee.",
+    "Private TLS extraction replay, private claim contents or global count of all launches/connections.",
+    "Installed executable/CA bytes or launch-time memory image independently rehashed; recorded digest/audit consistency only.",
+    "Signatures, complete validated chain, trust acceptance, website/proxy/DNS root cause or Windows/Edge equivalence.",
+    "Session-wide or outer launcher/tool-shell OS exit identity; only two observed lifetimes accepted.",
+    "Authentication, book source/target access, first-question save, content/frame refresh/reopen readback."
+  ],
+  "observation": {
+    "at_utc": "2026-10-20T06:07:42.316294+00:00",
+    "target": "www.usense.com:443",
+    "proxy": {
+      "enabled": true,
+      "pac_present": false,
+      "authentication_syntax_present": false,
+      "kind": "windows-single-fixed-http-proxy",
+      "host": "127.0.0.1",
+      "port": 7897,
+      "endpoint": "127.0.0.1:7897",
+      "proxy_server_sha256": "00444a0af013aab6e52e22598646969ac40a3926e1a3b38614c9723e6f86747a",
+      "registry_path_sha256": "bf3b19a94623201cde8c775f4d9776c2a2b097b0efdc046b66dffc148baf69d4"
+    },
+    "published_sanitized_verify_error_codes": [
+      62
+    ],
+    "published_sanitized_verify_return_codes": [
+      62
+    ],
+    "category": "HOSTNAME_MISMATCH",
+    "strict_TLS_success": false,
+    "root_cause": "UNKNOWN",
+    "leaf_SAN": [
+      "qt.lingshubao.cn"
+    ],
+    "leaf_SAN_covers_target": false,
+    "leaf_not_after_utc": "2026-08-30T00:16:04+00:00",
+    "leaf_expired_by_public_dates": true,
+    "server_sent_unique_public_certificates": 4,
+    "raw_PEM_occurrences_reported": 8,
+    "chain_accepted": false,
+    "OpenSSL_trust_equals_Edge": false
+  },
+  "release_evidence": {
+    "TLS": {
+      "pid": 71152,
+      "retained_handle": 572,
+      "creation": {
+        "status": "OBSERVED_EXACT_RETAINED_HANDLE",
+        "creation_filetime": 134369500623180876,
+        "exit_filetime": 0,
+        "kernel_100ns": 0,
+        "user_100ns": 0
+      },
+      "exit": {
+        "status": "OBSERVED_EXACT_RETAINED_HANDLE",
+        "creation_filetime": 134369500623180876,
+        "exit_filetime": 134369500632928149,
+        "kernel_100ns": 156250,
+        "user_100ns": 156250
+      },
+      "exit_code": 1,
+      "wait_signaled": true,
+      "readers_joined": true,
+      "streams": {
+        "stdout": {
+          "bytes": 12575,
+          "sha256": "298ba9f645e407d074ded8768fcee5f40a29d2c350076458a5a8db4f46082fc0",
+          "eof_observed": true,
+          "file_closed": true,
+          "reader_error_type": null
+        },
+        "stderr": {
+          "bytes": 241,
+          "sha256": "a1b373def17ed7a5dc85ab22991f6d036a42ff17cf5a0ff29018fd3fd24c9af3",
+          "eof_observed": true,
+          "file_closed": true,
+          "reader_error_type": null
+        }
+      },
+      "closed_handles": {
+        "stdin": {
+          "closed": true,
+          "handle": 548,
+          "post_close": {
+            "valid": false,
+            "winerror": 6,
+            "invalid_handle_confirmed": true
+          }
+        },
+        "stdout": {
+          "closed": true,
+          "handle": 544,
+          "post_close": {
+            "valid": false,
+            "winerror": 6,
+            "invalid_handle_confirmed": true
+          }
+        },
+        "stderr": {
+          "closed": true,
+          "handle": 556,
+          "post_close": {
+            "valid": false,
+            "winerror": 6,
+            "invalid_handle_confirmed": true
+          }
+        },
+        "process_handle": {
+          "handle": 572,
+          "close_called": true,
+          "post_close": {
+            "valid": false,
+            "winerror": 6,
+            "invalid_handle_confirmed": true
+          }
+        }
+      }
+    },
+    "TLS_wrapper": {
+      "thread_id": "01a157e6-628a-75d2-b685-6cb98e5fb0af",
+      "wrapper_launches": 1,
+      "shell": false,
+      "started_utc": "2026-10-20T06:07:42.163586+00:00",
+      "budget_seconds": 22,
+      "timeout": false,
+      "pid": 59584,
+      "handle": 180,
+      "creation": {
+        "status": "OBSERVED_EXACT_RETAINED_HANDLE",
+        "creation_filetime": 134369500621659711,
+        "exit_filetime": 0,
+        "kernel_100ns": 0,
+        "user_100ns": 0
+      },
+      "exit_code": 0,
+      "exit": {
+        "status": "OBSERVED_EXACT_RETAINED_HANDLE",
+        "creation_filetime": 134369500621659711,
+        "exit_filetime": 134369500633025669,
+        "kernel_100ns": 1250000,
+        "user_100ns": 312500
+      },
+      "wait_signaled": true,
+      "elapsed_ms_to_wrapper_observed_exit": 1140.204,
+      "handle_close_called": true,
+      "handle_post_close": {
+        "valid": false,
+        "winerror": 6,
+        "invalid_handle_confirmed": true
+      },
+      "redirect_files_closed": true,
+      "wrapper_stdout": {
+        "size": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "wrapper_stderr": {
+        "size": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "finished_utc": "2026-10-20T06:07:43.305424+00:00"
+    },
+    "scope": "Two observed retained-handle lifetimes and owned stream/handle metadata; not all shells/ancestors/session processes."
+  },
+  "timing": {
+    "wrapper_os_lifetime_ms": "1136.5958",
+    "tls_os_lifetime_ms": "974.7273",
+    "parent_same_process_elapsed_ms": 1140.204,
+    "child_relative_launch_ms": -4.862,
+    "child_relative_release_ms": 974.53,
+    "finite_exit_below_22s": true,
+    "general_shared_deadline_accepted": false,
+    "outer_timeout_path": "records UNKNOWN and closes its wrapper handle; no timeout termination of wrapper/descendants",
+    "child_finally_path": "exact-child kill is conditional on local perf_counter being before inherited deadline",
+    "unexecuted_branches": "No timeout/late-cleanup negative control run; no new execution authorized"
+  },
+  "declared_author_counts": {
+    "TLS_launches": 1,
+    "TLS_handshake_intents": 1,
+    "wrapper_launches": 1,
+    "target_HTTP_requests": 0,
+    "proxy_CONNECT_intents": 1,
+    "stdin_application_bytes": 0,
+    "browser_profile_login_business": 0,
+    "retry_or_fallback": 0
+  },
+  "reviewer_counters": {
+    "author_imports_or_runs": 0,
+    "TLS_network_or_HTTP": 0,
+    "browser_profile_login_business": 0,
+    "process_scans": 0,
+    "private_raw_reads": 0,
+    "registry_or_trust_reads_or_writes": 0,
+    "installed_binary_CA_reads": 0,
+    "Git_commands": 0,
+    "mainline_writes": 0,
+    "B_or_other_chat_messages": 0,
+    "local_public_PEM_decodes": 4,
+    "local_x509_processes": 0,
+    "independent_static_utility_runs": 1,
+    "independent_static_utility_exit_code": 0
+  },
+  "static_utility_events": [
+    {
+      "event": "REPORT_GENERATION_SOURCE_DECODING_FAILED_BEFORE_EXECUTION",
+      "exit_code": 1,
+      "error": "SyntaxError: Non-UTF-8 code starting with byte 0xe6 in stdin on line120; no encoding declared.",
+      "cause_boundary": "PowerShell-piped report source rejected before any Python statements ran.",
+      "outputs_created_by_failed_attempt": 0,
+      "network_or_author_runs": 0,
+      "correction": "Write this independent report generator as UTF-8 file; no frozen author code changed."
+    }
+  ],
+  "budget": {
+    "author_TLS_limit": 1,
+    "author_TLS_used": 1,
+    "author_TLS_remaining": 0,
+    "reviewer_network_limit": 0,
+    "old_A13_A10_budgets_restored": false,
+    "successor_execution_authorized": false
+  },
+  "historical_A13": {
+    "wrapper_pid": 31208,
+    "wrapper_OS_exit_identity": "UNKNOWN",
+    "changed_by_A14": false
+  },
+  "scope_preserved": {
+    "other_three_cases": "HOLD",
+    "Q22": "NOT_REPLAYED",
+    "B_messages": 0,
+    "book_submission": 0,
+    "first_question_save_and_readback": "NOT_RUN"
+  },
+  "input_postreview": {
+    "path": "input-postcheck.json",
+    "unchanged_count": 23
+  },
+  "reviewer_release": {
+    "state": "RELEASED_NO_RUNTIME_RESOURCES_ACQUIRED",
+    "owned_product_browser_profile_resources": 0,
+    "background_threads_or_child_processes_created_by_checker": 0,
+    "source_files_changed": 0,
+    "writes_only_below": "D:\\1800-worktrees\\a14-tls-review\\review-output",
+    "basis": "Static checker exit0; PEM decode in-process only; all artifact files use closing contexts; no runtime handles acquired.",
+    "further_action": "STOPPED_NO_RETRY_NO_REPAIR_NO_CONNECTION_NO_MESSAGES"
+  },
+  "output_manifest": {
+    "path": "raw-output-manifest.json",
+    "self_excluded": true,
+    "hash_representation": "raw bytes, UTF-8, no Git normalization"
+  },
+  "next_dependency": "Coordinator may record this limited archive/release decision. No diagnostic, repair, certificate exception, login or business successor is authorized."
+}

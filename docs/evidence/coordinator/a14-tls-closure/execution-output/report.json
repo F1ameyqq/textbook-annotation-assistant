@@ -1,0 +1,105 @@
+{
+  "task_id": "A14",
+  "author_status": "REVIEW",
+  "delivery_state": "FROZEN_SINGLE_DIAGNOSTIC_FAILURE_EVIDENCE_WITH_RELEASE_AND_TIMING_LIMITATION",
+  "execution_id": "19f0f61a-ce73-488f-893e-0d95b5a238c9",
+  "thread_id": "01a157e6-628a-75d2-b685-6cb98e5fb0af",
+  "independent_review_thread_id": "01a157e7-1425-7f53-8e84-1382566ffce6",
+  "workflow_commit": "cae8275555a7a77b303dae50fe9d8d3a3b4ce2c9",
+  "report_utc": "2026-10-20T06:10:50.616468+00:00",
+  "report_local": "2026-10-20T14:10:50.616468+08:00",
+  "observation_utc": "2026-10-20T06:07:42.316294+00:00",
+  "tls_result": "HOSTNAME_MISMATCH",
+  "strict_validation_succeeded": false,
+  "verification_error_codes": [
+    62
+  ],
+  "verification_return_codes": [
+    62
+  ],
+  "openssl_exit_code": 1,
+  "leaf_san": [
+    "qt.lingshubao.cn"
+  ],
+  "leaf_san_covers_target": false,
+  "leaf_validity_end_utc": "2026-08-30T00:16:04+00:00",
+  "leaf_within_public_validity_interval_at_observation": false,
+  "validity_interpretation": "Leaf public notAfter precedes observation; OpenSSL first error was 62. Later validation stages were not established as completed.",
+  "server_sent_unique_certificates": 4,
+  "chain_accepted": false,
+  "root_cause": "UNKNOWN",
+  "root_cause_limits": [
+    "No attribution to website, proxy interception, DNS or another path component.",
+    "Git OpenSSL PEM CA differs from Windows/Edge trust; this is not proof of the Edge cause.",
+    "No authentication, book access, page load, first-question save or refresh/reopen readback was tested."
+  ],
+  "counts": {
+    "tls_process_launches": 1,
+    "tls_handshake_intents": 1,
+    "wrapper_launches": 1,
+    "local_ast_precheck_network_connections": 0,
+    "target_http_requests": 0,
+    "stdin_application_bytes_written": 0,
+    "proxy_CONNECT_intents": 1,
+    "browser_profile_login_business_actions": 0,
+    "fallbacks": 0,
+    "retries": 0,
+    "postrun_tls_connections": 0,
+    "B_or_external_messages": 0
+  },
+  "budget": {
+    "limit": 1,
+    "consumed": 1,
+    "remaining": 0,
+    "prior_A13_and_A10_budgets_restored": false,
+    "additional_network_successors": "NOT_RUN"
+  },
+  "release": {
+    "tls_exact_creation_exit_identity_matches": true,
+    "tls_release_evidence_complete": true,
+    "tls_pid": 71152,
+    "tls_exit_code": 1,
+    "wrapper_exact_creation_exit_identity_matches": true,
+    "wrapper_os_exit_evidence_complete": true,
+    "wrapper_pid": 59584,
+    "wrapper_exit_code": 0,
+    "wrapper_timeout": false,
+    "all_observed_processes_and_owned_handles_released": true
+  },
+  "timing": {
+    "outer_same_process_elapsed_ms_to_wrapper_os_exit": 1140.204,
+    "outer_wrapper_creation_to_exit_ms_from_OS_filetimes": 1136.5958,
+    "tls_creation_to_exit_ms_from_OS_filetimes": 974.7273,
+    "observed_run_and_wrapper_exit_within_22_seconds": true,
+    "child_reported_launch_elapsed_ms_preserved": -4.862,
+    "child_reported_release_elapsed_ms_preserved": 974.53,
+    "limitation_id": "A14-TIMING-01",
+    "limitation": "The frozen implementation passes a parent perf_counter value into a child; the child reported a negative launch delta (-4.862ms). A shared cross-process clock basis is not established. Child relative values and its 22s assertion cannot prove a general shared deadline guard. Parent same-process elapsed plus exact OS exit independently show this finite run ended in 1.140204s. No code was changed or rerun after this anomaly.",
+    "general_22_second_guard_accepted": false
+  },
+  "freeze": {
+    "launch_intent": {
+      "size": 3816,
+      "sha256": "2d73cef6f535ef7f503bae6d3094e8353005c771feefbfb74ceaa06bf3000aec"
+    },
+    "bindings_unchanged": true,
+    "frozen_code_modified_after_run": false,
+    "raw_manifest": "raw-output-manifest.json",
+    "raw_private_streams_excluded": true,
+    "git_commit_created": false
+  },
+  "scope_preserved": {
+    "writes_by_this_task": [
+      "D:/1800-worktrees/a14-tls-diagnostic/execution-output/",
+      "D:/1800/.local/stages/a14-tls-diagnostic/"
+    ],
+    "mainline_or_product_writes": 0,
+    "proxy_or_trust_configuration_changes": 0,
+    "certificate_ignore": false,
+    "other_three_cases": "HOLD",
+    "Q22": "NOT_REPLAYED",
+    "book_level_submission": 0
+  },
+  "author_acceptance_boundary": "REVIEW only; no independent acceptance, integration, authentication or live business qualification claimed.",
+  "next_dependency": "Registered independent static review of fixed public evidence and release. No new TLS/HTTP/browser action is authorized by this delivery."
+}
