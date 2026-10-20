@@ -2,7 +2,7 @@
   "schema_version": 1,
   "project": "D:\\1800",
   "coordinator_thread_id": "01a15768-1e2d-7781-b29f-1f7376270216",
-  "updated_at": "2026-10-20T12:21:28.146629+00:00",
+  "updated_at": "2026-10-20T12:27:39.130897+00:00",
   "automation": {
     "id": "1800-a",
     "kind": "heartbeat",
@@ -10788,23 +10788,23 @@
       "at": "2026-10-20T11:04:16.687655+00:00",
       "task": "A17",
       "dispatch_key": "A17:excluded-static:003f8620:new-formal-pair",
-      "status": "APPROVED_SINGLE_LIVE_ACTIVE",
+      "status": "LIVE_FIXED_DELIVERY_VERIFIED_REVIEW_READY",
       "base_commit": "003f862065a2d630e666323c0d158e33bcee91e9",
       "execution": {
         "thread_id": "01a158fd-281c-7282-a3b4-db876697686c",
         "host_id": "local",
-        "cursor": "b92e1f43-e01a-4b82-86b0-c466dba3623e:14",
+        "cursor": "b92e1f43-e01a-4b82-86b0-c466dba3623e:22",
         "workspace": "D:/1800-worktrees/a17-static-exclusion",
         "branch": "codex/a17-static-exclusion",
-        "status": "APPROVED_SINGLE_LIVE_ACTIVE",
+        "status": "LIVE_FIXED_RELEASED",
         "created_at": "2026-10-20T11:06:05.834705+00:00",
         "acknowledged": true,
         "turn_id": "01a15940-7f67-72a0-9dd4-b848a78bf2b3",
         "product_commit": "1168a75eb35f319c3ced270b6c515adbdb38603f",
-        "final_commit": "8bffd88dacc146fc3f061ed0863b299fa5dabd30",
-        "released": false,
-        "completed_at": null,
-        "duration_ms": null
+        "final_commit": "5aec24575a0e1621f4f22680da3beba581e6cec2",
+        "released": true,
+        "completed_at": 1792499122,
+        "duration_ms": 360614
       },
       "review": {
         "thread_id": "01a158fd-cbeb-7a31-a3e6-661c7d4c95d4",
@@ -10851,10 +10851,10 @@
       "A16_remaining": 0,
       "dedup_checked_no_prior_A17": true,
       "worktree_method": "Explicit short path with core.longpaths after previously preserved managed long-path creation failure; no retry of that failed managed path",
-      "live_used": 0,
+      "live_used": 1,
       "live_activated": true,
       "scope_notes": "Observed CDN Script is denied before send, not allowed. At most 16 combined guard exclusion events; all required navigation/auth/book/data gates remain.",
-      "next_dependency": "Fixed actual live delivery and release, then same formal independent review",
+      "next_dependency": "Static independent actual-failure/release review; prepare next adaptation from captured script",
       "workflow_commit": "811c3ac9e5913812bc71d74bc665eded96e23aa3",
       "auxiliary_boundary_preparation": {
         "path": ".local/stages/coordinator/a17-excluded-static-preparation/notes.md",
@@ -11399,6 +11399,47 @@
           ],
           "future_binding": "Bind each concrete authorized stage to this standing permission and its own scope/version/budget; no per-round TLS question"
         }
+      },
+      "live_remaining": 0,
+      "reported_live_result": {
+        "basis": "author_progress_unverified",
+        "exit_code": 2,
+        "first_block": "same-origin HTTPS GET XHR PATH_BLOCKED after one expected CDN exclusion",
+        "business_gets": 0,
+        "originals": 0,
+        "authenticated_book_proven": false
+      },
+      "live_delivery": {
+        "at": "2026-10-20T12:27:39.130897+00:00",
+        "status": "MECHANICAL_PASS_PENDING_INDEPENDENT",
+        "final": "5aec24575a0e1621f4f22680da3beba581e6cec2",
+        "base": "8bffd88dacc146fc3f061ed0863b299fa5dabd30",
+        "added": 25,
+        "modified": 0,
+        "deleted": 0,
+        "old_members_preserved": 31574,
+        "old_evidence_preserved": 30349,
+        "raw_members": 44,
+        "candidate_dependencies": 18,
+        "delivery_members": 24,
+        "input_manifest_sha256": "2b9a7af24fbf5cdc8858d99e5f12c5171d8460d604a4af72e13806fb269e0a86",
+        "isolation": "D:\\1800-worktrees\\a17-live-review",
+        "delivery_sha256": "63f77c9eabd9e6517abbd4c1dc3b7d1c4f9b8ccc82624c204598c248b9324a4f",
+        "report_sha256": "1c77ffe44ce9050a83b20817d4b2dd8525a02d3632e1d70f8d69f4da6594ad1b"
+      },
+      "live_review_dispatch": {
+        "at": "2026-10-20T12:27:39.130897+00:00",
+        "task": "A17",
+        "role": "review",
+        "action": "send_message_to_thread",
+        "status": "READY_TO_SEND",
+        "thread_id": "01a158fd-cbeb-7a31-a3e6-661c7d4c95d4",
+        "host_id": "local",
+        "task_document": "docs/tasks/A17-single-live-fixed-independent-review.md",
+        "task_sha256": "993f888f10be3c046cd4a39b9815b3c59054e5a36a1a6349b0daddc15ddbd0d5",
+        "isolation": "D:\\1800-worktrees\\a17-live-review",
+        "input_manifest_sha256": "2b9a7af24fbf5cdc8858d99e5f12c5171d8460d604a4af72e13806fb269e0a86",
+        "final": "5aec24575a0e1621f4f22680da3beba581e6cec2"
       }
     }
   },
@@ -13812,8 +13853,8 @@
     }
   ],
   "last_action": {
-    "at": "2026-10-20T12:21:28.146629+00:00",
-    "action": "Existing A17 executor acknowledged unique approved live dispatch; automation records continuing TLS permission"
+    "at": "2026-10-20T12:27:39.130897+00:00",
+    "action": "Received fixed A17 live failure; exported raw isolation for same independent reviewer"
   },
   "limitations": [
     "Current route uses mock B artifacts until independently agreed interface/artifact versions exist.",
