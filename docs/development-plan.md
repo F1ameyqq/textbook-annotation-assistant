@@ -1,3 +1,5 @@
+2026-10-20 A19唯一live已耗1/余0并固定释放，实际final38e86a1c：原导航HTTP200/DCL，随后Document NAVIGATION_BLOCKED，readiness超时；认证/书源未证明，六GET/两图0。调度23交付+self、20依赖、45raw及31730旧成员保全；同独立按docs/tasks/A19-single-live-fixed-independent-review.md静态核实际失败与释放，不能仅凭Document字段确认主框。打包CRLF比较失败原件保持；不重试/延期/清标记，旧live关闭。具体路径用途与触发原因UNKNOWN待既有固定证据分析。
+
 2026-10-20 A19正式独立与调度有限接受后，已引用用户“一直批准”同类TLS持续许可绑定本轮。产品13067ff3/finale999f4e7、20依赖原bytes已核；任务docs/tasks/A19-approved-single-live-dispatch.md，意图docs/evidence/coordinator/a19-live-dispatch/dispatch-intent.json。仅原导航新增被动证据；成功在同context继续全部已准书源读取，失败首错停止不重试。1context/1导航/900秒、六GET+两图各一次、version至多1、共享排除16、0样题登录写入；实际窗口/启动/结果见JSON，旧额度不恢复。原执行承接，同独立等待固定实际结果。下方预检中状态为历史。
 
 2026-10-20 A19已正式独立及调度有限接受：产品13067ff3/finale999f4e7，ACCEPTED_OFFLINE_ONLY/BOUNDED_READONLY_PREFLIGHT；独立新18/18 438ms、3控制141ms，15报告成员+self及64输入原bytes核证、完整29项scope绑定通过。见docs/evidence/coordinator/a19-independent-closure/。作者/独立均释放；下一步依据已有“一直批准”同类TLS许可直接绑定本阶段唯一真实轮，不重复询问。实际认证/书源/首题仍未证明，旧失败/未知/耗尽额度不变。
