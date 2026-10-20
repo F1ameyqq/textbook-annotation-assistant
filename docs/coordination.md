@@ -1,5 +1,7 @@
 # A 侧开发调度与验收
 
+2026-10-20 A16 R01–R04 修订已冻结释放并交原独立复核：产品cb26282a/final8ab09441，候选SHA071340237c76a7159bd90485e17a774c2f870114baef0199172a2fc5f9547efc。作者新修订raw suite75/75、2906ms；调度核104增改/19依赖，111去重raw已导出D:/1800-worktrees/a16-r1-review，31259基线及原39证据保全。正式独立01a15841-0d44-7272-9740-40d013839869按docs/tasks/A16-revision-fixed-independent-review.md复核，原作者已释放，不再重跑旧suite。R02仅支持窄native-fetch来源关系，当前平台适用性未证明；新旧失败及无OS创建身份的释放限制保留。当前未接受、A16 TLS未批准/live0；旧TLS草案须按新候选接受结果更新，不能直接执行。
+
 2026-10-20 A16 首次正式独立已 REWORK 并释放，31 raw 成员及清单核证，报告见 docs/evidence/coordinator/a16-independent-rework/。已复现 R01 样题同 ID 改角色/顺序仍接受；静态 R02 schema 词汇共现不足、R03 原图未完整解码为阻断，R04 释放状态缺创建身份条件需修正。补件后的作者 suite 33/33，独立 12 PASS/1 FAIL/3 NOT_RUN，初次父包导入失败及原结果保留。原执行01a15840-7766-7533-818d-cc016aa0a60b已开始同阶段修订，正式补充任务 docs/tasks/A16-formal-findings-correction-supplement.md；原独立等待新固定交付，不重建聊天。允许本阶段必要纯离线迭代，不重跑旧任务或恢复旧额度。A16 TLS未批准、live0，待新候选独立接受后再固定具体决定与激活。
 
 2026-10-20 A16已进入正式独立离线验收：作者产品2a604c2d/final4fe417d5，最新33/33 PASS（516ms）并释放；调度核47新增白名单、31259旧成员保全，导出49raw至D:/1800-worktrees/a16-independent-fixed。原独立01a15841-0d44-7272-9740-40d013839869已按docs/tasks/A16-fixed-offline-review-dispatch.md接单，当前尚未接受。run01/run05完整traceback不在包内、CRLF/LF原失败等限制保留。0新live，A16的TLS决定/激活仍待固定验收结果；不唤醒作者重跑旧任务。下方“开发/标准准备”为历史。
