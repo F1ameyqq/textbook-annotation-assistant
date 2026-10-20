@@ -2,14 +2,14 @@
   "schema_version": 1,
   "project": "D:\\1800",
   "coordinator_thread_id": "01a15768-1e2d-7781-b29f-1f7376270216",
-  "updated_at": "2026-10-20T10:45:19.417903+00:00",
+  "updated_at": "2026-10-20T10:48:36.029550+00:00",
   "automation": {
     "id": "1800-a",
     "kind": "heartbeat",
     "status": "ACTIVE",
     "interval_minutes": 30,
-    "routing_update": "A16_APPROVED_SINGLE_LIVE_ACTIVE",
-    "routing_updated_at": "2026-10-20T10:38:36.915309+00:00",
+    "routing_update": "A16_SINGLE_LIVE_SPENT_FIXED_FAILURE_REVIEW_ACTIVE",
+    "routing_updated_at": "2026-10-20T10:48:36.029550+00:00",
     "pause_reason": null,
     "paused_at": "2026-10-20T11:38:10.407716+08:00",
     "target_thread_id": "01a15768-1e2d-7781-b29f-1f7376270216",
@@ -10317,7 +10317,7 @@
     },
     "A16": {
       "at": "2026-10-20T07:34:24.473472+00:00",
-      "status": "LIVE_FAILURE_FIXED_INDEPENDENT_READY",
+      "status": "LIVE_FAILURE_INDEPENDENT_ACTIVE",
       "task": "docs/tasks/A16-current-book-source-target-readonly.md",
       "task_sha256": "d472860d3699acc3f2629abbb104c595c0adbf4a33bd59bc481caf21e34eeda2",
       "review_task": "docs/tasks/A16-independent-current-readonly-review.md",
@@ -10346,7 +10346,7 @@
       "execution_host_id": "local",
       "execution_cursor": "9e646293-db4c-4df5-ad60-154ad1ffafe8:27",
       "review_host_id": "local",
-      "review_cursor": "54109698-8e67-431c-b756-da2abb21b362:29",
+      "review_cursor": "54109698-8e67-431c-b756-da2abb21b362:30",
       "workflow_commit": "386353f91eb2bf8d9d75d909c3bf5e2c132d1ac5",
       "acknowledged_at": "2026-10-20T07:41:56.909245+00:00",
       "execution": {
@@ -10360,11 +10360,12 @@
       "review": {
         "thread_id": "01a15841-0d44-7272-9740-40d013839869",
         "host_id": "local",
-        "cursor": "54109698-8e67-431c-b756-da2abb21b362:29",
-        "status": "LIVE_FIXED_INDEPENDENT_READY",
+        "cursor": "54109698-8e67-431c-b756-da2abb21b362:30",
+        "status": "LIVE_FAILURE_INDEPENDENT_ACTIVE",
         "author_final": "003f862065a2d630e666323c0d158e33bcee91e9",
         "formal_report_fixed": false,
-        "acknowledged": false
+        "acknowledged": true,
+        "turn_id": "01a158ea-d8ef-7a33-99c7-444a85f572f1"
       },
       "first_save_readiness_aux": {
         "agent": "/root/a14_dispatch_boundary_aux",
@@ -10730,7 +10731,16 @@
         },
         "next": "Wait fixed live delivery before actual-result review; no new run or browser access."
       },
-      "live_review_dispatch": "docs/tasks/A16-single-live-fixed-independent-review.md"
+      "live_review_dispatch": "docs/tasks/A16-single-live-fixed-independent-review.md",
+      "live_current_active": false,
+      "live_can_run_again": false,
+      "live_review_workflow": "6041eecb7ad0a7da4954d18b5a0dc871c33951bc",
+      "cdn_dependency_preparation": {
+        "status": "AUXILIARY_FIXED_GIT_READONLY_ACTIVE",
+        "agent": "/root/a14_dispatch_boundary_aux",
+        "output_allowlist": ".local/stages/coordinator/a16-cdn-dependency-preparation/notes.md",
+        "new_live_authorized": false
+      }
     }
   },
   "route": [

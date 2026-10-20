@@ -1,5 +1,7 @@
 # 模块化开发计划与两人分工
 
+2026-10-20 A16唯一live已耗1/余0，final003f8620已固定释放：18:37:27—18:37:37北京时间，一次启动/context/导航尝试，首个阻断为https cdn.bootcdn.net:443 Script ORIGIN_BLOCKED，后NETWORK_GUARD_STOPPED；业务GET/原图/样题0、后继NOT_RUN、认证未证明。调度核24成员+自身/31454旧成员保全，42raw隔离D:/1800-worktrees/a16-live-review；同正式独立按tasks/A16-single-live-fixed-independent-review.md已接单核失败与释放，尚未接受实际结果。8审计不等于请求数、辅助发送总数UNKNOWN、launcher OS创建身份UNKNOWN保持。不重启/延期/清标记，原本轮批准已用；下一适配须依据新证据另明确范围。
+
 2026-10-20 A16本轮已获用户直接批准“批准，仅此轮有界只读观测”，决定docs/approvals/A16-observation-only-tls-user-decision.json。唯一activation窗口10:35:37.215014—10:50:37.215014 UTC，原执行已按tasks/A16-observation-only-single-live-dispatch.md接单；实际启动和结果待固定报告，勿据预留当成功。只一次固定launcher，无重试/延期/换目录/清标记；0样题、登录提交、业务。原独立等固定结果再核证。下方“等待本轮TLS决定”已关闭，不重复询问。
 
 2026-10-20 A16只读观测版已正式独立及调度有限接受：产品dd22193a/final2453c71c，机器结论ACCEPTED_OFFLINE_ONLY仅限observation-only/sample0。独立新18/18（500ms）及9组控制（250ms）通过；38报告成员+清单、59输入raw核证，见docs/evidence/coordinator/a16-observation-independent-closure/。作者/独立均释放，原R02仍REWORK而能力停用，旧证据保全，真实平台仍NOT_RUN。具体本轮TLS提案tasks/A16-observation-only-tls-decision-proposal.md已固定，待用户直接决定；仅1原专用context/1导航/900秒、六GET/两图/0样题，包含获准OSS同受例外影响，0登录提交/业务。未答前0activation/live，不借用A15批准或重跑旧任务。
