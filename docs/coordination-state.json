@@ -2,7 +2,7 @@
   "schema_version": 1,
   "project": "D:\\1800",
   "coordinator_thread_id": "01a15768-1e2d-7781-b29f-1f7376270216",
-  "updated_at": "2026-10-20T14:49:36.138655+00:00",
+  "updated_at": "2026-10-20T14:53:53.448488+00:00",
   "automation": {
     "id": "1800-a",
     "kind": "heartbeat",
@@ -12010,7 +12010,7 @@
     "A20": {
       "at": "2026-10-20T14:14:25.286698+00:00",
       "task": "A20",
-      "status": "EXECUTION_ACTIVE_INDEPENDENT_PREPARATION_RELEASED",
+      "status": "FIXED_DELIVERY_VERIFIED_INDEPENDENT_DISPATCH_PENDING",
       "dispatch_key": "A20:authenticated-source-recovery:new-formal-execution-review",
       "project_id": "4488a042-3ec7-4f9e-8880-cbc8f4e02a51",
       "host_id": "local",
@@ -12021,17 +12021,22 @@
         "thread_id": "01a159aa-42b4-7103-bfaa-9767969d9b8e",
         "workspace": "D:/1800-worktrees/a20-authenticated-source",
         "branch": "codex/a20-authenticated-source",
-        "status": "ACTIVE",
+        "status": "FIXED_RELEASED",
         "host_id": "local",
         "acknowledged": true,
-        "cursor": "85607745-8ea5-4c27-9e79-372aacbdaa8c:28",
+        "cursor": "85607745-8ea5-4c27-9e79-372aacbdaa8c:29",
         "turn_id": "01a159aa-49b9-7881-ac9f-a669a52c9673",
-        "recorded_at": "2026-10-20T14:17:53.155343+00:00"
+        "recorded_at": "2026-10-20T14:17:53.155343+00:00",
+        "released": true,
+        "product_commit": "28203196b4f2dae27b1de4213b27da9a41ae3139",
+        "final_commit": "b41e88d7756fde9d7f1b348ce5a300d1104e765b",
+        "completed_at": 1792507750,
+        "duration_ms": 2056270
       },
       "review": {
         "thread_id": "01a159ab-01ba-7093-89a6-69e7ce572c38",
-        "workspace": "D:/1800-worktrees/a20-review-preparation",
-        "status": "WAITING_FIXED_DELIVERY_RELEASED",
+        "workspace": "D:/1800-worktrees/a20-independent-fixed",
+        "status": "FIXED_REVIEW_DISPATCH_PENDING",
         "host_id": "local",
         "acknowledged": true,
         "cursor": "fb5d2ce0-6d46-4202-86a8-a196d47f2ce0:2",
@@ -12059,7 +12064,7 @@
       "login_submission_authorized": false,
       "credential_tls_exception_authorized": false,
       "standing_tls_permission_reference": "docs/approvals/A17-excluded-static-user-decision.json",
-      "next_dependency": "Released exact A20 product/final/raw/results; then same independent isolated finite preflight before concrete credential-submission decision",
+      "next_dependency": "Same formal independent bounded preflight; then concrete direct credential-submission decision",
       "workflow_commit": "52be34a72c43a7331976aba4b286138b9183856b",
       "source_analysis": {
         "at": "2026-10-20T14:17:53.155343+00:00",
@@ -12105,7 +12110,41 @@
         "auxiliary_released": true,
         "review_draft": ".local/stages/coordinator/a20-progress/fixed-review-draft.md",
         "review_draft_sha256": "260754b7f8ce0986ec2840779f71cb22b5883d8daf39988dc7c4c52f9d2cf41c"
-      }
+      },
+      "delivery": {
+        "at": "2026-10-20T14:53:53.448488+00:00",
+        "status": "MECHANICAL_PASS_ONLY_PENDING_INDEPENDENT_REVIEW",
+        "base": "38e86a1c153eb0ad68ebd22d4403602ffaa6852b",
+        "first_product": "6956c5533b9c159d701d44c7088dcc9cf3ec1226",
+        "product": "28203196b4f2dae27b1de4213b27da9a41ae3139",
+        "final": "b41e88d7756fde9d7f1b348ce5a300d1104e765b",
+        "candidate_sha256": "91db377e44b5b864208cc27a078d25266b3375bba2fdee18b9c648f37b572a7b",
+        "delivery_sha256": "bc8d386edaae3560774ed3082d8e1e79ef81107a39ac4d17b8c3071f3615777a",
+        "report_sha256": "a0bdebf3f653666e8af52cd3c61b4f6133a331528880ebddedb0b33eb102bb80",
+        "release_sha256": "aaa90a137b25d99afc0632af2065c43fb6237486edb4874f58fdc5f7d5aeea4f",
+        "candidate_members": 27,
+        "delivery_members": 113,
+        "delivery_plus_self": 114,
+        "raw_members": 114,
+        "input_manifest_sha256": "5db4d9768e77b72fd06995bdce321d2c1eac706ce0e01926c2f45fc0f964c5b4",
+        "isolation": "D:/1800-worktrees/a20-independent-fixed",
+        "old_members": 31754,
+        "unchanged_old_members": 31750,
+        "old_evidence_preserved": 30522,
+        "modified": [
+          "src/annotation/source/usense/current_readonly/gate.py",
+          "src/annotation/source/usense/current_readonly/policy.py",
+          "tools/a16_current_state_launcher.py",
+          "tools/a16_current_state_probe.py"
+        ],
+        "added": 99,
+        "deleted": 0,
+        "coordinator_product_runs": 0,
+        "live": 0,
+        "initial_path_lookup": "Conventional REPORT.md/release.json absent; exact report.md/session-release.json located by frozen tree. Read-only lookup only."
+      },
+      "fixed_review_task": "D:/1800/docs/tasks/A20-fixed-authenticated-source-independent-review.md",
+      "fixed_review_task_sha256": "fb9b0a13f1217b1393efadec05486ec96274f79a13e121264e6dd467c7b727b4"
     }
   },
   "route": [
@@ -14518,8 +14557,8 @@
     }
   ],
   "last_action": {
-    "at": "2026-10-20T14:17:53.155343+00:00",
-    "action": "Registered exact A20 formal chats and existing-source login-path comparison"
+    "at": "2026-10-20T14:53:53.448488+00:00",
+    "action": "Received frozen A20 delivery and prepared isolated formal review"
   },
   "limitations": [
     "Current route uses mock B artifacts until independently agreed interface/artifact versions exist.",
