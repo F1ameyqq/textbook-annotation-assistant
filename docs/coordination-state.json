@@ -2,7 +2,7 @@
   "schema_version": 1,
   "project": "D:\\1800",
   "coordinator_thread_id": "01a15768-1e2d-7781-b29f-1f7376270216",
-  "updated_at": "2026-10-20T11:12:27.659506+00:00",
+  "updated_at": "2026-10-20T11:31:35.051820+00:00",
   "automation": {
     "id": "1800-a",
     "kind": "heartbeat",
@@ -10788,25 +10788,28 @@
       "at": "2026-10-20T11:04:16.687655+00:00",
       "task": "A17",
       "dispatch_key": "A17:excluded-static:003f8620:new-formal-pair",
-      "status": "AUTHOR_ACTIVE_REVIEW_PREPARATION_COMPLETE",
+      "status": "FIXED_DELIVERY_VERIFIED_INDEPENDENT_DISPATCH_PREPARED",
       "base_commit": "003f862065a2d630e666323c0d158e33bcee91e9",
       "execution": {
         "thread_id": "01a158fd-281c-7282-a3b4-db876697686c",
         "host_id": "local",
-        "cursor": "b92e1f43-e01a-4b82-86b0-c466dba3623e:3",
+        "cursor": "b92e1f43-e01a-4b82-86b0-c466dba3623e:5",
         "workspace": "D:/1800-worktrees/a17-static-exclusion",
         "branch": "codex/a17-static-exclusion",
-        "status": "ACTIVE_OFFLINE",
+        "status": "REVIEW_RELEASED",
         "created_at": "2026-10-20T11:06:05.834705+00:00",
         "acknowledged": true,
-        "turn_id": "01a158fd-2e98-7de2-bed3-041f29842de1"
+        "turn_id": "01a158fd-2e98-7de2-bed3-041f29842de1",
+        "product_commit": "e7ee24245ffaf4d4b81cbddae8b3720aac214c1b",
+        "final_commit": "1d2ba3766558fe9cc911756666d962184cc1de57",
+        "released": true
       },
       "review": {
         "thread_id": "01a158fd-cbeb-7a31-a3e6-661c7d4c95d4",
         "host_id": "local",
         "cursor": "779af964-e370-4f38-843a-a16207705e3d:3",
-        "workspace": "D:/1800-worktrees/a17-review-preparation",
-        "status": "PREPARATION_COMPLETE_WAITING_FIXED_EXECUTION",
+        "workspace": "D:/1800-worktrees/a17-independent-fixed",
+        "status": "FIXED_DELIVERY_REVIEW_DISPATCH_PREPARED",
         "created_at": "2026-10-20T11:06:51.908035+00:00",
         "acknowledged": true,
         "turn_id": "01a158fd-d230-72c0-a791-2a140f958e36",
@@ -10818,7 +10821,8 @@
           "product_read_or_execution": 0,
           "live": 0,
           "evidence_basis": "Formal review chat completion; preparation package not yet mechanically received by coordinator"
-        }
+        },
+        "preparation_intake": "docs/evidence/coordinator/a17-fixed-delivery/review-preparation"
       },
       "thinking": "xhigh",
       "model": "INHERIT_OMIT_PARAMETER",
@@ -10837,13 +10841,76 @@
       "live_used": 0,
       "live_activated": false,
       "scope_notes": "Observed CDN Script is denied before send, not allowed. At most 16 combined guard exclusion events; all required navigation/auth/book/data gates remain.",
-      "next_dependency": "Fixed author product/final/raw/release then coordinator input check and independent review",
+      "next_dependency": "Formal independent fixed candidate review; no live or TLS activation",
       "workflow_commit": "811c3ac9e5913812bc71d74bc665eded96e23aa3",
       "auxiliary_boundary_preparation": {
         "path": ".local/stages/coordinator/a17-excluded-static-preparation/notes.md",
         "sha256": "0d5701d4b9f944a5f819e9048fc635a08a9936c474d91664d18aecb128cb507c",
         "status": "COMPLETE_RELEASED_AUXILIARY_ONLY",
         "formal_acceptance": false
+      },
+      "product_commit": "e7ee24245ffaf4d4b81cbddae8b3720aac214c1b",
+      "author_final": "1d2ba3766558fe9cc911756666d962184cc1de57",
+      "candidate_sha256": "43870eac7194cb10d8542826a9a81e2a3c98dde1f191241bd4c1c43f007a787b",
+      "delivery_preflight": {
+        "at": "2026-10-20T11:23:12.602734+00:00",
+        "status": "RAW_MECHANICAL_PASS_ONLY_PENDING_FORMAL_REVIEW",
+        "base": "003f862065a2d630e666323c0d158e33bcee91e9",
+        "product": "e7ee24245ffaf4d4b81cbddae8b3720aac214c1b",
+        "final": "1d2ba3766558fe9cc911756666d962184cc1de57",
+        "candidate_sha256": "43870eac7194cb10d8542826a9a81e2a3c98dde1f191241bd4c1c43f007a787b",
+        "delivery_manifest_sha256": "dbc07911f7a753e78fd7768ecc53db413ddf0bcf63ad4605a01bec8ac39c6d26",
+        "report_sha256": "e33cc03fab7d3ac51d983d6708184ab152a34401e194c9ce51eb1c4672ce68dc",
+        "release_sha256": "cd2691a45112807066adddf85601a35d6ef581730fae3932ab9ac4c47a866a32",
+        "candidate_members": 18,
+        "delivery_members": 46,
+        "delivery_plus_self": 47,
+        "deduplicated_inputs": 61,
+        "input_manifest_sha256": "9e6704424c67e5c38802606832c4c1bab16f525504916b300a32573384210bc3",
+        "old_members": 31479,
+        "unchanged_old_members": 31475,
+        "changed_old_allowlisted": [
+          "src/annotation/source/usense/current_readonly/gate.py",
+          "src/annotation/source/usense/current_readonly/policy.py",
+          "tools/a16_current_state_launcher.py",
+          "tools/a16_current_state_probe.py"
+        ],
+        "new_members": 50,
+        "deleted": 0,
+        "old_evidence_preserved": 30259,
+        "review_preparation_raw_members": 4,
+        "review_preparation_manifest_sha256": "4a91efcc1b91d2836c5bcadbe1303e7273027635abdb7fc953696be49e18ea87",
+        "author_failure_retained": "Initial buffered traceback unavailable; interruption preserved; no reproduction attempted",
+        "live": 0,
+        "product_runs_by_coordinator": 0
+      },
+      "review_dispatch": {
+        "at": "2026-10-20T11:31:35.051820+00:00",
+        "key": "A17:fixed-independent:1d2ba376:43870eac",
+        "status": "PREPARED_BEFORE_SEND",
+        "review_thread_id": "01a158fd-cbeb-7a31-a3e6-661c7d4c95d4",
+        "host_id": "local",
+        "author_released": true,
+        "product_commit": "e7ee24245ffaf4d4b81cbddae8b3720aac214c1b",
+        "final_commit": "1d2ba3766558fe9cc911756666d962184cc1de57",
+        "candidate_sha256": "43870eac7194cb10d8542826a9a81e2a3c98dde1f191241bd4c1c43f007a787b",
+        "task": "docs/tasks/A17-fixed-offline-independent-review.md",
+        "task_sha256": "c08b39ab8e739110432e75ebdf6c12f7183d63334dec21a7bfff994a32ab18e2",
+        "raw_directory": "D:/1800-worktrees/a17-independent-fixed",
+        "input_manifest": "docs/evidence/coordinator/a17-fixed-delivery/input-raw-manifest.json",
+        "input_manifest_sha256": "9e6704424c67e5c38802606832c4c1bab16f525504916b300a32573384210bc3",
+        "outputs": [
+          "docs/evidence/A17/independent-review/",
+          "docs/evidence/A17/excluded-static/runs/run03/"
+        ],
+        "old_suites_allowed": false,
+        "live_authorized": false
+      },
+      "tls_proposal_preparation": {
+        "path": ".local/stages/coordinator/a17-tls-proposal-preparation/draft.md",
+        "sha256": "f11f0260bfbd5a4268dd90f1ddb31e4af7a6a29b13eddcc57dc2589d38f124d0",
+        "status": "DRAFT_NOT_APPROVED_AWAITING_FIXED_INDEPENDENT_RESULT",
+        "auxiliary_released": true
       }
     }
   },
@@ -13257,8 +13324,8 @@
     }
   ],
   "last_action": {
-    "at": "2026-10-20T11:10:20.957363+00:00",
-    "action": "A16 fixed failure closed. A17 separate formal executor/reviewer created and acknowledged, offline only; unique heartbeat updated."
+    "at": "2026-10-20T11:31:35.051820+00:00",
+    "action": "Received released A17 product/final; 61 raw and old evidence verified; fixed formal independent dispatch prepared."
   },
   "limitations": [
     "Current route uses mock B artifacts until independently agreed interface/artifact versions exist.",
