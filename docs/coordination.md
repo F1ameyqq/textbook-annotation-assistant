@@ -1,6 +1,6 @@
 # A 侧开发调度与验收
 
-2026-10-20 A15唯一live已耗1/剩0，final49e5ab4e，ORIGIN_BLOCKED后NETWORK_GUARD_STOPPED；认证未证明，阻断域名未记录，74raw已核，正式独立静态收口中。新增A16合并当前书籍/source/target/接口和一道普通单选准备，见docs/tasks/A16-current-book-source-target-readonly.md，分别新建正式执行/验收，ID以JSON为准。当前A16只离线开发/验收，允许必要的新代码修正和相关纯离线验证并保留失败，不重跑旧suite或恢复旧额度。A15证书例外不转移，A16新live未激活；先准备完整可审查方案，再落实本阶段TLS边界。其他三例HOLD、Q22不重放、0B消息。
+2026-10-20 A15已独立及调度有限收口：唯一live已耗1/剩0，final49e5ab4e，ORIGIN_BLOCKED后NETWORK_GUARD_STOPPED；只接受固定失败及已证自有释放，认证未证明、阻断域名未记录、launcher自身OS退出身份UNKNOWN保留。74作者raw及11独立raw核证，见docs/evidence/coordinator/a15-live-independent-closure/。A16合并当前书籍/source/target/接口和一道普通单选准备，已新建执行01a15840-7766-7533-818d-cc016aa0a60b、独立01a15841-0d44-7272-9740-40d013839869，均xhigh/model沿用且已接单，任务docs/tasks/A16-current-book-source-target-readonly.md。当前A16只离线开发/标准准备，允许必要的新代码修正和相关纯离线验证并保留失败，不重跑旧suite或恢复旧额度。A15证书例外不转移，A16新live未激活；先准备完整可审查方案，再落实本阶段TLS边界。其他三例HOLD、Q22不重放、0B消息。
 
 2026-10-20 A15离线预检已独立及调度有限接受：产品bef02045/final7432122b，作者E1-E4 4/4（16ms）、独立4/4（32ms），双方额度耗尽并释放。47作者raw、27独立清单成员及旧成员保全；报告见docs/evidence/coordinator/a15-independent-closure/。本次唯一live已绑定批准/候选/独立报告/原专用profile指纹，窗口07:16:59至07:31:59 UTC，见docs/evidence/coordinator/a15-live-dispatch/。仅本次专用context证书例外、1context/1导航、0登录/业务，等待实际结果；原失败保留、旧额度不恢复。
 

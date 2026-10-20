@@ -2,14 +2,14 @@
   "schema_version": 1,
   "project": "D:\\1800",
   "coordinator_thread_id": "01a15768-1e2d-7781-b29f-1f7376270216",
-  "updated_at": "2026-10-20T07:34:24.473472+00:00",
+  "updated_at": "2026-10-20T07:46:36.088745+00:00",
   "automation": {
     "id": "1800-a",
     "kind": "heartbeat",
     "status": "ACTIVE",
     "interval_minutes": 30,
-    "routing_update": "A13_SINGLE_REUSE_OBSERVATION_DISPATCHED",
-    "routing_updated_at": "2026-10-20T13:41:08.520255+08:00",
+    "routing_update": "A15_CLOSED_A16_OFFLINE_FORMAL_CHATS_ACTIVE",
+    "routing_updated_at": "2026-10-20T07:46:36.088745+00:00",
     "pause_reason": null,
     "paused_at": "2026-10-20T11:38:10.407716+08:00",
     "target_thread_id": "01a15768-1e2d-7781-b29f-1f7376270216",
@@ -10230,7 +10230,7 @@
       "committed_raw_files_verified": 27
     },
     "A15": {
-      "status": "LIVE_FIXED_FAILED_PENDING_INDEPENDENT",
+      "status": "CLOSED_LIMITED_FAILURE_ARCHIVE_AND_OWNED_RELEASE_ACCEPTED",
       "task": "docs/tasks/A15-certificate-exception-reuse.md",
       "task_sha256": "f7bdf3f43b0fb467dcb43e37ae97dfc77f69894292e54d2f16ab6d252590b4a6",
       "execution_thread_id": "01a157fd-c8e7-71e1-881a-7f766b4af082",
@@ -10273,13 +10273,13 @@
       "review": {
         "thread_id": "01a157fe-5cc9-7d91-8bbe-73b376cbe2a5",
         "host_id": "local",
-        "status": "REVIEW_FIXED_RELEASED_OFFLINE_ACCEPTED",
-        "cursor": "e1ece8f9-4e9e-4f26-9171-b1211de1c05e:20",
+        "status": "REVIEW_FIXED_RELEASED_LIVE_FAILURE_ACCEPTED",
+        "cursor": "e1ece8f9-4e9e-4f26-9171-b1211de1c05e:25",
         "preparation_complete": true
       },
       "review_task_sha256": "012c0e4b173216e4585d3fb235f8144d872c0700c59a9da1689344c75a0006b7",
       "proposal_task": "docs/tasks/A15-certificate-exception-observation-proposal.md",
-      "next_dependency": "Formal independent static review of fixed live failure and owned release; no live/suite reruns.",
+      "next_dependency": "None for A15; released and exhausted. A16 offline preparation continues in new chats.",
       "product_commit": "bef0204541eedd86e1fab849e8002a83f432cd7b",
       "failed_delivery_final": "25f9083b2c8183196a7b2d7671efd40d2ef78713",
       "packaging_disposition": "docs/tasks/A15-packaging-disposition-first-delta.md",
@@ -10310,17 +10310,20 @@
       "live_activation_state": "CONSUMED_NO_RETRY",
       "live_result": "ERROR_NETWORK_GUARD_STOPPED_ORIGIN_BLOCKED",
       "blocked_origin": "UNKNOWN_NOT_RECORDED",
-      "authenticated_viewer": "NOT_PROVEN"
+      "authenticated_viewer": "NOT_PROVEN",
+      "live_coordinator_acceptance": "docs/evidence/coordinator/a15-live-independent-closure/coordinator-acceptance.json",
+      "live_independent_report_sha256": "4225188164f346a1fac4bfbef62401a2d47604a9239a8ca449ee25c313f45133",
+      "live_independent_manifest_sha256": "32321832db2a3cc5266bdc707475de023c3e1d7c639f4867cf36aba28d25a418"
     },
     "A16": {
       "at": "2026-10-20T07:34:24.473472+00:00",
-      "status": "FORMAL_CHAT_CREATION_INTENT_SAVED",
+      "status": "EXECUTION_AND_REVIEW_PREPARATION_ACTIVE",
       "task": "docs/tasks/A16-current-book-source-target-readonly.md",
       "task_sha256": "d472860d3699acc3f2629abbb104c595c0adbf4a33bd59bc481caf21e34eeda2",
       "review_task": "docs/tasks/A16-independent-current-readonly-review.md",
       "review_task_sha256": "86a696c1085fc6dedef6c3c64d03e0ca2ee467434058db06a17e16ff8e958e54",
-      "execution_thread_id": null,
-      "review_thread_id": null,
+      "execution_thread_id": "01a15840-7766-7533-818d-cc016aa0a60b",
+      "review_thread_id": "01a15841-0d44-7272-9740-40d013839869",
       "host_id": "local",
       "workspace": "D:/1800-worktrees/a16-current-state",
       "branch": "codex/a16-current-state",
@@ -10339,7 +10342,27 @@
       "old_budgets_restored": false,
       "offline_iteration_policy": "Normal necessary pure offline development and relevant tests; retain failures and freeze exact deliveries; no old suites or live budget restoration.",
       "worktree_creation": "No suitable attached worktree; known managed long-path failure preserved; explicit longpaths short directory created from fixed 7432122b without rerunning managed setup.",
-      "next_dependency": "Create separate execution and review chats; prepare runnable bounded collector and specific next TLS decision before any live."
+      "next_dependency": "Track offline execution and independent standards preparation; fixed delivery before formal product review.",
+      "execution_host_id": "local",
+      "execution_cursor": "9e646293-db4c-4df5-ad60-154ad1ffafe8:1",
+      "review_host_id": "local",
+      "review_cursor": "54109698-8e67-431c-b756-da2abb21b362:1",
+      "workflow_commit": "386353f91eb2bf8d9d75d909c3bf5e2c132d1ac5",
+      "acknowledged_at": "2026-10-20T07:41:56.909245+00:00",
+      "execution": {
+        "thread_id": "01a15840-7766-7533-818d-cc016aa0a60b",
+        "host_id": "local",
+        "cursor": "9e646293-db4c-4df5-ad60-154ad1ffafe8:1",
+        "status": "ACTIVE_OFFLINE",
+        "acknowledged": true
+      },
+      "review": {
+        "thread_id": "01a15841-0d44-7272-9740-40d013839869",
+        "host_id": "local",
+        "cursor": "54109698-8e67-431c-b756-da2abb21b362:1",
+        "status": "ACTIVE_STANDARDS_PREPARATION",
+        "acknowledged": true
+      }
     }
   },
   "route": [
@@ -12752,8 +12775,8 @@
     }
   ],
   "last_action": {
-    "at": "2026-10-20T07:01:39.435765+00:00",
-    "action": "Both existing formal A15 chats acknowledged streamlined continuation; author first unspent delta and independent fixed static preflight active; same heartbeat updated."
+    "at": "2026-10-20T07:44:00.966845+00:00",
+    "action": "Closed A15 fixed failure and evidenced owned release after independent static review; exhausted no retry. A16 separate execution and review chats active offline."
   },
   "limitations": [
     "Current route uses mock B artifacts until independently agreed interface/artifact versions exist.",
@@ -12930,7 +12953,7 @@
     "A16_grouped_readonly_scope_draft": {
       "path": "D:/1800/.local/stages/coordinator/a16-current-state-first-question-scope/draft.md",
       "sha256": "0c91183e44315fc4654dab8c37a9ed86f87ddf69f11d5e8d3f32d7e0c02eccb5",
-      "status": "DRAFT_ONLY_NO_DISPATCH_NO_PLATFORM",
+      "status": "FORMAL_A16_DISPATCHED_OFFLINE_ONLY",
       "candidate": "section2 printed1, answer C, pending current source/target and approval",
       "scope": "One combined current book/source/target/wire observation and first-question preparation; no complex cases; A15 TLS authority not transferred"
     }
@@ -13657,10 +13680,10 @@
     "next_confirmation_document_sha256": "162343381469b1a827f0de6f611b8cdf504666caa06f79e1d8ea9c8a14dd32f2"
   },
   "last_heartbeat_check": {
-    "at": "2026-10-20T03:04:26.720991+00:00",
+    "at": "2026-10-20T07:46:36.088745+00:00",
     "automation_id": "1800-a",
-    "result": "Archived completed review; waiting previously requested user context, no new tool access or tests",
-    "notify": false
+    "result": "A15 fixed failure closure accepted; A16 separately created, acknowledged offline; same heartbeat refreshed.",
+    "notify": true
   },
   "publication_a07": {
     "task_id": "A-PUBLISH-03",
@@ -14007,7 +14030,7 @@
     "user_deadline_days": 3,
     "deadline_basis": "72 hours from this decision; target 2026-10-22 same local time; exact handover clock not specified",
     "user_selected_delivery": "必须包含：优先争取限定题型、小批量的平台试用版",
-    "status": "A15_FAILURE_STATIC_CLOSURE_AND_A16_GROUPED_OFFLINE_PREPARATION",
+    "status": "A15_CLOSED_FINITE_FAILURE_A16_OFFLINE_ACTIVE",
     "plan": "docs/delivery-72h-plan-2026-10-19.md",
     "plan_sha256": "6bfc3d379ec700556b6fec7438b85126c428c7ce4ae58ba9c727982b00ab94f7",
     "proposed_book_id": "46007447",
@@ -14047,11 +14070,12 @@
       "actual_live_writer_proven": false
     },
     "current_route": [
-      "A10 unique readonly current platform observation and release",
-      "Parallel minimal real runner scope then bounded offline implementation and independent review",
-      "Fix one fresh ordinary-choice question then at most five approved questions",
-      "Real save plus refresh/reopen readback, UNKNOWN stop/reconcile",
-      "Day3 independent acceptance and deliver fixed runnable pilot"
+      "Close A15 fixed failure and actually proven owned release; no rerun",
+      "A16 grouped current book/source/target/wire collector offline development and independent review",
+      "Bind one new specific A16 TLS decision if necessary and activation before one grouped readonly round",
+      "Fix the prepared fresh ordinary-choice content, frames and write policy/count; implement necessary real codec",
+      "First real save and independent refreshed/reopened content/frame readback; UNKNOWN stop and reconcile",
+      "After first-question proof, at most five total questions then independent pilot handoff by 2026-10-22 evening"
     ],
     "engineering_scope": {
       "agent": "/root/pilot_live_runner_scope",
@@ -14062,7 +14086,7 @@
       "platform_access": false,
       "next_dependency": "Concrete bounded new-path implementation task and finite test matrix"
     },
-    "first_day_blocker": "Dedicated headless single navigation failed ERR_CERT_COMMON_NAME_INVALID; root cause UNKNOWN; prior MCP login-only works.",
+    "first_day_blocker": "A15 single certificate-exception observation stopped ORIGIN_BLOCKED/NETWORK_GUARD_STOPPED; blocked origin/resource type unrecorded; authentication not proven. Current source/target and wire remain unverified.",
     "ordinary_browser_question": {
       "status": "ANSWERED_USER_REPORT_CAN_OPEN",
       "question": "Can the usual browser currently open the platform?",

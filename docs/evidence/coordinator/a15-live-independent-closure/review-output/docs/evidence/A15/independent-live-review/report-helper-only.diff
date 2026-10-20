@@ -1,0 +1,48 @@
+--- frozen/seal_observation.py
++++ frozen/seal_observation_utc6.py
+@@ -5,7 +5,7 @@
+ from pathlib import Path
+ import re
+ import subprocess
+-from datetime import datetime, timezone
++from datetime import datetime, timezone, timedelta
+ 
+ ROOT = Path(__file__).resolve().parents[5]
+ EVIDENCE = ROOT / 'docs/evidence/A15/certificate-exception'
+@@ -74,8 +74,11 @@
+     assert command['invocations'] == 1 and command['exit_code'] == 2
+     assert not stderr_raw and stdout['release'] == 'RELEASED' and stdout['product_exit_code'] == 2
+     assert stdout['errors'] is False and stdout['launcher_own_os_exit_identity'] == 'UNKNOWN'
+-    start = datetime.fromisoformat(command['started_at'].replace('Z', '+00:00'))
+-    assert datetime.fromisoformat(activation['not_before']) <= start < datetime.fromisoformat(activation['expires_at'])
++    shell_time = command['started_at'].replace('Z', '+00:00')
++    floored_time = re.sub(r'(\.\d{6})\d(?=\+00:00$)', r'\1', shell_time)
++    start = datetime.fromisoformat(floored_time)
++    assert datetime.fromisoformat(activation['not_before']) <= start
++    assert start + timedelta(microseconds=1) < datetime.fromisoformat(activation['expires_at'])
+     names = {p.name for p in SOURCE.iterdir()}
+     assert names == EXPECTED
+     records, captured = {}, []
+@@ -195,6 +198,8 @@
+         'launcher_own_OS_identity': 'UNKNOWN', 'owned_release_record': 'author-release.json',
+         'old_raw_preserved': 47, 'old_original_base_members_preserved': 31212,
+         'independent_result_acceptance': 'NOT_CLAIMED',
++        'report_only_packaging_event': 'report-packaging-event.json',
++        'PowerShell_seven_digit_UTC_window_check': 'The floored timestamp and entire next microsecond lie inside the window; raw time remains exact.',
+         'next_dependency': 'Independent read-only review of this fixed result; no new platform access or retry authorized.',
+         'limitations': ['ORIGIN_BLOCKED is preserved without the raw URL/domain; no root-cause attribution.',
+             'No authenticated viewer, book data, login submission, save/readback or platform business acceptance is established.',
+@@ -202,7 +207,12 @@
+             'Own release is limited to three retained child identities, two owned Jobs and recorded context/runtime closure.']})
+     report = f'''# A15 single live observation: fixed error archive
+ 
+-Status: `REVIEW`. The one activated observation finished with `ERROR` /
++Status: `REVIEW`. The report-only Python 3.9 timestamp parsing failure and
++original helper are preserved in report-packaging-event.json. A new report
++helper only normalizes comparison precision; it does not rerun the observation
++or alter the raw timestamp.
++
++The one activated observation finished with `ERROR` /
+ `NETWORK_GUARD_STOPPED`, not an authenticated-viewer or login-required result.
+ No platform acceptance is claimed. The single live allocation is consumed:
+ one launcher invocation, one context, one navigation intent, zero remaining.
