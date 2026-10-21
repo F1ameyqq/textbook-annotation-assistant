@@ -1,0 +1,84 @@
+{
+  "schema": "A24CallbackIndependentActualLibraryContract/v1",
+  "python": "3.9.13",
+  "playwright": "1.58.0",
+  "sources_verified_before_helper_import": [
+    {
+      "installed_path": "C:\\Users\\ASUS\\AppData\\Local\\Programs\\Python\\Python39\\Lib\\site-packages\\playwright\\_impl\\_helper.py",
+      "snapshot_path": "D:\\1800-worktrees\\a24-route-callback-minimum-review\\.local\\fixed-external\\1bb682d7e5d0d2c61306b0206307075a94bc6b680f12269cd3e241f35161434c-_helper.py",
+      "declared_private_copy_path": "D:\\1800\\.local\\stages\\a24-route-callback-library-evidence\\_impl\\_helper.py",
+      "bytes": 18840,
+      "sha256": "1bb682d7e5d0d2c61306b0206307075a94bc6b680f12269cd3e241f35161434c"
+    },
+    {
+      "installed_path": "C:\\Users\\ASUS\\AppData\\Local\\Programs\\Python\\Python39\\Lib\\site-packages\\playwright\\_impl\\_impl_to_api_mapping.py",
+      "snapshot_path": "D:\\1800-worktrees\\a24-route-callback-minimum-review\\.local\\fixed-external\\86dc40006a97ee2f1129b721142b92b86c90377974fb5703be884d68fb743839-_impl_to_api_mapping.py",
+      "declared_private_copy_path": "D:\\1800\\.local\\stages\\a24-route-callback-library-evidence\\_impl\\_impl_to_api_mapping.py",
+      "bytes": 4866,
+      "sha256": "86dc40006a97ee2f1129b721142b92b86c90377974fb5703be884d68fb743839"
+    },
+    {
+      "installed_path": "C:\\Users\\ASUS\\AppData\\Local\\Programs\\Python\\Python39\\Lib\\site-packages\\playwright\\_impl\\_browser_context.py",
+      "snapshot_path": "D:\\1800-worktrees\\a24-route-callback-minimum-review\\.local\\fixed-external\\6dc0b13b26dc74b85c2bb999d36ede2c4cd56828d1b8a95a980b79bee99204e4-_browser_context.py",
+      "declared_private_copy_path": "D:\\1800\\.local\\stages\\a24-route-callback-library-evidence\\_impl\\_browser_context.py",
+      "bytes": 27878,
+      "sha256": "6dc0b13b26dc74b85c2bb999d36ede2c4cd56828d1b8a95a980b79bee99204e4"
+    },
+    {
+      "installed_path": "C:\\Users\\ASUS\\AppData\\Local\\Programs\\Python\\Python39\\Lib\\site-packages\\playwright\\async_api\\_generated.py",
+      "snapshot_path": "D:\\1800-worktrees\\a24-route-callback-minimum-review\\.local\\fixed-external\\bec1438194e51cf942b01e8425d7d7a962f4be6f14619363133a0166f66f7313-_generated.py",
+      "declared_private_copy_path": "D:\\1800\\.local\\stages\\a24-route-callback-library-evidence\\async_api\\_generated.py",
+      "bytes": 846417,
+      "sha256": "bec1438194e51cf942b01e8425d7d7a962f4be6f14619363133a0166f66f7313"
+    }
+  ],
+  "route_handler": {
+    "source": "_helper.py:RouteHandler._handle_internal",
+    "arguments": [
+      "route",
+      "route.request"
+    ],
+    "invocations": "RouteHandler.handle tracks/removes active invocations in finally"
+  },
+  "mapper": {
+    "source": "_impl_to_api_mapping.py:ImplToApiMapping.wrap_handler",
+    "arity": "len(inspect.signature(handler).parameters)",
+    "argument_selection": "mapped positional list sliced by arity",
+    "bound_cache_key": "instance attribute prefix plus handler.__name__"
+  },
+  "registration": {
+    "source": "async_api/_generated.py:BrowserContext.route",
+    "callback": "self._wrap_handler(handler)"
+  },
+  "dispatch": {
+    "source": "_browser_context.py:BrowserContext._on_route",
+    "callback": "await route_handler.handle(route)"
+  },
+  "new_signature": {
+    "bound_route": [
+      "route"
+    ],
+    "bound_paused": [
+      "event"
+    ],
+    "distinct_handler_names": true
+  },
+  "independent_cache_control": {
+    "case": "paused_mapped_before_route",
+    "cache_wrappers_distinct": true,
+    "same_method_cache_reused": true,
+    "route_signature": [
+      "route"
+    ],
+    "paused_signature": [
+      "event"
+    ],
+    "actual_RouteHandler_dispatch": "PASS_FAKE_ROUTE",
+    "same_request_identity": true,
+    "callback_and_active_invocations_settled": true,
+    "real_resources": 0
+  },
+  "historical_arity_error": "Consistent with variadic wrapper exposing two parameters; not proof of full timeout causality",
+  "whole_environment_or_browser_binary_fully_hashed": false,
+  "library_installed_or_replaced": false
+}
