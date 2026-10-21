@@ -1,0 +1,114 @@
+--- frozen-actual/src/annotation/runtime/live_pilot/owner.py
++++ frozen-product/src/annotation/runtime/live_pilot/owner.py
+@@ -11,6 +11,7 @@
+ import json
+ import os
+ from pathlib import Path
++import re
+ import subprocess
+ import sys
+ import time
+@@ -92,11 +93,13 @@
+         return False
+ 
+     def decide(self, method, url, kind, redirected=False):
++        from annotation.source.usense.current_readonly.policy import excluded_static, EXCLUDED_STATIC
++        if excluded_static(method, url, kind, redirected):
++            return False, EXCLUDED_STATIC  # Existing bounded denial only; never send.
+         parsed = urlsplit(url)
+         if redirected or method != "GET" or parsed.username or parsed.password or parsed.fragment:
+             return False, "FIRST_SAVE_BOOTSTRAP_BLOCKED"
+         if parsed.scheme != "https" or parsed.netloc != "www.usense.com":
+-            # The old guard retains its exact bounded CDN denial classification.
+             return False, "ORIGIN_BLOCKED"
+         path_hash = hashlib.sha256(parsed.path.encode()).hexdigest()
+         if url == TARGET and kind == "Document":
+@@ -154,6 +157,72 @@
+                 return
+             await super().paused(event)
+     return OwnerGuard
++
++
++def guard_evidence(guard):
++    """Bounded projection of existing audit events only; never add a listener."""
++    if guard is None:
++        return {"status": "NOT_CREATED", "complete": True, "total_events": 0, "events": []}
++    try:
++        from annotation.source.usense.current_readonly.policy import FIXED, SESSION, VERSION_PATH, LOGIN_POST, BOOK
++        templates = {urlsplit(ORIGIN + path).path.replace(BOOK, "{book_id}") for path in FIXED.values()}
++        templates.update(SESSION | {VERSION_PATH, urlsplit(LOGIN_POST).path})
++        query_names = {"t", "page", "pageSize", "status_list", "id", "title", "team_name", "username", "role", "is_admin",
++                       "file_id", "pageNum", "annotationType", "type", "order_in_level"}
++        booleans = {"redirect_hop", "main_navigation", "business_read", "scoped_source_read", "expected_passive_denial",
++                    "expected_excluded_static_denial", "expected_excluded_path_denial", "expected_excluded_version_repeat"}
++        def project(event):
++            require(isinstance(event, dict), "GUARD_EVENT_PROJECTION")
++            result = {}
++            for key, value in event.items():
++                if key in ("method", "category", "decision", "source", "resource_type", "known_route"):
++                    require(isinstance(value, str) and re.fullmatch(r"[A-Za-z0-9_]{1,100}", value), "GUARD_EVENT_PROJECTION")
++                elif key == "time":
++                    require(isinstance(value, str) and re.fullmatch(r"[0-9T:+.Z-]{10,40}", value), "GUARD_EVENT_PROJECTION")
++                elif key == "path_sha256":
++                    require(value is None or isinstance(value, str) and re.fullmatch("[0-9a-f]{64}", value), "GUARD_EVENT_PROJECTION")
++                elif key == "path_template":
++                    require(value is None or value in templates, "GUARD_EVENT_PROJECTION")
++                elif key == "query_parameter_names":
++                    require(isinstance(value, list) and len(value) <= len(query_names) and all(v in query_names for v in value), "GUARD_EVENT_PROJECTION")
++                elif key in ("query_names_redacted", "port"):
++                    require(value is None and key == "port" or type(value) is int and 0 <= value <= 65535, "GUARD_EVENT_PROJECTION")
++                elif key == "hostname":
++                    require(isinstance(value, str) and re.fullmatch(r"[A-Za-z0-9.-]{1,253}", value), "GUARD_EVENT_PROJECTION")
++                elif key == "scheme":
++                    require(value in ("https", "http", "wss", "ws", "data", "blob", "OTHER"), "GUARD_EVENT_PROJECTION")
++                elif key in booleans:
++                    require(type(value) is bool, "GUARD_EVENT_PROJECTION")
++                else:
++                    continue  # No raw URL/query/body/token/exception fields.
++                result[key] = value
++            return result
++        events = guard.events
++        require(isinstance(events, list), "GUARD_EVENT_PROJECTION")
++        failure = guard.failure
++        require(failure is None or isinstance(failure, dict), "GUARD_EVENT_PROJECTION")
++        first_failure = None if failure is None else {"exception_type": failure.get("exception_type") if
++            failure.get("exception_type") in ("Stop", "PilotError", "TimeoutError", "Error", "OTHER") else "OTHER",
++            "codes": [v for v in failure.get("codes", []) if isinstance(v, str) and re.fullmatch("[A-Z0-9_]{1,100}", v)][:8]}
++        blocked = next((i for i, event in enumerate(events) if event.get("decision") == "BLOCK"), None)
++        matched = next((i for i, event in enumerate(events) if first_failure and event.get("category") in first_failure["codes"]), None)
++        retained = sorted(set(range(min(128, len(events)))) | ({blocked} if blocked is not None else set()) | ({matched} if matched is not None else set()))
++        summary = guard.exclusion_summary()
++        require(set(summary) == {"combined_guard_events", "completed_denial_calls", "event_limit", "double_layer_events_count_separately",
++            "http_send_count", "dns_tcp_tls_activity", "script_necessity", "pending_callbacks"} and
++            all(type(summary[k]) is int and summary[k] >= 0 for k in ("combined_guard_events", "completed_denial_calls", "event_limit", "pending_callbacks")) and
++            summary["event_limit"] == 16 and summary["double_layer_events_count_separately"] is True and
++            all(summary[k] == "UNKNOWN" for k in ("http_send_count", "dns_tcp_tls_activity", "script_necessity")), "GUARD_EVENT_PROJECTION")
++        return {"status": "PROJECTED", "total_events": len(events), "retained_events": len(retained), "limit": 128,
++            "maximum_retained": 130, "completeness_scope": "SAFE_EXISTING_EVENT_PROJECTION_ONLY",
++            "selection": "FIRST_128_PLUS_EARLIEST_BLOCK_AND_FIRST_FAILURE_CATEGORY_MATCH", "truncated": len(retained) < len(events),
++            "complete": len(retained) == len(events), "events": [{"index": i, **project(events[i])} for i in retained],
++            "earliest_block_index": blocked, "first_failure_category_event_index": matched,
++            "failure_event_link": "CATEGORY_MATCH_ONLY_NOT_CAUSAL_PROOF" if matched is not None else "NOT_RECORDED",
++            "first_failure": first_failure, "exclusions": dict(summary), "settlement": {"sealed": guard.sealed,
++                "shutdown_started": guard.shutdown_started, "stopped": guard.stopped, "pending_callbacks": summary["pending_callbacks"]}}
++    except BaseException as error:
++        return {"status": "PROJECTION_ERROR", "complete": False, "total_events": "UNKNOWN", "error": safe_error(error)}
+ 
+ 
+ def base_binding(authority):
+@@ -374,6 +443,7 @@
+         result["first_error"] = safe_error(error)
+         result["status"] = "ERROR_STOPPED_NO_RETRY"
+     finally:
++        result["guard_evidence_before_release"] = guard_evidence(getattr(backend, "guard", None))
+         try:
+             if isinstance(getattr(backend, "bootstrap_steps", None), dict):
+                 result["bootstrap_steps"] = dict(backend.bootstrap_steps)
+@@ -385,6 +455,7 @@
+             release = await backend.close()
+         except BaseException as error:
+             release = {"released": False, "first_error": safe_error(error), "outer_job_reap_required": True}
++        result["guard_evidence_after_release"] = guard_evidence(getattr(backend, "guard", None))
+         result["steps"]["release"] = "DONE" if release.get("released") is True else "UNKNOWN"
+         result["release"] = release
+         if release.get("released") is not True:
