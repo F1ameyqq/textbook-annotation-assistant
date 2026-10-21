@@ -13603,7 +13603,7 @@
         "branch": "codex/a24-first-save",
         "status": "ACTIVE_FIRST_SAVE_WIRE_R1_CONSOLIDATED",
         "host_id": "local",
-        "cursor": "0d524930-f946-4765-8053-ad5865e326fb:28",
+        "cursor": "0d524930-f946-4765-8053-ad5865e326fb:30",
         "turn_id": "01a15dfe-a73c-7fe3-9d19-29a99914542a",
         "started_at": 1792578332,
         "acknowledged": true,
@@ -13619,9 +13619,9 @@
       "review": {
         "thread_id": "01a15cf8-68e0-7b63-91a3-657a567b344c",
         "workspace": "D:/1800-worktrees/a24-first-save-wire-review",
-        "status": "REWORK_FIXED_RELEASED",
+        "status": "REWORK_RELEASED_AWAITING_R1_FROZEN_DELIVERY",
         "host_id": "local",
-        "cursor": "9962b7f7-cacc-4c19-9a31-45759f3976b5:14",
+        "cursor": "9962b7f7-cacc-4c19-9a31-45759f3976b5:15",
         "turn_id": "01a15de7-19a9-7351-8a9d-5ebe47caa458",
         "started_at": 1792576788,
         "acknowledged": true,
@@ -13635,7 +13635,9 @@
         "duration_ms": 768994,
         "at": "2026-10-21T06:34:08.248094+00:00",
         "progress_note": "Fixed REWORK: real owner integration and journal receipt/query persistence boundary. 45 Python/8 JS pass; one independent control FAIL; remaining controls NOT_RUN.",
-        "handoff_snapshot_at": "2026-10-21T10:15:48.597167+00:00"
+        "handoff_snapshot_at": "2026-10-21T10:15:48.597167+00:00",
+        "coordinator_successor_notice": "SENT_NO_REVIEW_OR_TEST_DISPATCH",
+        "successor_notice_acknowledged": true
       },
       "task_document": "docs/tasks/A24-current-contract-first-save-integration.md",
       "task_sha256": "564ff7319d20ffd23a52128bcf1ae31af2298dbedaa001ed9a3d6b508281880b",
@@ -14546,7 +14548,28 @@
           0
         ],
         "dispatch_workflow": "4a065695e9aaef61f1a6bfad43a0ac70310a430d",
-        "cursor": "0d524930-f946-4765-8053-ad5865e326fb:28"
+        "cursor": "0d524930-f946-4765-8053-ad5865e326fb:30",
+        "static_snapshot_preparation": {
+          "path": "docs/evidence/coordinator/a24-first-save-wire-independent-closure/static-snapshot-contract.json",
+          "sha256": "8fc850080c7abc6cc735e781e3c04527b7578a159eecb847ece2355a5b3cba95",
+          "source_input_hashes_verified": 10,
+          "scope": "AUXILIARY_STATIC_ONLY",
+          "aggregate_schema": "UNKNOWN_DO_NOT_FABRICATE_CODEC_METADATA",
+          "conditional_business_GETs": [
+            17,
+            20
+          ],
+          "activation": false
+        }
+      },
+      "model_parallel_preparation": {
+        "status": "STATIC_PREPARATION_COMPLETE_LOCAL_DEPENDENCY_GAP",
+        "directory": "docs/evidence/coordinator/a24-model-minimum-readiness",
+        "manifest_sha256": "5a7da3b2287589f1b81b61603072972e6c1c6c5e54ae8babbc5545d2171ae2bc",
+        "received_B_raw_verified": 22,
+        "missing_local_dependency": "tools/route_a_layout.py",
+        "model_calls": 0,
+        "first_save_blocking": false
       }
     }
   },

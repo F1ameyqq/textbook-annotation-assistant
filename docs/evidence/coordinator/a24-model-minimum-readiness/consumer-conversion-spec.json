@@ -1,0 +1,202 @@
+{
+  "at": "2026-10-21T10:29:02.799858+00:00",
+  "scope": "ONE_ORDINARY_SINGLE_CHOICE_STATIC_SPEC_ONLY_NO_IMPLEMENTATION_OR_ACCEPTANCE",
+  "fixed_heads": {
+    "B": "6d3d29f16e20f1521a3ff17239ce2830bec903c3",
+    "A": "680bd5f624659f1091db974d5ed30b332ff946dc"
+  },
+  "authority": "No platform/model/network authority is created. This is not a verified runnable command or accepted public B contract.",
+  "target_namespace": {
+    "public_semantics": "SourceBundle -> EvidenceBundle -> QuestionGraph -> CheckReport in the existing C01 contracts API.",
+    "versions": "A fixed API selects legacy c01-exchange-1 / 1.0.0-a-proposal, explicit recovery, or native by declared namespace. Bind the existing accepted candidate namespace and its exact validator; do not rename a B trial object or synthetic native object into observed evidence.",
+    "native_warning": "a03-native uses 1.4.0-a03-native-proposal and explicit fixed registry/bridge context; its schema defines Amended* artifacts. Its synthetic-only profile is not authority for a real run."
+  },
+  "mapping": [
+    {
+      "B": "source.book_id, scope_id, artifact_id; assets[].asset_id,width,height,sha256,path,reading_order",
+      "A": "SourceBundle envelope and source asset resources; a separate immutable input reference to original B source bytes",
+      "rule": "Reuse checked identity/dimensions/hash only after equality with selected A current originals. New A envelope/run_id/producer/input_refs/hash are produced explicitly; B input_refs omit revision/kind and cannot be copied as C01 ArtifactRef."
+    },
+    {
+      "B": "source assets and file ordering",
+      "A": "SourcePayload directories/pages_expected/pages_acquired/external_page_mappings/history/scope_manifest/basis",
+      "rule": "A supplies reviewed one-question scope, current directory and separate resource/viewer/source/save-page evidence. B reading_order is not a platform page number or directory. No chapter completeness claim."
+    },
+    {
+      "B": "payload.pages[].regions[].region_id, bbox, asset_id",
+      "A": "EvidenceBundle Region.region_id and OriginalBox.image{asset_id,width,height,sha256}, bbox",
+      "rule": "Preserve immutable B IDs in evidence references; derive distinct A IDs bound to source+B output+conversion version. B bbox is original-image coordinates for its own declared input asset. Require finite positive bounds and exact image binding."
+    },
+    {
+      "B": "pages[].crop_transforms[].original_bbox,crop_to_original; regions[].crop_id",
+      "A": "Region.crop_transform plus final OriginalBox",
+      "rule": "Convert translation/scale/rotation/padding and processed dimensions only from the actual recorded transform. Baseline column crops are translations; never add the offset to its already-original region bbox again. If manual question crops are model inputs, compose that transform back to the A original, preserving manual provenance and exact crop bytes."
+    },
+    {
+      "B": "region.content_type=unknown; text_hint; role_candidate; verification_status=UNVERIFIED",
+      "A": "Region.content_type,text,source,certainty,evidence_refs,printed_number_candidates",
+      "rule": "unknown is not an A ContentType. For this text-only pilot, classify each selected source region explicitly as text; OCR-derived text uses source=OCR and remains UNCERTAIN until content review. Human edits remain separate revisions/provenance. role_candidate/text_hint/confidence cannot establish confirmed role/text or ordinary single-choice."
+    },
+    {
+      "B": "pages[].ocr_lines; coverage_evidence.lines; issues; split_info",
+      "A": "Observed EvidenceRecord resources, CoverageClue records and CheckReport issues",
+      "rule": "Retain raw lines and geometry; distinguish SHARED_RECOGNITION from independent review. Baseline coverage_evidence explicitly says can_authorize_quality_pass=false. Do not promote its line list to independent whole-page completeness."
+    },
+    {
+      "B": "selected raw OCR regions/atoms and explicit reviewed grouping",
+      "A": "six Fragment records and six final Region records: stem, option A, B, C, D, answer; content_type=text; unique reading_order",
+      "rule": "For this A24 pilot exactly one projected region per fragment is necessary. Multiple OCR atoms may support a derived final region/text only with explicit grouping, source references and approved extent; union-by-proximity is not content completeness evidence. Keep unselected raw outputs."
+    },
+    {
+      "B": "No baseline QuestionGraph/answer relation",
+      "A": "Question{question_id,directory_id,question_type=ordinary_choice,fragment_ids,parent_question_id=null,shared_fragment_ids=[],cross_page=false,external_refs}; GraphPayload source/evidence refs, fragments, answer_relations, identity_notes",
+      "rule": "A must construct this layer; baseline alone supplies none. question_id is a stable internal ID, not printed number. New target external platform_question_id/platform_order remain null. Compute cross_page from non-answer/non-explanation source pages; an answer on viewer173 does not itself make question.cross_page=true."
+    },
+    {
+      "B": "answer-page OCR observation and explicit association evidence",
+      "A": "one AnswerRelation with candidate_fragment_ids, selected_fragment_ids=[answer fragment], status=SELECTED, evidence_refs",
+      "rule": "Do not select by matching printed 1 alone or mathematical answer guessing. Require section/question/source-pixel identity and answer OCR content review. Missing/conflicting association remains AMBIGUOUS or UNRESOLVED and HOLD."
+    },
+    {
+      "B": "No A policy/readiness facts",
+      "A": "A current policy maps stem/option/answer to Q/W/A with SEPARATE options; source-bound single-choice qualification and approval content digest",
+      "rule": "A admission requires six semantic roles, Q/W/W/W/W/A, explicit A-D option labels, answer text equal to one label, and reviewed SINGLE_CHOICE resource bound to frames/parts. Do not manufacture these confirmations from type labels."
+    },
+    {
+      "B": "quality_decision=NOT_EVALUATED; limitations",
+      "A": "CheckReport PRE_APPLY with explicit coverage/checks/issues/decision",
+      "rule": "Missing option/text/type/answer/source/crop/coverage/identity enters HOLD. Never translate NOT_EVALUATED or model confidence into PASS. Model test can record partial evidence while fixed-content first-save continues separately."
+    }
+  ],
+  "minimum_graph_shape": {
+    "questions": 1,
+    "fragments": 6,
+    "projected_regions": 6,
+    "ordered_semantic_roles": [
+      "stem",
+      "option",
+      "option",
+      "option",
+      "option",
+      "answer"
+    ],
+    "ordered_platform_roles": [
+      "Q",
+      "W",
+      "W",
+      "W",
+      "W",
+      "A"
+    ],
+    "content_type": "text",
+    "new_question_external_refs": {
+      "platform_question_id": null,
+      "platform_order": null
+    },
+    "source_and_graph_refs": "Exact artifact_id/revision/kind/content_hash tuples; graph and evidence source versions must equal.",
+    "answer_relation": "Exactly one selected relation, selecting the separate answer fragment; selection evidence is mandatory.",
+    "A_owned_mapping": "Book46007447/current leaf; platform tail insertion/actual ID and order/six object crops/body preservation are outside model inference and remain under A24 plan/approval."
+  },
+  "cannot_infer_automatically": [
+    "B UNKNOWN content_type to text; role_candidate to confirmed stem/option/answer; confidence to correctness.",
+    "Four candidate boxes imply four complete ordered A-D options, or ordinary_choice implies exactly one correct answer.",
+    "A final question boundary is the union of detected OCR boxes; any absent pixel/text can be guessed or discarded.",
+    "Printed question 1 and answer 1.C are the same section/book question without source association evidence.",
+    "Image list reading_order or resource index equals viewer/source/save-page; page14/resource13 and page173/resource172 retain distinct semantics.",
+    "B region UUID remains patch-compatible after source/model/config/dependency changes.",
+    "Shared recognizer line coverage proves independent completeness; ignored raw outputs are decoration.",
+    "Manual OCR input crops, selected labels, corrections or answer pairing count as autonomous model output.",
+    "Static schema conversion, local evidence PASS or immutable hashes authorize model calls/platform save."
+  ],
+  "entry_dependency_closure": {
+    "statically_identified_function_pair": "annotation.recognition.baseline.recognize(source_path,use_ocr=True) -> write_result(result,previews,new_output_dir)",
+    "source_manifest": "b-source-trial/0.1; artifact_id/book_id/scope_id; nonempty portable local assets with unique asset_id/reading_order and exact width/height/SHA. Place manifest at an existing common local parent if referencing retained original children; no absolute/traversal paths, download or image copy required by the format.",
+    "local_B_sources": [
+      {
+        "path": "src/annotation/recognition/baseline.py",
+        "status": "RAW_BYTES_READ",
+        "sha256": "f6c84e8f997e08c7bcef2aaf685b57f472410081485f784c01717311cc1a3675"
+      },
+      {
+        "path": "src/annotation/recognition/__init__.py",
+        "status": "LOCAL_BLOB_PRESENT",
+        "blob": "e6036402dd1c4ad475602e8266ea1fd053ef7f25",
+        "bytes": 72,
+        "sha256": "4b585fc922f3561d674fc839d8ec51214199581908172b10be96693deeecaf7d"
+      },
+      {
+        "path": "tools/route_a_layout.py",
+        "status": "TREE_PRESENT_LOCAL_OBJECT_MISSING",
+        "blob": "97b967728ef6400673193324f7ee5c3262a2cb36",
+        "check": "presence-only cat-file --batch-check under GIT_NO_LAZY_FETCH=1; no fetching or execution"
+      },
+      {
+        "path": "src/annotation/recognition/pipeline.py",
+        "status": "PREVIOUS_FIXED_INTAKE_GAP_NOT_RECHECKED"
+      },
+      {
+        "path": "tools/run_pipeline_b.py",
+        "status": "PREVIOUS_FIXED_INTAKE_GAP_NOT_RECHECKED"
+      }
+    ],
+    "runtime_packages_required_by_known_wrapper": [
+      "numpy",
+      "Pillow",
+      "opencv provided through legacy backend",
+      "rapidocr-onnxruntime",
+      "onnxruntime"
+    ],
+    "fixed_B_report_versions": "rapidocr-onnxruntime1.4.4; PP-OCRv4 det+rec and v2 cls; ordinary environment ORT1.25.1, local CPU. These are B report facts, not current environment verification.",
+    "weights_from_fixed_B_report": [
+      "ch_PP-OCRv4_det_infer.onnx",
+      "ch_PP-OCRv4_rec_infer.onnx",
+      "ch_ppocr_mobile_v2.0_cls_infer.onnx"
+    ],
+    "transitive_backend_closure": "UNKNOWN until exact missing route_a_layout raw is acquired through an authorized intake; its dynamic imports/config/weight-loading can then be checked without running it.",
+    "A_conversion_closure": [
+      "contracts/__init__.py namespace dispatcher",
+      "contracts/models.py + integrity.py + validation.py or exact existing accepted namespace closure",
+      "quality/targetcheck/__init__.py projection_frames",
+      "quality/live_pilot.py single-choice source classification, six-frame and approval binding",
+      "selected source resources/B raw evidence/new conversion output manifest"
+    ],
+    "execution_status": "NOT_RUN_NOT_READY_TO_CLAIM_RUNNABLE_LOCAL_CLOSURE"
+  },
+  "A_fixed_sources_read": [
+    {
+      "path": "src/annotation/contracts/models.py",
+      "sha256": "993c6d5081dcb6dad0b20107ed68860564acee8390e65285fb5a36761cbc19b9",
+      "evidence": "lines45-255; OriginalBox116-126"
+    },
+    {
+      "path": "src/annotation/contracts/validation.py",
+      "sha256": "6b98eefe7c1a308f3846ba2f3acce1ffae5c64ec0b5c4d3675ee5872f055a0f7",
+      "evidence": "graph286-340; coverage372-398"
+    },
+    {
+      "path": "src/annotation/quality/targetcheck/__init__.py",
+      "sha256": "a88d99f1f81fe33ce99a22a48e84585be663087e2eaeac27fa239ec9ccaedb3a",
+      "evidence": "projection_frames112-130"
+    },
+    {
+      "path": "src/annotation/quality/live_pilot.py",
+      "sha256": "dff850451fd35b545bcb83f75cf6dd3d8a8719984f9d258a47723ce3a8af6215",
+      "evidence": "single-choice59-99; bindings141-177"
+    },
+    {
+      "path": "src/annotation/contracts/a03_native/data/schemas/exchange.json",
+      "sha256": "8417b84787ec3ff95966129e7bf14e388c0b66018f4828d3c438fd2e1134a1af",
+      "evidence": "AmendedSourceBundle/AmendedEvidenceBundle/AmendedQuestionGraph definitions"
+    }
+  ],
+  "activity_counts": {
+    "model_calls": 0,
+    "B_script_execution": 0,
+    "tests": 0,
+    "network": 0,
+    "missing_blob_fetch": 0,
+    "platform": 0,
+    "external_messages": 0,
+    "product_edits": 0
+  }
+}
