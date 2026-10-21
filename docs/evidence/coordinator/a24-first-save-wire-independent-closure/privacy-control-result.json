@@ -1,0 +1,24 @@
+{
+  "schema": "A24IndependentWireCounterexample/v1",
+  "mode": "SYNTHETIC_ONLY",
+  "tests": 1,
+  "failures": 1,
+  "errors": 0,
+  "passed": false,
+  "duration_ms": 234,
+  "raw_output": "test_unapproved_response_value_must_not_enter_durable_journal (__main__.ReceiptPrivacy) ... FAIL\n\n======================================================================\nFAIL: test_unapproved_response_value_must_not_enter_durable_journal (__main__.ReceiptPrivacy)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"D:\\1800-worktrees\\a24-first-save-wire-review\\docs\\evidence\\A24\\independent-first-save-wire-review\\privacy_control.py\", line 66, in test_unapproved_response_value_must_not_enter_durable_journal\n    self.assertFalse(leaks, 'UNAPPROVED_RESPONSE_FIELD_WRITTEN_TO_JOURNAL')\nAssertionError: ['event-000004.json'] is not false : UNAPPROVED_RESPONSE_FIELD_WRITTEN_TO_JOURNAL\n\n----------------------------------------------------------------------\nRan 1 test in 0.247s\n\nFAILED (failures=1)\n",
+  "records": [
+    {
+      "case": "unprojected_receipt_journal",
+      "effect_state": "APPLIED_SYNTHETIC_WIRE",
+      "synthetic_commit_count": 1,
+      "leaked_journal_files": [
+        "event-000004.json"
+      ],
+      "raw_synthetic_evidence_preserved": true,
+      "real_upload_save_calls": 0
+    }
+  ],
+  "real_resources": 0,
+  "further_controls": "NOT_RUN_AFTER_FIRST_MATERIAL_CONTROL_FAILURE"
+}

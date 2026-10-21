@@ -1,0 +1,63 @@
+{
+  "at": "2026-10-21T10:23:32.122176+00:00",
+  "task": "A24",
+  "result": "REWORK_FIXED_REPORT_RECEIVED_AND_MECHANICALLY_VERIFIED",
+  "reviewer": "01a15cf8-68e0-7b63-91a3-657a567b344c",
+  "coordinator": "01a15dfa-9556-7812-9ed5-1b3bce53555e",
+  "product": "851cf6fce217df8f64a6f3bdeaa99b5e5e2c234d",
+  "final": "680bd5f624659f1091db974d5ed30b332ff946dc",
+  "report_members": 22,
+  "manifest_self": 1,
+  "frozen_inputs_verified": 225,
+  "raw_git_inputs_verified": 225,
+  "machine_sha256": "42fe0b357193ed8279e6158b459da390efa195101ce18748450d0073e6b8dd0e",
+  "output_manifest_sha256": "aa426135adcd15ba045fdd59191fd5c5f256269fd40bce4d32bf1d08c1bc8e53",
+  "blockers": [
+    {
+      "id": "R1",
+      "priority": 1,
+      "kind": "MISSING_EXECUTABLE_OWNER_INTEGRATION",
+      "source": [
+        "src/annotation/runtime/live_pilot/runner.py:11-37",
+        "src/annotation/delivery/live_pilot/usense.py:52-58",
+        "src/annotation/delivery/live_pilot/usense.py:98-110",
+        "tools/a16_current_state_probe.py:740-756"
+      ],
+      "evidence": "static-integration-scan.json",
+      "minimum_fix": "Existing owned framework entry: raw authority/hash/scope/window/count checks before resources, new guard before online/bootstrap, adapter call, full outer release, designated readonly reopen; small fake owner verification"
+    },
+    {
+      "id": "R2",
+      "priority": 1,
+      "kind": "UNAPPROVED_RESPONSE_AND_QUERY_PERSISTENCE",
+      "source": [
+        "src/annotation/runtime/live_pilot/runner.py:75-89",
+        "src/annotation/delivery/live_pilot/usense.py:634-636",
+        "src/annotation/delivery/live_pilot/usense.py:790-807",
+        "src/annotation/delivery/live_pilot/wire.py:381-410"
+      ],
+      "evidence": [
+        "privacy-control-result.json",
+        "counterexample-event-000004.json"
+      ],
+      "observed_layer": "One synthetic response extra member persisted while normal fake flow succeeded",
+      "query_value_branch": "STATIC_DATA_FLOW_ONLY_NO_ACTUAL_ACCOUNT_ACCESS",
+      "minimum_fix": "Finite approved receipt or UNKNOWN plus hashes before journal; no raw response dump; template/key/hash query provenance; preserve claim/no resend; focused sentinel regression"
+    }
+  ],
+  "reviewer_released": true,
+  "root_product_or_suite_runs": 0,
+  "actual_save": "NOT_RUN",
+  "actual_readback": "NOT_RUN",
+  "write_activated": false,
+  "prior_readonly_remaining": [
+    0,
+    0
+  ],
+  "old_failures_and_unknown_preserved": true,
+  "next_action": "One consolidated same-A24 author rework and concrete first-save preparation; same formal reviewer checks fixed delta",
+  "metadata_lookup_error_retained": {
+    "command_chunk": "827dbd",
+    "error": "Static read requested absent output-manifest.json; actual frozen manifest is raw-manifest.json; no product run or retry"
+  }
+}
