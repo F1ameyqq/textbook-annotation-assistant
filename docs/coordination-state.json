@@ -2,7 +2,7 @@
   "schema_version": 1,
   "project": "D:\\1800",
   "coordinator_thread_id": "01a15768-1e2d-7781-b29f-1f7376270216",
-  "updated_at": "2026-10-21T04:58:52.666220+00:00",
+  "updated_at": "2026-10-21T04:59:37.877771+00:00",
   "automation": {
     "id": "1800-a",
     "kind": "heartbeat",
@@ -12671,7 +12671,7 @@
     "A22": {
       "at": "2026-10-21T04:16:34.267672+00:00",
       "task": "A22",
-      "status": "ACTUAL_FIXED_RELEASED_PENDING_MECHANICAL_AND_INDEPENDENT_REVIEW",
+      "status": "ACTUAL_FAILURE_FIXED_INDEPENDENT_DISPATCH_PENDING",
       "dispatch_key": "A22:post-login-session-reuse:new-formal-execution-review",
       "project_id": "4488a042-3ec7-4f9e-8880-cbc8f4e02a51",
       "host_id": "local",
@@ -12696,8 +12696,8 @@
       },
       "review": {
         "thread_id": "01a15cad-c63a-7062-8fe6-2fc4add9e9a5",
-        "workspace": "D:/1800-worktrees/a22-independent-fixed",
-        "status": "ACCEPTED_OFFLINE_ONLY_RELEASED",
+        "workspace": "D:/1800-worktrees/a22-live-review",
+        "status": "ACTUAL_REVIEW_DISPATCH_PENDING",
         "host_id": "local",
         "cursor": "05b138eb-1be4-4f90-9ad5-89720d315532:7",
         "turn_id": "01a15cbc-5245-7342-8840-8e85c5ab22f7",
@@ -12726,7 +12726,7 @@
       "new_live_authorized": true,
       "login_submission_authorized": false,
       "local_credential_config_reads_authorized": false,
-      "next_dependency": "One fixed actual A22 delivery/release, then same formal independent static actual-result review",
+      "next_dependency": "Same formal independent static failure/release review; A23 offline implementation in parallel",
       "workflow_commit": "68279e400143c5681338530db409060a39760c0a",
       "delivery": {
         "at": "2026-10-21T04:32:59.883701+00:00",
@@ -12916,7 +12916,158 @@
         "product_runs": 0,
         "cause": "UNKNOWN"
       },
-      "live_remaining": 0
+      "live_remaining": 0,
+      "actual_delivery": {
+        "at": "2026-10-21T04:57:40.597923+00:00",
+        "status": "MECHANICAL_PASS_PENDING_ACTUAL_INDEPENDENT_REVIEW",
+        "auxiliary_only": true,
+        "formal_acceptance": false,
+        "base": "1acc8d00dfef5808561139a99ba6f028d7bfd7a1",
+        "final": "3517982bd416ff77fdf596e80c502a75d780f2b9",
+        "direct_parent_verified": true,
+        "old_members_preserved": 32045,
+        "final_tree_members": 32074,
+        "added": 29,
+        "modified": 0,
+        "deleted": 0,
+        "candidate_members": 28,
+        "delivery_manifest_members": 28,
+        "delivery_manifest_self_excluded": true,
+        "raw_members": 58,
+        "candidate_manifest_sha256": "264e7fd8120efc8dd8f95f6c66b28693104d82f47e3d68e3a91fd0c422b38141",
+        "input_manifest_sha256": "ecb2034e126b5b37e9d415979ed320f3587a6442b906f02a818c3242f34c08db",
+        "delivery_manifest_sha256": "7602eb7d04101047f161c3c392e1076e0b3600b8e5b21aacfc19b58232a7e006",
+        "author_report_sha256": "72b4a7fd5393b795fdad3ba25e47286630a74b8dc43880c9a103720280da952d",
+        "live_result_sha256": "6d9d457435e4057f95e1cfa60dabf3bf03d58fa20c3e817c3f14f29778a506b9",
+        "isolation": "D:/1800-worktrees/a22-live-review",
+        "authority_raw_comparisons": [
+          {
+            "delivery_path": "docs/evidence/A22/session-reuse/live-delivery/activation.json",
+            "root_path": ".local/stages/a22-session-reuse-activation.json",
+            "sha256": "f396716b79fdf33ba96d79c207d5e4e23c17daa9073e49741b26ac7abc919896",
+            "size": 3319,
+            "raw_identical": true
+          },
+          {
+            "delivery_path": "docs/evidence/A22/session-reuse/live-delivery/authorization.json",
+            "root_path": "docs/approvals/A22-session-reuse-user-decision.json",
+            "sha256": "53d708e0f9866ddac88728f23ba0cb1b7a794d39f96e5682826b506b4f966991",
+            "size": 3327,
+            "raw_identical": true
+          },
+          {
+            "delivery_path": "docs/evidence/A22/session-reuse/live-delivery/dispatch-intent.json",
+            "root_path": "docs/evidence/coordinator/a22-live-dispatch/dispatch-intent.json",
+            "sha256": "34678072039c971d291e90266f1e5557c8438298084fb9027fb0208748312e3b",
+            "size": 2456,
+            "raw_identical": true
+          },
+          {
+            "delivery_path": "docs/evidence/A22/session-reuse/live-delivery/independent-result.json",
+            "root_path": "docs/evidence/coordinator/a22-independent-closure/independent-result.json",
+            "sha256": "fa11ed620f6a32907af9f385f5539d7e0d7a6e6c30613abb4eef54a746d2cac4",
+            "size": 2602,
+            "raw_identical": true
+          },
+          {
+            "delivery_path": "docs/evidence/A22/session-reuse/live-delivery/task.md",
+            "root_path": "docs/tasks/A22-approved-single-live-dispatch.md",
+            "sha256": "adee9a3a00973a83325ed7ee1547fa661412022f2958e51e0ef362f88dce4987",
+            "size": 3749,
+            "raw_identical": true
+          }
+        ],
+        "actual_budget_keys": {
+          "launches_used": 1,
+          "live_remaining": 0,
+          "retry_attempts": 0
+        },
+        "schema_note": "No author_frozen_released field exists in A22 manifest. Actual budget keys are launches_used and live_remaining; no invented launches_remaining key.",
+        "launches_used": 1,
+        "live_remaining": 0,
+        "first_failure": {
+          "codes": [
+            "PROTECTED_AUTHENTICATION_UNPROVEN"
+          ],
+          "exception_type": "Stop"
+        },
+        "outcome": "ERROR",
+        "navigation_http_status": 200,
+        "domcontentloaded_observed": true,
+        "readiness_state": "DONE",
+        "protected_viewer_authenticated": false,
+        "session_receipt_count": 0,
+        "business_get_sends_observed": 0,
+        "original_gets_observed": 0,
+        "release_record_consistency": [
+          {
+            "role": "product",
+            "pid": 51224,
+            "created_filetime": 134370317616692552,
+            "exit_code": 2,
+            "held_identity_before_after_equal": true,
+            "exit_observed": true,
+            "handle_closed": true,
+            "source": "docs/evidence/A22/session-reuse/live-delivery/raw/launcher-release.json"
+          },
+          {
+            "role": "worker",
+            "pid": 42792,
+            "created_filetime": 134370317624701624,
+            "exit_code": 2,
+            "held_identity_before_after_equal": true,
+            "exit_observed": true,
+            "handle_closed": true,
+            "source": "docs/evidence/A22/session-reuse/live-delivery/raw/worker-release.json"
+          },
+          {
+            "role": "occupancy",
+            "pid": 41356,
+            "created_filetime": 134370317634722847,
+            "exit_code": 0,
+            "held_identity_before_after_equal": true,
+            "exit_observed": true,
+            "handle_closed": true,
+            "source": "docs/evidence/A22/session-reuse/live-delivery/raw/occupancy.json"
+          }
+        ],
+        "context_runtime_release": {
+          "context_close_attempted": true,
+          "context_closed": true,
+          "context_created": true,
+          "errors": [],
+          "runtime_stop_attempted": true,
+          "runtime_stopped": true,
+          "state": "RELEASED"
+        },
+        "launcher_job_final_active": 0,
+        "worker_job_final_active": 0,
+        "launcher_self_OS_creation_exit_identity": "UNKNOWN",
+        "raw_copy_members_matched": 10,
+        "tool_command_exit": 0,
+        "launcher_child_returncode": 2,
+        "current_state_guard_at_serialization": {
+          "failure": {
+            "codes": [
+              "PROTECTED_AUTHENTICATION_UNPROVEN"
+            ],
+            "exception_type": "Stop"
+          },
+          "pending_tasks": 0,
+          "shutdown_started": true,
+          "stopped": true,
+          "terminal_stopped": true
+        },
+        "limitations": [
+          "Mechanical raw and release-record consistency only; formal independent actual-result review pending.",
+          "No actual authentication or book/source/readback success inferred.",
+          "No product import/run/tests/browser/network/profile/config/native/occupancy activity performed.",
+          "Original live-output directory and source Script/sidecars not read or copied.",
+          "Root index, coordination, tasks and other files were not modified; no commit."
+        ],
+        "coordinator_product_runs": 0,
+        "release": "AUXILIARY_COMPLETE_NO_WAITING_RESOURCES"
+      }
     },
     "A23": {
       "at": "2026-10-21T04:58:52.666220+00:00",
@@ -12952,7 +13103,8 @@
       "new_live_authorized": false,
       "login_submission_authorized": false,
       "local_credential_config_reads_authorized": false,
-      "next_dependency": "Parallel offline correction while A22 fixed actual failure/release is independently archived; frozen limited preflight before one new readonly activation"
+      "next_dependency": "Parallel offline correction while A22 fixed actual failure/release is independently archived; frozen limited preflight before one new readonly activation",
+      "workflow_commit": "d86dbcb82ebd7b61d5e87f02402bfe8a6bcd1b15"
     }
   },
   "route": [
@@ -15365,8 +15517,8 @@
     }
   ],
   "last_action": {
-    "at": "2026-10-21T04:58:52.666220+00:00",
-    "action": "Accelerate: A22 failure closure in parallel with A23 current-session completion implementation"
+    "at": "2026-10-21T04:59:37.877771+00:00",
+    "action": "Root reverified A22 fixed actual bytes and prepared same-reviewer dispatch"
   },
   "limitations": [
     "Current route uses mock B artifacts until independently agreed interface/artifact versions exist.",
