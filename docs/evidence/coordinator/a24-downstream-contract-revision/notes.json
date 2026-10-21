@@ -1,0 +1,242 @@
+{
+  "schema": "A24-downstream-contract-static-preparation/v1",
+  "role": "AUXILIARY_STATIC_PREPARATION_NOT_FORMAL_REVIEW",
+  "fixed_final": "a1250758d0fc14e8c7d5c827ece2c207a4d99aac",
+  "source_script": {
+    "path": "D:/1800/.local/stages/a17-excluded-static-live/static-assets/1-d0a5ebce18bc92d7643662ecec2d078bb295214111e7cb32688f0b88e05bed41.bin",
+    "sha256": "d0a5ebce18bc92d7643662ecec2d078bb295214111e7cb32688f0b88e05bed41",
+    "size": 3065996,
+    "executed": false,
+    "sidecar_read": false
+  },
+  "raw_inputs": [
+    {
+      "path": "src/annotation/source/usense/current_readonly/decode.py",
+      "size": 22955,
+      "sha256": "68716f115b32ce01909a17840526339be106cf56e307a8ca7d889a825e2dbc15"
+    },
+    {
+      "path": "src/annotation/source/usense/current_readonly/policy.py",
+      "size": 11005,
+      "sha256": "5b5d17e0b6a34d73301564450b164057da1577ba6bcbeee9247977cefa552974"
+    },
+    {
+      "path": "tools/a16_current_state_probe.py",
+      "size": 77624,
+      "sha256": "429ad52b5b363851c1bc598e2527189913a09a90584a25106540336981d90f25"
+    }
+  ],
+  "scope": {
+    "fixed_git_only": true,
+    "active_workspaces_read": false,
+    "live_outputs_read": false,
+    "network": 0,
+    "product_imports": 0,
+    "product_runs": 0,
+    "tests": 0,
+    "profile_or_config_reads": 0,
+    "new_requests_or_budgets": 0,
+    "product_changes": 0
+  },
+  "findings": [
+    {
+      "id": "D1",
+      "classification": "PROVEN_STATIC_COMPATIBILITY_DIFFERENCE_NOT_ACTUAL_SCHEMA",
+      "topic": "frames envelope",
+      "reader": "decode.py:334-339 requires body.data list; business():130-135 accepts HTTP200 and numeric code0 only",
+      "official": "kS(id,null) exact same no-page query GET; Hn accepts numeric code0/200, returns data, wraps a data array as annotations; object data is unchanged; without numeric code returns raw body. Viewer consumes result.annotations.",
+      "minimum": "Endpoint-local decode can explicitly support successful data array and data.annotations array; retain exact chosen shape and raw types. Do not merge aliases recursively or mark missing annotations empty. Other Hn envelope forms are a separately explicit compatibility choice, not inferred actual responses."
+    },
+    {
+      "id": "D2",
+      "classification": "PROVEN_STATIC_REQUEST_BRANCH_DIFFERENCE_ACTUAL_BRANCH_UNKNOWN",
+      "topic": "source and pages",
+      "reader": "policy.py:12-14 always calls source GET then two pre_annotation GETs; probe.py:1081 requires source data.file_id",
+      "official": "v6e source GET matches path/query. Uses Hn data; reads source/oss_page_url_pattern/oss_image_url_pattern/total_pages, does not inspect file_id. Mo source===oss plus truthy page pattern selects page JSON via p6e, otherwise legacy pre_annotation.",
+      "minimum": "Keep one source GET. After validated current response select exactly one of two branches per whole book. Legacy: existing two GETs. OSS: substitute each page GET with one exact dynamically registered page JSON GET for the same requested viewer; never add it after legacy attempt. Present wrong file_id stops; absent field is distinct from mismatch and request binding is only request binding, not returned identity proof."
+    },
+    {
+      "id": "D3",
+      "classification": "PROVEN_STATIC_DERIVED_GLOBAL_ORDER_DIFFERENCE",
+      "topic": "directory",
+      "reader": "decode.py:324-328 trusts source order_in_level; raw data.directory_data envelope matches official Zh/$B",
+      "official": "vp clones through Eg and C0, DFS in array order, starting1; each truthy isQuestion node assigned order_in_level=String(counter++) and label same; skips descending into question children. This is local UI derivation, not server mutation in read.",
+      "minimum": "Preserve raw node order_in_level/label/id/types and separately record official-derived global order and traversal position. Report disagreement; no silent renumbering of raw evidence or assertion of save order. Existing strict string IDs/boolean isQuestion/valid order requirements are narrower than frontend and actual shapes remain unknown."
+    },
+    {
+      "id": "D4",
+      "classification": "PROVEN_STATIC_RESOURCE_MAPPING_BRANCH_WITH_LIMITS",
+      "topic": "page image and dimensions",
+      "reader": "source_page requires data.file_id, exactly one pages entry with int nonnegative page_index and string image; original_info fully decodes downloaded bytes; visible_mapping is passive and save_page stays UNKNOWN",
+      "official": "OSS p6e explicitly i=positive-floor(pageNum)-1, page JSON provides blocks only, image URL from independent source metadata image pattern. Synthesized file_id comes from caller. Legacy Hn returns page object. PdfViewer image resolver accepts absolute http URL unchanged or creates relative base+image+token; dimensions are loaded Image.width/height with canvas fit, not known metadata width/height.",
+      "minimum": "For OSS record viewer14->derived resource13, viewer173->derived resource172 as frontend-derived mapping plus exact metadata/template evidence; not server-returned mapping. Keep original dimensions from exact downloaded bytes. Relative/token image branch is outside present public no-query source rule and must stop, not add token to URL or broaden source. No canvas/display/save-page proof from static derivation."
+    },
+    {
+      "id": "D5",
+      "classification": "FINITE_EVIDENCE_WHITELIST_GAP",
+      "topic": "bounded pre-adapter facts",
+      "reader": "decode.py:228-233 whitelist lacks annotations, source, oss_page_url_pattern, oss_image_url_pattern, blocks",
+      "minimum": "Add only necessary finite field type/presence/length facts for these concrete branches. Pattern values stay transient until canonical existing-origin/book-path validation; do not output generic body/credentials or introduce arbitrary-key crawler."
+    }
+  ],
+  "request_table": [
+    {
+      "logical": "directory",
+      "request": "GET /qieti/api/annotate_ocr/directory/get?file_id=46007447",
+      "official_unpack": "raw Axios response.data; code0 then data.directory_data",
+      "match": "request and outer envelope MATCH; derived UI order differs"
+    },
+    {
+      "logical": "frames",
+      "request": "GET /qieti/api/annotate_pic/get_manual_annotations_unified/46007447",
+      "official_unpack": "Hn(response.data,{wrapKey:annotations}); viewer .annotations",
+      "match": "request MATCH; parser supports only one documented shape"
+    },
+    {
+      "logical": "source",
+      "request": "GET /qieti/api/annotate_pic/pre_annotation_source/46007447?annotationType=mr_pre",
+      "official_unpack": "Hn(response.data), source and two URL patterns plus total_pages",
+      "match": "request MATCH; mandatory file_id is not in frontend consumption contract"
+    },
+    {
+      "logical": "page14",
+      "legacy": "GET /qieti/api/annotate_pic/pre_annotation/46007447?pageNum=14&annotationType=mr_pre",
+      "oss": "exact expand(current metadata oss_page_url_pattern,13), one substituted GET only",
+      "match": "legacy branch MATCH; OSS currently unsupported"
+    },
+    {
+      "logical": "page173",
+      "legacy": "GET /qieti/api/annotate_pic/pre_annotation/46007447?pageNum=173&annotationType=mr_pre",
+      "oss": "exact expand(current metadata oss_page_url_pattern,172), one substituted GET only",
+      "match": "legacy branch MATCH; OSS currently unsupported"
+    }
+  ],
+  "oss_minimum_plan": {
+    "source_condition": "Only source string exactly oss and present valid string oss_page_url_pattern selects OSS. Missing/unrecognized metadata cannot be invented from history. Keep legacy only for an explicit accepted legacy branch, never after an OSS failure.",
+    "template": "nR uses String(pattern).replace(\"%d\",String(index)).replace(\"{pageIndex}\",String(index)): one replacement each, in that order. Do not Python-format, append extensions or guess directory. Reject unresolved/ambiguous placeholders, noncanonical URLs or conflicting two pages.",
+    "registration": "Before each send, bind exact URL to one logical page budget and target book/current metadata response. Canonical HTTPS, no userinfo/query/fragment/redirect/encoded traversal; only previously allowed main/OSS origin and approved /upload_images/46007447/ namespace. If actual template is outside these constraints, stop and report; this proposal grants no new source/path. Validate image template independently under existing register_original rules.",
+    "count": "Each logical page gets one native send/context reservation/cache identity and one chosen URL; remove or disable alternate fixed legacy key for that branch. Two layers share existing budget; no fallback/retry or direct client bypass. Original image GET remains one per viewer after successful exact source binding.",
+    "page_JSON": "Official f6e uses Bo.get absolute URL with timeout15000 and .data, without gn auth interceptor. JSON may be array (blocks) or object with blocks array; p6e otherwise defaults empty blocks. For bounded proof, distinguish explicit empty from missing/invalid; do not call missing/403/404 known-empty. Do not run f6e itself; existing guarded page fetch can credentials omit and no Authorization for approved public OSS, exact schema only.",
+    "synthesized_page": "{file_id:String(requestedBook),source:oss,pages:[{page_index:viewer-1,image:expanded image pattern,blocks:decoded explicit blocks,source:oss}]} is frontend-derived; label derived provenance and retain original limited page JSON facts/hash, never forge a server response or raw SHA over synthesis.",
+    "privacy": "No token/query values in output; no real user context read by this auxiliary. Full transient URL may enter Python/native for guard/cache; do not promise it stays only inside browser."
+  },
+  "unknowns": [
+    "actual directory/frame/source/page response schema",
+    "actual current source branch and URL patterns",
+    "whether mandatory source file_id exists",
+    "actual empty book-list cause",
+    "original image bytes/dimensions",
+    "current visible canvas binding",
+    "save-page numbering and newness/content/bbox",
+    "full inventory and old content preservation"
+  ],
+  "nonblocking_notes": [
+    "No current request parameter discrepancy proved for directory or no-page frames GET. Source parameter matches. Legacy pageNum/annotationType spelling and values match.",
+    "No parser imports, product execution, tests, browser or actual platform access occurred."
+  ],
+  "helper_event": {
+    "event": "Initial raw read used absent path src/annotation/current_readonly/decode.py and Git returned128; corrected by fixed tree path inventory. No product run/write/retry of live. A large read output was truncated; later bounded static reads completed.",
+    "preserved": true
+  },
+  "script_fragments": [
+    {
+      "name": "Hn_numeric_code_and_wrapKey",
+      "byte_offset_zero_based": 1069105,
+      "byte_length": 192,
+      "sha256": "d112894ccf3bc7bf103b1bfb6549d2ee2142906567516e9c0b9779e5cc3f4bac",
+      "text": "function Hn(e,t={}){if(e&&typeof e.code==\"number\"){if(e.code!==0&&e.code!==200)throw new Error(e.message||\"Error\");const n=e.data;return t.wrapKey&&Array.isArray(n)?{[t.wrapKey]:n}:n}return e}"
+    },
+    {
+      "name": "directory_GET",
+      "byte_offset_zero_based": 1082583,
+      "byte_length": 91,
+      "sha256": "a4652b00216bb48abbe1b4a624a2a1aa5a474fb4585953bf0035be3f50c3c294",
+      "text": "async function Zh(e){return(await gn.get(`${Gr}/directory/get`,{params:{file_id:e}})).data}"
+    },
+    {
+      "name": "frames_GET_and_unwrap",
+      "byte_offset_zero_based": 1078292,
+      "byte_length": 206,
+      "sha256": "b21799a14eae2087db932580244e206febb805926456e9cbceb6ec3626444f3f",
+      "text": "async function kS(e,t=null){const n=t!==null?`${Hr}/get_manual_annotations_unified/${e}?pageNum=${t}`:`${Hr}/get_manual_annotations_unified/${e}`,a=await gn.get(n);return Hn(a.data,{wrapKey:\"annotations\"})}"
+    },
+    {
+      "name": "page_number_template_and_page_JSON",
+      "byte_offset_zero_based": 1075903,
+      "byte_length": 384,
+      "sha256": "c8df862c7e73fe6a10c976da449ca3b263a650506d7ad27f317db20b8c1b9d64",
+      "text": "function tR(e){const t=Number(e);return!Number.isFinite(t)||t<=0?null:Math.floor(t)}function nR(e,t){return e?String(e).replace(\"%d\",String(t)).replace(\"{pageIndex}\",String(t)):\"\"}async function f6e(e){var t;if(!e)return null;try{return(await Bo.get(e,{timeout:15e3})).data}catch(n){const a=(t=n==null?void 0:n.response)==null?void 0:t.status;if(a===403||a===404)return null;throw n}}"
+    },
+    {
+      "name": "source_metadata_GET_and_cache",
+      "byte_offset_zero_based": 1076287,
+      "byte_length": 439,
+      "sha256": "99693bfaa7bb4a8814658cec88b889e2deadb3ade92d1ac325ed8c35c445b2a4",
+      "text": "async function v6e(e){const t=String(e);if(SS.has(t))return SS.get(t);if(xS.has(t))return xS.get(t);const n=(async()=>{try{const a=await gn.get(`${Hr}/pre_annotation_source/${e}`,{params:{annotationType:\"mr_pre\"}}),r=Hn(a.data),o=r&&typeof r==\"object\"?r:{source:\"legacy_db\"};return o.source=o.source||\"legacy_db\",SS.set(t,o),o}catch{const r={source:\"unknown\"};return SS.set(t,r),r}})();xS.set(t,n);try{return await n}finally{xS.delete(t)}}"
+    },
+    {
+      "name": "OSS_page_synthesis",
+      "byte_offset_zero_based": 1076726,
+      "byte_length": 550,
+      "sha256": "b87eada935d68158b0f7d1fdacac1409991a3dcefea61660a981c974ef19d927",
+      "text": "async function p6e(e,t,n){const a=tR(t);if(a===null)return null;const r=`${e}|${a}`;if(WE.has(r))return GE(WE.get(r));if(CS.has(r)){const i=await CS.get(r);return GE(i)}const o=(async()=>{const i=a-1,l=nR(n==null?void 0:n.oss_page_url_pattern,i),s=nR(n==null?void 0:n.oss_image_url_pattern,i);let u=[];if(l){const d=await f6e(l);Array.isArray(d)?u=d:d&&Array.isArray(d.blocks)&&(u=d.blocks)}const c={page_index:i,image:s||\"\",blocks:Array.isArray(u)?u:[],source:\"oss\"};return WE.set(r,GE(c)),c})();CS.set(r,o);try{return await o}finally{CS.delete(r)}}"
+    },
+    {
+      "name": "source_branch_and_legacy_page_GET",
+      "byte_offset_zero_based": 1077276,
+      "byte_length": 729,
+      "sha256": "fd5499ce50fe1c9cc89ace997c7ce6932ddad62958737d7805dd2b24b41948a3",
+      "text": "async function Mo(e,t=null,n=\"none\"){if(n===\"mr_pre\"){const l=await v6e(e),s=tR(t),u=(l==null?void 0:l.source)===\"oss\"&&!!(l!=null&&l.oss_page_url_pattern);if(u&&s!==null){const c=await p6e(e,s,l);return{file_id:String(e),source:\"oss\",pages:c?[c]:[]}}if(u&&s===null){const c=Number((l==null?void 0:l.total_pages)||0),d=[],f=Number.isFinite(c)?Math.max(0,Math.floor(c)):0;for(let v=0;v<f;v+=1)d.push({page_index:v,image:nR(l==null?void 0:l.oss_image_url_pattern,v),blocks:[],source:\"oss\"});return{file_id:String(e),source:\"oss\",pages:d}}}const a=tR(t);let r=[];a!==null&&r.push(`pageNum=${a}`),r.push(`annotationType=${n}`);const o=r.length>0?`?${r.join(\"&\")}`:\"\",i=await gn.get(`${Hr}/pre_annotation/${e}${o}`);return Hn(i.data)}"
+    },
+    {
+      "name": "directory_viewer_fetch",
+      "byte_offset_zero_based": 2694917,
+      "byte_length": 493,
+      "sha256": "07adedbbad690793634c6457122bb4e22ed0bc7962d61955dc09719f7808489b",
+      "text": "async function $B(){if(!w.value){vp([{id:1,label:\"\u76ee\u5f55\u4e00\",children:[{id:11,label:\"\u5b50\u76ee\u5f55\u4e00\"},{id:12,label:\"\u5b50\u76ee\u5f55\u4e8c\"}]}]);return}try{const N=await Zh(w.value);N.code===0&&N.data&&N.data.directory_data?vp(N.data.directory_data):vp([{id:1,label:\"\u76ee\u5f55\u4e00\",children:[{id:11,label:\"\u5b50\u76ee\u5f55\u4e00\"},{id:12,label:\"\u5b50\u76ee\u5f55\u4e8c\"}]}])}catch(N){console.error(\"\u83b7\u53d6\u76ee\u5f55\u7ed3\u6784\u5931\u8d25:\",N),vp([{id:1,label:\"\u76ee\u5f55\u4e00\",children:[{id:11,label:\"\u5b50\u76ee\u5f55\u4e00\"},{id:12,label:\"\u5b50\u76ee\u5f55\u4e8c\"}]}])}}"
+    },
+    {
+      "name": "directory_viewer_global_reindex",
+      "byte_offset_zero_based": 2681911,
+      "byte_length": 501,
+      "sha256": "73068ab3cc54ec289a2b8608f58cd7feb1cf6f8e176c3c0df9c9ee488f4baa4d",
+      "text": "function C0(N,O={nextOrder:1}){var ee;if(N)for(const ge of N){if(ge!=null&&ge.isQuestion){const Ce=O.nextOrder++;ge.order_in_level=String(Ce),ge.label=String(Ce);continue}(ee=ge==null?void 0:ge.children)!=null&&ee.length&&C0(ge.children,O)}}function Eg(N){const O=xc(N);return C0(O),O}function fse(N){ot.value=Eg(N),kl.value=null,AI()}function TB(){fse(Kt.value),Ir.value=!1,li.value=!1,Iu.value=\"\",kd.value=null}function vp(N){const O=Eg(N||[]);at.value=O,ot.value=xc(O),Kt.value=xc(O),kl.value=null}"
+    },
+    {
+      "name": "frames_viewer_consumer",
+      "byte_offset_zero_based": 2677743,
+      "byte_length": 112,
+      "sha256": "03183ac046243fe79ffe8568b11a748e0cdb22f960b0b1771661fdca019e162f",
+      "text": "async function SB(){const N=await kS(w.value);return rt.value=N.annotations||[],Ww(),Ca.value=bo.value,rt.value}"
+    },
+    {
+      "name": "viewer_page_load_call",
+      "byte_offset_zero_based": 2712280,
+      "byte_length": 480,
+      "sha256": "9ae7472f91c56eed78f6f7da6db32f18c76e1ea30bbe24107c75def14f5cd14a",
+      "text": "async function Ql(N,O,ee=!0){if(w.value)try{const ge=w.value;if(ee){const Ce=await Mo(ge,O,Ie.value);Ce.pages&&Ce.pages.length>0?N===\"question_zone\"?mn.value=Ce.pages:N===\"answer_zone\"&&(Un.value=Ce.pages):(ve.warning(`\u9875\u7801 ${O} \u4e0d\u5b58\u5728`),N===\"question_zone\"&&O>qn.value?qn.value--:N===\"answer_zone\"&&O>ra.value&&ra.value--)}if(N===\"question_zone\"){const Ce=(xe.value[O]||[]).filter($e=>{const mt=$e.type;return l(mt,\"question_zone\",$e,xe.value[O])&&(!ze.value&&$e.order_in_le"
+    },
+    {
+      "name": "viewer_image_URL",
+      "byte_offset_zero_based": 2610785,
+      "byte_length": 240,
+      "sha256": "fd31863fd09cc03550d947928d7b3c292d5f08184a207852baabb5d2744a7c63",
+      "text": "M=Le=>{if(!Le||!Le.image)return\"\";const qe=JSON.parse(localStorage.getItem(\"user\")),Ve=qe?qe.access_token:\"\";if(Le.image.startsWith(\"http\"))return Le.image;const Ue=r.imageBasePath+Le.image;return Ue+(Ue.includes(\"?\")?\"&\":\"?\")+\"token=\"+Ve};"
+    },
+    {
+      "name": "viewer_intrinsic_dimensions",
+      "byte_offset_zero_based": 2611377,
+      "byte_length": 303,
+      "sha256": "bd44a9f6577177d8580b658a8860fdd22204acc93f4d631342c9703bd9909c53",
+      "text": "const Je=M(Ge),It=s.value.get(Je)||s.value.get(r.imageBasePath+Ge.image),_n=(It==null?void 0:It.width)||1,Zt=(It==null?void 0:It.height)||1,ct=Math.min(Ve.width/_n,Ve.height/Zt),ht=_n*ct,Jt=Zt*ct,Ln=(Ve.width-ht)/2,In=(Ve.height-Jt)/2,kn=(Yt-dt-Ln*Fe)/(ct*Fe),Pn=(De-He-In*Fe)/(ct*Fe);return{x:kn,y:Pn}}"
+    },
+    {
+      "name": "viewer_image_draw",
+      "byte_offset_zero_based": 2624920,
+      "byte_length": 1200,
+      "sha256": "53ea07d4793ea4598d0ff485d9de6f5a08baf983c8911eeda8bf2beaec12773f",
+      "text": "Ye=new Image,Ye.crossOrigin=\"anonymous\",await new Promise((ct,ht)=>{Ye.onload=()=>{s.value.set(tt,Ye),ct(!0)},Ye.onerror=ht,Ye.src=tt}));const Fe=Ve.closest(\".pdf-content\"),dt=Ve.closest(\".pdf-container\")||h.value;if(Fe){const ct=dt?window.getComputedStyle(dt):null,ht=ct?parseFloat(ct.paddingLeft||\"0\")+parseFloat(ct.paddingRight||\"0\"):0,Jt=ct?parseFloat(ct.paddingTop||\"0\")+parseFloat(ct.paddingBottom||\"0\"):0,Ln=Math.max(0,Fe.clientWidth-ht);Fe.clientHeight-20;const In=Math.max(0,Fe.clientHeight-Jt);Ye.width,Ye.height,Ve.width=Ln,Ve.height=In;const kn=Ve.closest(\".pdf-page\");kn&&(kn.style.width=`${Ve.width}px`,kn.style.height=`${Ve.height}px`)}else Ve.width=Ye.width,Ve.height=Ye.height;await Wt(),W(Le),Ue.save();const He=b.value[Le]||1,St=_.value[Le]||0,Ht=S.value[Le]||0,Yt=Math.min(Ve.width/Ye.width,Ve.height/Ye.height),De=Ye.width*Yt,Ge=Ye.height*Yt,Je=(Ve.width-De)/2,It=(Ve.height-Ge)/2;Ue.translate(St,Ht);const _n=De*He,Zt=Ge*He;Ue.drawImage(Ye,Je*He,It*He,_n,Zt),qe.blocks&&!p.value&&(Ue.strokeStyle=\"grey\",Ue.lineWidth=1/He,qe.blocks.forEach(ct=>{const ht=ct.rect_bbox||ct.bbox;if(ht&&Array.isArray(ht)&&ht.length===4){const[Jt,Ln,In,kn]=ht,Pn=(Jt*Yt+Je)*He,Kn=(Ln*Yt+It)*He,qa=(In"
+    }
+  ],
+  "released": true
+}
