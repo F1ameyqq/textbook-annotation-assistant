@@ -2,7 +2,7 @@
   "schema_version": 1,
   "project": "D:\\1800",
   "coordinator_thread_id": "01a15768-1e2d-7781-b29f-1f7376270216",
-  "updated_at": "2026-10-21T04:20:49.516683+00:00",
+  "updated_at": "2026-10-21T04:32:59.883701+00:00",
   "automation": {
     "id": "1800-a",
     "kind": "heartbeat",
@@ -12671,7 +12671,7 @@
     "A22": {
       "at": "2026-10-21T04:16:34.267672+00:00",
       "task": "A22",
-      "status": "FORMAL_OFFLINE_EXECUTION_AND_REVIEW_PREPARATION_ACTIVE",
+      "status": "FIXED_DELIVERY_VERIFIED_INDEPENDENT_DISPATCH_PENDING",
       "dispatch_key": "A22:post-login-session-reuse:new-formal-execution-review",
       "project_id": "4488a042-3ec7-4f9e-8880-cbc8f4e02a51",
       "host_id": "local",
@@ -12682,24 +12682,31 @@
         "thread_id": "01a15cad-c139-76e2-88f8-705093575a7e",
         "workspace": "D:/1800-worktrees/a22-session-reuse",
         "branch": "codex/a22-session-reuse",
-        "status": "ACTIVE_OFFLINE",
+        "status": "FIXED_RELEASED",
         "host_id": "local",
-        "cursor": "b95d3548-63e3-468b-82fe-1adb68c0680c:2",
+        "cursor": "b95d3548-63e3-468b-82fe-1adb68c0680c:3",
         "turn_id": "01a15cad-c458-7f51-ba5a-c2c0943ac0a1",
         "started_at": 1792556254,
         "acknowledged": true,
-        "released": false
+        "released": true,
+        "product_commit": "41fda0d1ff7f548e1bc8ec6b5b4d653109736532",
+        "final_commit": "1acc8d00dfef5808561139a99ba6f028d7bfd7a1",
+        "completed_at": 1792556986,
+        "duration_ms": 732268
       },
       "review": {
         "thread_id": "01a15cad-c63a-7062-8fe6-2fc4add9e9a5",
-        "workspace": "D:/1800-worktrees/a22-review-preparation",
-        "status": "ACTIVE_PREPARATION",
+        "workspace": "D:/1800-worktrees/a22-independent-fixed",
+        "status": "FIXED_REVIEW_DISPATCH_PENDING",
         "host_id": "local",
-        "cursor": "05b138eb-1be4-4f90-9ad5-89720d315532:2",
+        "cursor": "05b138eb-1be4-4f90-9ad5-89720d315532:3",
         "turn_id": "01a15cad-cbf0-73f2-a2cc-aece8f727802",
         "started_at": 1792556256,
         "acknowledged": true,
-        "released": false
+        "released": true,
+        "preparation_released": true,
+        "preparation_manifest_sha256": "fc610d4d6962b15d044ca6c5c76736aab85ab36f67bdecc33bdeaf2bad7ef8e5",
+        "preparation_archive": "D:/1800/docs/evidence/coordinator/a22-independent-preparation"
       },
       "task_document": "docs/tasks/A22-post-login-session-reuse-readonly.md",
       "task_sha256": "d47f5b4c37b1e97d9ee702dce9b6ab0bb65f670819875830a4af97023969b3fe",
@@ -12714,8 +12721,79 @@
       "new_live_authorized": false,
       "login_submission_authorized": false,
       "local_credential_config_reads_authorized": false,
-      "next_dependency": "New formal reuse-only adaptation and independent preparation; frozen bounded preflight before activation",
-      "workflow_commit": "68279e400143c5681338530db409060a39760c0a"
+      "next_dependency": "Same formal independent bounded preflight, then root binding of standing readonly TLS permission",
+      "workflow_commit": "68279e400143c5681338530db409060a39760c0a",
+      "delivery": {
+        "at": "2026-10-21T04:32:59.883701+00:00",
+        "status": "MECHANICAL_PASS_ONLY_PENDING_INDEPENDENT_REVIEW",
+        "base": "29a243227893cdbd8e7d235a8c787b4d721ed8e2",
+        "product": "41fda0d1ff7f548e1bc8ec6b5b4d653109736532",
+        "final": "1acc8d00dfef5808561139a99ba6f028d7bfd7a1",
+        "candidate_sha256": "264e7fd8120efc8dd8f95f6c66b28693104d82f47e3d68e3a91fd0c422b38141",
+        "delivery_sha256": "dd8ff91275f46b35f0551cf1dfb17971cce0352c1606bbca8d6e3af8c6dfaeb0",
+        "report_sha256": "2c909f5c68e9a89cd6cff0e32ddc7807462d9f6ef1a65aae9067db1ef3065472",
+        "release_sha256": "f8cd0565f23a67d632f93bfc3df5257c9e2ef560a34f406048338e94b46b2ca7",
+        "candidate_members": 28,
+        "delivery_members": 82,
+        "raw_members": 94,
+        "input_manifest_sha256": "0e24aa2356ca87bfe925481d4ab411970568b0874f4804438ce6eda26be401b2",
+        "isolation": "D:/1800-worktrees/a22-independent-fixed",
+        "old_members": 31967,
+        "unchanged_old_members": 31962,
+        "old_evidence_preserved": 30726,
+        "modified": [
+          "src/annotation/source/usense/current_readonly/auth.py",
+          "src/annotation/source/usense/current_readonly/gate.py",
+          "src/annotation/source/usense/current_readonly/policy.py",
+          "tools/a16_current_state_launcher.py",
+          "tools/a16_current_state_probe.py"
+        ],
+        "added": 78,
+        "deleted": 0,
+        "coordinator_product_runs": 0,
+        "live": 0,
+        "author_suite": {
+          "task": "A22",
+          "candidate_sha256": "264e7fd8120efc8dd8f95f6c66b28693104d82f47e3d68e3a91fd0c422b38141",
+          "author_latest": {
+            "run": 4,
+            "tests_run": 25,
+            "failures": 0,
+            "errors": 0,
+            "success": true,
+            "duration_ms": 766
+          },
+          "raw_latest": {
+            "run": 1,
+            "tests_run": 25,
+            "failures": 0,
+            "errors": 0,
+            "success": true,
+            "duration_ms": 750
+          },
+          "author_result": "runs/run04/result.json",
+          "raw_result": "raw-checkout/docs/evidence/A22/session-reuse/runs/run01/result.json",
+          "prior_runs_retained": [
+            "runs/run01",
+            "runs/run02",
+            "runs/run03"
+          ],
+          "author_run03": {
+            "tests_run": 22,
+            "failures": 1,
+            "errors": 0
+          },
+          "scope_member_count": 50,
+          "candidate_dependencies": 28,
+          "old_suites_run": 0,
+          "real_browser_network_profile_native_occupancy_credential_calls": 0,
+          "real_product_launcher_native_children": 0,
+          "live_activated": false,
+          "acceptance": "AUTHOR_OFFLINE_DELIVERY_ONLY_NOT_INDEPENDENT_ACCEPTANCE"
+        }
+      },
+      "fixed_review_task": "D:/1800/docs/tasks/A22-fixed-session-reuse-independent-review.md",
+      "fixed_review_task_sha256": "86bfef90b1a1d31d8db1bbc9067739d6ec3ff3a013874745ab38004d37caaa4e"
     }
   },
   "route": [
@@ -15128,8 +15206,8 @@
     }
   ],
   "last_action": {
-    "at": "2026-10-21T04:18:00.058974+00:00",
-    "action": "Registered exact A22 execution and independent review chats for readonly reuse"
+    "at": "2026-10-21T04:32:59.883701+00:00",
+    "action": "Received A22 frozen no-login reuse delivery and prepared same-chat independent preflight"
   },
   "limitations": [
     "Current route uses mock B artifacts until independently agreed interface/artifact versions exist.",

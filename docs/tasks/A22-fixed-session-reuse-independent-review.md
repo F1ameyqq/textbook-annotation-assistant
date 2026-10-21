@@ -1,0 +1,15 @@
+# A22 固定原会话复用候选独立预检
+
+原正式独立 01a15cad-c63a-7062-8fe6-2fc4add9e9a5 承接同阶段。准备2成员+self已根归档，作者已冻结释放。只授权本次有限离线预检，0真实浏览器/网络/profile/本机用户名密码配置/native/占用/产品或launcher子进程/登录/业务/decision/activation/live。
+
+基线29a243227893cdbd8e7d235a8c787b4d721ed8e2，产品41fda0d1ff7f548e1bc8ec6b5b4d653109736532，final1acc8d00dfef5808561139a99ba6f028d7bfd7a1，两条直接父链已核。产品workflow68279e400143c5681338530db409060a39760c0a。候选SHA264e7fd8120efc8dd8f95f6c66b28693104d82f47e3d68e3a91fd0c422b38141，交付SHAdd8ff91275f46b35f0551cf1dfb17971cce0352c1606bbca8d6e3af8c6dfaeb0。28依赖、82交付+self、94去重raw。唯一输入D:/1800-worktrees/a22-independent-fixed，根清单docs/evidence/coordinator/a22-fixed-delivery/input-raw-manifest.json SHA0e24aa2356ca87bfe925481d4ab411970568b0874f4804438ce6eda26be401b2。31967旧成员仅5获准产品路径变化，30726旧证据原mode/type/blob保全，78新增/0删除。
+
+独立输出仅该隔离内docs/evidence/A22/independent-session-reuse-review/；新25项suite和少量必要控制也定向此新目录。静态查看原runner的ROOT/输出行为，如硬编码作者路径则建独立runner只定向测试模块和输出并保留离线资源阻断，不改候选/作者runner，不运行package/seal/helper或旧suite。作者新25/25 766ms、raw25/25 750ms是输入，不冒充独立结果。run01/run02导入失败0tests、run03 22项1断言失败、后修测试期望并增3控制全部保留；不得改写失败。
+
+重点核auth/policy/gate/probe真实调用路径一致缩为VIEWER单阶段/唯一TARGET导航：用户名密码配置解析/读取、表单填入/点击、arm_submit/reserve_login/POST在I/O/动作/预留前硬拒绝且无开关恢复。不能只跳过authenticate或借旧凭据授权true。原profile定位来自固定旧绑定而非读本机配置，现有页面内部token用于已准GET不导出/注入。原主框、精确页、可见受保护viewer、无登录密码框、本轮双层关联session有限投影组合后准入book GET核46007447，旧A21receipt/HTTP200/localStorage不可单独准入。实际账户字段/持久化/平台认证不能据fake宣称。
+
+单VIEWER session三路径各1总3，单主导航双层各1；六GET/两图各1、version1/共享排除16、原来源/逐跳/WS/未知API/静态Image窄规则保持。401/403/登录跳转/未知/晚到fatal/pending不清即停，后继NOT_RUN，0补发/重登。新相关fake控制有限集中于这些差量和新完整50项scope+三个模板的同类型同值绑定、旧A21候选/activation/凭据授权拒绝。decode/js_wire/native/reference/OS释放/时基及作者声明未改片段以精确raw核对应有限证据，不重跑旧25以外历史suite或刷NOT_RUN。
+
+通过时机器报告使用冻结template/gate完整50scope，result=ACCEPTED_OFFLINE_ONLY，scope=POST_LOGIN_SESSION_REUSE_CURRENT_SOURCE_READONLY。独立接受不激活live。已有A17“一直批准”持续只读TLS许可只能由根在接受后绑定本阶段实际候选/报告/profile/新一次预算/窗口；0登录授权，不借A21已耗许可，无需再问同类TLS。
+
+固定报告、机器结果、新suite/必要控制原始结果、清单及明确释放；返回精确路径/hash。真正影响不误写/不越界/有界停止/事实的缺口REWORK，首意外失败保留并停止依赖后继；原件完整且正确停止的报告细节列限制，不无关修订。旧预算不恢复、0B消息，其他三例HOLD，Q22不重放。

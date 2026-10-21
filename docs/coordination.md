@@ -1,3 +1,5 @@
+2026-10-21 A22已冻结释放交正式独立预检，产品41fda0d1/final1acc8d00；作者新25/25 766ms和raw25/25 750ms，28依赖/82交付+self、94去重raw。31967基线仅5获准修改、30726旧证据保全。原独立按docs/tasks/A22-fixed-session-reuse-independent-review.md在D:/1800-worktrees/a22-independent-fixed核零凭据/登录、VIEWER单阶段、当前组合证据及完整50scope。原失败保留；0真实资源/新live。通过后根沿用已有A17只读TLS持续许可绑定本阶段唯一轮，不重复询问。
+
 2026-10-21 A22新正式阶段去重意图已落盘，base29a24322，任务docs/tasks/A22-post-login-session-reuse-readonly.md。基于A21一次有限登录响应新事实，准备原profile只读复用，VIEWER单阶段/1固定导航、0本机用户名密码配置读取/填入/登录POST，不修无关home等待，不假设持久化或认证。作者D:/1800-worktrees/a22-session-reuse已建干净短路径worktree；新执行/独立确切ID/cursor见JSON。当前纯离线0真实资源/live，固定预检后根引用已有A17同类只读TLS持续许可绑定自己的唯一轮，不重复询问；不借A21已耗登录批准。
 
 2026-10-21 A21实际失败已正式独立及调度有限收口，final29a24322；11报告成员+self及54固定输入原bytes核证，见docs/evidence/coordinator/a21-live-independent-closure/。实际登录POST1/HTTP200及有限业务码接受，UI转换未证后TimeoutError/UNKNOWN停止；受保护认证/书源未证，六GET/两图NOT_RUN。三持有身份进程/两Job/context/runtime释放有限接受，launcherOS身份/product stdout缺原bytes/计时差限制保留。原执行独立均关闭，live1余0。本轮批准已耗，不重派A21。后续准备原profile只读复用，0本机用户名密码配置/登录提交；静态home路由差异不冒充实际根因。
