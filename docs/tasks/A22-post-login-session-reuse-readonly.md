@@ -10,7 +10,7 @@ auth.py新路径从VIEWER开始，唯一TARGET导航意图，两层各1预留且
 
 沿用同context原主框、精确TARGET、可见受保护viewer容器、无登录/密码表单、当前获准session响应关联和有限业务投影作为viewer准入组合证据。URL、HTTP200、本地token存在或A21历史receipt不能单独证明认证。沿用原admit_viewer当前session语义并缩为一次导航；不人为新增必须发profile诊断请求的门槛。若缺少本轮组合证据、401/403、登录跳转/表单或UNKNOWN，立即停止，后继NOT_RUN，不自动登录或补请求。viewer准入后同context继续首个book GET核46007447，身份通过才继续目录/框/来源/页映射/两图；分别报告viewer访问、账户身份字段是否可用及书籍身份，不能混称。
 
-原session仅三路径 /qieti/api/user_login/profile、/qieti/api/config/permissions、/qieti/api/config/teams（以冻结SESSION实际字面为准，先核实路径，不按本文缩写猜）；单VIEWER阶段每路径最多一次，总最多3，按原前端请求观察，不新增诊断补发。六固定业务GET各最多一次、viewer14/173两原图各最多一次、version至多1、共享排除16；原来源与注册原图路径、窄静态图片准入规则、CDN和未知同源拒绝/有界继续条件均保持。两个守卫、await前预算记账、身份/逐跳/WS/未知API和晚到fatal/未结清进入ERROR/UNKNOWN保持。导航成功即在同轮集中书源读取，不拆新的书/目录/图片诊断轮。
+原session仅三路径 /qieti/api/user_login/profile、/qieti/api/user_login/config/permissions、/qieti/api/user_login/config/teams（以冻结SESSION实际字面为准，先核实路径，不按本文缩写猜）；单VIEWER阶段每路径最多一次，总最多3，按原前端请求观察，不新增诊断补发。六固定业务GET各最多一次、viewer14/173两原图各最多一次、version至多1、共享排除16；原来源与注册原图路径、窄静态图片准入规则、CDN和未知同源拒绝/有界继续条件均保持。两个守卫、await前预算记账、身份/逐跳/WS/未知API和晚到fatal/未结清进入ERROR/UNKNOWN保持。导航成功即在同轮集中书源读取，不拆新的书/目录/图片诊断轮。
 
 准确表述会话复用：原站页面内部既有GET_JSON可使用本机浏览器已有会话token发送已准GET，token不能导出到Python/日志/文件，也不注入/复制其他会话。禁止的是读取本机用户名密码配置和重新登录，不能宣称浏览器不使用已有认证材料。原profile指纹 b4620cd9fe064121a916062126321b7bba3862185d8919bf228f1399097a0d00；静态核冻结profile_binding依赖无需读取本机用户名密码即可定位原profile。保留Edge/原profile，不新建替换或清锁/批量kill。
 
