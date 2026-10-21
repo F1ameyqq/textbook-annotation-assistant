@@ -1,0 +1,452 @@
+{
+  "type": "object",
+  "properties": {
+    "format_version": {
+      "const": "a03-native-pre-run-1"
+    },
+    "context": {
+      "oneOf": [
+        {
+          "type": "object",
+          "properties": {
+            "kind": {
+              "const": "INITIAL"
+            },
+            "hold_id": {
+              "type": "null"
+            },
+            "hold_head": {
+              "type": "null"
+            },
+            "hold_ref": {
+              "type": "null"
+            }
+          },
+          "required": [
+            "kind",
+            "hold_id",
+            "hold_head",
+            "hold_ref"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "kind": {
+              "const": "POST_HOLD"
+            },
+            "hold_id": {
+              "type": "string",
+              "minLength": 1
+            },
+            "hold_head": {
+              "type": "object",
+              "properties": {
+                "sequence": {
+                  "type": "integer",
+                  "minimum": 0
+                },
+                "hash": {
+                  "type": "string",
+                  "pattern": "^[0-9a-f]{64}$"
+                }
+              },
+              "required": [
+                "sequence",
+                "hash"
+              ],
+              "additionalProperties": false
+            },
+            "hold_ref": {
+              "type": "object",
+              "properties": {
+                "path": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "sha256": {
+                  "type": "string",
+                  "pattern": "^[0-9a-f]{64}$"
+                },
+                "media_type": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "origin": {
+                  "const": "SYNTHETIC"
+                }
+              },
+              "required": [
+                "path",
+                "sha256",
+                "media_type",
+                "origin"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "required": [
+            "kind",
+            "hold_id",
+            "hold_head",
+            "hold_ref"
+          ],
+          "additionalProperties": false
+        }
+      ]
+    },
+    "source_ref": {
+      "type": "object",
+      "properties": {
+        "artifact_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "revision": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "kind": {
+          "type": "string",
+          "minLength": 1
+        },
+        "content_hash": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        }
+      },
+      "required": [
+        "artifact_id",
+        "revision",
+        "kind",
+        "content_hash"
+      ],
+      "additionalProperties": false
+    },
+    "graph_ref": {
+      "type": "object",
+      "properties": {
+        "artifact_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "revision": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "kind": {
+          "type": "string",
+          "minLength": 1
+        },
+        "content_hash": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        }
+      },
+      "required": [
+        "artifact_id",
+        "revision",
+        "kind",
+        "content_hash"
+      ],
+      "additionalProperties": false
+    },
+    "snapshot_ref": {
+      "type": "object",
+      "properties": {
+        "artifact_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "revision": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "kind": {
+          "type": "string",
+          "minLength": 1
+        },
+        "content_hash": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        }
+      },
+      "required": [
+        "artifact_id",
+        "revision",
+        "kind",
+        "content_hash"
+      ],
+      "additionalProperties": false
+    },
+    "oracle": {
+      "type": "object",
+      "properties": {
+        "path": {
+          "type": "string",
+          "minLength": 1
+        },
+        "sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "media_type": {
+          "type": "string",
+          "minLength": 1
+        },
+        "origin": {
+          "const": "SYNTHETIC"
+        }
+      },
+      "required": [
+        "path",
+        "sha256",
+        "media_type",
+        "origin"
+      ],
+      "additionalProperties": false
+    },
+    "input_raw_sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "implementation_sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "actual_observation": {
+      "type": "object",
+      "properties": {
+        "path": {
+          "type": "string",
+          "minLength": 1
+        },
+        "sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "media_type": {
+          "type": "string",
+          "minLength": 1
+        },
+        "origin": {
+          "const": "SYNTHETIC"
+        }
+      },
+      "required": [
+        "path",
+        "sha256",
+        "media_type",
+        "origin"
+      ],
+      "additionalProperties": false
+    },
+    "observed_at": {
+      "type": "string",
+      "minLength": 1
+    },
+    "produced_at": {
+      "type": "string",
+      "minLength": 1
+    },
+    "checks": {
+      "type": "object",
+      "properties": {
+        "source_integrity": {
+          "enum": [
+            "PASS",
+            "FAIL"
+          ]
+        },
+        "structure": {
+          "enum": [
+            "PASS",
+            "FAIL"
+          ]
+        },
+        "answer_matching": {
+          "enum": [
+            "PASS",
+            "FAIL"
+          ]
+        },
+        "coverage": {
+          "enum": [
+            "PASS",
+            "FAIL"
+          ]
+        },
+        "policy": {
+          "enum": [
+            "PASS",
+            "FAIL"
+          ]
+        }
+      },
+      "required": [
+        "source_integrity",
+        "structure",
+        "answer_matching",
+        "coverage",
+        "policy"
+      ],
+      "additionalProperties": false
+    },
+    "runtime_status": {
+      "const": "ACTUAL_CHECKS_COMPUTED"
+    },
+    "admission": {
+      "const": "RUNTIME_RECHECK_REQUIRED"
+    },
+    "evidence_ref": {
+      "type": "object",
+      "properties": {
+        "artifact_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "revision": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "kind": {
+          "type": "string",
+          "minLength": 1
+        },
+        "content_hash": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        }
+      },
+      "required": [
+        "artifact_id",
+        "revision",
+        "kind",
+        "content_hash"
+      ],
+      "additionalProperties": false
+    },
+    "policy_ref": {
+      "additionalProperties": false,
+      "properties": {
+        "policy_id": {
+          "pattern": "^[A-Za-z][A-Za-z0-9_.:-]{0,127}$",
+          "title": "Policy Id",
+          "type": "string"
+        },
+        "revision": {
+          "exclusiveMinimum": 0,
+          "title": "Revision",
+          "type": "integer"
+        },
+        "content_hash": {
+          "pattern": "^[0-9a-f]{64}$",
+          "title": "Content Hash",
+          "type": "string"
+        }
+      },
+      "required": [
+        "policy_id",
+        "revision",
+        "content_hash"
+      ],
+      "title": "PolicyRef",
+      "type": "object"
+    },
+    "run_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "input_manifest": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "path": {
+            "type": "string",
+            "minLength": 1
+          },
+          "sha256": {
+            "type": "string",
+            "pattern": "^[0-9a-f]{64}$"
+          },
+          "media_type": {
+            "type": "string",
+            "minLength": 1
+          },
+          "origin": {
+            "const": "SYNTHETIC"
+          }
+        },
+        "required": [
+          "path",
+          "sha256",
+          "media_type",
+          "origin"
+        ],
+        "additionalProperties": false
+      }
+    },
+    "native_binding": {
+      "type": "object",
+      "properties": {
+        "registry_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "registration_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "owner_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "generation": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "target_store_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "target_session_id": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "required": [
+        "registry_id",
+        "registration_id",
+        "owner_id",
+        "generation",
+        "target_store_id",
+        "target_session_id"
+      ],
+      "additionalProperties": false
+    }
+  },
+  "required": [
+    "format_version",
+    "context",
+    "source_ref",
+    "graph_ref",
+    "snapshot_ref",
+    "oracle",
+    "input_raw_sha256",
+    "implementation_sha256",
+    "actual_observation",
+    "observed_at",
+    "produced_at",
+    "checks",
+    "runtime_status",
+    "admission",
+    "evidence_ref",
+    "policy_ref",
+    "run_id",
+    "input_manifest",
+    "native_binding"
+  ],
+  "additionalProperties": false
+}

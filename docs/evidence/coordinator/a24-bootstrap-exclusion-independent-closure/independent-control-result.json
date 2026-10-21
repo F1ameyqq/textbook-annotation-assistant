@@ -1,0 +1,78 @@
+{
+  "schema": "A24BootstrapIndependentProjectionEdge/v1",
+  "tests": 1,
+  "failures": 1,
+  "errors": 0,
+  "passed": false,
+  "duration_ms": 0,
+  "raw_output": "test_directly_injected_non_enum_decision_is_incomplete (__main__.ProjectionEnumEdge) ... FAIL\n\n======================================================================\nFAIL: test_directly_injected_non_enum_decision_is_incomplete (__main__.ProjectionEnumEdge)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"D:\\1800-worktrees\\a24-bootstrap-exclusion-minimum-review\\docs\\evidence\\A24\\independent-bootstrap-exclusion-review\\independent_control.py\", line 48, in test_directly_injected_non_enum_decision_is_incomplete\n    self.assertEqual(snapshot['status'], 'PROJECTION_ERROR',\nAssertionError: 'PROJECTED' != 'PROJECTION_ERROR'\n- PROJECTED\n+ PROJECTION_ERROR\n : Shape-only validation accepted a decision outside ALLOW/BLOCK\n\n----------------------------------------------------------------------\nRan 1 test in 0.002s\n\nFAILED (failures=1)\n",
+  "observation": {
+    "original_decision": "ALLOW",
+    "direct_mutation": true,
+    "synthetic_non_sensitive_value": "FORMAT_ONLY_NONENUM",
+    "snapshot": {
+      "status": "PROJECTED",
+      "total_events": 1,
+      "retained_events": 1,
+      "limit": 128,
+      "maximum_retained": 130,
+      "completeness_scope": "SAFE_EXISTING_EVENT_PROJECTION_ONLY",
+      "selection": "FIRST_128_PLUS_EARLIEST_BLOCK_AND_FIRST_FAILURE_CATEGORY_MATCH",
+      "truncated": false,
+      "complete": true,
+      "events": [
+        {
+          "index": 0,
+          "time": "2026-10-21T13:59:34.298539+00:00",
+          "method": "GET",
+          "path_sha256": "87ec8139f55b0c2b54ad542b07fea420ccd00dd1020e2c758dfb82005d0a63c3",
+          "path_template": null,
+          "known_route": "UNKNOWN",
+          "query_parameter_names": [],
+          "query_names_redacted": 0,
+          "scheme": "https",
+          "hostname": "www.usense.com",
+          "port": 443,
+          "resource_type": "Document",
+          "category": "NAVIGATION",
+          "decision": "FORMAT_ONLY_NONENUM",
+          "source": "FETCH_REQUEST_STAGE",
+          "redirect_hop": false,
+          "main_navigation": true,
+          "business_read": false,
+          "scoped_source_read": false,
+          "expected_passive_denial": false,
+          "expected_excluded_static_denial": false,
+          "expected_excluded_path_denial": false,
+          "expected_excluded_version_repeat": false
+        }
+      ],
+      "earliest_block_index": null,
+      "first_failure_category_event_index": null,
+      "failure_event_link": "NOT_RECORDED",
+      "first_failure": null,
+      "exclusions": {
+        "combined_guard_events": 0,
+        "completed_denial_calls": 0,
+        "event_limit": 16,
+        "double_layer_events_count_separately": true,
+        "http_send_count": "UNKNOWN",
+        "dns_tcp_tls_activity": "UNKNOWN",
+        "script_necessity": "UNKNOWN",
+        "pending_callbacks": 0
+      },
+      "settlement": {
+        "sealed": false,
+        "shutdown_started": false,
+        "stopped": false,
+        "pending_callbacks": 0
+      }
+    }
+  },
+  "subsequent_controls": "NOT_RUN_FIRST_FAILURE",
+  "actual_resources": 0,
+  "old_suites_run": 0,
+  "model_or_content_review": 0,
+  "product_input_edits": 0,
+  "run_count": 1
+}

@@ -1,0 +1,10 @@
+{
+  "schema": "A24CallbackIndependentStaticDelta/v1",
+  "path": "src/annotation/delivery/live_pilot/usense.py",
+  "prior_raw_sha256": "0a9ef091dbec998a95aafe4e50a9330cbd80316046c1b6b9863ae433e376fdcb",
+  "candidate_raw_sha256": "6e5c6ae1fa08588ee675193a3054588c1b537083098ab169b4646cc1ddc3e277",
+  "exact_two_additions_verified": true,
+  "diff": "--- fixed-actual-prior/usense.py\n+++ candidate/usense.py\n@@ -3,6 +3,7 @@\n import asyncio\n import base64\n from datetime import datetime, timezone\n+from functools import wraps\n import hashlib\n import json\n from collections import Counter\n@@ -114,6 +115,7 @@\n             \"FIRST_SAVE_ACTIVATION_REQUIRED\")\n \n     def track_callback(function):\n+        @wraps(function)\n         async def tracked(self, *args, **kwargs):\n             current = asyncio.current_task()\n             self.callbacks.add(current)\n",
+  "policy_count_timeout_source_owner_gate_expansion": false,
+  "actual_timeout_recovery_proven": false
+}

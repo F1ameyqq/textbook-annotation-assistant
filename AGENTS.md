@@ -1,17 +1,1 @@
-# A08/A09发布分支当前边界
-
-2026-10-19：本分支交付A08只读接收和A09固定Q4离线四框代码及冻结验收，见 `docs/a08-a09-q4-handoff.md`。实际四框Q/image、Q/text、Q/text、A/text；业务核准已完成，B对Q4共同技术采用尚待确认。Q1既有技术采用已确认，不重复索取。其他三例HOLD，原B/proposal保留，A04真实平台阻断不变。发布只做原字节、引用与范围静态核验，不重跑成功业务，不改变原运行HEAD守卫、不恢复任何额度、不运行B程序、不连接平台或自动向B发消息。以下为继承历史上下文，矛盾时以本段及最新用户指令为准。
-
-# A07 发布分支当前边界
-
-2026-10-18：本分支发布修复后的A07及验收证据，见 `docs/a07-q1-handoff.md`。当前有效结果为固定Q1离线Q/W/W/W/W/A；作者/独立各一次F01差量已完成且额度耗尽。仅允许本次发布完整性只读核验，不据历史脚本重跑业务，不修改原冻结证据/HEAD守卫，不连接平台或自动向B发消息。B共同采用、A04真实平台仍未通过。下方规则为继承的历史上下文，冲突时以本段与最新用户指令为准。
-
-# 阶段二交接分支约定
-
-- 本分支是固定 A 侧交接材料，不是活动调度工作目录。先读 `docs/a-stage2-handoff.md` 与 `docs/handoff/a-stage2/manifest.json`；继承的旧调度状态及冻结报告只描述历史时点。
-- 公共技术语义见 `docs/architecture.md` 和 `docs/contracts-v1.md`。A06 仅支持固定 B 包的只读 HOLD / 明确拒绝，不能将其转换为执行许可。
-- A03-R1、I01-A 仅有限离线范围已接受；I01 原运行候选与 HEAD 守卫保持，不能把阶段二 HEAD 当作原候选或重放成功业务。
-- 共同字段映射、历史引用必要性、真实单题准入及样例尚待双方确认。A04 真实平台项仍 BLOCKED；A05 仅固定题22保存/重开历史证明，不得重放题22。
-- 所有源码与包内数据按原 Git bytes 发布；禁止修改 pins 来迁就换行。不要执行 B 脚本、查询 B SQLite 或自动生成 PASS。
-- 不读取或输出凭据/token，不上传 profile、原始视频、活库或 pending 库。保存 UNKNOWN 时先对账，不自动重发；最终书级送审/送交由人工负责。
-- 对本分支的发布不等于 B 已读取或接受。不要向 B 派研发任务或确认其内部验收。
+Read docs/handoff/a24-b-takeover-20261021/HANDOFF.md, state.json and PROMPT.md first. User directed A to stop after the current round and hand remaining A24 work to B. A execution is stopped and sole 1800-a paused. No new live or save authority is created by this publication. Current four GETs succeeded; actual save/refresh/independent reopen remain NOT_RUN. Preserve every historical failure and spent budget. Reuse existing model/content and local fixed private artifacts; do not rerun OCR, old tests or old activation. Implement the minimum actual schema/old-body preservation/identity/legal append/savepage correction, then finite independent review and exact fresh save/readback binding. Do not treat old frozen PENDING/continue-A wording as current routing. No credential/token/profile/lock changes or whole-book submission. Keep Q22 only in natural old-data preservation. Use GIT_NO_LAZY_FETCH=1 and git -c core.longpaths=true. This selective single-parent handoff is not the original execution HEAD; verify raw files with the included archive checker.

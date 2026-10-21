@@ -1,0 +1,104 @@
+--- fixed-prior/src/annotation/runtime/live_pilot/owner.py
++++ fixed-product/src/annotation/runtime/live_pilot/owner.py
+@@ -156,7 +156,74 @@
+                 await self.session.send("Fetch.failRequest", {"requestId": event["requestId"], "errorReason": "BlockedByClient"})
+                 return
+             await super().paused(event)
++
++        async def capture(self, response):
++            validate_capture_owner(authority, framework, self)
++            await super().capture(response)
+     return OwnerGuard
++
++
++def capture_binding(authority):
++    return {"schema": "A24OwnedPrivateCapture/v1", "run_id": authority.data["run_id"],
++        "authority_sha256": authority.raw_hash, "candidate_sha256": authority.data["refs"]["candidate"]["sha256"],
++        "scope_sha256": authority.data["scope_sha256"], "directory": str(authority.output / "private" / "source-capture")}
++
++
++def bind_capture_owner(authority, framework, guard):
++    """Bind only this fresh definitions module, never its historical output."""
++    require(type(authority) is Authority, "VALIDATED_OWNER_AUTHORITY_REQUIRED")
++    authority.check()
++    require(getattr(guard, "owner_authority_hash", None) == authority.raw_hash and guard.output is None and
++            not hasattr(framework, "a24_capture_owner_binding"), "OWNER_CAPTURE_ALREADY_BOUND")
++    require(authority.output == Path(authority.data["output_directory"]) and authority.output == authority.output.resolve(),
++            "OWNER_CAPTURE_PATH")
++    framework.require_plain_path(authority.output)
++    private = authority.output / "private"
++    framework.require_plain_path(private, missing_leaf=True)
++    private.mkdir(exist_ok=True)
++    binding = capture_binding(authority)
++    target = Path(binding["directory"])
++    framework.require_plain_path(target, missing_leaf=True)
++    require(not target.exists() and target != framework.LIVE_OUT, "OWNER_CAPTURE_PATH")
++    target.mkdir(exist_ok=False)
++    save_new(target / "capture-owner.json", binding)
++    # CurrentGuard.capture retains its original output==LIVE_OUT check and xb.
++    # This module was freshly loaded for this sole owner; old entrypoints stay inert.
++    framework.LIVE_OUT = target
++    framework.a24_capture_owner_binding = binding
++    guard.output, guard.owner_capture_binding = target, binding
++
++
++def validate_capture_owner(authority, framework, guard):
++    authority.check()
++    expected = capture_binding(authority)
++    require(getattr(guard, "owner_authority_hash", None) == authority.raw_hash and
++            getattr(guard, "owner_capture_binding", None) == expected and
++            getattr(framework, "a24_capture_owner_binding", None) == expected and
++            guard.output == framework.LIVE_OUT == Path(expected["directory"]), "OWNER_CAPTURE_BINDING")
++    framework.require_plain_path(guard.output)
++    framework.require_plain_path(guard.output / "capture-owner.json")
++    require((guard.output / "capture-owner.json").read_bytes() == canonical(expected), "OWNER_CAPTURE_BINDING")
++
++
++def capture_evidence(framework, guard):
++    if guard is None or not hasattr(guard, "owner_capture_binding"):
++        return {"status": "NOT_CONFIGURED", "assets": []}
++    try:
++        assets = []
++        for asset in framework.public_assets(guard):
++            raw_path = guard.output / asset["ref"]
++            source_path = guard.output / (asset["ref"] + ".source.json")
++            framework.require_plain_path(raw_path)
++            framework.require_plain_path(source_path)
++            raw, source = raw_path.read_bytes(), source_path.read_bytes()
++            require(len(raw) == asset["size"] and sha(raw) == asset["sha256"], "OWNER_CAPTURE_BINDING")
++            assets.append({**asset, "private_raw_ref": {"path": str(raw_path), "bytes": len(raw), "sha256": sha(raw)},
++                "private_provenance_ref": {"path": str(source_path), "bytes": len(source), "sha256": sha(source)}})
++        return {"status": "BOUND_PRIVATE_CAPTURE", "owner_binding": dict(guard.owner_capture_binding), "assets": assets,
++                "source_urls_exported": False, "captured_code_executed_by_collector": False}
++    except BaseException as error:
++        return {"status": "CAPTURE_EVIDENCE_ERROR", "complete": False, "error": safe_error(error)}
+ 
+ 
+ def guard_evidence(guard):
+@@ -175,7 +242,9 @@
+             require(isinstance(event, dict), "GUARD_EVENT_PROJECTION")
+             result = {}
+             for key, value in event.items():
+-                if key in ("method", "category", "decision", "source", "resource_type", "known_route"):
++                if key == "decision":
++                    require(value in ("ALLOW", "BLOCK"), "GUARD_EVENT_PROJECTION")
++                elif key in ("method", "category", "source", "resource_type", "known_route"):
+                     require(isinstance(value, str) and re.fullmatch(r"[A-Za-z0-9_]{1,100}", value), "GUARD_EVENT_PROJECTION")
+                 elif key == "time":
+                     require(isinstance(value, str) and re.fullmatch(r"[0-9T:+.Z-]{10,40}", value), "GUARD_EVENT_PROJECTION")
+@@ -281,6 +350,7 @@
+         guard_class = owner_guard_class(self.framework, self.authority)
+         self.guard = make_first_save_guard(guard_class, self.context, page, BootstrapPolicy(self.authority), binding)
+         self.guard.profile = profile
++        bind_capture_owner(self.authority, self.framework, self.guard)
+         self.bootstrap_steps["guard_install"] = "STARTED"
+         await self.guard.install()
+         self.bootstrap_steps["guard_install"] = "DONE"
+@@ -456,6 +526,7 @@
+         except BaseException as error:
+             release = {"released": False, "first_error": safe_error(error), "outer_job_reap_required": True}
+         result["guard_evidence_after_release"] = guard_evidence(getattr(backend, "guard", None))
++        result["private_capture_evidence"] = capture_evidence(getattr(backend, "framework", None), getattr(backend, "guard", None))
+         result["steps"]["release"] = "DONE" if release.get("released") is True else "UNKNOWN"
+         result["release"] = release
+         if release.get("released") is not True:
