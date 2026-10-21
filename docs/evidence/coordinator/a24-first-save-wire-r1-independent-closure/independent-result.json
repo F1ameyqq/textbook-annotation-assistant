@@ -1,0 +1,200 @@
+{
+  "schema": "A24FirstSaveWireR1IndependentReview/v1",
+  "result": "REWORK",
+  "at_utc": "2026-10-21T12:15:54.371358+00:00",
+  "reviewer": "01a15cf8-68e0-7b63-91a3-657a567b344c",
+  "same_A24_stage": true,
+  "base": "680bd5f624659f1091db974d5ed30b332ff946dc",
+  "product": "0bc24966930c38df6cc75ae83dbb4069f35f966f",
+  "content_commit": "f21325e887846b0ed7a2aa72627ac0e2dc99393f",
+  "final": "2dcead75c317d3d46b56c1f2bc00583394daaea7",
+  "task_sha256": "0dc091a63be94a2429f5734083cb10cb86fcc7a1102af78d870151873ab27f71",
+  "candidate_sha256": "ade52cb3cff54f7ed094f921daa4be55d747ed28beb2fc16c80312b176584c67",
+  "delivery_manifest_sha256": "b760076cf6e48b5fcaa3daf8738cf9788b24c5c8c76359587709292571305679",
+  "root_input_manifest": {
+    "bytes": 92238,
+    "sha256": "685174a033865695ac0143c559cb3b61a561302fbdee6391231bf935d4753018"
+  },
+  "private_snapshot_manifest": {
+    "bytes": 7424,
+    "sha256": "a3057a872ba2faf47086079365938ab2b80ec2c75790bfb28bac5caa38f3b292"
+  },
+  "inputs_verified": {
+    "root": 291,
+    "candidate": 132,
+    "delivery": 290,
+    "private_snapshots": 17
+  },
+  "dispositions": {
+    "receipt_query_P1": "CLOSED_IN_REVIEWED_OFFLINE_LAYER",
+    "owner_original_P1": "EXECUTABLE_PATH_IMPLEMENTED_REOPEN_PREDECESSOR_GATE_REWORK",
+    "overall_code_acceptance": "REWORK",
+    "current_author_four_get_code_preflight": "ACCEPTED_OFFLINE_ONLY",
+    "current_author_four_get_accepted_scope": "BOUNDED_AUTHOR_UNBOUND_FOUR_GET_PREFLIGHT",
+    "conditional_save": "NOT_QUALIFIED_NOT_ADMITTED",
+    "independent_reopen": "REWORK_NOT_ADMITTED",
+    "actual_collection": "NOT_RUN",
+    "actual_save": "NOT_RUN",
+    "actual_independent_readback": "NOT_RUN"
+  },
+  "remaining_blockers": [
+    {
+      "id": "R1-R",
+      "priority": 1,
+      "title": "Reject unknown/unreleased/unbound independent predecessor before resource acquisition",
+      "sources": [
+        "src/annotation/runtime/live_pilot/authority.py:243-246",
+        "src/annotation/runtime/live_pilot/owner.py:305",
+        "src/annotation/runtime/live_pilot/owner.py:330-333",
+        "src/annotation/runtime/live_pilot/runner.py:182"
+      ],
+      "observed": {
+        "case": "unbound_reopen_with_unknown_author",
+        "verified_role": "INDEPENDENT_REOPEN",
+        "author_status": "UNKNOWN",
+        "author_release_proven": false,
+        "receipt_present": false,
+        "worker_status": "PREWRITE_BLOCKED_NO_EFFECT",
+        "backend_log": [
+          "profile",
+          "occupancy",
+          "install-before-online-bootstrap",
+          "close"
+        ],
+        "fake_business_reads": 4,
+        "fake_business_methods": [
+          "GET",
+          "GET",
+          "GET",
+          "GET"
+        ],
+        "physical_fake_close_called": true,
+        "real_resources": 0
+      },
+      "minimum_fix": "Role-limit acquisition to AUTHOR_SAVE; pre-resource INDEPENDENT_REOPEN requires qualified route/profile, known author result/strict receipt/refresh and full hash-linked coordinator outer release chain; UNKNOWN must not use acquisition as reconciliation",
+      "evidence": [
+        "reopen-control-result.json",
+        "counterexample-unbound-reopen-result.json"
+      ]
+    }
+  ],
+  "current_prewrite_admission": {
+    "separate_finite_offline_preflight_accepted": true,
+    "conditions": [
+      "role AUTHOR_SAVE",
+      "schema_profile None",
+      "body_admission CURRENT_SCHEMA_UNBOUND",
+      "root creates exact new hashed authority/decision/current prewrite acceptance before actual use",
+      "one fresh owned context and initial navigation; existing session/frame admission; exact bootstrap",
+      "four once-only GETs; no effects or self-promotion; first failure stop/release"
+    ],
+    "business_gets": 4,
+    "signature_get": 0,
+    "upload_post": 0,
+    "commit_post": 0,
+    "refresh": 0,
+    "reopen": 0,
+    "result_after_successful_collection": "PREWRITE_BLOCKED_NO_EFFECT",
+    "raw_body_scope": "controlled directory/frame/export refs; book finite metadata/hash only",
+    "no_actual_authority_created_by_review": true,
+    "remaining_reopen_bug_shared_with_this_role_branch": false
+  },
+  "tests": {
+    "new_suite": {
+      "runs": 1,
+      "tests": 20,
+      "pass": 20,
+      "fail": 0,
+      "errors": 0,
+      "exit": 0,
+      "report_duration_ms": 117422,
+      "embedded_unittest_seconds": 116.057
+    },
+    "independent": {
+      "runs": 1,
+      "tests": 1,
+      "pass": 0,
+      "fail": 1,
+      "errors": 0,
+      "exit": 1,
+      "duration_ms": 297
+    },
+    "further_controls": "NOT_RUN_AFTER_FIRST_MATERIAL_FAILURE",
+    "old_suites": 0,
+    "model_runs": 0,
+    "timing_difference_decomposition": "UNKNOWN_ORIGINAL_FIELDS_RETAINED"
+  },
+  "model_content": {
+    "accepted_corrected_sha256": "cd4ee0c6a379fa5bf8cc87dccdb010c423a9e2f9a2382336efaa00cefe103b5a",
+    "accepted_independent_machine_sha256": "1dad447c41ee2d8a8ce79e02d3aef2c5ef0238be07278759a118d0273ab6e9e0",
+    "root_disposition_sha256": "9feb5218e54b561a5d094d5bbd86604a8574b3c773722ce768f31924fa123d2e",
+    "acceptance": "UNCHANGED_NOT_REVIEWED_AGAIN",
+    "native_conversion_focused_suite_control": "PASS",
+    "roles": [
+      "Q",
+      "W",
+      "W",
+      "W",
+      "W",
+      "A"
+    ],
+    "model_FAILED_HOLD_empty_answer": "PRESERVED",
+    "AI_visual_answer_transcription": "DISCLOSED",
+    "HISTORICAL": "QUOTED_FIXED_CORRECTION_NOT_HUMAN_APPROVAL",
+    "actual_model_runs_by_reviewer": 0
+  },
+  "typed_scope_mapping": "typed-authority-scope.json",
+  "future_actual_bindings": [
+    "natural export current codec/route completeness/all-five-zone old body and frames",
+    "legal append/newness",
+    "save-page/account/joint policy/receipt/signature and exact payload/request",
+    "new qualified authority",
+    "known author/outer release chain plus R1-R fix before independent reopen"
+  ],
+  "limits": {
+    "write_eligible": false,
+    "production_ready": false,
+    "real_resources": 0,
+    "new_activation": false,
+    "old_A24_readonly_remaining": [
+      0,
+      0
+    ],
+    "all_original_failures_retained": true,
+    "new_stage_chat_model_formula_or_chapter_gate": false
+  },
+  "artifacts": {
+    "report.md": {
+      "bytes": 11655,
+      "sha256": "be219409d2a7dc292b4858aa2e871bb5cebedc26b82ef05ff1d02796ace38df9"
+    },
+    "typed-authority-scope.json": {
+      "bytes": 31762,
+      "sha256": "3033014369f1323b7c4e4d7ff9b1c164ff4c3327c5f677e2d39e27116da4b8a1"
+    },
+    "python-result.json": {
+      "bytes": 2087,
+      "sha256": "e5e5503a139994a8c40b55e258882bee147aa565c8eac42880e56c476a925c9f"
+    },
+    "reopen-control-result.json": {
+      "bytes": 2844,
+      "sha256": "40f7bff3a124d97ebff11b0c230ee839ef39621f81fcb4aa1d9c903fb47f319a"
+    },
+    "counterexample-unbound-reopen-result.json": {
+      "bytes": 2387,
+      "sha256": "d930154b97bc8c2d174888710a3d7d0a050bc043ebc610c51ec336871a64748b"
+    },
+    "reviewer-metadata-failures.json": {
+      "bytes": 445,
+      "sha256": "b16466ebdea5c3998b126e5ceeb8bc05afd2ebbb7bd662efe0ded2b9bfd3a554"
+    },
+    "input-preservation.json": {
+      "bytes": 490,
+      "sha256": "84cd7f25fcbc90aa155b321444faea81f7532ccf25d1e3a905aa168d835bb6c8"
+    },
+    "release.json": {
+      "bytes": 886,
+      "sha256": "3198d8729a0f2c6cd2ec58bac457b51d028807dbe2030fb2e6f9ed269722fafd"
+    }
+  }
+}

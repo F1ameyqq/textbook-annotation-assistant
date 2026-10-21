@@ -1,0 +1,21 @@
+# Same A24: current body facts and minimum reopen correction
+
+Continue in existing author 01a15cf8-0c63-70d3-b374-ce85e6f29fd7, local, inherited model/xhigh. This draft alone authorizes no real resources. Root will supply the fixed formal/root disposition and a separate exact hashed authority before dispatching the one current-body acquisition.
+
+The user's latest direct request authorizes reuse of B's existing local model entry, completing A's dependencies, and one ordinary-choice recognition/save/independent readback. Local inference and corrected-content review are complete. Do not run the model again or wait for chapter/formula acceptance. Keep the original empty answer OCR and all failed/NOT_RUN controls.
+
+## One current-body acquisition when separately activated
+
+Use only the frozen raw launch package D:/1800/.local/stages/a24-first-save-r1-frozen-launch, final 2dcead75c317d3d46b56c1f2bc00583394daaea7, candidate ade52cb3cff54f7ed094f921daa4be55d747ed28beb2fc16c80312b176584c67. Current plan CURRENT_SCHEMA_UNBOUND, role AUTHOR_SAVE, schema_profile null. Exactly one fresh book/directory/frames/natural-export read sequence, followed by PREWRITE_BLOCKED_NO_EFFECT. This is acquisition of the missing save preconditions within A24. It is not permission to promote the schema, enter the conditional write branch, upload, commit, refresh/reopen, login, retry, reuse old outputs, or restore either exhausted readonly budget.
+
+Root will provide the sole run ID, authority path/hash and UTC window. Use existing Python 3.9 with project dependencies and -B. Validate frozen dependency bytes before import. Hold and prove the actual launcher's own process identity/exit/handle release using the existing bounded Windows supervisor definitions; a live launcher cannot self-certify its exit. Preserve raw stdout/stderr privately and expose only safe projections. No global process kill, profile deletion, lock removal or credential reads. First failure or unknown stops, successors NOT_RUN; never restart this authority. Return private raw body refs, counts/hashes, all owned releases, and the frozen actual-result delivery promptly.
+
+## One cohesive same-stage correction using the resulting facts
+
+After the fixed acquisition, combine the minimum reopen gate correction with the actual natural-export schema adapter and qualified one-question request. The independent R1 counterexample establishes that INDEPENDENT_REOPEN currently reaches four reads despite UNKNOWN author state, absent receipt and unproved release. Reject this before acquiring profile/native/context resources. CURRENT_SCHEMA_UNBOUND acquisition is AUTHOR_SAVE-only. A qualified independent reopen requires verified actual author success, exact receipt/frozen inputs and externally proven launcher plus descendant/context/runtime release, with all hashes/identities bound. Unknown-save reconciliation must remain a separate explicit GET-only path and must never reopen or resend a claim.
+
+Use the actual private directory/full-frame/export bytes to bind the native schema, authoritative completeness, old full five-zone content and frames, target identity/newness, legal append and save-page mapping. Never invent server completeness metadata or infer a body schema from synthetic fixtures. If a necessary fact is absent, report that precise gap without speculative broad probes. Preserve all 22 existing questions and 68 prior observed frames subject to freshly observed counts; old Q22 appears only as part of the natural aggregate.
+
+Keep accepted corrected content cd4ee0c6a379fa5bf8cc87dccdb010c423a9e2f9a2382336efaa00cefe103b5a and model/content formal/root dispositions unchanged. Six JPEGs and native graph/conversion are already fixed. Content correction is explicit AI review, not human-user approval or raw OCR success. No second question or whole-book submission.
+
+Use only material new focused controls for the gate/schema changes, preserve original R1 20-test results and failed independent counterexample, and do not repeat old suites. Freeze one small revised candidate, exact dependencies and request/plan/profile/crop bindings; actual save and fresh independent reopen await this same reviewer's bounded acceptance and root binding. No new formal chat or diagnostic stage, no B messages, push, or unrelated code change.

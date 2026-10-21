@@ -1,0 +1,37 @@
+{
+  "schema": "A24R1IndependentReopenPredecessorControl/v1",
+  "mode": "SYNTHETIC_ONLY",
+  "tests": 1,
+  "failures": 1,
+  "errors": 0,
+  "passed": false,
+  "duration_ms": 297,
+  "raw_output": "test_unbound_reopen_must_refuse_unknown_author_before_profile_or_reads (__main__.ReopenPredecessor) ... FAIL\n\n======================================================================\nFAIL: test_unbound_reopen_must_refuse_unknown_author_before_profile_or_reads (__main__.ReopenPredecessor)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"D:\\1800-worktrees\\a24-first-save-wire-r1-review\\docs\\evidence\\A24\\independent-first-save-wire-r1-review\\reopen_control.py\", line 71, in test_unbound_reopen_must_refuse_unknown_author_before_profile_or_reads\n    self.assertEqual(calls, [], 'UNKNOWN_AUTHOR_REOPEN_EXECUTED_BUSINESS_READS')\nAssertionError: Lists differ: [('GET', 'https://www.usense.com/qieti/api[522 chars]47')] != []\n\nFirst list contains 4 additional elements.\nFirst extra element 0:\n('GET', 'https://www.usense.com/qieti/api/claim_book/books?page=1&pageSize=10&status_list=%E6%A0%87%E6%B3%A8%E4%B8%AD,%E8%BF%94%E4%BF%AE,%E5%BE%85%E5%AE%A1%E6%A0%B8,%E5%A4%8D%E5%AE%A1&id=46007447&title=&team_name=&username=R1_PRIVATE_SESSION_QUERY_SENTINEL_7429&role=worker&is_admin=false')\n\n+ []\n- [('GET',\n-   'https://www.usense.com/qieti/api/claim_book/books?page=1&pageSize=10&status_list=%E6%A0%87%E6%B3%A8%E4%B8%AD,%E8%BF%94%E4%BF%AE,%E5%BE%85%E5%AE%A1%E6%A0%B8,%E5%A4%8D%E5%AE%A1&id=46007447&title=&team_name=&username=R1_PRIVATE_SESSION_QUERY_SENTINEL_7429&role=worker&is_admin=false'),\n-  ('GET',\n-   'https://www.usense.com/qieti/api/annotate_ocr/directory/get?file_id=46007447'),\n-  ('GET',\n-   'https://www.usense.com/qieti/api/annotate_pic/get_manual_annotations_unified/46007447'),\n-  ('GET',\n-   'https://www.usense.com/qieti/api/annotate_ocr/export-paper-questions/46007447')] : UNKNOWN_AUTHOR_REOPEN_EXECUTED_BUSINESS_READS\n\n----------------------------------------------------------------------\nRan 1 test in 0.307s\n\nFAILED (failures=1)\n",
+  "records": [
+    {
+      "case": "unbound_reopen_with_unknown_author",
+      "verified_role": "INDEPENDENT_REOPEN",
+      "author_status": "UNKNOWN",
+      "author_release_proven": false,
+      "receipt_present": false,
+      "worker_status": "PREWRITE_BLOCKED_NO_EFFECT",
+      "backend_log": [
+        "profile",
+        "occupancy",
+        "install-before-online-bootstrap",
+        "close"
+      ],
+      "fake_business_reads": 4,
+      "fake_business_methods": [
+        "GET",
+        "GET",
+        "GET",
+        "GET"
+      ],
+      "physical_fake_close_called": true,
+      "real_resources": 0
+    }
+  ],
+  "real_resources": 0,
+  "further_controls": "NOT_RUN_AFTER_FIRST_MATERIAL_FAILURE"
+}
