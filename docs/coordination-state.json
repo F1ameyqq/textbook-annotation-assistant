@@ -13603,7 +13603,7 @@
         "branch": "codex/a24-first-save",
         "status": "ACTIVE_FIRST_SAVE_WIRE_R1_CONSOLIDATED",
         "host_id": "local",
-        "cursor": "0d524930-f946-4765-8053-ad5865e326fb:32",
+        "cursor": "0d524930-f946-4765-8053-ad5865e326fb:33",
         "turn_id": "01a15dfe-a73c-7fe3-9d19-29a99914542a",
         "started_at": 1792578332,
         "acknowledged": true,
@@ -14548,7 +14548,7 @@
           0
         ],
         "dispatch_workflow": "4a065695e9aaef61f1a6bfad43a0ac70310a430d",
-        "cursor": "0d524930-f946-4765-8053-ad5865e326fb:30",
+        "cursor": "0d524930-f946-4765-8053-ad5865e326fb:33",
         "static_snapshot_preparation": {
           "path": "docs/evidence/coordinator/a24-first-save-wire-independent-closure/static-snapshot-contract.json",
           "sha256": "8fc850080c7abc6cc735e781e3c04527b7578a159eecb847ece2355a5b3cba95",
@@ -14575,7 +14575,7 @@
       "model_one_question_execution": {
         "at": "2026-10-21T10:46:37.214831+00:00",
         "task": "A24",
-        "status": "MODEL_DEPENDENCY_AND_PREFLIGHT_ACTIVE",
+        "status": "ACTUAL_PARTIAL_OCR_FIXED_CORRECTED_CONTENT_PENDING_INDEPENDENT",
         "source": "DIRECT_USER_REQUEST_CURRENT_COORDINATOR_CHAT",
         "user_request": "那就直接复用B侧现有模型和入口，补齐A侧缺失依赖，与A24首题保存修订并行推进。尽快跑通一道普通单选的实际识别、保存和独立读回，不要再等整章或复杂公式验收。尽快进入交付前的真实测试",
         "task_document": "docs/tasks/A24-one-question-model-execution.md",
@@ -14584,8 +14584,8 @@
         "local_model_backend": "rapidocr-onnxruntime1.4.4 CPU",
         "maximum_input_assets": 6,
         "inference_attempt_limit": 1,
-        "actual_inference_used": 0,
-        "inference_activation": "PENDING_EXACT_INPUT_AND_RUNTIME_PREFLIGHT",
+        "actual_inference_used": 1,
+        "inference_activation": "docs/evidence/coordinator/a24-model-one-question/inference-activation-startup-r1.json",
         "missing_source_dependency_acquisition_authorized": true,
         "model_preparation_only_restriction_superseded_for_this_pilot": true,
         "same_formal_author_and_reviewer": true,
@@ -14597,7 +14597,43 @@
         ],
         "direct_user_request_file": "docs/evidence/coordinator/a24-model-one-question/direct-user-request.txt",
         "direct_user_request_sha256": "11c74e23c854fbd026f5c08535e0611a52c7c2defe76fabeeec3c424d155495a",
-        "metadata_text_correction": "PowerShell/Python stdin non-ASCII transcription corrected from UTF-8 apply_patch source; original metadata bytes retained; no business action occurred."
+        "metadata_text_correction": "PowerShell/Python stdin non-ASCII transcription corrected from UTF-8 apply_patch source; original metadata bytes retained; no business action occurred.",
+        "preserved_source_failures": [
+          {
+            "transport": "github_connector",
+            "result": "404_NOT_FOUND_FOR_THREE_BLOBS_AND_ROOT_REPO_METADATA",
+            "meaning": "Access/existence root cause UNKNOWN"
+          },
+          {
+            "transport": "configured_origin_ssh",
+            "exit_code": 128,
+            "result": "CONNECTION_CLOSED_PORT22",
+            "raw_directory": ".local/stages/a24-model-b-source/ssh-intake"
+          }
+        ],
+        "current_intake": "Same exact repository and three blob IDs using standard HTTPS, no credential prompt/config changes, bounded90s",
+        "source_intake_result": "HTTPS_EXIT0_EXACT_THREE_GIT_BLOBS_VERIFIED",
+        "source_intake_directory": ".local/stages/a24-model-b-source/https-intake",
+        "selected_existing_entry": "tools/route_a_layout.py::ocr_atoms",
+        "input_mode": "SIX_EXPLICIT_MANUAL_REGIONS_REAL_OCR_NO_HIDDEN_APPROVED_TEXT",
+        "inference_activation_sha256": "92ddb106d539fc1500b69fdd0ac544f5cd00f23d23414571914bf920694b209d",
+        "actual_result": "FAILED_HOLD_EMPTY_ANSWER; EXPLICIT_VISUAL_CORRECTION_SEPARATE",
+        "failed_process_launches": 1,
+        "original_claim_reopened": false,
+        "actual_engine_calls": 6,
+        "actual_ort_session_calls": 22,
+        "actual_inference_remaining": 0,
+        "actual_platform_calls": 0,
+        "actual_result_manifest": "docs/evidence/coordinator/a24-model-one-question/actual-partial-ocr-manifest.json",
+        "actual_result_manifest_sha256": "ec45a2c44e262a96b210aa5fd8a00a8a360721a4773cbaede4a7d22596ee3108",
+        "corrected_content_path": ".local/stages/a24-model-one-question/reviewed-candidate-v1.json",
+        "corrected_content_sha256": "cd4ee0c6a379fa5bf8cc87dccdb010c423a9e2f9a2382336efaa00cefe103b5a",
+        "corrected_content_reviewer_kind": "COORDINATOR_AI_VISUAL_REVIEW",
+        "human_user_review_claimed": false,
+        "formal_review_status": "DISPATCH_INTENT_RECORDED",
+        "formal_review_task": "docs/tasks/A24-one-question-model-fixed-review.md",
+        "formal_review_task_sha256": "4c36e04e9e691f8c92f1af0c1e770b6d35ae8462445f86259b1b6efd45977966",
+        "formal_review_thread_id": "01a15cf8-68e0-7b63-91a3-657a567b344c"
       }
     }
   },
