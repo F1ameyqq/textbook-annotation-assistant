@@ -2,7 +2,7 @@
   "schema_version": 1,
   "project": "D:\\1800",
   "coordinator_thread_id": "01a15768-1e2d-7781-b29f-1f7376270216",
-  "updated_at": "2026-10-21T04:09:04.764548+00:00",
+  "updated_at": "2026-10-21T04:10:09.604543+00:00",
   "automation": {
     "id": "1800-a",
     "kind": "heartbeat",
@@ -12340,7 +12340,7 @@
     "A21": {
       "at": "2026-10-21T01:50:20.225601+00:00",
       "task": "A21",
-      "status": "ACTUAL_FAILURE_FIXED_INDEPENDENT_DISPATCH_PENDING",
+      "status": "ACTUAL_FIXED_INDEPENDENT_REVIEW_ACTIVE",
       "dispatch_key": "A21:static-image-classification:new-formal-execution-review",
       "project_id": "4488a042-3ec7-4f9e-8880-cbc8f4e02a51",
       "host_id": "local",
@@ -12366,13 +12366,13 @@
       "review": {
         "thread_id": "01a15c27-a798-7e63-a879-a1bfd2d56b5a",
         "workspace": "D:/1800-worktrees/a21-live-review",
-        "status": "ACTUAL_REVIEW_DISPATCH_PENDING",
+        "status": "ACTIVE_ACTUAL_STATIC_REVIEW",
         "host_id": "local",
-        "cursor": "2deec2ff-5afb-445f-83cc-ae24da0e7222:12",
+        "cursor": "2deec2ff-5afb-445f-83cc-ae24da0e7222:13",
         "acknowledged": true,
-        "released": true,
-        "turn_id": "01a15c39-ed3b-7552-91e7-e456b15748af",
-        "started_at": 1792548662,
+        "released": false,
+        "turn_id": "01a15ca6-3a4b-7ce1-a53b-9f2486ca2684",
+        "started_at": 1792555760,
         "preparation_released": true,
         "preparation_manifest_sha256": "d598bdb67d092f6d475080e1db09cc8150be88e95016f00644f22d9710393810",
         "preparation_archive": "D:/1800/docs/evidence/coordinator/a21-independent-preparation",
@@ -12622,6 +12622,25 @@
         "coordinator_product_runs": 0,
         "live_used": 1,
         "live_remaining": 0
+      },
+      "actual_review_workflow": "72e09d9e47e224f839760b10459e73094bb0295a",
+      "login_transition_static_preparation": {
+        "at": "2026-10-21T04:10:09.604543+00:00",
+        "status": "STATIC_RELATION_VERIFIED_NOT_ACTUAL_ROOT_CAUSE",
+        "sources_verified": 2,
+        "literal_offsets_verified": 13,
+        "script_sha256": "d0a5ebce18bc92d7643662ecec2d078bb295214111e7cb32688f0b88e05bed41",
+        "inferred_destination": "/qieti/home",
+        "probe_accepted_paths": [
+          "/qieti",
+          "/qieti/"
+        ],
+        "actual_destination": "UNKNOWN",
+        "actual_timeout_root_cause": "UNKNOWN",
+        "formal_actual_review_separate": true,
+        "script_execution": 0,
+        "network": 0,
+        "profile_or_credentials_reads": 0
       }
     }
   },
@@ -15035,8 +15054,8 @@
     }
   ],
   "last_action": {
-    "at": "2026-10-21T04:09:04.764548+00:00",
-    "action": "Received fixed A21 single login HTTP200 then UI timeout stop"
+    "at": "2026-10-21T04:10:09.604543+00:00",
+    "action": "A21 actual reviewer acknowledged; verified static UI route mismatch independently of actual failure"
   },
   "limitations": [
     "Current route uses mock B artifacts until independently agreed interface/artifact versions exist.",

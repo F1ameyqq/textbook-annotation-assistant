@@ -1,0 +1,163 @@
+{
+  "schema": "A21-login-transition-static-preparation/v1",
+  "created_at": "2026-10-21T04:07:20.511089+00:00",
+  "scope": "STATIC_FIXED_SOURCE_RELATIONS_ONLY_NOT_FORMAL_REVIEW",
+  "sources": [
+    {
+      "revision": "cf03910d9554d6e3198c59494de2d4ce7bf7ad80",
+      "path": "src/annotation/source/usense/current_readonly/auth.py",
+      "bytes": 10006,
+      "sha256": "90b8a25d2f6ee3966e469207c28635658b5077dfc9345e53010d6c1fb3855be9",
+      "lines": 202
+    },
+    {
+      "revision": "cf03910d9554d6e3198c59494de2d4ce7bf7ad80",
+      "path": "tools/a16_current_state_probe.py",
+      "bytes": 74576,
+      "sha256": "0973d5b7af7a939091a633903da3cb0380aa9657d18d9cbbc2181e14f1d0182e",
+      "lines": 1317
+    }
+  ],
+  "script": {
+    "path": "D:\\1800\\.local\\stages\\a17-excluded-static-live\\static-assets\\1-d0a5ebce18bc92d7643662ecec2d078bb295214111e7cb32688f0b88e05bed41.bin",
+    "bytes": 3065996,
+    "sha256": "d0a5ebce18bc92d7643662ecec2d078bb295214111e7cb32688f0b88e05bed41",
+    "offset_basis": "zero-based raw bytes",
+    "verified_literals": [
+      {
+        "offset": 1067312,
+        "literal": "Ui=\"/qieti/api/user_login\""
+      },
+      {
+        "offset": 1069878,
+        "literal": "gn.post(`${Ui}/login`"
+      },
+      {
+        "offset": 1069105,
+        "literal": "function Hn(e,t={})"
+      },
+      {
+        "offset": 1095395,
+        "literal": "Pze(t.value,a.value)"
+      },
+      {
+        "offset": 1095416,
+        "literal": "localStorage.setItem(\"user\",JSON.stringify({id:v.id"
+      },
+      {
+        "offset": 1095613,
+        "literal": "l.push(\"/\")"
+      },
+      {
+        "offset": 3061973,
+        "literal": "oEt=[{path:\"/\",redirect:\"/home\"}"
+      },
+      {
+        "offset": 3062050,
+        "literal": "path:\"/home\",name:\"home\""
+      },
+      {
+        "offset": 3063770,
+        "literal": "hu=ZVe({history:AVe(\"/qieti\")"
+      },
+      {
+        "offset": 1013247,
+        "literal": "function AVe("
+      },
+      {
+        "offset": 1007193,
+        "literal": "function vVe("
+      },
+      {
+        "offset": 3063813,
+        "literal": "hu.beforeEach"
+      },
+      {
+        "offset": 3062598,
+        "literal": "path:\"/annotateUnified\""
+      }
+    ]
+  },
+  "probe_wait": {
+    "function": "authenticate.confirmed",
+    "lines": [
+      827,
+      842
+    ],
+    "first_wait": "flow.login_response is not None; inspect finite visible UI error while waiting",
+    "ui_timeout_ms": 10000,
+    "outer_confirmed_timeout_seconds": 25,
+    "origin": "https://www.usense.com",
+    "pathname_allowlist": [
+      "/qieti",
+      "/qieti/"
+    ],
+    "search": "empty",
+    "hash": "empty",
+    "password_dom_selector_must_be_absent": ".login-form input[type=password]",
+    "post_wait_requirements": [
+      "drain completed",
+      "native/context reservations each1",
+      "native login_http200"
+    ],
+    "viewer_navigation_follows_only_after_confirmation": true
+  },
+  "response_capture": {
+    "native_http_lines": [
+      395,
+      407
+    ],
+    "context_associated_body_projection_lines": [
+      599,
+      608
+    ],
+    "finite_projection_auth_lines": [
+      57,
+      88
+    ],
+    "snapshot_auth_lines": [
+      174,
+      186
+    ],
+    "serialization_probe_lines": [
+      1107,
+      1127
+    ],
+    "timeout_redaction_probe_lines": [
+      70,
+      80
+    ],
+    "http200_alone_is_authentication": false,
+    "sensitive_response_fields_persisted_by_projection": false
+  },
+  "static_comparison": {
+    "known_script_success_branch": "Pze -> localStorage user object -> router push /",
+    "known_script_root_redirect": "/ -> /home",
+    "known_script_history_base": "/qieti",
+    "inferred_client_route_target": "/qieti/home",
+    "in_probe_wait_allowlist": false,
+    "inference_only_no_script_execution": true,
+    "actual_a21_root_cause": "UNKNOWN",
+    "client_route_redirect_is_not_observed_http_redirect": true
+  },
+  "await_fixed_actual_evidence": [
+    "Current A21 loaded script SHA matches the approved historical A17 source or does not",
+    "native/context POST association, native HTTP status and finite login_response separately",
+    "post-login URL shape and remaining login password DOM, if recorded safely",
+    "which wait stage emitted TimeoutError and preceding guard failure",
+    "viewer navigation, protected marker, session and book/source evidence",
+    "actual fixed final/report/hash/release; no active output inspected"
+  ],
+  "parent_relayed_live_summary_not_independently_verified": "one POST/HTTP200, UI transition unconfirmed, TimeoutError/UNKNOWN, six GET/two originals NOT_RUN",
+  "notes_md_sha256": "29e5ce804552476ac85570278ccce1eef6457b341b5fd94f7950e262cc0d5e51",
+  "actions": {
+    "product_import_run_tests": 0,
+    "network_browser_profile_real_credentials_config_native_occupancy": 0,
+    "active_author_or_current_live_output_reads": 0,
+    "script_execution_refetch_git_copy_or_sidecar_reads": 0,
+    "candidate_creation": 0,
+    "root_coordination_changes": 0,
+    "commits": 0
+  },
+  "released": true
+}
