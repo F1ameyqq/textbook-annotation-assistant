@@ -2,7 +2,7 @@
   "schema_version": 1,
   "project": "D:\\1800",
   "coordinator_thread_id": "01a15768-1e2d-7781-b29f-1f7376270216",
-  "updated_at": "2026-10-21T01:33:24.446405+00:00",
+  "updated_at": "2026-10-21T01:36:06.452746+00:00",
   "automation": {
     "id": "1800-a",
     "kind": "heartbeat",
@@ -12010,7 +12010,7 @@
     "A20": {
       "at": "2026-10-20T14:14:25.286698+00:00",
       "task": "A20",
-      "status": "APPROVED_SINGLE_LIVE_DISPATCH_READY",
+      "status": "SINGLE_LIVE_STOP_REPORTED_AWAITING_FIXED_DELIVERY",
       "dispatch_key": "A20:authenticated-source-recovery:new-formal-execution-review",
       "project_id": "4488a042-3ec7-4f9e-8880-cbc8f4e02a51",
       "host_id": "local",
@@ -12021,17 +12021,18 @@
         "thread_id": "01a159aa-42b4-7103-bfaa-9767969d9b8e",
         "workspace": "D:/1800-worktrees/a20-authenticated-source",
         "branch": "codex/a20-authenticated-source",
-        "status": "FIXED_RELEASED",
+        "status": "ACTIVE_SEALING_ACTUAL_STOP",
         "host_id": "local",
         "acknowledged": true,
-        "cursor": "66899f29-d728-45ad-bc72-fd0dfe8adec2:1",
-        "turn_id": "01a159aa-49b9-7881-ac9f-a669a52c9673",
-        "recorded_at": "2026-10-20T14:17:53.155343+00:00",
-        "released": true,
+        "cursor": "66899f29-d728-45ad-bc72-fd0dfe8adec2:4",
+        "turn_id": "01a15c17-e10f-7651-89df-2920659e8ca8",
+        "recorded_at": "2026-10-21T01:36:06.452746+00:00",
+        "released": false,
         "product_commit": "28203196b4f2dae27b1de4213b27da9a41ae3139",
         "final_commit": "b41e88d7756fde9d7f1b348ce5a300d1104e765b",
-        "completed_at": 1792507750,
-        "duration_ms": 2056270
+        "completed_at": null,
+        "duration_ms": null,
+        "started_at": 1792546431
       },
       "review": {
         "thread_id": "01a159ab-01ba-7093-89a6-69e7ce572c38",
@@ -12062,7 +12063,7 @@
       "review_task_sha256": "2939e98da7544240d3f2de59bde93bb0bd164b996b0bf2f17a609c42602d0a05",
       "dedup_checked_no_A20": true,
       "live_activated": true,
-      "live_used": 0,
+      "live_used": 1,
       "scope": "AUTHENTICATION_RECOVERY_AND_CURRENT_BOOK_SOURCE",
       "offline_only": false,
       "new_live_reserved_limit": 1,
@@ -12070,7 +12071,7 @@
       "login_submission_authorized": true,
       "credential_tls_exception_authorized": true,
       "standing_tls_permission_reference": "docs/approvals/A17-excluded-static-user-decision.json",
-      "next_dependency": "One A20 actual fixed delivery/release, then same formal independent actual-result review",
+      "next_dependency": "Fixed actual author delivery/release; same independent static review; no retry",
       "workflow_commit": "52be34a72c43a7331976aba4b286138b9183856b",
       "source_analysis": {
         "at": "2026-10-20T14:17:53.155343+00:00",
@@ -12212,7 +12213,7 @@
       "tls_exception_authorized": true,
       "live_dispatch": {
         "task": "A20",
-        "status": "READY_TO_SEND",
+        "status": "SENT_ACKNOWLEDGED",
         "at": "2026-10-21T01:33:24.446405+00:00",
         "dispatch_key": "A20:authenticated-source:approved-single-live",
         "thread_id": "01a159aa-42b4-7103-bfaa-9767969d9b8e",
@@ -12264,13 +12265,25 @@
         "launch_limit": 1,
         "retry_limit": 0,
         "login_submission_limit": 1,
-        "business_write_limit": 0
+        "business_write_limit": 0,
+        "dispatch_workflow": "05dacdd1e7a0dfdea218ae6866b4827183f8e2dd",
+        "send_confirmed": true,
+        "recorded_at": "2026-10-21T01:36:06.452746+00:00"
       },
       "user_decision": {
         "path": "D:/1800/docs/approvals/A20-authenticated-source-user-decision.json",
         "sha256": "ed63b7ceff7ff5d4498af1543efea86a7deba779e42920e69c07bcb6464def2e",
         "basis": "DIRECT_A20_USER_DECISION",
         "answer": "批准本轮一次登录及读取"
+      },
+      "live_remaining": 0,
+      "actual_reported_progress": {
+        "source": "wait_threads commentary only; not fixed/accepted",
+        "first_stop_reported": "Login-page same-origin Image GET API_BLOCKED",
+        "credential_fill_and_login_submission_reported": 0,
+        "business_get_and_original_reported": 0,
+        "release": "author reports owned resources closed; raw not yet received",
+        "active_directory_read": false
       }
     }
   },
@@ -14684,8 +14697,8 @@
     }
   ],
   "last_action": {
-    "at": "2026-10-21T01:33:24.446405+00:00",
-    "action": "Bound direct human A20 single-login approval and unique 900-second live dispatch"
+    "at": "2026-10-21T01:36:06.452746+00:00",
+    "action": "A20 direct approval dispatched; author reports single live stopped before credential fill; waiting fixed evidence"
   },
   "limitations": [
     "Current route uses mock B artifacts until independently agreed interface/artifact versions exist.",
@@ -15578,14 +15591,12 @@
     "next_confirmation_document_sha256": "162343381469b1a827f0de6f611b8cdf504666caa06f79e1d8ea9c8a14dd32f2"
   },
   "last_heartbeat_check": {
-    "at": "2026-10-20T15:09:07.053000+00:00",
-    "trigger_at": "2026-10-20T15:05:44.482Z",
+    "at": "2026-10-21T01:36:06.452746+00:00",
     "task": "A20",
-    "execution_cursor": "85607745-8ea5-4c27-9e79-372aacbdaa8c:29",
-    "review_cursor": "fb5d2ce0-6d46-4202-86a8-a196d47f2ce0:5",
-    "new_live": 0,
-    "decision_created": false,
-    "activation_created": false
+    "execution_cursor": "66899f29-d728-45ad-bc72-fd0dfe8adec2:4",
+    "new_question": false,
+    "approval": "DIRECT_ANSWER_APPROVED",
+    "automation_prompt_updated": true
   },
   "publication_a07": {
     "task_id": "A-PUBLISH-03",
