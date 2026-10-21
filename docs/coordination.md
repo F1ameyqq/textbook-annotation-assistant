@@ -1,3 +1,5 @@
+2026-10-21 A21实际失败已正式独立及调度有限收口，final29a24322；11报告成员+self及54固定输入原bytes核证，见docs/evidence/coordinator/a21-live-independent-closure/。实际登录POST1/HTTP200及有限业务码接受，UI转换未证后TimeoutError/UNKNOWN停止；受保护认证/书源未证，六GET/两图NOT_RUN。三持有身份进程/两Job/context/runtime释放有限接受，launcherOS身份/product stdout缺原bytes/计时差限制保留。原执行独立均关闭，live1余0。本轮批准已耗，不重派A21。后续准备原profile只读复用，0本机用户名密码配置/登录提交；静态home路由差异不冒充实际根因。
+
 2026-10-21 A21唯一真实轮已耗1余0并固定释放，final29a24322：登录POST1、HTTP200及有限业务码接受，UI转换未确认后TimeoutError/UNKNOWN停止；受保护认证/书源未证，六GET/两图NOT_RUN。调度31941旧成员保全、26新增、54raw已隔离；同独立按docs/tasks/A21-single-live-fixed-independent-review.md静态核失败与已证释放。原A20同hash图片本轮STATIC准入但用途/HTTP未知。旧批准已用，不重试/清标记/重开。下方待答为历史。
 
 2026-10-21 用户已直接回答固定A21问题“批准本轮一次登录及读取”，原待答状态关闭，不再询问。决定与提案/候选/独立报告47项绑定，27依赖和模板raw已核；任务docs/tasks/A21-approved-single-live-dispatch.md、意图docs/evidence/coordinator/a21-live-dispatch/dispatch-intent.json。原执行承接唯一1context/最多2导航/1官方UI登录/900秒，同context六GET和两图；0业务写入上传OCR，首异常或未知停止不重试。实际窗口及启动结果见JSON。原独立待固定交付，旧额度/失败/原件不变。下方未答/未激活为历史。
