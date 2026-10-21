@@ -1,0 +1,15 @@
+# A23 固定会话完成候选有限独立预检
+
+原正式独立01a15cd4-df45-7002-8caa-f89820034469承接；作者已冻结释放，不新建聊天。基线3517982bd416ff77fdf596e80c502a75d780f2b9、产品81ff688ab2f13b7c51271f2c5ed33b8bd726d573、final3e5d99f3a740f44cb0f4d09fe37ceb0a34ce4382。产品workflow d86dbcb82ebd7b61d5e87f02402bfe8a6bcd1b15，候选SHA18921b3335809c0c0722dc1bf8bf1495d8628bab780ce95045079c82c1f615ad，交付SHA2507c7fc86c24326cc12c04ea1eaca1b13e3eb6d95a10b82fdd138af58571769。
+
+根机械核证与精确输入数/hash见docs/evidence/coordinator/a23-fixed-delivery/input-raw-manifest.json及raw-preflight.json。唯一输入D:/1800-worktrees/a23-independent-fixed；29候选依赖、74交付成员+self。32074旧成员仅auth/gate/probe/launcher四获准文件变化，policy/decode/js_wire/native/reference/旧evidence原bytes保持。不得读作者工作区或真实.local输出。
+
+只执行新18项suite及必要少量相关独立控制，输出仅隔离内docs/evidence/A23/independent-session-completion-review/。先静态读runner输出约束，若硬编码作者路径，建独立runner定向新目录并保留离线资源阻断，不改冻结产品/作者runner，不运行package/verify/seal或旧suite。作者18/18 1890ms、raw18/18 1782ms及最初14/14是输入，不能冒充独立结果。保留write_text参数/rg glob失败和fixture尾空行检查未知exit，不为这些元数据缺口重跑产品。
+
+有限预检重点：已有当前session的双层预留/原frame/请求响应及有限投影结清，统一20秒不重置；任一层已预留、在途、失败或UNKNOWN都不得主动补发；完全无请求时只有精确profile主动GET最多1，计入原总3，与前端并发不能双发；主动body不传Python，仅固定投影，无凭据原值外泄；401/403/错frame/晚到fatal/pending停止；0本机凭据配置读取/登录/refresh/业务写入。成功同context六业务GET/两图和映射，认证组合、账户字段可用性、书籍身份分开。
+
+不新增通用认证框架或测试历史全部边界，未改部分按raw同一性引用有限证据。完整53scope及三模板同类型同值绑定A23自己的身份/路径/预算；不能借A22候选或已耗activation。新机器报告必须使用冻结template/gate完整scope，result=ACCEPTED_OFFLINE_ONLY、scope=CURRENT_SESSION_COMPLETION_AND_SOURCE_READONLY。准备模板非live授权。用户A17“一直批准”同类只读TLS已存在，本轮通过后由根直接绑定唯一轮，不再询问；0新增login/write授权。
+
+只做纯fake离线新差量；0真实browser/network/profile/配置/native占用/产品launcher子进程/新decision/activation/live。真实认证/书源、当前源schema和首题仍未证，fake两条成功链不能扩称。真正在不误写/不越界/有界停止或事实投影上的缺口REWORK；报告细节且原件完整正确停止者列限制，不延长无关修订。首个意外失败保留，依赖后继NOT_RUN；正常同阶段具体修正不新建阶段。
+
+固定输出报告/机器结果/原始suite与有限控制/清单/明确释放，精确返回路径/hash，不保留等待进程。A22实际失败与已证释放已正式及根接受，根a22-live-independent-closure，不能重启旧轮。其他三例HOLD、Q22不重放、0B消息。用户要求交付即验收、通过即真实读取，聚焦关键路径。
