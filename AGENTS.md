@@ -1,3 +1,5 @@
+2026-10-21 用户已直接回答固定A20问题“批准本轮一次登录及读取”，原待答状态关闭，不再询问。决定与提案/候选/独立报告39项绑定，27依赖和模板raw已核；任务docs/tasks/A20-approved-single-live-dispatch.md、意图docs/evidence/coordinator/a20-live-dispatch/dispatch-intent.json。原执行承接唯一1context/最多2导航/1官方UI登录/900秒，同context六GET和两图；0业务写入上传OCR，首异常或未知停止不重试。实际窗口及启动结果见JSON。原独立待固定交付，旧额度/失败/原件不变。下方未答/未激活为历史。
+
 2026-10-20 A20有限独立及调度接受后，具体本轮提案已固定：docs/tasks/A20-bounded-authenticated-source-decision-proposal.md。最多1原context/2固定导航/1次官方UI登录提交/900秒，登录后同context读取六GET/两图，0业务写入上传OCR。因新增在context TLS例外中发送本机已有凭据，须本次直接决定；原“一直批准”只读许可不代用。作者/独立已释放，当前0真实凭据/登录/decision/activation/live，不得未答先执行、重复询问或恢复旧额度。精确提案hash及问询状态见JSON。
 
 2026-10-20 A20已正式独立及调度有限接受：产品28203196/finalb41e88d7，ACCEPTED_OFFLINE_ONLY；独立新35/35 2250ms、5控制641ms，25报告成员+self及114输入原bytes核证，完整39项scope绑定通过。见docs/evidence/coordinator/a20-independent-closure/。作者/独立均释放；下一步固定本次准确凭据发送提案，再由用户作直接决定。原同类只读TLS许可不扩展为登录提交；当前0真实凭据/登录/activation/live。封存工具首次解码失败及旧失败/UNKNOWN保持，真实认证/书源/首题仍未证明。
