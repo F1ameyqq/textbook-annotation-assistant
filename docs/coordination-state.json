@@ -2,7 +2,7 @@
   "schema_version": 1,
   "project": "D:\\1800",
   "coordinator_thread_id": "01a15768-1e2d-7781-b29f-1f7376270216",
-  "updated_at": "2026-10-21T04:49:30.315815+00:00",
+  "updated_at": "2026-10-21T04:58:52.666220+00:00",
   "automation": {
     "id": "1800-a",
     "kind": "heartbeat",
@@ -12671,7 +12671,7 @@
     "A22": {
       "at": "2026-10-21T04:16:34.267672+00:00",
       "task": "A22",
-      "status": "SINGLE_READONLY_LIVE_DISPATCHED_PENDING_FIXED_RESULT",
+      "status": "ACTUAL_FIXED_RELEASED_PENDING_MECHANICAL_AND_INDEPENDENT_REVIEW",
       "dispatch_key": "A22:post-login-session-reuse:new-formal-execution-review",
       "project_id": "4488a042-3ec7-4f9e-8880-cbc8f4e02a51",
       "host_id": "local",
@@ -12682,17 +12682,17 @@
         "thread_id": "01a15cad-c139-76e2-88f8-705093575a7e",
         "workspace": "D:/1800-worktrees/a22-session-reuse",
         "branch": "codex/a22-session-reuse",
-        "status": "ACTIVE_SINGLE_LIVE_DISPATCH",
+        "status": "ACTUAL_FIXED_RELEASED",
         "host_id": "local",
-        "cursor": "b95d3548-63e3-468b-82fe-1adb68c0680c:4",
+        "cursor": "b95d3548-63e3-468b-82fe-1adb68c0680c:7",
         "turn_id": "01a15cc9-af44-7073-8070-f376802370dd",
         "started_at": 1792558083,
         "acknowledged": true,
-        "released": false,
+        "released": true,
         "product_commit": "41fda0d1ff7f548e1bc8ec6b5b4d653109736532",
-        "final_commit": "1acc8d00dfef5808561139a99ba6f028d7bfd7a1",
-        "completed_at": null,
-        "duration_ms": 732268
+        "final_commit": "3517982bd416ff77fdf596e80c502a75d780f2b9",
+        "completed_at": 1792558343,
+        "duration_ms": 259433
       },
       "review": {
         "thread_id": "01a15cad-c63a-7062-8fe6-2fc4add9e9a5",
@@ -12719,7 +12719,7 @@
       "review_task_sha256": "76a3cc01dc5b300ed4ace9e6e8c80d50f076a3f7a49f3b8ae9a5dd7f50a4c1a1",
       "dedup_checked_no_A22": true,
       "live_activated": true,
-      "live_used": 0,
+      "live_used": 1,
       "scope": "POST_LOGIN_SESSION_REUSE_CURRENT_SOURCE_READONLY",
       "offline_only": false,
       "new_live_reserved_limit": 1,
@@ -12915,7 +12915,44 @@
         "sha256": "1fbd991473c78258be0a58d2e20c30d21ae5d8a71608a02e7cc4ba9acb69d704",
         "product_runs": 0,
         "cause": "UNKNOWN"
-      }
+      },
+      "live_remaining": 0
+    },
+    "A23": {
+      "at": "2026-10-21T04:58:52.666220+00:00",
+      "task": "A23",
+      "status": "INTENT_RECORDED_BEFORE_CREATE",
+      "dispatch_key": "A23:session-completion:new-formal-execution-review",
+      "project_id": "4488a042-3ec7-4f9e-8880-cbc8f4e02a51",
+      "host_id": "local",
+      "base_commit": "3517982bd416ff77fdf596e80c502a75d780f2b9",
+      "thinking": "xhigh",
+      "model": "INHERIT_USER_DEFAULT",
+      "execution": {
+        "thread_id": null,
+        "workspace": "D:/1800-worktrees/a23-session-completion",
+        "branch": "codex/a23-session-completion",
+        "status": "CREATE_NOT_CALLED"
+      },
+      "review": {
+        "thread_id": null,
+        "workspace": "D:/1800-worktrees/a23-review-preparation",
+        "status": "CREATE_NOT_CALLED"
+      },
+      "task_document": "docs/tasks/A23-current-session-completion-source-readonly.md",
+      "task_sha256": "50b68ec55c73ad9f72915787aabf0b2f0373c1202e1c73a3898b1d38ff516e5d",
+      "review_task_document": "docs/tasks/A23-independent-session-completion-review.md",
+      "review_task_sha256": "7b2d2dbb326b4687051ea632ac263db6bb61412e5dec9279b74a84f7d89268c4",
+      "dedup_checked_no_A23": true,
+      "live_activated": false,
+      "live_used": 0,
+      "scope": "CURRENT_SESSION_COMPLETION_AND_SOURCE_READONLY",
+      "offline_only": true,
+      "new_live_reserved_limit": 1,
+      "new_live_authorized": false,
+      "login_submission_authorized": false,
+      "local_credential_config_reads_authorized": false,
+      "next_dependency": "Parallel offline correction while A22 fixed actual failure/release is independently archived; frozen limited preflight before one new readonly activation"
     }
   },
   "route": [
@@ -15328,8 +15365,8 @@
     }
   ],
   "last_action": {
-    "at": "2026-10-21T04:49:30.315815+00:00",
-    "action": "Dispatched approved A22 readonly round and prepared local A/B alignment recommendation"
+    "at": "2026-10-21T04:58:52.666220+00:00",
+    "action": "Accelerate: A22 failure closure in parallel with A23 current-session completion implementation"
   },
   "limitations": [
     "Current route uses mock B artifacts until independently agreed interface/artifact versions exist.",
