@@ -2,7 +2,7 @@
   "schema_version": 1,
   "project": "D:\\1800",
   "coordinator_thread_id": "01a15768-1e2d-7781-b29f-1f7376270216",
-  "updated_at": "2026-10-21T04:03:55.100818+00:00",
+  "updated_at": "2026-10-21T04:09:04.764548+00:00",
   "automation": {
     "id": "1800-a",
     "kind": "heartbeat",
@@ -12340,7 +12340,7 @@
     "A21": {
       "at": "2026-10-21T01:50:20.225601+00:00",
       "task": "A21",
-      "status": "ACTUAL_STOP_REPORTED_PENDING_FIXED_DELIVERY",
+      "status": "ACTUAL_FAILURE_FIXED_INDEPENDENT_DISPATCH_PENDING",
       "dispatch_key": "A21:static-image-classification:new-formal-execution-review",
       "project_id": "4488a042-3ec7-4f9e-8880-cbc8f4e02a51",
       "host_id": "local",
@@ -12351,22 +12351,22 @@
         "thread_id": "01a15c27-595a-70e0-88b4-fe064550c884",
         "workspace": "D:/1800-worktrees/a21-static-image",
         "branch": "codex/a21-static-image",
-        "status": "SEALING_ACTUAL_STOP_NO_RETRY",
+        "status": "ACTUAL_FIXED_RELEASED",
         "host_id": "local",
-        "cursor": "802eb2ed-b1a9-4926-b0bf-179e33cd1817:7",
+        "cursor": "802eb2ed-b1a9-4926-b0bf-179e33cd1817:10",
         "turn_id": "01a15c9e-8bbf-7b92-87f7-e86c6ae8688b",
         "started_at": 1792555256,
         "acknowledged": true,
-        "released": false,
+        "released": true,
         "product_commit": "b65d85156b56840d6ae055880d4d707b998e2ff3",
-        "final_commit": "cf03910d9554d6e3198c59494de2d4ce7bf7ad80",
-        "completed_at": 1792547961,
-        "duration_ms": 515950
+        "final_commit": "29a243227893cdbd8e7d235a8c787b4d721ed8e2",
+        "completed_at": 1792555572,
+        "duration_ms": 315879
       },
       "review": {
         "thread_id": "01a15c27-a798-7e63-a879-a1bfd2d56b5a",
-        "workspace": "D:/1800-worktrees/a21-independent-fixed",
-        "status": "WAITING_FIXED_ACTUAL_DELIVERY",
+        "workspace": "D:/1800-worktrees/a21-live-review",
+        "status": "ACTUAL_REVIEW_DISPATCH_PENDING",
         "host_id": "local",
         "cursor": "2deec2ff-5afb-445f-83cc-ae24da0e7222:12",
         "acknowledged": true,
@@ -12393,7 +12393,7 @@
       "new_live_authorized": true,
       "login_submission_authorized": true,
       "credential_tls_exception_authorized": true,
-      "next_dependency": "Author frozen actual report/raw/final/release, then root verification and same formal independent static review; no retry",
+      "next_dependency": "Same independent static actual-failure/release review; A21 live exhausted",
       "workflow_commit": "82c2b7ee62a126bb74bc08c2d2dedbe5c556d1ca",
       "delivery": {
         "at": "2026-10-21T02:10:39.412635+00:00",
@@ -12602,6 +12602,26 @@
         "authentication": "NOT_PROVEN",
         "source_reads": "NOT_RUN",
         "fixed_delivery_pending": true
+      },
+      "actual_delivery": {
+        "at": "2026-10-21T04:09:04.764548+00:00",
+        "status": "MECHANICAL_PASS_PENDING_ACTUAL_INDEPENDENT_REVIEW",
+        "base": "cf03910d9554d6e3198c59494de2d4ce7bf7ad80",
+        "final": "29a243227893cdbd8e7d235a8c787b4d721ed8e2",
+        "old_members_preserved": 31941,
+        "added": 26,
+        "modified": 0,
+        "deleted": 0,
+        "candidate_members": 27,
+        "delivery_manifest_members": 25,
+        "raw_members": 54,
+        "input_manifest_sha256": "0338c5dc7ea40b9cb2d5c025001e3c66b2ef02a04af93166a7fee7565584518a",
+        "delivery_manifest_sha256": "9b37e525dc3c5867e6ad682c90e574d5c496de8a8530d82f57b5e5de553f122c",
+        "author_report_sha256": "cf424594b2c7198c2b482627e6b29bb899349a41f07fced2638b52c9c9b712a0",
+        "isolation": "D:/1800-worktrees/a21-live-review",
+        "coordinator_product_runs": 0,
+        "live_used": 1,
+        "live_remaining": 0
       }
     }
   },
@@ -15015,8 +15035,8 @@
     }
   ],
   "last_action": {
-    "at": "2026-10-21T04:03:55.100818+00:00",
-    "action": "Recorded reported A21 single login HTTP200 followed by unconfirmed UI transition and stop"
+    "at": "2026-10-21T04:09:04.764548+00:00",
+    "action": "Received fixed A21 single login HTTP200 then UI timeout stop"
   },
   "limitations": [
     "Current route uses mock B artifacts until independently agreed interface/artifact versions exist.",

@@ -1,3 +1,5 @@
+2026-10-21 A21唯一真实轮已耗1余0并固定释放，final29a24322：登录POST1、HTTP200及有限业务码接受，UI转换未确认后TimeoutError/UNKNOWN停止；受保护认证/书源未证，六GET/两图NOT_RUN。调度31941旧成员保全、26新增、54raw已隔离；同独立按docs/tasks/A21-single-live-fixed-independent-review.md静态核失败与已证释放。原A20同hash图片本轮STATIC准入但用途/HTTP未知。旧批准已用，不重试/清标记/重开。下方待答为历史。
+
 2026-10-21 用户已直接回答固定A21问题“批准本轮一次登录及读取”，原待答状态关闭，不再询问。决定与提案/候选/独立报告47项绑定，27依赖和模板raw已核；任务docs/tasks/A21-approved-single-live-dispatch.md、意图docs/evidence/coordinator/a21-live-dispatch/dispatch-intent.json。原执行承接唯一1context/最多2导航/1官方UI登录/900秒，同context六GET和两图；0业务写入上传OCR，首异常或未知停止不重试。实际窗口及启动结果见JSON。原独立待固定交付，旧额度/失败/原件不变。下方未答/未激活为历史。
 
 2026-10-21 A21具体本轮提案已固定：docs/tasks/A21-bounded-authenticated-source-decision-proposal.md。有限独立及根接受后，请用户决定本轮1原context/2固定导航/最多1官方UI登录/900秒及同context六GET两图，0业务写入上传OCR；A20批准只上一轮已消费，不移用。本轮待直接凭据提交决定，当前0真实配置读取/decision/activation/live；精确提案hash和问询状态见JSON，不重复问或未答先执行。
