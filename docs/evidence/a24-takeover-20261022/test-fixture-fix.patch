@@ -1,0 +1,73 @@
+diff --git a/tests/a24_first_save_current_body/test_minimum_gate.py b/tests/a24_first_save_current_body/test_minimum_gate.py
+index 3105336..b222c02 100644
+--- a/tests/a24_first_save_current_body/test_minimum_gate.py
++++ b/tests/a24_first_save_current_body/test_minimum_gate.py
+@@ -2,6 +2,7 @@
+ import asyncio
+ import copy
+ import io
++import importlib.util
+ import json
+ from pathlib import Path
+ import sys
+@@ -21,6 +22,13 @@ def put(path,value):
+     raw=json.dumps(value).encode();path.write_bytes(raw)
+     return {"path":str(path),"bytes":len(raw),"sha256":auth.sha(raw)}
+ 
++def frozen_framework(root):
++    name="a24_minimum_gate_framework_"+root.name.replace("-","_")
++    spec=importlib.util.spec_from_file_location(name,ROOT/"tools/a16_current_state_probe.py")
++    module=importlib.util.module_from_spec(spec);sys.modules[name]=module;spec.loader.exec_module(module)
++    old=root/"synthetic-spent-output";old.mkdir();module.LIVE_OUT=old
++    return module
++
+ class GateTests(unittest.TestCase):
+     def setUp(self):
+         self.temp=tempfile.TemporaryDirectory(prefix="a24-new-gate-");self.addCleanup(self.temp.cleanup)
+@@ -106,24 +114,41 @@ class EntryEvidenceTests(unittest.TestCase):
+         async def goto(*a,**k):raise TimeoutError("PRIVATE_EXCEPTION_TEXT")
+         async def context_close():log.append("close");raise OSError("PRIVATE_EXCEPTION_TEXT")
+         async def runtime_stop():log.append("stop")
+-        async def settle(*a,**k):pass
+         page=SimpleNamespace(url="about:blank",set_default_timeout=lambda *a:None,on=lambda *a:None,goto=goto)
+         context=SimpleNamespace(pages=[page],on=lambda *a:None,set_offline=online,close=context_close)
+         runtime=SimpleNamespace(chromium=SimpleNamespace(launch_persistent_context=launch),stop=runtime_stop)
+-        guard=SimpleNamespace(install=install,navigation=Nav(),auth=SimpleNamespace(arm_navigation=lambda *a:None),response=lambda *a:None,
+-            stopped=True,begin_shutdown=lambda:None,callbacks=set(),tasks=set(),failure=None)
++        framework=frozen_framework(self.root);self.cap.output.mkdir()
++        def make_guard(guard_class,*args,**kwargs):
++            guard=object.__new__(guard_class)
++            guard.install=install;guard.navigation=Nav();guard.auth=SimpleNamespace(arm_navigation=lambda *a:None)
++            guard.response=lambda *a:None;guard.stopped=True;guard.begin_shutdown=lambda:None
++            guard.callbacks=set();guard.tasks=set();guard.failure=None
++            guard.owner_authority_hash=self.cap.raw_hash;guard.output=None
++            return guard
+         backend=object.__new__(owner.WindowsBackend)
+         backend.authority=self.cap;backend.bootstrap_steps={};backend.runtime=backend.context=backend.guard=None
+-        backend.framework=SimpleNamespace(CurrentGuard=object,settle_callbacks=settle)
++        backend.framework=framework
+         module=SimpleNamespace(async_playwright=lambda:SimpleNamespace(start=start))
+-        with patch.dict(sys.modules,{"playwright":SimpleNamespace(),"playwright.async_api":module}),patch("annotation.delivery.live_pilot.usense.make_first_save_guard",return_value=guard):
++        with patch.dict(sys.modules,{"playwright":SimpleNamespace(),"playwright.async_api":module}),patch("annotation.delivery.live_pilot.usense.make_first_save_guard",side_effect=make_guard):
+             with self.assertRaises(TimeoutError):asyncio.run(backend.open(self.root,owner.base_binding(self.cap)))
++        owner.validate_capture_owner(self.cap,framework,backend.guard)
++        binding=owner.capture_binding(self.cap)
++        self.assertEqual(backend.guard.output,Path(binding["directory"]))
++        self.assertTrue((backend.guard.output/"capture-owner.json").is_file())
+         self.assertEqual(log,["install","online","nav_begin","nav_failed"])
+         self.assertEqual(backend.bootstrap_steps["navigation"],"STARTED")
+         released=asyncio.run(backend.close())
+         self.assertFalse(released["released"]);self.assertFalse(released["context_closed"]);self.assertTrue(released["runtime_stopped"])
+         self.assertEqual(released["errors"][0]["step"],"context_close")
+         self.assertNotIn("PRIVATE_EXCEPTION_TEXT",json.dumps(released))
++    def test_capture_owner_hash_mismatch_rejects_before_private_directory(self):
++        framework=frozen_framework(self.root);self.cap.output.mkdir()
++        guard_class=owner.owner_guard_class(framework,self.cap);guard=object.__new__(guard_class)
++        guard.owner_authority_hash="0"*64;guard.output=None
++        with self.assertRaises(PilotError) as caught:owner.bind_capture_owner(self.cap,framework,guard)
++        self.assertEqual(caught.exception.code,"OWNER_CAPTURE_ALREADY_BOUND")
++        self.assertFalse((self.cap.output/"private").exists())
++        self.assertFalse(hasattr(framework,"a24_capture_owner_binding"))
+     def test_stderr_raw_is_saved_before_unsafe_output_rejection_and_handle_release(self):
+         state={"exit":None,"handle":False,"job":False}
+         class Handle:
