@@ -1,3 +1,5 @@
+2026-10-21 A20实际失败已正式独立及调度有限收口，finalf45fa867，10报告成员+self及56输入原bytes核证，见docs/evidence/coordinator/a20-live-independent-closure/。仅接受登录页Image GET API_BLOCKED固定失败和三持有身份进程/两Job/context/runtime已证释放。凭据填写/提交、六GET/两图0，认证未证明；路径用途/根因/主DocumentHTTP/DCL/launcher自身OS身份UNKNOWN，stdout原bytes未提供及首次清单错误仅作者转录保持。作者独立均释放，live1耗尽余0，不重派旧A20。本轮直接批准已用；静态分类冲突的后继修正不恢复额度。
+
 2026-10-21 A20唯一真实轮已耗1/余0并固定释放，finalf45fa867：登录页同源Image GET API_BLOCKED，凭据填写/提交0、六GET/两图0，认证未证明。调度核28新增、55清单+self=56raw及全部旧成员保全；同独立按docs/tasks/A20-single-live-fixed-independent-review.md静态核实际失败和已证释放。首次CRLF清单失败及中间缺清单提交保留，0重跑。路径用途/根因/launcher自身OS身份UNKNOWN，不推定验证码或logo，不重开原activation/output/标记。
 
 2026-10-21 用户已直接回答固定A20问题“批准本轮一次登录及读取”，原待答状态关闭，不再询问。决定与提案/候选/独立报告39项绑定，27依赖和模板raw已核；任务docs/tasks/A20-approved-single-live-dispatch.md、意图docs/evidence/coordinator/a20-live-dispatch/dispatch-intent.json。原执行承接唯一1context/最多2导航/1官方UI登录/900秒，同context六GET和两图；0业务写入上传OCR，首异常或未知停止不重试。实际窗口及启动结果见JSON。原独立待固定交付，旧额度/失败/原件不变。下方未答/未激活为历史。
