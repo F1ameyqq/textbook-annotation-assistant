@@ -2,7 +2,7 @@
   "schema_version": 1,
   "project": "D:\\1800",
   "coordinator_thread_id": "01a15768-1e2d-7781-b29f-1f7376270216",
-  "updated_at": "2026-10-21T04:14:36.884771+00:00",
+  "updated_at": "2026-10-21T04:16:34.267672+00:00",
   "automation": {
     "id": "1800-a",
     "kind": "heartbeat",
@@ -12394,7 +12394,7 @@
       "new_live_authorized": true,
       "login_submission_authorized": true,
       "credential_tls_exception_authorized": true,
-      "next_dependency": "A22 new readonly original-profile reuse preparation; zero credential configuration read or login submission, no A21 retry",
+      "next_dependency": "A22 new original-profile reuse-only preparation; A21 remains closed/spent",
       "workflow_commit": "82c2b7ee62a126bb74bc08c2d2dedbe5c556d1ca",
       "delivery": {
         "at": "2026-10-21T02:10:39.412635+00:00",
@@ -12667,6 +12667,42 @@
           "No new OS-wide process/profile scan, credentials access, product import/run or live replay occurred."
         ]
       }
+    },
+    "A22": {
+      "at": "2026-10-21T04:16:34.267672+00:00",
+      "task": "A22",
+      "status": "INTENT_RECORDED_BEFORE_CREATE",
+      "dispatch_key": "A22:post-login-session-reuse:new-formal-execution-review",
+      "project_id": "4488a042-3ec7-4f9e-8880-cbc8f4e02a51",
+      "host_id": "local",
+      "base_commit": "29a243227893cdbd8e7d235a8c787b4d721ed8e2",
+      "thinking": "xhigh",
+      "model": "INHERIT_USER_DEFAULT",
+      "execution": {
+        "thread_id": null,
+        "workspace": "D:/1800-worktrees/a22-session-reuse",
+        "branch": "codex/a22-session-reuse",
+        "status": "CREATE_NOT_CALLED"
+      },
+      "review": {
+        "thread_id": null,
+        "workspace": "D:/1800-worktrees/a22-review-preparation",
+        "status": "CREATE_NOT_CALLED"
+      },
+      "task_document": "docs/tasks/A22-post-login-session-reuse-readonly.md",
+      "task_sha256": "863b86d9ecbe75967f2e060d5368dda585076a0b6857f22fa102c5ece661de0b",
+      "review_task_document": "docs/tasks/A22-independent-session-reuse-review.md",
+      "review_task_sha256": "76a3cc01dc5b300ed4ace9e6e8c80d50f076a3f7a49f3b8ae9a5dd7f50a4c1a1",
+      "dedup_checked_no_A22": true,
+      "live_activated": false,
+      "live_used": 0,
+      "scope": "POST_LOGIN_SESSION_REUSE_CURRENT_SOURCE_READONLY",
+      "offline_only": true,
+      "new_live_reserved_limit": 1,
+      "new_live_authorized": false,
+      "login_submission_authorized": false,
+      "local_credential_config_reads_authorized": false,
+      "next_dependency": "New formal reuse-only adaptation and independent preparation; frozen bounded preflight before activation"
     }
   },
   "route": [
@@ -15079,8 +15115,8 @@
     }
   ],
   "last_action": {
-    "at": "2026-10-21T04:14:36.884771+00:00",
-    "action": "Closed fixed A21 login response and unconfirmed UI transition; prepare no-login reuse"
+    "at": "2026-10-21T04:16:34.267672+00:00",
+    "action": "Recorded A22 formal execution/review intent for no-login original-session reuse"
   },
   "limitations": [
     "Current route uses mock B artifacts until independently agreed interface/artifact versions exist.",

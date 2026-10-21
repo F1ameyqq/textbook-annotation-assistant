@@ -1,0 +1,147 @@
+{
+  "schema": "A22-reuse-only-static-preparation/v1",
+  "created_at": "2026-10-21T04:14:29.118180+00:00",
+  "scope": "PREPARATION_ONLY_NO_CANDIDATE_OR_AUTHORITY",
+  "fixed_actual_base": "29a243227893cdbd8e7d235a8c787b4d721ed8e2",
+  "input_directory": "D:\\1800-worktrees\\a21-live-review",
+  "sources": [
+    {
+      "path": "src/annotation/source/usense/current_readonly/auth.py",
+      "bytes": 10006,
+      "sha256": "90b8a25d2f6ee3966e469207c28635658b5077dfc9345e53010d6c1fb3855be9",
+      "lines": 202
+    },
+    {
+      "path": "src/annotation/source/usense/current_readonly/policy.py",
+      "bytes": 11216,
+      "sha256": "16305510585d4cf8417e3cf26c9ba7d9659c9c07fc00373fed29b762cf7c2a33",
+      "lines": 202
+    },
+    {
+      "path": "src/annotation/source/usense/current_readonly/gate.py",
+      "bytes": 10117,
+      "sha256": "25446d93af6ebdbbb4fb2a2949e1e52ba7461df2a83499d616552630b30ed298",
+      "lines": 207
+    },
+    {
+      "path": "tools/a16_current_state_probe.py",
+      "bytes": 74576,
+      "sha256": "0973d5b7af7a939091a633903da3cb0380aa9657d18d9cbbc2181e14f1d0182e",
+      "lines": 1317
+    },
+    {
+      "path": "tools/a16_current_state_launcher.py",
+      "bytes": 6874,
+      "sha256": "59620ef38b6c73ba17c1537ccc5bde97e3a5d5dff7de187fa5e0115db501ff79",
+      "lines": 132
+    },
+    {
+      "path": "docs/evidence/A21/static-image/live-delivery/live-result.json",
+      "bytes": 5650,
+      "sha256": "d5912a77dd055ba75df51e791e3ed2f46737978d96954aa1f5223210714c7fb8",
+      "lines": 192
+    }
+  ],
+  "a21_fixed_author_summary": {
+    "formal_independent_review_not_replaced": true,
+    "actual_login_post_requests": 1,
+    "login_http_status": 200,
+    "login_response": {
+      "authenticated_profile_fields_present": false,
+      "business_decode": "ACCEPTED_NUMERIC_CODE",
+      "credential_return_present": true,
+      "http_status": 200
+    },
+    "ui_transition_confirmed": false,
+    "protected_viewer_authenticated": false,
+    "phase": "LOGIN",
+    "session_receipt_routes": [
+      "permissions"
+    ],
+    "business_GETs_completed": 0,
+    "original_GETs_completed": 0,
+    "outcome": "ERROR",
+    "error": {
+      "codes": [
+        "UNKNOWN"
+      ],
+      "exception_type": "TimeoutError"
+    },
+    "live_used": 1,
+    "live_remaining": 0,
+    "persistence_proven": false
+  },
+  "proposed_bounds_not_authority": {
+    "new_context_limit": 1,
+    "total_seconds_including_release": 900,
+    "navigation_sequence": [
+      "https://www.usense.com/qieti/annotateUnified"
+    ],
+    "navigation_limit": 1,
+    "local_username_password_config_reads": 0,
+    "form_fills_clicks": 0,
+    "login_POSTs": 0,
+    "automatic_logins": 0,
+    "refresh_posts": 0,
+    "automatic_resends": 0,
+    "fixed_business_GETs_each": 1,
+    "fixed_business_GETs_count": 6,
+    "original_viewers": [
+      14,
+      173
+    ],
+    "original_GET_each": 1,
+    "session_phases": [
+      "VIEWER"
+    ],
+    "session_GET_each_existing_path": 1,
+    "session_GET_total_max": 3,
+    "version_check_limit": 1,
+    "shared_exclusion_event_limit": 16,
+    "sample_limit": 0,
+    "business_writes_uploads_OCR": 0,
+    "existing_profile_only": true,
+    "profile_fingerprint": "b4620cd9fe064121a916062126321b7bba3862185d8919bf228f1399097a0d00"
+  },
+  "source_references": {
+    "persistent_context": "probe.py:691-715",
+    "profile_binding_callers_only": "probe.py:1248-1264,1292-1294",
+    "old_login_assumptions": "auth.py:91-128,167-186; policy.py:164-177; gate.py:87-188",
+    "existing_reuse_branch": "probe.py:848-856",
+    "viewer_book_flow": "probe.py:984-1002",
+    "current_session_association": "auth.py:152-165; probe.py:609-617",
+    "page_internal_existing_token_use": "probe.py:859-888",
+    "existing_launcher_release": "launcher.py:16-124"
+  },
+  "minimum_change_areas": [
+    "Existing auth single VIEWER phase/one navigation and fail-closed credential paths",
+    "Existing policy hard deny login and write methods; TARGET-only Document",
+    "Probe direct protected viewer entry and current evidence admission; reuse existing collect",
+    "Gate/new full scope and authority identities; preserve static image/source/read budgets",
+    "Launcher/probe identity binding only; original clocks/jobs/release preserved"
+  ],
+  "known_limits": [
+    "Profile persistence and future protected authentication remain UNKNOWN.",
+    "No native profile_binding implementation was read in this six-file scope; author must retain and statically verify frozen dependency behavior without real credential/config reads.",
+    "Existing browser-local token use for approved GETs is distinct from prohibited local username/password config reads and token export/injection.",
+    "No new profile/session diagnostic requests are proposed; insufficient current protected evidence stops.",
+    "A21 /home waiting mismatch remains historical and need not be changed for a no-login stage."
+  ],
+  "future_pending": [
+    "Root A21 formal closure",
+    "A22 task/IDs/workflow/product/candidate/raw",
+    "Formal independent bounded offline review",
+    "Applicable standing read-only TLS authority bound by root to exact new scope",
+    "New output/report/decision/activation/marker/window"
+  ],
+  "notes_md_sha256": "853774129cb429e6e26d3ed857a2482df5301daad72fcef3c353f39f5e439e57",
+  "actions": {
+    "product_import_run_tests": 0,
+    "network_browser_profile_config_credentials_native_occupancy": 0,
+    "active_directory_reads": 0,
+    "candidate_decision_activation_creation": 0,
+    "root_state_or_other_directory_changes": 0,
+    "commits": 0
+  },
+  "released": true
+}
