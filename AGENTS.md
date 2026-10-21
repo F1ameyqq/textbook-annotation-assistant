@@ -1,3 +1,5 @@
+2026-10-21 A22已正式独立及调度有限接受：产品41fda0d1/final1acc8d00，ACCEPTED_OFFLINE_ONLY/BOUNDED_READONLY_PREFLIGHT。新25/25 1000ms，独立控制3PASS/1辅助hash失败/1NOT_RUN；尾LF提取差异经静态核证，原失败保持，未重跑。14报告成员+self、94输入及50scope核证，见docs/evidence/coordinator/a22-independent-closure/。作者独立均释放；下一步直接绑定已有A17同类只读TLS持续许可至A22自己唯一轮，不重复询问。0用户名密码配置读取/登录/业务，真实认证/书源/首题仍未证。
+
 2026-10-21 A22已冻结释放交正式独立预检，产品41fda0d1/final1acc8d00；作者新25/25 766ms和raw25/25 750ms，28依赖/82交付+self、94去重raw。31967基线仅5获准修改、30726旧证据保全。原独立按docs/tasks/A22-fixed-session-reuse-independent-review.md在D:/1800-worktrees/a22-independent-fixed核零凭据/登录、VIEWER单阶段、当前组合证据及完整50scope。原失败保留；0真实资源/新live。通过后根沿用已有A17只读TLS持续许可绑定本阶段唯一轮，不重复询问。
 
 2026-10-21 A22新正式阶段去重意图已落盘，base29a24322，任务docs/tasks/A22-post-login-session-reuse-readonly.md。基于A21一次有限登录响应新事实，准备原profile只读复用，VIEWER单阶段/1固定导航、0本机用户名密码配置读取/填入/登录POST，不修无关home等待，不假设持久化或认证。作者D:/1800-worktrees/a22-session-reuse已建干净短路径worktree；新执行/独立确切ID/cursor见JSON。当前纯离线0真实资源/live，固定预检后根引用已有A17同类只读TLS持续许可绑定自己的唯一轮，不重复询问；不借A21已耗登录批准。
