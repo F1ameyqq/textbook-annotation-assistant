@@ -2,7 +2,7 @@
   "schema_version": 1,
   "project": "D:\\1800",
   "coordinator_thread_id": "01a15768-1e2d-7781-b29f-1f7376270216",
-  "updated_at": "2026-10-21T04:45:12.345678+00:00",
+  "updated_at": "2026-10-21T04:47:40.208839+00:00",
   "automation": {
     "id": "1800-a",
     "kind": "heartbeat",
@@ -12671,7 +12671,7 @@
     "A22": {
       "at": "2026-10-21T04:16:34.267672+00:00",
       "task": "A22",
-      "status": "ACCEPTED_OFFLINE_ONLY_PENDING_STANDING_PERMISSION_BINDING",
+      "status": "APPROVED_SINGLE_LIVE_DISPATCH_READY",
       "dispatch_key": "A22:post-login-session-reuse:new-formal-execution-review",
       "project_id": "4488a042-3ec7-4f9e-8880-cbc8f4e02a51",
       "host_id": "local",
@@ -12718,15 +12718,15 @@
       "review_task_document": "docs/tasks/A22-independent-session-reuse-review.md",
       "review_task_sha256": "76a3cc01dc5b300ed4ace9e6e8c80d50f076a3f7a49f3b8ae9a5dd7f50a4c1a1",
       "dedup_checked_no_A22": true,
-      "live_activated": false,
+      "live_activated": true,
       "live_used": 0,
       "scope": "POST_LOGIN_SESSION_REUSE_CURRENT_SOURCE_READONLY",
-      "offline_only": true,
+      "offline_only": false,
       "new_live_reserved_limit": 1,
-      "new_live_authorized": false,
+      "new_live_authorized": true,
       "login_submission_authorized": false,
       "local_credential_config_reads_authorized": false,
-      "next_dependency": "Bind existing A17 readonly TLS permission to one A22 context and 900-second window",
+      "next_dependency": "One fixed actual A22 delivery/release, then same formal independent static actual-result review",
       "workflow_commit": "68279e400143c5681338530db409060a39760c0a",
       "delivery": {
         "at": "2026-10-21T04:32:59.883701+00:00",
@@ -12847,6 +12847,67 @@
           "One successor control NOT_RUN",
           "Offline helper OS creation identity not collected; real authentication/source/save not proven"
         ]
+      },
+      "tls_exception_authorized": true,
+      "live_dispatch": {
+        "task": "A22",
+        "status": "READY_TO_SEND",
+        "at": "2026-10-21T04:47:40.208839+00:00",
+        "dispatch_key": "A22:session-reuse:standing-readonly-single-live",
+        "thread_id": "01a15cad-c139-76e2-88f8-705093575a7e",
+        "host_id": "local",
+        "task_document": "docs/tasks/A22-approved-single-live-dispatch.md",
+        "task_sha256": "adee9a3a00973a83325ed7ee1547fa661412022f2958e51e0ef362f88dce4987",
+        "product_commit": "41fda0d1ff7f548e1bc8ec6b5b4d653109736532",
+        "final_commit": "1acc8d00dfef5808561139a99ba6f028d7bfd7a1",
+        "candidate_sha256": "264e7fd8120efc8dd8f95f6c66b28693104d82f47e3d68e3a91fd0c422b38141",
+        "product_workflow": "68279e400143c5681338530db409060a39760c0a",
+        "decision_sha256": "53d708e0f9866ddac88728f23ba0cb1b7a794d39f96e5682826b506b4f966991",
+        "independent_report_sha256": "fa11ed620f6a32907af9f385f5539d7e0d7a6e6c30613abb4eef54a746d2cac4",
+        "activation_sha256": "f396716b79fdf33ba96d79c207d5e4e23c17daa9073e49741b26ac7abc919896",
+        "standing_permission_sha256": "f5ceacf9028f773ead882f3e6601004c2c3e28171be31abb85c5be99a1d67b46",
+        "coordinator_verification_sha256": "73f71eff31daed683b54152058affd030d676ccfe3a81ab36a774174393912e6",
+        "not_before": "2026-10-21T04:47:40.208839+00:00",
+        "expires_at": "2026-10-21T05:02:40.208839+00:00",
+        "cwd": "D:/1800-worktrees/a22-session-reuse/docs/evidence/A22/session-reuse/raw-checkout",
+        "argv": [
+          "python",
+          "-B",
+          "tools/a16_current_state_launcher.py",
+          "--live",
+          "--certificate-exception",
+          "--activation-file",
+          "D:/1800/.local/stages/a22-session-reuse-activation.json",
+          "--activation-sha256",
+          "f396716b79fdf33ba96d79c207d5e4e23c17daa9073e49741b26ac7abc919896",
+          "--candidate-sha256",
+          "264e7fd8120efc8dd8f95f6c66b28693104d82f47e3d68e3a91fd0c422b38141",
+          "--profile-fingerprint",
+          "b4620cd9fe064121a916062126321b7bba3862185d8919bf228f1399097a0d00",
+          "--decision-file",
+          "D:/1800/docs/approvals/A22-session-reuse-user-decision.json",
+          "--report-file",
+          "D:/1800/docs/evidence/coordinator/a22-independent-closure/independent-result.json"
+        ],
+        "environment": {
+          "PYTHONIOENCODING": "utf-8"
+        },
+        "unset_environment": [
+          "DEBUG",
+          "PWDEBUG"
+        ],
+        "raw_dependencies_verified": 28,
+        "profile_fingerprint": "b4620cd9fe064121a916062126321b7bba3862185d8919bf228f1399097a0d00",
+        "launch_limit": 1,
+        "retry_limit": 0,
+        "login_submission_limit": 0,
+        "local_credential_config_read_limit": 0,
+        "business_write_limit": 0
+      },
+      "user_decision": {
+        "path": "D:/1800/docs/approvals/A22-session-reuse-user-decision.json",
+        "sha256": "53d708e0f9866ddac88728f23ba0cb1b7a794d39f96e5682826b506b4f966991",
+        "basis": "A17_STANDING_READONLY_TLS_PERMISSION_BOUND_TO_A22"
       }
     }
   },
@@ -15260,8 +15321,8 @@
     }
   ],
   "last_action": {
-    "at": "2026-10-21T04:45:12.345678+00:00",
-    "action": "Accepted A22 finite independent session reuse preflight"
+    "at": "2026-10-21T04:47:40.208839+00:00",
+    "action": "Bound standing readonly permission and A22 unique live dispatch"
   },
   "limitations": [
     "Current route uses mock B artifacts until independently agreed interface/artifact versions exist.",

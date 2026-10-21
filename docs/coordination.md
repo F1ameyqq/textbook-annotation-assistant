@@ -1,3 +1,5 @@
+2026-10-21 A22正式独立及调度有限接受后，已按A17“一直批准”持续只读许可绑定自己唯一轮，任务docs/tasks/A22-approved-single-live-dispatch.md及根a22-live-dispatch意图。28依赖/3模板raw已核；1原context/1viewer导航/900秒，0用户名密码配置读取/填写/登录POST，认证后同context六GET及两图。实际窗口/启动结果见JSON；不重试/延期/清标记，不借A21已耗登录批准，不重复询问同类TLS。原执行承接，同独立等待固定实际结果；旧失败/UNKNOWN/额度保持。
+
 2026-10-21 A22已正式独立及调度有限接受：产品41fda0d1/final1acc8d00，ACCEPTED_OFFLINE_ONLY/BOUNDED_READONLY_PREFLIGHT。新25/25 1000ms，独立控制3PASS/1辅助hash失败/1NOT_RUN；尾LF提取差异经静态核证，原失败保持，未重跑。14报告成员+self、94输入及50scope核证，见docs/evidence/coordinator/a22-independent-closure/。作者独立均释放；下一步直接绑定已有A17同类只读TLS持续许可至A22自己唯一轮，不重复询问。0用户名密码配置读取/登录/业务，真实认证/书源/首题仍未证。
 
 2026-10-21 A22已冻结释放交正式独立预检，产品41fda0d1/final1acc8d00；作者新25/25 766ms和raw25/25 750ms，28依赖/82交付+self、94去重raw。31967基线仅5获准修改、30726旧证据保全。原独立按docs/tasks/A22-fixed-session-reuse-independent-review.md在D:/1800-worktrees/a22-independent-fixed核零凭据/登录、VIEWER单阶段、当前组合证据及完整50scope。原失败保留；0真实资源/新live。通过后根沿用已有A17只读TLS持续许可绑定本阶段唯一轮，不重复询问。
