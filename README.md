@@ -1,5 +1,7 @@
 # 试题标注辅助自动化
 
+2026-10-21主线：[Q16与三个阅读任务的固定离线输出](docs/b-q16-reading-fixed-delivery-20261021.md)。补齐阅读任务1漏失的面积公式、符号和三空，核对Q16的11分式与三小问配答；固定A C01消费者已实际读回4题/任务完整内容。原始候选、账本及HOLD保持，独立人工内容验收未完成；本轮不扩展辅助工具，网站标注不动。
+
 2026-10-21：[可运行的离线书页预框演示](docs/b-prebox-demo-20261021.md)。导入PNG/JPEG自动生成几何候选，支持拖画、移动、四角调整、分类、保存重开和自包含JSON导出/重导入；[真实界面](docs/evidence/prebox-demo-20261021.jpg)。启动：`python -X utf8 tools/prebox_b.py --workspace data/runs/my-prebox`，打开打印的本机地址。候选须人工检查，未核准、不配答、不修改网站；与第一章内容交付分别记录。
 
 全项目入口：[实施框架与关口](docs/project-framework.md) · [协作与交接](docs/collaboration.md) · [B 状态](docs/status/b.md) · [A 材料清单](docs/a-side-request.md)。公共合同仍为草案，识别模块使用隔离的试验格式。
