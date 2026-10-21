@@ -2,7 +2,7 @@
   "schema_version": 1,
   "project": "D:\\1800",
   "coordinator_thread_id": "01a15768-1e2d-7781-b29f-1f7376270216",
-  "updated_at": "2026-10-21T01:36:06.452746+00:00",
+  "updated_at": "2026-10-21T01:41:32.929607+00:00",
   "automation": {
     "id": "1800-a",
     "kind": "heartbeat",
@@ -12010,7 +12010,7 @@
     "A20": {
       "at": "2026-10-20T14:14:25.286698+00:00",
       "task": "A20",
-      "status": "SINGLE_LIVE_STOP_REPORTED_AWAITING_FIXED_DELIVERY",
+      "status": "ACTUAL_FAILURE_FIXED_INDEPENDENT_DISPATCH_PENDING",
       "dispatch_key": "A20:authenticated-source-recovery:new-formal-execution-review",
       "project_id": "4488a042-3ec7-4f9e-8880-cbc8f4e02a51",
       "host_id": "local",
@@ -12021,23 +12021,23 @@
         "thread_id": "01a159aa-42b4-7103-bfaa-9767969d9b8e",
         "workspace": "D:/1800-worktrees/a20-authenticated-source",
         "branch": "codex/a20-authenticated-source",
-        "status": "ACTIVE_SEALING_ACTUAL_STOP",
+        "status": "ACTUAL_FIXED_RELEASED",
         "host_id": "local",
         "acknowledged": true,
-        "cursor": "66899f29-d728-45ad-bc72-fd0dfe8adec2:4",
+        "cursor": "66899f29-d728-45ad-bc72-fd0dfe8adec2:14",
         "turn_id": "01a15c17-e10f-7651-89df-2920659e8ca8",
         "recorded_at": "2026-10-21T01:36:06.452746+00:00",
-        "released": false,
+        "released": true,
         "product_commit": "28203196b4f2dae27b1de4213b27da9a41ae3139",
-        "final_commit": "b41e88d7756fde9d7f1b348ce5a300d1104e765b",
-        "completed_at": null,
-        "duration_ms": null,
+        "final_commit": "f45fa86789b8f154d03e8c4807412a2161d678f6",
+        "completed_at": 1792546774,
+        "duration_ms": 342947,
         "started_at": 1792546431
       },
       "review": {
         "thread_id": "01a159ab-01ba-7093-89a6-69e7ce572c38",
-        "workspace": "D:/1800-worktrees/a20-independent-fixed",
-        "status": "ACCEPTED_OFFLINE_ONLY_RELEASED",
+        "workspace": "D:/1800-worktrees/a20-live-review",
+        "status": "ACTUAL_REVIEW_DISPATCH_PENDING",
         "host_id": "local",
         "acknowledged": true,
         "cursor": "fb5d2ce0-6d46-4202-86a8-a196d47f2ce0:5",
@@ -12071,7 +12071,7 @@
       "login_submission_authorized": true,
       "credential_tls_exception_authorized": true,
       "standing_tls_permission_reference": "docs/approvals/A17-excluded-static-user-decision.json",
-      "next_dependency": "Fixed actual author delivery/release; same independent static review; no retry",
+      "next_dependency": "Same independent static actual-failure/release review; A20 live exhausted",
       "workflow_commit": "52be34a72c43a7331976aba4b286138b9183856b",
       "source_analysis": {
         "at": "2026-10-20T14:17:53.155343+00:00",
@@ -12284,6 +12284,28 @@
         "business_get_and_original_reported": 0,
         "release": "author reports owned resources closed; raw not yet received",
         "active_directory_read": false
+      },
+      "actual_delivery": {
+        "at": "2026-10-21T01:41:32.929607+00:00",
+        "status": "MECHANICAL_PASS_PENDING_ACTUAL_INDEPENDENT_REVIEW",
+        "base": "b41e88d7756fde9d7f1b348ce5a300d1104e765b",
+        "intermediate": "28dc921c84bb4a6f043472337f3df9128c3b4d3f",
+        "final": "f45fa86789b8f154d03e8c4807412a2161d678f6",
+        "old_members_preserved": 31853,
+        "added": 28,
+        "modified": 0,
+        "deleted": 0,
+        "candidate_members": 27,
+        "delivery_manifest_members": 55,
+        "raw_members": 56,
+        "input_manifest_sha256": "7a0d0758424683549fe6aefb11cc18de5e7e09037b01c5083a96a37c2de873a8",
+        "delivery_manifest_sha256": "13e4b6ebc91ae36d0734fc0438564ee65d593064f890cf6e363066256fe71714",
+        "author_report_sha256": "0daa4d425c59b5c895b2ba1f21c70c512fa854fe1610afbf94f7756290e980d4",
+        "release_sha256": "21049df50a9198bd35c439603562e1b10ae52db573690cc1a35b292e252c7323",
+        "isolation": "D:/1800-worktrees/a20-live-review",
+        "coordinator_product_runs": 0,
+        "live_used": 1,
+        "live_remaining": 0
       }
     }
   },
@@ -14697,8 +14719,8 @@
     }
   ],
   "last_action": {
-    "at": "2026-10-21T01:36:06.452746+00:00",
-    "action": "A20 direct approval dispatched; author reports single live stopped before credential fill; waiting fixed evidence"
+    "at": "2026-10-21T01:41:32.929607+00:00",
+    "action": "Received fixed A20 login-page Image stop and isolated actual review"
   },
   "limitations": [
     "Current route uses mock B artifacts until independently agreed interface/artifact versions exist.",

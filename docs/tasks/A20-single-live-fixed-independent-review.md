@@ -1,0 +1,15 @@
+# A20 唯一实际轮固定结果独立核证
+
+续派原正式独立01a159ab-01ba-7093-89a6-69e7ce572c38。原执行已固定释放。产品28203196b4f2dae27b1de4213b27da9a41ae3139、离线final b41e88d7756fde9d7f1b348ce5a300d1104e765b，实际证据中间提交 28dc921c84bb4a6f043472337f3df9128c3b4d3f、final f45fa86789b8f154d03e8c4807412a2161d678f6。调度机械核全部31853旧成员mode/type/blob原样保全，仅28新增/0改删；候选27依赖不变，55清单成员+self合计56raw。
+
+唯一输入隔离 `D:/1800-worktrees/a20-live-review`；根清单 docs/evidence/coordinator/a20-live-delivery/input-raw-manifest.json SHA 7a0d0758424683549fe6aefb11cc18de5e7e09037b01c5083a96a37c2de873a8；作者完整清单SHA 13e4b6ebc91ae36d0734fc0438564ee65d593064f890cf6e363066256fe71714，报告SHA 0daa4d425c59b5c895b2ba1f21c70c512fa854fe1610afbf94f7756290e980d4，释放SHA 21049df50a9198bd35c439603562e1b10ae52db573690cc1a35b292e252c7323。只读此固定raw；不读原作者或.local实际输出。实际authority五份原bytes与根本轮文件相同。
+
+核本轮直接用户批准“批准本轮一次登录及读取”、scope AUTHENTICATION_RECOVERY_AND_CURRENT_BOOK_SOURCE、候选91db377e44b5b864208cc27a078d25266b3375bba2fdee18b9c648f37b572a7b、产品workflow52be34a72c43a7331976aba4b286138b9183856b及原profile、决定、activation对应。UTC窗口01:33:24.446405—01:48:24.446405，实际外部01:34:25.405895—01:34:36.111973；所有时间层分别核，不推测精确差值原因。
+
+实际报告为登录页一次导航失败，首致命同源Image GET API_BLOCKED，pathSHA7f8d9b088e7dea613880ef32040bf2c15bda25cb7a672a7ae05a37137bac2eba。路径用途与根因尚UNKNOWN，不做字典猜测。一次CDN拒绝、11审计不是11请求；version仅native预留不等于已发送。登录主Document HTTP/DCL未落盘；viewer navigation_diagnostics NOT_STARTED不等于整个轮未启动。实际凭据填入/提交、官方UI点击、登录POST为0；配置未读的证据仅冻结控制流早停，不能扩为OS文件审计。六GET/两图/映射/业务0，后继NOT_RUN，认证及当前书源未证明。
+
+结合固定原件核保留首错、晚到guard/pending0及释放：三个持有句柄进程的PID/创建身份before/after、退出码/句柄关闭，两Job最终0/关闭，context/runtime成功关闭。launcher自身OS身份保留UNKNOWN。外捕获包装器exit0与产品/worker/launcher exit2分开；135byte stdout只保存安全投影和hash、未存原bytes的限制如实列出。第一次清单误比较普通checkout CRLF失败及中间证据提交缺清单已保留，第二固定raw清单只是封存补齐，不作产品重跑。
+
+全程0suite、产品import/run、launcher、browser/network/profile/凭据/native/占用/新连接/登录；仅静态核固定结果。现有离线报告引用有限范围，不重做预检。0重发/重试/延期/清标记或旧额度恢复。原件完整且正确拒绝/ERROR下的报告细节差异列限制，不为此要求重跑或修产品。结论最多ACCEPTED_FIXED_FAILURE_AND_OWN_RELEASE_ONLY，不把认证/书源/首题标PASS。其他三例HOLD、Q22不重放、0B消息。
+
+只在新隔离内 `docs/evidence/A20/independent-live-review/` 输出报告、机器结果、静态核证记录、SHA清单和明确释放；不能覆盖原报告。完成后立即返回精确路径/hash及释放，不保持等待进程。

@@ -1,3 +1,5 @@
+2026-10-21 A20唯一真实轮已耗1/余0并固定释放，finalf45fa867：登录页同源Image GET API_BLOCKED，凭据填写/提交0、六GET/两图0，认证未证明。调度核28新增、55清单+self=56raw及全部旧成员保全；同独立按docs/tasks/A20-single-live-fixed-independent-review.md静态核实际失败和已证释放。首次CRLF清单失败及中间缺清单提交保留，0重跑。路径用途/根因/launcher自身OS身份UNKNOWN，不推定验证码或logo，不重开原activation/output/标记。
+
 2026-10-21 用户已直接回答固定A20问题“批准本轮一次登录及读取”，原待答状态关闭，不再询问。决定与提案/候选/独立报告39项绑定，27依赖和模板raw已核；任务docs/tasks/A20-approved-single-live-dispatch.md、意图docs/evidence/coordinator/a20-live-dispatch/dispatch-intent.json。原执行承接唯一1context/最多2导航/1官方UI登录/900秒，同context六GET和两图；0业务写入上传OCR，首异常或未知停止不重试。实际窗口及启动结果见JSON。原独立待固定交付，旧额度/失败/原件不变。下方未答/未激活为历史。
 
 2026-10-20 A20有限独立及调度接受后，具体本轮提案已固定：docs/tasks/A20-bounded-authenticated-source-decision-proposal.md。最多1原context/2固定导航/1次官方UI登录提交/900秒，登录后同context读取六GET/两图，0业务写入上传OCR。因新增在context TLS例外中发送本机已有凭据，须本次直接决定；原“一直批准”只读许可不代用。作者/独立已释放，当前0真实凭据/登录/decision/activation/live，不得未答先执行、重复询问或恢复旧额度。精确提案hash及问询状态见JSON。
