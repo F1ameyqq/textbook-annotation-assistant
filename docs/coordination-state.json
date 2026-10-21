@@ -2,7 +2,7 @@
   "schema_version": 1,
   "project": "D:\\1800",
   "coordinator_thread_id": "01a15768-1e2d-7781-b29f-1f7376270216",
-  "updated_at": "2026-10-21T04:59:37.877771+00:00",
+  "updated_at": "2026-10-21T05:01:01.993805+00:00",
   "automation": {
     "id": "1800-a",
     "kind": "heartbeat",
@@ -12671,7 +12671,7 @@
     "A22": {
       "at": "2026-10-21T04:16:34.267672+00:00",
       "task": "A22",
-      "status": "ACTUAL_FAILURE_FIXED_INDEPENDENT_DISPATCH_PENDING",
+      "status": "ACTUAL_FAILURE_FIXED_INDEPENDENT_REVIEW_ACTIVE",
       "dispatch_key": "A22:post-login-session-reuse:new-formal-execution-review",
       "project_id": "4488a042-3ec7-4f9e-8880-cbc8f4e02a51",
       "host_id": "local",
@@ -12697,20 +12697,20 @@
       "review": {
         "thread_id": "01a15cad-c63a-7062-8fe6-2fc4add9e9a5",
         "workspace": "D:/1800-worktrees/a22-live-review",
-        "status": "ACTUAL_REVIEW_DISPATCH_PENDING",
+        "status": "ACTIVE_ACTUAL_STATIC_REVIEW",
         "host_id": "local",
-        "cursor": "05b138eb-1be4-4f90-9ad5-89720d315532:7",
-        "turn_id": "01a15cbc-5245-7342-8840-8e85c5ab22f7",
-        "started_at": 1792557208,
+        "cursor": "05b138eb-1be4-4f90-9ad5-89720d315532:8",
+        "turn_id": "01a15cd4-d562-7952-82c8-10c010d85dd0",
+        "started_at": 1792558814,
         "acknowledged": true,
-        "released": true,
+        "released": false,
         "preparation_released": true,
         "preparation_manifest_sha256": "fc610d4d6962b15d044ca6c5c76736aab85ab36f67bdecc33bdeaf2bad7ef8e5",
         "preparation_archive": "D:/1800/docs/evidence/coordinator/a22-independent-preparation",
         "last_checked_at": "2026-10-21T04:38:11.741386+00:00",
         "progress_note": "Reported new suite 25/25; independent controls 3 pass then source-segment hash mismatch. Reviewer preserving failure and checking extraction difference statically; no fixed final result or live activation.",
-        "completed_at": 1792557637,
-        "duration_ms": 429769,
+        "completed_at": null,
+        "duration_ms": null,
         "closure_directory": "D:/1800/docs/evidence/coordinator/a22-independent-closure"
       },
       "task_document": "docs/tasks/A22-post-login-session-reuse-readonly.md",
@@ -13067,12 +13067,13 @@
         ],
         "coordinator_product_runs": 0,
         "release": "AUXILIARY_COMPLETE_NO_WAITING_RESOURCES"
-      }
+      },
+      "actual_review_workflow": "817903b62df8adcc4a48009a70184a23e23dd253"
     },
     "A23": {
       "at": "2026-10-21T04:58:52.666220+00:00",
       "task": "A23",
-      "status": "INTENT_RECORDED_BEFORE_CREATE",
+      "status": "FORMAL_OFFLINE_EXECUTION_AND_REVIEW_PREPARATION_ACTIVE",
       "dispatch_key": "A23:session-completion:new-formal-execution-review",
       "project_id": "4488a042-3ec7-4f9e-8880-cbc8f4e02a51",
       "host_id": "local",
@@ -13080,15 +13081,27 @@
       "thinking": "xhigh",
       "model": "INHERIT_USER_DEFAULT",
       "execution": {
-        "thread_id": null,
+        "thread_id": "01a15cd4-d799-75b1-8514-13040b089182",
         "workspace": "D:/1800-worktrees/a23-session-completion",
         "branch": "codex/a23-session-completion",
-        "status": "CREATE_NOT_CALLED"
+        "status": "ACTIVE_OFFLINE",
+        "host_id": "local",
+        "cursor": "9e50bdb0-2159-47d9-b37b-8f66475ce061:1",
+        "turn_id": "01a15cd4-dc81-7491-bfda-88997257b38c",
+        "started_at": 1792558816,
+        "acknowledged": true,
+        "released": false
       },
       "review": {
-        "thread_id": null,
+        "thread_id": "01a15cd4-df45-7002-8caa-f89820034469",
         "workspace": "D:/1800-worktrees/a23-review-preparation",
-        "status": "CREATE_NOT_CALLED"
+        "status": "ACTIVE_PREPARATION",
+        "host_id": "local",
+        "cursor": "444d385a-5fe3-4ed7-a15d-6aa95d1ae70e:1",
+        "turn_id": "01a15cd4-e5b0-71f1-8ea0-1904998d217a",
+        "started_at": 1792558818,
+        "acknowledged": true,
+        "released": false
       },
       "task_document": "docs/tasks/A23-current-session-completion-source-readonly.md",
       "task_sha256": "50b68ec55c73ad9f72915787aabf0b2f0373c1202e1c73a3898b1d38ff516e5d",
@@ -15517,8 +15530,8 @@
     }
   ],
   "last_action": {
-    "at": "2026-10-21T04:59:37.877771+00:00",
-    "action": "Root reverified A22 fixed actual bytes and prepared same-reviewer dispatch"
+    "at": "2026-10-21T05:01:01.993805+00:00",
+    "action": "Registered A23 formal execution/review and acknowledged parallel A22 fixed actual review"
   },
   "limitations": [
     "Current route uses mock B artifacts until independently agreed interface/artifact versions exist.",
