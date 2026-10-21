@@ -2,7 +2,7 @@
   "schema_version": 1,
   "project": "D:\\1800",
   "coordinator_thread_id": "01a15768-1e2d-7781-b29f-1f7376270216",
-  "updated_at": "2026-10-21T02:17:00.611415+00:00",
+  "updated_at": "2026-10-21T02:18:27.854581+00:00",
   "automation": {
     "id": "1800-a",
     "kind": "heartbeat",
@@ -12340,7 +12340,7 @@
     "A21": {
       "at": "2026-10-21T01:50:20.225601+00:00",
       "task": "A21",
-      "status": "ACCEPTED_OFFLINE_ONLY_PENDING_CONCRETE_CREDENTIAL_DECISION",
+      "status": "READY_FOR_DIRECT_A21_CREDENTIAL_DECISION",
       "dispatch_key": "A21:static-image-classification:new-formal-execution-review",
       "project_id": "4488a042-3ec7-4f9e-8880-cbc8f4e02a51",
       "host_id": "local",
@@ -12393,7 +12393,7 @@
       "new_live_authorized": false,
       "login_submission_authorized": false,
       "credential_tls_exception_authorized": false,
-      "next_dependency": "Finalize concrete A21 credential/context-TLS proposal and obtain direct user decision; no live until then",
+      "next_dependency": "Direct user answer to fixed A21 proposal; no repeated question or live before answer",
       "workflow_commit": "82c2b7ee62a126bb74bc08c2d2dedbe5c556d1ca",
       "delivery": {
         "at": "2026-10-21T02:10:39.412635+00:00",
@@ -12503,6 +12503,17 @@
         "draft_sha256": "3a8eb7c3378b9a699595e2c924b33b19d08d1f148c8d7fd8d3c08b9f9a7f9325",
         "released": true,
         "formal_acceptance": false
+      },
+      "decision_proposal": {
+        "path": "D:/1800/docs/tasks/A21-bounded-authenticated-source-decision-proposal.md",
+        "sha256": "d2539d443c95ddc1ac39e43ff5f1a7a42824e2e1d0be2dfd3fc15d34fc0deffc",
+        "acceptance_commit": "09b25a90abc3645915f0f04113541aa83dfb9afe"
+      },
+      "user_decision_request": {
+        "path": "D:/1800/docs/evidence/coordinator/a21-user-decision-request/request-intent.json",
+        "sha256": "a44ee42241fea33088cb2100ff939cee56dcb35f2bf13518d3744921eb3889d9",
+        "status": "READY_TO_ASK_DIRECT_HUMAN_DECISION",
+        "question": "A21 已通过独立及调度预检。是否批准已固定的本轮方案（D:/1800/docs/tasks/A21-bounded-authenticated-source-decision-proposal.md）：在原专用无头会话临时忽略 HTTPS 证书校验，使用本机已有配置最多提交一次官方登录表单，随后同会话读取书46007447的书源；最多2次固定导航、15分钟含释放，0业务写入/上传/OCR，异常停止不重试？这会发送既有用户名和密码，证书不能可靠确认服务端身份，无需提供密码。A20批准明确仅限上一轮且已消费；按A21任务约定，本轮凭据提交需新的直接决定。"
       }
     }
   },
@@ -14916,8 +14927,8 @@
     }
   ],
   "last_action": {
-    "at": "2026-10-21T02:17:00.611415+00:00",
-    "action": "Accepted finite A21 independent static-image preflight"
+    "at": "2026-10-21T02:18:27.854581+00:00",
+    "action": "Fixed A21 concrete credential transmission proposal for direct decision"
   },
   "limitations": [
     "Current route uses mock B artifacts until independently agreed interface/artifact versions exist.",

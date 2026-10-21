@@ -1,3 +1,5 @@
+2026-10-21 A21具体本轮提案已固定：docs/tasks/A21-bounded-authenticated-source-decision-proposal.md。有限独立及根接受后，请用户决定本轮1原context/2固定导航/最多1官方UI登录/900秒及同context六GET两图，0业务写入上传OCR；A20批准只上一轮已消费，不移用。本轮待直接凭据提交决定，当前0真实配置读取/decision/activation/live；精确提案hash和问询状态见JSON，不重复问或未答先执行。
+
 2026-10-21 A21已正式独立及调度有限接受：产品b65d8515/finalcf03910d，ACCEPTED_OFFLINE_ONLY；独立新16/16 296ms、5控制141ms，22报告成员+self和76输入原bytes核证、完整47scope通过。见docs/evidence/coordinator/a21-independent-closure/。作者独立均释放，0真实凭据/login/live；下一步完整具体本轮凭据方案交用户直接决定。A20图片用途/根因UNKNOWN、原失败和耗尽额度保持；独立首文档helper参数错误仅修helper，测试未重跑。
 
 2026-10-21 A21已冻结释放交正式独立预检：产品b65d8515/finalcf03910d，作者新16/16及raw16/16；27依赖/63交付+self、76去重raw，31881基线仅4获准修改、30644旧证据保全。原独立按docs/tasks/A21-fixed-static-image-independent-review.md在D:/1800-worktrees/a21-independent-fixed核窄静态图片分类/两层身份/完整47scope与旧许可拒绝。实际A20路径用途根因UNKNOWN；当前0真实凭据/login/live，接受后再固定本阶段具体凭据决定，不借A20已耗批准。确切状态/cursor见JSON。
