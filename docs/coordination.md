@@ -1,3 +1,5 @@
+2026-10-21 A21新正式阶段已先落盘去重意图，基线f45fa867，任务docs/tasks/A21-static-image-authenticated-source.md。只修原站规范assets单basename图片与PROTECTED关键词冲突及新阶段身份绑定；实际A20阻断路径用途仍UNKNOWN，不能称已定位根因。新执行/独立各自正式对话ID/cursor见JSON，作者D:/1800-worktrees/a21-static-image短路径worktree已建，独立仅准备标准等固定raw。当前纯离线0browser/network/profile/真实凭据/login/live；A20原件和已耗额度保持。先可运行候选和有限独立预检，再固定本阶段具体凭据提交决定，不借A20单轮批准。
+
 2026-10-21 A20实际失败已正式独立及调度有限收口，finalf45fa867，10报告成员+self及56输入原bytes核证，见docs/evidence/coordinator/a20-live-independent-closure/。仅接受登录页Image GET API_BLOCKED固定失败和三持有身份进程/两Job/context/runtime已证释放。凭据填写/提交、六GET/两图0，认证未证明；路径用途/根因/主DocumentHTTP/DCL/launcher自身OS身份UNKNOWN，stdout原bytes未提供及首次清单错误仅作者转录保持。作者独立均释放，live1耗尽余0，不重派旧A20。本轮直接批准已用；静态分类冲突的后继修正不恢复额度。
 
 2026-10-21 A20唯一真实轮已耗1/余0并固定释放，finalf45fa867：登录页同源Image GET API_BLOCKED，凭据填写/提交0、六GET/两图0，认证未证明。调度核28新增、55清单+self=56raw及全部旧成员保全；同独立按docs/tasks/A20-single-live-fixed-independent-review.md静态核实际失败和已证释放。首次CRLF清单失败及中间缺清单提交保留，0重跑。路径用途/根因/launcher自身OS身份UNKNOWN，不推定验证码或logo，不重开原activation/output/标记。

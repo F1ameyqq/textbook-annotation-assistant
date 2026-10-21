@@ -2,7 +2,7 @@
   "schema_version": 1,
   "project": "D:\\1800",
   "coordinator_thread_id": "01a15768-1e2d-7781-b29f-1f7376270216",
-  "updated_at": "2026-10-21T01:47:33.547583+00:00",
+  "updated_at": "2026-10-21T01:50:20.225601+00:00",
   "automation": {
     "id": "1800-a",
     "kind": "heartbeat",
@@ -12072,7 +12072,7 @@
       "login_submission_authorized": true,
       "credential_tls_exception_authorized": true,
       "standing_tls_permission_reference": "docs/approvals/A17-excluded-static-user-decision.json",
-      "next_dependency": "Prepare narrow static-image classification correction; no A20 retry or transfer of one-round login authority",
+      "next_dependency": "A21 narrow static-image classification correction; A20 stays closed and spent",
       "workflow_commit": "52be34a72c43a7331976aba4b286138b9183856b",
       "source_analysis": {
         "at": "2026-10-20T14:17:53.155343+00:00",
@@ -12336,6 +12336,42 @@
           "Authentication, current book/source/inventory/mapping and first save/readback remain unproven. Body/schema UNKNOWN and write eligibility false are preserved; no old NOT_RUN or spent budget is restored."
         ]
       }
+    },
+    "A21": {
+      "at": "2026-10-21T01:50:20.225601+00:00",
+      "task": "A21",
+      "status": "INTENT_RECORDED_BEFORE_CREATE",
+      "dispatch_key": "A21:static-image-classification:new-formal-execution-review",
+      "project_id": "4488a042-3ec7-4f9e-8880-cbc8f4e02a51",
+      "host_id": "local",
+      "base_commit": "f45fa86789b8f154d03e8c4807412a2161d678f6",
+      "thinking": "xhigh",
+      "model": "INHERIT_USER_DEFAULT",
+      "execution": {
+        "thread_id": null,
+        "workspace": "D:/1800-worktrees/a21-static-image",
+        "branch": "codex/a21-static-image",
+        "status": "CREATE_NOT_CALLED"
+      },
+      "review": {
+        "thread_id": null,
+        "workspace": "D:/1800-worktrees/a21-review-preparation",
+        "status": "CREATE_NOT_CALLED"
+      },
+      "task_document": "docs/tasks/A21-static-image-authenticated-source.md",
+      "task_sha256": "e34acb7ade411353eb177d6b455eb0fb42fb2269b0c8e1237636d1cd2b0e8654",
+      "review_task_document": "docs/tasks/A21-independent-static-image-review.md",
+      "review_task_sha256": "9ec7151f727b76c1a7a4f0ac728a78cf7f92c44076a61c309125befdb02144cc",
+      "dedup_checked_no_A21": true,
+      "live_activated": false,
+      "live_used": 0,
+      "scope": "AUTHENTICATION_RECOVERY_STATIC_IMAGE_CLASSIFICATION",
+      "offline_only": true,
+      "new_live_reserved_limit": 1,
+      "new_live_authorized": false,
+      "login_submission_authorized": false,
+      "credential_tls_exception_authorized": false,
+      "next_dependency": "New formal offline correction and independent preparation; concrete decision only after fixed preflight"
     }
   },
   "route": [
@@ -14748,8 +14784,8 @@
     }
   ],
   "last_action": {
-    "at": "2026-10-21T01:47:33.547583+00:00",
-    "action": "Closed A20 fixed login-page failure and recorded owned release after independent review"
+    "at": "2026-10-21T01:50:20.225601+00:00",
+    "action": "Recorded A21 new formal execution/review intent for static-image classification correction"
   },
   "limitations": [
     "Current route uses mock B artifacts until independently agreed interface/artifact versions exist.",

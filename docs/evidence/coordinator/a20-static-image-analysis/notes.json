@@ -1,0 +1,116 @@
+{
+  "schema": "A20-login-image-static-preparation/v1",
+  "created_at": "2026-10-21T01:39:11.524246+00:00",
+  "status": "STATIC_PREPARATION_ONLY_NOT_FORMAL_ACCEPTANCE",
+  "script_sha256": "d0a5ebce18bc92d7643662ecec2d078bb295214111e7cb32688f0b88e05bed41",
+  "script_bytes": 3065996,
+  "offset_convention": "zero-based UTF-8 bytes; half-open spans",
+  "reviewed_login_component_span": [
+    1095192,
+    1097198
+  ],
+  "login_component_markers": {
+    "img_create": {
+      "count_in_login_component": 0
+    },
+    "src_property": {
+      "count_in_login_component": 0
+    },
+    "css_url": {
+      "count_in_login_component": 0
+    },
+    "captcha_ascii": {
+      "count_in_login_component": 0
+    }
+  },
+  "global_captcha_case_insensitive_count": 0,
+  "global_chinese_captcha_marker_count": 0,
+  "anchors": [
+    {
+      "name": "login_background_div",
+      "byte_offset": 1095872,
+      "bytes": 43,
+      "fragment_sha256": "11bbd450fe35324211812d68bbdb76c9dba6ee47fa432cdd74c877154ee8d40f"
+    },
+    {
+      "name": "logo_assignment",
+      "byte_offset": 2230354,
+      "bytes": 37,
+      "fragment_sha256": "c36813f2fa3ddc738ebe4d0dade6ce10067acc8d6afb66d8d152109ad8b0c8da"
+    },
+    {
+      "name": "logo_image_use",
+      "byte_offset": 2231537,
+      "bytes": 48,
+      "fragment_sha256": "0c2651e7988d0971e8117f4bd2fb3ad2bba26d90788b40a8c938c906aa103482"
+    }
+  ],
+  "explicit_public_image_paths": [
+    {
+      "path": "/qieti/assets/logo-Dj3LIo9h.png",
+      "path_byte_offset": 2230359,
+      "assignment_byte_offset": 2230354,
+      "component": "AppHeader",
+      "component_name_byte_offset": 2230691,
+      "img_use_byte_offset": 2231537,
+      "query_present": false,
+      "actual_request_or_blocked_path_match": "NOT_PROVEN"
+    }
+  ],
+  "login_background": {
+    "node_byte_offset": 1095872,
+    "class_value_byte_offset": 1095888,
+    "class_name": "login-background",
+    "scoped_id": "data-v-3765519e",
+    "scoped_id_string_byte_offset": 1097177,
+    "image_url_from_reviewed_js": "NOT_FOUND",
+    "css_html_or_server_sources_read": false
+  },
+  "captcha_endpoint_from_reviewed_login_component": "NOT_FOUND",
+  "actual_blocked_path": "UNKNOWN_NOT_READ",
+  "actual_blocked_hash": "UNKNOWN_NOT_READ",
+  "actual_purpose": "UNKNOWN",
+  "actual_event_basis": "Coordinator relayed active-author progress only; no live output inspected",
+  "frozen_source_final": "b41e88d7756fde9d7f1b348ce5a300d1104e765b",
+  "frozen_sources": [
+    {
+      "path": "src/annotation/source/usense/current_readonly/auth.py",
+      "sha256": "90b8a25d2f6ee3966e469207c28635658b5077dfc9345e53010d6c1fb3855be9",
+      "relevant_lines": [
+        189,
+        198
+      ],
+      "finding": "known_form rejects extra auth markers; does not identify image endpoints or establish actual form execution"
+    },
+    {
+      "path": "src/annotation/source/usense/current_readonly/policy.py",
+      "sha256": "e12e50c32e6c1dd7c427d6e6b07492fe0ffffbd8edbf509ea1d93b3416231b94",
+      "relevant_lines": [
+        182,
+        185
+      ],
+      "finding": "PROTECTED API_BLOCKED branch precedes STATIC acceptance; resource type alone does not identify purpose"
+    }
+  ],
+  "inference_limitations": [
+    "Static missing captcha marker does not prove no current captcha",
+    "Background class does not establish a concrete image URL",
+    "Shared AppHeader logo does not prove this login-page request",
+    "API_BLOCKED covers protected path patterns, not one inferred endpoint",
+    "No actual path/hash available yet; no permission expansion proposed"
+  ],
+  "notes_md_sha256": "3bcf0a75e9fcfc510d2224a724ebf3933cdce37752dacd820d752daeab119cd8",
+  "actions": {
+    "script_execution": 0,
+    "script_refetch": 0,
+    "source_copy_to_git": 0,
+    "sidecar_read": 0,
+    "active_directory_read": 0,
+    "live_output_read": 0,
+    "credential_profile_config_reads": 0,
+    "product_tests_native_occupancy": 0,
+    "network": 0,
+    "commits": 0
+  },
+  "release": "COMPLETE_NO_BACKGROUND_OR_WAITING_PROCESSES"
+}

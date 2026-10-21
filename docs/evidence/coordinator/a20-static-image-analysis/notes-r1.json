@@ -1,0 +1,101 @@
+{
+  "schema": "A20-login-image-static-preparation-r1/v1",
+  "created_at": "2026-10-21T01:43:53.696396+00:00",
+  "scope": "STATIC_MECHANISM_AND_EXISTING_LITERAL_COMPARISON_ONLY",
+  "actual_final": "f45fa86789b8f154d03e8c4807412a2161d678f6",
+  "audit_path": "docs/evidence/A20/authenticated-source/live-delivery/network-audit.json",
+  "audit_sha256": "bbd0cd07e1e4ed0c6abcd661d45e432465e8f03800111ff8b8e632e1db2ae341",
+  "audit_bytes": 8256,
+  "audit_event_count_not_http_count": 11,
+  "actual_event": {
+    "index": 8,
+    "event": {
+      "business_read": false,
+      "category": "API_BLOCKED",
+      "decision": "BLOCK",
+      "expected_excluded_path_denial": false,
+      "expected_excluded_static_denial": false,
+      "expected_excluded_version_repeat": false,
+      "expected_passive_denial": false,
+      "hostname": "www.usense.com",
+      "known_route": "UNKNOWN",
+      "main_navigation": false,
+      "method": "GET",
+      "path_sha256": "7f8d9b088e7dea613880ef32040bf2c15bda25cb7a672a7ae05a37137bac2eba",
+      "path_template": null,
+      "port": 443,
+      "query_names_redacted": 0,
+      "query_parameter_names": [],
+      "redirect_hop": false,
+      "resource_type": "Image",
+      "scheme": "https",
+      "source": "FETCH_REQUEST_STAGE",
+      "time": "2026-10-21T01:34:35.501292+00:00"
+    }
+  },
+  "policy_sha256": "e12e50c32e6c1dd7c427d6e6b07492fe0ffffbd8edbf509ea1d93b3416231b94",
+  "policy_unchanged_in_actual_final": true,
+  "protected_regex": "(^|/)(?:api|login|logout|signin|signout|sign[-_]in|sign[-_]out|user[-_]login|auth|oauth)(?:/|[._-]|$)",
+  "mechanism": {
+    "match_operation": "PROTECTED.search(p.path), re.I",
+    "left_boundary": "path start or slash",
+    "right_boundary": "slash, dot, underscore, hyphen, or path end",
+    "arbitrary_substring_match": false,
+    "whole_directory_segment_only": false,
+    "static_basename_prefix_can_match": true,
+    "protected_branch_lines": [
+      182,
+      183
+    ],
+    "static_branch_lines": [
+      184,
+      185
+    ],
+    "actual_static_false_positive": "NOT_PROVEN"
+  },
+  "known_source_comparison": {
+    "script_sha256": "d0a5ebce18bc92d7643662ecec2d078bb295214111e7cb32688f0b88e05bed41",
+    "script_bytes": 3065996,
+    "literal_path_occurrences": 333,
+    "literal_path_unique_count": 201,
+    "actual_hash_matches": 0,
+    "constructed_or_guessed_paths": 0,
+    "known_logo_path": "/qieti/assets/logo-Dj3LIo9h.png",
+    "known_logo_offset": 2230359,
+    "known_logo_path_sha256": "df4ef8fc1c7c80c5786a44a9b3a8d553bd21caaa31a9d593cd38575d3afbf754",
+    "known_logo_matches_actual": false,
+    "limitations": "Only existing full root-relative literals; not runtime concatenation, CSS or HTML"
+  },
+  "fixed_repository_source_search": {
+    "scope": "fixed final src/tools/tests/docs image-name text search",
+    "initial_matching_files": 2,
+    "actual_frontend_literal_paths_established": 0,
+    "disposition": "Two A01 bootstrap command output NUL-separated repository path lists; bounded filename refinement produced zero matches. Initial oversized output was truncated; no product/platform rerun.",
+    "sources": [
+      {
+        "path": "docs/evidence/A01/review-integration-R1/bootstrap-commands.json",
+        "sha256": "6f730d01e361c2250833038b4abe21727b4857d86201f73b673c3fdda856cd68"
+      },
+      {
+        "path": "docs/evidence/A01/review-integration-R2/bootstrap-commands.json",
+        "sha256": "d2b4e4ad3623990d2f5b8b6988eaafb35c9aba58002b8363baa59e995233b054"
+      }
+    ]
+  },
+  "actual_path_and_purpose": "UNKNOWN",
+  "minimum_direction": "Separate genuine protected route identity from proven existing approved static-image basename classification; do not broadly allow Image or reorder all STATIC before protection. Source evidence still required; no new request or retry authorized.",
+  "original_notes_unchanged": {
+    "notes.md": "3bcf0a75e9fcfc510d2224a724ebf3933cdce37752dacd820d752daeab119cd8",
+    "notes.json": "2ac3ca31632e2a2845b7432278e32d5bcdf53c1547ec6f726fb3782b18f31600"
+  },
+  "notes_r1_md_sha256": "ee1d4841738b29e1d21b29bd60939fc4796f2bbb7e8c2a5995d5d5df3a8a5cc7",
+  "actions": {
+    "product_execution_import_tests": 0,
+    "network_profile_credentials_config_native_occupancy": 0,
+    "sidecar_reads": 0,
+    "new_live_or_retries": 0,
+    "product_or_coordination_changes": 0,
+    "commits": 0
+  },
+  "released": true
+}
