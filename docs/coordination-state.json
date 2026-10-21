@@ -2,14 +2,14 @@
   "schema_version": 1,
   "project": "D:\\1800",
   "coordinator_thread_id": "01a15dfa-9556-7812-9ed5-1b3bce53555e",
-  "updated_at": "2026-10-21T13:02:03.077346+00:00",
+  "updated_at": "2026-10-21T13:05:39.964685+00:00",
   "automation": {
     "id": "1800-a",
     "kind": "heartbeat",
     "status": "ACTIVE",
     "interval_minutes": 50,
     "routing_update": "TRANSFERRED_TO_REGISTERED_SUCCESSOR",
-    "routing_updated_at": "2026-10-21T10:25:06.483092+00:00",
+    "routing_updated_at": "2026-10-21T13:04:30.532918+00:00",
     "pause_reason": "USER_REQUESTED_COORDINATOR_CONTEXT_MIGRATION",
     "paused_at": "2026-10-21T10:15:48.597167+00:00",
     "target_thread_id": "01a15dfa-9556-7812-9ed5-1b3bce53555e",
@@ -17,7 +17,8 @@
     "transfer_receipt": "docs/handoff/coordinator-20261021/successor-takeover/automation-r1-review-continuation-receipt.json",
     "actual_rrule": "RRULE:FREQ=MINUTELY;INTERVAL=50",
     "prior_repo_interval_minutes": 30,
-    "cadence_note": "Actual TOML already50 at handoff; preserved, cause of discrepancy UNKNOWN"
+    "cadence_note": "Actual TOML already50 at handoff; preserved, cause of discrepancy UNKNOWN",
+    "latest_prompt_sha256": "f74bef5bf296099f30de586695ae5e51d1cd99975d27c43b9f77b29e3507a1a3"
   },
   "managed_side": "A",
   "authority": {
@@ -13601,14 +13602,14 @@
         "thread_id": "01a15cf8-0c63-70d3-b374-ce85e6f29fd7",
         "workspace": "D:/1800-worktrees/a24-first-save",
         "branch": "codex/a24-first-save",
-        "status": "MINIMUM_GATE_CURRENT_BODY_EXACT_AUTHORITY_DISPATCH_INTENT",
+        "status": "MINIMUM_GATE_CURRENT_BODY_SINGLE_LIVE_ACTIVE",
         "host_id": "local",
-        "cursor": "b0f205c6-d71d-451a-a23a-44e2a614d899:4",
-        "turn_id": "01a15e7e-ee7b-7fb1-b9a5-97d756e56e11",
-        "started_at": 1792586739,
+        "cursor": "b0f205c6-d71d-451a-a23a-44e2a614d899:8",
+        "turn_id": "01a15e8e-c6b9-7d61-befd-c56a6ed779c2",
+        "started_at": 1792587777,
         "acknowledged": true,
-        "released": true,
-        "progress_note": "Actual bootstrap substep unavailable; same author fixing pre-resource reopen gate and passive existing-step/raw-output retention without new live.",
+        "released": false,
+        "progress_note": "Author reported exact new one-shot acquisition started from frozen minimum-gate package; external holder owns launcher identity/handle. Await fixed actual result; no retry.",
         "product_commit": "f529cd890814045689cb0907247d765d7218e215",
         "final_commit": "1be0a94b71ef9b200e4941ad4488c98280f8cba8",
         "completed_at": null,
@@ -14859,7 +14860,7 @@
           "at": "2026-10-21T13:02:03.077346+00:00",
           "task": "A24",
           "same_stage": true,
-          "status": "EXACT_AUTHORITY_BOUND_PENDING_SAME_AUTHOR_DISPATCH",
+          "status": "ACTUAL_STARTED_AWAITING_FIXED_RESULT",
           "run_id": "A24-first-save-r1-minimum-body-20261021t130203z",
           "authority": {
             "path": "D:/1800/docs/evidence/coordinator/a24-minimum-gate-current-body-dispatch/authority.json",
@@ -14896,13 +14897,19 @@
             0,
             0
           ],
-          "live_used": 0,
+          "live_used": 1,
           "live_limit": 1,
           "actual_save": "NOT_RUN",
           "actual_independent_readback": "NOT_RUN",
           "historical_rework_and_spent_current_body_preserved": true,
           "prior_current_body_remaining": 0,
-          "root_product_or_tests_or_live_runs": 0
+          "root_product_or_tests_or_live_runs": 0,
+          "dispatch_workflow": "49ca3f61f1598d1fac7b8335d328a5bb8c84fad0",
+          "execution_turn": "01a15e8e-c6b9-7d61-befd-c56a6ed779c2",
+          "execution_cursor": "b0f205c6-d71d-451a-a23a-44e2a614d899:8",
+          "live_remaining": 0,
+          "actual_started_reported": true,
+          "actual_start_exact_timestamp": "AWAIT_FIXED_EVIDENCE"
         }
       }
     }
@@ -17321,14 +17328,16 @@
       "kind": "MINIMUM_GATE_CURRENT_BODY_EXACT_SINGLE_LIVE",
       "thread_id": "01a15cf8-0c63-70d3-b374-ce85e6f29fd7",
       "authority_sha256": "960f729175f836755ab2af81d6a36baa4d8357ae6a61df495842f3494fc54d81",
-      "status": "BOUND_PENDING_SEND",
+      "status": "SENT_AND_ACKNOWLEDGED",
       "new_stage": false,
-      "old_budgets_restored": false
+      "old_budgets_restored": false,
+      "turn_id": "01a15e8e-c6b9-7d61-befd-c56a6ed779c2",
+      "cursor": "b0f205c6-d71d-451a-a23a-44e2a614d899:5"
     }
   ],
   "last_action": {
-    "at": "2026-10-21T13:02:32.962111+00:00",
-    "action": "Accepted fixed minimum-gate independent delta and bound one fresh current-body4GET authority960f7291; old86f3 and old readonly rounds remain spent; same author dispatch next."
+    "at": "2026-10-21T13:05:39.964685+00:00",
+    "action": "Same author confirmed minimum-gate actual current-body test started; new round spent1/remaining0 pending frozen outcome."
   },
   "limitations": [
     "Current route uses mock B artifacts until independently agreed interface/artifact versions exist.",
@@ -17721,12 +17730,13 @@
     "shown_in_codex": "QUEUED"
   },
   "last_interactive_check": {
-    "at": "2026-10-20T11:12:27.659506+00:00",
-    "task": "A17",
-    "execution_status": "ACTIVE_OFFLINE",
-    "review_status": "PREPARATION_COMPLETE_WAITING_FIXED_EXECUTION",
-    "new_live": 0,
-    "current_blocker": "A16 fatal external CDN Script denial; A17 bounded exclusion and callback/frame checks in development"
+    "at": "2026-10-21T13:05:39.964685+00:00",
+    "task": "A24",
+    "execution_status": "MINIMUM_GATE_CURRENT_BODY_SINGLE_LIVE_ACTIVE",
+    "review_status": "MINIMUM_GATE_FIXED_ACCEPTED_RELEASED",
+    "new_live": 1,
+    "current_blocker": "Current-body actual collection in flight; full save/readback not started",
+    "user_time_answer": "Next bounded platform test actually started by21:04 local; deadline21:17:03 local; full save/readback depends on acquired source facts."
   },
   "external_handoff_history": [
     {
