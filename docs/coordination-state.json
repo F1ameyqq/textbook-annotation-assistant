@@ -2,7 +2,7 @@
   "schema_version": 1,
   "project": "D:\\1800",
   "coordinator_thread_id": "01a15768-1e2d-7781-b29f-1f7376270216",
-  "updated_at": "2026-10-21T02:19:07.499236+00:00",
+  "updated_at": "2026-10-21T04:00:33.566376+00:00",
   "automation": {
     "id": "1800-a",
     "kind": "heartbeat",
@@ -12340,7 +12340,7 @@
     "A21": {
       "at": "2026-10-21T01:50:20.225601+00:00",
       "task": "A21",
-      "status": "WAITING_DIRECT_A21_CREDENTIAL_DECISION",
+      "status": "APPROVED_SINGLE_LIVE_DISPATCH_READY",
       "dispatch_key": "A21:static-image-classification:new-formal-execution-review",
       "project_id": "4488a042-3ec7-4f9e-8880-cbc8f4e02a51",
       "host_id": "local",
@@ -12385,15 +12385,15 @@
       "review_task_document": "docs/tasks/A21-independent-static-image-review.md",
       "review_task_sha256": "9ec7151f727b76c1a7a4f0ac728a78cf7f92c44076a61c309125befdb02144cc",
       "dedup_checked_no_A21": true,
-      "live_activated": false,
+      "live_activated": true,
       "live_used": 0,
       "scope": "AUTHENTICATION_RECOVERY_STATIC_IMAGE_CLASSIFICATION",
-      "offline_only": true,
+      "offline_only": false,
       "new_live_reserved_limit": 1,
-      "new_live_authorized": false,
-      "login_submission_authorized": false,
-      "credential_tls_exception_authorized": false,
-      "next_dependency": "Direct user answer to fixed A21 proposal; no repeated question or live before answer",
+      "new_live_authorized": true,
+      "login_submission_authorized": true,
+      "credential_tls_exception_authorized": true,
+      "next_dependency": "One A21 actual fixed delivery/release, then same formal independent actual-result review",
       "workflow_commit": "82c2b7ee62a126bb74bc08c2d2dedbe5c556d1ca",
       "delivery": {
         "at": "2026-10-21T02:10:39.412635+00:00",
@@ -12512,13 +12512,81 @@
       "user_decision_request": {
         "path": "D:/1800/docs/evidence/coordinator/a21-user-decision-request/request-intent.json",
         "sha256": "a44ee42241fea33088cb2100ff939cee56dcb35f2bf13518d3744921eb3889d9",
-        "status": "ASKED_WAITING_DIRECT_HUMAN_ANSWER",
+        "status": "ANSWERED_DIRECT_APPROVAL",
         "question": "A21 已通过独立及调度预检。是否批准已固定的本轮方案（D:/1800/docs/tasks/A21-bounded-authenticated-source-decision-proposal.md）：在原专用无头会话临时忽略 HTTPS 证书校验，使用本机已有配置最多提交一次官方登录表单，随后同会话读取书46007447的书源；最多2次固定导航、15分钟含释放，0业务写入/上传/OCR，异常停止不重试？这会发送既有用户名和密码，证书不能可靠确认服务端身份，无需提供密码。A20批准明确仅限上一轮且已消费；按A21任务约定，本轮凭据提交需新的直接决定。",
         "dispatched_at": "2026-10-21T02:19:07.499236+00:00",
         "tool": "request_user_input_async",
         "tool_accepted": true,
-        "direct_answer_received": false,
-        "proposal_commit": "6a72279ae9dc34f0afcdd5f1a31b20ed85304bb1"
+        "direct_answer_received": true,
+        "proposal_commit": "6a72279ae9dc34f0afcdd5f1a31b20ed85304bb1",
+        "state": "ANSWERED_DIRECT_APPROVAL",
+        "direct_answer": "批准本轮一次登录及读取",
+        "question_item_id": "[\"request_user_input_async\",\"call_09dbedcfcacf4b0bac5401d5096d4ed7\",0]",
+        "answer_record": "D:/1800/docs/evidence/coordinator/a21-live-dispatch/answer-record.json",
+        "answer_record_sha256": "da96acc280764e3dae0eed93a39ea084b118dff3dba2c7ad60e5c3a50e64703b"
+      },
+      "tls_exception_authorized": true,
+      "live_dispatch": {
+        "task": "A21",
+        "status": "READY_TO_SEND",
+        "at": "2026-10-21T04:00:33.566376+00:00",
+        "dispatch_key": "A21:static-image:approved-single-live",
+        "thread_id": "01a15c27-595a-70e0-88b4-fe064550c884",
+        "host_id": "local",
+        "task_document": "docs/tasks/A21-approved-single-live-dispatch.md",
+        "task_sha256": "8f013c7d45114aad6231bd4670848136673efa72e6a29203a2322345d699fbfb",
+        "product_commit": "b65d85156b56840d6ae055880d4d707b998e2ff3",
+        "final_commit": "cf03910d9554d6e3198c59494de2d4ce7bf7ad80",
+        "candidate_sha256": "f0710e872776c452728e68710052c8580ae45fc4ea55cbff7fddb11a11d18657",
+        "product_workflow": "82c2b7ee62a126bb74bc08c2d2dedbe5c556d1ca",
+        "decision_sha256": "53254d74c20fda06724bfbfa94718cc49fc8192a5b3feb543108b0a3a9f7e9b0",
+        "independent_report_sha256": "2fa24bc6c8cb1cd7a898a502bed0ba678b331ab6c04cd0732eff452ea3d9523a",
+        "activation_sha256": "1a158399b9350c605a036cb255dcf82c35364ae8198917926d1504ce215beb95",
+        "answer_record_sha256": "da96acc280764e3dae0eed93a39ea084b118dff3dba2c7ad60e5c3a50e64703b",
+        "proposal_sha256": "d2539d443c95ddc1ac39e43ff5f1a7a42824e2e1d0be2dfd3fc15d34fc0deffc",
+        "author_release_sha256": "64b46783ac64877b58321d3e42098d7dfc91df852e200746063f5cd074ddf42a",
+        "coordinator_verification_sha256": "ee1583af7fd3b425a007f2c5bdeb2e7edfdb233aeb4c7c957bd97404e46efcfb",
+        "not_before": "2026-10-21T04:00:33.566376+00:00",
+        "expires_at": "2026-10-21T04:15:33.566376+00:00",
+        "cwd": "D:/1800-worktrees/a21-static-image/docs/evidence/A21/static-image/raw-checkout",
+        "argv": [
+          "python",
+          "-B",
+          "tools/a16_current_state_launcher.py",
+          "--live",
+          "--certificate-exception",
+          "--activation-file",
+          "D:/1800/.local/stages/a21-static-image-activation.json",
+          "--activation-sha256",
+          "1a158399b9350c605a036cb255dcf82c35364ae8198917926d1504ce215beb95",
+          "--candidate-sha256",
+          "f0710e872776c452728e68710052c8580ae45fc4ea55cbff7fddb11a11d18657",
+          "--profile-fingerprint",
+          "b4620cd9fe064121a916062126321b7bba3862185d8919bf228f1399097a0d00",
+          "--decision-file",
+          "D:/1800/docs/approvals/A21-static-image-user-decision.json",
+          "--report-file",
+          "D:/1800/docs/evidence/coordinator/a21-independent-closure/independent-result.json"
+        ],
+        "environment": {
+          "PYTHONIOENCODING": "utf-8"
+        },
+        "unset_environment": [
+          "DEBUG",
+          "PWDEBUG"
+        ],
+        "raw_dependencies_verified": 27,
+        "profile_fingerprint": "b4620cd9fe064121a916062126321b7bba3862185d8919bf228f1399097a0d00",
+        "launch_limit": 1,
+        "retry_limit": 0,
+        "login_submission_limit": 1,
+        "business_write_limit": 0
+      },
+      "user_decision": {
+        "path": "D:/1800/docs/approvals/A21-static-image-user-decision.json",
+        "sha256": "53254d74c20fda06724bfbfa94718cc49fc8192a5b3feb543108b0a3a9f7e9b0",
+        "basis": "DIRECT_A21_USER_DECISION",
+        "answer": "批准本轮一次登录及读取"
       }
     }
   },
@@ -14932,8 +15000,8 @@
     }
   ],
   "last_action": {
-    "at": "2026-10-21T02:19:07.499236+00:00",
-    "action": "Asked once for direct decision on fixed A21 credential proposal; no live"
+    "at": "2026-10-21T04:00:33.566376+00:00",
+    "action": "Bound direct human A21 single-login approval and unique 900-second live dispatch"
   },
   "limitations": [
     "Current route uses mock B artifacts until independently agreed interface/artifact versions exist.",
