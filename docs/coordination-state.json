@@ -2,7 +2,7 @@
   "schema_version": 1,
   "project": "D:\\1800",
   "coordinator_thread_id": "01a15768-1e2d-7781-b29f-1f7376270216",
-  "updated_at": "2026-10-21T04:47:40.208839+00:00",
+  "updated_at": "2026-10-21T04:49:30.315815+00:00",
   "automation": {
     "id": "1800-a",
     "kind": "heartbeat",
@@ -12671,7 +12671,7 @@
     "A22": {
       "at": "2026-10-21T04:16:34.267672+00:00",
       "task": "A22",
-      "status": "APPROVED_SINGLE_LIVE_DISPATCH_READY",
+      "status": "SINGLE_READONLY_LIVE_DISPATCHED_PENDING_FIXED_RESULT",
       "dispatch_key": "A22:post-login-session-reuse:new-formal-execution-review",
       "project_id": "4488a042-3ec7-4f9e-8880-cbc8f4e02a51",
       "host_id": "local",
@@ -12682,16 +12682,16 @@
         "thread_id": "01a15cad-c139-76e2-88f8-705093575a7e",
         "workspace": "D:/1800-worktrees/a22-session-reuse",
         "branch": "codex/a22-session-reuse",
-        "status": "FIXED_RELEASED",
+        "status": "ACTIVE_SINGLE_LIVE_DISPATCH",
         "host_id": "local",
-        "cursor": "b95d3548-63e3-468b-82fe-1adb68c0680c:3",
-        "turn_id": "01a15cad-c458-7f51-ba5a-c2c0943ac0a1",
-        "started_at": 1792556254,
+        "cursor": "b95d3548-63e3-468b-82fe-1adb68c0680c:4",
+        "turn_id": "01a15cc9-af44-7073-8070-f376802370dd",
+        "started_at": 1792558083,
         "acknowledged": true,
-        "released": true,
+        "released": false,
         "product_commit": "41fda0d1ff7f548e1bc8ec6b5b4d653109736532",
         "final_commit": "1acc8d00dfef5808561139a99ba6f028d7bfd7a1",
-        "completed_at": 1792556986,
+        "completed_at": null,
         "duration_ms": 732268
       },
       "review": {
@@ -12851,7 +12851,7 @@
       "tls_exception_authorized": true,
       "live_dispatch": {
         "task": "A22",
-        "status": "READY_TO_SEND",
+        "status": "SENT_ACKNOWLEDGED",
         "at": "2026-10-21T04:47:40.208839+00:00",
         "dispatch_key": "A22:session-reuse:standing-readonly-single-live",
         "thread_id": "01a15cad-c139-76e2-88f8-705093575a7e",
@@ -12902,12 +12902,19 @@
         "retry_limit": 0,
         "login_submission_limit": 0,
         "local_credential_config_read_limit": 0,
-        "business_write_limit": 0
+        "business_write_limit": 0,
+        "dispatch_workflow": "65a7bc08bf2e0dbf7d907aed510179ec46c14491"
       },
       "user_decision": {
         "path": "D:/1800/docs/approvals/A22-session-reuse-user-decision.json",
         "sha256": "53d708e0f9866ddac88728f23ba0cb1b7a794d39f96e5682826b506b4f966991",
         "basis": "A17_STANDING_READONLY_TLS_PERMISSION_BOUND_TO_A22"
+      },
+      "metadata_helper_event": {
+        "path": "docs/evidence/coordinator/a22-live-dispatch/metadata-helper-parse-event.json",
+        "sha256": "1fbd991473c78258be0a58d2e20c30d21ae5d8a71608a02e7cc4ba9acb69d704",
+        "product_runs": 0,
+        "cause": "UNKNOWN"
       }
     }
   },
@@ -15321,8 +15328,8 @@
     }
   ],
   "last_action": {
-    "at": "2026-10-21T04:47:40.208839+00:00",
-    "action": "Bound standing readonly permission and A22 unique live dispatch"
+    "at": "2026-10-21T04:49:30.315815+00:00",
+    "action": "Dispatched approved A22 readonly round and prepared local A/B alignment recommendation"
   },
   "limitations": [
     "Current route uses mock B artifacts until independently agreed interface/artifact versions exist.",
@@ -16826,5 +16833,16 @@
       ],
       "future_binding": "Bind each concrete authorized stage to this standing permission and its own scope/version/budget; no per-round TLS question"
     }
+  },
+  "a_b_small_pilot_alignment_20261021": {
+    "status": "LOCAL_DRAFT_NOT_PUSHED_NOT_SENT",
+    "path": "docs/tasks/A-B-small-pilot-alignment-2026-10-21.md",
+    "source_B_head": "6d3d29f16e20f1521a3ff17239ce2830bec903c3",
+    "remote_probe_attempts": 1,
+    "remote_probe_exit": 128,
+    "remote_probe_result": "SSH_CONNECTION_CLOSED_PORT22",
+    "remote_current_heads": "UNKNOWN",
+    "pushes": 0,
+    "B_messages": 0
   }
 }
