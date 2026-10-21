@@ -2,7 +2,7 @@
   "schema_version": 1,
   "project": "D:\\1800",
   "coordinator_thread_id": "01a15768-1e2d-7781-b29f-1f7376270216",
-  "updated_at": "2026-10-21T02:11:32.743435+00:00",
+  "updated_at": "2026-10-21T02:17:00.611415+00:00",
   "automation": {
     "id": "1800-a",
     "kind": "heartbeat",
@@ -12340,7 +12340,7 @@
     "A21": {
       "at": "2026-10-21T01:50:20.225601+00:00",
       "task": "A21",
-      "status": "FORMAL_FIXED_INDEPENDENT_PREFLIGHT_ACTIVE",
+      "status": "ACCEPTED_OFFLINE_ONLY_PENDING_CONCRETE_CREDENTIAL_DECISION",
       "dispatch_key": "A21:static-image-classification:new-formal-execution-review",
       "project_id": "4488a042-3ec7-4f9e-8880-cbc8f4e02a51",
       "host_id": "local",
@@ -12366,16 +12366,19 @@
       "review": {
         "thread_id": "01a15c27-a798-7e63-a879-a1bfd2d56b5a",
         "workspace": "D:/1800-worktrees/a21-independent-fixed",
-        "status": "ACTIVE_FIXED_PREFLIGHT",
+        "status": "ACCEPTED_OFFLINE_ONLY_RELEASED",
         "host_id": "local",
-        "cursor": "2deec2ff-5afb-445f-83cc-ae24da0e7222:3",
+        "cursor": "2deec2ff-5afb-445f-83cc-ae24da0e7222:12",
         "acknowledged": true,
-        "released": false,
+        "released": true,
         "turn_id": "01a15c39-ed3b-7552-91e7-e456b15748af",
         "started_at": 1792548662,
         "preparation_released": true,
         "preparation_manifest_sha256": "d598bdb67d092f6d475080e1db09cc8150be88e95016f00644f22d9710393810",
-        "preparation_archive": "D:/1800/docs/evidence/coordinator/a21-independent-preparation"
+        "preparation_archive": "D:/1800/docs/evidence/coordinator/a21-independent-preparation",
+        "completed_at": 1792548950,
+        "duration_ms": 288082,
+        "closure_directory": "D:/1800/docs/evidence/coordinator/a21-independent-closure"
       },
       "task_document": "docs/tasks/A21-static-image-authenticated-source.md",
       "task_sha256": "e34acb7ade411353eb177d6b455eb0fb42fb2269b0c8e1237636d1cd2b0e8654",
@@ -12390,7 +12393,7 @@
       "new_live_authorized": false,
       "login_submission_authorized": false,
       "credential_tls_exception_authorized": false,
-      "next_dependency": "Same formal independent bounded preflight; concrete A21 credential decision after acceptance",
+      "next_dependency": "Finalize concrete A21 credential/context-TLS proposal and obtain direct user decision; no live until then",
       "workflow_commit": "82c2b7ee62a126bb74bc08c2d2dedbe5c556d1ca",
       "delivery": {
         "at": "2026-10-21T02:10:39.412635+00:00",
@@ -12456,7 +12459,51 @@
       },
       "fixed_review_task": "D:/1800/docs/tasks/A21-fixed-static-image-independent-review.md",
       "fixed_review_task_sha256": "c0ce0fbf5968f348403cfc31279b1ec99899d2703c00907d2ac38458af073699",
-      "fixed_review_workflow": "35e8d1f8cee4a12ed7e42452043ccbe255bba3ba"
+      "fixed_review_workflow": "35e8d1f8cee4a12ed7e42452043ccbe255bba3ba",
+      "independent_acceptance": {
+        "at": "2026-10-21T02:17:00.611415+00:00",
+        "status": "ACCEPTED_OFFLINE_ONLY",
+        "acceptance_basis": "BOUNDED_OFFLINE_PREFLIGHT_ONLY",
+        "candidate_sha256": "f0710e872776c452728e68710052c8580ae45fc4ea55cbff7fddb11a11d18657",
+        "machine_report_sha256": "2fa24bc6c8cb1cd7a898a502bed0ba678b331ab6c04cd0732eff452ea3d9523a",
+        "report_sha256": "8fdc634b05e6b6ca419a3d7f245ae190b56675226d923377ac897289788ec222",
+        "manifest_sha256": "1553bbfc70a3f61e196624c6c5df4d0a07d5cee1c0604dc48d93b35c750eb015",
+        "release_sha256": "ef856b628d2e4c1509c67b94858b5dc1e74edf85148be1e5d23ee3689868e7d4",
+        "members_plus_manifest": 23,
+        "frozen_inputs_verified": 76,
+        "scope_binding_fields": 47,
+        "coordinator_product_runs": 0,
+        "coordinator_suite_runs": 0,
+        "live": 0,
+        "write_eligible": false,
+        "scope": "AUTHENTICATION_RECOVERY_STATIC_IMAGE_CLASSIFICATION",
+        "tests": {
+          "new_suite": {
+            "passed": 16,
+            "failed": 0,
+            "errors": 0,
+            "duration_ms": 296
+          },
+          "independent_controls": {
+            "passed": 5,
+            "failed": 0,
+            "errors": 0,
+            "duration_ms": 141
+          }
+        },
+        "limitations": [
+          "Offline fake transport only; real authentication/source/save-readback and whether actual A20 path belongs to the new class remain unproven.",
+          "Initial documentation metadata helper failed on unsupported pathlib.write_text newline parameter before any product verification/import/test; exact returned stderr transcribed, original raw stderr file was not captured. Only the documentation helper was corrected; no test rerun or restored budget.",
+          "No OS-wide process/profile scan or launcher OS identity claim; no product/native/browser resources were created."
+        ]
+      },
+      "auxiliary_mechanical": {
+        "path": "D:/1800/.local/stages/coordinator/a21-fixed-mechanical-aux/notes.json",
+        "sha256": "7ce27449f6337a71b15ed54b4d1ac1beed1983bdb1186bf4a50ba08da257e571",
+        "draft_sha256": "3a8eb7c3378b9a699595e2c924b33b19d08d1f148c8d7fd8d3c08b9f9a7f9325",
+        "released": true,
+        "formal_acceptance": false
+      }
     }
   },
   "route": [
@@ -14869,8 +14916,8 @@
     }
   ],
   "last_action": {
-    "at": "2026-10-21T02:11:32.743435+00:00",
-    "action": "Same formal A21 reviewer acknowledged frozen preflight"
+    "at": "2026-10-21T02:17:00.611415+00:00",
+    "action": "Accepted finite A21 independent static-image preflight"
   },
   "limitations": [
     "Current route uses mock B artifacts until independently agreed interface/artifact versions exist.",
@@ -15763,14 +15810,14 @@
     "next_confirmation_document_sha256": "162343381469b1a827f0de6f611b8cdf504666caa06f79e1d8ea9c8a14dd32f2"
   },
   "last_heartbeat_check": {
-    "at": "2026-10-21T02:11:32.743435+00:00",
+    "at": "2026-10-21T02:17:00.611415+00:00",
     "task": "A20",
     "execution_cursor": "66899f29-d728-45ad-bc72-fd0dfe8adec2:4",
     "new_question": false,
     "approval": "DIRECT_ANSWER_APPROVED",
     "automation_prompt_updated": true,
     "trigger_at": "2026-10-21T02:05:12.655Z",
-    "review_cursor": "2deec2ff-5afb-445f-83cc-ae24da0e7222:3",
+    "review_cursor": "2deec2ff-5afb-445f-83cc-ae24da0e7222:12",
     "new_live": 0,
     "decision_created": false,
     "activation_created": false
