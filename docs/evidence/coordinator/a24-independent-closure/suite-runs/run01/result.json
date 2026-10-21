@@ -1,0 +1,668 @@
+{
+  "task": "A24",
+  "run": 1,
+  "mode": "OFFLINE_IN_MEMORY_FAKE_TRANSPORT",
+  "tests_run": 21,
+  "failures": 0,
+  "errors": 0,
+  "success": true,
+  "fatal": null,
+  "duration_ms": 516,
+  "browser_network_profile_native_occupancy_login_business_calls": 0,
+  "product_child_processes": 0,
+  "old_suites_run": 0,
+  "live_activated": false,
+  "records": [
+    {
+      "case": "all_scope_fields_bound",
+      "count": 66,
+      "fields": [
+        "task",
+        "run_id",
+        "workflow_commit",
+        "scope",
+        "candidate_manifest_sha256",
+        "sample_limit",
+        "automatic_schema_confirmation",
+        "fixed_business_get_count",
+        "original_get_count",
+        "new_live_limit",
+        "context_limit",
+        "navigation_limit",
+        "total_seconds",
+        "business_get_limit_per_url",
+        "original_limit_per_viewer",
+        "navigation_sequence",
+        "session_phase_limit",
+        "session_completion_timeout_seconds",
+        "active_session_get_path",
+        "active_session_get_limit",
+        "local_credential_config_read_limit",
+        "login_form_fill_limit",
+        "login_ui_click_limit",
+        "required_profile_fingerprint",
+        "session_get_limit_per_path_per_phase",
+        "session_get_limit_total",
+        "session_get_paths",
+        "refresh_post_limit",
+        "automatic_request_resend_limit",
+        "existing_session_token_usage",
+        "token_export_limit",
+        "static_image_path_pattern",
+        "static_image_method",
+        "static_image_resource_type",
+        "static_image_origin",
+        "static_image_query_allowed",
+        "static_image_redirect_allowed",
+        "static_image_original_main_frame_required",
+        "static_image_precedes_basename_protection",
+        "book_request_plan",
+        "book_list_precedence",
+        "book_identity_field",
+        "book_duplicate_target_limit",
+        "response_projection",
+        "business_response_body_export_limit",
+        "unknown_response_key_export_limit",
+        "book_context_parameter_addition_limit",
+        "pagination_limit",
+        "book_picker_action_limit",
+        "mapping_ui_actions_limit",
+        "mapping_semantics",
+        "save_page_mapping",
+        "login_submission_limit",
+        "business_write_limit",
+        "upload_limit",
+        "ocr_limit",
+        "old_budgets_restored",
+        "executor_thread_id",
+        "output_directory",
+        "activation_path",
+        "decision_path",
+        "report_path",
+        "excluded_static_event_limit",
+        "version_check_limit",
+        "standing_tls_permission_path",
+        "standing_tls_permission_sha256"
+      ]
+    },
+    {
+      "case": "all_scoped_reads",
+      "gets": [
+        "/qieti/api/claim_book/books?page=1&pageSize=10&id=46007447",
+        "/qieti/api/annotate_ocr/directory/get?file_id=46007447",
+        "/qieti/api/annotate_pic/get_manual_annotations_unified/46007447",
+        "/qieti/api/annotate_pic/pre_annotation_source/46007447?annotationType=mr_pre",
+        "/qieti/api/annotate_pic/pre_annotation/46007447?pageNum=14&annotationType=mr_pre",
+        "https://oss-ef-bd-2026-gz.oss-cn-guangzhou.aliyuncs.com/upload_images/46007447/14.png",
+        "/qieti/api/annotate_pic/pre_annotation/46007447?pageNum=173&annotationType=mr_pre",
+        "https://oss-ef-bd-2026-gz.oss-cn-guangzhou.aliyuncs.com/upload_images/46007447/173.png"
+      ],
+      "facts": {
+        "response-http-book.json": {
+          "schema": "A24-finite-response-http/v1",
+          "endpoint": "book",
+          "http_status": 200,
+          "business_code": "UNKNOWN_BEFORE_BODY"
+        },
+        "response-facts-book.json": {
+          "schema": "A24-finite-response-facts/v1",
+          "endpoint": "book",
+          "http_status": 200,
+          "business_code": 0,
+          "business_code_type": "integer",
+          "envelope_type": "object",
+          "structure": {
+            "type": "object",
+            "fields": {
+              "data": {
+                "type": "object",
+                "fields": {
+                  "records": {
+                    "type": "array",
+                    "length": 1,
+                    "items": [
+                      {
+                        "type": "object",
+                        "fields": {
+                          "id": {
+                            "type": "string"
+                          },
+                          "title": {
+                            "type": "string"
+                          },
+                          "question_count": {
+                            "type": "integer"
+                          }
+                        }
+                      }
+                    ]
+                  }
+                }
+              }
+            }
+          },
+          "server_schema_confirmed": false,
+          "raw_body_exported": false,
+          "book_contract": {
+            "data_type": "object",
+            "containers": {
+              "records": {
+                "type": "array",
+                "length": 1
+              }
+            },
+            "selected_container": "records",
+            "item_count": 1,
+            "non_object_item_count": 0,
+            "target_match_count": 1,
+            "target_fields": [
+              {
+                "id": "46007447",
+                "title_type": "string",
+                "title": "SYNTHETIC_A24"
+              }
+            ],
+            "branch": "MATCHED_TARGET"
+          },
+          "json_decode": "VALID_JSON"
+        },
+        "response-http-directory.json": {
+          "schema": "A24-finite-response-http/v1",
+          "endpoint": "directory",
+          "http_status": 200,
+          "business_code": "UNKNOWN_BEFORE_BODY"
+        },
+        "response-facts-directory.json": {
+          "schema": "A24-finite-response-facts/v1",
+          "endpoint": "directory",
+          "http_status": 200,
+          "business_code": 0,
+          "business_code_type": "integer",
+          "envelope_type": "object",
+          "structure": {
+            "type": "object",
+            "fields": {
+              "data": {
+                "type": "object",
+                "fields": {
+                  "directory_data": {
+                    "type": "array",
+                    "length": 1,
+                    "items": [
+                      {
+                        "type": "object",
+                        "fields": {
+                          "children": {
+                            "type": "array",
+                            "length": 1
+                          },
+                          "id": {
+                            "type": "string"
+                          }
+                        }
+                      }
+                    ]
+                  }
+                }
+              }
+            }
+          },
+          "server_schema_confirmed": false,
+          "raw_body_exported": false,
+          "json_decode": "VALID_JSON"
+        },
+        "response-http-frames.json": {
+          "schema": "A24-finite-response-http/v1",
+          "endpoint": "frames",
+          "http_status": 200,
+          "business_code": "UNKNOWN_BEFORE_BODY"
+        },
+        "response-facts-frames.json": {
+          "schema": "A24-finite-response-facts/v1",
+          "endpoint": "frames",
+          "http_status": 200,
+          "business_code": 0,
+          "business_code_type": "integer",
+          "envelope_type": "object",
+          "structure": {
+            "type": "object",
+            "fields": {
+              "data": {
+                "type": "array",
+                "length": 1,
+                "items": [
+                  {
+                    "type": "object",
+                    "fields": {
+                      "order_in_level": {
+                        "type": "integer"
+                      },
+                      "rect_id": {
+                        "type": "string"
+                      },
+                      "file_id": {
+                        "type": "string"
+                      },
+                      "type": {
+                        "type": "string"
+                      },
+                      "directory_id": {
+                        "type": "string"
+                      }
+                    }
+                  }
+                ]
+              }
+            }
+          },
+          "server_schema_confirmed": false,
+          "raw_body_exported": false,
+          "json_decode": "VALID_JSON"
+        },
+        "target-inventory.json": {
+          "book_id": "46007447",
+          "inventory_coverage": "PARTIAL",
+          "content_coverage": "UNKNOWN",
+          "write_preservation_baseline": false,
+          "question_count_reported": 1,
+          "question_count_observed": 1,
+          "frame_count": 1,
+          "global_max_observed": 22,
+          "append_after_order": null,
+          "questions": [
+            {
+              "id": "q22",
+              "order": 22,
+              "directory_id": "d",
+              "label": null,
+              "frames": [
+                {
+                  "rect_id": "r22",
+                  "type": "question",
+                  "file_id": "46007447",
+                  "order_in_level": 22,
+                  "directory_id": "d"
+                }
+              ],
+              "content": {
+                "status": "UNKNOWN",
+                "reason": "NOT_FETCHED",
+                "text": null
+              }
+            }
+          ],
+          "directories": [
+            {
+              "id": "d",
+              "label": null,
+              "parent": null
+            }
+          ],
+          "orphan_frames": [],
+          "q22_in_inventory": true,
+          "q22_sample_or_navigation": false
+        },
+        "response-http-source.json": {
+          "schema": "A24-finite-response-http/v1",
+          "endpoint": "source",
+          "http_status": 200,
+          "business_code": "UNKNOWN_BEFORE_BODY"
+        },
+        "response-facts-source.json": {
+          "schema": "A24-finite-response-facts/v1",
+          "endpoint": "source",
+          "http_status": 200,
+          "business_code": 0,
+          "business_code_type": "integer",
+          "envelope_type": "object",
+          "structure": {
+            "type": "object",
+            "fields": {
+              "data": {
+                "type": "object",
+                "fields": {
+                  "file_id": {
+                    "type": "string"
+                  },
+                  "total_pages": {
+                    "type": "integer"
+                  }
+                }
+              }
+            }
+          },
+          "server_schema_confirmed": false,
+          "raw_body_exported": false,
+          "json_decode": "VALID_JSON"
+        },
+        "source-metadata.json": {
+          "file_id": "46007447",
+          "total_pages": 214
+        },
+        "response-http-page14.json": {
+          "schema": "A24-finite-response-http/v1",
+          "endpoint": "page14",
+          "http_status": 200,
+          "business_code": "UNKNOWN_BEFORE_BODY"
+        },
+        "response-facts-page14.json": {
+          "schema": "A24-finite-response-facts/v1",
+          "endpoint": "page14",
+          "http_status": 200,
+          "business_code": 0,
+          "business_code_type": "integer",
+          "envelope_type": "object",
+          "structure": {
+            "type": "object",
+            "fields": {
+              "data": {
+                "type": "object",
+                "fields": {
+                  "file_id": {
+                    "type": "string"
+                  },
+                  "pages": {
+                    "type": "array",
+                    "length": 1,
+                    "items": [
+                      {
+                        "type": "object",
+                        "fields": {
+                          "page_index": {
+                            "type": "integer"
+                          },
+                          "image": {
+                            "type": "string"
+                          }
+                        }
+                      }
+                    ]
+                  }
+                }
+              }
+            }
+          },
+          "server_schema_confirmed": false,
+          "raw_body_exported": false,
+          "json_decode": "VALID_JSON"
+        },
+        "source-response-viewer14.json": {
+          "code": 0,
+          "data": {
+            "file_id": "46007447",
+            "pages": [
+              {
+                "page_index": 21,
+                "image": "https://oss-ef-bd-2026-gz.oss-cn-guangzhou.aliyuncs.com/upload_images/46007447/14.png"
+              }
+            ]
+          },
+          "viewer_request": 14,
+          "projection": "EXPLICIT_PUBLIC_SOURCE_FIELDS_ONLY",
+          "raw_response_sha256": "9af1b2af3f394242c2d622319bfed2258a0adede8e48fb970374986f3fb027c8"
+        },
+        "response-http-page173.json": {
+          "schema": "A24-finite-response-http/v1",
+          "endpoint": "page173",
+          "http_status": 200,
+          "business_code": "UNKNOWN_BEFORE_BODY"
+        },
+        "response-facts-page173.json": {
+          "schema": "A24-finite-response-facts/v1",
+          "endpoint": "page173",
+          "http_status": 200,
+          "business_code": 0,
+          "business_code_type": "integer",
+          "envelope_type": "object",
+          "structure": {
+            "type": "object",
+            "fields": {
+              "data": {
+                "type": "object",
+                "fields": {
+                  "file_id": {
+                    "type": "string"
+                  },
+                  "pages": {
+                    "type": "array",
+                    "length": 1,
+                    "items": [
+                      {
+                        "type": "object",
+                        "fields": {
+                          "page_index": {
+                            "type": "integer"
+                          },
+                          "image": {
+                            "type": "string"
+                          }
+                        }
+                      }
+                    ]
+                  }
+                }
+              }
+            }
+          },
+          "server_schema_confirmed": false,
+          "raw_body_exported": false,
+          "json_decode": "VALID_JSON"
+        },
+        "source-response-viewer173.json": {
+          "code": 0,
+          "data": {
+            "file_id": "46007447",
+            "pages": [
+              {
+                "page_index": 180,
+                "image": "https://oss-ef-bd-2026-gz.oss-cn-guangzhou.aliyuncs.com/upload_images/46007447/173.png"
+              }
+            ]
+          },
+          "viewer_request": 173,
+          "projection": "EXPLICIT_PUBLIC_SOURCE_FIELDS_ONLY",
+          "raw_response_sha256": "02757a764eb4ad57fdbde1a7b8d450f0b2f514b12a165cf1c837be95ad08e832"
+        },
+        "static-assets-observation.json": {
+          "status": "NO_ALLOWED_SCRIPT_CAPTURED",
+          "automatic_schema_confirmation": false,
+          "schema_status": "UNKNOWN",
+          "assets": []
+        }
+      },
+      "result": {
+        "steps": {
+          "navigation": "DONE",
+          "session_completion": "DONE",
+          "book": "DONE",
+          "directory": "DONE",
+          "frames": "DONE",
+          "source": "DONE",
+          "page14": "DONE",
+          "original14": "DONE",
+          "mapping14": "DONE",
+          "page173": "DONE",
+          "original173": "DONE",
+          "mapping173": "DONE"
+        },
+        "sources": [
+          {
+            "original": {
+              "width": 1,
+              "height": 1,
+              "format": "PNG",
+              "size": 68,
+              "sha256": "6b1048f8a6d40bac0b2954c18fefa40c4ea7a96120fc2e54b7317c0e43c2bbec",
+              "full_pixel_decode": true,
+              "ref": "original-viewer-14.png",
+              "book_id": "46007447",
+              "viewer": 14,
+              "resource_index": 21,
+              "source_url_sha256": "a1e335ea9b0fe1a5ade805adca4d0119c0cebd3330712b847cec61b17631c0a0",
+              "origin": {
+                "path_sha256": "737555cc0b7bece7fa4114af6be780dadf89c30d4538635b63ab6aafe731134a",
+                "path_template": null,
+                "known_route": "UNKNOWN",
+                "query_parameter_names": [],
+                "query_names_redacted": 0,
+                "scheme": "https",
+                "hostname": "oss-ef-bd-2026-gz.oss-cn-guangzhou.aliyuncs.com",
+                "port": 443,
+                "resource_type": "Image",
+                "category": "REGISTERED_ORIGINAL",
+                "decision": "ALLOW",
+                "source": "CURRENT_SOURCE_RESPONSE",
+                "redirect_hop": false,
+                "main_navigation": false,
+                "business_read": false,
+                "expected_passive_denial": false,
+                "expected_excluded_static_denial": false,
+                "expected_excluded_path_denial": false,
+                "expected_excluded_version_repeat": false
+              }
+            },
+            "mapping": {
+              "viewer": 14,
+              "book_id": "46007447",
+              "resource_index": 21,
+              "request_resource_binding": "EXACT_SCOPED_RESPONSE",
+              "save_page": null,
+              "save_page_status": "UNKNOWN",
+              "visible_status": "MATCHED_CURRENT_CANVAS",
+              "resource_matches": true,
+              "canvas_width": 1,
+              "canvas_height": 1,
+              "dark_samples": 20,
+              "light_samples": 20
+            }
+          },
+          {
+            "original": {
+              "width": 1,
+              "height": 1,
+              "format": "PNG",
+              "size": 68,
+              "sha256": "6b1048f8a6d40bac0b2954c18fefa40c4ea7a96120fc2e54b7317c0e43c2bbec",
+              "full_pixel_decode": true,
+              "ref": "original-viewer-173.png",
+              "book_id": "46007447",
+              "viewer": 173,
+              "resource_index": 180,
+              "source_url_sha256": "0c72effd628895df030fc879fff50ec8cb2f271ed9c7062da8a964ff21a36f56",
+              "origin": {
+                "path_sha256": "1709ac91dffd6c996348f8c42f797a959d65ecbcca186efe44b1732665d933a9",
+                "path_template": null,
+                "known_route": "UNKNOWN",
+                "query_parameter_names": [],
+                "query_names_redacted": 0,
+                "scheme": "https",
+                "hostname": "oss-ef-bd-2026-gz.oss-cn-guangzhou.aliyuncs.com",
+                "port": 443,
+                "resource_type": "Image",
+                "category": "REGISTERED_ORIGINAL",
+                "decision": "ALLOW",
+                "source": "CURRENT_SOURCE_RESPONSE",
+                "redirect_hop": false,
+                "main_navigation": false,
+                "business_read": false,
+                "expected_passive_denial": false,
+                "expected_excluded_static_denial": false,
+                "expected_excluded_path_denial": false,
+                "expected_excluded_version_repeat": false
+              }
+            },
+            "mapping": {
+              "viewer": 173,
+              "book_id": "46007447",
+              "resource_index": 180,
+              "request_resource_binding": "EXACT_SCOPED_RESPONSE",
+              "save_page": null,
+              "save_page_status": "UNKNOWN",
+              "visible_status": "MATCHED_CURRENT_CANVAS",
+              "resource_matches": true,
+              "canvas_width": 1,
+              "canvas_height": 1,
+              "dark_samples": 20,
+              "light_samples": 20
+            }
+          }
+        ],
+        "gaps": [
+          "BODY_UNKNOWN_SAMPLE_DISABLED",
+          "READ_SCHEMA_UNVERIFIED",
+          "NEW_QUESTION_CONTENT_DIRECTORY_GEOMETRY_UNVERIFIED"
+        ],
+        "viewer_access_confirmed": true,
+        "account_identity_fields_available": "NOT_OBSERVED",
+        "book": {
+          "id": "46007447",
+          "title": "SYNTHETIC_A24",
+          "question_count": 1
+        },
+        "book_identity_confirmed": true,
+        "book_identity_basis": "CANONICAL_LIST_TARGET_ID_AND_TITLE",
+        "book_picker_identity_confirmed": false,
+        "target": {
+          "book_id": "46007447",
+          "inventory_coverage": "PARTIAL",
+          "content_coverage": "UNKNOWN",
+          "write_preservation_baseline": false,
+          "question_count_reported": 1,
+          "question_count_observed": 1,
+          "frame_count": 1,
+          "global_max_observed": 22,
+          "append_after_order": null,
+          "questions": [
+            {
+              "id": "q22",
+              "order": 22,
+              "directory_id": "d",
+              "label": null,
+              "frames": [
+                {
+                  "rect_id": "r22",
+                  "type": "question",
+                  "file_id": "46007447",
+                  "order_in_level": 22,
+                  "directory_id": "d"
+                }
+              ],
+              "content": {
+                "status": "UNKNOWN",
+                "reason": "NOT_FETCHED",
+                "text": null
+              }
+            }
+          ],
+          "directories": [
+            {
+              "id": "d",
+              "label": null,
+              "parent": null
+            }
+          ],
+          "orphan_frames": [],
+          "q22_in_inventory": true,
+          "q22_sample_or_navigation": false
+        },
+        "static_assets": [],
+        "outcome": "READONLY_REVIEW_WITH_GAPS",
+        "scope": "CURRENT_CONTRACT_AND_FIRST_SAVE_PREPARATION_READONLY",
+        "sample_limit": 0,
+        "sample": {
+          "status": "NOT_RUN",
+          "reason": "OBSERVATION_ONLY_SCOPE",
+          "content_acceptable": false
+        },
+        "body_status": "UNKNOWN",
+        "schema_status": "UNKNOWN",
+        "automatic_schema_confirmation": false,
+        "production_ready": false,
+        "write_eligible": false,
+        "first_question_status": "HOLD_CONTENT_DIRECTORY_GEOMETRY_AND_SAVE_READBACK_REQUIRED"
+      },
+      "business_native_sends": 8,
+      "ui_page_fills": []
+    }
+  ]
+}

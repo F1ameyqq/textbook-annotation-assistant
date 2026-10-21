@@ -2,7 +2,7 @@
   "schema_version": 1,
   "project": "D:\\1800",
   "coordinator_thread_id": "01a15768-1e2d-7781-b29f-1f7376270216",
-  "updated_at": "2026-10-21T06:09:46.402810+00:00",
+  "updated_at": "2026-10-21T06:19:20.167512+00:00",
   "automation": {
     "id": "1800-a",
     "kind": "heartbeat",
@@ -13587,7 +13587,7 @@
     "A24": {
       "at": "2026-10-21T05:37:43.707015+00:00",
       "task": "A24",
-      "status": "FORMAL_READONLY_PREFLIGHT_ACTIVE",
+      "status": "ACCEPTED_OFFLINE_ONLY",
       "dispatch_key": "A24:concentrated-current-contract-first-save",
       "project_id": "4488a042-3ec7-4f9e-8880-cbc8f4e02a51",
       "host_id": "local",
@@ -13613,18 +13613,20 @@
       "review": {
         "thread_id": "01a15cf8-68e0-7b63-91a3-657a567b344c",
         "workspace": "D:/1800-worktrees/a24-independent-fixed",
-        "status": "ACTIVE_FIXED_READONLY_PREFLIGHT",
+        "status": "ACCEPTED_OFFLINE_ONLY_RELEASED",
         "host_id": "local",
-        "cursor": "428a2396-617d-4cee-8553-aeceaae6c4b8:5",
+        "cursor": "428a2396-617d-4cee-8553-aeceaae6c4b8:20",
         "turn_id": "01a15d12-d337-72a1-a8f7-17c3bb9b670d",
         "started_at": 1792561147,
         "acknowledged": true,
-        "released": false,
+        "released": true,
         "preparation_archive": "docs/evidence/coordinator/a24-independent-preparation",
         "preparation_manifest_sha256": "737d28f18a29717a07083e3e3a5893d5b026427caec419a9cc15ee0bdd3c4733",
         "preparation_members_verified": 7,
         "preparation_source_inputs_verified": 12,
-        "dispatch_workflow": "aafc87ac26a67d01d1cf7d814f1fb7262f74a4dc"
+        "dispatch_workflow": "aafc87ac26a67d01d1cf7d814f1fb7262f74a4dc",
+        "completed_at": 1792563502,
+        "duration_ms": 621324
       },
       "task_document": "docs/tasks/A24-current-contract-first-save-integration.md",
       "task_sha256": "564ff7319d20ffd23a52128bcf1ae31af2298dbedaa001ed9a3d6b508281880b",
@@ -13661,7 +13663,34 @@
         "added": 95,
         "deleted": 0,
         "coordinator_product_runs": 0
-      }
+      },
+      "independent_closure": {
+        "path": "D:/1800/docs/evidence/coordinator/a24-independent-closure",
+        "verification": {
+          "at": "2026-10-21T06:19:20.167512+00:00",
+          "status": "ACCEPTED_OFFLINE_ONLY",
+          "accepted_scope": "BOUNDED_READONLY_PREFLIGHT",
+          "candidate_sha256": "d10e30b4567ba5c4a81b8aa53396e35619e05f191e457a40c371866499161753",
+          "product": "eb75fad5ca56daa117929dd1377d2157f2340388",
+          "final": "3d53a0b670c04cf84387cd77d69b0a9571741328",
+          "scope_binding_fields": 66,
+          "machine_report_sha256": "391dff86c7a963b6195fdd0d3d61de1d47d8e26ed05b9a125b70e93cf8b23770",
+          "report_sha256": "05d016684613aa9d8e25da9086a1e2f404f66cddf6303db2041c121694766f32",
+          "manifest_sha256": "8204908049f00bab171af1a2e8598d426ef90ddd0b9760abc9e490cf4ec25dd5",
+          "release_sha256": "6bf0913a592ed91786c2d4e643926339746f704e4d4d2854563853e35575d1df",
+          "report_members": 19,
+          "input_members_verified": 111,
+          "root_product_runs": 0,
+          "limitations_preserved": [
+            "Top-level safe_error may show UNKNOWN while original finite facts retain stopping branch",
+            "No current platform/book/source/save proof",
+            "First-save readiness hashes use checkout representation",
+            "Original author/helper failures retained"
+          ]
+        },
+        "verification_sha256": "44e33554b26439ad7c7c18ca3485952b481edb6ad8110932316fc647ed3f9d8e"
+      },
+      "next_dependency": "Bind standing readonly permission and immediately dispatch same executor; then same-stage current source and first-save integration"
     }
   },
   "route": [
@@ -16074,8 +16103,8 @@
     }
   ],
   "last_action": {
-    "at": "2026-10-21T06:06:51.003461+00:00",
-    "action": "A24 frozen readonly intake; dispatch same formal independent; concentrate later first-save integration"
+    "at": "2026-10-21T06:19:20.167512+00:00",
+    "action": "A24 independent and root accepted fixed bounded readonly preflight; direct activation next"
   },
   "limitations": [
     "Current route uses mock B artifacts until independently agreed interface/artifact versions exist.",
