@@ -1,0 +1,160 @@
+{
+  "task": "A24",
+  "run": 1,
+  "mode": "OFFLINE_IN_MEMORY_FAKE_TRANSPORT",
+  "tests_run": 28,
+  "failures": 0,
+  "errors": 0,
+  "success": true,
+  "fatal": null,
+  "duration_ms": 781,
+  "browser_network_profile_native_occupancy_login_business_calls": 0,
+  "product_child_processes": 0,
+  "old_suites_run": 0,
+  "live_activated": false,
+  "records": [
+    {
+      "case": "complete_OSS_six_slots_two_images",
+      "count": 8,
+      "source_plan": {
+        "schema": "A24-current-source-plan/v1",
+        "branch": "OSS",
+        "source_provenance": "EXPLICIT_SOURCE_FIELD",
+        "envelope": "NUMERIC_CODE_200",
+        "returned_file_id_status": "NOT_RETURNED",
+        "request_book_binding": "EXACT_AUTHENTICATED_SCOPED_TARGET_REQUEST",
+        "page_logical_slots": 2,
+        "fallback_limit": 0,
+        "template_values_exported": false,
+        "pages": [
+          {
+            "viewer": 14,
+            "logical_slot": "page14",
+            "resource_index": 13,
+            "index_provenance": "FRONTEND_DERIVED_VIEWER_MINUS_ONE",
+            "request_kind": "SUBSTITUTED_PAGE_JSON"
+          },
+          {
+            "viewer": 173,
+            "logical_slot": "page173",
+            "resource_index": 172,
+            "index_provenance": "FRONTEND_DERIVED_VIEWER_MINUS_ONE",
+            "request_kind": "SUBSTITUTED_PAGE_JSON"
+          }
+        ]
+      },
+      "source_projections": [
+        {
+          "book_id": "46007447",
+          "viewer": 14,
+          "resource_index": 13,
+          "representation": "FRONTEND_DERIVED",
+          "returned_file_id_status": "NOT_A_SERVER_RETURNED_IDENTITY",
+          "index_provenance": "FRONTEND_DERIVED_VIEWER_MINUS_ONE",
+          "page_json_shape": "EXPLICIT_BLOCKS_ARRAY",
+          "block_count": 0,
+          "blocks_status": "EXPLICIT_EMPTY",
+          "raw_page_response_sha256": "2b385c0b69f42b36853b5bd4ee23504002d3a91b3cc9247bf1081a07b092112f",
+          "source_metadata_reference": "response-facts-source.json",
+          "image_template_reference": "CURRENT_VALIDATED_oss_image_url_pattern"
+        },
+        {
+          "book_id": "46007447",
+          "viewer": 173,
+          "resource_index": 172,
+          "representation": "FRONTEND_DERIVED",
+          "returned_file_id_status": "NOT_A_SERVER_RETURNED_IDENTITY",
+          "index_provenance": "FRONTEND_DERIVED_VIEWER_MINUS_ONE",
+          "page_json_shape": "EXPLICIT_BLOCKS_ARRAY",
+          "block_count": 0,
+          "blocks_status": "EXPLICIT_EMPTY",
+          "raw_page_response_sha256": "2b385c0b69f42b36853b5bd4ee23504002d3a91b3cc9247bf1081a07b092112f",
+          "source_metadata_reference": "response-facts-source.json",
+          "image_template_reference": "CURRENT_VALIDATED_oss_image_url_pattern"
+        }
+      ]
+    },
+    {
+      "case": "new_revision_all_scope_bound",
+      "scope_fields": 103,
+      "old_live_remaining": 0,
+      "new_checkpoint_activated": false
+    },
+    {
+      "case": "all_scoped_reads_after_context_query",
+      "native_business_and_original_sends": 8,
+      "book_binding": {
+        "preparation": "BOUND_CURRENT_CONTEXT",
+        "send_recheck": "BOUND_CONTEXT_UNCHANGED",
+        "binding_count": 1,
+        "read_intent_count": 1,
+        "query_values_exported": false,
+        "logical_slot": "BOOK"
+      },
+      "safe_book_facts": {
+        "schema": "A24-finite-response-facts/v1",
+        "endpoint": "book",
+        "http_status": 200,
+        "business_code": 0,
+        "business_code_type": "integer",
+        "envelope_type": "object",
+        "structure": {
+          "type": "object",
+          "fields": {
+            "data": {
+              "type": "object",
+              "fields": {
+                "records": {
+                  "type": "array",
+                  "length": 1,
+                  "items": [
+                    {
+                      "type": "object",
+                      "fields": {
+                        "id": {
+                          "type": "string"
+                        },
+                        "title": {
+                          "type": "string"
+                        },
+                        "question_count": {
+                          "type": "integer"
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        },
+        "server_schema_confirmed": false,
+        "raw_body_exported": false,
+        "book_contract": {
+          "data_type": "object",
+          "containers": {
+            "records": {
+              "type": "array",
+              "length": 1
+            }
+          },
+          "selected_container": "records",
+          "item_count": 1,
+          "non_object_item_count": 0,
+          "target_match_count": 1,
+          "target_fields": [
+            {
+              "id": "46007447",
+              "title_type": "string",
+              "title": "SYNTHETIC_A24"
+            }
+          ],
+          "branch": "MATCHED_TARGET"
+        },
+        "json_decode": "VALID_JSON"
+      },
+      "old_allocation_restored": false,
+      "images": 2
+    }
+  ]
+}

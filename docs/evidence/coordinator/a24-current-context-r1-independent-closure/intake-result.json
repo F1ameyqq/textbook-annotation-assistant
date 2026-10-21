@@ -1,0 +1,54 @@
+{
+  "result": "PASS_RAW_INTAKE_ONLY",
+  "input_members": 120,
+  "candidate_dependencies": 42,
+  "delivery_members": 108,
+  "candidate_sha256": "c68ce354be516552e1aadafe253cd3f9c12785b3107d2454e59f10446ef31b77",
+  "raw_size_sha256_git_blob_mode_type_verified": true,
+  "runners": {
+    "new-python-runner.py": {
+      "source_sha256": "3e74fd2b2ac6c1f2d55b5aaa1d6ad09b2e11a199b2c30664ea4555f2ec56d974",
+      "new_sha256": "910d7764868a2b140a00c50aa160f05d5026ca8e66fbd78791f3df3bc267b130",
+      "replacements": [
+        {
+          "before": "ROOT = Path(__file__).resolve().parents[2]",
+          "after": "ROOT = Path(__file__).resolve().parents[4]"
+        },
+        {
+          "before": "OUT = ROOT / 'docs/evidence/A24/revisions/current-context-r1/runs'",
+          "after": "OUT = Path(__file__).resolve().parent / 'python-runs'"
+        },
+        {
+          "before": "Path(__file__).with_name('test_current_context.py')",
+          "after": "ROOT / 'tests/a24_current_context/test_current_context.py'"
+        },
+        {
+          "before": "unittest.TextTestRunner(stream=stderr, verbosity=2)",
+          "after": "unittest.TextTestRunner(stream=stderr, verbosity=2, failfast=True)"
+        }
+      ],
+      "extra_output_only_change": null
+    },
+    "new-js-runner.py": {
+      "source_sha256": "52b60fa999a176c0f8dbe3712ed59b525ceef813aec89afde563d2fdfa3a767c",
+      "new_sha256": "b1f1f1c8a48ce2026c388a2988a4cf4b75e8f1c9dd4f95f1d531cdabdb363c73",
+      "replacements": [
+        {
+          "before": "ROOT = Path(__file__).resolve().parents[2]",
+          "after": "ROOT = Path(__file__).resolve().parents[4]"
+        },
+        {
+          "before": "OUT = ROOT / 'docs/evidence/A24/revisions/current-context-r1/js-runs'",
+          "after": "OUT = Path(__file__).resolve().parent / 'js-runs'"
+        },
+        {
+          "before": "Path(__file__).with_name('js_fake_controls.cjs')",
+          "after": "ROOT / 'tests/a24_current_context/js_fake_controls.cjs'"
+        }
+      ],
+      "extra_output_only_change": "Save Node stdout/stderr before result parsing"
+    }
+  },
+  "frozen_inputs_modified": 0,
+  "real_resources": 0
+}
