@@ -2,7 +2,7 @@
   "schema_version": 1,
   "project": "D:\\1800",
   "coordinator_thread_id": "01a15768-1e2d-7781-b29f-1f7376270216",
-  "updated_at": "2026-10-21T02:18:27.854581+00:00",
+  "updated_at": "2026-10-21T02:19:07.499236+00:00",
   "automation": {
     "id": "1800-a",
     "kind": "heartbeat",
@@ -12340,7 +12340,7 @@
     "A21": {
       "at": "2026-10-21T01:50:20.225601+00:00",
       "task": "A21",
-      "status": "READY_FOR_DIRECT_A21_CREDENTIAL_DECISION",
+      "status": "WAITING_DIRECT_A21_CREDENTIAL_DECISION",
       "dispatch_key": "A21:static-image-classification:new-formal-execution-review",
       "project_id": "4488a042-3ec7-4f9e-8880-cbc8f4e02a51",
       "host_id": "local",
@@ -12512,8 +12512,13 @@
       "user_decision_request": {
         "path": "D:/1800/docs/evidence/coordinator/a21-user-decision-request/request-intent.json",
         "sha256": "a44ee42241fea33088cb2100ff939cee56dcb35f2bf13518d3744921eb3889d9",
-        "status": "READY_TO_ASK_DIRECT_HUMAN_DECISION",
-        "question": "A21 已通过独立及调度预检。是否批准已固定的本轮方案（D:/1800/docs/tasks/A21-bounded-authenticated-source-decision-proposal.md）：在原专用无头会话临时忽略 HTTPS 证书校验，使用本机已有配置最多提交一次官方登录表单，随后同会话读取书46007447的书源；最多2次固定导航、15分钟含释放，0业务写入/上传/OCR，异常停止不重试？这会发送既有用户名和密码，证书不能可靠确认服务端身份，无需提供密码。A20批准明确仅限上一轮且已消费；按A21任务约定，本轮凭据提交需新的直接决定。"
+        "status": "ASKED_WAITING_DIRECT_HUMAN_ANSWER",
+        "question": "A21 已通过独立及调度预检。是否批准已固定的本轮方案（D:/1800/docs/tasks/A21-bounded-authenticated-source-decision-proposal.md）：在原专用无头会话临时忽略 HTTPS 证书校验，使用本机已有配置最多提交一次官方登录表单，随后同会话读取书46007447的书源；最多2次固定导航、15分钟含释放，0业务写入/上传/OCR，异常停止不重试？这会发送既有用户名和密码，证书不能可靠确认服务端身份，无需提供密码。A20批准明确仅限上一轮且已消费；按A21任务约定，本轮凭据提交需新的直接决定。",
+        "dispatched_at": "2026-10-21T02:19:07.499236+00:00",
+        "tool": "request_user_input_async",
+        "tool_accepted": true,
+        "direct_answer_received": false,
+        "proposal_commit": "6a72279ae9dc34f0afcdd5f1a31b20ed85304bb1"
       }
     }
   },
@@ -14927,8 +14932,8 @@
     }
   ],
   "last_action": {
-    "at": "2026-10-21T02:18:27.854581+00:00",
-    "action": "Fixed A21 concrete credential transmission proposal for direct decision"
+    "at": "2026-10-21T02:19:07.499236+00:00",
+    "action": "Asked once for direct decision on fixed A21 credential proposal; no live"
   },
   "limitations": [
     "Current route uses mock B artifacts until independently agreed interface/artifact versions exist.",
