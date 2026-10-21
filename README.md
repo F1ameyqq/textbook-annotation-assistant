@@ -1,5 +1,7 @@
 # 试题标注辅助自动化
 
+2026-10-21：[可运行的离线书页预框演示](docs/b-prebox-demo-20261021.md)。导入PNG/JPEG自动生成几何候选，支持拖画、移动、四角调整、分类、保存重开和自包含JSON导出/重导入；[真实界面](docs/evidence/prebox-demo-20261021.jpg)。启动：`python -X utf8 tools/prebox_b.py --workspace data/runs/my-prebox`，打开打印的本机地址。候选须人工检查，未核准、不配答、不修改网站；与第一章内容交付分别记录。
+
 全项目入口：[实施框架与关口](docs/project-framework.md) · [协作与交接](docs/collaboration.md) · [B 状态](docs/status/b.md) · [A 材料清单](docs/a-side-request.md)。公共合同仍为草案，识别模块使用隔离的试验格式。
 
 当前并行工作入口：[来源覆盖报告工具](tools/report_source_coverage_b.py) · [B→A 消费样例提案](docs/b-a-consumer-samples.md) · [Q16 独立人工核对模板](docs/q16-independent-review.md)。这些产物分别用于清点、接口讨论和待实施的内容签核，不代表整章完整、A 已接收或 Q16 正确。
