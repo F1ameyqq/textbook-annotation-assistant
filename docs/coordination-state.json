@@ -13603,7 +13603,7 @@
         "branch": "codex/a24-first-save",
         "status": "ACTIVE_FIRST_SAVE_WIRE_R1_CONSOLIDATED",
         "host_id": "local",
-        "cursor": "0d524930-f946-4765-8053-ad5865e326fb:33",
+        "cursor": "0d524930-f946-4765-8053-ad5865e326fb:43",
         "turn_id": "01a15dfe-a73c-7fe3-9d19-29a99914542a",
         "started_at": 1792578332,
         "acknowledged": true,
@@ -13619,11 +13619,11 @@
       "review": {
         "thread_id": "01a15cf8-68e0-7b63-91a3-657a567b344c",
         "workspace": "D:/1800-worktrees/a24-first-save-wire-review",
-        "status": "REWORK_RELEASED_AWAITING_R1_FROZEN_DELIVERY",
+        "status": "MODEL_CONTENT_ACCEPTED_RELEASED_AWAITING_WIRE_R1",
         "host_id": "local",
-        "cursor": "9962b7f7-cacc-4c19-9a31-45759f3976b5:15",
-        "turn_id": "01a15de7-19a9-7351-8a9d-5ebe47caa458",
-        "started_at": 1792576788,
+        "cursor": "9962b7f7-cacc-4c19-9a31-45759f3976b5:28",
+        "turn_id": "01a15e25-20a1-76e3-b584-a5a055fcc334",
+        "started_at": 1792580853,
         "acknowledged": true,
         "released": true,
         "preparation_archive": "docs/evidence/coordinator/a24-independent-preparation",
@@ -13631,13 +13631,14 @@
         "preparation_members_verified": 7,
         "preparation_source_inputs_verified": 12,
         "dispatch_workflow": "e0bcd85ec419a69d492aebac918917401fef5926",
-        "completed_at": 1792578046,
-        "duration_ms": 768994,
+        "completed_at": 1792581370,
+        "duration_ms": 516743,
         "at": "2026-10-21T06:34:08.248094+00:00",
-        "progress_note": "Fixed REWORK: real owner integration and journal receipt/query persistence boundary. 45 Python/8 JS pass; one independent control FAIL; remaining controls NOT_RUN.",
+        "progress_note": "Fixed partial OCR/release and explicitly corrected one-question content finite accepted; wire REWORK unchanged, awaiting frozen R1.",
         "handoff_snapshot_at": "2026-10-21T10:15:48.597167+00:00",
         "coordinator_successor_notice": "SENT_NO_REVIEW_OR_TEST_DISPATCH",
-        "successor_notice_acknowledged": true
+        "successor_notice_acknowledged": true,
+        "model_review_workspace": "D:\\1800-worktrees\\a24-model-one-question-review"
       },
       "task_document": "docs/tasks/A24-current-contract-first-save-integration.md",
       "task_sha256": "564ff7319d20ffd23a52128bcf1ae31af2298dbedaa001ed9a3d6b508281880b",
@@ -14548,7 +14549,7 @@
           0
         ],
         "dispatch_workflow": "4a065695e9aaef61f1a6bfad43a0ac70310a430d",
-        "cursor": "0d524930-f946-4765-8053-ad5865e326fb:33",
+        "cursor": "0d524930-f946-4765-8053-ad5865e326fb:43",
         "static_snapshot_preparation": {
           "path": "docs/evidence/coordinator/a24-first-save-wire-independent-closure/static-snapshot-contract.json",
           "sha256": "8fc850080c7abc6cc735e781e3c04527b7578a159eecb847ece2355a5b3cba95",
@@ -14575,7 +14576,7 @@
       "model_one_question_execution": {
         "at": "2026-10-21T10:46:37.214831+00:00",
         "task": "A24",
-        "status": "ACTUAL_PARTIAL_OCR_FIXED_CORRECTED_CONTENT_PENDING_INDEPENDENT",
+        "status": "ACCEPTED_FIXED_PARTIAL_OCR_AND_EXPLICIT_CORRECTED_CONTENT_ONLY",
         "source": "DIRECT_USER_REQUEST_CURRENT_COORDINATOR_CHAT",
         "user_request": "那就直接复用B侧现有模型和入口，补齐A侧缺失依赖，与A24首题保存修订并行推进。尽快跑通一道普通单选的实际识别、保存和独立读回，不要再等整章或复杂公式验收。尽快进入交付前的真实测试",
         "task_document": "docs/tasks/A24-one-question-model-execution.md",
@@ -14611,14 +14612,14 @@
             "raw_directory": ".local/stages/a24-model-b-source/ssh-intake"
           }
         ],
-        "current_intake": "Same exact repository and three blob IDs using standard HTTPS, no credential prompt/config changes, bounded90s",
+        "current_intake": "SOURCE_ACQUISITION_COMPLETE",
         "source_intake_result": "HTTPS_EXIT0_EXACT_THREE_GIT_BLOBS_VERIFIED",
         "source_intake_directory": ".local/stages/a24-model-b-source/https-intake",
         "selected_existing_entry": "tools/route_a_layout.py::ocr_atoms",
         "input_mode": "SIX_EXPLICIT_MANUAL_REGIONS_REAL_OCR_NO_HIDDEN_APPROVED_TEXT",
         "inference_activation_sha256": "92ddb106d539fc1500b69fdd0ac544f5cd00f23d23414571914bf920694b209d",
-        "actual_result": "FAILED_HOLD_EMPTY_ANSWER; EXPLICIT_VISUAL_CORRECTION_SEPARATE",
-        "failed_process_launches": 1,
+        "actual_result": "RAW_FAILED_HOLD; CORRECTED_ONE_QUESTION_CONTENT_FINITE_ACCEPTED",
+        "failed_process_launches": 2,
         "original_claim_reopened": false,
         "actual_engine_calls": 6,
         "actual_ort_session_calls": 22,
@@ -14630,10 +14631,23 @@
         "corrected_content_sha256": "cd4ee0c6a379fa5bf8cc87dccdb010c423a9e2f9a2382336efaa00cefe103b5a",
         "corrected_content_reviewer_kind": "COORDINATOR_AI_VISUAL_REVIEW",
         "human_user_review_claimed": false,
-        "formal_review_status": "DISPATCH_INTENT_RECORDED",
+        "formal_review_status": "ACCEPTED_FINITE_RELEASED",
         "formal_review_task": "docs/tasks/A24-one-question-model-fixed-review.md",
         "formal_review_task_sha256": "4c36e04e9e691f8c92f1af0c1e770b6d35ae8462445f86259b1b6efd45977966",
-        "formal_review_thread_id": "01a15cf8-68e0-7b63-91a3-657a567b344c"
+        "formal_review_thread_id": "01a15cf8-68e0-7b63-91a3-657a567b344c",
+        "formal_review_cursor": "9962b7f7-cacc-4c19-9a31-45759f3976b5:28",
+        "formal_review_turn_id": "01a15e25-20a1-76e3-b584-a5a055fcc334",
+        "model_no_rerun_prompt_updated": true,
+        "formal_review_result_sha256": "1dad447c41ee2d8a8ce79e02d3aef2c5ef0238be07278759a118d0273ab6e9e0",
+        "formal_review_output_manifest_sha256": "c612655143555e4f69d061e738143452f7d4da95f0d62deb9ea2277839ae329a",
+        "formal_and_root_closure": "docs/evidence/coordinator/a24-model-one-question-independent-closure",
+        "initial_local_startup_failures": 1,
+        "total_process_launches": 2,
+        "process_exit_codes": [
+          1,
+          1
+        ],
+        "actual_engine_initializations": 1
       }
     }
   },
