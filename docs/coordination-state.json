@@ -2,7 +2,7 @@
   "schema_version": 1,
   "project": "D:\\1800",
   "coordinator_thread_id": "01a15768-1e2d-7781-b29f-1f7376270216",
-  "updated_at": "2026-10-21T05:24:47.768674+00:00",
+  "updated_at": "2026-10-21T05:30:53.443029+00:00",
   "automation": {
     "id": "1800-a",
     "kind": "heartbeat",
@@ -13097,7 +13097,7 @@
     "A23": {
       "at": "2026-10-21T04:58:52.666220+00:00",
       "task": "A23",
-      "status": "SINGLE_LIVE_EXECUTION_ACTIVE",
+      "status": "ACTUAL_FIXED_REVIEW_PENDING",
       "dispatch_key": "A23:session-completion:new-formal-execution-review",
       "project_id": "4488a042-3ec7-4f9e-8880-cbc8f4e02a51",
       "host_id": "local",
@@ -13108,23 +13108,23 @@
         "thread_id": "01a15cd4-d799-75b1-8514-13040b089182",
         "workspace": "D:/1800-worktrees/a23-session-completion",
         "branch": "codex/a23-session-completion",
-        "status": "ACTIVE_APPROVED_SINGLE_LIVE",
+        "status": "ACTUAL_FIXED_RELEASED",
         "host_id": "local",
-        "cursor": "9e50bdb0-2159-47d9-b37b-8f66475ce061:10",
+        "cursor": "9e50bdb0-2159-47d9-b37b-8f66475ce061:18",
         "turn_id": "01a15cea-f113-7b41-9623-b3d27a1cf0e8",
         "started_at": 1792560263,
         "acknowledged": true,
-        "released": false,
+        "released": true,
         "progress_note": "Actual launch/result pending fixed delivery; dispatch is not proof of startup or success",
         "product_commit": "81ff688ab2f13b7c51271f2c5ed33b8bd726d573",
-        "final_commit": "3e5d99f3a740f44cb0f4d09fe37ceb0a34ce4382",
-        "completed_at": null,
-        "duration_ms": null
+        "final_commit": "454c6ff4a89580e6209b4c45fd6bc74a5e603d83",
+        "completed_at": 1792560517,
+        "duration_ms": 254421
       },
       "review": {
         "thread_id": "01a15cd4-df45-7002-8caa-f89820034469",
-        "workspace": "D:/1800-worktrees/a23-independent-fixed",
-        "status": "ACCEPTED_OFFLINE_ONLY_RELEASED",
+        "workspace": "D:/1800-worktrees/a23-live-review",
+        "status": "ACTUAL_REVIEW_DISPATCH_PENDING",
         "host_id": "local",
         "cursor": "444d385a-5fe3-4ed7-a15d-6aa95d1ae70e:14",
         "turn_id": "01a15cde-991e-7a93-bf17-d8a443a6928a",
@@ -13143,14 +13143,14 @@
       "review_task_sha256": "7b2d2dbb326b4687051ea632ac263db6bb61412e5dec9279b74a84f7d89268c4",
       "dedup_checked_no_A23": true,
       "live_activated": true,
-      "live_used": 0,
+      "live_used": 1,
       "scope": "CURRENT_SESSION_COMPLETION_AND_SOURCE_READONLY",
       "offline_only": false,
       "new_live_reserved_limit": 1,
       "new_live_authorized": true,
       "login_submission_authorized": false,
       "local_credential_config_reads_authorized": false,
-      "next_dependency": "One fixed actual A23 delivery/release, then same formal independent static actual-result review",
+      "next_dependency": "Same formal independent actual-result review; concentrate next source/first-save adaptation using fixed new facts",
       "workflow_commit": "d86dbcb82ebd7b61d5e87f02402bfe8a6bcd1b15",
       "delivery": {
         "at": "2026-10-21T05:10:32.403196+00:00",
@@ -13411,7 +13411,29 @@
         "sha256": "23ca1e8adb0b2b79876fa253d7be1572162933e8933e17f23fc1c30b768646d7",
         "basis": "A17_STANDING_READONLY_TLS_PERMISSION_BOUND_TO_A23"
       },
-      "live_dispatch_workflow": "50d852390370363a7d572416ff90ffbf4605fb0b"
+      "live_dispatch_workflow": "50d852390370363a7d572416ff90ffbf4605fb0b",
+      "actual_delivery": {
+        "at": "2026-10-21T05:30:53.443029+00:00",
+        "status": "MECHANICAL_PASS_PENDING_FORMAL_ACTUAL_REVIEW",
+        "final": "454c6ff4a89580e6209b4c45fd6bc74a5e603d83",
+        "base": "3e5d99f3a740f44cb0f4d09fe37ceb0a34ce4382",
+        "raw_members": 64,
+        "manifest_sha256": "3984da49ce141aead2d314e80274d6b1eacf246de71c9b01f11d31cdd0628c4a",
+        "old_members_preserved": 32145,
+        "added": 31,
+        "modified": 0,
+        "deleted": 0,
+        "candidate_dependencies": 29,
+        "authority_raw_comparisons": {
+          "activation.json": ".local/stages/a23-session-completion-activation.json",
+          "authorization.json": "docs/approvals/A23-session-completion-user-decision.json",
+          "independent-result.json": "docs/evidence/coordinator/a23-independent-closure/independent-result.json",
+          "dispatch-intent.json": "docs/evidence/coordinator/a23-live-dispatch/dispatch-intent.json",
+          "task.md": "docs/tasks/A23-approved-single-live-dispatch.md"
+        },
+        "coordinator_product_runs": 0
+      },
+      "live_remaining": 0
     }
   },
   "route": [
@@ -15824,8 +15846,8 @@
     }
   ],
   "last_action": {
-    "at": "2026-10-21T05:24:47.768674+00:00",
-    "action": "A23 original executor acknowledged unique readonly actual dispatch"
+    "at": "2026-10-21T05:30:53.443029+00:00",
+    "action": "A23 fixed actual viewer admission then book identity rejection; dispatch same independent static review"
   },
   "limitations": [
     "Current route uses mock B artifacts until independently agreed interface/artifact versions exist.",
