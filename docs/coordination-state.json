@@ -2,7 +2,7 @@
   "schema_version": 1,
   "project": "D:\\1800",
   "coordinator_thread_id": "01a15768-1e2d-7781-b29f-1f7376270216",
-  "updated_at": "2026-10-21T01:51:48.354179+00:00",
+  "updated_at": "2026-10-21T02:10:39.412635+00:00",
   "automation": {
     "id": "1800-a",
     "kind": "heartbeat",
@@ -12340,7 +12340,7 @@
     "A21": {
       "at": "2026-10-21T01:50:20.225601+00:00",
       "task": "A21",
-      "status": "FORMAL_OFFLINE_EXECUTION_AND_REVIEW_PREPARATION_ACTIVE",
+      "status": "FIXED_DELIVERY_VERIFIED_INDEPENDENT_DISPATCH_PENDING",
       "dispatch_key": "A21:static-image-classification:new-formal-execution-review",
       "project_id": "4488a042-3ec7-4f9e-8880-cbc8f4e02a51",
       "host_id": "local",
@@ -12351,24 +12351,31 @@
         "thread_id": "01a15c27-595a-70e0-88b4-fe064550c884",
         "workspace": "D:/1800-worktrees/a21-static-image",
         "branch": "codex/a21-static-image",
-        "status": "ACTIVE_OFFLINE",
+        "status": "FIXED_RELEASED",
         "host_id": "local",
-        "cursor": "802eb2ed-b1a9-4926-b0bf-179e33cd1817:1",
+        "cursor": "802eb2ed-b1a9-4926-b0bf-179e33cd1817:2",
         "turn_id": "01a15c27-5c5b-76f1-b10e-b6b4322d9e9a",
         "started_at": 1792547445,
         "acknowledged": true,
-        "released": false
+        "released": true,
+        "product_commit": "b65d85156b56840d6ae055880d4d707b998e2ff3",
+        "final_commit": "cf03910d9554d6e3198c59494de2d4ce7bf7ad80",
+        "completed_at": 1792547961,
+        "duration_ms": 515950
       },
       "review": {
         "thread_id": "01a15c27-a798-7e63-a879-a1bfd2d56b5a",
-        "workspace": "D:/1800-worktrees/a21-review-preparation",
-        "status": "ACTIVE_PREPARATION",
+        "workspace": "D:/1800-worktrees/a21-independent-fixed",
+        "status": "FIXED_REVIEW_DISPATCH_PENDING",
         "host_id": "local",
-        "cursor": "2deec2ff-5afb-445f-83cc-ae24da0e7222:1",
+        "cursor": "2deec2ff-5afb-445f-83cc-ae24da0e7222:2",
         "acknowledged": true,
-        "released": false,
+        "released": true,
         "turn_id": "01a15c27-aa7d-7041-9d76-6349671549fb",
-        "started_at": 1792547465
+        "started_at": 1792547465,
+        "preparation_released": true,
+        "preparation_manifest_sha256": "d598bdb67d092f6d475080e1db09cc8150be88e95016f00644f22d9710393810",
+        "preparation_archive": "D:/1800/docs/evidence/coordinator/a21-independent-preparation"
       },
       "task_document": "docs/tasks/A21-static-image-authenticated-source.md",
       "task_sha256": "e34acb7ade411353eb177d6b455eb0fb42fb2269b0c8e1237636d1cd2b0e8654",
@@ -12383,8 +12390,72 @@
       "new_live_authorized": false,
       "login_submission_authorized": false,
       "credential_tls_exception_authorized": false,
-      "next_dependency": "New formal offline correction and independent preparation; concrete decision only after fixed preflight",
-      "workflow_commit": "82c2b7ee62a126bb74bc08c2d2dedbe5c556d1ca"
+      "next_dependency": "Same formal independent bounded preflight; concrete A21 credential decision after acceptance",
+      "workflow_commit": "82c2b7ee62a126bb74bc08c2d2dedbe5c556d1ca",
+      "delivery": {
+        "at": "2026-10-21T02:10:39.412635+00:00",
+        "status": "MECHANICAL_PASS_ONLY_PENDING_INDEPENDENT_REVIEW",
+        "base": "f45fa86789b8f154d03e8c4807412a2161d678f6",
+        "product": "b65d85156b56840d6ae055880d4d707b998e2ff3",
+        "final": "cf03910d9554d6e3198c59494de2d4ce7bf7ad80",
+        "candidate_sha256": "f0710e872776c452728e68710052c8580ae45fc4ea55cbff7fddb11a11d18657",
+        "delivery_sha256": "3cfc649370032e80a52c763e3c7c18b741358d2b5bfe38e14d89b3fcf2c9b099",
+        "report_sha256": "8e27ed08f1e3228c1b774512dd27d561dc0ede4b7c4d8df87cacc0ecb957dacf",
+        "release_sha256": "64b46783ac64877b58321d3e42098d7dfc91df852e200746063f5cd074ddf42a",
+        "candidate_members": 27,
+        "delivery_members": 63,
+        "delivery_plus_self": 64,
+        "raw_members": 76,
+        "input_manifest_sha256": "7e0e2bf511ff325e9c1ac0e723d2edfefedf77f96f7e8c49ddc9e35d5d172431",
+        "isolation": "D:/1800-worktrees/a21-independent-fixed",
+        "old_members": 31881,
+        "unchanged_old_members": 31877,
+        "old_evidence_preserved": 30644,
+        "modified": [
+          "src/annotation/source/usense/current_readonly/gate.py",
+          "src/annotation/source/usense/current_readonly/policy.py",
+          "tools/a16_current_state_launcher.py",
+          "tools/a16_current_state_probe.py"
+        ],
+        "added": 60,
+        "deleted": 0,
+        "coordinator_product_runs": 0,
+        "live": 0,
+        "report_utf8_and_no_replacement": true,
+        "author_suite": {
+          "task": "A21",
+          "author_run": {
+            "path": "runs/run01/result.json",
+            "tests": 16,
+            "pass": 16,
+            "duration_ms": 313
+          },
+          "raw_run": {
+            "path": "raw-checkout/docs/evidence/A21/static-image/runs/run01/result.json",
+            "tests": 16,
+            "pass": 16,
+            "duration_ms": 375
+          },
+          "raw_candidate_control": {
+            "task": "A21",
+            "mode": "STATIC_RAW_CANDIDATE_AND_TEMPLATE_CONTROL",
+            "success": true,
+            "candidate_sha256": "f0710e872776c452728e68710052c8580ae45fc4ea55cbff7fddb11a11d18657",
+            "candidate_members_verified": 27,
+            "scope_member_count": 47,
+            "templates_verified": 3,
+            "browser_network_profile_native_occupancy_credential_calls": 0,
+            "product_entry_points_run": 0,
+            "old_suites_run": 0,
+            "live_activated": false
+          },
+          "old_suites_run": 0,
+          "new_failures": 0,
+          "live_activated": false
+        }
+      },
+      "fixed_review_task": "D:/1800/docs/tasks/A21-fixed-static-image-independent-review.md",
+      "fixed_review_task_sha256": "c0ce0fbf5968f348403cfc31279b1ec99899d2703c00907d2ac38458af073699"
     }
   },
   "route": [
@@ -14797,8 +14868,8 @@
     }
   ],
   "last_action": {
-    "at": "2026-10-21T01:51:27.395180+00:00",
-    "action": "Registered exact A21 formal execution and independent review chat IDs"
+    "at": "2026-10-21T02:10:39.412635+00:00",
+    "action": "Received A21 frozen raw delivery and prepared same-chat independent review"
   },
   "limitations": [
     "Current route uses mock B artifacts until independently agreed interface/artifact versions exist.",
