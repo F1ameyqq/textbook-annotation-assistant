@@ -1,0 +1,21 @@
+# A23 固定实际结果与精确自有释放独立验收
+
+结论：ACCEPTED_FIXED_PARTIAL_VIEWER_ADMISSION_FAILURE_AND_OWN_RELEASE_ONLY。仅接受本轮当前viewer组合准入、BOOK_IDENTITY_REJECTED固定失败及已证精确自有释放；不升级账户身份、书籍/书源或保存验收。
+
+实际final454c6ff4a89580e6209b4c45fd6bc74a5e603d83，直接父3e5d99f3a740f44cb0f4d09fe37ceb0a34ce4382；产品81ff688ab2f13b7c51271f2c5ed33b8bd726d573不变。独立派发workflow9433c246642f087751296abcacda5ea7968f289c。64份raw逐项大小/SHA256/Git blob身份通过；作者30清单成员+self、29候选依赖和10个raw复制成员闭包通过。激活、决定、原独立报告的53scope及单轮标记绑定一致。根固定核32145旧成员保全、31新增0改删，本审查引用其机械核证和hash核过的保全记录，不重读base或运行Git/产品。
+
+唯一轮北京时间2026-10-21 13:24:53.697938—13:25:03.718366（对应原件05:24:53.697938—05:25:03.718366 UTC），在900秒窗口内。记录1启动、0重试，live1已耗尽、余0。持续A17只读TLS许可仅绑定本轮，不能据此再开A23。
+
+导航记录HTTP200，DOMContentLoaded/goto3109ms，可见容器readiness156ms。原permissions有native/context各一次允许记录、原frame/已预留network关联HTTP200，以及完成的有限ACCEPTED_NUMERIC_CODE投影。session_completion=DONE，viewer组合准入成立；active profile意图0、账户字段NOT_OBSERVED。记录保留关联标签，未单独留原request/frame/network ID以供离线逐值比较；原关联约束由固定guard分支核证。不从这组有限证据推定账户身份或profile持久化。
+
+随后BUSINESS_BOOK的native允许预留1、context允许事件1，book步骤DONE，但book_identity_confirmed=false，首次错误及shutdown前后首错均为BOOK_IDENTITY_REJECTED。固定collect源码在step('book', get_once)返回并标DONE后才调用book_identity，因此DONE不代表书籍身份通过。get_once/business代码只支持“内部HTTP200/dict body/integer code0检查返回”的静态推断；实际HTTP/body/安全结构/ID值没有留存，不能当作独立原件。book_identity拒绝分支可能为未找到匹配data.id46007447投影或匹配投影冲突，具体分支UNKNOWN。实际wrong book和parser/list结构错配均未证。
+
+目录、全量框、来源、page14/page173、两原图及映射、样题与内容后继全部NOT_RUN，sources空，body/schema UNKNOWN，write_eligible及production_ready=false。0凭据配置读取、0登录/业务写入。16个审计事件不是16个HTTP请求；version两层各1但成功UNKNOWN，共享静态排除1且拒绝完成1。会话/辅助发送总数、DNS/TCP/TLS及脚本必要性UNKNOWN保持。原捕获完整Script及sidecar未读取、未复制。
+
+精确释放依据是保留句柄的前后PID和创建FILETIME一致：product50172退出2、worker45692退出2、occupancy6152退出0，均观察退出并闭句柄。两个Job均已分配、清理前active1、最终active0并关闭；context已关、runtime已停、errors空，pending tasks/callbacks0；未记录总/硬截止超时。这只接受固定自有资源，不作OS全局释放判断。launcher自身OS创建/退出身份仍UNKNOWN。
+
+封装工具退出0是工具记录；外层子返回2，product/worker持有退出均2，不能混为成功。135字节outer launcher stdout原bytes及SHA已核；errors=false只表示释放无错误。90字节product stdout只有计数/摘要，原bytes不可得，不能由外层JSON重建。stderr0仅计数/摘要。封装/launcher/worker各自时钟记录与wall/FILETIME差值原样保留，精确原因UNKNOWN，见timing-and-stdout-limits.json。
+
+原报告helper嵌套引号SyntaxError、随后archive.py不存在事件保留在packaging-failure.json；该文件是工具输出转录，个别命令退出码UNKNOWN。只修报告helper，无产品/live重复，不为此归档细节阻断已保留原件和正确停止。旧离线控制失败/NOT_RUN、A22失败/UNKNOWN及所有耗尽额度保持。
+
+本独立本轮只解析固定bytes、JSON和AST，0产品导入、runner/suite、browser/network/profile/真实配置/native/占用、新decision/activation/live。复核后64输入保持原bytes。独立已释放，无等待进程或背景helper；不授权重试、下一live或首题保存。其他三例HOLD、Q22不导航/样题/重放、0B/外部联系人消息。
