@@ -1,0 +1,244 @@
+{
+  "schema": "A24-save-mapping-static-preparation/v1",
+  "status": "AUXILIARY_STATIC_PREPARATION_ONLY_RELEASED",
+  "script": {
+    "path": "D:/1800/.local/stages/a17-excluded-static-live/static-assets/1-d0a5ebce18bc92d7643662ecec2d078bb295214111e7cb32688f0b88e05bed41.bin",
+    "sha256": "d0a5ebce18bc92d7643662ecec2d078bb295214111e7cb32688f0b88e05bed41",
+    "size": 3065996,
+    "executed": false,
+    "sidecar_read": false
+  },
+  "prior_notes": [
+    {
+      "path": "D:/1800/.local/stages/coordinator/a18-first-save-wire-preparation/notes.md",
+      "size": 8979,
+      "sha256": "f8c3f8a277fd9e0b0afe338f18ebf63a4716d4217d5b1fe8a16e3f0645c8b4dc"
+    },
+    {
+      "path": "D:/1800/.local/stages/coordinator/a23-first-save-consolidation/draft.md",
+      "size": 11785,
+      "sha256": "335a3ea88780bee6113c568bfc764f71110b310816c003aa6c43bca9abc44c28"
+    }
+  ],
+  "scope": {
+    "active_author_or_live_output_reads": 0,
+    "product_runs": 0,
+    "product_imports": 0,
+    "tests": 0,
+    "browser_network_requests": 0,
+    "profile_or_credentials_reads": 0,
+    "permissions_added": 0,
+    "formal_acceptance": false,
+    "product_changes": 0
+  },
+  "page_mapping": {
+    "source": "OSS p6e maps positive viewer pageNum to resource index pageNum-1; source file_id is synthesized from caller. Actual current response/mapping not read by auxiliary.",
+    "viewer_selection": "qw validates integer positive input against ii.value and writes qn/ra then calls Ql. Ql passes selected viewer O to Mo(ge,O,Ie.value), assigns resulting pages to mn/Un, and updates qn/ra.",
+    "component_slot": "PdfViewer receives pages; nt(Le,rect) takes r.pages[Le] and emits event(dataURL,Le,rect). Le is pages-array position, not source resource_index or saved page.",
+    "new_rect": "Aue(dataURL,slot,rect) sets page_index=qn.value for question/choice; Due sets page_index=ra.value for answer. Parent ignores slot for saved page; rect_bbox is carried from rect.",
+    "submit": "e8 upload-result object preserves clip.page_index; commit annotations_upsert writes yn.page_index unchanged. No minus1/plus1 at submit.",
+    "conditional_example": "If exact bound current source/display selection is viewer14 for question/choices and viewer173 for answer, the documented client path sends saved page14/173 even when OSS resource indices are13/172. This is conditional static contract, not proof of actual UI selection or accepted save.",
+    "required_actual": "Need fixed source URL/hash/dimensions/resource identity and verified chosen viewer/current page relation, exact final six bboxes and source-region evidence, then server receipt/independent readback to confirm persistence."
+  },
+  "coordinate_mapping": {
+    "variables": "W,H = loaded Image.width,height; Cw,Ch = canvas width,height; L,T,Bw,Bh = boundingClientRect; z = zoom; px,py = pan offsets.",
+    "formula": "cx=(clientX-L)*Cw/Bw; cy=(clientY-T)*Ch/Bh; f=min(Cw/W,Ch/H); ox=(Cw-W*f)/2; oy=(Ch-H*f)/2; x=(cx-px-ox*z)/(f*z); y=(cy-py-oy*z)/(f*z).",
+    "unit": "rect_bbox is original loaded-image pixel coordinates, not screenshot/CSS/canvas-display coordinates; inverse to Be drawImage fit/zoom/pan.",
+    "normalization": "A sorts minX,minY,maxX,maxY; ordinary finish uses abs width>5 OR abs height>5. It can select preannotation boxes or union intersecting blocks in conditional branches; do not assume cursor drag endpoints equal final bbox.",
+    "precision": "Inspected ordinary path performs no explicit rounding at commit; array.join(\",\") serializes numerical coordinates. Crop canvas rasterization/encoding does not redefine original bbox. Future direct adapter must validate chosen precision/bounds and avoid a second scale transform.",
+    "crop": "nt creates full-size canvas at Image.width/height, draws image, applies associated eraser pixels when present, and crops bbox into JPEG dataURL. New ordinary rect path therefore supplies new cropped data, not automatically reusable original URL. Existing upload behavior from prior notes remains a separate fixed budget/authorization concern.",
+    "submit": "e8 preserves rect_bbox from clip through upload results, then only array->CSV join. zone-array index determines image_order_in_annotation_zone, not page resource index.",
+    "unknown": "Current actual renderer dimensions/transform, chosen crop bboxes/content, image raster rounding, crop upload requirements and server geometry acceptance were not observed."
+  },
+  "old_body_export_scope": [
+    {
+      "endpoint": "GET /qieti/api/annotate_ocr/export-paper-questions/{file_id}",
+      "static": "q6e supplies only path ID and responseType blob. AnnotateUnified passes q6e into hyt; paper handler h checks selectedPdf and directly calls it, downloads {file_id}_paper_questions.jsonl. Unlike other hyt export handlers, this paper handler does not call precheck callback.",
+      "coverage": "No zone filters, explicit all-record inventory, version/digest, pagination/completeness flag, or question/frame bindings are validated in this exact wrapper+consumer chain. Absence of a zone parameter is not evidence of all-zone coverage. Server JSONL schema/current content unknown."
+    },
+    {
+      "endpoint": "GET /qieti/api/annotate_pic/training_questions/{file_id}/export",
+      "static": "D6e returns Hn(data); exact consumer in title=\u9898\u5e72\u8bad\u7ec3\u62c9\u6846 warns export includes only saved questions and downloads {id}_traning.json.",
+      "coverage": "Saved training questions are not proven identical to unified annotation old-question set. No zone/coverage/version check in this exact wrapper+consumer. Do not adopt as whole old-content baseline."
+    }
+  ],
+  "known_export_symbol_offsets": {
+    "q6e": [
+      1086631,
+      2710886
+    ],
+    "D6e": [
+      1083602,
+      3053153
+    ]
+  },
+  "minimal_same_A24_followup": [
+    "Use separate fields viewer_page/resource_index/saved_page_proposal and explicit provenance; never copy zero-based resource index into save field by name.",
+    "Bind six original-pixel bboxes directly to exact image bytes/dimensions; inspect resulting draft/crops before payload; avoid CSS screenshot scale reuse.",
+    "Construct final payload with preserved page and bbox, zone-local ordinal and exact new rect IDs; keep upload separately counted and never invoke entire UI save to hide retries.",
+    "Known export remains a potential fixed read candidate only if an actual bounded schema/coverage check is explicitly added to same-stage plan. Current notes do not authorize it or establish full preservation. No generalized endpoint discovery needed."
+  ],
+  "script_fragments": [
+    {
+      "name": "OSS_viewer_to_resource_index",
+      "utf8_byte_offset_zero_based": 1076726,
+      "byte_length": 550,
+      "sha256": "b87eada935d68158b0f7d1fdacac1409991a3dcefea61660a981c974ef19d927",
+      "text": "async function p6e(e,t,n){const a=tR(t);if(a===null)return null;const r=`${e}|${a}`;if(WE.has(r))return GE(WE.get(r));if(CS.has(r)){const i=await CS.get(r);return GE(i)}const o=(async()=>{const i=a-1,l=nR(n==null?void 0:n.oss_page_url_pattern,i),s=nR(n==null?void 0:n.oss_image_url_pattern,i);let u=[];if(l){const d=await f6e(l);Array.isArray(d)?u=d:d&&Array.isArray(d.blocks)&&(u=d.blocks)}const c={page_index:i,image:s||\"\",blocks:Array.isArray(u)?u:[],source:\"oss\"};return WE.set(r,GE(c)),c})();CS.set(r,o);try{return await o}finally{CS.delete(r)}}"
+    },
+    {
+      "name": "parent_page_navigation",
+      "utf8_byte_offset_zero_based": 2710986,
+      "byte_length": 423,
+      "sha256": "d8b08be864434bbaa7ef59170ab88f0e57509c05228425ea180995ecbe1dc40e",
+      "text": "async function qw(N){let O,ee,ge;if(N===\"question_zone\"?(O=parseInt(He.value),ee=He,ge=qn):N===\"answer_zone\"&&(O=parseInt(St.value),ee=St,ge=ra),isNaN(O)||O<=0||O>ii.value){ve.warning(\"\u8bf7\u8f93\u5165\u6709\u6548\u7684\u9875\u7801\"),ee.value=ge.value.toString();return}qf(N),ge.value=O,await Ql(N,O),ee.value=ge.value.toString(),setTimeout(()=>{const Ce=document.activeElement;Ce&&(Ce.tagName===\"INPUT\"||Ce.tagName===\"TEXTAREA\")&&Ce.blur()},0)}"
+    },
+    {
+      "name": "parent_page_load",
+      "utf8_byte_offset_zero_based": 2712280,
+      "byte_length": 2062,
+      "sha256": "0d6bcaeeb410a33dfae3b8387111d0b4fb96837cc6d3bf8e5162976c9bff335c",
+      "text": "async function Ql(N,O,ee=!0){if(w.value)try{const ge=w.value;if(ee){const Ce=await Mo(ge,O,Ie.value);Ce.pages&&Ce.pages.length>0?N===\"question_zone\"?mn.value=Ce.pages:N===\"answer_zone\"&&(Un.value=Ce.pages):(ve.warning(`\u9875\u7801 ${O} \u4e0d\u5b58\u5728`),N===\"question_zone\"&&O>qn.value?qn.value--:N===\"answer_zone\"&&O>ra.value&&ra.value--)}if(N===\"question_zone\"){const Ce=(xe.value[O]||[]).filter($e=>{const mt=$e.type;return l(mt,\"question_zone\",$e,xe.value[O])&&(!ze.value&&$e.order_in_level==Ca.value+1||ze.value&&parseInt($e.order_in_level)==parseInt(ze.value))}).map($e=>({...$e,isEditEnabled:!0,is_pre_annotation:$e.is_pre_annotation||!1})),Ee=rt.value.filter($e=>{const mt=$e.type;return $e.page_index===O&&l(mt,\"question_zone\",$e)&&(!ze.value||$e.order_in_level!=ze.value)}).map($e=>{const mt=$e.type;return{...$e,rect_bbox:$e.rect_bbox.split(\",\").map(Number),isHistorical:!0,isEditEnabled:ze.value&&parseInt($e.order_in_level)==parseInt(ze.value),is_pre_annotation:$e.is_pre_annotation===1||$e.is_pre_annotation===!0||$e.is_pre_annotation===!0,pre_annotations_id:$e.pre_annotations_id||null}});We.value=[...Ce,...Ee],qn.value=O}else if(N===\"answer_zone\"){const Ce=(Pe.value[O]||[]).filter($e=>{const mt=$e.type;return l(mt,\"answer_zone\",$e,Pe.value[O])&&(!ze.value&&$e.order_in_level==Ca.value+1||ze.value&&parseInt($e.order_in_level)==parseInt(ze.value))}).map($e=>{const mt=$e.type;return{...$e,isEditEnabled:!0,is_pre_annotation:$e.is_pre_annotation||!1}}),Ee=rt.value.filter($e=>{const mt=$e.type;return $e.page_index===O&&l(mt,\"answer_zone\",$e)&&(!ze.value||parseInt($e.order_in_level)!=parseInt(ze.value))}).map($e=>{const mt=$e.type;return{...$e,rect_bbox:$e.rect_bbox.split(\",\").map(Number),isHistorical:!0,isEditEnabled:ze.value&&parseInt($e.order_in_level)==parseInt(ze.value),is_pre_annotation:$e.is_pre_annotation===1||$e.is_pre_annotation===!0||$e.is_pre_annotation===!0,pre_annotations_id:$e.pre_annotations_id||null}});Ut.value=[...Ce,...Ee],ra.value=O}}catch(ge){console.error(\"\u52a0\u8f7d\u9875\u9762\u5931\u8d25:\",ge),ve.error(\"\u52a0\u8f7d\u9875\u9762\u5931\u8d25\uff0c\u8bf7\u91cd\u8bd5\")}}"
+    },
+    {
+      "name": "viewer_mouse_inverse_transform",
+      "utf8_byte_offset_zero_based": 2611064,
+      "byte_length": 616,
+      "sha256": "f5ba31da99051d4bb099367fb33b728e4500e835853c3994f5ff265ef594faae",
+      "text": "function $(Le,qe){const Ve=o.value[qe];if(!Ve)return{x:0,y:0};const Ue=Ve.getBoundingClientRect(),tt=Le.clientX-Ue.left,Ye=Le.clientY-Ue.top,Fe=b.value[qe]||1,dt=_.value[qe]||0,He=S.value[qe]||0,St=Ve.width/Ue.width,Ht=Ve.height/Ue.height,Yt=tt*St,De=Ye*Ht,Ge=r.pages[qe];if(!Ge)return{x:(Yt-dt)/Fe,y:(De-He)/Fe};const Je=M(Ge),It=s.value.get(Je)||s.value.get(r.imageBasePath+Ge.image),_n=(It==null?void 0:It.width)||1,Zt=(It==null?void 0:It.height)||1,ct=Math.min(Ve.width/_n,Ve.height/Zt),ht=_n*ct,Jt=Zt*ct,Ln=(Ve.width-ht)/2,In=(Ve.height-Jt)/2,kn=(Yt-dt-Ln*Fe)/(ct*Fe),Pn=(De-He-In*Fe)/(ct*Fe);return{x:kn,y:Pn}}"
+    },
+    {
+      "name": "bbox_normalize",
+      "utf8_byte_offset_zero_based": 2611680,
+      "byte_length": 96,
+      "sha256": "68ce05187ff9a629e300fb9f4cdb02c92ce96e3597cf06c48172e8d4a1197c21",
+      "text": "function A(Le,qe,Ve,Ue){return[Math.min(Le,Ve),Math.min(qe,Ue),Math.max(Le,Ve),Math.max(qe,Ue)]}"
+    },
+    {
+      "name": "ordinary_draw_finish_and_optional_snap",
+      "utf8_byte_offset_zero_based": 2621778,
+      "byte_length": 1932,
+      "sha256": "c469bf8040bc457788c125e74ba61f68379b3d2cd193c225443391bf35bb28f4",
+      "text": "function ae(Le,qe){if(k.value=!1,!(!v.value||v.value.pageIndex!==qe)){if(v.value.dragging){const{startX:Ve,startY:Ue,currX:tt,currY:Ye}=v.value,Fe=Math.abs(tt-Ve),dt=Math.abs(Ye-Ue);if(Fe>5||dt>5){let He=A(Ve,Ue,tt,Ye);if(r.preAnnotationEnabled===\"yes\"&&v.value.rectType&&v.value.rectType!==\"eraser\"&&!v.value.forceRegionCapture){const Yt=G(qe,He).map(De=>Z(De)).filter(Boolean);if(Yt.length>0){i.value[qe]||(i.value[qe]=[]),Yt.forEach(De=>{i.value[qe].push(De)}),setTimeout(()=>{Yt.forEach(De=>{nt(qe,De).catch(Ge=>{console.error(\"\u6279\u91cf\u5708\u9009\u9884\u6807\u6ce8\u622a\u56fe\u5931\u8d25:\",Ge)})})},50),v.value=null;return}}if(r.isAnnotationMode&&v.value.rectType!==\"eraser\"){const Yt=r.pages[qe];let De=[];const Ge=o.value[qe];if(Yt&&Yt.blocks&&Ge){const It=Yt.blocks.filter(ct=>{const ht=ct.rect_bbox||ct.bbox;return ht&&Array.isArray(ht)&&ht.length===4}),_n=r.imageBasePath+Yt.image;let Zt;s.value.has(_n)&&(Zt=s.value.get(_n)),Zt&&De.push(...It.map(ct=>ct.rect_bbox||ct.bbox))}const Je=De.filter(It=>L(He,It));if(Je.length>0){const It=Math.min(...Je.map(ht=>ht[0])),_n=Math.min(...Je.map(ht=>ht[1])),Zt=Math.max(...Je.map(ht=>ht[2])),ct=Math.max(...Je.map(ht=>ht[3]));He=[It,_n,Zt,ct]}}const St=r.maxQuestionOrder!==null?r.maxQuestionOrder+1:1,Ht={rect_id:ce(),rect_bbox:He,type:v.value.rectType,order_in_level:St.toString(),isHistorical:!1,isEditEnabled:!0};Ht.type===\"eraser\"&&v.value.parentBox&&(Ht.parent_rect_id=v.value.parentBox.rect_id),i.value[qe]||(i.value[qe]=[]),i.value[qe].push(Ht),Ht.type===\"eraser\"?(i.value[qe].forEach((Yt,De)=>{Yt.type!==\"eraser\"&&Ht.parent_rect_id===Yt.rect_id&&nt(qe,Yt,\"rectResized\")}),a(\"eraserPop\",qe,Ht)):setTimeout(()=>{nt(qe,Ht)},50)}}if(v.value.moving||v.value.resizing){const Ve=i.value[qe][v.value.rectIndex];Ve.type===\"eraser\"?(i.value[qe].forEach((Ue,tt)=>{Ue.type!==\"eraser\"&&Ve.parent_rect_id===Ue.rect_id&&nt(qe,Ue,\"rectResized\")}),a(\"eraserRectUpdated\",qe,Ve)):nt(qe,Ve,\"rectResized\")}v.value=null}}"
+    },
+    {
+      "name": "viewer_image_draw",
+      "utf8_byte_offset_zero_based": 2624767,
+      "byte_length": 1425,
+      "sha256": "dcc9afaab60ee5517d7103b65414328b22f84bace93bef4f8ed791ccfdcf731c",
+      "text": "async function Be(Le){const qe=r.pages[Le],Ve=o.value[Le];if(!Ve)return;const Ue=Ve.getContext(\"2d\"),tt=M(qe);let Ye;s.value.has(tt)?Ye=s.value.get(tt):(Ye=new Image,Ye.crossOrigin=\"anonymous\",await new Promise((ct,ht)=>{Ye.onload=()=>{s.value.set(tt,Ye),ct(!0)},Ye.onerror=ht,Ye.src=tt}));const Fe=Ve.closest(\".pdf-content\"),dt=Ve.closest(\".pdf-container\")||h.value;if(Fe){const ct=dt?window.getComputedStyle(dt):null,ht=ct?parseFloat(ct.paddingLeft||\"0\")+parseFloat(ct.paddingRight||\"0\"):0,Jt=ct?parseFloat(ct.paddingTop||\"0\")+parseFloat(ct.paddingBottom||\"0\"):0,Ln=Math.max(0,Fe.clientWidth-ht);Fe.clientHeight-20;const In=Math.max(0,Fe.clientHeight-Jt);Ye.width,Ye.height,Ve.width=Ln,Ve.height=In;const kn=Ve.closest(\".pdf-page\");kn&&(kn.style.width=`${Ve.width}px`,kn.style.height=`${Ve.height}px`)}else Ve.width=Ye.width,Ve.height=Ye.height;await Wt(),W(Le),Ue.save();const He=b.value[Le]||1,St=_.value[Le]||0,Ht=S.value[Le]||0,Yt=Math.min(Ve.width/Ye.width,Ve.height/Ye.height),De=Ye.width*Yt,Ge=Ye.height*Yt,Je=(Ve.width-De)/2,It=(Ve.height-Ge)/2;Ue.translate(St,Ht);const _n=De*He,Zt=Ge*He;Ue.drawImage(Ye,Je*He,It*He,_n,Zt),qe.blocks&&!p.value&&(Ue.strokeStyle=\"grey\",Ue.lineWidth=1/He,qe.blocks.forEach(ct=>{const ht=ct.rect_bbox||ct.bbox;if(ht&&Array.isArray(ht)&&ht.length===4){const[Jt,Ln,In,kn]=ht,Pn=(Jt*Yt+Je)*He,Kn=(Ln*Yt+It)*He,qa=(In-Jt)*Yt*He,Ya=(kn-Ln)*Yt*He;Ue.strokeRect(Pn,Kn,qa,Ya)}})),Ue.restore()}"
+    },
+    {
+      "name": "crop_and_selectRegion_emit",
+      "utf8_byte_offset_zero_based": 2626296,
+      "byte_length": 745,
+      "sha256": "efe660e85394aabfe60106111a35a6f4772f93f8b4f1e7d850e8f080ee509454",
+      "text": "async function nt(Le,qe,Ve=\"selectRegion\"){const Ue=r.pages[Le];if(!Ue)return;const tt=M(Ue);let Ye;if(s.value.has(tt))Ye=s.value.get(tt);else return;const Fe=document.createElement(\"canvas\"),dt=Fe.getContext(\"2d\");Fe.width=Ye.width,Fe.height=Ye.height,dt.drawImage(Ye,0,0);const He=o.value[Le];if(!He)return;He.width/Ye.width,He.height/Ye.height,i.value[Le]&&i.value[Le].forEach(ct=>{if(ct.type===\"eraser\"&&ct.parent_rect_id===qe.rect_id){const[Jt,Ln,In,kn]=ct.rect_bbox;dt.fillStyle=\"white\",dt.fillRect(Jt,Ln,In-Jt,kn-Ln)}});const[St,Ht,Yt,De]=qe.rect_bbox,Ge=Yt-St,Je=De-Ht,It=document.createElement(\"canvas\");It.width=Ge,It.height=Je,It.getContext(\"2d\").drawImage(Fe,St,Ht,Ge,Je,0,0,Ge,Je);const Zt=It.toDataURL(\"image/jpeg\");a(Ve,Zt,Le,qe)}"
+    },
+    {
+      "name": "question_choice_parent_select_handler",
+      "utf8_byte_offset_zero_based": 2727523,
+      "byte_length": 1402,
+      "sha256": "3c4ac366a1c2d7d4fe75d01dda1c46c44f0434a38b054457eab0338b5a3ba9d5",
+      "text": "function Aue(N,O,ee){console.log(\"\u6536\u5230\u9898\u76ee\u533a\u5708\u9009\u56fe\u7247:rect_id:\",ee.rect_id);const ge=(ee==null?void 0:ee.type)||Kn.value||(ht.value?\"choice\":null)||(Zt.value?\"question\":null)||\"question\",Ce=ge===\"cover\",Ee=ge===\"directory\",$e=ge===\"back_cover\",mt=ge===\"choice\",Vt=Ce||Ee||$e;Sa.value.length;const we=Vt?ge:mt?\"choice\":\"question\",Lt={...ee,src:N,page_index:qn.value,type:we,content_type:null,is_pre_annotation:ee.is_pre_annotation||!1,preAnnotationText:ee.preAnnotationText||null,pre_annotations_id:ee.pre_annotations_id||null};Sa.value.push(Lt),Ce?(on.value.push(Lt),console.log(\"\u5f53\u524d\u5c01\u9762\u56fe\u7247\u6570\u91cf:\",on.value.length)):Ee?(lt.value.push(Lt),console.log(\"\u5f53\u524d\u76ee\u5f55\u56fe\u7247\u6570\u91cf:\",lt.value.length)):$e?(Oe.value.push(Lt),console.log(\"\u5f53\u524d\u5c01\u5e95\u56fe\u7247\u6570\u91cf:\",Oe.value.length)):mt?(Lt.rect_bbox=ee.rect_bbox,Xe.value.push(Lt),console.log(\"\u5f53\u524d\u9009\u9879\u533a\u56fe\u7247\u6570\u91cf:\",Xe.value.length)):(Ft.value.push(Lt),console.log(\"\u5f53\u524d\u9898\u76ee\u533a\u56fe\u7247\u6570\u91cf:\",Ft.value.length)),console.log(\"\u7edf\u4e00\u77e9\u5f62\u6846\u603b\u6570:\",Sa.value.length),Vt||(fe.value=!0),Vt||(ee.preAnnotationType!==void 0&&ee.preAnnotationType!==null?(ee.preAnnotationType===\"image\"?Lt.content_type=\"image\":ee.preAnnotationType===\"table\"?Lt.content_type=\"table\":Lt.content_type=\"text\",console.log(\"\u9884\u6807\u6ce8\u70b9\u9009\u6a21\u5f0f\uff0c\u81ea\u52a8\u8bbe\u7f6econtent_type:\",Lt.content_type,\"\u57fa\u4e8e\u9884\u6807\u6ce8type:\",ee.preAnnotationType)):Lt.content_type=\"text\")}"
+    },
+    {
+      "name": "answer_parent_select_handler",
+      "utf8_byte_offset_zero_based": 2730261,
+      "byte_length": 1119,
+      "sha256": "7856658dd1de22ad94de1a901a344bbb88effa0407574d8ca12d5ae20106e4dd",
+      "text": "function Due(N,O,ee){console.log(\"\u6536\u5230\u7b54\u6848\u533a\u5708\u9009\u56fe\u7247:rect_id:\",ee.rect_id),Sa.value.length;const ge=(ee==null?void 0:ee.type)||qa.value;let Ce=\"answer\";ge===\"analysis\"?Ce=\"analysis\":ge===\"knowledge_point\"&&(Ce=\"knowledge_point\");const Ee={...ee,src:N,page_index:ra.value,rect_bbox:ee.rect_bbox,type:Ce,content_type:null,is_pre_annotation:ee.is_pre_annotation||!1,preAnnotationText:ee.preAnnotationText||null,pre_annotations_id:ee.pre_annotations_id||null};Sa.value.push(Ee),Ce===\"analysis\"?(it.value.push(Ee),console.log(\"\u5f53\u524d\u89e3\u6790\u533a\u56fe\u7247\u6570\u91cf:\",it.value.length)):Ce===\"knowledge_point\"?(Mt.value.push(Ee),console.log(\"\u5f53\u524d\u77e5\u8bc6\u70b9\u533a\u56fe\u7247\u6570\u91cf:\",Mt.value.length)):(kt.value.push(Ee),console.log(\"\u5f53\u524d\u7b54\u6848\u533a\u56fe\u7247\u6570\u91cf:\",kt.value.length)),fe.value=!0,ee.preAnnotationType!==void 0&&ee.preAnnotationType!==null?(ee.preAnnotationType===\"image\"?Ee.content_type=\"image\":ee.preAnnotationType===\"table\"?Ee.content_type=\"table\":Ee.content_type=\"text\",console.log(\"\u9884\u6807\u6ce8\u70b9\u9009\u6a21\u5f0f\uff0c\u81ea\u52a8\u8bbe\u7f6econtent_type:\",Ee.content_type,\"\u57fa\u4e8e\u9884\u6807\u6ce8type:\",ee.preAnnotationType)):Ee.content_type=\"text\"}"
+    },
+    {
+      "name": "question_component_event_binding",
+      "utf8_byte_offset_zero_based": 2800133,
+      "byte_length": 332,
+      "sha256": "fc17f515fcd3dc39f428153a36ae24753c31049e48b12a68963dd065b43f1c92",
+      "text": "fileId:w.value,pages:mn.value,imageBasePath:il.value,currentPageManualRects:We.value,\"is-annotation-mode\":It.value,\"selected-rect-type\":Kn.value,zone:\"question_zone\",\"max-question-order\":Ca.value,\"pre-annotation-enabled\":Be.value,key:w.value,onSelectRegion:Aue,onRectResized:Mue,onRectRemove:Rue,onRectDblClick:jB,onEraserPop:O[19]|"
+    },
+    {
+      "name": "answer_component_event_binding",
+      "utf8_byte_offset_zero_based": 2803377,
+      "byte_length": 330,
+      "sha256": "4ac784765fcb8fc7491c11489a932aec8ab250162b3ac98433b61af5813c9ec0",
+      "text": "fileId:w.value,pages:Un.value,imageBasePath:il.value,currentPageManualRects:Ut.value,\"is-annotation-mode\":_n.value,\"selected-rect-type\":qa.value,zone:\"answer_zone\",\"max-question-order\":Ca.value,\"pre-annotation-enabled\":Be.value,key:w.value,onSelectRegion:Due,onRectResized:Pue,onRectRemove:Lue,onRectDblClick:jB,onEraserPop:O[32]|"
+    },
+    {
+      "name": "crop_dataURL_upload_selection",
+      "utf8_byte_offset_zero_based": 2745806,
+      "byte_length": 632,
+      "sha256": "170f2f58011e8aabdf1462aa711e94c00df39be241e27d25f28e8a4b1b2aef3c",
+      "text": "const E0=(N,O,ee)=>{if(N.src&&N.src.startsWith(\"data:\")){console.log(`\u4e0a\u4f20${N.type}\u56fe\u7247, \u5e8f\u53f7:${N.order_in_page+1}`);const ge=atob(N.src.split(\",\")[1]),Ce=new Array(ge.length);for(let we=0;we<ge.length;we++)Ce[we]=ge.charCodeAt(we);const Ee=new Uint8Array(Ce),$e=new Blob([Ee],{type:\"image/jpeg\"}),mt=Math.random().toString(36).substring(2,10),Vt=`${w.value}_${ee}_${N.type}_${O}@page_${N.page_index}_${mt}.jpg`;return{type:N.type,index:O,clip:N,promise:BI($e,Vt)}}else return console.log(`\u4e0a\u4f20${N.type}\u56fe\u7247\uff0c\u5e8f\u53f7:${N.order_in_page+1} (\u4f7f\u7528\u539f\u6709\u8def\u5f84)`),{type:N.type,index:O,clip:N,promise:Promise.resolve(N.src)}};"
+    },
+    {
+      "name": "upload_result_to_rect_fields",
+      "utf8_byte_offset_zero_based": 2749145,
+      "byte_length": 495,
+      "sha256": "8d1663ce9fdd547a206b55cef1c4962ee3140568d3d8bdb3fd4d20491d3a2828",
+      "text": "const zo=await Promise.all(ge.map(async yn=>{const pr=await yn.promise,wo=yn.type,El=u(wo,yn.clip),Md=d(El,fn,$e);return{rect_id:yn.clip.rect_id,uploaded_img_path:pr,index:yn.index,type:wo,belong_to_level:El,order_in_level:Md,image_order_in_annotation_zone:yn.index,rect_bbox:yn.clip.rect_bbox,page_index:yn.clip.page_index,image_path:pr,directory_id:$e,content_type:yn.clip.content_type||null,is_pre_annotation:yn.clip.is_pre_annotation||!1,pre_annotations_id:yn.clip.pre_annotations_id||null}}"
+    },
+    {
+      "name": "final_commit_payload",
+      "utf8_byte_offset_zero_based": 2752171,
+      "byte_length": 856,
+      "sha256": "ae4d8cb7628b4b8d9bed899b03b1a44aa0277d87d425fe6efffa9bf42e739e86",
+      "text": "return{commitPayload:{file_id:w.value,target_directory_id:$e,question_order:we?null:fn,is_new_question_insertion:we,insert_after_order:we?na.insertAfterOrder:null,annotations_upsert:y8.map(yn=>({rect_id:yn.rect_id,type:yn.type,belong_to_level:yn.belong_to_level,order_in_level:yn.order_in_level,image_order_in_annotation_zone:yn.index,rect_bbox:Array.isArray(yn.rect_bbox)?yn.rect_bbox.join(\",\"):yn.rect_bbox,page_index:yn.page_index,image_path:yn.image_path,parent_rect_id:yn.parent_rect_id||null,directory_id:yn.directory_id||null,content_type:yn.content_type||null,user_id:Ia,is_pre_annotation:yn.is_pre_annotation||!1,pre_annotations_id:yn.pre_annotations_id||null})),annotations_delete_rect_ids:co,ocr_submissions:O?jI:[],ocr_delete_zones:Pce,question_info:Vt?{tishi:Ne.value||null,tilei:un.value||null,tihao:Ta.value||null}:null,created_by:Fr||null},"
+    },
+    {
+      "name": "ordinary_save_call",
+      "utf8_byte_offset_zero_based": 2753835,
+      "byte_length": 512,
+      "sha256": "f59fffd549d4c8a2287b0746cc1a3761819f5cb516c3e0343e80816569377c86",
+      "text": "async function VI(){if(Yt.value)return ve.warning(\"\u6b63\u5728\u63d0\u4ea4\uff0c\u8bf7\u52ff\u91cd\u590d\u64cd\u4f5c\"),!1;Yt.value=!0;try{const N=await e8({includeOcrSubmissions:!0});if(!N)return!1;const O=await E6e(N.commitPayload),ee=Number.parseInt(O==null?void 0:O.question_order,10)||N.meta.tentativeQuestionOrder;return await t8(N.meta,ee,{advanceAfterHistorical:!0,successMessage:\"\u4e0a\u4f20\u6210\u529f\uff01\",commitResult:O})}catch(N){return console.error(\"\u4e0a\u4f20\u5931\u8d25:\",N),ve.error(\"\u4e0a\u4f20\u5931\u8d25\uff0c\u8bf7\u91cd\u8bd5\"),!1}finally{De.value=!1,Yt.value=!1}}"
+    },
+    {
+      "name": "commit_API",
+      "utf8_byte_offset_zero_based": 1083248,
+      "byte_length": 95,
+      "sha256": "34548ec469d6bf7963ab9b34648792b9b8c77727236a3a148d0b8ae28a29fa72",
+      "text": "async function E6e(e){const t=await gn.post(`${Hr}/commit_unified_submit`,e);return Hn(t.data)}"
+    },
+    {
+      "name": "paper_export_API",
+      "utf8_byte_offset_zero_based": 1086616,
+      "byte_length": 101,
+      "sha256": "dabf1a1f68f77a6c1055dbb1de87817182c70e64b33134601780dd629638dbfc",
+      "text": "async function q6e(e){return await gn.get(`${Gr}/export-paper-questions/${e}`,{responseType:\"blob\"})}"
+    },
+    {
+      "name": "training_export_API",
+      "utf8_byte_offset_zero_based": 1083587,
+      "byte_length": 101,
+      "sha256": "674d45de5dc9ac06119c4d4d050b14470a2314219ec072865d08ec690d1fb68a",
+      "text": "async function D6e(e){const t=await gn.get(`${Hr}/training_questions/${e}/export`);return Hn(t.data)}"
+    },
+    {
+      "name": "paper_export_UI_handler",
+      "utf8_byte_offset_zero_based": 2643641,
+      "byte_length": 396,
+      "sha256": "051616ec06af4e6bacc8f89d3666e94e1f261667b456ce513ad5a18b927b825b",
+      "text": "async function h(){var m,b;try{if(!e.value){ve.warning(\"\u8bf7\u5148\u9009\u62e9\u4e66\u7c4d\");return}ve.info(\"\u6b63\u5728\u5bfc\u51fa\u8bd5\u5377\u8bd5\u9898\uff0c\u8bf7\u7a0d\u5019...\");const _=await l(e.value);fm(_,`${e.value}_paper_questions.jsonl`),ve.success(\"\u5bfc\u51fa\u6210\u529f\")}catch(_){console.error(\"\u5bfc\u51fa\u8bd5\u5377\u8bd5\u9898\u5931\u8d25:\",_),ve.error(((b=(m=_.response)==null?void 0:m.data)==null?void 0:b.detail)||\"\u5bfc\u51fa\u8bd5\u5377\u8bd5\u9898\u5931\u8d25\uff0c\u8bf7\u91cd\u8bd5\")}}"
+    },
+    {
+      "name": "paper_export_dependency_binding",
+      "utf8_byte_offset_zero_based": 2710650,
+      "byte_length": 266,
+      "sha256": "57c712e898a224b1a51a4f4220a546d9ab6318af0eab648d60b838ebe17b2d56",
+      "text": "handleExportPaperQuestions:xue,handleExportImageResource:Cue}=hyt({selectedPdf:w,currentExportImportId:E,runPrecheckBeforeExport:yue,exportStructuredBundle:pee,exportBookInfo:cee,exportDirectory:dee,exportShiti:fee,exportPaperQuestions:q6e,exportImageResource:vee});"
+    },
+    {
+      "name": "training_export_UI_handler",
+      "utf8_byte_offset_zero_based": 3052920,
+      "byte_length": 397,
+      "sha256": "a379acfe347668b7eb2d28f69471f7122e75955f960702e334366eeee7b97f2a",
+      "text": "async function En(){if(!d.value){ve.warning(\"\u8bf7\u5148\u9009\u62e9\u4e66\u7c4d\");return}if(W.value.length===0){ve.warning(\"\u5f53\u524d\u6ca1\u6709\u53ef\u5bfc\u51fa\u7684\u9898\u76ee\");return}ue.value&&ve.warning(\"\u5bfc\u51fa\u4ec5\u5305\u542b\u5df2\u4fdd\u5b58\u9898\u76ee\"),j.value=!0;try{const gt=await D6e(String(d.value.id)),At=tn(d.value.id);Tn(`${At}_traning.json`,gt),ve.success(\"\u5bfc\u51fa\u6210\u529f\")}catch(gt){ve.error(gt.message||\"\u5bfc\u51fa\u5931\u8d25\")}finally{j.value=!1}}"
+    }
+  ],
+  "limits": [
+    "Script is previously captured asset, not current live server behavior.",
+    "A24 r1 claimed22questions/68frames and sixJSON/twoimages not independently inspected here.",
+    "No claim of actual save-page mapping, server receipt, old-content coverage or independent acceptance.",
+    "Only exact known export symbol references followed; no general frontend endpoint survey."
+  ],
+  "released": true
+}
