@@ -1,0 +1,55 @@
+{
+  "schema": "A24DirectBrowserHandleRecovery/v1",
+  "date": "2026-10-22",
+  "timezone": "Asia/Shanghai",
+  "browser": {
+    "id": "3",
+    "name": "Edge",
+    "type": "extension",
+    "profile_name": "用户配置 1",
+    "extension_instance_id": "0f326768-cfdf-44b6-a59a-ddb7ce549d81"
+  },
+  "target_tab": {
+    "id": "1199071977",
+    "provider_tab_id": "[\"88ee73e8-3aca-483a-a9a2-eeb292dae62e\",\"1199071977\"]",
+    "tab_group": "📖 A24只读恢复",
+    "url": "https://www.usense.com/qieti/home",
+    "title": "数据标注平台"
+  },
+  "diagnostic_sequence": [
+    {
+      "operation": "browser.tabs.get",
+      "result": "TAB_NOT_FOUND_AGENT_TABS_EMPTY"
+    },
+    {
+      "operation": "browser.user.openTabs",
+      "result": "TARGET_FOUND_IN_USER_TABS"
+    },
+    {
+      "operation": "browser.user.claimTab",
+      "result": "SUCCESS"
+    },
+    {
+      "operation": "tab.url_and_title",
+      "result": "SUCCESS"
+    },
+    {
+      "operation": "tab.markHandoff",
+      "result": "SUCCESS"
+    }
+  ],
+  "connection": {
+    "browser_connected": true,
+    "direct_tab_handle": true,
+    "automatic_ax_path_required": false,
+    "dom_read": false,
+    "business_response_read": false
+  },
+  "platform_effects": {
+    "business_gets": 0,
+    "website_writes": 0,
+    "save_or_submit": 0,
+    "credential_cookie_token_reads": 0
+  },
+  "status": "DIRECT_TAB_HANDLE_RECOVERED"
+}
