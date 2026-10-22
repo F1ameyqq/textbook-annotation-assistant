@@ -2,6 +2,14 @@
 
 更新时间：2026-10-22，Asia/Shanghai。负责人：xiaoshanqingpro 一侧。
 
+## 2026-10-22 用户暂不便导出，完成A24离线接管部署包及独立重放
+
+- 用户回复暂不方便查看导出入口，本轮无需用户网页操作。来源成员继续停止；未重试或绕过浏览器强制停止，无新平台数据、标注修改或项目模型API调用。当前真实格式与旧题完整分母仍未取得。
+- [固定离线包及复现说明](../a24-offline-replay-20261022.md)：A24原522公开成员与3个已审覆盖文件分离保存，生成523文件有效树。ZIP位于 `handoffs/b/a24/a24-offline-replay-20261022-v2-final.zip`，2,034,326字节，SHA `c4ad1b298dd34a8b0a5ec8706a3514fefe19d9a33582cd27fa826ef1a94ec89e`。源码修复与上一轮完全同字节；新增的是移交重建入口及绑定，不改写A原发布。
+- 首版包因选错同为7项的套件、test未绑定源码、根清单可缺省等真实问题被退回，旧字节/拒绝记录保留。最终版要求根清单及全树校验先于源码导入和输出创建，保留失败ID/traceback，修正Windows路径门；有限入口guard不称OS全IO沙箱。
+- 作者及[独立成员](../evidence/a24-offline-replay-20261022/independent-final-report.md)分别从最终ZIP新目录重建并运行正确controlled-capture 7 + minimum-gate 10 + book-snapshot 4，共21项通过。独立测试后523文件仍匹配；主会话实际新目录重建和三个负例通过（目标已存在、源码篡改、缺根清单），各自命令/退出码见[机器记录](../../evaluation/a24-offline-replay-20261022.json)。没有为本增量重复跑无关B全套或空白环境安装。
+- 两个离线成员本轮已完成、空闲；来源成员保持停止。包可供恢复同一修复版本，仍CURRENT_SCHEMA_UNBOUND/HOLD、write_allowed=false、live后继NOT_RUN，历史authority/activation不可复用，不新增章节/人工/A接收/平台验收。公开固定版本以本记录所在提交及PR #3远端head核对。
+
 ## 2026-10-22 用户登录后只读采集受工具阻断，采集器正文留存修复已集成
 
 - [本轮说明与接续门](../a24-readonly-acquisition-20261022.md)：用户已在新标签1199071973登录，清单确认/qieti/home；DOM报Debugger unattached，Windows回退因无法可信确认URL被工具强制停止。来源成员停止网页动作，book/directory/fullframes/export均NOT_RUN，当前业务数据增量0、写入0。不是再次未登录或旧会话抢占，不要求重登，不绕过工具限制。

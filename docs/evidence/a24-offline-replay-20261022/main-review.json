@@ -1,0 +1,96 @@
+{
+  "schema": "A24OfflinePackageMainReconstructionReview/v1",
+  "recorded_at": "2026-10-22T02:32:28.634486+00:00",
+  "archive_sha256": "c4ad1b298dd34a8b0a5ec8706a3514fefe19d9a33582cd27fa826ef1a94ec89e",
+  "archive_bytes": 2034326,
+  "zip_members": 531,
+  "reconstructed_members": 523,
+  "negative_cases": [
+    "existing target rejected without mutation",
+    "tampered source rejected before import or output",
+    "missing root manifest rejected"
+  ],
+  "calls": [
+    {
+      "argv": [
+        "C:\\Users\\LIHAOYANG\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\python.exe",
+        "-B",
+        "C:\\Users\\LIHAOYANG\\Documents\\Codex\\2026-10-16\\ni\\work\\a24-takeover-20261022\\offline-final-main-review\\extracted\\a24-offline-replay\\offline_replay.py",
+        "verify"
+      ],
+      "exit_code": 0,
+      "stdout": "{\n  \"schema\": \"A24OfflineReplayVerification/v1\",\n  \"baseline_members\": 522,\n  \"overlay_members\": 3,\n  \"effective_members\": 523,\n  \"root_manifest_checked\": true,\n  \"status\": \"PASS\"\n}\n",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "C:\\Users\\LIHAOYANG\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\python.exe",
+        "-B",
+        "C:\\Users\\LIHAOYANG\\Documents\\Codex\\2026-10-16\\ni\\work\\a24-takeover-20261022\\offline-final-main-review\\extracted\\a24-offline-replay\\offline_replay.py",
+        "rebuild",
+        "--target",
+        "C:\\Users\\LIHAOYANG\\Documents\\Codex\\2026-10-16\\ni\\work\\a24-takeover-20261022\\offline-final-main-review\\effective"
+      ],
+      "exit_code": 0,
+      "stdout": "{\n  \"schema\": \"A24OfflineReplayRebuild/v1\",\n  \"target\": \"C:\\\\Users\\\\LIHAOYANG\\\\Documents\\\\Codex\\\\2026-10-16\\\\ni\\\\work\\\\a24-takeover-20261022\\\\offline-final-main-review\\\\effective\",\n  \"members\": 523,\n  \"status\": \"PASS\"\n}\n",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "C:\\Users\\LIHAOYANG\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\python.exe",
+        "-B",
+        "C:\\Users\\LIHAOYANG\\Documents\\Codex\\2026-10-16\\ni\\work\\a24-takeover-20261022\\offline-final-main-review\\extracted\\a24-offline-replay\\offline_replay.py",
+        "rebuild",
+        "--target",
+        "C:\\Users\\LIHAOYANG\\Documents\\Codex\\2026-10-16\\ni\\work\\a24-takeover-20261022\\offline-final-main-review\\effective"
+      ],
+      "exit_code": 1,
+      "stdout": "",
+      "stderr": "Traceback (most recent call last):\n  File \"C:\\Users\\LIHAOYANG\\Documents\\Codex\\2026-10-16\\ni\\work\\a24-takeover-20261022\\offline-final-main-review\\extracted\\a24-offline-replay\\offline_replay.py\", line 288, in <module>\n    raise SystemExit(main())\n                     ^^^^^^\n  File \"C:\\Users\\LIHAOYANG\\Documents\\Codex\\2026-10-16\\ni\\work\\a24-takeover-20261022\\offline-final-main-review\\extracted\\a24-offline-replay\\offline_replay.py\", line 280, in main\n    result = rebuild(args.target.resolve())\n             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\Users\\LIHAOYANG\\Documents\\Codex\\2026-10-16\\ni\\work\\a24-takeover-20261022\\offline-final-main-review\\extracted\\a24-offline-replay\\offline_replay.py\", line 161, in rebuild\n    raise FileExistsError(\"rebuild target already exists\")\nFileExistsError: rebuild target already exists\n"
+    },
+    {
+      "argv": [
+        "C:\\Users\\LIHAOYANG\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\python.exe",
+        "-B",
+        "C:\\Users\\LIHAOYANG\\Documents\\Codex\\2026-10-16\\ni\\work\\a24-takeover-20261022\\offline-final-main-review\\extracted\\a24-offline-replay\\offline_replay.py",
+        "test",
+        "--tree",
+        "C:\\Users\\LIHAOYANG\\Documents\\Codex\\2026-10-16\\ni\\work\\a24-takeover-20261022\\offline-final-main-review\\effective",
+        "--report-dir",
+        "C:\\Users\\LIHAOYANG\\Documents\\Codex\\2026-10-16\\ni\\work\\a24-takeover-20261022\\offline-final-main-review\\must-not-create-reports",
+        "--temp-dir",
+        "C:\\Users\\LIHAOYANG\\Documents\\Codex\\2026-10-16\\ni\\work\\a24-takeover-20261022\\offline-final-main-review\\must-not-create-temp"
+      ],
+      "exit_code": 1,
+      "stdout": "",
+      "stderr": "Traceback (most recent call last):\n  File \"C:\\Users\\LIHAOYANG\\Documents\\Codex\\2026-10-16\\ni\\work\\a24-takeover-20261022\\offline-final-main-review\\extracted\\a24-offline-replay\\offline_replay.py\", line 288, in <module>\n    raise SystemExit(main())\n                     ^^^^^^\n  File \"C:\\Users\\LIHAOYANG\\Documents\\Codex\\2026-10-16\\ni\\work\\a24-takeover-20261022\\offline-final-main-review\\extracted\\a24-offline-replay\\offline_replay.py\", line 282, in main\n    result = run_tests(args.tree.resolve(), args.report_dir.resolve(), args.temp_dir.resolve())\n             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\Users\\LIHAOYANG\\Documents\\Codex\\2026-10-16\\ni\\work\\a24-takeover-20261022\\offline-final-main-review\\extracted\\a24-offline-replay\\offline_replay.py\", line 201, in run_tests\n    tree_verification = verify_effective_tree(tree)\n                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\Users\\LIHAOYANG\\Documents\\Codex\\2026-10-16\\ni\\work\\a24-takeover-20261022\\offline-final-main-review\\extracted\\a24-offline-replay\\offline_replay.py\", line 183, in verify_effective_tree\n    verify_file(tree / safe_relative(item[\"path\"]), item)\n  File \"C:\\Users\\LIHAOYANG\\Documents\\Codex\\2026-10-16\\ni\\work\\a24-takeover-20261022\\offline-final-main-review\\extracted\\a24-offline-replay\\offline_replay.py\", line 83, in verify_file\n    raise ValueError(f\"byte mismatch: {item['path']}\")\nValueError: byte mismatch: src/annotation/runtime/live_pilot/owner.py\n"
+    },
+    {
+      "argv": [
+        "C:\\Users\\LIHAOYANG\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\python.exe",
+        "-B",
+        "C:\\Users\\LIHAOYANG\\Documents\\Codex\\2026-10-16\\ni\\work\\a24-takeover-20261022\\offline-final-main-review\\extracted\\a24-offline-replay\\offline_replay.py",
+        "verify"
+      ],
+      "exit_code": 1,
+      "stdout": "",
+      "stderr": "Traceback (most recent call last):\n  File \"C:\\Users\\LIHAOYANG\\Documents\\Codex\\2026-10-16\\ni\\work\\a24-takeover-20261022\\offline-final-main-review\\extracted\\a24-offline-replay\\offline_replay.py\", line 288, in <module>\n    raise SystemExit(main())\n                     ^^^^^^\n  File \"C:\\Users\\LIHAOYANG\\Documents\\Codex\\2026-10-16\\ni\\work\\a24-takeover-20261022\\offline-final-main-review\\extracted\\a24-offline-replay\\offline_replay.py\", line 278, in main\n    result = verify_package()\n             ^^^^^^^^^^^^^^^^\n  File \"C:\\Users\\LIHAOYANG\\Documents\\Codex\\2026-10-16\\ni\\work\\a24-takeover-20261022\\offline-final-main-review\\extracted\\a24-offline-replay\\offline_replay.py\", line 132, in verify_package\n    raise ValueError(\"required root manifest is missing\")\nValueError: required root manifest is missing\n"
+    },
+    {
+      "argv": [
+        "C:\\Users\\LIHAOYANG\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\python.exe",
+        "-B",
+        "C:\\Users\\LIHAOYANG\\Documents\\Codex\\2026-10-16\\ni\\work\\a24-takeover-20261022\\offline-final-main-review\\extracted\\a24-offline-replay\\offline_replay.py",
+        "verify"
+      ],
+      "exit_code": 0,
+      "stdout": "{\n  \"schema\": \"A24OfflineReplayVerification/v1\",\n  \"baseline_members\": 522,\n  \"overlay_members\": 3,\n  \"effective_members\": 523,\n  \"root_manifest_checked\": true,\n  \"status\": \"PASS\"\n}\n",
+      "stderr": ""
+    }
+  ],
+  "decision": "PASS_RECONSTRUCTION_AND_THREE_NEGATIVES_ONLY_LIVE_HOLD",
+  "synthetic_suites_delegated_to_independent_reviewer": true,
+  "browser_or_platform_actions": 0,
+  "model_api_calls": 0,
+  "write_allowed": false
+}
