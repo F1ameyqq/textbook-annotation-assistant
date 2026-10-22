@@ -17,13 +17,16 @@ def main(argv=None):
         return 2
     # Source discovery is relative to the tool, never the caller's directory.
     sys.path.insert(0, str(source))
-    writer = bool(args and args[0] in ("--writer", "writer"))
+    insertion = bool(args and args[0] in ("--insert-writer", "insert-writer"))
+    finalization = bool(args and args[0] in ("--finalize-writer", "finalize-writer"))
+    writer = finalization or insertion or bool(args and args[0] in ("--writer", "writer"))
     if writer:
         args.pop(0)
-        if not (package / "writer.py").is_file():
+        module_file = "finalize_writer.py" if finalization else "insertion_writer.py" if insertion else "writer.py"
+        if not (package / module_file).is_file():
             print("WRITER_NOT_INTEGRATED: integrate the reviewed writer and update modules first.", file=sys.stderr)
             return 2
-        module_name = "annotation.runtime.usense_live.writer"
+        module_name = "annotation.runtime.usense_live." + module_file.removesuffix(".py")
     else:
         module_name = "annotation.runtime.usense_live.cli"
     module = import_module(module_name)

@@ -42,6 +42,33 @@ class ToolEntryTests(unittest.TestCase):
             self.assertEqual(entry.main(["--writer", "--help"]), 2)
         load.assert_not_called()
 
+    def test_finalize_is_explicit_and_restores_argv(self):
+        previous = sys.argv
+        for flag in ("finalize-writer", "--finalize-writer"):
+            observed = []
+            module = Mock()
+            module.main.side_effect = lambda: observed.append(sys.argv[1:]) or 0
+            with patch.object(entry.Path, "is_file", return_value=True), \
+                    patch.object(entry, "import_module", return_value=module) as load:
+                self.assertEqual(entry.main([flag, "--help"]), 0)
+            load.assert_called_once_with("annotation.runtime.usense_live.finalize_writer")
+            self.assertEqual(observed, [["--help"]])
+            self.assertIs(sys.argv, previous)
+
+    def test_missing_finalize_stops_before_import(self):
+        with patch.object(entry.Path, "is_file", side_effect=[True, False]), \
+                patch.object(entry, "import_module") as load, patch.object(entry, "print", create=True):
+            self.assertEqual(entry.main(["--finalize-writer", "--help"]), 2)
+        load.assert_not_called()
+
+    def test_insert_alias_remains_separate(self):
+        module = Mock()
+        module.main.return_value = 0
+        with patch.object(entry.Path, "is_file", return_value=True), \
+                patch.object(entry, "import_module", return_value=module) as load:
+            self.assertEqual(entry.main(["--insert-writer", "--help"]), 0)
+        load.assert_called_once_with("annotation.runtime.usense_live.insertion_writer")
+
 
 if __name__ == "__main__":
     unittest.main()
