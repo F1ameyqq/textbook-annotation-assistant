@@ -1,0 +1,354 @@
+diff --git a/src/annotation/runtime/live_pilot/historical_preservation.py b/src/annotation/runtime/live_pilot/historical_preservation.py
+new file mode 100644
+index 0000000..a9a21ec
+--- /dev/null
++++ b/src/annotation/runtime/live_pilot/historical_preservation.py
+@@ -0,0 +1,210 @@
++"""Byte-exact preservation for an A24 historical JSONL original.
++
++This layer is deliberately separate from current-schema codecs and write
++admission. It preserves evidence without assigning platform identities,
++inventing five-zone semantics, or asserting current export completeness.
++"""
++import copy
++from dataclasses import dataclass
++import hashlib
++import json
++from pathlib import Path
++
++from annotation.quality.live_pilot import require
++from annotation.runtime.storage.common import digest
++
++
++REPARSE_POINT = 0x400
++DOM_LINK_FIELDS = {"source_line", "evidence_type", "candidate_value", "evidence_sha256"}
++DOM_LINK_TYPE = "DOM_DATA_KEY_LOCAL_CANDIDATE"
++
++
++def _sha(raw):
++    return hashlib.sha256(raw).hexdigest()
++
++
++def _unique_object(pairs):
++    value = {}
++    for key, item in pairs:
++        require(key not in value, "HISTORICAL_JSON_DUPLICATE_KEY")
++        value[key] = item
++    return value
++
++
++def _decode_record(raw):
++    try:
++        text = raw.decode("utf-8", errors="strict")
++    except UnicodeDecodeError as exc:
++        require(False, "HISTORICAL_SOURCE_ENCODING", type(exc).__name__)
++    try:
++        value = json.loads(text, object_pairs_hook=_unique_object,
++                           parse_constant=lambda token: require(False, "HISTORICAL_JSON_NONFINITE", token))
++    except json.JSONDecodeError as exc:
++        require(False, "HISTORICAL_JSONL_RECORD", type(exc).__name__)
++    require(isinstance(value, dict), "HISTORICAL_JSONL_RECORD")
++    return value
++
++
++def _split_span(span):
++    if span.endswith(b"\r\n"):
++        return span[:-2], "CRLF"
++    if span.endswith(b"\n"):
++        return span[:-1], "LF"
++    if span.endswith(b"\r"):
++        return span[:-1], "CR"
++    return span, "NONE"
++
++
++@dataclass(frozen=True)
++class HistoricalRecord:
++    line_number: int
++    byte_offset: int
++    raw_span: bytes
++    record_bytes: bytes
++    line_ending: str
++    line_identity: str
++    content_fingerprint: str
++    _value: dict
++
++    def value(self):
++        return copy.deepcopy(self._value)
++
++    def byte_reference(self, source_sha256):
++        return {
++            "schema": "A24HistoricalRawByteRef/v1",
++            "source_sha256": source_sha256,
++            "line_number": self.line_number,
++            "byte_offset": self.byte_offset,
++            "byte_length": len(self.raw_span),
++            "record_byte_length": len(self.record_bytes),
++            "raw_span_sha256": _sha(self.raw_span),
++            "record_sha256": _sha(self.record_bytes),
++            "line_ending": self.line_ending,
++        }
++
++
++@dataclass(frozen=True)
++class HistoricalArchive:
++    path: Path
++    source_sha256: str
++    source_bytes: int
++    records: tuple
++
++    def reconstruct_bytes(self):
++        return b"".join(record.raw_span for record in self.records)
++
++    def full_records(self):
++        return [record.value() for record in self.records]
++
++    def public_preservation_manifest(self):
++        return {
++            "schema": "A24HistoricalOriginalPreservation/v1",
++            "status": "PRESERVED_HISTORICAL_BYTES_IDENTITY_UNBOUND",
++            "fresh_capture_proven": False,
++            "write_allowed": False,
++            "source": {"bytes": self.source_bytes, "sha256": self.source_sha256,
++                       "representation": "UTF8_JSONL"},
++            "record_count": len(self.records),
++            "records": [{
++                "line_identity": record.line_identity,
++                "content_fingerprint": record.content_fingerprint,
++                "raw_byte_ref": record.byte_reference(self.source_sha256),
++                "field_names": list(record._value),
++            } for record in self.records],
++        }
++
++
++def load_historical_original(path, expected_sha256, expected_bytes):
++    """Verify and preserve a historical JSONL file without schema promotion."""
++    require(isinstance(expected_sha256, str) and len(expected_sha256) == 64 and
++            all(ch in "0123456789abcdef" for ch in expected_sha256) and
++            type(expected_bytes) is int and expected_bytes > 0, "HISTORICAL_SOURCE_REF")
++    candidate = Path(path)
++    require(candidate.is_file() and not candidate.is_symlink() and
++            not (getattr(candidate.lstat(), "st_file_attributes", 0) & REPARSE_POINT),
++            "HISTORICAL_SOURCE_PATH")
++    source = candidate.resolve()
++    require(source.is_file() and not source.is_symlink() and
++            not (getattr(source.lstat(), "st_file_attributes", 0) & REPARSE_POINT),
++            "HISTORICAL_SOURCE_PATH")
++    raw = source.read_bytes()
++    require(len(raw) == expected_bytes and _sha(raw) == expected_sha256,
++            "HISTORICAL_SOURCE_BYTES")
++    require(raw and not raw.startswith(b"\xef\xbb\xbf"), "HISTORICAL_SOURCE_ENCODING")
++
++    records, offset = [], 0
++    for line_number, span in enumerate(raw.splitlines(keepends=True), 1):
++        record_bytes, line_ending = _split_span(span)
++        require(record_bytes and record_bytes.strip(), "HISTORICAL_JSONL_RECORD")
++        value = _decode_record(record_bytes)
++        raw_span_sha256 = _sha(span)
++        line_identity = digest({"source_sha256": expected_sha256, "line_number": line_number,
++                                "byte_offset": offset, "raw_span_sha256": raw_span_sha256})
++        records.append(HistoricalRecord(
++            line_number=line_number,
++            byte_offset=offset,
++            raw_span=span,
++            record_bytes=record_bytes,
++            line_ending=line_ending,
++            line_identity=line_identity,
++            content_fingerprint=digest(value),
++            _value=value,
++        ))
++        offset += len(span)
++    require(records and offset == len(raw), "HISTORICAL_JSONL_RECORD")
++    archive = HistoricalArchive(source, expected_sha256, expected_bytes, tuple(records))
++    require(archive.reconstruct_bytes() == raw, "HISTORICAL_SOURCE_BYTES")
++    return archive
++
++
++def build_identity_mapping(archive, dom_candidate_links=()):
++    """Build non-authoritative typed candidates; never choose a canonical ID."""
++    require(isinstance(archive, HistoricalArchive) and
++            isinstance(dom_candidate_links, (list, tuple)), "IDENTITY_EVIDENCE_SCHEMA")
++    valid_lines = {record.line_number for record in archive.records}
++    by_line = {line: [] for line in valid_lines}
++    by_dom_key = {}
++    seen = set()
++    for link in dom_candidate_links:
++        require(isinstance(link, dict) and set(link) == DOM_LINK_FIELDS and
++                type(link["source_line"]) is int and link["source_line"] in valid_lines and
++                link["evidence_type"] == DOM_LINK_TYPE and
++                isinstance(link["candidate_value"], str) and link["candidate_value"] and
++                link["candidate_value"].strip() == link["candidate_value"] and
++                isinstance(link["evidence_sha256"], str) and len(link["evidence_sha256"]) == 64 and
++                all(ch in "0123456789abcdef" for ch in link["evidence_sha256"]),
++                "IDENTITY_EVIDENCE_SCHEMA")
++        key = (link["source_line"], link["candidate_value"], link["evidence_sha256"])
++        require(key not in seen, "IDENTITY_EVIDENCE_DUPLICATE")
++        seen.add(key)
++        value = copy.deepcopy(link)
++        by_line[link["source_line"]].append(value)
++        by_dom_key.setdefault(link["candidate_value"], set()).add(link["source_line"])
++
++    entries = []
++    for record in archive.records:
++        dom_candidates = by_line[record.line_number]
++        ambiguous = (len({item["candidate_value"] for item in dom_candidates}) > 1 or
++                     any(len(by_dom_key[item["candidate_value"]]) > 1 for item in dom_candidates))
++        candidates = [
++            {"evidence_type": "SOURCE_LINE_LOCAL_CANDIDATE", "source_line": record.line_number,
++             "line_identity": record.line_identity},
++            {"evidence_type": "CONTENT_FINGERPRINT_LOCAL_CANDIDATE",
++             "content_fingerprint": record.content_fingerprint},
++        ] + copy.deepcopy(dom_candidates)
++        entries.append({
++            "line_identity": record.line_identity,
++            "source_line": record.line_number,
++            "canonical_question_id": None,
++            "selected_candidate": None,
++            "status": "HOLD_AMBIGUOUS_LOCAL_MAPPING" if ambiguous else "HOLD_LOCAL_CANDIDATES_ONLY",
++            "candidates": candidates,
++        })
++    return {
++        "schema": "A24HistoricalIdentityCandidates/v1",
++        "status": "HOLD_CANONICAL_ID_UNBOUND",
++        "fresh_capture_proven": False,
++        "write_allowed": False,
++        "source_sha256": archive.source_sha256,
++        "entries": entries,
++    }
+diff --git a/tests/a24_historical_preservation/test_historical_preservation.py b/tests/a24_historical_preservation/test_historical_preservation.py
+new file mode 100644
+index 0000000..89bbdb0
+--- /dev/null
++++ b/tests/a24_historical_preservation/test_historical_preservation.py
+@@ -0,0 +1,132 @@
++import hashlib
++import json
++import os
++from pathlib import Path
++import tempfile
++import unittest
++
++from annotation.quality.live_pilot import PilotError
++from annotation.runtime.live_pilot.historical_preservation import (
++    DOM_LINK_TYPE,
++    build_identity_mapping,
++    load_historical_original,
++)
++
++
++SOURCE_SHA256 = "02a8aaae2bc907649a03f3676806a02da103e0b487fb43f7e187b29a67fc7a8c"
++SOURCE_BYTES = 11625
++FIELDS = ["doc_id", "title", "province", "city", "district", "grade", "subject", "year",
++          "term", "paper_type", "tixu", "tihao", "question", "option", "answer", "analysis",
++          "tishi", "comment", "step"]
++
++
++def sha(raw):
++    return hashlib.sha256(raw).hexdigest()
++
++
++class HistoricalPreservationTests(unittest.TestCase):
++    def setUp(self):
++        self.temp = tempfile.TemporaryDirectory(prefix="a24-historical-")
++        self.root = Path(self.temp.name)
++
++    def tearDown(self):
++        self.temp.cleanup()
++
++    def synthetic(self, raw=None):
++        if raw is None:
++            records = [
++                {"doc_id": "", "question": "<br>Q \\frac{1}{2}", "option": ["B", "A"],
++                 "answer": "A", "unknown_extra": {"nested": [None, ""]}},
++                {"doc_id": "", "question": "Q2", "option": [], "answer": "B",
++                 "unknown_extra": {"flag": False}},
++            ]
++            raw = (json.dumps(records[0], ensure_ascii=False, separators=(",", ":")) + "\r\n" +
++                   json.dumps(records[1], ensure_ascii=False, separators=(",", ":"))).encode("utf-8")
++        path = self.root / "historical.jsonl"
++        path.write_bytes(raw)
++        return path, raw
++
++    def test_synthetic_roundtrip_preserves_raw_bytes_all_fields_nulls_and_option_order(self):
++        path, raw = self.synthetic()
++        archive = load_historical_original(path, sha(raw), len(raw))
++        self.assertEqual(archive.reconstruct_bytes(), raw)
++        self.assertEqual([r.line_ending for r in archive.records], ["CRLF", "NONE"])
++        values = archive.full_records()
++        self.assertEqual(values[0]["option"], ["B", "A"])
++        self.assertEqual(values[0]["unknown_extra"], {"nested": [None, ""]})
++        self.assertEqual(values[1]["unknown_extra"], {"flag": False})
++        manifest = archive.public_preservation_manifest()
++        self.assertIs(manifest["write_allowed"], False)
++        self.assertNotIn("<br>Q", str(manifest))
++        for record, item in zip(archive.records, manifest["records"]):
++            ref = item["raw_byte_ref"]
++            self.assertEqual(raw[ref["byte_offset"]:ref["byte_offset"] + ref["byte_length"]],
++                             record.raw_span)
++
++    def test_wrong_sha_and_byte_tamper_reject(self):
++        path, raw = self.synthetic()
++        with self.assertRaises(PilotError) as caught:
++            load_historical_original(path, "0" * 64, len(raw))
++        self.assertEqual(caught.exception.code, "HISTORICAL_SOURCE_BYTES")
++        path.write_bytes(raw + b" ")
++        with self.assertRaises(PilotError) as caught:
++            load_historical_original(path, sha(raw), len(raw))
++        self.assertEqual(caught.exception.code, "HISTORICAL_SOURCE_BYTES")
++
++    def test_duplicate_json_key_rejects(self):
++        raw = b'{"question":"A","question":"B"}'
++        path, _ = self.synthetic(raw)
++        with self.assertRaises(PilotError) as caught:
++            load_historical_original(path, sha(raw), len(raw))
++        self.assertEqual(caught.exception.code, "HISTORICAL_JSON_DUPLICATE_KEY")
++
++    def test_identity_disguise_rejects_and_many_to_many_never_selects(self):
++        path, raw = self.synthetic()
++        archive = load_historical_original(path, sha(raw), len(raw))
++        disguised = {"source_line": 1, "evidence_type": DOM_LINK_TYPE, "candidate_value": "dom-a",
++                     "evidence_sha256": "1" * 64, "canonical_question_id": "invented"}
++        with self.assertRaises(PilotError) as caught:
++            build_identity_mapping(archive, [disguised])
++        self.assertEqual(caught.exception.code, "IDENTITY_EVIDENCE_SCHEMA")
++
++        links = [
++            {"source_line": 1, "evidence_type": DOM_LINK_TYPE, "candidate_value": "dom-a",
++             "evidence_sha256": "1" * 64},
++            {"source_line": 1, "evidence_type": DOM_LINK_TYPE, "candidate_value": "dom-b",
++             "evidence_sha256": "1" * 64},
++            {"source_line": 2, "evidence_type": DOM_LINK_TYPE, "candidate_value": "dom-a",
++             "evidence_sha256": "1" * 64},
++        ]
++        mapping = build_identity_mapping(archive, links)
++        self.assertEqual({entry["status"] for entry in mapping["entries"]},
++                         {"HOLD_AMBIGUOUS_LOCAL_MAPPING"})
++        self.assertTrue(all(entry["canonical_question_id"] is None and
++                            entry["selected_candidate"] is None for entry in mapping["entries"]))
++
++    @unittest.skipUnless(os.environ.get("A24_HISTORICAL_EXPORT_PATH"),
++                         "set A24_HISTORICAL_EXPORT_PATH for private 19-record regression")
++    def test_actual_19_record_original_roundtrips_without_identity_promotion(self):
++        path = Path(os.environ["A24_HISTORICAL_EXPORT_PATH"])
++        raw = path.read_bytes()
++        archive = load_historical_original(path, SOURCE_SHA256, SOURCE_BYTES)
++        independently_parsed = [json.loads(line) for line in raw.decode("utf-8").splitlines()]
++        self.assertEqual(archive.reconstruct_bytes(), raw)
++        self.assertEqual(archive.full_records(), independently_parsed)
++        self.assertEqual(len(archive.records), 19)
++        self.assertTrue(all(list(value) == FIELDS for value in archive.full_records()))
++        self.assertTrue(all(value["doc_id"] == "" and value["tihao"] == ""
++                            for value in archive.full_records()))
++        self.assertEqual([value["tixu"] for value in archive.full_records()], list(range(1, 20)))
++        for record in archive.records:
++            ref = record.byte_reference(archive.source_sha256)
++            self.assertEqual(raw[ref["byte_offset"]:ref["byte_offset"] + ref["byte_length"]],
++                             record.raw_span)
++        mapping = build_identity_mapping(archive)
++        self.assertEqual(len(mapping["entries"]), 19)
++        self.assertTrue(all(entry["status"] == "HOLD_LOCAL_CANDIDATES_ONLY" and
++                            entry["canonical_question_id"] is None and
++                            entry["selected_candidate"] is None for entry in mapping["entries"]))
++
++
++if __name__ == "__main__":
++    unittest.main()

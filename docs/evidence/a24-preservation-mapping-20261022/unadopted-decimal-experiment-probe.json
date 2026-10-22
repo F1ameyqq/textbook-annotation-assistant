@@ -1,0 +1,35 @@
+{
+  "schema": "A24HistoricalPreservationNumericProbe/v1",
+  "date": "2026-10-22",
+  "input_class": "SYNTHETIC_VALID_JSON_NUMERIC_BOUNDARY_NO_PRIVATE_BODY",
+  "probe_record_sha256": "a47c5b3fa5384d7c23d265131eae606dbf8d98709cd9a7ab573491caa1484e1a",
+  "v1": {
+    "patch_sha256": "d9ade078140df02a7da3473e3031cc7c801474b17dba5c0d1561cd04d1c73bdf",
+    "precise_type": "float",
+    "precise_repr": "1.2345678901234567",
+    "precise_exact_text_preserved": false,
+    "huge_type": "float",
+    "huge_is_infinite": true,
+    "content_fingerprint": {
+      "status": "ERROR",
+      "error_type": "ValueError"
+    },
+    "result": "FAIL_NUMERIC_PRECISION_AND_NONFINITE_RUNTIME_VALUE"
+  },
+  "v2": {
+    "patch_sha256": "0b1763048682b408767ca32c2449eff677d6edf16094102245cd741291c9cff0",
+    "precise_type": "Decimal",
+    "precise_text": "1.2345678901234567890123456789",
+    "precise_exact": true,
+    "huge_type": "Decimal",
+    "huge_text": "1E+309",
+    "huge_is_finite": true,
+    "mutation_isolated": true,
+    "reconstruct_exact": true,
+    "content_fingerprint": "a47c5b3fa5384d7c23d265131eae606dbf8d98709cd9a7ab573491caa1484e1a",
+    "content_fingerprint_equals_record_sha256": true,
+    "result": "PASS_EXACT_DECIMAL_AND_IMMUTABLE_ARCHIVE_STATE"
+  },
+  "nonstandard_nan_and_infinity": "REJECTED_BY_PARSE_CONSTANT",
+  "actual_historical_19_record_source_contains_json_float": false
+}
