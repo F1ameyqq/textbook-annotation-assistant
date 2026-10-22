@@ -1,0 +1,187 @@
+{
+  "schema": "a24-evening-q1-sixframe/1",
+  "date": "2026-10-22",
+  "timezone": "Asia/Shanghai",
+  "B_input": "fa3a48e872ae6dfe0819b223b484ee5331288a51",
+  "A07_source": "e37606d74d7e538052c563d02df11c6c961b742f",
+  "status": "PASS_FIXED_Q1_OFFLINE_C01_REPLAY_ONLY",
+  "current_visual_input": {
+    "bytes": 3531,
+    "sha256": "2384a8386e8946b5842dfa5d9ce099857e7795f9397335bd6434da1f2f4aab1f",
+    "classification": "CURRENT_VISUAL_DRAFT_NOT_SERVER_RAW",
+    "canonical_question_id": null
+  },
+  "human_confirmation": {
+    "path": "evaluation/a24-current-q1-user-confirmation-20261022.json",
+    "scope": "meaning_numbers_options_answer_D_and_printed_blank_only"
+  },
+  "geometry": {
+    "classification": "FIXED_A07_LOCAL_JPEG_ORIGINAL_PIXELS",
+    "roles": [
+      "Q",
+      "W",
+      "W",
+      "W",
+      "W",
+      "A"
+    ],
+    "bbox_xyxy": [
+      [
+        70,
+        332,
+        590,
+        445
+      ],
+      [
+        96,
+        453,
+        153,
+        486
+      ],
+      [
+        207,
+        453,
+        262,
+        486
+      ],
+      [
+        320,
+        453,
+        374,
+        486
+      ],
+      [
+        430,
+        453,
+        486,
+        486
+      ],
+      [
+        72,
+        239,
+        88,
+        258
+      ]
+    ],
+    "asset_ids": [
+      "viewer-10",
+      "viewer-10",
+      "viewer-10",
+      "viewer-10",
+      "viewer-10",
+      "viewer-173"
+    ],
+    "parentheses_bbox": [
+      505,
+      413,
+      588,
+      445
+    ],
+    "current_canvas_same_bytes_or_transform_proven": false,
+    "content_binding": "SEMANTIC_MATCH_WITH_DOCUMENTED_A07_NORMALIZATION"
+  },
+  "actual_run": {
+    "entry": "tools/run_current_q1_sixframe.py",
+    "consumer": "annotation.delivery.q1_offline",
+    "exit_code": 0,
+    "result": "READY_FOR_REVIEW",
+    "outcome": "APPLIED",
+    "frame_count": 6,
+    "dispatches": 1,
+    "read_sequences": [
+      1,
+      2
+    ],
+    "mock_target_initial_question_count": 0,
+    "mock_target_final_question_count": 1,
+    "plan_ref": {
+      "artifact_id": "a07-plan-a24-current-q1-sixframe-20261022",
+      "revision": 1,
+      "kind": "ApplyPlan",
+      "content_hash": "ddcfad0fd5443f6306dc352e2b0523c3000a65e0df5979647daf275dc1ef4b1e"
+    },
+    "receipt_ref": {
+      "artifact_id": "a07-receipt-a24-current-q1-sixframe-20261022",
+      "revision": 1,
+      "kind": "ExecutionReceipt",
+      "content_hash": "270a3f1428a443978ecd8451baedf30e63b32c270cad64047ab2d200e2fd4002"
+    },
+    "output": "data/runs/current-q1-sixframe-main-20261022",
+    "manifest_sha256": "b674e3a281fcb4736d2fd45916961e2e5ff4f9fe814ea2ab438ec759abee1aff",
+    "manifest_members_excluding_manifest": 53
+  },
+  "primary_verification": {
+    "command": "python tools/verify_current_q1_sixframe.py data/runs/current-q1-sixframe-main-20261022",
+    "exit_code": 0,
+    "member_hashes": 53,
+    "actual_before_after_and_plan_frame_equality": "PASS",
+    "native_readback_hash_binding": "PASS",
+    "parentheses_in_Q_outside_four_W": "PASS",
+    "original_image_and_overlay_visual_inspection": "PASS_MAIN_MODEL_REVIEW",
+    "independent_human_coordinate_acceptance": false,
+    "negative_cases": [
+      {
+        "case": "wrong v2 rejected before output",
+        "exit_code": 1,
+        "output_created": false
+      },
+      {
+        "case": "existing output rejected",
+        "exit_code": 1
+      },
+      {
+        "case": "wrong actual role rejected even after manifest rehash",
+        "exit_code": 1
+      }
+    ]
+  },
+  "files": [
+    {
+      "path": "tools/run_current_q1_sixframe.py",
+      "bytes": 4249,
+      "sha256": "9a64435bdb05c636ff93f6d23e1e4e38b936e667013b9ee9f488b89949a0c46f"
+    },
+    {
+      "path": "tools/build_current_q1_sixframe.py",
+      "bytes": 18643,
+      "sha256": "8dc1383cc0e6f5f348d71c058a6e492e5587b2097a7593a8c7518681db8ecb79"
+    },
+    {
+      "path": "tools/verify_current_q1_sixframe.py",
+      "bytes": 4664,
+      "sha256": "3e3fecbf266f4151144ebea5c0e56ec41c7fc7ce95fcc8aa6dbf3752b964854e"
+    }
+  ],
+  "public_evidence": [
+    {
+      "path": "docs/evidence/a24-evening-q1-20261022/primary-negative-cases.json",
+      "bytes": 335,
+      "sha256": "58d2e320f5310600ccadf92691f904768eee0d6df732caec56fd9552a3791fde"
+    },
+    {
+      "path": "docs/evidence/a24-evening-q1-20261022/q1-offline-plan.json",
+      "bytes": 960,
+      "sha256": "d3b07ce1ae33c8381ae3b2823572be834160999521542d7873636bb922ae0537"
+    },
+    {
+      "path": "docs/evidence/a24-evening-q1-20261022/q1-simulated-receipt.json",
+      "bytes": 1179,
+      "sha256": "6570e118d8ae83af102974c48272122f6010b6b9fc451400826d6744e3aded75"
+    }
+  ],
+  "limits": [
+    "EMPTY_MEMORY_TARGET_NOT_CURRENT_OLD_QUESTION_PRESERVATION",
+    "CURRENT_V3_SEMANTIC_BINDING_NOT_NEW_SERVER_CONTENT",
+    "C01_HISTORICAL_APPROVAL_APPLIES_TO_FIXED_A07_OFFLINE_RUN_ONLY",
+    "NO_CURRENT_CANONICAL_ID_OR_SAVEPAGE_MAPPING",
+    "EXISTING_PYTHON_PYDANTIC_PILLOW_NOT_CLEAN_INSTALL",
+    "CHAPTER_DENOMINATOR_UNKNOWN"
+  ],
+  "platform_use_allowed": false,
+  "platform_calls": 0,
+  "model_calls": 0,
+  "paid_calls": 0,
+  "website_annotations_changed": false,
+  "public_contract_finalized": false,
+  "A_receiving_acceptance": "NOT_CLAIMED"
+}
