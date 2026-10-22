@@ -15,8 +15,8 @@ import zipfile
 
 
 ROOT = Path(__file__).resolve().parents[1]
-RUNTIME = ROOT / "handoffs/b/a24/a24-archived-preservation-runtime-v2-20261022.zip"
-RUNTIME_SHA256 = "65df4a0a206b1992465d30b7cf0d3ab1340ada73d08e06c78e7c1625deb44758"
+RUNTIME = ROOT / "handoffs/b/a24/a24-runtime-preservation-v3-20261022.zip"
+RUNTIME_SHA256 = "2f97801dc13bc040b1eefb97b02932c2c7cbfee887297eedf579cd6998c52638"
 STATE_SHA256 = "640aaabe023c1e96e24ac3b1b002c8b9e7c045ed7b075a8777377a8ae9ba5775"
 HISTORICAL_SHA256 = "02a8aaae2bc907649a03f3676806a02da103e0b487fb43f7e187b29a67fc7a8c"
 DOM_SHA256 = "ddf4251950bc3ef076416e3a677a18d378890dd251a94d33f062a431d838a770"

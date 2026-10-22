@@ -6,10 +6,6 @@
       "path": "handoffs/b/46007447/B-46007447-Q16-reading-C01-v2-HOLD-2026-10-21.zip",
       "sha256": "4725523ec499a3074b268b12f0282ca795c13ddd98e97350078a50db89f7dc93"
     },
-    "bundle": {
-      "path": "private-local:bundle.json",
-      "sha256": "e347e6eef8a87a60bcf314816a0b5ff7a9f3cf24b60109891f844d998fd5e39d"
-    },
     "fixed_eight_source_package": {
       "path": "handoffs/b/46007447/B-46007447-observed-eight-sources-v2-PARTIAL-2026-10-17.zip",
       "sha256": "ec77d52ebcf25b3fec64579f63400c010cc08a623d71e20506e6ed46125ea695"
@@ -17,15 +13,25 @@
     "archived_directory_state": {
       "path": "private-local:current-state.json",
       "sha256": "640aaabe023c1e96e24ac3b1b002c8b9e7c045ed7b075a8777377a8ae9ba5775"
+    },
+    "local_rebuilt_bundle": {
+      "path": "private-local:bundle.json",
+      "sha256": "e347e6eef8a87a60bcf314816a0b5ff7a9f3cf24b60109891f844d998fd5e39d"
+    },
+    "published_bundle": {
+      "path": "handoffs/b/46007447/B-46007447-Q16-reading-C01-v2-HOLD-2026-10-21.zip!delivery/bundle.json",
+      "bytes": 107935,
+      "sha256": "95488a276535a7bee7094238b02c6b41574e37df19d7b946830c6c07f9a824d6"
     }
   },
   "question_graph": {
-    "artifact_id": "b-q16-reading-graph",
+    "artifact_id": "b-q16-reading-graph-57bb4ce3fb7f74766c6276c4",
     "question_count": 4,
     "original_local_directory_ids": [
       "chapter1-local"
     ],
-    "platform_question_ids_all_null": true
+    "platform_question_ids_all_null": true,
+    "local_rebuilt_artifact_id": "b-q16-reading-graph"
   },
   "routes": [
     {
@@ -296,6 +302,19 @@
   "publication": {
     "mode": "SANITIZED_COPY",
     "original_report_sha256": "41698b7f295af866cadd6faef45b7c27008792e1b40dc6b95f25f340829337fb",
-    "transformation": "Only local absolute paths replaced by repository-relative or private-local basename references; all route values and HOLD boundaries retained."
+    "transformation": "Only local absolute paths replaced by repository-relative or private-local basename references; all route values and HOLD boundaries retained. Main review also distinguishes ZIP-original bundle from local rebuild and records exact routing-content equality without treating artifact references as interchangeable."
+  },
+  "bundle_identity_reconciliation": {
+    "published_bundle_sha256": "95488a276535a7bee7094238b02c6b41574e37df19d7b946830c6c07f9a824d6",
+    "local_rebuilt_bundle_sha256": "e347e6eef8a87a60bcf314816a0b5ff7a9f3cf24b60109891f844d998fd5e39d",
+    "exactly_equal_fields": [
+      "SourceBundle.payload.assets",
+      "EvidenceBundle.payload.regions",
+      "QuestionGraph.payload.questions",
+      "QuestionGraph.payload.fragments",
+      "QuestionGraph.payload.answer_relations"
+    ],
+    "artifact_references_interchangeable": false,
+    "difference": "Local rebuild has different created_at, producer versions, artifact IDs, content hashes and references; routing evidence values compared exactly to ZIP original."
   }
 }
