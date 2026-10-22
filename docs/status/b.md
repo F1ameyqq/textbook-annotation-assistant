@@ -2,6 +2,14 @@
 
 更新时间：2026-10-22，Asia/Shanghai。负责人：xiaoshanqingpro 一侧。
 
+## 2026-10-22 用户登录后只读采集受工具阻断，采集器正文留存修复已集成
+
+- [本轮说明与接续门](../a24-readonly-acquisition-20261022.md)：用户已在新标签1199071973登录，清单确认/qieti/home；DOM报Debugger unattached，Windows回退因无法可信确认URL被工具强制停止。来源成员停止网页动作，book/directory/fullframes/export均NOT_RUN，当前业务数据增量0、写入0。不是再次未登录或旧会话抢占，不要求重登，不绕过工具限制。
+- 内容成员修复owner.acquire_current_schema遗漏book正文：四既定GET的数量/顺序/参数不变，四成功正文均xb存私有文件，采集表示明确为UTF8_REENCODED_RESPONSE_TEXT；未改变auth/guard/write_allowed=false。主会话已将补丁集成到隔离A24变体，owner LF SHA dc5113d1984c58d63ea3a26b95d45664aed60a0915a31b9f4afab592169e1318；原A发布树不改。变体改变运行代码，旧候选哈希/activation均不可复用。
+- 质量成员完成[独立补丁审查](../reviews/a24-book-capture-independent-20261022.md)，新增第三GET失败保留前两份/停止后继负例。主会话实际4快照+7捕获+10门禁共21项通过。第一次禁网复测误拦asyncio本地唤醒socket的4失败已保留，使用现有MemoryPolicy正确隔离后4/4通过，产品及预期未因该框架错误放宽。
+- [旧题保全独立代码审计](../reviews/a24-old-preservation-20261022.md)与6项有限拒绝例完成，仍仅证明条件门；真实五区/元数据/完整题框分母、格式适配及保全效果均缺当前输入，未自填VERIFIED/metadata或代人工接受。[机器记录](../../evaluation/a24-readonly-acquisition-20261022.json)记录作者/独立/主会话及字节行尾差量、原失败与最终回执。
+- 三原会话已交本轮离线成果，来源因工具规则停止；新原件或受支持连接恢复后再定向派工，不空转等待。用户已被询问网站书籍JSON预览是否有导出入口；尚未把未回答问题当数据或同意。OCR/新模型/付费API、标注修改及实际保存/refresh/reopen均0/NOT_RUN，章节验收未新增。
+
 ## 2026-10-22 接收三成员首批成果，A24消费与本机门禁修复已收尾
 
 - 当前A24未改写消费者实际无损读取B固定v2包，完整对象相等，37富文本绑定一致/坏引用0；不是依据旧91文件不变推断。4题任务/1材料/37区/26片段/11诊断槽/6null空均在。限定C01读取通过，真实保存schema/共享材料复杂分框仍未适配，不替换A24首题目标。[消费报告](../reviews/a24-c01-consumption-20261022.md)。

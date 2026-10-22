@@ -1,0 +1,30 @@
+diff --git a/tests/a24_book_snapshot_fix/test_book_snapshot.py b/tests/a24_book_snapshot_fix/test_book_snapshot.py
+--- a/tests/a24_book_snapshot_fix/test_book_snapshot.py
++++ b/tests/a24_book_snapshot_fix/test_book_snapshot.py
+@@ -110,6 +110,26 @@ class BookSnapshotTests(unittest.TestCase):
+         self.assertEqual(len(self.calls), 1)
+         self.assertFalse((self.root / "owned-output" / "private").exists())
+ 
++    def test_third_get_failure_retains_prior_private_evidence_and_never_unlocks_write(self):
++        failed = self.responses[:2] + [{"http_status": 503, "body": "PRIVATE_FAILURE_BODY"}] + self.responses[3:]
++
++        with self.assertRaises(PilotError) as caught:
++            self.acquire(failed)
++
++        self.assertEqual(caught.exception.code, "OWNER_FIRST_SAVE_BLOCKED")
++        self.assertEqual(len(self.calls), 3)
++        self.assertEqual([call["method"] for call in self.calls], ["GET"] * 3)
++        self.assertTrue(all(call["payload"] is None and call["phase"] == "acquire"
++                            for call in self.calls))
++        private = self.root / "owned-output" / "private"
++        self.assertEqual((private / "book-snapshot.bin").read_bytes(), self.expected["book"])
++        self.assertEqual((private / "directory-snapshot.bin").read_bytes(), self.expected["directory"])
++        self.assertFalse((private / "frames-snapshot.bin").exists())
++        self.assertFalse((private / "export-snapshot.bin").exists())
++        # acquire_current_schema raises before returning any result that could
++        # carry write_allowed=True; the caller therefore cannot reach adapter.
++        self.assertFalse(any(call["method"] != "GET" for call in self.calls))
++
+ 
+ if __name__ == "__main__":
+     unittest.main()

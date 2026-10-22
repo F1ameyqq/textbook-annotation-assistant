@@ -1,0 +1,74 @@
+{
+  "schema": "A24BookSnapshotPatchIndependentReview/v1",
+  "date": "2026-10-22",
+  "scope": "source_diff_and_synthetic_tests_only",
+  "decision": "PASS_SOURCE_AND_SYNTHETIC_SCOPE_LIVE_UNVERIFIED",
+  "author_patch": {
+    "path": "C:/Users/LIHAOYANG/Documents/Codex/2026-10-17/chapter1-content-sol56/outputs/a24-book-snapshot-fix-20261022/owner-book-snapshot.patch",
+    "sha256": "b52a9d820ddb9a4edf5a6b43357566851f588804941d5e807d72e8019b43a7e6",
+    "target": "src/annotation/runtime/live_pilot/owner.py",
+    "hunks": 1
+  },
+  "owner_hashes": {
+    "baseline_sha256": "fb5bcd815d075f425d97845da13b64c2e06f62ecb990f41924377dadea8aeaaf",
+    "author_lf_sha256": "dc5113d1984c58d63ea3a26b95d45664aed60a0915a31b9f4afab592169e1318",
+    "independent_applied_crlf_sha256": "f21e48c53aeb238b5fe629c642f5fb322f47e2b50c8bb382b2c5ff4dda446f55",
+    "independent_applied_normalized_lf_sha256": "dc5113d1984c58d63ea3a26b95d45664aed60a0915a31b9f4afab592169e1318",
+    "semantic_diff_from_author_copy": false,
+    "byte_difference_reason": "CRLF versus LF only"
+  },
+  "review": {
+    "new_gets": 0,
+    "request_route_order_or_params_changed": false,
+    "authentication_or_guard_changed": false,
+    "write_qualification_changed": false,
+    "credentials_or_headers_persisted": false,
+    "query_values_persisted": false,
+    "response_bodies_publicly_persisted": false,
+    "private_saved_slots": [
+      "book",
+      "directory",
+      "frames",
+      "export"
+    ],
+    "exclusive_create_mode": "xb",
+    "capture_representation": "UTF8_REENCODED_RESPONSE_TEXT",
+    "raw_http_bytes_claimed": false
+  },
+  "independent_regression": {
+    "runtime": "C:/Users/LIHAOYANG/.cache/codex-runtimes/codex-primary-runtime/dependencies/python/python.exe",
+    "command": "PYTHONPATH=src python -m unittest discover -s tests/a24_book_snapshot_fix -p test_book_snapshot.py -v",
+    "tests_run": 4,
+    "failures": 0,
+    "errors": 0,
+    "result": "PASS",
+    "augmented_test_sha256": "3af68d67fe779c1b054a2b4b2a2277577c55b6c32956544166b319251a6f1210",
+    "extra_negative_patch_sha256": "834bf9a2feed9ae99eb323acef5dbd9025af14561d0e7756330e1ff7ba53cd8c",
+    "third_get_failure": {
+      "error_code": "OWNER_FIRST_SAVE_BLOCKED",
+      "requests_sent": 3,
+      "methods": [
+        "GET",
+        "GET",
+        "GET"
+      ],
+      "retained_private_slots": [
+        "book",
+        "directory"
+      ],
+      "absent_private_slots": [
+        "frames",
+        "export"
+      ],
+      "later_request_sent": false,
+      "adapter_reachable": false,
+      "write_unlocked": false
+    }
+  },
+  "limitations": [
+    "No website or live HTTP operation was performed.",
+    "No current real schema or full old-question denominator was available.",
+    "The saved bytes are UTF-8 re-encoded response text, not asserted native HTTP raw bytes.",
+    "PASS does not imply live, platform, human, or official acceptance."
+  ]
+}
