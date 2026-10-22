@@ -1,0 +1,54 @@
+{
+  "schema": "Q1ProgramExecutionAudit/v1",
+  "recorded_at": "2026-10-22T23:57:56+08:00",
+  "request": "Use the developed automation program, not LLM-operated browser actions or human click guidance.",
+  "target_operation": "UPDATE_EXISTING_FIRST_LESSON_Q1",
+  "book_id": "46007447",
+  "runtime_package_sha256": "2f97801dc13bc040b1eefb97b02932c2c7cbfee887297eedf579cd6998c52638",
+  "actual_command": "python -m annotation.runtime.live_pilot apply",
+  "actual_exit_code": 2,
+  "actual_result": {
+    "status": "BLOCKED",
+    "reason": "LIVE_TRANSPORT_NOT_IMPLEMENTED",
+    "platform_calls": 0,
+    "submission_status": "NOT_SUBMITTED"
+  },
+  "code_findings": [
+    {
+      "file": "src/annotation/runtime/live_pilot/__main__.py",
+      "sha256": "6a144957a94d8f6fb3738008a3034b4461298027f7992c2cc6fae258e08d0903",
+      "finding": "Generic CLI apply and reconcile-readonly are hard-blocked; they do not invoke the concrete current-context runner."
+    },
+    {
+      "file": "src/annotation/delivery/live_pilot/plan.py",
+      "sha256": "41354b58f567b1a106972f9f4bd57f75fa635936d01568954f7a8fc07c45cf8e",
+      "finding": "Plan assumes absent new question, zero existing frames, and a global append position; it is not an existing-question update plan."
+    },
+    {
+      "file": "src/annotation/delivery/live_pilot/wire.py",
+      "sha256": "282749ab5111c7a69737070827e89fd74b8b6ff991a3956181e44a6693a9b95b",
+      "finding": "Payload sets is_new_question_insertion=true and question_order=null, creating six frames; it cannot be reused for the selected existing Q1."
+    },
+    {
+      "file": "src/annotation/runtime/live_pilot/authority.py",
+      "sha256": "efac944a00155d72ae37c12279036149ad4fd2846f73cd1b1c62e950d3c4a44d",
+      "finding": "Concrete owner path exists, but binds original executor/profile identities and D:/1800 roots; local takeover configuration has not been completed."
+    }
+  ],
+  "concrete_platform_code_exists": true,
+  "concrete_entry": "tools/a24_first_save_launcher.py run -> owner.run_stage -> runner.apply_current_context",
+  "concrete_entry_launched": false,
+  "existing_question_update_supported_by_audited_plan": false,
+  "root_cause_scope": "Both program integration/operation gaps and current native data/session gaps; not browser connectivity alone.",
+  "machine_pipeline_save": "NOT_RUN",
+  "LLM_UI_write": "NOT_RUN",
+  "manual_guidance_fallback": "STOPPED_BY_USER",
+  "next_engineering_work": [
+    "Localize the existing concrete owner/session entry without weakening its bounded request and release behavior.",
+    "Acquire actual current record, frame identities, native update format and before-state through the program's supported capture path.",
+    "Implement and verify existing-question update semantics separately from append, preserving non-target records and fields.",
+    "Execute one bounded programmatic save, then fresh programmatic readback and independent comparison; reconcile UNKNOWN without retrying the write."
+  ],
+  "platform_save_complete": false,
+  "whole_chapter_complete": false
+}
