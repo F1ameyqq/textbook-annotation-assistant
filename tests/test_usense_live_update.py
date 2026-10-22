@@ -76,6 +76,40 @@ class UsenseExistingQuestionTests(unittest.TestCase):
         self.assertEqual(payload["ocr_submissions"][1]["rect_ids"], ["synthetic-2-choice"])
         self.assertTrue(update.compare_readback(plan, copy.deepcopy(plan["expected"]))["match"])
 
+    def test_nonempty_html_and_markdown_image_references_cannot_be_removed(self):
+        for image in ('<img src="https://synthetic.invalid/diagram?a=1&amp;b=2">',
+                      '![图形](https://synthetic.invalid/signed(a).png?sig=keep)',
+                      '![图形][diagram]\n[diagram]: https://synthetic.invalid/diagram.png'):
+            with self.subTest(image=image):
+                before, target = fixture()
+                before["zones"]["question"]["data"]["ocr_result"] += "\n" + image
+                self.blocked("EXISTING_IMAGE_REFERENCE_REMOVAL_FORBIDDEN",
+                             lambda: update.make_plan(before, target, {"question": review("updated text without figure")}))
+                plan = update.make_plan(before, target, {"question": review("updated text\n" + image)})
+                self.assertTrue(plan["mutation_required"])
+
+    def test_changed_image_url_or_missing_duplicate_is_rejected(self):
+        before, target = fixture()
+        image = '![diagram](https://synthetic.invalid/keep.png)'
+        before["zones"]["question"]["data"]["ocr_result"] = image + "\n" + image
+        for text in (image, image.replace("keep", "different") + "\n" + image):
+            self.blocked("EXISTING_IMAGE_REFERENCE_REMOVAL_FORBIDDEN",
+                         lambda: update.make_plan(before, target, {"question": review(text)}))
+
+    def test_empty_broken_img_can_be_removed(self):
+        before, target = fixture()
+        before["zones"]["question"]["data"]["ocr_result"] = 'old <img src=""> text ![empty]()'
+        self.assertTrue(update.make_plan(before, target, {"question": review("cleaned text")})["mutation_required"])
+
+    def test_legacy_lossy_plan_is_history_only_never_new_writer_input(self):
+        before, target = fixture()
+        before["zones"]["question"]["data"]["ocr_result"] += ' ![figure](https://synthetic.invalid/figure)'
+        legacy = update._make_plan(before, target, {"question": review("old defective approved text")}, protect_images=False)
+        self.assertIs(update.validate_recorded_plan(legacy), legacy)
+        self.assertTrue(update.compare_recorded_readback(legacy, legacy["expected"])["match"])
+        self.blocked("EXISTING_IMAGE_REFERENCE_REMOVAL_FORBIDDEN", lambda: update.validate_plan(legacy))
+        self.blocked("EXISTING_IMAGE_REFERENCE_REMOVAL_FORBIDDEN", lambda: update.compare_readback(legacy, legacy["expected"]))
+
     def test_existing_question_modes_allow_non_choice_text_zones(self):
         before, target = fixture(3)
         changes = {"question": review("解答：$x^2=4$"), "answer": review("$x=\\pm2$"),

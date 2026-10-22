@@ -184,7 +184,7 @@ class WriterIndependentTests(unittest.TestCase):
         with self.assertRaises(ValueError) as caught: fn()
         self.assertEqual(getattr(caught.exception, "code", None), code)
 
-    def run_fake(self, *, ledger=None, **options):
+    def run_fake(self, *, ledger=None, previous_acceptance=None, **options):
         browser = FakeBrowser(self.files, **options)
         original = writer.ExactPolicy
         def policy_factory(binding, urls):
@@ -200,7 +200,7 @@ class WriterIndependentTests(unittest.TestCase):
             result = asyncio.run(writer.execute(config_path="synthetic-config", config_sha256="a" * 64,
                 plan_path=self.files.plan_path, plan_sha256=self.files.plan_sha,
                 baseline=self.files.baseline, ledger_root=ledger or self.files.ledger,
-                authorization_reference="synthetic-current-user-authorization"))
+                authorization_reference="synthetic-current-user-authorization", previous_acceptance=previous_acceptance))
         return result, browser
 
     def test_source_exact_bytes_bound(self):

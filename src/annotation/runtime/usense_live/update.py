@@ -8,7 +8,9 @@ fresh read, once-only intent, one send, real receipt and independent readback.
 from __future__ import annotations
 
 import copy
+from collections import Counter
 from datetime import datetime
+from html.parser import HTMLParser
 import hashlib
 import json
 import math
@@ -216,7 +218,74 @@ def _review(review):
     require(review["reviewed_text_sha256"] == text_digest(review["text"]), "REVIEW_TEXT_HASH_MISMATCH")
 
 
+def image_references(text):
+    """Extract nonempty HTML/Markdown image destinations; never dereference URLs.
+
+    Counts matter: retaining one of two repeated diagrams is still data loss.
+    HTML entities are decoded by HTMLParser, as the browser decodes img.src.
+    Empty img src and empty Markdown destinations contain no usable reference.
+    """
+    found = []
+
+    class Images(HTMLParser):
+        def handle_starttag(self, tag, attrs):
+            if tag.lower() == "img":
+                for name, value in attrs:
+                    if name.lower() == "src" and isinstance(value, str) and value.strip():
+                        found.append(value.strip())
+        handle_startendtag = handle_starttag
+
+    Images(convert_charrefs=True).feed(text)
+    for match in re.finditer(r"!\[(?:\\.|[^\]\\])*\]\(\s*", text):
+        start = match.end()
+        if start >= len(text):
+            continue
+        if text[start] == "<":
+            end = start + 1
+            while end < len(text) and (text[end] != ">" or text[end - 1] == "\\"):
+                end += 1
+            destination = text[start + 1:end] if end < len(text) else ""
+        else:
+            end, depth = start, 0
+            while end < len(text):
+                char = text[end]
+                if char == "\\" and end + 1 < len(text):
+                    end += 2
+                    continue
+                if char == "(":
+                    depth += 1
+                elif char == ")":
+                    if depth == 0:
+                        break
+                    depth -= 1
+                elif char.isspace() and depth == 0:
+                    break
+                end += 1
+            destination = text[start:end]
+        if destination.strip():
+            found.append(destination.strip())
+    definitions = {}
+    for match in re.finditer(r"(?m)^ {0,3}\[([^\]]+)\]:\s*(?:<([^>]+)>|(\S+))", text):
+        definitions[" ".join(match[1].split()).casefold()] = match[2] or match[3]
+    for match in re.finditer(r"!\[((?:\\.|[^\]\\])*)\](?:\[([^\]]*)\])?(?!\()", text):
+        # The inline scanner owns immediate '(...)' forms; regex backtracking
+        # must not treat one as an unresolved reference-style image.
+        if match.end() < len(text) and text[match.end()] == "(":
+            continue
+        label = match[2] or match[1]
+        key = " ".join(label.split()).casefold()
+        if key in definitions:
+            found.append(definitions[key])
+        elif label.strip():
+            found.append("unresolved-markdown-image:" + match[0])
+    return Counter(found)
+
+
 def make_plan(before, target, approved_changes):
+    return _make_plan(before, target, approved_changes, protect_images=True)
+
+
+def _make_plan(before, target, approved_changes, *, protect_images):
     binding = validate_snapshot(before, target)
     require(type(approved_changes) is dict and set(approved_changes) <= set(ZONES), "ZONE_CHANGE_FORBIDDEN")
     expected, changes, submissions = copy.deepcopy(before), [], []
@@ -229,6 +298,9 @@ def make_plan(before, target, approved_changes):
         # Clearing is a different destructive protocol operation, never inferred.
         require(bool(text.strip()), "EMPTY_UPDATE_REQUIRES_EXPLICIT_CLEAR_PROTOCOL", zone)
         require(bool(binding["rect_ids"][zone]), "ZONE_HAS_NO_SOURCE_FRAME", zone)
+        if state == "present" and protect_images:
+            require(not (image_references(old_text) - image_references(text)),
+                    "EXISTING_IMAGE_REFERENCE_REMOVAL_FORBIDDEN", zone)
         if state == "present":
             expected["zones"][zone]["data"]["ocr_result"] = text
         else:
@@ -270,6 +342,19 @@ def validate_plan(plan):
     return plan
 
 
+def validate_recorded_plan(plan):
+    """Recompute an already-recorded historical plan, never authorize a new send.
+
+    Old accepted runs predate the image-loss guard. Revision verification must
+    inspect that historical evidence, including its defect, without rewriting
+    history. New writer input always goes through validate_plan instead.
+    """
+    require(type(plan) is dict and plan.get("schema") == PLAN_SCHEMA, "PLAN_SCHEMA")
+    expected = _make_plan(plan["before"], plan["target"], plan["approved_changes"], protect_images=False)
+    require(json_same(expected, plan), "PLAN_TAMPERED")
+    return plan
+
+
 def differences(expected, actual, path=()):
     if type(expected) is not type(actual):
         return [{"path": list(path), "kind": "type", "expected_type": type(expected).__name__, "actual_type": type(actual).__name__}]
@@ -307,6 +392,16 @@ def compare_readback(plan, after):
     one send and resource release. This pure result never claims a live save.
     """
     validate_plan(plan)
+    return _compare_validated_readback(plan, after)
+
+
+def compare_recorded_readback(plan, after):
+    """Historical evidence check only; cannot make a new plan writable."""
+    validate_recorded_plan(plan)
+    return _compare_validated_readback(plan, after)
+
+
+def _compare_validated_readback(plan, after):
     _json(after)
     expected = copy.deepcopy(plan["expected"])
     metadata_changes, metadata_error = [], None

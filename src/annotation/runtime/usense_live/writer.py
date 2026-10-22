@@ -12,6 +12,7 @@ from .core import ORIGIN, TARGET, load_binding, tls_launch_arguments, write_new,
 from .config import capture_endpoints
 from .capture import FETCH
 from .update import loads, validate_plan, from_captured_map, check_prewrite, json_same
+from .revision import verify_previous_acceptance, same as revision_same
 
 POST=ORIGIN+'/qieti/api/annotate_pic/commit_unified_submit'
 
@@ -54,7 +55,7 @@ SEND="""async url=>{
  }finally{clearTimeout(timer);}
 }"""
 
-def validate_inputs(plan, baseline, endpoints, ledger_root, authorization_reference):
+def validate_inputs(plan, baseline, endpoints, ledger_root, authorization_reference, previous_acceptance=None, revision_context=None):
  validate_plan(plan)
  require(isinstance(authorization_reference,str) and bool(authorization_reference.strip()),'CURRENT_WRITE_AUTHORIZATION_REFERENCE_REQUIRED')
  order=plan['target']['question_order']; prefix=f'q{order}_'
@@ -67,25 +68,36 @@ def validate_inputs(plan, baseline, endpoints, ledger_root, authorization_refere
   require(record.is_file(),'REVIEW_RECORD_MISSING')
  ledger=plain_path(str(ledger_root))
  require(ledger.is_dir(),'LEDGER_DIRECTORY_REQUIRED')
- claim=ledger/(plan['ledger_key']+'.json')
- require(not claim.exists(),'EXISTING_INTENT_READBACK_REQUIRED_NO_RETRY')
+ if previous_acceptance is not None:
+  require(plan['mutation_required'] is True,'REVISION_REQUIRES_EXPLICIT_MUTATION')
+  verified=verify_previous_acceptance(previous_acceptance,plan,native,ledger)
+  claim=ledger/(verified['intent_key']+'.json')
+  if revision_context is not None:revision_context.update(verified)
+ else:
+  claim=ledger/(plan['ledger_key']+'.json')
+  require(not claim.exists(),'EXISTING_INTENT_READBACK_REQUIRED_NO_RETRY')
  return native,claim
 
 
-async def execute(*,config_path,config_sha256,plan_path,plan_sha256,baseline,ledger_root,authorization_reference):
+async def execute(*,config_path,config_sha256,plan_path,plan_sha256,baseline,ledger_root,authorization_reference,previous_acceptance=None):
  raw=Path(plan_path).read_bytes();require(sha(raw)==plan_sha256,'PLAN_FILE_CHANGED')
  plan=loads(raw); binding=load_binding(config_path,config_sha256)
  require(Path(ledger_root).resolve()==Path(binding.data['profile']['directory']).parent/'usense-existing-ledger','LEDGER_ROOT_MUST_BELONG_TO_BOUND_PROFILE')
  endpoints=capture_endpoints(binding)
- native,claim=validate_inputs(plan,Path(baseline),endpoints,Path(ledger_root),authorization_reference)
+ revision={}
+ native,claim=validate_inputs(plan,Path(baseline),endpoints,Path(ledger_root),authorization_reference,previous_acceptance,revision)
  binding.check(profile=True)
  run=binding.output;run.mkdir(exist_ok=False)
  result={'schema':'UsenseActualNativeUpdate/v1','operation':'EXISTING_QUESTION_TEXT_UPDATE','book_id':'46007447',
   'status':'PREPARING','plan_sha256':plan['plan_sha256'],'plan_file_sha256':plan_sha256,'config_sha256':config_sha256,
   'target':plan['target'],'run_id':run.name,'post_attempts':0,'save_success':False,'independent_readback':'PENDING',
-  'authorization_reference':authorization_reference,'ledger_key':plan['ledger_key']}
+  'authorization_reference':authorization_reference,'ledger_key':plan['ledger_key'],'intent_key':claim.stem}
  write_new(run/'claim.json',{'operation':'EXISTING_QUESTION_TEXT_UPDATE','config_sha256':config_sha256,'plan_file_sha256':plan_sha256})
  (run/'plan.json').write_bytes(raw)
+ if revision:
+  write_new(run/'revision-validation.json',revision)
+  result['revision']={key:value for key,value in revision.items() if key!='evidence_file_sha256'}
+  result['revision_validation_sha256']=sha((run/'revision-validation.json').read_bytes())
  context=runtime=None;pending=set()
  policy=ExactPolicy(binding,[TARGET]+[ORIGIN+p for p in endpoints.values()])
  try:
@@ -143,9 +155,12 @@ async def execute(*,config_path,config_sha256,plan_path,plan_sha256,baseline,led
    require(prepared['created_by_bound'] is True,'ACTOR_NOT_BOUND')
    policy.body_sha=prepared['sha256']
    result.update(status='PREWRITE_MATCHED',native_body_sha256=policy.body_sha,created_by_source='authenticated username bound inside page; not exported')
+   if revision:
+    require(revision_same(revision,verify_previous_acceptance(previous_acceptance,plan,fresh,Path(ledger_root))),'PREVIOUS_ACCEPTANCE_EVIDENCE_CHANGED')
    sent_at=datetime.now(timezone.utc).isoformat()
    write_new(claim,{'operation':'EXISTING_QUESTION_TEXT_UPDATE','run_id':run.name,'target':plan['target'],
     'ledger_key':plan['ledger_key'],'plan_sha256':plan['plan_sha256'],'native_body_sha256':policy.body_sha,
+    'intent_key':claim.stem,'previous_acceptance_sha256':revision.get('previous_acceptance_sha256'),
     'intent_at':sent_at,'automatic_retry_allowed':False,'state':'INTENT_REQUIRES_INDEPENDENT_READBACK'})
    result.update(status='SEND_INTENT_RECORDED',send_intent_at=sent_at,post_attempts=1)
    write_new(run/'send-intent.json',result)
@@ -190,9 +205,10 @@ def main():
  parser=argparse.ArgumentParser(description=__doc__)
  for name in ('config','sha256','plan','plan-sha256','baseline','ledger-root','authorization-reference'):
   parser.add_argument('--'+name,required=True)
+ parser.add_argument('--previous-acceptance')
  args=parser.parse_args()
  result=asyncio.run(execute(config_path=args.config,config_sha256=args.sha256,plan_path=args.plan,plan_sha256=args.plan_sha256,
-  baseline=args.baseline,ledger_root=args.ledger_root,authorization_reference=args.authorization_reference))
+  baseline=args.baseline,ledger_root=args.ledger_root,authorization_reference=args.authorization_reference,previous_acceptance=args.previous_acceptance))
  print(json.dumps(result,ensure_ascii=False),flush=True)
  return 0 if result['status'] in ('NO_OP_CURRENT_STATE_CONFIRMED','RECEIPT_CAPTURED_REQUIRES_INDEPENDENT_READBACK') else 2
 
