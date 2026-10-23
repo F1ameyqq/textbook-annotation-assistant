@@ -1,0 +1,11 @@
+# A25 最后两题固定实际有限验收
+
+仅接受第4题一次提交的200/code0精确成功回执、原释放失败/未回读事实及最终整批OS释放。第4题完整保存状态和独立读回仍未证，第5题NOT_RUN。authority8696ca2c已消耗1/剩余0，不重发第4题、不建accepted marker，不伪造revision前驱。
+
+55份原件独立隔离核hash。第4题native21/node1792067074506/info2110708409593016321的计划、config、send intent、新稳定ledger intent和execution摘要相互绑定，原回执question_order21、success=true、inserted=false，摘要6fec83f3。12份before原生响应与已验baseline严格相同；审计显示12业务GET+1惰性导航+1TLS探测，以及唯一commit POST，native/context两层各1不相加。实际POST原body未导出，含未导出的authenticated created_by，未声称重建原body；绑定由已接受未变writer守卫及完整固定记录支持。
+
+writer原status为RELEASE_UNPROVEN_NO_RETRY、退出码2、communicate未超时；context_closed=false、runtime_stopped=false，两者分别TimeoutError。原stderr中的Event loop is closed及closed pipe析构异常保留，释放超时的完整因果仍UNKNOWN，不展开诊断。原reader配置/进程不存在于完整固定输出，流程在writer失败处停止；第5题只有计划/审查hash准备文件，无writer/reader/intent。
+
+原五ledger文件逐hash保持；唯一新增第4题INTENT_REQUIRES_INDEPENDENT_READBACK，合计6文件，没有第3或第4accepted marker。唯一authority原字节、原子消费intent、监管进程、writer发送/结束、batch停止和最终释放的时间链相容；旧额度未恢复。
+
+最终整批Job active0，23个唯一PID+creation_filetime持有身份均exit_signaled且handle关闭，含writer PID；launcher/process/thread/Job handle均关闭。只接受最终整批OS释放，不能覆盖原writer context/runtime false。首两题已证保存回读及第三有限对账保持，未重跑任何产品、平台或测试。后续只读补读计划需另行固定静态预检；本actual结果不等待或授权补读。独立完成并释放，sole1800-a保持PAUSED。
