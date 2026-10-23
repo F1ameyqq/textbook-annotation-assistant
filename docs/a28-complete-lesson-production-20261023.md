@@ -49,4 +49,3 @@ initially omitted the native `message` field; its original failures are retained
 and only the three affected tests were rerun after correction. The actual four
 candidates also passed the revised preflight without a browser. The prior 40
 checks remain historical evidence for `48cbd114`, not a fresh R1 suite run.
-
