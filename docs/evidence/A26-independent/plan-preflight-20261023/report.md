@@ -1,0 +1,19 @@
+# A26 最小原生采集入口独立预检
+
+结论：ACCEPTED_BOUNDED_NATIVE_EXPORT_AND_FIVE_IMAGE_CAPTURE_PREFLIGHT_ONLY。该结论只接受本固定计划的一次原生 paper GET、五张既存图片 GET 的离线入口预检。根可把已有用户许可绑定至精确 plan、manifest、launcher 及新的单次 authority；本独立未创建 authority 或访问平台。渲染依赖仍待绑定，不阻塞本次采集预检。
+
+输入全部来自根 root-plan-frozen/root-index.json，115份原件复制到独立私有目录后逐份校验长度与SHA256，报告前再次核对根原件/独立副本115对。root-index SHA256为 c272c468b0393144dd2def52772b9391698e144bf41017a55e1fcdf0c24a6ce8。原manifest未另取作者目录，按根索引四字段及固定生产器序列化重建，字节摘要精确匹配给定594003e0…；该重建件明确标为派生核证。plan为 bb4e6662ab6d0be3534a51ec08aefbe66b4eb7bfda9be9d79edb8af47c0f7b31。
+
+固定官方前端4个片段按字节偏移、长度、SHA和文本逐项核实，补核Gr基础路径及hyt参数绑定，证明 export-paper-questions/46007447 是GET原生blob下载、文件名为paper_questions.jsonl。该接口返回整书时保留其必要原件，分析及交付计数仅限已接受的五个node/info身份。五题身份与A25最终机器结果及固定readback-data完全一致；重新核得5个唯一图片引用和36处公式，逐题公式数6/5/4/4/17。初始四图误计及准备失败原记录均保留。
+
+复用的19个runtime Python文件聚合摘要与A25已接受实现1c222acd…一致。原profile、DIRECT、固定www.usense.com leaf/SPKI与actor绑定沿用；已有FETCH在浏览器内部使用现存会话令牌发送精确GET，不返回或导出令牌，不执行新登录。五张图片使用不携带认证的DIRECT urllib GET，系统信任和主机名校验，拒绝重定向，无自动重试。未跑旧套件或扩展TLS实验。
+
+启动器先核authority、计划/manifest原字节、每个source/frozen成员、launcher、自身限制、actor、<=900秒窗口、固定干净product和实现摘要，再排除既有outer/live输出并独占创建。保存单次启动记录并把authority消费为1/0后才调用既有Windows Job/held-identity holder。采集器约束唯一惰性同源导航和一次export GET，禁用静态请求；导出原HTTP实体字节先落盘，再检查状态、双层计数与严格JSONL。原响应不被解析结果替代。context/runtime释放未确认会抛错、阻止后续图片；图片失败保留已得实体及意图/响应，立即停止余图。外层OS释放仍须由实际holder原件另证。
+
+有限新增控制共13组完成通过：固定来源/身份/资源绑定；JSONL有效/BOM/空行和七类拒绝；单次采集正常分支；规则扩大在资源前拒绝；HTTP失败、损坏JSONL、登录缺失、guard计数缺失、释放失败均停止后继；图片完整像素解码、HTTP/解码失败原件保全、拒绝跳转；authority在启动前消费及二次启动拒绝；成员变化在profile检查前拒绝。使用冻结AST原函数体与注入的合成binding/context/网络响应/Git/holder，不启动浏览器或实际子进程，不证明真实TLS、计时、平台或释放。
+
+独立辅助程序首轮保留3 PASS、1 FAIL、9 NOT_RUN。FAIL发生在进入采集函数前：Windows asyncio构造本地socketpair被验收辅助的全网络禁用钩子拒绝。仅在独立目录新建辅助修正件，把注入的立即完成协程改为直接await模拟，未改作者代码，未覆盖原错误，未重跑先前三组通过控制；剩余10组全部通过。原stderr中附带的事件循环清理异常及未await警告一并保全。这里的13组完成通过不抹去首轮辅助FAIL。
+
+A25第3题原strict FAIL和限定created-zone键序对账、第4题context/runtime原关闭异常及后续首次读回链继续保留，不补marker或revision前驱。未读取真实profile、ledger或作者活动目录；未修改根state、AGENTS、作者产品、Git或1800-a，也未向其他聊天发消息。
+
+实际原生导出、五图实采、五题原生内容映射、可打开成品及图片/公式/单位实际显示全部留待固定实际交付另验。HTTP200、JSONL解析成功或本地合成PASS不得扩为这些层通过。根绑定后按计划执行一次，异常保留、停止后继，不自动重试或再次保存。
