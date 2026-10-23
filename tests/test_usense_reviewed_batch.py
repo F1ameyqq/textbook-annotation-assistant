@@ -217,6 +217,14 @@ class BatchTests(unittest.TestCase):
         self.save()
         self.blocked("BATCH_CAPTURE_OVERLAP_CHANGED")
 
+    def test_boolean_request_count_is_not_an_integer_guard_proof(self):
+        ref = self.manifest["captures"][0]
+        summary = batch.read(ref["path"])
+        summary["captures"]["directory"]["request_counts"]["context"] = True
+        self.manifest["captures"][0] = dump(ref["path"], summary)
+        self.save()
+        self.blocked("BATCH_CAPTURE_ROW_INVALID")
+
     def test_unknown_stable_or_revision_intent_blocks_planning(self):
         plan = self.prepare()
         stable = plan["items"][0]["plan"]["ledger_key"]

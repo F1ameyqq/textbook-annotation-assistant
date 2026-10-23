@@ -64,7 +64,8 @@ def load_baseline(captures, now):
             require(re.fullmatch(r"directory|frames|source|page_[0-9]+|q[1-9][0-9]*_(?:annotations|info|question|choice|answer|analysis|knowledge_point)", name)
                     is not None, "BATCH_CAPTURE_NAME")
             require(row.get("filename") == name + ".json" and type(row.get("status")) is int and row["status"] == 200 and
-                    row.get("request_counts") == {"context": 1, "native": 1}, "BATCH_CAPTURE_ROW_INVALID")
+                    type(row.get("request_counts")) is dict and set(row["request_counts"]) == {"context", "native"} and
+                    all(type(value) is int and value == 1 for value in row["request_counts"].values()), "BATCH_CAPTURE_ROW_INVALID")
             path = parent / (name + ".json")
             raw = path.read_bytes()
             require(sha(raw) == row.get("sha256") and type(row.get("bytes")) is int and len(raw) == row["bytes"],

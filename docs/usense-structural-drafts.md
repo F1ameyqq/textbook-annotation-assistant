@@ -1,6 +1,6 @@
 # 第二课时目录纠正和新增题：离线结构草稿
 
-本轮基于第一轮 `604b83d`，仅新增通用离线模块、工具、合成测试及本文档，不修改公共状态、OCR、Q7专用算法或网络传输。没有任何结构写入口；所有草稿和比较结果都保留 `write_authorized=false`、`platform_acceptance=false`。原统一 writer 和 Q7 writer 不接受此草稿格式。
+离线草稿基于第一轮 `604b83d`，不修改公共状态、OCR或Q7专用算法。草稿本身保留 `write_authorized=false`、`platform_acceptance=false`；原统一writer和Q7 writer不接受此格式。取得真实preview后的新增显式写器见[结构writer](usense-structural-writer.md)，实际运行仍由总控独占。
 
 第二课时现有 native18—22 是当地印刷 Q1—Q5，不能再把旧原生17—21称作印刷题号。真实范围是当地Q1—Q8及Q8后变式，共9题；相邻阅读3任务另计。该修正来自新来源核查，不修改此前历史记录的原字节。
 
@@ -15,7 +15,7 @@
 - `has_changes=false` 时前端停止；`directory_moves[].impacted_question_count>0` 时显示确认。其他情况可能自动调用apply。**不要运行这条完整UI流程来采preview。**
 - 名为preview的请求仍然是POST。前端不能证明它绝无写入副作用，需要总控隔离该请求、留原始响应并重新GET比较。
 
-实际预览回执/apply收据还没有在本工作线被观察，因此不猜服务器响应schema、不生成apply请求或自动放行。私有前端片段和实际五题preview载荷单独留本机，不进入仓库。
+离线草稿阶段没有原生preview回执。随后总控提供真实preview及独立全局读回，已用独立模块严格绑定并生成apply计划；首次apply响应schema仍未知，写器原字节留存后等待独立读回，不猜成功收据。私有片段/响应和真实载荷留本机，不进入仓库。
 
 ## 可复现入口
 
@@ -69,4 +69,4 @@ python -B -m unittest discover -s tests -p test_usense_structure.py -v
 
 测试均为合成内容，不是实际平台写入。覆盖五题移动/18题保护、稳定身份错配、原字节和协议变化、900秒时效、旧UNKNOWN、原生收据未知、错答案页/错本地图片、漏图、旧题元数据变化、下一题未刷新scope等。
 
-下一关需总控取得独立精确preview原始HTTP响应及前后GET，审查服务器变更集合和冲突处理；再决定目录apply适配。新增题还需来源/裁图/逐区内容审校、目录纠正后的完整新读回及一个通用单次writer适配。当前只有离线草稿和比较器，没有将这些缺口描述为完成。
+后续真实preview已完成绑定，显式apply/insert写器和合成测试另见结构writer说明。尚需总控实际执行、独立完整读回/导出；新增四题的真实来源/裁图/逐区审校也不能由工程测试替代。
