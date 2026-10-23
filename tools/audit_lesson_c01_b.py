@@ -14,7 +14,9 @@ def load(p):
 def need(ok,code):
  if not ok:raise ValueError(code)
 def audit(root,oracle_path,option_path=None):
- root=Path(root).resolve();oracle=load(oracle_path);bundle=load(root/'bundle.json');side=load(root/'delivery.json');basis=load(root/'basis.json');review=load(root/'current-review.json');generation=load(root/'generation.json')
+ root=Path(root).resolve();oracle=load(oracle_path)
+ if option_path:need(sha(option_path)==oracle['option_regions_raw_sha256'],'OPTION_SOURCE_PROOF_FILE_CHANGED')
+ bundle=load(root/'bundle.json');side=load(root/'delivery.json');basis=load(root/'basis.json');review=load(root/'current-review.json');generation=load(root/'generation.json')
  need(bundle['format_version']=='c01-exchange-1','C01_FORMAT');artifacts={a['kind']:a for a in bundle['artifacts']};need(len(artifacts)==len(bundle['artifacts'])==4 and set(artifacts)=={'SourceBundle','EvidenceBundle','QuestionGraph','CheckReport'},'EXACT_FOUR_ARTIFACTS')
  source=artifacts['SourceBundle'];evidence=artifacts['EvidenceBundle'];graph=artifacts['QuestionGraph'];check=artifacts['CheckReport'];ref=lambda a:{k:a[k] for k in ('artifact_id','revision','kind','content_hash')}
  need(side['c01_graph_ref']==check['payload']['subject']==check['payload']['graph']==ref(graph),'CURRENT_GRAPH_CHECK_BINDING')
@@ -44,8 +46,11 @@ def audit(root,oracle_path,option_path=None):
  need(all(not c['region_ids'] for c in evidence['payload']['coverage_clues'] if c['disposition'] in ('EXCLUDED','UNASSIGNED')),'EXCLUDED_CLUE_HAS_REGIONS')
  qmap={q['question_id']:q for q in questions};need([q['question_id'] for q in questions]==['bq-'+k for k in oracle['keys']],'GRAPH_QUESTION_IDENTITIES')
  active=set();all_owned=[];options={};content={};diagram_count=0;blank_count=0
- for item,q in zip(basis['items'],questions):
+ for index,(item,q) in enumerate(zip(basis['items'],questions)):
   key=item['item_key'];owned=[b for b in side['bindings'] if b['item_key']==key and b['fragment_id'] is not None];need(item['human_verified'] is False,'FALSE_HUMAN_CLAIM');need(q['external_refs']['platform_question_id'] is None and q['external_refs']['platform_order'] is None,'FALSE_PLATFORM_ID')
+  need(item['printed_number']==q['external_refs']['printed_number']==str(min(index+1,8)),'PRINTED_NUMBER_IS_NOT_NATIVE_ORDER')
+  need(q['question_type']==('ordinary_choice' if key in oracle['option_numbers'] else 'free_response'),'QUESTION_TYPE')
+  need(q['cross_page']==(len({regions[b['region_id']]['box']['image']['asset_id'] for b in owned if b['role'] not in ('answer','explanation')})>1),'QUESTION_CROSS_PAGE')
   want_parent='bq-'+oracle['variant_parent'] if key==oracle['keys'][-1] else None;need(q['parent_question_id']==want_parent,'VARIANT_PARENT')
   fields={name:''.join(regions[b['region_id']]['text'] or '' for b in owned if b['field']==name) for name in ('question','choice','answer','analysis')}
   need(all(fields[k]==(item['fields'][k] or '') for k in fields),'GRAPH_CONTENT_FIELD_LOSS')
@@ -89,6 +94,8 @@ def audit(root,oracle_path,option_path=None):
    if run['format']=='blank':need(run['value'] is None,'QUESTION_BLANK_FILLED');blank_count+=1
  need(active==set(frags) and diagram_count==oracle['required_diagram_groups'],'FRAGMENT_OR_DIAGRAM_SCOPE')
  pending=[key for key,count in options.items() if count!=4]
+ need(side['pending_option_geometry']==pending and side['unfilled_question_blanks']==blank_count==8,'OPTION_OR_BLANK_SCOPE_REPORT')
+ if not pending:need(bundle['policies'][0]['option_grouping']=='SEPARATE','OPTION_POLICY_SCOPE')
  return {'schema':'B03IndependentC01ContentAudit/v1','status':'SOURCE_CONTENT_AND_PACKAGE_BINDINGS_MATCH' if not pending else 'SOURCE_CONTENT_MATCH_SEPARATE_OPTIONS_PENDING','review_kind':'INDEPENDENT_MODEL_NOT_HUMAN','bundle_sha256':sha(root/'bundle.json'),'questions':9,'selected_answer_relations':9,'source_images':len(assets),'source_regions':len(regions),'graph_fragments':len(frags),'derived_crops_pixel_verified':len(proofs),'relative_resources_hash_verified':len(resources),'diagram_groups':diagram_count,'unfilled_question_blanks':blank_count,'option_fragments':options,'pending_separate_options':pending,'platform_requests':0,'a_owner_acceptance':False,'human_acceptance':False,'whole_chapter_acceptance':False,'full_object_content_sha256':hashlib.sha256(json.dumps(content,sort_keys=True,ensure_ascii=False).encode()).hexdigest()}
 if __name__=='__main__':
  p=argparse.ArgumentParser(description=__doc__)
