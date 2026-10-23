@@ -5,17 +5,20 @@ has no writer dispatch, retry, accepted-ledger repair or revision promotion.
 The authority directory's atomic claim fences every reuse of that authority.
 """
 import argparse
+import ctypes
 from datetime import datetime, timezone
 import json
+import ntpath
 import os
 from pathlib import Path
 import re
+import stat
 import subprocess
 import sys
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path[:0] = [str(ROOT / "src"), str(ROOT / "tools")]
-from annotation.runtime.usense_live.core import (require, sha, plain_path, profile_identity,
+from annotation.runtime.usense_live.core import (BindingError, require, sha, plain_path, profile_identity,
                                                 LOCKS, write_new, utc, load_binding)
 from annotation.runtime.usense_live.config import capture_endpoints
 from annotation.runtime.usense_live.update import loads
@@ -84,14 +87,65 @@ record. This function validates the whole chain and only creates a new request.
             "status": "PREPARED_NO_AUTHORITY_NO_DISPATCH"}
 
 
-def exclusive_profile(profile, *, run=subprocess.run):
-    """Current OS observation, not a caller's success boolean or lock absence.
+def profile_arguments(commandline):
+    """Parse Windows quoting with the OS parser, then extract the data directory.
 
-Fail closed when any Edge process has an unreadable command line. Require an
-    no mention of this profile at all; ambiguous command lines stop conservatively.
-    The full OS query is ephemeral; retain only identity/hash facts, no command text.
-"""
+    Never compare the whole command string to a path: dot components, separators,
+    long/short names and filesystem aliases can spell the same directory.
+    """
+    require("\0" not in commandline and len(commandline) <= 32768, "RECOVERY_PROCESS_COMMANDLINE_UNKNOWN")
+    shell = ctypes.WinDLL("shell32", use_last_error=True)
+    kernel = ctypes.WinDLL("kernel32", use_last_error=True)
+    parse = shell.CommandLineToArgvW
+    parse.argtypes = [ctypes.c_wchar_p, ctypes.POINTER(ctypes.c_int)]
+    parse.restype = ctypes.POINTER(ctypes.c_wchar_p)
+    kernel.LocalFree.argtypes = [ctypes.c_void_p]
+    kernel.LocalFree.restype = ctypes.c_void_p
+    count = ctypes.c_int()
+    argv = parse(commandline, ctypes.byref(count))
+    require(bool(argv), "RECOVERY_PROCESS_COMMANDLINE_UNKNOWN")
+    try:
+        args = [argv[index] for index in range(count.value)]
+    finally:
+        require(not kernel.LocalFree(ctypes.cast(argv, ctypes.c_void_p)), "RECOVERY_COMMANDLINE_BUFFER_RELEASE_FAILED")
+    require(bool(args) and bool(args[0]) and not args[0].startswith("--"), "RECOVERY_PROCESS_COMMANDLINE_UNKNOWN")
+    directories = []
+    for index, argument in enumerate(args[1:], 1):
+        key, equals, value = argument.partition("=")
+        if key.casefold() in ("--user-data-dir", "-user-data-dir", "/user-data-dir"):
+            if not equals:
+                require(index + 1 < len(args), "RECOVERY_PROFILE_ARGUMENT_UNKNOWN")
+                value = args[index + 1]
+            require(bool(value), "RECOVERY_PROFILE_ARGUMENT_UNKNOWN")
+            directories.append(value)
+    require(len(directories) <= 1, "RECOVERY_PROFILE_ARGUMENT_AMBIGUOUS")
+    return directories
+
+
+def directory_identity(path):
+    """Directory metadata only; resolve Windows aliases without reading contents."""
+    value = str(path)
+    local = value.replace("/", "\\")
+    if local.startswith("\\\\?\\"):
+        local = local[4:]
+    # Do not turn a process argument into an unsolicited UNC/network lookup.
+    require(ntpath.isabs(value) and re.match(r"^[A-Za-z]:\\", local), "RECOVERY_PROFILE_ARGUMENT_UNKNOWN")
+    try:
+        info = os.stat(value)
+    except (OSError, ValueError):
+        raise BindingError("RECOVERY_PROFILE_DIRECTORY_IDENTITY_UNKNOWN") from None
+    require(stat.S_ISDIR(info.st_mode) and info.st_ino > 0, "RECOVERY_PROFILE_DIRECTORY_IDENTITY_UNKNOWN")
+    return info.st_dev, info.st_ino
+
+
+def exclusive_profile(profile, *, run=subprocess.run):
+    """Current OS observation using parsed arguments and actual directory identity.
+
+    Unknown command lines, duplicate/relative arguments and unreadable directory
+    identities fail closed. No browser profile contents or command text persist.
+    """
     require(os.name == "nt", "WINDOWS_REQUIRED")
+    bound_identity = directory_identity(profile)
     command = "$OutputEncoding=[Console]::OutputEncoding=[System.Text.UTF8Encoding]::new($false); @(Get-CimInstance Win32_Process -Filter \"Name='msedge.exe'\" -ErrorAction Stop | Select-Object ProcessId,CreationDate,CommandLine) | ConvertTo-Json -Depth 3 -Compress"
     response = run(["powershell.exe", "-NoProfile", "-NonInteractive", "-Command", command],
                    capture_output=True, timeout=10)
@@ -106,15 +160,13 @@ Fail closed when any Edge process has an unreadable command line. Require an
         require(type(commandline) is str and bool(commandline.strip()) and
                 type(row.get("ProcessId")) is int and row["ProcessId"] > 0 and row.get("CreationDate"),
                 "RECOVERY_PROCESS_IDENTITY_UNKNOWN")
-        # Conservatively reject any occurrence too: ambiguous quoting must not
-        # allow a possibly occupied profile through to capture.
-        normalized = commandline.replace("/", "\\").casefold()
-        require(str(profile).replace("/", "\\").casefold() not in normalized,
-                "RECOVERY_PROFILE_IN_USE")
+        for directory in profile_arguments(commandline):
+            require(directory_identity(directory) != bound_identity, "RECOVERY_PROFILE_IN_USE")
         facts.append({"pid": row["ProcessId"], "creation": row["CreationDate"],
                       "command_sha256": sha(commandline.encode("utf-8"))})
     return {"observed_at": datetime.now(timezone.utc).isoformat(), "source": "Win32_Process",
-            "profile": str(profile), "edge_processes": facts, "matching_profile_processes": 0}
+            "profile": str(profile), "edge_processes": facts, "matching_profile_processes": 0,
+            "profile_comparison": "WINDOWS_ARGV_DIRECTORY_DEVICE_INODE"}
 
 
 def preflight(request_path, request_sha, authority_path, authority_sha):
