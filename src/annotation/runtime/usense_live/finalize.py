@@ -172,6 +172,7 @@ def _candidate_payload(before, approved):
             'image_path':url,'parent_rect_id':None,'directory_id':DIRECTORY,'content_type':layout[2],
             'user_id':main_old[rect]['user_id'] if rect in main_old else None,
             'is_pre_annotation':False,'pre_annotations_id':None})
+    i._source_page_bindings(frames,source_map)
     zones=c.get('zone_values')
     require(type(zones) is dict and set(zones)=={'question','choice','answer'} and all(type(t) is str and t.strip()
         and c.get('zone_text_sha256',{}).get(z)==u.text_digest(t) for z,t in zones.items()), 'MAIN_REVIEWED_TEXT_REQUIRED')

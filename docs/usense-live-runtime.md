@@ -1,6 +1,8 @@
 # 书籍 46007447 的真实读取与登录入口
 
-运行入口为 `python -m annotation.runtime.usense_live`。需要 Windows、Python 3.9+、Python Playwright 和已安装的 Microsoft Edge。项目代码需要已安装，或将仓库 `src` 加到 Python 模块路径。模块没有本机绝对路径、账户、密码、Cookie 或令牌配置。
+当前能力和安全离线检查见[运行索引](run-index.md)，已完成的 17 题证据见[课时闭环](usense-first-lesson-closure-20261023.md)。本文后续真实操作示例需要当前范围和操作者绑定，不能重放已完成题目的历史计划。
+
+模块入口为 `python -m annotation.runtime.usense_live`，使用前先将仓库 `src` 加到 Python 模块路径；当前 B 树没有可供 `pip install .` 使用的项目安装清单。真实运行需要 Windows、Python 3.9+、Python Playwright 和已安装的 Microsoft Edge。模块没有本机绝对路径、账户、密码、Cookie 或令牌配置。
 
 也可使用仓库入口 `python tools/run_usense_live.py`，它根据脚本所在目录加载同仓库的 `src`，无需设置 `PYTHONPATH`。可从任意工作目录用此脚本的绝对路径调用。选择已经具备 Playwright 的 Python 环境；入口不会下载依赖。`doctor`、`configure` 和离线验证不启动浏览器。实际登录、采集和写入需要 Windows 上可用的 Edge 与兼容的 Playwright（需支持 `route_web_socket`；已实测版本为 1.64.0）。
 
@@ -13,7 +15,7 @@ python tools/run_usense_live.py --insert-writer --help
 python tools/run_usense_live.py --finalize-writer --help
 ```
 
-`--writer`（或首个子命令 `writer`）明确进入单独的写入模块；须先将审查后的 `writer.py` 和 `update.py` 合入同一个包。可用参数由 writer 的 `--help` 列出。它不会把 capture 配置解释为写授权：真实写入还需要审校后的 plan、绑定哈希、原始 baseline、全局 intent ledger 及当前写入授权引用。每次只处理一题；收据成功之后仍须另进程读回比较。应在所有模块集成完成后生成新配置；运行期间改动包内 Python 文件会使实现哈希校验失败。
+`--writer`（或首个子命令 `writer`）明确进入单独的写入模块；当前固定提交已包含 `writer.py` 和 `update.py`。可用参数由 writer 的 `--help` 列出。它不会把 capture 配置解释为写授权：真实写入还需要审校后的 plan、绑定哈希、原始 baseline、全局 intent ledger 及当前写入授权引用。每次只处理一题；收据成功之后仍须另进程读回比较。应在所有模块集成完成后生成新配置；运行期间改动包内 Python 文件会使实现哈希校验失败。
 
 `doctor` 只检查依赖和已有配置，不启动浏览器；检查成功不等于登录有效或平台读写完成。业务写入由独立 writer 实现，本包的 capture 不能 POST。
 

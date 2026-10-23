@@ -1,0 +1,30 @@
+name: Offline Usense regression
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  synthetic-regression:
+    runs-on: windows-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Run standard-library-only suites with network and process guards
+        run: python -I -S tools/run_offline_ci.py --report offline-ci-report.json
+      - name: Keep machine-readable regression results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: offline-usense-report
+          path: offline-ci-report.json
+          if-no-files-found: error

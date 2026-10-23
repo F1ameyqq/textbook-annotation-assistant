@@ -4,7 +4,8 @@
 
 ## 工作入口
 
-- 当前交付路线：`docs/project-framework.md`；架构参考：`docs/architecture.md`；接口设计草案：`docs/contracts-v1.md`。
+- 当前可运行入口：[运行索引](run-index.md)；当前结果：[17 题真实闭环](usense-first-lesson-closure-20261023.md)；分支/固定 A 交付：[集成路线](integration-route-20261023.md)。
+- 长期交付路线：`docs/project-framework.md`；架构参考：`docs/architecture.md`；接口设计草案：`docs/contracts-v1.md`。
 - A 状态：`docs/status/a.md`；B 状态：`docs/status/b.md`。各方只更新自己的状态，另一方通过 PR 提意见。
 - A 所需材料：`docs/a-side-request.md`；B 最小模块：`docs/b-recognition.md`。
 - Issue 记录共同交付、依赖和接口问题；PR 交付代码、样例与验证结果。模板在 `.github/`。

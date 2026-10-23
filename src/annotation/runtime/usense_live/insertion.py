@@ -107,6 +107,22 @@ def _hash(value):
     return type(value) is str and re.fullmatch(r"[0-9a-f]{64}", value) is not None
 
 
+def _source_page_bindings(frames, source_map):
+    """Membership alone cannot bind a source image to its declared viewer page."""
+    pages = {}
+    for frame in frames:
+        page = frame["viewer_page"]
+        source = frame["source"]
+        identity = (source["path"], source["sha256"])
+        require(page not in pages or pages[page] == identity,
+                "ONE_SOURCE_PER_VIEWER_PAGE_REQUIRED")
+        pages[page] = identity
+    require(set(pages) == {10, 173} and len({ref[0] for ref in pages.values()}) == 2
+            and len({ref[1] for ref in pages.values()}) == 2
+            and {path: digest for path, digest in pages.values()} == source_map,
+            "DISTINCT_SOURCE_PAGE_BINDINGS_REQUIRED")
+
+
 def _approved_payload(approved, before):
     require(type(approved) is dict, "APPROVED_NEW_CONTENT_REQUIRED")
     for field in ("candidate", "review", "crop_evidence"):
@@ -169,6 +185,7 @@ def _approved_payload(approved, before):
                      "image_order_in_annotation_zone": layout[1], "rect_bbox": frame["rect_bbox"], "page_index": page,
                      "image_path": url, "parent_rect_id": None, "directory_id": DIRECTORY, "content_type": layout[2],
                      "user_id": None, "is_pre_annotation": False, "pre_annotations_id": None})
+    _source_page_bindings(frames, source_map)
     zones = candidate.get("zone_values")
     require(type(zones) is dict and set(zones) == {"question", "choice", "answer"}, "THREE_APPROVED_ZONES_REQUIRED")
     require(all(type(text) is str and bool(text.strip()) and candidate.get("zone_text_sha256", {}).get(zone) ==

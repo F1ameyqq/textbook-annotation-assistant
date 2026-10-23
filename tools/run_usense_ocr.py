@@ -94,6 +94,8 @@ def main():
     p = argparse.ArgumentParser(description=__doc__)
     p.add_argument("--repo", type=Path, required=True)
     p.add_argument("--capture", type=Path, required=True)
+    p.add_argument("--readback-manifest", type=Path,
+                   help="Original merge manifest; verifies each original run summary and response")
     p.add_argument("--sources", type=Path, required=True)
     p.add_argument("--source-manifest", type=Path, required=True)
     p.add_argument("--orders", type=int, nargs="+", required=True)
@@ -115,14 +117,9 @@ def main():
         from PIL import Image
         sys.path.insert(0, str(args.repo / "src"))
         from annotation.recognition.inline_ocr import _cpu_backend, _json_value
-        summary = read(args.capture / "capture-summary.json")
-        captures = summary["captures"]
-        def get(name):
-            declared, file = captures[name], args.capture / (name+".json")
-            assert declared["status"] == 200 and file.stat().st_size == declared["bytes"] and sha(file) == declared["sha256"]
-            value = read(file)
-            assert value["code"] == 0
-            return value["data"]
+        from annotation.recognition.usense_capture import CaptureReader
+        capture_reader = CaptureReader(args.capture, args.readback_manifest)
+        get = capture_reader.get
         directory = get("directory")["directory_data"]
         all_frames = get("frames")
         lesson = []
@@ -149,7 +146,9 @@ def main():
         write(args.out / "backend.json", backend)
         run["adapter"] = ref(args.repo / "src/annotation/recognition/inline_ocr.py")
         write(args.out / "sources.json", {"source_manifest": ref(args.source_manifest), "pages": page_provenance,
-                                          "capture_summary": ref(args.capture / "capture-summary.json")})
+                                          "capture_summary": capture_reader.evidence_ref(),
+                                          "capture_directory": str(args.capture.resolve()),
+                                          "readback_manifest": ref(args.readback_manifest) if args.readback_manifest else None})
         for order in args.orders:
             qout = args.out / ("q"+str(order))
             qout.mkdir()
