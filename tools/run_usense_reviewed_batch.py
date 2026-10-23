@@ -197,8 +197,14 @@ def main(argv=None):
     out = Path(a.out).resolve()
     out.mkdir(parents=True, exist_ok=False)
     baseline, profile = Path(a.baseline).resolve(), Path(a.profile).resolve()
+    supplied_schema = loads(Path(a.manifest).read_bytes()).get('schema')
+    lesson_mode = supplied_schema == 'A28ReviewedLessonManifest/v1'
     try:
-        prepared = batch.prepare(a.manifest, a.manifest_sha256, baseline, profile, a.authorization_reference)
+        if lesson_mode:
+            from annotation.runtime.usense_live import lesson_batch
+            prepared = lesson_batch.prepare(a.manifest, a.manifest_sha256, baseline, profile, a.authorization_reference)
+        else:
+            prepared = batch.prepare(a.manifest, a.manifest_sha256, baseline, profile, a.authorization_reference)
         require(json_same(prepared["transport"], {"mode": "DIRECT" if a.proxy_server is None else "HTTP_CONNECT_PROXY",
                                                 "proxy_server": a.proxy_server}), "BATCH_TRANSPORT_MUST_MATCH_CURRENT_CAPTURE")
         check_resources(profile, a.dependency_dir)
@@ -218,10 +224,14 @@ def main(argv=None):
     if a.preflight_only:
         print(json.dumps({"status": "PREFLIGHT_ONLY_NO_BROWSER", "targets": len(prepared["targets"])}))
         return 0
-    result = execute(prepared, out, baseline, profile, a.authorization_reference, a.tls_approval_reference,
+    if lesson_mode:
+        result = lesson_batch.execute(prepared, out, baseline, profile, a.authorization_reference, a.tls_approval_reference,
+                     lambda args, record: child(args, record, a.dependency_dir), write_plan)
+    else:
+        result = execute(prepared, out, baseline, profile, a.authorization_reference, a.tls_approval_reference,
                      lambda args, record: child(args, record, a.dependency_dir), a.proxy_server)
     print(json.dumps({"status": result["status"], "results": result["results"]}, ensure_ascii=True))
-    return 0 if result["status"] == "ALL_ACCEPTED" else 2
+    return 0 if result["status"] in ("ALL_ACCEPTED", "ALL_FOUR_ACCEPTED") else 2
 
 
 if __name__ == "__main__":

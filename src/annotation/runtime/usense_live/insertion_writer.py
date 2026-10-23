@@ -20,6 +20,7 @@ from .core import (ORIGIN, TARGET, load_binding, tls_launch_arguments, write_new
 from .config import endpoints
 from .capture import FETCH
 from .writer import ExactPolicy, SEND, POST
+from .release import close_framework, run_owned_writer
 
 
 PREPARE = r"""async payload => {
@@ -39,14 +40,27 @@ PREPARE = r"""async payload => {
 }"""
 
 
-def comparator():
+PREPARE_LESSON = PREPARE.replace('payload.annotations_upsert.length!==7',
+    '![3,4].includes(payload.annotations_upsert.length)')
+
+
+def is_lesson(plan):
+    return isinstance(plan, dict) and plan.get('schema') == 'A28LessonInsertPlan/v1'
+
+
+def comparator(plan=None):
     # Kept separate for independent review and reuse by the readback process.
+    if is_lesson(plan):
+        from . import lesson_insert
+        return lesson_insert
     from . import insertion
     return insertion
 
 
-def full_endpoints():
+def full_endpoints(plan=None):
     """Exactly the observed current 22-question book and four source-page reads."""
+    if is_lesson(plan):
+        return comparator(plan).full_endpoints(plan)
     result = endpoints((), (10, 11, 12, 173), source=True)
     for first in (1, 7, 13, 19):
         result.update(endpoints(range(first, min(first + 6, 23))))
@@ -66,6 +80,9 @@ def same(left, right):
 
 
 def verify_evidence(plan):
+    if is_lesson(plan):
+        from .lesson_batch import verify_evidence as verify_lesson_evidence
+        return verify_lesson_evidence(plan)
     approved = plan['approved_new_content']
     require(isinstance(approved, dict), 'APPROVED_NEW_CONTENT_REQUIRED')
     for key in ('candidate', 'review', 'crop_evidence'):
@@ -108,17 +125,18 @@ class InsertPolicy(ExactPolicy):
 
 
 def validate_inputs(plan, baseline, ledger_root, authorization_reference):
-    api = comparator()
+    api = comparator(plan)
     api.validate_insert_plan(plan)
     require(isinstance(authorization_reference, str) and bool(authorization_reference.strip()),
             'CURRENT_INSERT_AUTHORIZATION_REFERENCE_REQUIRED')
-    paths = full_endpoints()
+    paths = full_endpoints(plan)
     require(set(plan['before_full']) == set(paths), 'FULL_BASELINE_ENDPOINT_SET_REQUIRED')
     native = {name: parse((baseline / (name + '.json')).read_bytes()) for name in paths}
     require(all(same(native[name], plan['before_full'][name]) for name in paths), 'BASELINE_PLAN_CHANGED')
     require(api.check_prewrite(plan, native)['ok'], 'BASELINE_COMPARATOR_REJECTED')
     payload = plan['payload_candidate']
-    require(payload['created_by'] is None and len(payload['annotations_upsert']) == 7 and
+    allowed_rows = (3, 4) if is_lesson(plan) else (7,)
+    require(payload['created_by'] is None and len(payload['annotations_upsert']) in allowed_rows and
             all(row['user_id'] is None for row in payload['annotations_upsert']), 'UNBOUND_SEVEN_ROW_ACTOR_REQUIRED')
     require(payload['annotations_delete_rect_ids'] == [] and payload['ocr_delete_zones'] == [], 'COPY_FIRST_NO_DELETIONS')
     require(re.fullmatch(r'[a-zA-Z0-9_-]{10,150}', plan['ledger_key']) is not None, 'SCOPED_LEDGER_KEY_REQUIRED')
@@ -132,7 +150,8 @@ def validate_inputs(plan, baseline, ledger_root, authorization_reference):
 
 async def record_and_send(*, page, policy, plan, claim, run, result):
     """Atomic durable intent before arming; never erase the intent on error."""
-    prepared = await asyncio.wait_for(page.evaluate(PREPARE, copy.deepcopy(plan['payload_candidate'])), timeout=10)
+    prepared = await asyncio.wait_for(page.evaluate(PREPARE_LESSON if is_lesson(plan) else PREPARE,
+        copy.deepcopy(plan['payload_candidate'])), timeout=10)
     require(prepared.get('created_by_bound') is True and prepared.get('seven_row_user_ids_bound') is True and
             re.fullmatch('[0-9a-f]{64}', prepared.get('sha256', '')) is not None, 'PAGE_ACTORS_NOT_BOUND')
     for field in ('runtime_actor_sha256', 'runtime_user_id_sha256'):
@@ -141,7 +160,7 @@ async def record_and_send(*, page, policy, plan, claim, run, result):
     verify_evidence(plan)
     policy.body_sha = prepared['sha256']
     sent_at = datetime.now(timezone.utc).isoformat()
-    write_new(claim, {'operation': 'Q7_COPY_FIRST_VARIANT_INSERT', 'run_id': run.name,
+    write_new(claim, {'operation': plan.get('operation', 'Q7_COPY_FIRST_VARIANT_INSERT'), 'run_id': run.name,
         'ledger_key': plan['ledger_key'], 'plan_sha256': plan['plan_sha256'],
         'native_body_sha256': policy.body_sha, 'intent_at': sent_at, 'automatic_retry_allowed': False,
         'state': 'INTENT_REQUIRES_INDEPENDENT_ALL23_READBACK'})
@@ -163,9 +182,12 @@ async def record_and_send(*, page, policy, plan, claim, run, result):
         post_layers={layer: policy.counts.get((layer, 'POST', POST), 0) for layer in ('context', 'native')})
     require(response['status'] == 200 and not policy.blocked and all(n == 1 for n in result['post_layers'].values()),
             'POST_OR_DUAL_GUARD_UNPROVEN')
-    decoded = comparator().decode_receipt(plan, parse(raw))
+    decoded = comparator(plan).decode_receipt(plan, parse(raw))
     require(isinstance(decoded, dict) and decoded.get('ok') is True, 'RECEIPT_DECODER_RESULT_REQUIRED')
     result.update(status='INSERT_RECEIPT_REQUIRES_INDEPENDENT_ALL23_READBACK', receipt_validation=decoded)
+    if is_lesson(plan):
+        result.update(receipt_exact_success=True,
+            expected_readback='NEW_QUESTION_AND_REINDEXED_TAIL_WITH_FULL_GLOBAL_PRESERVATION')
 
 
 async def execute(*, config_path, config_sha256, plan_path, plan_sha256, baseline, ledger_root,
@@ -190,6 +212,8 @@ async def execute(*, config_path, config_sha256, plan_path, plan_sha256, baselin
         'process_id': os.getpid(), 'post_attempts': 0, 'save_success': False, 'old_q7_modified_by_request': False,
         'independent_readback': 'PENDING_ALL23', 'authorization_reference': authorization_reference,
         'ledger_key': plan['ledger_key'], 'prewrite_responses': {}}
+    if is_lesson(plan):
+        result.update(schema='UsenseActualLessonInsert/v1', operation=plan['operation'], independent_readback='PENDING_NEW_AND_TAIL')
     write_new(run / 'claim.json', {'operation': result['operation'], 'config_sha256': config_sha256, 'plan_file_sha256': plan_sha256})
     (run / 'plan.json').write_bytes(raw)
     write_new(run / 'full-read-scope.json', paths)
@@ -262,7 +286,7 @@ async def execute(*, config_path, config_sha256, plan_path, plan_sha256, baselin
                 'observed_at': datetime.now(timezone.utc).isoformat()}
             require(not policy.blocked and all(n == 1 for n in counts.values()), 'PREWRITE_DUAL_GUARD_UNPROVEN')
             require(same(fresh[name], native[name]), 'BEFORE_CHANGED_' + name)
-        require(comparator().check_prewrite(plan, fresh)['ok'], 'PREWRITE_COMPARATOR_REJECTED')
+        require(comparator(plan).check_prewrite(plan, fresh)['ok'], 'PREWRITE_COMPARATOR_REJECTED')
         require(not policy.blocked, 'GUARD_BLOCKED')
         await record_and_send(page=page, policy=policy, plan=plan, claim=claim, run=run, result=result)
     except BaseException as exc:
@@ -272,29 +296,9 @@ async def execute(*, config_path, config_sha256, plan_path, plan_sha256, baselin
     finally:
         policy.armed = False
         policy.sealed = True
-        release = {'context_closed': context is None, 'runtime_stopped': runtime is None, 'errors': [],
-                   'os_process_release': 'REQUIRES_PARENT_PID_EXIT_OBSERVATION', 'process_id': os.getpid()}
-        if context is not None:
-            try:
-                await asyncio.wait_for(context.close(), timeout=15)
-                release['context_closed'] = True
-            except BaseException as exc:
-                release['errors'].append({'phase': 'context_close', 'type': type(exc).__name__})
-        for task in list(pending):
-            task.cancel()
-        if pending:
-            try:
-                await asyncio.wait_for(asyncio.gather(*list(pending), return_exceptions=True), timeout=5)
-            except BaseException as exc:
-                release['errors'].append({'phase': 'callbacks', 'type': type(exc).__name__})
-        if runtime is not None:
-            try:
-                await asyncio.wait_for(runtime.stop(), timeout=15)
-                release['runtime_stopped'] = True
-            except BaseException as exc:
-                release['errors'].append({'phase': 'runtime_stop', 'type': type(exc).__name__})
-        release['pending_callbacks'] = len(pending)
-        release['context_runtime_release_confirmed'] = bool(release['context_closed'] and release['runtime_stopped'] and not release['errors'] and not pending)
+        result['business_status_before_release'] = result['status']
+        release = await close_framework(context, runtime, pending)
+        release['process_id'] = os.getpid()
         result['release'] = release
         if not release['context_runtime_release_confirmed']:
             result['status'] = 'RELEASE_UNPROVEN_NO_RETRY'
@@ -309,7 +313,7 @@ def main():
     for name in ('config', 'sha256', 'plan', 'plan-sha256', 'baseline', 'ledger-root', 'authorization-reference'):
         parser.add_argument('--' + name, required=True)
     args = parser.parse_args()
-    result = asyncio.run(execute(config_path=args.config, config_sha256=args.sha256, plan_path=args.plan,
+    result = run_owned_writer(execute(config_path=args.config, config_sha256=args.sha256, plan_path=args.plan,
         plan_sha256=args.plan_sha256, baseline=args.baseline, ledger_root=args.ledger_root,
         authorization_reference=args.authorization_reference))
     print(json.dumps(result, ensure_ascii=True), flush=True)
