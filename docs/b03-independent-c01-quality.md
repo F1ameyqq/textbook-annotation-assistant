@@ -27,3 +27,5 @@ python -I tools/replay_b03_negative_cases.py --package fresh-package --oracle ev
 ```
 
 该入口不导入生产者构造器，以固定包正常对照为起点，实际运行15个故障副本；陈旧CheckReport使用可复现的陈旧subject引用，实际旧版混包另已检查。
+
+脱敏独立预期和选项文件按固定JSON内容摘要核对，保留类型与值，避免Git换行转换影响复现；原图、ZIP和原始选项审校原件仍按原始字节SHA固定。

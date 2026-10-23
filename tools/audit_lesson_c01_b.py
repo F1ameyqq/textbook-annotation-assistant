@@ -15,7 +15,11 @@ def need(ok,code):
  if not ok:raise ValueError(code)
 def audit(root,oracle_path,option_path=None):
  root=Path(root).resolve();oracle=load(oracle_path)
- if option_path:need(sha(option_path)==oracle['option_regions_raw_sha256'],'OPTION_SOURCE_PROOF_FILE_CHANGED')
+ if option_path:
+  if 'option_regions_canonical_sha256' in oracle:
+   digest=hashlib.sha256(json.dumps(load(option_path),ensure_ascii=False,sort_keys=True,separators=(',',':'),allow_nan=False).encode()).hexdigest()
+   need(digest==oracle['option_regions_canonical_sha256'],'OPTION_SOURCE_PROOF_FILE_CHANGED')
+  else:need(sha(option_path)==oracle['option_regions_raw_sha256'],'OPTION_SOURCE_PROOF_FILE_CHANGED')
  bundle=load(root/'bundle.json');side=load(root/'delivery.json');basis=load(root/'basis.json');review=load(root/'current-review.json');generation=load(root/'generation.json')
  need(bundle['format_version']=='c01-exchange-1','C01_FORMAT');artifacts={a['kind']:a for a in bundle['artifacts']};need(len(artifacts)==len(bundle['artifacts'])==4 and set(artifacts)=={'SourceBundle','EvidenceBundle','QuestionGraph','CheckReport'},'EXACT_FOUR_ARTIFACTS')
  source=artifacts['SourceBundle'];evidence=artifacts['EvidenceBundle'];graph=artifacts['QuestionGraph'];check=artifacts['CheckReport'];ref=lambda a:{k:a[k] for k in ('artifact_id','revision','kind','content_hash')}
