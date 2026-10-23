@@ -30,6 +30,7 @@ class RuntimeTests(unittest.TestCase):
                 {"url": runtime.ORIGIN + "/qieti/api/annotate_ocr/directory/get?file_id=46007447", "resource_types": ["fetch"], "max_requests": 1}],
             "static_get": {"mode": "SAME_ORIGIN_ASSETS", "max_requests": 8},
             "tls": {"mode": "STRICT"},
+            "transport": {"mode": "DIRECT", "proxy_server": None},
             "implementation_sha256": runtime.implementation_digest(),
             "authorization_reference": "SYNTHETIC_TEST_ONLY_NOT_A_USER_AUTHORIZATION"}
         self.path = self.root / "config.json"

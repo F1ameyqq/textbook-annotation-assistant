@@ -19,6 +19,8 @@ python tools/run_usense_live.py --finalize-writer --help
 
 ## 准备配置
 
+A25 传输修订开始使用 `UsenseLiveReadConfig/v2`。每份新配置都绑定 `transport`：默认明确 DIRECT，或通过 `configure --proxy-server http://127.0.0.1:port` 绑定已观察且当前批准的无凭据本地 HTTP 代理。不会自动读取系统/PAC/环境代理，也不会在代理失败后转直连。证书探测与所有 writer/read owner 使用同一显式路径；原精确 leaf/SPKI 和 origin 不变。新配置/实现不能用于重开任何旧 claim、输出或已耗轮次。详见 [A25 传输修订](a25-transport-revision-20261023.md)。
+
 先准备项目专用浏览器目录、输出目录和配置目录。下面的路径、执行者和审核者由调用者填写：
 
 ```powershell

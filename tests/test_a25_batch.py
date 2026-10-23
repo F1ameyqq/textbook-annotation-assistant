@@ -8,7 +8,7 @@ import subprocess
 import sys
 import tempfile
 import unittest
-from unittest.mock import patch
+from unittest.mock import Mock, patch
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "src"))
@@ -83,6 +83,7 @@ class A25BatchTests(unittest.TestCase):
             caps[name] = {"filename": name + ".json", "sha256": sha(value), "bytes": len(value), "status": 200,
                           "request_counts": {"context": 1, "native": 1}}
         summary = {"status": "NATIVE_GETS_CAPTURED", "book_id": "46007447", "save_attempts": 0, "captures": caps,
+                   "transport": {"mode": "DIRECT", "proxy_server": None},
                    "release": {"context_runtime_release_confirmed": True}}
         summary_raw = raw(summary)
         (self.baseline / "capture-summary.json").write_bytes(summary_raw)
@@ -272,6 +273,38 @@ class A25BatchTests(unittest.TestCase):
         self.assertEqual(calls, ["configure", "--writer", "configure", "capture"] * 5)
         self.assertEqual(len(list(self.ledger.glob("*.accepted.json"))), 5)
         self.assertTrue(all(item["checks"]["different_processes"] for item in result["results"]))
+
+    def test_proxy_transport_is_forwarded_to_writer_configuration(self):
+        server = "http://127.0.0.1:7897"
+        summary_path = self.baseline / "capture-summary.json"
+        summary = json.loads(summary_path.read_bytes())
+        summary["transport"] = {"mode": "HTTP_CONNECT_PROXY", "proxy_server": server}
+        summary_path.write_bytes(raw(summary))
+        self.manifest["baseline"]["capture_summary_sha256"] = sha(summary_path.read_bytes())
+        prepared = self.prepare()
+        out = self.root / "proxy-forward"
+        out.mkdir()
+        calls = []
+        def child(args, record):
+            calls.append(args)
+            if args[0] == "configure":
+                self.assertEqual(args[args.index("--proxy-server") + 1], server)
+                return {"result": {"sha256": "a" * 64}, "exit_code": 0}
+            return {"result": {"status": "UNKNOWN_DO_NOT_RETRY"}, "exit_code": 2}
+        result = entry.execute(prepared, out, self.baseline, self.profile, "SYNTHETIC_ONLY", "SYNTHETIC_ONLY", child, server)
+        self.assertEqual([call[0] for call in calls], ["configure", "--writer"])
+        self.assertEqual(result["status"], "STOPPED_NO_RETRY")
+
+    def test_changed_transport_stops_before_first_configuration(self):
+        prepared = self.prepare()
+        out = self.root / "proxy-mismatch"
+        out.mkdir()
+        child = Mock()
+        result = entry.execute(prepared, out, self.baseline, self.profile, "SYNTHETIC_ONLY", "SYNTHETIC_ONLY", child,
+                               "http://127.0.0.1:7897")
+        child.assert_not_called()
+        self.assertEqual(result["error_code"], "BATCH_TRANSPORT_MUST_MATCH_CURRENT_CAPTURE")
+        self.assertEqual([r["status"] for r in result["results"]], ["NOT_RUN"] * 5)
 
 
 class PortableEntryA25Tests(unittest.TestCase):

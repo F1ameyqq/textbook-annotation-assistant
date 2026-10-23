@@ -20,6 +20,7 @@ def main(argv=None):
         c.add_argument("--"+actor, required=True)
     c.add_argument("--authorization-reference", required=True)
     c.add_argument("--tls-approval-reference")
+    c.add_argument("--proxy-server", help="Explicit credentialless http://127.0.0.1:port; no automatic system proxy or fallback")
     c.add_argument("--orders", type=int, nargs="*", default=[])
     c.add_argument("--pages", type=int, nargs="*", default=[])
     c.add_argument("--source", action="store_true")

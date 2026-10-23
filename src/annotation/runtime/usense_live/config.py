@@ -65,7 +65,7 @@ def capture_endpoints(binding):
 
 def configure(*, profile, output_root, config_path, coordinator, executor, reviewer,
               authorization_reference, orders=(), pages=(), source=False, login=False,
-              tls_approval_reference=None, seconds=600, now=None):
+              tls_approval_reference=None, proxy_server=None, seconds=600, now=None):
     require(type(seconds) is int and 30 <= seconds <= 900, "WINDOW_SECONDS_30_TO_900")
     current = now or datetime.now(timezone.utc)
     prefix = "usense-login-" if login else "usense-readonly-"
@@ -94,7 +94,8 @@ def configure(*, profile, output_root, config_path, coordinator, executor, revie
         "expires_at": (current+timedelta(seconds=seconds-1)).isoformat(), "headless": not login,
         "allowed_get": rules, "static_get": {"mode": "SAME_ORIGIN_ASSETS" if login else "DISABLED",
                                                "max_requests": 32 if login else 0},
-        "tls": tls, "implementation_sha256": None, "authorization_reference": authorization_reference}
+        "tls": tls, "transport": {"mode": "DIRECT" if proxy_server is None else "HTTP_CONNECT_PROXY", "proxy_server": proxy_server},
+        "implementation_sha256": None, "authorization_reference": authorization_reference}
     out = Path(config_path).resolve()
     require(out.parent.is_dir(), "CONFIG_PARENT_REQUIRED")
     with tempfile.NamedTemporaryFile(dir=out.parent, suffix=".draft.json", delete=False) as stream:

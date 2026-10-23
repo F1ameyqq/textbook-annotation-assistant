@@ -10,6 +10,8 @@ python tools/run_usense_reviewed_batch.py --manifest C:/project/private/targets.
 
 清单顶层恰好为 `schema`、`book_id`（固定 `46007447`）、`baseline`、`targets`。
 
+A25 传输修订后的当前 capture-summary 必须包含显式 `transport`。代理模式执行/预检另传 `--proxy-server http://127.0.0.1:port`，并与 summary 严格一致；该参数进入每个 writer 和 independent-reader 的 configure。省略为明确 DIRECT，不能继承系统代理。此字段变化不能用旧 capture 或旧配置替代当前新源。
+
 |字段|内容|
 |---|---|
 |`baseline.capture_summary_sha256`|原始 `capture-summary.json` 的 SHA256；必须完整 `NATIVE_GETS_CAPTURED`、0 writes、context/runtime 已释放|

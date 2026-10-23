@@ -16,13 +16,11 @@ import json
 import os
 from pathlib import Path
 import re
-import socket
-import ssl
 import sys
 import tempfile
 from urllib.parse import parse_qsl, urlsplit
 
-SCHEMA = "UsenseLiveReadConfig/v1"
+SCHEMA = "UsenseLiveReadConfig/v2"
 TARGET = "https://www.usense.com/qieti/annotateUnified"
 ORIGIN = "https://www.usense.com"
 LOGIN = ORIGIN + "/qieti/login"
@@ -148,7 +146,7 @@ def _load_binding(path, expected_sha256, *, now=None, manual_login=False):
     data = parse(raw)
     require(isinstance(data, dict) and set(data) == {
         "schema", "book_id", "operation", "run_id", "actors", "target_url", "profile", "output_root",
-        "not_before", "expires_at", "headless", "allowed_get", "static_get", "tls", "implementation_sha256", "authorization_reference"},
+        "not_before", "expires_at", "headless", "allowed_get", "static_get", "tls", "transport", "implementation_sha256", "authorization_reference"},
         "CONFIG_FIELDS")
     expected_schema = "UsenseLiveManualLoginConfig/v1" if manual_login else SCHEMA
     expected_operation = "MANUAL_LOGIN_ONLY" if manual_login else "READONLY_CAPTURE"
@@ -214,6 +212,8 @@ def _load_binding(path, expected_sha256, *, now=None, manual_login=False):
             0 <= static["max_requests"] <= 64 and (static["mode"] != "DISABLED" or static["max_requests"] == 0),
             "BOUNDED_STATIC_POLICY_REQUIRED")
     tls = data["tls"]
+    from .transport import validate_transport
+    validate_transport(data["transport"])
     require(tls == {"mode": "STRICT"} or (isinstance(tls, dict) and set(tls) == {
         "mode", "origin", "leaf_der_sha256", "spki_sha256_base64", "approval_reference"} and
         tls["mode"] == "USER_APPROVED_EXACT_CERT" and tls["origin"] == ORIGIN and
@@ -320,18 +320,21 @@ class ManualLoginPolicy(ReadonlyPolicy):
 
 
 def tls_launch_arguments(binding):
-    """Exact leaf checked before HTTP, public-key pin then enforced by Chromium."""
-    setting = binding.data["tls"]
-    if setting["mode"] == "STRICT":
-        return []
-    context = ssl.SSLContext(ssl.PROTOCOL_TLS_CLIENT)
-    context.check_hostname = False
-    context.verify_mode = ssl.CERT_NONE
-    with socket.create_connection(("www.usense.com", 443), timeout=10) as sock:
-        with context.wrap_socket(sock, server_hostname="www.usense.com") as secure:
-            cert = secure.getpeercert(binary_form=True)
-    require(sha(cert) == setting["leaf_der_sha256"], "APPROVED_CERTIFICATE_CHANGED")
-    return ["--ignore-certificate-errors-spki-list=" + setting["spki_sha256_base64"]]
+    """One explicit transport for the exact-leaf probe and Chromium launch."""
+    from .transport import launch_arguments
+    return launch_arguments(binding)
+
+
+def record_exception(output, name, exc, phase):
+    """Keep original exception text privately; summaries expose only its hash."""
+    import traceback
+    raw = "".join(traceback.format_exception(type(exc), exc, exc.__traceback__)).encode("utf-8")
+    with (output / (name + ".traceback.txt")).open("xb") as stream:
+        stream.write(raw)
+    value = {"type": type(exc).__name__, "code": getattr(exc, "code", "CAPTURE_ERROR"), "phase": phase,
+             "traceback_file": name + ".traceback.txt", "traceback_bytes": len(raw), "traceback_sha256": sha(raw)}
+    write_new(output / (name + ".json"), value)
+    return value
 
 
 class OwnedReadonlyContext:
@@ -353,6 +356,7 @@ No token/cookie/profile contents are read or returned by this module.
         self.pending = set()
         self.closed = False
         self.release = None
+        self.startup_phase = "NOT_STARTED"
 
     def schedule(self, awaitable):
         task = asyncio.create_task(awaitable)
@@ -397,13 +401,17 @@ No token/cookie/profile contents are read or returned by this module.
             "config_sha256": self.binding.raw_sha256, "run_id": self.binding.data["run_id"],
             "operation": self.operation, "automatic_retry_allowed": False})
         try:
+            self.startup_phase = "TLS_PREFLIGHT"
             tls_args = await asyncio.to_thread(tls_launch_arguments, self.binding)
+            self.startup_phase = "PLAYWRIGHT_START"
             self.runtime = await async_playwright().start()
+            self.startup_phase = "CONTEXT_LAUNCH"
             self.context = await self.runtime.chromium.launch_persistent_context(
                 self.binding.data["profile"]["directory"], channel="msedge", headless=self.binding.data["headless"],
                 offline=True, service_workers="block", ignore_https_errors=False, accept_downloads=False,
                 viewport={"width": 1440, "height": 1000}, timeout=15000,
                 args=["--disable-session-crashed-bubble", "--disable-extensions", "--disable-background-networking"] + tls_args)
+            self.startup_phase = "INSTALL_GUARDS_OFFLINE"
             # Edge may restore its own welcome/previous tab for this dedicated
             # project profile. Normalize while the entire context is still
             # offline, before installing the guards and enabling networking.
@@ -424,9 +432,13 @@ No token/cookie/profile contents are read or returned by this module.
             await self.cdp.send("Fetch.enable", {"patterns": [{"urlPattern": "*", "requestStage": "Request"}]})
             self.binding.check(profile=False)
             await self.context.set_offline(False)
+            self.startup_phase = "READY"
             return self
-        except BaseException:
-            await self.close()
+        except BaseException as exc:
+            try:
+                record_exception(self.binding.output, "startup-error", exc, self.startup_phase)
+            finally:
+                await self.close()
             raise
 
     async def navigate(self):
@@ -443,6 +455,7 @@ No token/cookie/profile contents are read or returned by this module.
         self.policy.blocked = True
         result = {"schema": "UsenseReadonlyRelease/v1", "config_sha256": self.binding.raw_sha256,
                   "context_closed": self.context is None, "runtime_stopped": self.runtime is None,
+                  "context_created": self.context is not None, "runtime_started": self.runtime is not None,
                   "pending_callbacks": None, "errors": [], "os_process_release": "REQUIRES_OUTER_HOLDER",
                   "save_attempts": 0, "login_requests_per_layer": getattr(self.policy, "login_counts", {}),
                   "automatic_login_performed": False, "automatic_retry_allowed": False}

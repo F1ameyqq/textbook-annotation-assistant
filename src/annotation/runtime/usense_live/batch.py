@@ -6,6 +6,7 @@ from .config import endpoints
 from .core import plain_path, require, sha
 from .update import loads, make_plan, from_captured_map, json_same
 from .writer import validate_inputs
+from .transport import validate_transport
 
 SCHEMA = "UsenseReviewedTargetManifest/v1"
 
@@ -50,6 +51,7 @@ def prepare(manifest_path, manifest_sha256, baseline, profile, authorization_ref
             type(summary.get("save_attempts")) is int and summary["save_attempts"] == 0 and
             summary.get("release", {}).get("context_runtime_release_confirmed") is True,
             "BATCH_BASELINE_NOT_COMPLETE_RELEASED_READONLY")
+    validate_transport(summary.get("transport"))
     files = bound["files"]
     require(type(files) is dict and set(files) == set(summary["captures"]), "BATCH_BASELINE_FILE_SET")
     native = {}
@@ -113,7 +115,7 @@ def prepare(manifest_path, manifest_sha256, baseline, profile, authorization_ref
                 "review_evidence": refs, "previous_acceptance": previous, "intent_key": claim.stem,
                 "ledger_files": identity_files})
     return {"schema": "UsensePreparedBatch/v1", "manifest_sha256": manifest_sha256,
-            "targets": prepared, "evidence_file_sha256": evidence, "ledger_root": str(ledger)}
+            "targets": prepared, "evidence_file_sha256": evidence, "ledger_root": str(ledger), "transport": summary["transport"]}
 
 
 def recheck(prepared, pending):

@@ -77,7 +77,7 @@ def child(args, record, dependency_dir=None):
     return value
 
 
-def execute(prepared, out, baseline, profile, authorization, tls, run_child):
+def execute(prepared, out, baseline, profile, authorization, tls, run_child, proxy_server=None):
     targets = prepared["targets"]
     summary = {"schema": "UsenseReviewedBatch/v2", "book_id": "46007447", "status": "RUNNING",
                "manifest_sha256": prepared["manifest_sha256"], "started_at": now(),
@@ -85,6 +85,8 @@ def execute(prepared, out, baseline, profile, authorization, tls, run_child):
                             "semantic_lesson": item["semantic_lesson"], "status": "NOT_RUN"} for item in targets]}
     current = None
     try:
+        require(json_same(prepared["transport"], {"mode": "DIRECT" if proxy_server is None else "HTTP_CONNECT_PROXY",
+                                                "proxy_server": proxy_server}), "BATCH_TRANSPORT_MUST_MATCH_CURRENT_CAPTURE")
         # Materialize every plan and evidence binding before any configure/browser.
         for item in targets:
             # Bounded directory name independent of native order and label.
@@ -109,7 +111,8 @@ def execute(prepared, out, baseline, profile, authorization, tls, run_child):
                 configured = run_child(["configure", "--profile", profile, "--output-root", out, "--config", cfg,
                     "--coordinator", "root-takeover", "--executor", label + "-process", "--reviewer", "existing-update-reviewer",
                     "--authorization-reference", authorization, "--tls-approval-reference", tls,
-                    "--orders", order, "--pages", *pages, "--source"], qout / (label + "-configuration-result.json"))
+                    "--orders", order, "--pages", *pages, "--source", *([] if proxy_server is None else ["--proxy-server", proxy_server])],
+                    qout / (label + "-configuration-result.json"))
                 return cfg, configured["result"]["sha256"]
 
             cfg, digest = configure("writer")
@@ -171,6 +174,7 @@ def main(argv=None):
         p.add_argument("--" + name, required=True)
     p.add_argument("--repo", default=str(ROOT))
     p.add_argument("--dependency-dir")
+    p.add_argument("--proxy-server")
     p.add_argument("--preflight-only", action="store_true")
     a = p.parse_args(argv)
     require(Path(a.repo).resolve() == ROOT, "BATCH_REPOSITORY_MUST_MATCH_ENTRY")
@@ -179,6 +183,8 @@ def main(argv=None):
     baseline, profile = Path(a.baseline).resolve(), Path(a.profile).resolve()
     try:
         prepared = batch.prepare(a.manifest, a.manifest_sha256, baseline, profile, a.authorization_reference)
+        require(json_same(prepared["transport"], {"mode": "DIRECT" if a.proxy_server is None else "HTTP_CONNECT_PROXY",
+                                                "proxy_server": a.proxy_server}), "BATCH_TRANSPORT_MUST_MATCH_CURRENT_CAPTURE")
         check_resources(profile, a.dependency_dir)
     except BaseException as exc:
         # These labels describe supplied, unvalidated manifest entries only.
@@ -197,7 +203,7 @@ def main(argv=None):
         print(json.dumps({"status": "PREFLIGHT_ONLY_NO_BROWSER", "targets": len(prepared["targets"])}))
         return 0
     result = execute(prepared, out, baseline, profile, a.authorization_reference, a.tls_approval_reference,
-                     lambda args, record: child(args, record, a.dependency_dir))
+                     lambda args, record: child(args, record, a.dependency_dir), a.proxy_server)
     print(json.dumps({"status": result["status"], "results": result["results"]}, ensure_ascii=True))
     return 0 if result["status"] == "ALL_ACCEPTED" else 2
 

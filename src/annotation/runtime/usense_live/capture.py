@@ -5,7 +5,7 @@ from datetime import datetime, timezone
 import json
 
 from .config import capture_endpoints
-from .core import (ORIGIN, TARGET, load_binding, owned_readonly_context, require, sha, utc, write_new)
+from .core import (ORIGIN, TARGET, load_binding, owned_readonly_context, require, sha, utc, write_new, record_exception)
 
 FETCH = r"""async path => {
  const stored=localStorage.getItem('user');
@@ -29,15 +29,19 @@ async def capture(config_path, config_sha256):
     endpoints = capture_endpoints(binding)
     result = {"schema": "UsenseNativeCapture/v1", "book_id": "46007447", "status": "NOT_STARTED",
               "config_sha256": config_sha256, "run_id": binding.data["run_id"], "save_attempts": 0,
+              "transport": binding.data["transport"],
               "document_mode": "LOCAL_INERT_SAME_ORIGIN_DOCUMENT", "viewer_rendered": False,
               "body_encoding": "FETCH_ARRAYBUFFER_HTTP_ENTITY_BYTES", "captures": {}, "release": None}
-    owner = None
+    owner = owned_readonly_context(binding)
+    phase = "CONTEXT_ENTER"
     try:
-        async with owned_readonly_context(binding) as owner:
+        async with owner:
+            phase = "INERT_NAVIGATION"
             await owner.page.route(TARGET, lambda route: route.fulfill(status=200, content_type="text/html",
                 body='<!doctype html><title>Usense program collector</title><link rel="icon" href="data:,">'))
             await owner.navigate()
             for name, path in endpoints.items():
+                phase = "GET_" + name
                 binding.check()
                 remaining = (utc(binding.data["expires_at"])-datetime.now(timezone.utc)).total_seconds()
                 require(remaining > 0, "CAPTURE_WINDOW_EXPIRED")
@@ -63,7 +67,11 @@ async def capture(config_path, config_sha256):
                 result["status"] = "NATIVE_GETS_CAPTURED"
     except BaseException as exc:
         result["status"] = "CAPTURE_FAILED_NO_RETRY"
-        result["error"] = {"type": type(exc).__name__, "code": getattr(exc, "code", "CAPTURE_ERROR")}
+        if binding.output.exists():
+            startup = getattr(owner, "startup_phase", "READY")
+            result["error"] = record_exception(binding.output, "capture-error", exc, startup if startup != "READY" else phase)
+        else:
+            result["error"] = {"type": type(exc).__name__, "code": getattr(exc, "code", "CAPTURE_ERROR")}
     finally:
         if owner is not None:
             result["release"] = owner.release
