@@ -43,6 +43,12 @@ def run(root, out):
     need(not out.is_relative_to(root) and not root.is_relative_to(out), "OUTPUT_MUST_BE_OUTSIDE_PACKAGE")
     need(not out.exists(), "FRESH_OUTPUT_REQUIRED")
     release = json.loads((root / "release.json").read_bytes())
+    producer = release.get('producer_script', 'export_lesson_c01_b.py')
+    verifier = release.get('verifier_script', 'verify_lesson_c01_b.py')
+    need((producer, verifier) in (
+        ('export_lesson_c01_b.py', 'verify_lesson_c01_b.py'),
+        ('revise_source_confirmed_c01_b.py', 'verify_source_confirmed_c01_b.py')),
+        'UNSUPPORTED_REPLAY_ENTRYPOINTS')
     need(sys.version_info[:2] == (3, 12), "VALIDATED_PYTHON_312_REQUIRED")
     need(sha((root / "delivery/bundle.json").read_bytes()) == release["bundle_sha256"], "RELEASE_BUNDLE_CHANGED")
     out.mkdir(parents=True)
@@ -54,11 +60,11 @@ def run(root, out):
         need(completed.returncode == 0, "REPLAY_COMMAND_FAILED:" + script)
 
     rebuilt = out / "rebuilt-delivery"
-    command("export_lesson_c01_b.py", "--frozen", root / "delivery", "--out", rebuilt)
+    command(producer, "--frozen", root / "delivery", "--out", rebuilt)
     reference = {p.relative_to(root / "delivery").as_posix(): p.read_bytes() for p in (root / "delivery").rglob("*") if p.is_file()}
     actual = {p.relative_to(rebuilt).as_posix(): p.read_bytes() for p in rebuilt.rglob("*") if p.is_file()}
     need(actual == reference, "FROZEN_REBUILD_BYTES_DIFFER")
-    command("verify_lesson_c01_b.py", "--delivery", rebuilt, "--out", out / "b-check.json")
+    command(verifier, "--delivery", rebuilt, "--out", out / "b-check.json")
     command("b-c01-readonly-consumer.py", "--a-source", root / "consumer-a", "--pins", root / "consumer-pins.json",
             "--pins-sha256", release["consumer_pins_sha256"], "--bundle", rebuilt / "bundle.json",
             "--expected-questions", release["questions"], "--out", out / "a-readback.json")
