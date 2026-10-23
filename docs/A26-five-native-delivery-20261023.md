@@ -21,4 +21,4 @@ ZIP SHA256：`7b1718ff909b013e0426dad890189dfa22bea5c101a6535a166544cc7c0c0bfc`�
 
 正式结果 SHA256：`8d5e88464a379216d4f79d561d2ce04dc5d7d900a7de58a4d8f3ccc014c2b01e`。
 
-并行 A27 稳定性修复使用独立工作区。首个候选的 Windows 等价 profile 路径占用检查被独立反例判为 REWORK，原执行正在最小修正；不影响本交付。最新修复状态以 `docs/coordination-state.json` 的 `tasks.A27` 为准。唯一 `1800-a` 保持 PAUSED，无远端推送或 B 消息。
+并行 A27 稳定性修复已通过正式独立及根协调的有限离线验收，并将产品工作区快进至 `ebca4c71a70bdfb5fbccc023d00e0207ae532470`。首次发现的 Windows 等价 profile 路径占用漏判已修正，原 REWORK 与失败证据保留。此次接入没有重复保存或读回；新恢复流程的真实平台运行仍未执行，详见 [A27 收口](A27-stability-closure-20261023.md)。本交付包及其原实测基线保持不变。唯一 `1800-a` 保持 PAUSED，无远端推送或 B 消息。
