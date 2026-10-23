@@ -1,6 +1,8 @@
 # 试题标注辅助自动化
 
-当前可交付结果（2026-10-23，Asia/Shanghai）：书籍 **46007447 第一课时原印刷 Q1—Q16 加 Q7 变式，共 17 个独立题目**，已由程序真实保存、独立进程读回并核对实际导出；10 张题图加载与渲染通过。Q7 主问题答案 C、变式答案 B，全书为 23 题节点 / 76 框。这是限定课时的真实闭环；平台正式送审/业务复审、整章无人值守和跨书泛化仍未建立。
+当前工作重点（2026-10-23，Asia/Shanghai）：**恢复 B 侧识别、组题配答、内容质检与离线交接**，网站直接交付由另一执行端负责。B 当前在 B02/B03 向 G2 完整章节试交付推进；下一份输出是第二课时九题固定内容包和 C01 离线消费/独立重放，见 [B 侧当前位置与下一份交付](docs/b-side-progress-20261023.md)。
+
+此前临时接管成果：书籍 **46007447 第一课时原印刷 Q1—Q16 加 Q7 变式，共 17 个独立题目**，已由程序真实保存、独立进程读回并核对实际导出；10 张题图加载与渲染通过。Q7 主问题答案 C、变式答案 B，当时全书为 23 题节点 / 76 框。后续外部写入会改变网站库存；历史保存量不等于 B 的整章内容交付量。
 
 - [运行索引与下一步缺口](docs/run-index.md)：环境、可直接执行的离线检查、真实运行入口与范围。
 - [17 题完整流程及限制](docs/usense-first-lesson-closure-20261023.md) · [完成证据摘要](evaluation/usense-lesson1-complete-20261023.json) · [历史 194 项代码检查](evaluation/usense-lesson1-code-checks-20261023.json)。
@@ -13,20 +15,22 @@
 
 ```powershell
 python --version
-python tools/run_usense_live.py --help
-python tools/run_usense_live.py doctor
+python tools/run_source_region_ocr.py --help
+python tools/assemble_usense_candidates.py --help
+python tools/book_coverage_inventory.py --help
 $env:PYTHONPATH = Join-Path (Get-Location) 'src'
-python -B -m unittest discover -s tests -p 'test_usense_live*.py'
-python -B -m unittest discover -s tests/usense_live -p 'test_*.py'
+python -B -m unittest discover -s tests -p 'test_source_region_ocr.py'
+python -B -m unittest discover -s tests -p 'test_usense_ocr_candidates.py'
+python -B -m unittest discover -s tests -p 'test_book_coverage_inventory.py'
 ```
 
-帮助、doctor 和以上合成测试不启动平台浏览器，不发送业务请求。`doctor` 在缺 Playwright 或缺新配置时返回 exit 2；这表示环境/配置未就绪，不能据此否定已有的真实保存记录。实际登录、采集及写入需要 Windows、Edge、兼容的 Playwright 和当前身份/范围绑定，见 [运行手册](docs/usense-live-runtime.md)。配置、原始响应、源图、审校稿及 profile 保存在仓库外的私有目录。
+上述帮助和合成测试不启动平台浏览器，不发送业务请求；71 项对应本轮 B 侧来源/OCR/覆盖账本检查，不能当识别正确率。实际 OCR 还需本机已有 RapidOCR/ONNX 模型与固定来源，见 [来源区域识别](docs/source-region-ocr.md) 和 [候选组装](docs/usense-ocr-candidates.md)。原始响应、源图和审校稿留在仓库外。此前平台工具另见 [历史运行手册](docs/usense-live-runtime.md)，不属于当前 B 侧操作任务。
 
 ## 后续工程边界
 
 Q7 插入已改变原生题序：变式为 8，原 Q8—Q16 为 9—17。[新批次入口](docs/usense-reviewed-batch.md)用稳定节点及 question_info 身份绑定显式清单，提供 prepare/status/run；旧 `--orders` 批次命令与历史计划不可重放。[OCR 候选入口](docs/usense-ocr-candidates.md)保留来源、修订与未知项。下一次运行先固定当前完整基线、来源、授权和一次性账本；UNKNOWN 必须先独立读回调和。
 
-最新只读盘点覆盖本书全部 214 页来源索引和 93 个末级目录，返回的预标注块为 0；这不等于已识别全书。第二课时实际为印刷 Q1—Q8 加变式共 9 题，其中已有 5 题原生序号为 18—22，错挂第一课时目录。目录纠正、4 题新增和完整题答审校正在推进，尚未新增该课时真实完成量。后续还需整书题目分母、复杂公式/共享材料消费、独立留出及安装发布验收。
+本书 214 页原图已取得并核验，93 个末级目录有来源候选映射；只有 31 页完成过整页 OCR，不能称逐题识别整书。第二课时印刷 Q1—Q8 加变式共九题已有 B 来源核对，正在整理便携内容包。第一章 103 个题/任务候选仍待独立完整对账；整书题目分母、18 个末级范围配答和目录外九份测试卷范围尚有缺口。
 
 ## 历史工作与离线工具
 
