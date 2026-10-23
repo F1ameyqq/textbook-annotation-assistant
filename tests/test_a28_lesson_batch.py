@@ -40,6 +40,28 @@ class FrozenFixture:
         self.old_ledger = self.ledger / 'old-accepted-fixed.json'
         self.old_ledger.write_bytes(b'{"historical":"unchanged"}')
         self.old_bytes = self.old_ledger.read_bytes()
+        self.identity_rows = []
+        for order, info_id in sorted(batch.ins.OBSERVED_OLD_INFO_BY_ORDER.items()):
+            node = batch.ins.TAIL_NODE if order == 23 else batch.ins.OLD_NODES[order-1]
+            source = root / ('synthetic-known-info-' + str(order) + '.json')
+            if order >= 18:
+                kind = 'native_info_raw'
+                ref = dump(source, {'code': 0, 'message': 'success', 'data': {'id': info_id, 'file_id': batch.ins.BOOK,
+                                                       'order_in_level': str(order)}})
+            elif order == 1:
+                kind = 'accepted_public_proof'
+                ref = dump(source, {'schema': 'UsenseQ1LiveProofPublic/v1', 'target': {
+                    'book_id': batch.ins.BOOK, 'node_id': node, 'info_id': info_id, 'question_order': order}})
+            else:
+                kind = 'accepted_code_binding'
+                source = source.with_suffix('.py')
+                source.write_text('OLD_Q7_NODE = ' + repr(node) + '\nOLD_Q7_INFO = ' + repr(info_id) + '\n', encoding='utf-8')
+                ref = {'path': str(source), 'sha256': sha(source.read_bytes())}
+            self.identity_rows.append({'question_order': order, 'node_id': node, 'info_id': info_id,
+                                       'source_kind': kind, 'source': ref})
+        self.identity_proof = root / 'known-info-evidence.json'
+        self.identity_ref = dump(self.identity_proof, {'schema': 'A28KnownOldInfoEvidence/v1',
+            'book_id': batch.ins.BOOK, 'identities': self.identity_rows})
         self.candidates, self.candidate_paths, self.proof_rows = [], [], []
         self.source = root / 'synthetic-source.bin'
         self.source.write_bytes(b'SYNTHETIC_SOURCE_BYTES_NOT_PLATFORM_CONTENT')
@@ -77,6 +99,7 @@ class FrozenFixture:
             'release': {'context_runtime_release_confirmed': True},
             'transport': {'mode': 'DIRECT', 'proxy_server': None}, 'captures': captures})
         self.manifest_value = {'schema': batch.SCHEMA, 'book_id': '46007447',
+            'known_info_evidence': self.identity_ref,
             'baseline': {'capture_summary_sha256': summary_ref['sha256'], 'files': files}, 'targets': []}
         self.refresh()
 
@@ -94,6 +117,7 @@ class FrozenFixture:
             'candidate_sha256': sha(self.candidate_paths[index].read_bytes()),
             'review_ref': review['path'], 'review_sha256': review['sha256'],
             'crop_evidence_ref': crop['path'], 'crop_evidence_sha256': crop['sha256'],
+            'known_info_evidence': self.identity_ref,
             'source_evidence': [candidate['frames'][0]['source']], 'candidate': candidate}
 
     def prepare(self):
@@ -172,6 +196,48 @@ class EvidenceTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, 'A28_EXISTING_LEDGER_CHANGED'):
             batch.recheck(prepared)
         self.assertEqual(self.f.old_ledger.read_bytes(), b'SYNTHETIC_EXTERNAL_CHANGE')
+
+
+class R1IdentityEvidenceTests(unittest.TestCase):
+    def setUp(self):
+        self.temp = tempfile.TemporaryDirectory()
+        self.addCleanup(self.temp.cleanup)
+        self.f = FrozenFixture(Path(self.temp.name))
+
+    def test_all_eight_identity_sources_bound_to_prepare_and_writer_evidence(self):
+        prepared = self.f.prepare()
+        self.assertEqual(len(batch.verify_known_info_evidence(self.f.identity_ref)), 9)
+        for row in self.f.identity_rows:
+            self.assertIn(row['source']['path'], prepared['evidence_file_sha256'])
+        self.assertTrue(batch.verify_evidence({'approved_new_content': self.f.approved()}))
+
+    def test_missing_identity_evidence_rejected_before_runtime(self):
+        self.f.manifest_value.pop('known_info_evidence')
+        self.f.refresh()
+        with self.assertRaisesRegex(ValueError, 'A28_FILE_REFERENCE'):
+            self.f.prepare()
+
+    def test_omitted_or_rebound_known_identity_rejected(self):
+        original = copy.deepcopy(self.f.identity_rows)
+        for kind in ('omit', 'rebind'):
+            rows = copy.deepcopy(original)
+            if kind == 'omit':
+                rows.pop()
+            else:
+                rows[-1]['info_id'] = '9999999999'
+            ref = dump(self.f.identity_proof, {'schema': 'A28KnownOldInfoEvidence/v1',
+                'book_id': batch.ins.BOOK, 'identities': rows})
+            with self.assertRaisesRegex(ValueError, 'A28_KNOWN_INFO_EVIDENCE_COVERAGE|A28_KNOWN_INFO_EVIDENCE_BINDING'):
+                batch.verify_known_info_evidence(ref)
+
+    def test_every_identity_original_mutation_rejected(self):
+        for row in self.f.identity_rows:
+            with self.subTest(order=row['question_order']):
+                path = Path(row['source']['path']); original = path.read_bytes()
+                path.write_bytes(original + b' ')
+                with self.assertRaisesRegex(ValueError, 'A28_FILE_CHANGED'):
+                    batch.verify_evidence({'approved_new_content': self.f.approved()})
+                path.write_bytes(original)
 
 
 class FakeBinding:

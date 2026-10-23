@@ -3,6 +3,7 @@
 Only this book, lesson, four logical units and observed succeeding stable node
 are supported. No recovery resend, old-question update, login or upload path.
 """
+import ast
 import copy
 from datetime import datetime, timezone
 import json
@@ -33,6 +34,52 @@ def checked(ref):
     return path
 
 
+def verify_known_info_evidence(ref):
+    """Bind the finite known-ID deny list to existing raw/public/code evidence."""
+    path = checked(ref)
+    proof = read(path)
+    require(proof.get('schema') == 'A28KnownOldInfoEvidence/v1' and
+            proof.get('book_id') == ins.BOOK, 'A28_KNOWN_INFO_EVIDENCE_SCHEMA')
+    rows = proof.get('identities')
+    expected = ins.OBSERVED_OLD_INFO_BY_ORDER
+    require(type(rows) is list and [r.get('question_order') for r in rows] == sorted(expected),
+            'A28_KNOWN_INFO_EVIDENCE_COVERAGE')
+    refs = {str(path): ref['sha256']}
+    for row in rows:
+        order = row['question_order']
+        node = ins.TAIL_NODE if order == 23 else ins.OLD_NODES[order-1]
+        require(type(order) is int and row.get('info_id') == expected[order] and
+                row.get('node_id') == node, 'A28_KNOWN_INFO_EVIDENCE_BINDING')
+        source = checked(row['source'])
+        refs[str(source)] = row['source']['sha256']
+        kind = row.get('source_kind')
+        if order >= 18:
+            require(kind == 'native_info_raw', 'A28_KNOWN_INFO_SOURCE_KIND')
+            info = u._response(read(source))
+            require(info.get('id') == expected[order] and info.get('file_id') == ins.BOOK and
+                    info.get('order_in_level') == str(order), 'A28_KNOWN_INFO_RAW_BINDING')
+        elif order == 1:
+            require(kind == 'accepted_public_proof', 'A28_KNOWN_INFO_SOURCE_KIND')
+            public = read(source)
+            require(public.get('schema') == 'UsenseQ1LiveProofPublic/v1' and
+                    public.get('target', {}).get('book_id') == ins.BOOK and
+                    public['target'].get('node_id') == node and
+                    public['target'].get('info_id') == expected[order] and
+                    public['target'].get('question_order') == order, 'A28_KNOWN_INFO_PUBLIC_BINDING')
+        else:
+            require(order == 7 and kind == 'accepted_code_binding', 'A28_KNOWN_INFO_SOURCE_KIND')
+            values = {}
+            for statement in ast.parse(source.read_text(encoding='utf-8')).body:
+                if isinstance(statement, ast.Assign) and len(statement.targets) == 1:
+                    target = statement.targets[0]
+                    if isinstance(target, ast.Name) and target.id in ('OLD_Q7_NODE', 'OLD_Q7_INFO'):
+                        require(target.id not in values, 'A28_KNOWN_INFO_CODE_DUPLICATE')
+                        values[target.id] = ast.literal_eval(statement.value)
+            require(values == {'OLD_Q7_NODE': node, 'OLD_Q7_INFO': expected[order]},
+                    'A28_KNOWN_INFO_CODE_BINDING')
+    return refs
+
+
 def verify_evidence(plan):
     """Re-open original candidate, review, all source and fetched-crop bytes."""
     approved = plan['approved_new_content']
@@ -44,6 +91,7 @@ def verify_evidence(plan):
             'A28_REVIEW_NOT_BOUND')
     for ref in approved['source_evidence']:
         checked(ref)
+    verify_known_info_evidence(approved.get('known_info_evidence'))
     proof = read(approved['crop_evidence_ref'])
     require(proof['schema'] == 'A28CropProof/v1' and proof['status'] == 'ALL_CROPS_CAPTURED', 'A28_CROP_PROOF_INCOMPLETE')
     rows = {(row['logical_key'], row['key']): row for row in proof['images']}
@@ -75,6 +123,8 @@ def prepare(manifest_path, manifest_sha, baseline, profile, authorization):
     paths = ins.full_endpoints(tail_order=23)
     require(set(paths) == set(manifest['baseline']['files']) == set(summary['captures']), 'A28_BASELINE_SCOPE')
     refs = {str(manifest_path): manifest_sha, str(baseline/'capture-summary.json'): manifest['baseline']['capture_summary_sha256']}
+    known_info_ref = manifest.get('known_info_evidence')
+    refs.update(verify_known_info_evidence(known_info_ref))
     before = {}
     for name in paths:
         raw = (baseline/(name+'.json')).read_bytes()
@@ -94,7 +144,9 @@ def prepare(manifest_path, manifest_sha, baseline, profile, authorization):
         approved = {'candidate_ref': str(candidate_path), 'candidate_sha256': item['candidate']['sha256'],
             'review_ref': review['path'], 'review_sha256': review['sha256'],
             'crop_evidence_ref': crop['path'], 'crop_evidence_sha256': crop['sha256'],
-            'source_evidence': [{'path': p, 'sha256': h} for p,h in sources.items()], 'candidate': candidate}
+            'source_evidence': [{'path': p, 'sha256': h} for p,h in sources.items()],
+            'known_info_evidence': known_info_ref,
+            'candidate': candidate}
         verify_evidence({'approved_new_content': approved})
         # All four candidates are validated before any runtime, using only an
         # in-memory structural predecessor projection (never server identity).

@@ -88,6 +88,7 @@ def candidate_for(index):
     approved = {"candidate_ref": "SYNTHETIC-candidate.json", "candidate_sha256": "a" * 64,
         "review_ref": candidate["review"]["path"], "review_sha256": candidate["review"]["sha256"],
         "crop_evidence_ref": "SYNTHETIC-crop.json", "crop_evidence_sha256": "c" * 64,
+        "known_info_evidence": {"path": "SYNTHETIC-known-info-evidence.json", "sha256": "d" * 64},
         "source_evidence": source_evidence, "candidate": copy.deepcopy(candidate)}
     return candidate, approved
 
@@ -296,6 +297,80 @@ class A28LessonInsertTests(unittest.TestCase):
         candidate, approved = candidate_for(2)
         with self.assertRaises(ValueError):
             ins.make_insert_plan(self.before, candidate, approved)
+
+
+class A28LessonInsertIdentityR1Tests(unittest.TestCase):
+    """New R1 checks only; the original nineteen results remain historical."""
+
+    def test_r1_old_q5_alias_is_held_by_real_comparator(self):
+        before = initial_before()
+        candidate, approved = candidate_for(0)
+        plan = ins.make_insert_plan(before, candidate, approved)
+        after, receipt = readback_for(plan)
+        after["q23_info"]["data"]["id"] = "2110708481181396993"
+        result = ins.compare_insert_readback(plan, after, receipt, ACTORS, WINDOW)
+        self.assertFalse(result["ok"])
+        self.assertIn({"path": "new_identity.info_id", "reason": "NEW_INFO_ID_ALIASES_OBSERVED_OLD_IDENTITY"},
+                      result["differences"])
+
+    def test_r1_every_observed_old_info_alias_is_held(self):
+        before = initial_before()
+        candidate, approved = candidate_for(0)
+        plan = ins.make_insert_plan(before, candidate, approved)
+        for order, ident in ins.OBSERVED_OLD_INFO_BY_ORDER.items():
+            with self.subTest(baseline_question_order=order):
+                after, receipt = readback_for(plan)
+                after["q23_info"]["data"]["id"] = ident
+                result = ins.compare_insert_readback(plan, after, receipt, ACTORS, WINDOW)
+                self.assertFalse(result["ok"])
+                self.assertTrue(any(row["reason"] == "NEW_INFO_ID_ALIASES_OBSERVED_OLD_IDENTITY"
+                                    for row in result["differences"]))
+
+    def test_r1_normal_four_question_chain_compares_without_mock(self):
+        before, accepted_info_ids = initial_before(), set()
+        for index in range(4):
+            candidate, approved = candidate_for(index)
+            plan = ins.make_insert_plan(before, candidate, approved)
+            after, receipt = readback_for(plan, timestamp=f"2026-10-23T22:0{index}:00")
+            window = {"start": f"2026-10-23T14:0{index}:00.200Z", "end": f"2026-10-23T14:0{index}:01Z"}
+            result = ins.compare_insert_readback(plan, after, receipt, ACTORS, window)
+            self.assertTrue(result["ok"], result["differences"])
+            self.assertNotIn(result["new_identity"]["info_id"], accepted_info_ids)
+            accepted_info_ids.add(result["new_identity"]["info_id"])
+            evidence = result["old_info_identity_exclusion"]
+            self.assertEqual(evidence["excluded_observed_identities"], plan["observed_old_info_identities"])
+            self.assertEqual(evidence["known_info_evidence"], approved["known_info_evidence"])
+            self.assertEqual(evidence["observed_baseline_count"], len(ins.OBSERVED_OLD_INFO_BY_ORDER))
+            self.assertEqual(evidence["unobserved_baseline_orders"],
+                             [i for i in range(1, 24) if i not in ins.OBSERVED_OLD_INFO_BY_ORDER])
+            self.assertFalse(evidence["prior_inserted_info_exclusion_verified_by_this_module"])
+            before = {key: copy.deepcopy(after[key]) for key in ins.full_endpoints(tail_order=24 + index)}
+
+    def test_r1_plan_cannot_drop_or_replace_observed_identity_exclusions(self):
+        before = initial_before()
+        candidate, approved = candidate_for(0)
+        plan = ins.make_insert_plan(before, candidate, approved)
+        for mode in ("drop", "replace"):
+            tampered = copy.deepcopy(plan)
+            if mode == "drop":
+                tampered["observed_old_info_identities"].pop()
+            else:
+                tampered["observed_old_info_identities"][0]["info_id"] = "SYNTHETIC-other"
+            tampered.pop("plan_sha256")
+            tampered["plan_sha256"] = u.digest(tampered)
+            with self.assertRaisesRegex(ValueError, "INSERT_PLAN_TAMPERED"):
+                ins.validate_insert_plan(tampered)
+        for reference in (None, {"path": "synthetic.json", "sha256": "bad"},
+                          {"path": "", "sha256": "d" * 64},
+                          {"path": "synthetic.json", "sha256": "d" * 64, "extra": True}):
+            altered = copy.deepcopy(approved)
+            altered["known_info_evidence"] = reference
+            with self.assertRaisesRegex(ValueError, "KNOWN_INFO_EVIDENCE_REFERENCE_REQUIRED"):
+                ins.make_insert_plan(before, candidate, altered)
+        missing = copy.deepcopy(approved)
+        del missing["known_info_evidence"]
+        with self.assertRaisesRegex(ValueError, "APPROVAL_SHAPE"):
+            ins.make_insert_plan(before, candidate, missing)
 
 
 if __name__ == "__main__":

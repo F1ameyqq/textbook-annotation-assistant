@@ -23,6 +23,18 @@ OLD_PARENT = "dir-1792063578574-2a6vq8zom"
 TAIL_PARENT = "dir-1792063578574-g0n3ulsni"
 TAIL_NODE = "1792148510557"
 TAIL_INFO = "2111049977118109698"
+# Finite, source-bound identity evidence, not a freshly fetched all-book census.
+# A26 render-prep/info-baseline.json raw SHA256:
+# 0065baeff3561663aacbb397f57be41ed8b3c53744617b40f9f6f82b894685c5
+# A28 tail-preservation-source-01/.../q23_info.json raw SHA256:
+# 28e60c4c87d422c4ecd8841f5c2c6008812e13074bb8cdb732bc1e799b12b8cb
+# Native 1 is additionally bound by evaluation/usense-q1-live-proof-20261023.json;
+# native 7 is the accepted insertion.OLD_Q7_INFO code binding (not local raw).
+OBSERVED_OLD_INFO_BY_ORDER = {
+    1: "2110695521759309825", 7: ins.OLD_Q7_INFO,
+    18: "2110707359007944706", 19: "2110707547843899394", 20: "2110708248120700929",
+    21: "2110708409593016321", 22: "2110708481181396993", 23: TAIL_INFO,
+}
 OLD_NODES = ("1792064001811", "1792064044446", "1792065598862", "1792065892243",
              "1792066005626", "1792066259991", "1792066417325", "1792695084803",
              "1792066451314", "1792066484290", "1792066542156", "1792066591590",
@@ -140,7 +152,10 @@ def _validate_full(flat, count, read_orders):
 def _approved_payload(candidate, approved, before, index):
     require(type(approved) is dict and set(approved) == {
         "candidate_ref", "candidate_sha256", "review_ref", "review_sha256", "crop_evidence_ref",
-        "crop_evidence_sha256", "source_evidence", "candidate"}, "APPROVAL_SHAPE")
+        "crop_evidence_sha256", "source_evidence", "known_info_evidence", "candidate"}, "APPROVAL_SHAPE")
+    known_info = approved["known_info_evidence"]
+    require(type(known_info) is dict and set(known_info) == {"path", "sha256"} and
+            u._id(known_info["path"]) and ins._hash(known_info["sha256"]), "KNOWN_INFO_EVIDENCE_REFERENCE_REQUIRED")
     for field in ("candidate", "review", "crop_evidence"):
         require(u._id(approved.get(field + "_ref")) and ins._hash(approved.get(field + "_sha256")),
                 "APPROVAL_FILE_REFERENCE_REQUIRED")
@@ -243,6 +258,8 @@ def make_insert_plan(before, candidate, approved_new_content):
             "insert_after_order": count - 1, "new_order": count, "old_tail_target": identities[0],
             "old_identities": [{"node_id": node["id"], "lesson_directory_id": parent,
                                 "question_order": i} for i, (node, parent) in enumerate(questions, 1)],
+            "observed_old_info_identities": [{"baseline_question_order": order, "info_id": info_id}
+                for order, info_id in OBSERVED_OLD_INFO_BY_ORDER.items()],
             "candidate": copy.deepcopy(candidate), "before_full": copy.deepcopy(before),
             "before_sha256": flat_digest(before), "payload_candidate": payload,
             "approved_new_content": copy.deepcopy(approved_new_content),
@@ -393,6 +410,8 @@ def compare_insert_readback(plan, after, receipt, runtime_actor_hashes=None, sen
     check(new_identity["node_id"] == decoded["inserted_question_node"]["id"] and
           new_identity["lesson_directory_id"] == DIRECTORY and new_identity["info_id"] != TAIL_INFO,
           "new_identity", "RECEIPT_BOUND_NEW_IDENTITY_REQUIRED")
+    check(new_identity["info_id"] not in {entry["info_id"] for entry in plan["observed_old_info_identities"]},
+          "new_identity.info_id", "NEW_INFO_ID_ALIASES_OBSERVED_OLD_IDENTITY")
     for row in new_rows:
         actual = by_id.get(row["rect_id"], {})
         expected = {key: copy.deepcopy(row[key]) if key in row else actual.get(key) for key in ins.ROW_KEYS}
@@ -435,6 +454,15 @@ def compare_insert_readback(plan, after, receipt, runtime_actor_hashes=None, sen
             "old_tail_ocr_preserved": all(u.json_same(before[f"q{order}_{zone}"], after[f"q{order+1}_{zone}"])
                                            for zone in u.ZONES),
             "old_question_count": plan["before_count"], "new_question_count": 1,
+            "old_info_identity_exclusion": {
+                "excluded_observed_identities": copy.deepcopy(plan["observed_old_info_identities"]),
+                "known_info_evidence": copy.deepcopy(plan["approved_new_content"]["known_info_evidence"]),
+                "observed_baseline_count": len(plan["observed_old_info_identities"]),
+                "baseline_question_count": 23,
+                "unobserved_baseline_orders": [i for i in range(1, 24) if i not in OBSERVED_OLD_INFO_BY_ORDER],
+                "all_23_baseline_info_identities_observed": len(OBSERVED_OLD_INFO_BY_ORDER) == 23,
+                "raw_source_file_provenance_verified_by_this_module": False,
+                "prior_inserted_info_exclusion_verified_by_this_module": False},
             "expected_frame_count": FRAME_TOTALS[plan["after_count"] - 23],
             "automatic_retry_allowed": False, "receipt_verified": True,
             "independent_context_verified": False, "live_save_verified": False,

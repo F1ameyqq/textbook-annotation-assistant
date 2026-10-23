@@ -27,3 +27,26 @@ viewer12（印刷4）、viewer13（印刷5）和 viewer173（答案印刷25）�
 四个真实固定候选的 `--preflight-only` 已通过，0浏览器/平台写入。最终六文件绑定下新增40项检查全部通过（2.165秒），包含19纯合同和21批处理/发送/释放检查，未跑历史套件；最终固定提交/原件清单由 `fixed-delivery.json` 指向。首次本地configure因未创建输出目录 `PATH_MISSING` 在启动前拒绝，0浏览器/请求；保留原脚本和失败事实，再补齐本地目录。新增检查初跑18通过/1旧ledger前缀夹具失败保留，按当前确切ledger_key修正后通过。准备阶段工具/夹具错误保持在私有检查原件中，不擦写成PASS。
 
 私有阶段：`D:/1800/.local/stages/a28-complete-lesson-production-20261023`。当前新增平台保存和完整课时交付尚待本次固定代码独立接受后执行；原生导出沿用A26机制。授权仅此书此课时，不含整书送审、其他书、登录/凭证配置、profile替换、清锁或外发。
+# R1: known old identity exclusion
+
+The initial `48cbd114` code review found that a synthetic new Q6 readback could
+reuse accepted Q5's `info_id` and still pass. That fixed review and its failed
+counterexample remain unchanged; the original code is not eligible for live use.
+
+The revised comparator excludes eight explicitly known old info identities:
+native orders 1, 7, and 18–23. Six are bound to existing native info response
+bytes, Q1 to its accepted public proof, and Q7 to the accepted code binding.
+The writer and batch preflight reopen these sources and verify their hashes and
+values against the finite exclusion table. The plan includes the evidence
+reference and coverage. The other 15 old info originals are unavailable locally;
+this revision does not claim full-book info identity acquisition. Prior-new-ID
+uniqueness, all existing frame and directory checks, and old-tail content
+preservation continue unchanged.
+
+Eight distinct new R1 controls passed, including actual pure-comparator calls for
+all eight aliases and a normal four-question chain. A local evidence fixture
+initially omitted the native `message` field; its original failures are retained,
+and only the three affected tests were rerun after correction. The actual four
+candidates also passed the revised preflight without a browser. The prior 40
+checks remain historical evidence for `48cbd114`, not a fresh R1 suite run.
+
