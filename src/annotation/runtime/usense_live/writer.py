@@ -13,6 +13,7 @@ from .config import capture_endpoints
 from .capture import FETCH
 from .update import loads, validate_plan, from_captured_map, check_prewrite, json_same
 from .revision import verify_previous_acceptance, same as revision_same
+from .release import close_framework, run_owned_writer
 
 POST=ORIGIN+'/qieti/api/annotate_pic/commit_unified_submit'
 
@@ -175,24 +176,15 @@ async def execute(*,config_path,config_sha256,plan_path,plan_sha256,baseline,led
    expected={'code':0,'message':'success','data':{'inserted':False,'question_order':plan['target']['question_order'],
     'inserted_question_node':None,'success':True,'append_at_global_end':False}}
    require(response['status']==200 and json_same(receipt,expected),'RECEIPT_NOT_EXACT_SUCCESS')
+   result['receipt_exact_success']=True
  except BaseException as exc:
   result['status']='UNKNOWN_DO_NOT_RETRY' if result['post_attempts'] else 'BLOCKED_BEFORE_SEND'
   result['error_type']=type(exc).__name__;result['error_code']=getattr(exc,'code',None)
  finally:
   policy.armed=False
-  release={'context_closed':context is None,'runtime_stopped':runtime is None,'errors':[]}
-  if context is not None:
-   try:await asyncio.wait_for(context.close(),timeout=15);release['context_closed']=True
-   except BaseException as exc:release['errors'].append({'phase':'context_close','type':type(exc).__name__})
-  for task in list(pending):task.cancel()
-  if pending:
-   try:await asyncio.wait_for(asyncio.gather(*list(pending),return_exceptions=True),timeout=5)
-   except BaseException as exc:release['errors'].append({'phase':'callbacks','type':type(exc).__name__})
-  if runtime is not None:
-   try:await asyncio.wait_for(runtime.stop(),timeout=15);release['runtime_stopped']=True
-   except BaseException as exc:release['errors'].append({'phase':'runtime_stop','type':type(exc).__name__})
-  release['pending_callbacks']=len(pending)
-  release['context_runtime_release_confirmed']=bool(release['context_closed'] and release['runtime_stopped'] and not release['errors'] and not pending)
+  policy.blocked=True
+  result['business_status_before_release']=result['status']
+  release=await close_framework(context,runtime,pending)
   result['release']=release
   if not release['context_runtime_release_confirmed']:result['status']='RELEASE_UNPROVEN_NO_RETRY'
   write_new(run/'network-events.json',policy.events)
@@ -207,7 +199,7 @@ def main():
   parser.add_argument('--'+name,required=True)
  parser.add_argument('--previous-acceptance')
  args=parser.parse_args()
- result=asyncio.run(execute(config_path=args.config,config_sha256=args.sha256,plan_path=args.plan,plan_sha256=args.plan_sha256,
+ result=run_owned_writer(execute(config_path=args.config,config_sha256=args.sha256,plan_path=args.plan,plan_sha256=args.plan_sha256,
   baseline=args.baseline,ledger_root=args.ledger_root,authorization_reference=args.authorization_reference,previous_acceptance=args.previous_acceptance))
  print(json.dumps(result,ensure_ascii=False),flush=True)
  return 0 if result['status'] in ('NO_OP_CURRENT_STATE_CONFIRMED','RECEIPT_CAPTURED_REQUIRES_INDEPENDENT_READBACK') else 2

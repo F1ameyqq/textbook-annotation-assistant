@@ -17,7 +17,7 @@ sys.path.insert(0, str(ROOT / "src"))
 from annotation.runtime.usense_live import batch
 from annotation.runtime.usense_live.config import endpoints
 from annotation.runtime.usense_live.core import require, sha, write_new, profile_identity, LOCKS
-from annotation.runtime.usense_live.update import loads, from_captured_map, compare_readback, json_same, validate_plan
+from annotation.runtime.usense_live.update import loads, from_captured_map, compare_batch_readback, json_same, validate_plan
 
 
 def now():
@@ -144,7 +144,7 @@ def execute(prepared, out, baseline, profile, authorization, tls, run_child, pro
             r = rp["result"]
             names = endpoints([order], pages, source=True)
             after = {name: loads((out / r["run_id"] / (name + ".json")).read_bytes()) for name in names}
-            comparison = compare_readback(plan, from_captured_map(after, f"q{order}_"))
+            comparison = compare_batch_readback(plan, from_captured_map(after, f"q{order}_"))
             source_same = all(json_same(loads((baseline / (name + ".json")).read_bytes()), after[name])
                               for name in names if name == "source" or name.startswith("page_"))
             checks = {"writer_exit_zero": wp["exit_code"] == 0, "reader_exit_zero": rp["exit_code"] == 0,
@@ -157,13 +157,18 @@ def execute(prepared, out, baseline, profile, authorization, tls, run_child, pro
                 "native_full_state_matches": comparison["match"], "source_page_responses_unchanged": source_same,
                 "one_send_or_noop": w["post_attempts"] == (1 if plan["mutation_required"] else 0)}
             accepted = all(checks.values())
-            current.update(status="ACCEPTED" if accepted else "FAILED_STOP", checks=checks, comparison=comparison,
+            limited = comparison.get("schema") == "UsenseBatchCreatedZoneReadback/v1"
+            current.update(status=("ACCEPTED_CREATED_ZONE_ORDER" if limited else "ACCEPTED") if accepted else "FAILED_STOP", checks=checks, comparison=comparison,
                 changed_zones=[c["zone"] for c in plan["changes"]], writer_run=w["run_id"], reader_run=r["run_id"],
                 post_attempts=w["post_attempts"], plan_file_sha256=sha((qout / "plan.json").read_bytes()),
                 reviewed_candidate_sha256=item["candidate"]["sha256"])
+            if limited:
+                # No standard accepted marker: revision.py continues to require
+                # its unchanged, fully strict predecessor evidence chain.
+                current["revision_predecessor_eligible"] = False
             write_new(qout / "acceptance.json", current)
             require(accepted, "READBACK_ACCEPTANCE_FAILED")
-            if plan["mutation_required"]:
+            if plan["mutation_required"] and not limited:
                 write_new(Path(prepared["ledger_root"]) / (w["intent_key"] + ".accepted.json"),
                     {"plan_sha256": plan["plan_sha256"], "writer_run": w["run_id"], "reader_run": r["run_id"],
                      "acceptance_sha256": sha((qout / "acceptance.json").read_bytes())})

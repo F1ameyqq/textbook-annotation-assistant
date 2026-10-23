@@ -401,6 +401,30 @@ def compare_recorded_readback(plan, after):
     return _compare_validated_readback(plan, after)
 
 
+def compare_batch_readback(plan, after):
+    """Normal batch policy; strict evidence and historical comparison stay intact.
+
+The only fallback is the observed first-created question/answer direct data
+order. Its distinct result is deliberately ineligible for standard revisions.
+"""
+    strict = compare_readback(plan, after)
+    if strict["match"]:
+        return strict
+    reconciled = reconcile_first_created_zone_key_order(plan, after)
+    adjustments = reconciled["expected_key_order_adjustments"]
+    if not reconciled["match"] or not all(
+            item["path"] in (["zones", "question", "data"], ["zones", "answer", "data"])
+            for item in adjustments):
+        return strict
+    return {"schema": "UsenseBatchCreatedZoneReadback/v1",
+            "status": "CREATED_ZONE_KEY_ORDER_ONLY_MATCH", "match": True,
+            "policy": "EXACT_FIRST_CREATED_QUESTION_ANSWER_THREE_FIELD_ORDER_V1",
+            "plan_sha256": plan["plan_sha256"], "after_sha256": digest(after),
+            "reconciliation": reconciled, "revision_predecessor_eligible": False,
+            "receipt_verified": False, "independent_context_verified": False,
+            "live_save_verified": False}
+
+
 def reconcile_first_created_zone_key_order(plan, after):
     """Pure evidence reconciliation for the observed absent-to-present boundary.
 
