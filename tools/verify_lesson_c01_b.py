@@ -114,8 +114,20 @@ def verify(folder):
         text=''
         for run in binding['runs']:
             if run['format']=='blank':need(run['value'] is None,'QUESTION_BLANK_FILLED');text+=run['token']
+            elif run['format']=='latex':
+                token=run['source_text'];want=None
+                match=re.fullmatch(r'(\d+)/(\d+)',token)
+                if match:want='\\frac{'+match.group(1)+'}{'+match.group(2)+'}'
+                match=re.fullmatch(r'([A-Za-z0-9]+)([²³⁴])',token)
+                if match:want=match.group(1)+'^{'+str('²³⁴'.index(match.group(2))+2)+'}'
+                match=re.fullmatch(r'([A-Za-z]+)([₁₂₃])',token)
+                if match:want=match.group(1)+'_{'+str('₁₂₃'.index(match.group(2))+1)+'}'
+                match=re.fullmatch(r'√(\d+)',token)
+                if match:want='\\sqrt{'+match.group(1)+'}'
+                need(want is not None and run['text']==want,'SOURCE_FORMULA_SEMANTICS');text+=token
             else:need(run['format']=='plain','RUN_FORMAT');text+=run['text']
         need(text==(block['text'] or ''),'RICH_RUN_TRANSCRIPTION')
+        if 'rich_runs' in block:need(binding['runs']==block['rich_runs'],'DECLARED_RICH_RUNS')
     items=basis['items'];qids={'bq-'+i['item_key'] for i in items}
     questions={q['question_id']:q for q in graph['questions']};relations={r['question_id']:r for r in graph['answer_relations']}
     need(set(questions)==set(relations)==set(source['scope_manifest'])==qids and len(questions)==len(items),'QUESTION_SCOPE')
@@ -143,6 +155,30 @@ def verify(folder):
     need(issue_questions=={'bq-'+key for key in combined} and all(i['code']!='ANSWER_AMBIGUOUS' for i in check['issues']),'ONLY_ACTUAL_CONTENT_GAPS')
     outcomes={c['check_id']:c['outcome'] for c in check['checks']}
     need(outcomes['answer_matching']=='PASS' and outcomes['source_integrity']=='PASS' and outcomes['structure']=='PASS','CONFIRMED_CONTENT_NOT_HUMAN_GATE')
+    if projection:=basis.get('source_projection'):
+        need(projection['provenance']=='DERIVED_PORTABLE_EVIDENCE_NOT_ORIGINAL_HTTP_OR_ORIGINAL_SPEC_BYTES' and
+             projection['original_source_spec_sha256']==basis['root_review_sha256'] and
+             projection['original_archive_sha256']==basis['source_input_sha256'],'DERIVED_SOURCE_PROVENANCE')
+        source_items={i['item_key']:i for i in projection['source_items']}
+        need(set(source_items)=={i['item_key'] for i in items},'PROJECTED_ITEM_SCOPE')
+        projected_regions={r['region_id']:r for r in projection['regions']}
+        need(len(projected_regions)==len(projection['regions'])==len(basis['blocks']) and set(projected_regions)==set(bindings),'PROJECTED_REGION_SCOPE')
+        for item in items:
+            key=item['item_key'];original=source_items[key]
+            need(item['fields']=={'question':original['question_text'],'choice':'\n'.join(c['text'] for c in original['choices']) if original['choices'] else None,
+                 'answer':original['answer_text'],'analysis':original['analysis_text']} and
+                 item['intentional_wrong_solution_in_question']==original['intentional_wrong_solution_in_question'] and
+                 item['source_flow_note']==original['source_flow_note'],'EXACT_SOURCE_FACT_FIELDS')
+            for field,ids in (('question',original['question_region_ids_in_reading_order']),('answer',original['answer_region_ids_in_reading_order']),
+                              ('choice',[c['region_id'] for c in original['choices']]),('figure',original['diagram_region_ids'])):
+                need([b['block_id'] for b in delivery['bindings'] if b['item_key']==key and b['field']==field]==ids,'SOURCE_COLUMN_FLOW_AND_OWNER')
+            blank_ids=[r['blank_id'] for b in delivery['bindings'] if b['item_key']==key and b['field']=='question' for r in b['runs'] if r['format']=='blank']
+            need(blank_ids==[b['blank_id'] for b in original['blank_slots']] and all(b['value'] is None for b in original['blank_slots']),'EXACT_SOURCE_NULL_BLANKS')
+        for block in basis['blocks']:
+            original=projected_regions[block['block_id']];proof=proofs['region-'+block['block_id']]
+            need(block['item_key']==original['item_key'] and block['asset_id']=='viewer-'+str(original['viewer_page']) and block['bbox']==original['bbox'] and
+                 proof['rgb_sha256']==original['crop']['rgb_sha256']==block['original_crop_rgb_sha256'] and
+                 block['original_crop_sha256']==original['crop']['sha256'],'PROJECTED_ORIGINAL_REGION_PIXELS')
     need(check['decision']==delivery['decision']=='HOLD','PREAPPLY_NOT_EXECUTION')
     need(all(a['kind'] not in ('ApplyPlan','PlatformSnapshot','ExecutionReceipt') for a in bundle['artifacts']),'NO_EXECUTION_ARTIFACT')
     return {'status':'B_SOURCE_CONTENT_AND_C01_BINDINGS_VERIFIED','questions':len(items),'selected_answer_relations':len(relations),

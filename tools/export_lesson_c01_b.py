@@ -47,6 +47,28 @@ def runs(text):
     return result
 
 
+def source_runs(block):
+    if 'rich_runs' not in block:
+        return runs(block['text']) if block['text'] is not None else []
+    result=copy.deepcopy(block['rich_runs']);display=[]
+    for run in result:
+        if run['format']=='plain':
+            need(set(run)=={'format','text'} and type(run['text']) is str,'PLAIN_RUN');display.append(run['text'])
+        elif run['format']=='blank':
+            need({'format','token','value'}<=set(run)<={'format','token','value','blank_id'} and
+                 re.fullmatch(r'_{2,}',run['token']) and run['value'] is None,'NULL_SOURCE_BLANK');display.append(run['token'])
+        else:
+            need(run['format']=='latex' and set(run)=={'format','text','source_text'},'SOURCE_MATH_RUN')
+            token=run['source_text'];tex=None
+            if m:=re.fullmatch(r'(\d+)/(\d+)',token):tex=r'\frac{'+m[1]+'}{'+m[2]+'}'
+            elif m:=re.fullmatch(r'([A-Za-z0-9]+)([²³⁴])',token):tex=m[1]+'^{'+{'²':'2','³':'3','⁴':'4'}[m[2]]+'}'
+            elif m:=re.fullmatch(r'([A-Za-z]+)([₁₂₃])',token):tex=m[1]+'_{'+{'₁':'1','₂':'2','₃':'3'}[m[2]]+'}'
+            elif m:=re.fullmatch(r'√(\d+)',token):tex=r'\sqrt{'+m[1]+'}'
+            need(tex is not None and run['text']==tex,'SOURCE_MATH_SEMANTICS');display.append(token)
+    need(''.join(display)==(block['text'] or ''),'EXACT_SOURCE_RUN_TEXT')
+    return result
+
+
 def build_delivery(spec, images, generation=None):
     need(spec["schema"] == "b-private-lesson-source-export-input/0.1" and spec["review_kind"] == "B_MODEL_SOURCE_CONFIRMED", "SOURCE_REVIEW_REQUIRED")
     basis = copy.deepcopy(spec)
@@ -135,7 +157,7 @@ def build_delivery(spec, images, generation=None):
                        "physical_window_id":sha(canonical([asset["sha256"], bbox]))})
         fragment = block.get("graph_fragment", True)
         bindings.append({"block_id":block["block_id"], "item_key":block["item_key"], "field":block["field"], "role":block["role"],
-                         "region_id":rid, "fragment_id":fid if fragment else None, "runs":runs(block["text"]) if block["text"] is not None else [],
+                         "region_id":rid, "fragment_id":fid if fragment else None, "runs":source_runs(block),
                          "subfigure_count":block.get("subfigure_count", 0)})
         if block.get("derived_from_block_id"):
             bindings[-1]["derived_from_block_id"] = block["derived_from_block_id"]
