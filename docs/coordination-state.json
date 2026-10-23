@@ -1,8 +1,8 @@
 {
   "schema_version": 1,
   "project": "D:\\1800",
-  "coordinator_thread_id": "01a15dfa-9556-7812-9ed5-1b3bce53555e",
-  "updated_at": "2026-10-23T01:44:55.167762+00:00",
+  "coordinator_thread_id": "01a166c5-f93f-76e3-baf4-a3545ccddebd",
+  "updated_at": "2026-10-23T11:26:29.014657+08:00",
   "automation": {
     "id": "1800-a",
     "kind": "heartbeat",
@@ -17842,8 +17842,8 @@
     }
   ],
   "last_action": {
-    "at": "2026-10-23T01:44:55.167762+00:00",
-    "action": "Fetched complete B current tree into a clean managed worktree and prepared successor handoff; A stopped and heartbeat paused."
+    "at": "2026-10-23T11:26:29.014657+08:00",
+    "action": "Registered actual successor for repository/evidence reception only; verified no remote B delta and prepared frozen private-evidence delivery checklist; A stopped and heartbeat paused."
   },
   "limitations": [
     "Current route uses mock B artifacts until independently agreed interface/artifact versions exist.",
@@ -18610,15 +18610,18 @@
     "next_dependency": "New formal author fixed offline delivery; new independent preparation then bounded review"
   },
   "current_handoff_status": {
-    "at": "2026-10-23T01:44:55.167762+00:00",
-    "status": "PREPARED_AWAITING_ACTUAL_SUCCESSOR_REGISTRATION",
+    "at": "2026-10-23T11:26:29.014657+08:00",
+    "status": "TAKEN_OVER_RECEPTION_ONLY",
     "handoff": "docs/handoff/coordinator-20261023/HANDOFF.md",
     "product_commit": "ee463c800bef1ec5010ee5950662b9726d474e42",
     "B_reported_first_lesson_complete": true,
     "A_formal_acceptance_of_B_private_raw": false,
     "new_A_execution_authorized": false,
     "automation": "PAUSED",
-    "whole_project_complete": false
+    "whole_project_complete": false,
+    "successor_thread_id": "01a166c5-f93f-76e3-baf4-a3545ccddebd",
+    "registration": "docs/handoff/coordinator-20261023/successor-takeover/registration.json",
+    "next_delivery": "docs/handoff/coordinator-20261023/successor-takeover/next-delivery.md"
   },
   "current_batch_closure": {
     "at": "2026-10-19T11:49:48.663351+00:00",
@@ -19207,8 +19210,8 @@
     }
   },
   "b_update_reception_latest": {
-    "at": "2026-10-23T01:44:55.167762+00:00",
-    "task": "B_LATEST_REPOSITORY_RECEPTION_20261023",
+    "at": "2026-10-23T11:26:29.014657+08:00",
+    "task": "B_SUCCESSOR_RECEPTION_DELTA_CHECK_20261023",
     "head": "ee463c800bef1ec5010ee5950662b9726d474e42",
     "branch": "origin/b-side/readonly-book-46007447",
     "local_worktree": "C:/Users/ASUS/.codex/worktrees/b-latest-20261023/1800",
@@ -19235,18 +19238,24 @@
     "new_model_runs": 0,
     "new_B_messages": 0,
     "new_A_dispatches": 0,
-    "remote_pushes": 0
+    "remote_pushes": 0,
+    "remote_delta_commits": 0,
+    "remote_B_head_verified": "ee463c800bef1ec5010ee5950662b9726d474e42",
+    "registration": "docs/handoff/coordinator-20261023/successor-takeover/registration.json",
+    "next_delivery": "docs/handoff/coordinator-20261023/successor-takeover/next-delivery.md",
+    "private_B_live_raw_received": false,
+    "new_fetches": 0
   },
   "coordinator_handoff": {
-    "status": "PREPARED_AWAITING_ACTUAL_SUCCESSOR_REGISTRATION",
+    "status": "TAKEN_OVER_RECEPTION_ONLY",
     "at": "2026-10-23T01:44:55.167762+00:00",
     "handoff": "docs/handoff/coordinator-20261023/HANDOFF.md",
     "prompt": "docs/handoff/coordinator-20261023/PROMPT.md",
     "state": "docs/handoff/coordinator-20261023/state.json",
     "verification": "docs/handoff/coordinator-20261023/verification.json",
     "source_thread_id": "01a15dfa-9556-7812-9ed5-1b3bce53555e",
-    "successor_thread_id": null,
-    "successor_host_id": null,
+    "successor_thread_id": "01a166c5-f93f-76e3-baf4-a3545ccddebd",
+    "successor_host_id": "local",
     "baseline_commit": "0e2d188425c40ccba74f74dbfc47475d2348963b",
     "product_commit": "ee463c800bef1ec5010ee5950662b9726d474e42",
     "product_worktree": "C:/Users/ASUS/.codex/worktrees/b-latest-20261023/1800",
@@ -19262,7 +19271,11 @@
     "new_conversation_created": false,
     "project_complete": false,
     "first_successor_action": "Read this handoff, register actual thread ID, verify existing B checkout/remote delta and received completion scope; retain paused automation and stopped A execution.",
-    "no_automatic_heartbeat_resume_or_transfer": true
+    "no_automatic_heartbeat_resume_or_transfer": true,
+    "taken_over_at": "2026-10-23T11:26:29.014657+08:00",
+    "successor_registration": "docs/handoff/coordinator-20261023/successor-takeover/registration.json",
+    "first_successor_action_completed": true,
+    "new_A_execution_authorized": false
   },
   "b_update_reception_history": [
     {
@@ -19359,6 +19372,37 @@
       "platform_qualification": false,
       "helper": "/root/b_20261020_scope_audit",
       "helper_scope": "STATIC_ONLY_NOT_FORMAL_ACCEPTANCE"
+    },
+    {
+      "at": "2026-10-23T01:44:55.167762+00:00",
+      "task": "B_LATEST_REPOSITORY_RECEPTION_20261023",
+      "head": "ee463c800bef1ec5010ee5950662b9726d474e42",
+      "branch": "origin/b-side/readonly-book-46007447",
+      "local_worktree": "C:/Users/ASUS/.codex/worktrees/b-latest-20261023/1800",
+      "status": "FULL_CURRENT_TREE_RECEIVED_PUBLIC_RECORDS_READ_ONLY",
+      "scope": "Repository synchronization and B published progress reception, not A formal live-evidence acceptance.",
+      "reported_book_id": "46007447",
+      "reported_completed_first_lesson_questions": 17,
+      "reported_printed_questions": "Q1-Q16 plus Q7 variant",
+      "reported_current_whole_book_nodes": 23,
+      "reported_current_whole_book_frames": 76,
+      "reported_images_http200_and_rendered": 10,
+      "reported_focused_tests_passed": 194,
+      "reported_Q1": "One existing-question save followed by separate-process fresh-context readback; 21 checks.",
+      "formal_platform_submission_or_review": "NOT_RUN_PER_B_PUBLIC_RECORD",
+      "B_takeover_reported_in_repository": true,
+      "B_reported_coordinator_thread_id": "01a148f2-62d1-7313-9f0e-c4cf06fe7ca6",
+      "B_thread_registration_source": "docs/collaboration.md at ee463c800bef1ec5010ee5950662b9726d474e42",
+      "B_live_chat_status_or_host_verified": false,
+      "A_formal_acceptance_of_B_private_raw": false,
+      "records": "docs/handoff/coordinator-20261023/received-records.json",
+      "pull_receipt": "docs/handoff/coordinator-20261023/pull-receipt.json",
+      "new_platform_actions": 0,
+      "new_product_tests": 0,
+      "new_model_runs": 0,
+      "new_B_messages": 0,
+      "new_A_dispatches": 0,
+      "remote_pushes": 0
     }
   ],
   "standing_readonly_tls_permission": {
@@ -19447,6 +19491,33 @@
       "successor_registration": "docs/handoff/coordinator-20261021/successor-takeover/registration.json",
       "first_successor_action_completed": true,
       "heartbeat_transferred_at": "2026-10-21T10:25:06.483092+00:00"
+    },
+    {
+      "status": "PREPARED_AWAITING_ACTUAL_SUCCESSOR_REGISTRATION",
+      "at": "2026-10-23T01:44:55.167762+00:00",
+      "handoff": "docs/handoff/coordinator-20261023/HANDOFF.md",
+      "prompt": "docs/handoff/coordinator-20261023/PROMPT.md",
+      "state": "docs/handoff/coordinator-20261023/state.json",
+      "verification": "docs/handoff/coordinator-20261023/verification.json",
+      "source_thread_id": "01a15dfa-9556-7812-9ed5-1b3bce53555e",
+      "successor_thread_id": null,
+      "successor_host_id": null,
+      "baseline_commit": "0e2d188425c40ccba74f74dbfc47475d2348963b",
+      "product_commit": "ee463c800bef1ec5010ee5950662b9726d474e42",
+      "product_worktree": "C:/Users/ASUS/.codex/worktrees/b-latest-20261023/1800",
+      "heartbeat_id": "1800-a",
+      "heartbeat_status": "PAUSED",
+      "heartbeat_unchanged": true,
+      "source_dispatch_fenced": true,
+      "existing_formal_review_continues": false,
+      "role": "REPOSITORY_RECEPTION_EVIDENCE_RECEPTION_AND_DELIVERY_COORDINATION",
+      "B_current_platform_ownership_preserved": true,
+      "no_new_A_implementation_tests_live": true,
+      "all_historical_live_and_OCR_budgets_unchanged": true,
+      "new_conversation_created": false,
+      "project_complete": false,
+      "first_successor_action": "Read this handoff, register actual thread ID, verify existing B checkout/remote delta and received completion scope; retain paused automation and stopped A execution.",
+      "no_automatic_heartbeat_resume_or_transfer": true
     }
   ],
   "b_takeover_handoff": {
@@ -19508,5 +19579,27 @@
       "new_A_dispatches": 0,
       "remote_pushes": 0
     }
+  },
+  "successor_registration_latest": {
+    "at": "2026-10-23T11:26:29.014657+08:00",
+    "thread_id": "01a166c5-f93f-76e3-baf4-a3545ccddebd",
+    "host_id": "local",
+    "status": "TAKEN_OVER_RECEPTION_ONLY",
+    "receipt": "docs/handoff/coordinator-20261023/successor-takeover/registration.json",
+    "automation_unchanged_and_paused": true
+  },
+  "next_delivery_gap": {
+    "at": "2026-10-23T11:26:29.014657+08:00",
+    "id": "B_FIRST_LESSON_FROZEN_PRIVATE_EVIDENCE_RECEPTION",
+    "status": "PREPARED_AWAITING_EXISTING_FROZEN_RAW_RECEPTION_NOT_DISPATCHED",
+    "description": "Receive existing first-lesson evidence manifest, unique member paths/original bytes and stable identities; reconcile against public hashes.",
+    "report": "docs/handoff/coordinator-20261023/successor-takeover/next-delivery.md",
+    "public_reference_index": "docs/handoff/coordinator-20261023/successor-takeover/expected-public-evidence.json",
+    "private_raw_received": false,
+    "A_formal_acceptance": false,
+    "requires_new_save_readback_or_OCR": false,
+    "B_message_sent": false,
+    "formal_platform_review": "NOT_RUN_PER_B_PUBLIC_RECORD",
+    "lesson2_directory_conflict": "PRESERVED_NOT_MIGRATED"
   }
 }

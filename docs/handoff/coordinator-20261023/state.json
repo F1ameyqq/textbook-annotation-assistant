@@ -2,8 +2,8 @@
   "schema": "SuccessorCoordinatorHandoff/v1",
   "prepared_at": "2026-10-23T01:44:55.167762+00:00",
   "source_thread_id": "01a15dfa-9556-7812-9ed5-1b3bce53555e",
-  "successor_thread_id": null,
-  "status": "PREPARED_AWAITING_ACTUAL_SUCCESSOR_REGISTRATION",
+  "successor_thread_id": "01a166c5-f93f-76e3-baf4-a3545ccddebd",
+  "status": "TAKEN_OVER_RECEPTION_ONLY",
   "root": "D:/1800",
   "root_branch": "codex/local-login-config",
   "root_before_handoff_commit": "0e2d188425c40ccba74f74dbfc47475d2348963b",
@@ -23,15 +23,15 @@
     "changed_in_this_task": false
   },
   "handoff": {
-    "status": "PREPARED_AWAITING_ACTUAL_SUCCESSOR_REGISTRATION",
+    "status": "TAKEN_OVER_RECEPTION_ONLY",
     "at": "2026-10-23T01:44:55.167762+00:00",
     "handoff": "docs/handoff/coordinator-20261023/HANDOFF.md",
     "prompt": "docs/handoff/coordinator-20261023/PROMPT.md",
     "state": "docs/handoff/coordinator-20261023/state.json",
     "verification": "docs/handoff/coordinator-20261023/verification.json",
     "source_thread_id": "01a15dfa-9556-7812-9ed5-1b3bce53555e",
-    "successor_thread_id": null,
-    "successor_host_id": null,
+    "successor_thread_id": "01a166c5-f93f-76e3-baf4-a3545ccddebd",
+    "successor_host_id": "local",
     "baseline_commit": "0e2d188425c40ccba74f74dbfc47475d2348963b",
     "product_commit": "ee463c800bef1ec5010ee5950662b9726d474e42",
     "product_worktree": "C:/Users/ASUS/.codex/worktrees/b-latest-20261023/1800",
@@ -47,11 +47,15 @@
     "new_conversation_created": false,
     "project_complete": false,
     "first_successor_action": "Read this handoff, register actual thread ID, verify existing B checkout/remote delta and received completion scope; retain paused automation and stopped A execution.",
-    "no_automatic_heartbeat_resume_or_transfer": true
+    "no_automatic_heartbeat_resume_or_transfer": true,
+    "taken_over_at": "2026-10-23T11:26:29.014657+08:00",
+    "successor_registration": "docs/handoff/coordinator-20261023/successor-takeover/registration.json",
+    "first_successor_action_completed": true,
+    "new_A_execution_authorized": false
   },
   "B_observation": {
-    "at": "2026-10-23T01:44:55.167762+00:00",
-    "task": "B_LATEST_REPOSITORY_RECEPTION_20261023",
+    "at": "2026-10-23T11:26:29.014657+08:00",
+    "task": "B_SUCCESSOR_RECEPTION_DELTA_CHECK_20261023",
     "head": "ee463c800bef1ec5010ee5950662b9726d474e42",
     "branch": "origin/b-side/readonly-book-46007447",
     "local_worktree": "C:/Users/ASUS/.codex/worktrees/b-latest-20261023/1800",
@@ -78,7 +82,13 @@
     "new_model_runs": 0,
     "new_B_messages": 0,
     "new_A_dispatches": 0,
-    "remote_pushes": 0
+    "remote_pushes": 0,
+    "remote_delta_commits": 0,
+    "remote_B_head_verified": "ee463c800bef1ec5010ee5950662b9726d474e42",
+    "registration": "docs/handoff/coordinator-20261023/successor-takeover/registration.json",
+    "next_delivery": "docs/handoff/coordinator-20261023/successor-takeover/next-delivery.md",
+    "private_B_live_raw_received": false,
+    "new_fetches": 0
   },
   "original_root_porcelain_entries": 87,
   "original_root_dirty_files_hashed": 102,
@@ -106,5 +116,23 @@
     "polled_or_dispatched_this_task": false
   },
   "new_scope_required_before_A_product_or_live_execution": true,
-  "registration_instructions": "Obtain actual thread ID from current execution environment/tool; preserve source/history, update root coordinator_thread_id and current handoff successor fields; keep paused automation untouched."
+  "registration_instructions": "Obtain actual thread ID from current execution environment/tool; preserve source/history, update root coordinator_thread_id and current handoff successor fields; keep paused automation untouched.",
+  "successor_host_id": "local",
+  "registered_at": "2026-10-23T11:26:29.014657+08:00",
+  "coordinator_thread_id": "01a166c5-f93f-76e3-baf4-a3545ccddebd",
+  "successor_registration": "docs/handoff/coordinator-20261023/successor-takeover/registration.json",
+  "next_delivery_gap": {
+    "at": "2026-10-23T11:26:29.014657+08:00",
+    "id": "B_FIRST_LESSON_FROZEN_PRIVATE_EVIDENCE_RECEPTION",
+    "status": "PREPARED_AWAITING_EXISTING_FROZEN_RAW_RECEPTION_NOT_DISPATCHED",
+    "description": "Receive existing first-lesson evidence manifest, unique member paths/original bytes and stable identities; reconcile against public hashes.",
+    "report": "docs/handoff/coordinator-20261023/successor-takeover/next-delivery.md",
+    "public_reference_index": "docs/handoff/coordinator-20261023/successor-takeover/expected-public-evidence.json",
+    "private_raw_received": false,
+    "A_formal_acceptance": false,
+    "requires_new_save_readback_or_OCR": false,
+    "B_message_sent": false,
+    "formal_platform_review": "NOT_RUN_PER_B_PUBLIC_RECORD",
+    "lesson2_directory_conflict": "PRESERVED_NOT_MIGRATED"
+  }
 }
