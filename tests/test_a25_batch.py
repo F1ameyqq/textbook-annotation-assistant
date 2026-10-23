@@ -15,7 +15,7 @@ sys.path.insert(0, str(ROOT / "src"))
 from annotation.runtime.usense_live import batch
 from annotation.runtime.usense_live.config import ZONES, endpoints
 from annotation.runtime.usense_live.core import sha, BindingError
-from annotation.runtime.usense_live.update import ABSENT, UpdateError, text_digest
+from annotation.runtime.usense_live.update import ABSENT, UpdateError, text_digest, loads, validate_plan, json_same
 
 spec = importlib.util.spec_from_file_location("a25_batch_entry", ROOT / "tools/run_usense_reviewed_batch.py")
 entry = importlib.util.module_from_spec(spec)
@@ -105,6 +105,19 @@ class A25BatchTests(unittest.TestCase):
         self.assertEqual([p["printed_question"] for p in result["targets"]], list(range(17, 22)))
         self.assertEqual([p["target"]["question_order"] for p in result["targets"]], list(range(18, 23)))
         self.assertTrue(all(p["plan"]["payload_candidate"]["target_directory_id"] == "synthetic-real-parent" for p in result["targets"]))
+        self.assertEqual(list(self.ledger.iterdir()), [])
+
+    def test_materialized_plans_preserve_native_order_and_validate_before_browser(self):
+        prepared = self.prepare()
+        for index, item in enumerate(prepared["targets"]):
+            path = self.root / f"plan-roundtrip-{index}.json"
+            entry.write_plan(path, item["plan"])
+            loaded = loads(path.read_bytes())
+            validate_plan(loaded)
+            self.assertTrue(json_same(loaded, item["plan"]))
+            self.assertEqual(loaded["plan_sha256"], item["plan"]["plan_sha256"])
+            with self.assertRaises(FileExistsError):
+                entry.write_plan(path, item["plan"])
         self.assertEqual(list(self.ledger.iterdir()), [])
 
     def test_old_native_order_is_rejected_even_with_matching_candidate(self):

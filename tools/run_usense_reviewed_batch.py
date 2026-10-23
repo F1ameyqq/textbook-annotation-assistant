@@ -17,11 +17,22 @@ sys.path.insert(0, str(ROOT / "src"))
 from annotation.runtime.usense_live import batch
 from annotation.runtime.usense_live.config import endpoints
 from annotation.runtime.usense_live.core import require, sha, write_new, profile_identity, LOCKS
-from annotation.runtime.usense_live.update import loads, from_captured_map, compare_readback, json_same
+from annotation.runtime.usense_live.update import loads, from_captured_map, compare_readback, json_same, validate_plan
 
 
 def now():
     return datetime.now(timezone.utc).isoformat()
+
+
+def write_plan(path, plan):
+    """Keep native object order: it is part of update plan identity."""
+    validate_plan(plan)
+    raw = json.dumps(plan, ensure_ascii=False, separators=(",", ":"), allow_nan=False).encode("utf-8")
+    with path.open("xb") as stream:
+        stream.write(raw)
+        stream.flush()
+        os.fsync(stream.fileno())
+    validate_plan(loads(path.read_bytes()))
 
 
 def check_resources(profile, dependency_dir):
@@ -93,7 +104,7 @@ def execute(prepared, out, baseline, profile, authorization, tls, run_child, pro
             qout = out / ("target-" + sha(item["target"]["node_id"].encode())[:24])
             qout.mkdir()
             item["qout"] = qout
-            write_new(qout / "plan.json", item["plan"])
+            write_plan(qout / "plan.json", item["plan"])
             refs = {item["candidate"]["path"]: item["candidate"]["sha256"], **item["review_evidence"]}
             write_new(qout / "review-evidence-hashes.json", refs)
             for path in (qout / "plan.json", qout / "review-evidence-hashes.json"):
