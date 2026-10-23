@@ -1,0 +1,11 @@
+{
+  "schema": "A28IndependentHelperCorrection/v1",
+  "first_script": "launcher_controls.py",
+  "first_command_exit_code": 1,
+  "first_error": "AssertionError at line 16: core.implementation_digest()==delivery['implementation_sha256']",
+  "first_launcher_dynamic_cases": "NOT_RUN_PRECHECK_ASSERTION",
+  "reason": "Reviewer incorrectly equated Git raw source bytes with installed checkout bytes. Frozen manifest has different raw/checkout hashes for insertion_writer.py.",
+  "correction_scope": "Reconstruct only byte representations that exactly match the already frozen checkout_sha256, preserve raw workspace and first helper, then compute the unchanged implementation_digest over this separate package.",
+  "product_changes": 0,
+  "platform_calls": 0
+}
