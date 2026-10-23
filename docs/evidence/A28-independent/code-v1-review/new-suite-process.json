@@ -1,0 +1,19 @@
+{
+  "schema": "A28IndependentNewSuiteRun/v1",
+  "argv": [
+    "D:\\1800\\.local\\stages\\a25-lesson2-expansion-20261023\\runtime-py312\\venv\\Scripts\\python.exe",
+    "-I",
+    "-B",
+    "-c",
+    "import sys,unittest\ndef audit(event,args):\n if event in ('socket.connect','socket.getaddrinfo','subprocess.Popen','os.system'): raise RuntimeError('INDEPENDENT_OFFLINE_DENIAL:'+event)\n if event=='open' and isinstance(args[0],str) and ('browser-profiles' in args[0].lower() or 'worktrees/b-latest' in args[0].replace(chr(92),'/').lower()): raise RuntimeError('INDEPENDENT_ACTIVE_RESOURCE_READ_DENIED')\nsys.addaudithook(audit)\nsys.path.insert(0,'src');sys.path.insert(0,'tests')\nsuite=unittest.defaultTestLoader.loadTestsFromNames(['test_a28_lesson_insert','test_a28_lesson_batch'])\nresult=unittest.TextTestRunner(verbosity=2,failfast=True).run(suite)\nsys.exit(not result.wasSuccessful())\n"
+  ],
+  "cwd": "D:\\1800\\.local\\stages\\a28-independent-20261023\\code-v1-review\\workspace",
+  "started_at": "2026-10-23T14:34:09.013932+00:00",
+  "finished_at": "2026-10-23T14:34:11.936064+00:00",
+  "exit_code": 1,
+  "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "stderr_sha256": "7991fa578c4861b546951d7a8b39cdb97a78d94293d344d80d38594b3b68f163",
+  "stdout": "D:\\1800\\.local\\stages\\a28-independent-20261023\\code-v1-review\\author-new-checks\\stdout.txt",
+  "stderr": "D:\\1800\\.local\\stages\\a28-independent-20261023\\code-v1-review\\author-new-checks\\stderr.txt",
+  "scope": "Only two new A28 suites; audit denies network, subprocess and active profile/workspace reads."
+}

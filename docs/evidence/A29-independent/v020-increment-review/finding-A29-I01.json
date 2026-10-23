@@ -1,0 +1,70 @@
+{
+  "status": "REWORK",
+  "finding_id": "A29-I01",
+  "priority": "P2",
+  "title": "Record prefix inside release root bypasses outside-package check",
+  "source_lines": {
+    "13": "ROOT = Path(__file__).resolve().parents[1]",
+    "22": "    if not prefix.is_absolute() or ROOT == prefix.resolve() or ROOT in prefix.resolve().parents:",
+    "30": "    prefix.parent.mkdir(parents=True, exist_ok=True)",
+    "35": "    result = holder.run(command, ROOT, prefix, seconds)"
+  },
+  "counterexample_command_result": "D:\\1800\\.local\\stages\\a29-independent-20261023\\v020-increment-review-01\\commands\\07-output-inside-release-must-reject\\result.json",
+  "control_package": "D:\\1800\\.local\\stages\\a29-independent-20261023\\v020-increment-review-01\\package output boundary control",
+  "record_prefix": "D:\\1800\\.local\\stages\\a29-independent-20261023\\v020-increment-review-01\\package output boundary control\\top-level-output-01",
+  "expected": "Reject before child creation and leave full release file set unchanged",
+  "actual": "Exit 0, child batch --help executed under Job, three record files added inside release root",
+  "added_files": [
+    "top-level-output-01.process.json",
+    "top-level-output-01.stderr",
+    "top-level-output-01.stdout"
+  ],
+  "package_file_set_match_after": false,
+  "no_followup_package_check_executed": true,
+  "cause": "ROOT resolves to release/app; validation excludes app descendants but not the release directory containing manifest.json and launch.ps1.",
+  "minimal_correction": "Keep app as child cwd, but validate record prefix against full release root. Reject root-level and nested outputs before mkdir, holder creation or child launch. Retain normal outside-prefix behavior and original holder bytes.",
+  "original_review_package_unchanged": true,
+  "owned_job_results": [
+    {
+      "path": "D:\\1800\\.local\\stages\\a29-independent-20261023\\v020-increment-review-01\\holder records with spaces\\success-01.process.json",
+      "sha256": "6fa2a90da4204ccf7d256f65327389ce949266bc7fd20676dd90dcad7b948093",
+      "exit_code": 0,
+      "observed_processes": 3,
+      "owned_os_release_confirmed": true,
+      "job_active_processes_after": 0,
+      "job_assigned_before_resume": true,
+      "resumed": true,
+      "job_handle_closed": true,
+      "process_handle_closed": true,
+      "thread_handle_closed": true
+    },
+    {
+      "path": "D:\\1800\\.local\\stages\\a29-independent-20261023\\v020-increment-review-01\\holder records with spaces\\child-error-01.process.json",
+      "sha256": "da770ed5d1c8e7ceeb42006fe8e8d6802e8c02d8a4eb4f9074d392f8bb88b709",
+      "exit_code": 2,
+      "observed_processes": 3,
+      "owned_os_release_confirmed": true,
+      "job_active_processes_after": 0,
+      "job_assigned_before_resume": true,
+      "resumed": true,
+      "job_handle_closed": true,
+      "process_handle_closed": true,
+      "thread_handle_closed": true
+    },
+    {
+      "path": "D:\\1800\\.local\\stages\\a29-independent-20261023\\v020-increment-review-01\\package output boundary control\\top-level-output-01.process.json",
+      "sha256": "0a51d9fe85eb99cd73bd25fd7c9e06ab77546a38ffde139d2638db807467df46",
+      "exit_code": 0,
+      "observed_processes": 3,
+      "owned_os_release_confirmed": true,
+      "job_active_processes_after": 0,
+      "job_assigned_before_resume": true,
+      "resumed": true,
+      "job_handle_closed": true,
+      "process_handle_closed": true,
+      "thread_handle_closed": true
+    }
+  ],
+  "product_commands_after_first_failure": "NOT_RUN",
+  "real_profile_and_platform_access": 0
+}

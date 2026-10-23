@@ -2,7 +2,7 @@
   "schema_version": 1,
   "project": "D:\\1800",
   "coordinator_thread_id": "01a166c5-f93f-76e3-baf4-a3545ccddebd",
-  "updated_at": "2026-10-23T14:25:27.937526+00:00",
+  "updated_at": "2026-10-23T14:56:38.370724+00:00",
   "automation": {
     "id": "1800-a",
     "kind": "heartbeat",
@@ -16442,7 +16442,7 @@
         "root_index": "D:/1800/.local/stages/a28-complete-lesson-production-20261023/root-content-v1/root-index.json",
         "root_index_sha256": "240db7c66faea2528cacb32b954130df642488c39f9d9d82d9b0c9a4de03d1ae",
         "members_verified": 36,
-        "status": "IN_INDEPENDENT_REVIEW"
+        "status": "ACCEPTED"
       },
       "crop_fixed": {
         "proof_sha256": "a08c9ff26f7c392ac48decdb2e77c3b1d217eb0aa55240acb72a85e493f64cad",
@@ -16450,7 +16450,7 @@
         "root_index_sha256": "0ae9b44c8e3fc0274b9186416b67c527cc08cbd732ca148eafa80c3e4f3df2a4",
         "members_verified": 47,
         "actual_crops": 14,
-        "status": "IN_INDEPENDENT_CONTENT_REVIEW"
+        "status": "ACCEPTED"
       },
       "executor_cursor": "0c06bc0e-0582-4fcb-93e1-91bd1c414639:17",
       "review_cursor": "aced20eb-29e6-4062-ab73-aef1dec1984e:7",
@@ -16460,6 +16460,60 @@
         "root_closure_sha256": "43244e1a16282d691cbc1672a6e24b52f4cdb2cbd6e43ddeee5cd61de1505aba",
         "result_sha256": "4d8568cf60f5f31a611129e526f1e4cab3bd658a850e09f7201623a71fa1ad64",
         "accepted_at": "2026-10-23T14:25:27.937526+00:00"
+      },
+      "fixed_code": {
+        "status": "REWORK",
+        "commit": "48cbd114e59713d50438a478174b0b9396eee523",
+        "raw_manifest_sha256": "67db3aee2ede4ee51dfd04bf70dee0cd094b238b33233025b90ea2c4c01ca52c",
+        "root_index": "D:/1800/.local/stages/a28-complete-lesson-production-20261023/root-fixed-code-v2/root-index.json",
+        "root_index_sha256": "02bf8bc293d38a7ffbc0c57499c7196ad95f21ba69d6d4e3c56076d525211758",
+        "members": 208,
+        "git_raw_dependencies": 31,
+        "production_limits": {
+          "writers": 4,
+          "readers": 4,
+          "posts": 4,
+          "business_gets": 174,
+          "contexts": 8,
+          "total_seconds": 900,
+          "login": 0,
+          "retries": 0
+        },
+        "actual_new_saves": "PENDING_CODE_ACCEPTANCE"
+      },
+      "code_v1_rework": {
+        "root_receipt": "docs\\evidence\\coordinator\\a28-code-v1-rework\\receipt.json",
+        "root_receipt_sha256": "6efd0bce08f4d4897b595835f145ae3f069551052258662fd16016c49afde7ce",
+        "formal_result_sha256": "49d5bc0825533e83354eb01e57227f8ad42603b47e2cedf318c44c7d225d42d9",
+        "finding": {
+          "id": "R1",
+          "priority": 1,
+          "title": "Reject new info IDs that collide with known existing question identities",
+          "file": "src/annotation/runtime/usense_live/lesson_insert.py",
+          "line": 394,
+          "batch_file": "src/annotation/runtime/usense_live/lesson_batch.py",
+          "batch_lines": [
+            140,
+            202
+          ],
+          "witness": {
+            "path": "D:\\1800\\docs\\evidence\\A28-independent\\code-v1-review\\identity-control.json",
+            "sha256": "0a65417f64c6a45388dbd3ec4c3449926251b5ee8c44f259945397cca5289323"
+          },
+          "actual": "A new q23_info.id replaced with accepted q22_info.id still returns ok=true and ACCEPTED_A28_INSERT_PRESERVATION.",
+          "expected": "Reject a new info identity that is already bound to an existing preserved question; stop before promotion/next send."
+        },
+        "status": "R1_FIXED_IN_INDEPENDENT_REVIEW"
+      },
+      "fixed_code_r1": {
+        "status": "IN_INDEPENDENT_REVIEW",
+        "commit": "4658243f2055c38846713d2292e5f3ac44cc216e",
+        "fixed_delivery_sha256": "98b99b1257bcf5669745a7cc7efe93949dea6930fe5486c85c7bd996464d9825",
+        "root_index": "D:/1800/.local/stages/a28-complete-lesson-production-20261023/root-fixed-code-r1/root-index.json",
+        "root_index_sha256": "1036011eff529dba5ff24f5bd556324f825b44677e49a91bf4c568629b2a7ced",
+        "members": 244,
+        "git_raw_verified": 31,
+        "actual_new_saves": 0
       }
     },
     "A29": {
@@ -16484,7 +16538,7 @@
       "review_cursor": "cfd936a4-2acf-4fcf-aee1-642689410bff:3",
       "fixed_delivery": {
         "version": "v0.1.3-local-win64",
-        "status": "IN_INDEPENDENT_REVIEW",
+        "status": "ACCEPTED_CURRENT_MACHINE_RUNNABLE_HANDOFF",
         "code_commit": "1267b9f19d68ed01f205d3c17a831931783d6365",
         "final_commit": "dd369096ef01a6ed2e235ae22df3983d724a8aa0",
         "fixed_delivery": "docs/evidence/A29-execution/fixed-delivery.json",
@@ -16494,6 +16548,29 @@
         "zip": "D:/1800/.local/releases/A29-v0.1.3-local-win64.zip",
         "zip_sha256": "6530fc9c7d42e509fbc0048bca1c9ba9ed5c2cebdf535a6ba7218032331df006",
         "package_members_verified": 100
+      },
+      "v013_acceptance": {
+        "status": "ACCEPTED_CURRENT_MACHINE_RUNNABLE_HANDOFF_V0.1.3",
+        "root_closure": "docs\\evidence\\coordinator\\a29-v013-release-closure\\receipt.json",
+        "root_closure_sha256": "abc749b393ed72072e9eb8b57859ea6431ad1d4ca6759f9b230eeccc5a0cf08b",
+        "formal_result_sha256": "6efcb40b8a8a5a1df89104167fac95c86b759dcc61c34a8e233f9cd88ca8bf99"
+      },
+      "holder_increment_v1_review": {
+        "status": "REWORK",
+        "result": "docs/evidence/A29-independent/v020-increment-review/result.json",
+        "result_sha256": "d74e966e37b03732b7d45f0ad808f0a09abf675b8ba0be0336e76ef60ff840c8",
+        "finding": "A29-I01 release root output must be refused before launch",
+        "root_byte_receipt": "D:\\1800\\.local\\stages\\a29-runnable-release-20261023\\root-holder-r1\\root-index.json",
+        "reports_verified": 8,
+        "raw_input_triples": 49,
+        "independent_artifacts_verified": 283
+      },
+      "holder_r1": {
+        "status": "IN_INDEPENDENT_REVIEW",
+        "code_commit": "e7d59b3b1f0f417cb304011ca8823f7da35257f1",
+        "root_index": "D:\\1800\\.local\\stages\\a29-runnable-release-20261023\\root-holder-r1\\root-index.json",
+        "root_index_sha256": "807660e62d2fd4e65cfe7f34c757a7079c3c9136d82cd21575e6a772dda73e64",
+        "members": 39
       }
     }
   },
@@ -21489,12 +21566,9 @@
     ],
     "no_repeat_successful_saves": true,
     "source_originals_local": true,
-    "content_gaps": [
-      "Q6 old candidate mixes Q7 diagram labels/options",
-      "Q8 and variant need separate reviewed answers"
-    ],
-    "platform_frame_gap": "TO_RECONCILE_CURRENT_SCOPE",
-    "next_step": "Minimum new-frame/batch integration and new content fixed review then authorized production; runnable package parallel",
+    "content_gaps": [],
+    "platform_frame_gap": "MINIMUM_FOUR_NEW_QUESTION_AND_FRAME_CAPABILITY_FIXED_R1_IN_REVIEW",
+    "next_step": "R1 finite review then four actual saves and independent readbacks; holder repair review and final package in parallel",
     "whole_book_completed": false
   },
   "five_question_delivery_latest": {
@@ -21556,5 +21630,15 @@
       "registered_at": "2026-10-23T12:46:54.379633+00:00",
       "updated_at": "2026-10-23T13:39:50.317735+00:00"
     }
-  ]
+  ],
+  "runnable_release_latest": {
+    "version": "v0.1.3-local-win64",
+    "status": "ACCEPTED_CURRENT_MACHINE_RUNNABLE_HANDOFF",
+    "zip": "D:/1800/.local/releases/A29-v0.1.3-local-win64.zip",
+    "zip_sha256": "6530fc9c7d42e509fbc0048bca1c9ba9ed5c2cebdf535a6ba7218032331df006",
+    "readme": "D:/1800/.local/releases/A29-v0.1.3-local-win64/README.md",
+    "included_real_question_count": 5,
+    "A28_integration": "IN_PROGRESS",
+    "whole_project_completed": false
+  }
 }

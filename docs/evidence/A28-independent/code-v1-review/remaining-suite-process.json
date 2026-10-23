@@ -1,0 +1,20 @@
+{
+  "schema": "A28IndependentRemainingNewChecks/v1",
+  "argv": [
+    "D:\\1800\\.local\\stages\\a25-lesson2-expansion-20261023\\runtime-py312\\venv\\Scripts\\python.exe",
+    "-I",
+    "-B",
+    "-c",
+    "import sys,unittest\ndef audit(event,args):\n if event=='socket.connect':\n  f=sys._getframe(1)\n  if f.f_code.co_name=='_fallback_socketpair' and f.f_code.co_filename.replace(chr(92),'/').endswith('/Lib/socket.py') and args[1][0]=='127.0.0.1': return\n  raise RuntimeError('INDEPENDENT_OFFLINE_DENIAL:'+event)\n if event in ('socket.getaddrinfo','subprocess.Popen','os.system'): raise RuntimeError('INDEPENDENT_OFFLINE_DENIAL:'+event)\n if event=='open' and isinstance(args[0],str) and ('browser-profiles' in args[0].lower() or 'worktrees/b-latest' in args[0].replace(chr(92),'/').lower()): raise RuntimeError('INDEPENDENT_ACTIVE_RESOURCE_READ_DENIED')\nsys.addaudithook(audit)\nsys.path.insert(0,'src');sys.path.insert(0,'tests')\nnames=['test_a28_lesson_batch.SendTests','test_a28_lesson_batch.WriterEntrypointTests','test_a28_lesson_batch.WriterReleaseTests']\ns=unittest.defaultTestLoader.loadTestsFromNames(names)\nr=unittest.TextTestRunner(verbosity=2,failfast=True).run(s)\nsys.exit(not r.wasSuccessful())\n"
+  ],
+  "started_at": "2026-10-23T14:36:28.013454+00:00",
+  "finished_at": "2026-10-23T14:36:28.614195+00:00",
+  "exit_code": 0,
+  "stdout": "D:\\1800\\.local\\stages\\a28-independent-20261023\\code-v1-review\\author-new-checks-remaining\\stdout.txt",
+  "stderr": "D:\\1800\\.local\\stages\\a28-independent-20261023\\code-v1-review\\author-new-checks-remaining\\stderr.txt",
+  "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "stderr_sha256": "7500f9bde436f2c67eca2b553e0f4ac1add64f1d335de9d132b206f32e3cf00d",
+  "prior_helper_error_preserved": true,
+  "previous_35_passes_rerun": false,
+  "scope": "Only remaining 5 new checks; stdlib loopback socketpair is permitted for asyncio IPC, business network remains denied."
+}

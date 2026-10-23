@@ -1,0 +1,30 @@
+{
+  "schema": "A28RootCodeRework/v1",
+  "at": "2026-10-23T14:44:15.842056+00:00",
+  "status": "REWORK_KNOWN_OLD_INFO_ID_CAN_BE_ACCEPTED_AS_NEW",
+  "commit": "48cbd114e59713d50438a478174b0b9396eee523",
+  "formal_result_sha256": "49d5bc0825533e83354eb01e57227f8ad42603b47e2cedf318c44c7d225d42d9",
+  "reports_verified": 12,
+  "independent_raw_verified": 251,
+  "finding": {
+    "id": "R1",
+    "priority": 1,
+    "title": "Reject new info IDs that collide with known existing question identities",
+    "file": "src/annotation/runtime/usense_live/lesson_insert.py",
+    "line": 394,
+    "batch_file": "src/annotation/runtime/usense_live/lesson_batch.py",
+    "batch_lines": [
+      140,
+      202
+    ],
+    "witness": {
+      "path": "D:\\1800\\docs\\evidence\\A28-independent\\code-v1-review\\identity-control.json",
+      "sha256": "0a65417f64c6a45388dbd3ec4c3449926251b5ee8c44f259945397cca5289323"
+    },
+    "actual": "A new q23_info.id replaced with accepted q22_info.id still returns ok=true and ACCEPTED_A28_INSERT_PRESERVATION.",
+    "expected": "Reject a new info identity that is already bound to an existing preserved question; stop before promotion/next send."
+  },
+  "repair_scope": "Reject collision with all already observed old info IDs, preserve typed provenance; do not acquire unknown full-book bodies or replay old success",
+  "actual_new_saves": 0,
+  "content_acceptance_unchanged": true
+}

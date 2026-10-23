@@ -1,0 +1,78 @@
+{
+  "schema": "A28IndependentCodeReviewResult/v1",
+  "at": "2026-10-23T22:41:21.734208+08:00",
+  "status": "REWORK",
+  "decision": "REWORK_KNOWN_OLD_INFO_ID_CAN_BE_ACCEPTED_AS_NEW",
+  "commit": "48cbd114e59713d50438a478174b0b9396eee523",
+  "root_index_sha256": "02bf8bc293d38a7ffbc0c57499c7196ad95f21ba69d6d4e3c56076d525211758",
+  "fixed_delivery_sha256": "dfc14eb0b86bc4a03f0f21e7c784a444d0137b60cf9c104d9cdffcf5d1cbf27f",
+  "author_raw_manifest_sha256": "67db3aee2ede4ee51dfd04bf70dee0cd094b238b33233025b90ea2c4c01ca52c",
+  "frozen_members_verified": 208,
+  "git_raw_dependencies_verified_against_commit": 31,
+  "content_acceptance": "UNCHANGED_ACCEPTED_FOUR_QUESTION_CONTENT_AND_FIXED_REMOTE_CROPS_ONLY",
+  "new_author_checks": {
+    "distinct_passes": 40,
+    "first_passes": 35,
+    "first_helper_errors": 1,
+    "first_successors_not_run": 4,
+    "helper_correction_remaining_passes": 5,
+    "old_35_replayed": false,
+    "product_failures": 0,
+    "old_suites": 0
+  },
+  "independent_controls": {
+    "normal_fixed_input_control": "PASS",
+    "known_old_info_alias_rejection": "FAIL",
+    "remaining_independent_controls": "NOT_RUN_AFTER_FIRST_SEMANTIC_FAILURE"
+  },
+  "findings": [
+    {
+      "id": "R1",
+      "priority": 1,
+      "title": "Reject new info IDs that collide with known existing question identities",
+      "file": "src/annotation/runtime/usense_live/lesson_insert.py",
+      "line": 394,
+      "batch_file": "src/annotation/runtime/usense_live/lesson_batch.py",
+      "batch_lines": [
+        140,
+        202
+      ],
+      "witness": {
+        "path": "D:\\1800\\docs\\evidence\\A28-independent\\code-v1-review\\identity-control.json",
+        "sha256": "0a65417f64c6a45388dbd3ec4c3449926251b5ee8c44f259945397cca5289323"
+      },
+      "actual": "A new q23_info.id replaced with accepted q22_info.id still returns ok=true and ACCEPTED_A28_INSERT_PRESERVATION.",
+      "expected": "Reject a new info identity that is already bound to an existing preserved question; stop before promotion/next send."
+    }
+  ],
+  "production_eligibility": "NOT_RELEASED_REWORK",
+  "launcher_dynamic_controls": "NOT_RUN_AFTER_FIRST_SEMANTIC_FAILURE",
+  "actual_candidate_preflight": "FROZEN_AUTHOR_OUTPUT_RECEIVED_NOT_INDEPENDENTLY_REPLAYED",
+  "A27_release_module": "BYTE_IDENTICAL_TO_ACCEPTED_BASELINE",
+  "A27_writer_entry_checks": "PASS_IN_REMAINING_FIVE",
+  "actual_new_writes_readbacks_export": "NOT_RUN_BY_REVIEWER",
+  "raw_manifest_sha256": "1d2ed438c8ebd90b93bd85ee93033112c3a67bc643f3756a2fc39a57e0a93e44",
+  "report_sha256": "66b42651b0cecb29bf451ca99c1e91cc185c6844661c73a7067808497e3fef1b",
+  "preservation": {
+    "root_frozen_members_rechecked": 208,
+    "isolated_git_sources_rechecked": 31,
+    "product_edits": 0,
+    "root_state_edits": 0,
+    "old_evidence_edits": 0,
+    "automation_changed": false
+  },
+  "boundaries": {
+    "business_network": 0,
+    "browser": 0,
+    "profile_reads": 0,
+    "active_author_workspace_reads": 0,
+    "OCR": 0,
+    "platform_saves": 0,
+    "external_messages": 0,
+    "runtime_internal_IPC": "Standard-library Windows asyncio socketpair only"
+  },
+  "helper_errors_preserved": [
+    "Relative-path launcher read used wrong cwd; later rg masked shell status; corrected absolute frozen-path read.",
+    "Audit denied standard-library asyncio loopback socketpair before test body; original error and loop destructor output preserved."
+  ]
+}

@@ -1,0 +1,65 @@
+{
+  "schema": "A29IndependentIncrementReview/v1",
+  "at": "2026-10-23T22:46:31.613155+08:00",
+  "status": "REWORK",
+  "review_complete_and_released": true,
+  "scope": "V020_CANDIDATE_HOLDER_PACKAGING_HANDOFF_INCREMENT_ONLY",
+  "code_commit": "389f7defa9db901b101889f15c083c1eefc34d2a",
+  "final_commit": "9123285db87d7ca05f0d3571de1b171fe550ce87",
+  "zip_sha256": "dbcd0ac4317299d99debfce43559ff396765e32fd3855d8e54fad12b38f59052",
+  "manifest_sha256": "fb1fdf63a40b193c86aebe6dce2bfd09fb9ad36bfc82c6352b858ddf899808ad",
+  "root_index_sha256": "815a389190909fcedee843781f4cdba82b2a552cc3a0755087e4f2265dd79134",
+  "fixed_candidate_sha256": "e4e4f15881ddeb3ce8d6098ce8b245b1db00db6b520392f197effbf9a1010f03",
+  "prior_v013_result_sha256": "6efcb40b8a8a5a1df89104167fac95c86b759dcc61c34a8e233f9cd88ca8bf99",
+  "prior_v013_acceptance_preserved": true,
+  "validation": {
+    "frozen_input_pairs": 49,
+    "package_members": 108,
+    "package_total_files": 109,
+    "unchanged_members_reused": 96,
+    "new_or_changed_git_blob_files": 10,
+    "independent_commands_pass": 6,
+    "independent_commands_fail": 1,
+    "helper_errors": 0,
+    "held_jobs_released": 3,
+    "held_process_identities_released": 9,
+    "job_active_after": [
+      0,
+      0,
+      0
+    ],
+    "old_suite_reruns": 0,
+    "A28_business_suites": 0
+  },
+  "finite_validated_slices": [
+    "Fixed package identity and raw-byte delta closure",
+    "Correct package-external invocation with spaces",
+    "Child exit zero/nonzero propagation",
+    "Existing record-prefix refusal",
+    "Three own Jobs release in observed offline cases",
+    "Honest candidate-only START_HERE scope"
+  ],
+  "blocking_findings": [
+    {
+      "id": "A29-I01",
+      "priority": "P2",
+      "file": "app/tools/run_usense_owned.py",
+      "lines": [
+        13,
+        22
+      ],
+      "problem": "Release-root output bypasses app-only check and mutates immutable package file set",
+      "minimal_fix": "Keep app as child cwd, but validate record prefix against full release root. Reject root-level and nested outputs before mkdir, holder creation or child launch. Retain normal outside-prefix behavior and original holder bytes."
+    }
+  ],
+  "after_first_counterexample": "NO_FURTHER_PRODUCT_COMMANDS",
+  "A28_code_and_actual_outcome": "NOT_REVIEWED_OTHER_FORMAL_SCOPE",
+  "final_nine_question_delivery": "NOT_INCLUDED_PENDING_ROOT_FIXED_INPUT",
+  "final_business_release_acceptance": false,
+  "platform_browser_real_profile_credentials_OCR_saves": 0,
+  "pending_owned_sessions": 0,
+  "product_root_JSON_AGENTS_automation_mutations": 0,
+  "report_sha256": "b99dffd63bb6f925b837d2dd8b8c25c9714580e35ce2302265e15b5694544dd6",
+  "private_review_root": "D:\\1800\\.local\\stages\\a29-independent-20261023\\v020-increment-review-01",
+  "independent_artifact_members": 283
+}
