@@ -4,12 +4,35 @@ This module never imports a browser, writer, OCR engine, or network client.
 """
 import hashlib
 import json
+import math
 from pathlib import Path
 import re
 
 
+def _unique_object(pairs):
+    result = {}
+    for key, value in pairs:
+        if key in result:
+            raise ValueError("Duplicate JSON key")
+        result[key] = value
+    return result
+
+
+def _finite_float(text):
+    value = float(text)
+    if not math.isfinite(value):
+        raise ValueError("Finite JSON number required")
+    return value
+
+
+def _reject_constant(text):
+    raise ValueError("Finite JSON number required")
+
+
 def read_json(path):
-    return json.loads(Path(path).read_text(encoding="utf-8-sig"))
+    return json.loads(Path(path).read_text(encoding="utf-8-sig"),
+                      object_pairs_hook=_unique_object, parse_float=_finite_float,
+                      parse_constant=_reject_constant)
 
 
 def file_ref(path):
@@ -66,7 +89,7 @@ class CaptureReader:
             if original is not None and original.read_bytes() != file.read_bytes():
                 raise ValueError("Merged and original response differ: " + name)
         value = read_json(file)
-        if value.get("code") != 0:
+        if type(value.get("code")) is not int or value["code"] != 0:
             raise ValueError("Unsuccessful captured business response: " + name)
         return value["data"]
 

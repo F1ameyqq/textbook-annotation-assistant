@@ -263,6 +263,87 @@ class MergedCaptureTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, "Merged and original"):
             CaptureReader(self.merged, self.manifest).get("frames")
 
+    def boolean_code_rejected(self, code):
+        rows = read_json(self.manifest)
+        for row in rows:
+            original = self.root / row["run_id"] / "frames.json"
+            put(original, {"code": code, "data": [{"synthetic": True}]})
+            put(original.parent / "capture-summary.json", {"captures": {
+                "frames": {**file_ref(original), "status": 200}}})
+            row["sha256"] = file_ref(original)["sha256"]
+        put(self.manifest, rows)
+        (self.merged / "frames.json").write_bytes((self.root / "run-1/frames.json").read_bytes())
+        with self.assertRaisesRegex(ValueError, "Unsuccessful"):
+            CaptureReader(self.merged, self.manifest).get("frames")
+
+    def test_false_business_code_is_not_integer_zero(self):
+        self.boolean_code_rejected(False)
+
+    def test_true_business_code_is_not_integer_zero(self):
+        self.boolean_code_rejected(True)
+
+    def rewrite_response_text(self, text):
+        rows = read_json(self.manifest)
+        for row in rows:
+            original = self.root / row["run_id"] / "frames.json"
+            original.write_text(text, encoding="utf-8")
+            put(original.parent / "capture-summary.json", {"captures": {
+                "frames": {**file_ref(original), "status": 200}}})
+            row["sha256"] = file_ref(original)["sha256"]
+        put(self.manifest, rows)
+        (self.merged / "frames.json").write_bytes((self.root / "run-1/frames.json").read_bytes())
+
+    def test_duplicate_captured_response_keys_are_rejected(self):
+        self.rewrite_response_text('{"code":0,"data":[],"data":[]}')
+        with self.assertRaisesRegex(ValueError, "Duplicate JSON"):
+            CaptureReader(self.merged, self.manifest).get("frames")
+
+    def test_nonfinite_captured_response_is_rejected(self):
+        self.rewrite_response_text('{"code":0,"data":[NaN]}')
+        with self.assertRaisesRegex(ValueError, "Finite JSON"):
+            CaptureReader(self.merged, self.manifest).get("frames")
+
+    def test_overflowing_captured_response_is_rejected(self):
+        self.rewrite_response_text('{"code":0,"data":[1e9999]}')
+        with self.assertRaisesRegex(ValueError, "Finite JSON"):
+            CaptureReader(self.merged, self.manifest).get("frames")
+
+
+class StrictJSONTests(unittest.TestCase):
+    def setUp(self):
+        self.temp = tempfile.TemporaryDirectory()
+        self.addCleanup(self.temp.cleanup)
+        self.path = Path(self.temp.name) / "input.json"
+
+    def parse(self, text):
+        self.path.write_text(text, encoding="utf-8")
+        return read_json(self.path)
+
+    def test_duplicate_top_level_keys_rejected_even_for_identical_values(self):
+        with self.assertRaisesRegex(ValueError, "Duplicate"):
+            self.parse('{"code":0,"code":0}')
+
+    def test_duplicate_nested_keys_rejected(self):
+        with self.assertRaisesRegex(ValueError, "Duplicate"):
+            self.parse('{"data":[{"id":"first","id":"second"}]}')
+
+    def test_nan_and_signed_infinities_rejected(self):
+        for constant in ("NaN", "Infinity", "-Infinity"):
+            with self.subTest(constant=constant), self.assertRaisesRegex(ValueError, "Finite"):
+                self.parse('{"nested":[' + constant + ']}')
+
+    def test_overflow_to_infinity_rejected(self):
+        for number in ("1e9999", "-1e9999"):
+            with self.subTest(number=number), self.assertRaisesRegex(ValueError, "Finite"):
+                self.parse('{"value":' + number + '}')
+
+    def test_finite_numbers_strings_and_original_key_order_preserved(self):
+        value = self.parse('{"z":-0.25,"a":1.7976931348623157e308,"b":12345678901234567890,"text":"NaN"}')
+        self.assertEqual(list(value), ["z", "a", "b", "text"])
+        self.assertEqual(value["z"], -0.25)
+        self.assertEqual(value["b"], 12345678901234567890)
+        self.assertEqual(value["text"], "NaN")
+
 
 if __name__ == "__main__":
     unittest.main()
