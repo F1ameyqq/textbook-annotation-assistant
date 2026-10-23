@@ -1,0 +1,40 @@
+{
+  "at": "2026-10-23T13:21:54.103673+00:00",
+  "status": "FORMAL_AND_ROOT_REWORK_ACCEPTED_FIXED_FINDING",
+  "result_sha256": "16d2e26e92d09437eda81fe1d4af6c92eab26b428992420cefabd2e173c13971",
+  "product_commit": "23591811be71f9598c07c09b6a25a2a5fb066db0",
+  "reports_verified": 21,
+  "raw_pairs_verified": 147,
+  "synthetic_control_artifacts_verified": 169,
+  "finding": {
+    "id": "R1",
+    "priority": 1,
+    "title": "Equivalent profile directory path bypasses exclusivity gate",
+    "file": "D:\\1800\\.local\\stages\\a27-independent-20261023\\candidate-23591811\\product\\tools\\run_usense_postsave_readback.py",
+    "start": 111,
+    "end": 113,
+    "cause": "Only slash replacement and casefolded substring matching; no command argument/path equivalence validation",
+    "witness": {
+      "path": "D:\\1800\\.local\\stages\\a27-independent-20261023\\test-output\\independent-02\\profile-alias-witness.json",
+      "bytes": 1930,
+      "sha256": "616fd5b65ed843a4446bd0651696281c9d766cccebccd5bb273f8eaf22fe5824"
+    },
+    "same_directory_by_os_samefile": true,
+    "reported_matching_profile_processes": [
+      0,
+      0
+    ],
+    "actual_dispatch": [
+      "configure",
+      "capture"
+    ],
+    "actual_result": "READBACK_MATCHED_AFTER_OS_RELEASE",
+    "expected": "Reject occupied equivalent profile before configure/capture",
+    "repair_scope": "Parse Windows profile argument and validate canonical directory identity or reject ambiguity; retain both observations and add actual-entry alias rejection control"
+  },
+  "correction_executor": "01a168c9-e981-7651-8d73-e33ffdba6ee0",
+  "correction_reviewer": "01a168c9-f7f1-79a0-9143-cc48cabab2ad",
+  "correction_scope": "same A27 minimal Windows equivalent profile identity rejection before any configure/capture",
+  "no_platform_runs": true,
+  "A26_delivery_unblocked": true
+}

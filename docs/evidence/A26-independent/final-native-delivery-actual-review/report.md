@@ -1,0 +1,19 @@
+# A26 五题原生导出、实际显示及离线交付独立验收
+
+结论：ACCEPTED_FIVE_NATIVE_EXPORT_CONTENT_IMAGES_FORMULA_VISUAL_AND_PORTABLE_DELIVERY_AND_OWN_RELEASE_ONLY。书46007447课内印刷第1—5题的原生导出内容、五张原图、36处公式/单位显示以及当前可打开离线包有限通过。第1、5题原图包含部分题干，与正文重复；保留原字节，内容及图形均完整可读，该版面冗余不阻止本次交付，不要求重存或改图。
+
+本轮只接收根冻结的39份实际采集和112份成品输入，151组根原件/独立副本长度与SHA256一致，并在报告前再次核验。原actual/delivery manifest均按根索引和固定序列化重建，精确匹配指定摘要。plan、manifest、collector、launcher与已接受预检相同字节。既有五题读回引用另核25个zone引用、12份不同raw文件；未读取真实profile、ledger或作者活动目录。
+
+实际authority b11947b3-eede-4c93-9f57-94f08bc911ab 在900秒窗口内先记单次启动再消费，最终1耗0余；scope、profile、DIRECT、leaf/SPKI、actor、代码和配置摘要链一致。受监督进程持续6.734697秒。一次官方paper GET返回HTTP200、14167字节，SHA256 0943e76f2dfcbd04fd4e47f644ebbc2ded54c045c031baac3bab7a969d94f3ef；独立严格解析22行，0跳过，context/native各记录1次该GET。字节指HTTP实体，不声称是网络压缩线字节。五图各一次GET，全部HTTP200，独立完整像素解码、尺寸及RGB SHA与原证一致。没有保存、登录、刷新或重试；本独立没有新的平台请求。
+
+原生记录没有node/info ID。针对每个已接受稳定身份，在全部22条原生记录中以完整question、option、answer、analysis组合证明恰好1条匹配，映射到本次18—22行。题序仅是本次观察值，未当作身份。需要的精确格式转换只有读回LF变为原生字面<br>，以及choice按LF转option数组；无其他宽松归一化。五题所有题干、选项、答案、公式和单位一致，36处TeX逐项和顺序保持。空analysis和空option与已接受缺失状态对应；五题knowledge_point原本缺失，paper不含此字段，不新增覆盖声明。其余17条不计入本次验收。
+
+context/runtime释放为true，0待处理回调、0释放错误；实际采集Windows Job结束active=0，13个已持有PID/creation_filetime身份均有exit_signaled和handle_closed，Job/主进程/线程句柄关闭。离线成品显示另有独立的13个持有身份与Job清零证据，浏览器/runtime关闭且stderr为空。这里只接受各自拥有资源的释放。
+
+使用view_image实际查看5张整题和36张公式近照。第1题三角形/正方形及a/b/c标签、分数与平方完整；第2题货车斜面、A/B/C、四项及D答案完整；第3题折树图及8m/3m/答案4完整；第4题两圆孔、60/80标注与mm/答案100完整；第5题两船及北向标志、速度/时间/距离单位、角度、三角形、因此符号和平方均可读，解答正常换行。未观察到遮挡、裁切、公式遗漏或单位不可读。
+
+离线ZIP SHA256为7b1718ff909b013e0426dad890189dfa22bea5c101a6535a166544cc7c0c0bfc，共59文件，CRC无错误；58个内部manifest成员及manifest本身与冻结文件一致，在独立目录安全完整解压。HTML中每个zone经独立解析还原后与五条原生记录精确一致；5个data图片解码后等于实采原bytes，36个公式及顺序与原生一致。外部script仅assets/tex-svg.js，MathJax与许可证随包；CSP禁外连/字体且图片只允许data，未发现外部CSS引用。ZIP内HTML的SHA与已成功观察的桌面显示一致，41张截图及DOM观察哈希绑定完成：5图complete且自然/显示尺寸一致、36个SVG、0merror/外网请求/控制台或页面错误。已有成功浏览器实测不重跑；独立解压、资源闭合和输出字节关系已经证明当前包可按README完整解压后打开index.html。
+
+原生native-original.jsonl保持整份服务器实体；five-native-records.jsonl是本地重新序列化的五题子集；index.html是五题原生内容的便携显示。这三者没有混称。截图证据限Edge155.0.4283.62、1440px桌面宽度；未验打印、手机、其他浏览器和未观察视口。冻结render-prep manifest含辅助程序摘要但本112份输入不含其源文件，本次直接独立核成品与固定观察输出，不新增辅助实现代码验收；该限制不影响已完成的内容和显示输出结论。
+
+A25第3题strict FAIL及限定对账、第4题原释放异常、目录课时归属冲突和预检首轮独立辅助错误保持。实际本轮两个离线核验脚本均首次exit0，无新helper失败，未跑旧套件/重复平台实测。未补marker，未修改root state、AGENTS、作者产品、Git或1800-a，未向其他聊天发消息。最终平台额度1耗0余，后续没有采集或保存授权。

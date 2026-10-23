@@ -15710,7 +15710,8 @@
         "next_task_document": "docs/tasks/A25-next-delivery-gap-20261023.md",
         "fourth_original_framework_failure_preserved": true,
         "current_scope_platform_actions_complete": true,
-        "automatic_new_task_dispatch": false
+        "automatic_new_task_dispatch": false,
+        "resolved_by_A26": "docs/evidence/coordinator/a26-final-native-delivery-closure/receipt.json"
       },
       "local_repair_request": {
         "at": "2026-10-23T05:34:22.694192+00:00",
@@ -16155,7 +16156,7 @@
       "task_id": "A26",
       "workflow_id": "bb8ef0cf-1e06-414f-ba67-3dff32a7a878",
       "created_at": "2026-10-23T12:42:56.346769+00:00",
-      "status": "ACTUAL_AND_VISUAL_DELIVERY_FIXED_INDEPENDENT_REVIEW",
+      "status": "ACCEPTED_FIVE_NATIVE_EXPORT_CONTENT_IMAGES_FORMULA_VISUAL_AND_PORTABLE_DELIVERY_AND_OWN_RELEASE_ONLY",
       "executor_thread_id": "01a168c9-d32e-7a71-b23f-71f2aa54724e",
       "reviewer_thread_id": "01a168c9-dde2-7472-8387-fa155e902a4f",
       "model": "gpt-6-astra",
@@ -16232,7 +16233,7 @@
       },
       "actual_capture": {
         "at": "2026-10-23T13:10:33.461576+00:00",
-        "status": "FIXED_NATIVE_EXPORT_AND_IMAGES_ACTUAL_SENT_TO_INDEPENDENT",
+        "status": "FORMAL_AND_ROOT_ACCEPTED",
         "actual_manifest_sha256": "9f1c8610c04b23348a6e020bee8c89cf7a1dc728b5519624735cba1765c4b170",
         "members_verified": 39,
         "root_index": "D:\\1800\\.local\\stages\\a26-native-export-20261023\\root-actual-frozen\\root-index.json",
@@ -16257,12 +16258,19 @@
         "deliverable_html": "D:\\1800\\.local\\stages\\a26-native-export-20261023\\native-delivery-01\\index.html",
         "deliverable_zip": "D:\\1800\\.local\\stages\\a26-native-export-20261023\\A26-lesson2-five-native-delivery-20261023.zip",
         "zip_sha256": "7b1718ff909b013e0426dad890189dfa22bea5c101a6535a166544cc7c0c0bfc",
-        "visual_acceptance": "PENDING_INDEPENDENT",
+        "visual_acceptance": "FORMAL_AND_ROOT_ACCEPTED",
         "author_reported_images": 5,
         "author_reported_formulas": 36,
         "author_reported_screenshots": 41,
         "no_platform_request_by_root": true
-      }
+      },
+      "formal_acceptance": true,
+      "actual_deliverable_completed": true,
+      "updated_at": "2026-10-23T13:23:44.311945+00:00",
+      "final_closure": "docs/evidence/coordinator/a26-final-native-delivery-closure/receipt.json",
+      "final_closure_sha256": "3c7217672d81c88c08c7551586f6fe8b0a041bdc670a687c53939ef4f775928e",
+      "review_cursor": "ee26e1cf-287d-4bb2-9a3a-cb3e161b352f:36",
+      "executor_cursor": "44fbaf91-83ce-49aa-9364-f1afd6ad2654:35"
     },
     "A27": {
       "task_file": "docs/tasks/A27-batch-stability-20261023.md",
@@ -16276,7 +16284,7 @@
       "task_id": "A27",
       "workflow_id": "bb8ef0cf-1e06-414f-ba67-3dff32a7a878",
       "created_at": "2026-10-23T12:42:56.346769+00:00",
-      "status": "FIXED_PRODUCT_SENT_TO_INDEPENDENT",
+      "status": "R1_MINIMAL_PROFILE_EQUIVALENCE_CORRECTION_RUNNING",
       "executor_thread_id": "01a168c9-e981-7651-8d73-e33ffdba6ee0",
       "reviewer_thread_id": "01a168c9-f7f1-79a0-9143-cc48cabab2ad",
       "model": "gpt-6-astra",
@@ -16319,6 +16327,46 @@
         "delivery_manifest_sha256": "0c3df2aef1c79edf019829008e3b417adc40c560affe5202fe7aa0418d0395ab",
         "platform_runs": 0,
         "A26_product_changed": false
+      },
+      "original_fixed_review": {
+        "at": "2026-10-23T13:21:54.103673+00:00",
+        "status": "FORMAL_AND_ROOT_REWORK_ACCEPTED_FIXED_FINDING",
+        "result_sha256": "16d2e26e92d09437eda81fe1d4af6c92eab26b428992420cefabd2e173c13971",
+        "product_commit": "23591811be71f9598c07c09b6a25a2a5fb066db0",
+        "reports_verified": 21,
+        "raw_pairs_verified": 147,
+        "synthetic_control_artifacts_verified": 169,
+        "finding": {
+          "id": "R1",
+          "priority": 1,
+          "title": "Equivalent profile directory path bypasses exclusivity gate",
+          "file": "D:\\1800\\.local\\stages\\a27-independent-20261023\\candidate-23591811\\product\\tools\\run_usense_postsave_readback.py",
+          "start": 111,
+          "end": 113,
+          "cause": "Only slash replacement and casefolded substring matching; no command argument/path equivalence validation",
+          "witness": {
+            "path": "D:\\1800\\.local\\stages\\a27-independent-20261023\\test-output\\independent-02\\profile-alias-witness.json",
+            "bytes": 1930,
+            "sha256": "616fd5b65ed843a4446bd0651696281c9d766cccebccd5bb273f8eaf22fe5824"
+          },
+          "same_directory_by_os_samefile": true,
+          "reported_matching_profile_processes": [
+            0,
+            0
+          ],
+          "actual_dispatch": [
+            "configure",
+            "capture"
+          ],
+          "actual_result": "READBACK_MATCHED_AFTER_OS_RELEASE",
+          "expected": "Reject occupied equivalent profile before configure/capture",
+          "repair_scope": "Parse Windows profile argument and validate canonical directory identity or reject ambiguity; retain both observations and add actual-entry alias rejection control"
+        },
+        "correction_executor": "01a168c9-e981-7651-8d73-e33ffdba6ee0",
+        "correction_reviewer": "01a168c9-f7f1-79a0-9143-cc48cabab2ad",
+        "correction_scope": "same A27 minimal Windows equivalent profile identity rejection before any configure/capture",
+        "no_platform_runs": true,
+        "A26_delivery_unblocked": true
       }
     }
   },
@@ -20846,7 +20894,8 @@
       "next_task_document": "docs/tasks/A25-next-delivery-gap-20261023.md",
       "fourth_original_framework_failure_preserved": true,
       "current_scope_platform_actions_complete": true,
-      "automatic_new_task_dispatch": false
+      "automatic_new_task_dispatch": false,
+      "resolved_by_A26": "docs/evidence/coordinator/a26-final-native-delivery-closure/receipt.json"
     },
     "local_repair_request": {
       "at": "2026-10-23T05:34:22.694192+00:00",
@@ -21300,10 +21349,34 @@
       "A26",
       "A27"
     ],
-    "status": "A26_EXACT_CAPTURE_DISPATCHED_A27_OFFLINE_PARALLEL",
+    "status": "A26_ACTUAL_DELIVERY_COMPLETE_A27_R1_FIX_IN_PROGRESS",
     "platform_task": "A26",
     "offline_task": "A27",
     "five_existing_saves_not_repeated": true,
-    "registered_at": "2026-10-23T12:46:54.379633+00:00"
+    "registered_at": "2026-10-23T12:46:54.379633+00:00",
+    "updated_at": "2026-10-23T13:23:44.311945+00:00"
+  },
+  "five_question_delivery_latest": {
+    "status": "ACTUAL_PORTABLE_DELIVERY_ACCEPTED",
+    "book_id": "46007447",
+    "printed_questions": [
+      1,
+      2,
+      3,
+      4,
+      5
+    ],
+    "real_saves": 5,
+    "fresh_independent_readbacks": 5,
+    "native_export_accepted": true,
+    "images_accepted": 5,
+    "formula_occurrences_accepted": 36,
+    "closure": "docs/evidence/coordinator/a26-final-native-delivery-closure/receipt.json",
+    "deliverable_html": "D:\\1800\\.local\\stages\\a26-native-export-20261023\\native-delivery-01\\index.html",
+    "deliverable_zip": "D:\\1800\\.local\\stages\\a26-native-export-20261023\\A26-lesson2-five-native-delivery-20261023.zip",
+    "zip_sha256": "7b1718ff909b013e0426dad890189dfa22bea5c101a6535a166544cc7c0c0bfc",
+    "no_repeated_saves": true,
+    "A27_offline_stability": "R1_IN_PROGRESS",
+    "whole_book_completed": false
   }
 }

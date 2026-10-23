@@ -1,0 +1,139 @@
+{
+  "schema": "A27IndependentFixedReviewResult/v1",
+  "at": "2026-10-23T13:19:57.195646+00:00",
+  "status": "REWORK",
+  "decision": "REWORK_PROFILE_EXCLUSIVITY_GATE",
+  "product_commit": "23591811be71f9598c07c09b6a25a2a5fb066db0",
+  "base_commit": "389d2e7a282d21efa25db8d01c02d115ce9e83b7",
+  "delivery_manifest_sha256": "0c3df2aef1c79edf019829008e3b417adc40c560affe5202fe7aa0418d0395ab",
+  "source_copy_pairs_verified_and_rechecked": 147,
+  "raw_git_blob_dependencies_verified": 32,
+  "delivery_members_verified": 112,
+  "original_preparation_members_unchanged": 7,
+  "candidate_new_tests": {
+    "run": "commands/author-new20",
+    "passed": 20,
+    "failed": 0,
+    "seconds": 2.996
+  },
+  "author_affected_tests": {
+    "passed": 9,
+    "evidence": "VERIFIED_ORIGINAL_OUTPUT_NOT_RERUN"
+  },
+  "independent_controls": {
+    "distinct": 7,
+    "passed": 6,
+    "failed": 1,
+    "helper_errors_preserved": 1,
+    "first_run": {
+      "I01": "PASS",
+      "I02": "PASS",
+      "I03": "HELPER_ERROR_BEFORE_PRODUCT_SUBPROCESS",
+      "I04_I07": "NOT_RUN"
+    },
+    "second_run": {
+      "I03_I06": "PASS",
+      "I07": "FAIL"
+    },
+    "passed_controls_replayed": false,
+    "fixed_a25_raw_copies_replayed": 51,
+    "further_product_testing_after_counterexample": "NOT_RUN"
+  },
+  "blocking_findings": [
+    {
+      "id": "R1",
+      "priority": 1,
+      "title": "Equivalent profile directory path bypasses exclusivity gate",
+      "file": "D:\\1800\\.local\\stages\\a27-independent-20261023\\candidate-23591811\\product\\tools\\run_usense_postsave_readback.py",
+      "start": 111,
+      "end": 113,
+      "cause": "Only slash replacement and casefolded substring matching; no command argument/path equivalence validation",
+      "witness": {
+        "path": "D:\\1800\\.local\\stages\\a27-independent-20261023\\test-output\\independent-02\\profile-alias-witness.json",
+        "bytes": 1930,
+        "sha256": "616fd5b65ed843a4446bd0651696281c9d766cccebccd5bb273f8eaf22fe5824"
+      },
+      "same_directory_by_os_samefile": true,
+      "reported_matching_profile_processes": [
+        0,
+        0
+      ],
+      "actual_dispatch": [
+        "configure",
+        "capture"
+      ],
+      "actual_result": "READBACK_MATCHED_AFTER_OS_RELEASE",
+      "expected": "Reject occupied equivalent profile before configure/capture",
+      "repair_scope": "Parse Windows profile argument and validate canonical directory identity or reject ambiguity; retain both observations and add actual-entry alias rejection control"
+    }
+  ],
+  "finite_findings": {
+    "key_order_normal_batch_path": "OBSERVED_PASS_WITH_EXACT_LIMITED_STATUS_AND_NO_STANDARD_MARKER",
+    "cooperative_cleanup_and_writer_cli": "OBSERVED_OFFLINE_PASS_WITH_SYNTHETIC_RUNTIME_ONLY",
+    "synchronous_blocking_and_os_release": "EXISTING_OUTER_SUPERVISOR_STILL_REQUIRED_NOT_LIVE_TESTED",
+    "recovery_before_resource_wrong_receipt_intent_or_release_rejections": "PASS",
+    "recovery_second_observation_occupied": "PASS_CONFIGURE_ONLY_READER_NOT_RUN",
+    "recovery_new_sidecar_as_standard_revision": "REJECTED",
+    "whole_product_offline_acceptance": false
+  },
+  "historical_preservation": {
+    "q3_strict_FAIL": true,
+    "q4_framework_false": true,
+    "q4_timeout_root_cause": "UNKNOWN",
+    "q3_q4_standard_accepted_marker_created": false,
+    "original_ledger_repaired": false,
+    "old_authority_budget_reused": false,
+    "five_saves_replayed": false,
+    "author_initial_failures_preserved": 4,
+    "A26_delivery_not_blocked_by_this_review": true
+  },
+  "helper_error": {
+    "original_script": {
+      "path": "D:\\1800\\docs\\evidence\\A27-independent\\fixed-review\\independent_controls.py",
+      "bytes": 11946,
+      "sha256": "2e1e63bfd0414aec808996a98a08fa9950092224aa10c3f2eab84ced08089366"
+    },
+    "corrected_script": {
+      "path": "D:\\1800\\docs\\evidence\\A27-independent\\fixed-review\\independent_controls_v2.py",
+      "bytes": 11972,
+      "sha256": "24fec344f5bf65ad3cc15968d8c028e8ee0a575eb473ca7750230a2b582562cc"
+    },
+    "reason": "Windows subprocess audit executable field was None; reviewer audit hook rejected before product process launch",
+    "correction": "Only add executable=sys.executable to the synthetic subprocess; original outputs retained; run previously unexecuted I03-I07 only"
+  },
+  "actual_actions": {
+    "real_platform_requests": 0,
+    "browser_starts": 0,
+    "live_OS_process_observations": 0,
+    "real_profile_or_ledger_access": 0,
+    "author_active_workspace_access": 0,
+    "product_modifications": 0,
+    "old_194_suite_runs": 0,
+    "OCR_runs": 0,
+    "git_commits": 0,
+    "root_state_or_AGENTS_writes": 0,
+    "automation_access_or_changes": 0,
+    "messages_to_other_chats": 0
+  },
+  "future_real_verification": "NOT_RUN_NO_NEW_LIVE_AUTHORITY",
+  "automation_1800_a": "PAUSED_REQUIRED_UNCHANGED_NOT_LIVE_REOBSERVED",
+  "review_complete_and_released": true,
+  "next": "Root sends minimal frozen R1 correction to the same independent review; no platform retry or historical ledger repair",
+  "evidence": {
+    "report": {
+      "path": "D:\\1800\\docs\\evidence\\A27-independent\\fixed-review\\report.md",
+      "bytes": 6556,
+      "sha256": "08a9cc1f74338a5057769f0d490e53cd6d9eddae6a589460d64afe7e4c5becff"
+    },
+    "raw_manifest": {
+      "path": "D:\\1800\\docs\\evidence\\A27-independent\\fixed-review\\raw-manifest.json",
+      "bytes": 65986,
+      "sha256": "04bbe90b7499cd4efc4aa33fe2d90e16bd83ce9a2801df0ea104b5e0856f6056"
+    },
+    "control_artifacts": {
+      "path": "D:\\1800\\docs\\evidence\\A27-independent\\fixed-review\\control-artifacts.json",
+      "bytes": 44213,
+      "sha256": "7c38be7475405b894c24f68ccaf82a1d8ebf6a188e61f2c6e373082fbf2ec0c2"
+    }
+  }
+}
