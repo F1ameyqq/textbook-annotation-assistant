@@ -1,0 +1,59 @@
+--- accepted8990
++++ frozen389d
+@@ -401,9 +401,54 @@
+     return _compare_validated_readback(plan, after)
+ 
+ 
+-def _compare_validated_readback(plan, after):
++def reconcile_first_created_zone_key_order(plan, after):
++    """Pure evidence reconciliation for the observed absent-to-present boundary.
++
++    Keep the original strict comparison. Only a newly created zone's exact
++    three-field data object may change from the planner's insertion order to
++    the server order observed on A25. Types, every value and array order stay
++    strict. This neither accepts a ledger intent nor authorizes another send.
++    """
++    validate_plan(plan)
++    strict = _compare_validated_readback(plan, after)
++    expected_snapshot = copy.deepcopy(plan["expected"])
++    changes = []
++    if not strict["match"]:
++        for change in plan["changes"]:
++            if (change["before_state"] != "absent" or
++                    _zone_state(plan["before"]["zones"][change["zone"]])[0] != "absent"):
++                continue
++            zone = change["zone"]
++            expected = plan["expected"]["zones"][zone]["data"]
++            try:
++                actual = after["zones"][zone]["data"]
++            except (KeyError, TypeError):
++                continue
++            if (type(actual) is not dict or list(expected) != ["rect_ids", "ocr_result", "success"] or
++                    list(actual) != ["success", "ocr_result", "rect_ids"] or
++                    not all(json_same(expected[key], actual[key]) for key in expected)):
++                continue
++            expected_snapshot["zones"][zone]["data"] = {key: expected[key] for key in actual}
++            changes.append({"path": ["zones", zone, "data"], "before_state": "absent",
++                            "expected_keys": list(expected), "actual_keys": list(actual),
++                            "field_set_types_values_and_array_order_identical": True})
++    comparison = _compare_validated_readback(plan, after, expected_snapshot=expected_snapshot)
++    match = bool(changes) and comparison["match"]
++    return {"schema": "UsenseFirstCreatedZoneKeyOrderReconciliation/v1",
++            "status": "CREATED_ZONE_KEY_ORDER_ONLY_MATCH" if match else "RECONCILIATION_NOT_MATCHED",
++            "match": match, "strict_comparison": strict,
++            "comparison_after_limited_expected_key_order": comparison,
++            "expected_key_order_adjustments": changes, "original_after_sha256": digest(after),
++            "plan_sha256": plan["plan_sha256"], "ledger_key": plan["ledger_key"],
++            "scope": "Only changed absent-to-present data with the exact observed three-key order pair",
++            "receipt_verified": False, "independent_context_verified": False,
++            "live_save_verified": False, "ledger_accepted_by_this_function": False,
++            "new_send_authorized": False}
++
++
++def _compare_validated_readback(plan, after, *, expected_snapshot=None):
+     _json(after)
+-    expected = copy.deepcopy(plan["expected"])
++    expected = copy.deepcopy(plan["expected"] if expected_snapshot is None else expected_snapshot)
+     metadata_changes, metadata_error = [], None
+     try:
+         old, new = expected["info"]["data"]["updated_at"], after["info"]["data"]["updated_at"]

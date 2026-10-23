@@ -1,0 +1,13 @@
+# A25 新增缺失区键序对账与最后两题有限验收
+
+接受389d产品的有限纯对账规则；第三题既有真实保存及原新鲜独立读回在该规则下正式接受。原strict FAIL、原after/摘要、原intent和失败acceptance.json全部保留，本结论不创建accepted marker，不构成第三题revision predecessor，也不授权未来第三题写入。
+
+87原件/24 Git blob及外层7原件核证。已有产品仅update.py发生差异：新入口先validate_plan及原strict比较，仅对本plan从严格absent新增的data、精确三字段和逐值类型/数组均一致、恰好rect_ids,ocr_result,success→success,ocr_result,rect_ids的直接对象键序，在私有expected副本调整后再完整strict比较。所有其他原函数AST保持，原私有比较helper只增加可选副本参数，其余逻辑保持；core、writer、revision、runner字节未改。新3项（含16反例）及5独立拒绝控制通过，保留作者首次fixture导入失败原件。未运行旧套件、OCR或平台。
+
+第三题复用刚完成的固定实际独立结论与完整原件事实：一次200/code0成功回执，不同PID/context reader在writer退出后12原始响应均完成；完整快照2163节点/1796标量逐项核对只剩两处新增区data直接对象键序。重叠冻结原件逐字节相同；新纯入口对同一plan/after匹配，原strict仍失败，输入摘要不变。新函数的receipt/context/live标记仍false，实际保存/独立性由先前正式原件验收独立提供。五个原ledger文件及旧耗尽authority不变；原第三未解决intent继续阻止重发，旧revision严格前驱门不被此旁证替代。
+
+剩余targets恰好原清单印刷4/5、native21/22子集；两候选及两计划字节与先前验收相同，previous_acceptance=null，自身稳定分支在冻结观察中无ledger。无需借第三题权限。接受该具体增量计划，实际两次保存/回读仍NOT_RUN。实际运行仍须逐题新鲜12GET检查，再各最多1POST、新进程/context完整12GET回读；异常即停止无重试。
+
+接受launcher804bd183的静态启动条件，复用已验监管器a1582782：原profile/DIRECT/exactleaf-SPKI、清洁389d、87原件/副本及新checkpoint/targets/runtime/hash、新输出、原五ledger逐hash及完整JSON快照相等、剩余两identity分支空。根绑定新唯一authority、本报告/机器结论/根receipt原字节SHA及最新原profile独占进程0观察；启动器只检查锁，不代替该观察。范围exact2 writer+2 reader、4context/惰性导航/TLS、48业务GET、最多2POST、整批900秒，原五题批1/0不恢复或转借。写入/TLS引用替换同一新authority，intent及原子消费先于唯一监管启动。
+
+本次仅接受ledger_snapshot为原五文件且optional_existing_third_accepted_marker_sha256=null分支；启动器可选第三marker白名单分支未获本次授权，且启动器不创建marker。所有外层只静态核查，未新增外层测试或启动。最终整批Job0不证明逐writer子进程在下一reader前全部OS退出。报告固定helper曾出现一次UTF-8声明错误；原脚本与工具返回错误记录保留，仅加显式UTF-8声明修helper，未重跑已通过边界。完成并释放，sole1800-a保持PAUSED；未改产品、ledger、根状态或Git。

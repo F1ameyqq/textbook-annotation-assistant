@@ -1,0 +1,111 @@
+--- accepted_five_outer
++++ fixed_exact_two_outer
+@@ -10,14 +10,14 @@
+ 
+ BASE = Path(__file__).resolve().parent
+ REPO = Path('C:/Users/ASUS/.codex/worktrees/b-latest-20261023/1800')
+-CHECKPOINT = BASE / 'checkpoint-five-save-readiness.json'
+-CHECKPOINT_SHA = '7f459e57b8c8d8b9b59a3c2c5b6b3ca162a3b5f2944f8392461acfcc014c4d70'
+-MANIFEST = BASE / 'fixed-five-save-readiness/manifest.json'
+-MANIFEST_SHA = '128ee3d8e9eb00b0dc033c03b7654f1613fbad83dfeb05713f7e64eb4776ff67'
+-COMMIT = '8990e1e3c7561bc7403eb29359f0d39ba3a54295'
++CHECKPOINT = BASE / 'checkpoint-created-zone-reconciliation.json'
++CHECKPOINT_SHA = 'd71016829898da16b8c56fd2d9f2b321e0511be5aa499584eef0c306bbceee33'
++MANIFEST = BASE / 'fixed-created-zone-reconciliation/manifest.json'
++MANIFEST_SHA = '271c7ca122beeba5511b08619d9dc6cc356d777363eaf1051f372b9205d667b7'
++COMMIT = '389d2e7a282d21efa25db8d01c02d115ce9e83b7'
+ PROFILE = Path('D:/1800/.local/browser-profiles/937cbc0b7541861c7c68')
+-OUTPUT = BASE / 'five-save-live'
+-EVIDENCE = BASE / 'five-save-outer'
++OUTPUT = BASE / 'remaining-two-live'
++EVIDENCE = BASE / 'remaining-two-outer'
+ HOLDER = BASE.parent / 'owned_process.py'
+ PYTHON = BASE.parent / 'runtime-py312/venv/Scripts/python.exe'
+ sys.path.insert(0, str(REPO / 'src'))
+@@ -41,6 +41,9 @@
+     require(sha(CHECKPOINT.read_bytes()) == CHECKPOINT_SHA, 'CHECKPOINT_CHANGED')
+     require(sha(MANIFEST.read_bytes()) == MANIFEST_SHA, 'MANIFEST_CHANGED')
+     checkpoint, manifest = loads(CHECKPOINT.read_bytes()), loads(MANIFEST.read_bytes())
++    checkpoint['targets_manifest'] = {'path': checkpoint['remaining_two']['manifest'],
++                                      'sha256': checkpoint['remaining_two']['manifest_sha256']}
++    checkpoint['launch_argv'] = checkpoint['remaining_two']['launch_argv']
+     for item in manifest['members']:
+         require(sha(Path(item['source_path']).read_bytes()) == item['sha256'], 'FIXED_SOURCE_CHANGED')
+         require(sha(Path(item['frozen_path']).read_bytes()) == item['sha256'], 'FIXED_COPY_CHANGED')
+@@ -52,11 +55,13 @@
+     require(head == COMMIT and not dirty, 'PRODUCT_COMMIT_OR_WORKTREE_CHANGED')
+     require(implementation_digest() == checkpoint['implementation_sha256'], 'IMPLEMENTATION_CHANGED')
+     require(sha(PYTHON.read_bytes()) == 'd59c9a894b319828d023f3aa83d9a3488d2339f9e27e60e49b02abb0d53cf538', 'RUNTIME_EXE_CHANGED')
+-    require(sha(HOLDER.read_bytes()) == checkpoint['owned_supervisor']['sha256'], 'HOLDER_CHANGED')
++    require(sha(HOLDER.read_bytes()) == 'a1582782024994d841ddeadc0e2df6c8ef29a35bc8e428dcb4dd8b8cdc589ee8', 'HOLDER_CHANGED')
+     require(not OUTPUT.exists(), 'FRESH_BATCH_OUTPUT_REQUIRED')
+     require(not EVIDENCE.exists(), 'NO_SECOND_OUTER_LAUNCH')
+     ledger = PROFILE.parent / 'usense-existing-ledger'
+-    require(ledger.is_dir() and not list(ledger.iterdir()), 'INITIAL_FIVE_LEDGER_MUST_REMAIN_EMPTY')
++    require(ledger.is_dir(), 'EXISTING_LEDGER_REQUIRED')
++    for path, digest in checkpoint['ledger_original_file_sha256'].items():
++        require(sha(Path(path).read_bytes()) == digest, 'ORIGINAL_LEDGER_FILE_CHANGED')
+     require(not any((PROFILE / name).exists() for name in LOCKS), 'PROFILE_LOCK_PRESENT')
+     return checkpoint
+ 
+@@ -76,7 +81,8 @@
+                 'readiness_checkpoint_sha256', 'targets_manifest_sha256', 'profile', 'transport',
+                 'latest_start_utc', 'limits.attempts_allowed/spent/remaining', 'limits.save_attempts',
+                 'limits.independent_readers', 'limits.whole_batch_process_seconds', 'ledger_root',
+-                'tls exact original leaf/SPKI', 'outer_launcher_sha256'],
++                'tls exact original leaf/SPKI', 'outer_launcher_sha256', 'ledger_snapshot',
++                'optional_existing_third_accepted_marker_sha256 if root separately created that marker'],
+             'whole_batch_process_seconds_max': 900, 'new_platform_actions': 0,
+             'os_release_scope': 'One final whole-batch Job/held-identity release only; individual writers/readers separately evidence context/runtime release'}))
+         return 0
+@@ -95,16 +101,28 @@
+     require(authority['outer_launcher_sha256'] == sha(Path(__file__).read_bytes()), 'AUTHORITY_LAUNCHER_MISMATCH')
+     require(Path(authority['profile']).resolve() == PROFILE.resolve(), 'AUTHORITY_PROFILE_MISMATCH')
+     require(Path(authority['ledger_root']).resolve() == (PROFILE.parent / 'usense-existing-ledger').resolve(), 'AUTHORITY_LEDGER_MISMATCH')
++    ledger = PROFILE.parent / 'usense-existing-ledger'
++    original_ledger = {str(Path(p).resolve()): h for p, h in checkpoint['ledger_original_file_sha256'].items()}
++    expected_ledger = {str(Path(p).resolve()): h for p, h in authority['ledger_snapshot'].items()}
++    actual_ledger = {str(p.resolve()): sha(p.read_bytes()) for p in ledger.glob('*.json')}
++    require(actual_ledger == expected_ledger and all(expected_ledger.get(p) == h for p, h in original_ledger.items()), 'EXACT_NONEMPTY_LEDGER_SNAPSHOT_REQUIRED')
++    third_marker = str((ledger / 'usense-existing-2cd3c0d25c14d89391a5b7e496bbf53dd890020531b1fbf8a4b4b5b7a687a50d.accepted.json').resolve())
++    additions = set(expected_ledger) - set(original_ledger)
++    require(not additions or (additions == {third_marker} and expected_ledger[third_marker] == authority.get('optional_existing_third_accepted_marker_sha256')),
++            'ONLY_EXPLICIT_ROOT_BOUND_THIRD_MARKER_MAY_PREEXIST')
++    for item in checkpoint['remaining_two']['plans']:
++        stable_key = loads(Path(item['plan_path']).read_bytes())['ledger_key']
++        require(not list(ledger.glob(stable_key + '*.json')), 'REMAINING_TARGET_IDENTITY_ALREADY_HAS_LEDGER_FILE')
+     require(authority['transport'] == {'mode': 'DIRECT', 'proxy_server': None}, 'AUTHORITY_DIRECT_REQUIRED')
+     require(authority['tls']['origin'] == 'https://www.usense.com' and
+         authority['tls']['leaf_der_sha256'] == '52d8642145282846969a29b97c5c3aaae4c0203c4a6bc06906478f13445e3941' and
+         authority['tls']['spki_sha256_base64'] == 'Wlnek+vSltKGp2xIsXuyk4SecrEEbf38ppvOnLuzz7A=', 'AUTHORITY_EXACT_TLS_REQUIRED')
+     limits = authority['limits']
+     require((limits['attempts_allowed'], limits['attempts_spent'], limits['attempts_remaining']) == (1, 0, 1), 'UNSPENT_ONE_BATCH_REQUIRED')
+-    require(limits['save_attempts'] == 5 and limits['independent_readers'] == 5, 'EXACT_FIVE_SERIAL_SCOPE_REQUIRED')
+-    require(limits['save_attempts_per_target'] == 1 and limits['contexts'] == 10 and
+-        limits['inert_same_origin_navigations'] == 10 and limits['business_json_gets'] == 120 and
+-        limits['tls_probe_attempts'] == 10 and limits['retry_allowed'] is False, 'FINITE_BATCH_RESOURCE_SCOPE_REQUIRED')
++    require(limits['save_attempts'] == 2 and limits['independent_readers'] == 2, 'EXACT_REMAINING_TWO_SERIAL_SCOPE_REQUIRED')
++    require(limits['save_attempts_per_target'] == 1 and limits['contexts'] == 4 and
++        limits['inert_same_origin_navigations'] == 4 and limits['business_json_gets'] == 48 and
++        limits['tls_probe_attempts'] == 4 and limits['retry_allowed'] is False, 'FINITE_BATCH_RESOURCE_SCOPE_REQUIRED')
+     require(all(limits[name] == 0 for name in ('login_attempts', 'image_downloads', 'uploads', 'OCR_replays',
+         'new_or_deleted_frames', 'directory_moves')), 'NO_EXTRA_ACTIONS_ALLOWED')
+     seconds = limits['whole_batch_process_seconds']
+@@ -120,7 +138,7 @@
+     EVIDENCE.mkdir(exist_ok=False)
+     with (EVIDENCE / 'authority-before-launch.raw.json').open('xb') as stream:
+         stream.write(original)
+-    intent = {'schema': 'A25FiveSaveOuterSingleLaunch/v1', 'authority_id': authority['authority_id'],
++    intent = {'schema': 'A25RemainingTwoOuterSingleLaunch/v1', 'authority_id': authority['authority_id'],
+         'authority_original_sha256': sha(original), 'at': utc_now(), 'argv': command,
+         'product_commit': COMMIT, 'checkpoint_sha256': CHECKPOINT_SHA, 'whole_batch_process_seconds': seconds,
+         'attempts_spent': 1, 'attempts_remaining': 0, 'retry_allowed': False, 'status': 'INTENT_BEFORE_PROCESS_CREATION'}
+@@ -137,7 +155,7 @@
+     holder = importlib.util.module_from_spec(spec)
+     spec.loader.exec_module(holder)
+     result = holder.run(command, REPO, EVIDENCE / 'batch-01', seconds)
+-    final = {'schema': 'A25FiveSaveOuterOutcome/v1', 'finished_at': utc_now(), 'authority_id': authority['authority_id'],
++    final = {'schema': 'A25RemainingTwoOuterOutcome/v1', 'finished_at': utc_now(), 'authority_id': authority['authority_id'],
+         'outer_exit_code': result.get('exit_code'), 'whole_batch_os_release_confirmed': result.get('owned_os_release_confirmed'),
+         'job_active_processes_after': result.get('job_active_processes_after'), 'held_identities': len(result['observed_processes']),
+         'whole_batch_release_is_not_per_writer_os_release': True, 'retry_allowed': False,
