@@ -114,22 +114,22 @@ def candidates_from_graph(graph, pages):
                          "number": question["printed_number"],
                          "anchor": question["anchor_ref"]})
         if question.get('source_instance_id'):
-            stable = digest([stable, question['source_instance_id']])
+            stable = digest([stable, question['source_instance_id'], question.get('source_block_key', 'main')])
         candidate = {"key": stable, "printed_number": question["printed_number"],
                      "question_id": question["question_id"], "section_path": question["section_path"],
                      "zones": zones, "frames": frames, "issues": sorted(set(issues)),
                      "source_kind": "IMAGE_OCR" if image_based else "EXACT_TEXT_IMPORT",
                      "content_status": "NEEDS_REVIEW" if issues else "READY_EXACT_TEXT",
                      "review": None, "platform_status": "NOT_RUN"}
-        for field in ('source_instance_id', 'source_item_kind', 'material_id'):
+        for field in ('source_instance_id', 'source_item_kind', 'material_id', 'source_block_key', 'source_block_label'):
             if question.get(field) is not None: candidate[field] = question[field]
         if question.get('source_instance_id'): candidate['question_type'] = question['type_candidate']
         candidate["content_hash"] = candidate_hash(candidate)
         candidates.append(candidate)
     # Printed numbers are local to a selected lesson, never global order IDs.
     for item in candidates:
-        if sum((q["printed_number"], q.get('source_item_kind')) ==
-               (item["printed_number"], item.get('source_item_kind')) for q in candidates) != 1:
+        if sum((q["printed_number"], q.get('source_item_kind'), q.get('source_block_key')) ==
+               (item["printed_number"], item.get('source_item_kind'), item.get('source_block_key')) for q in candidates) != 1:
             item["issues"].append("DUPLICATE_PRINTED_NUMBER")
             item["content_status"] = "NEEDS_REVIEW"
     return candidates
@@ -137,7 +137,7 @@ def candidates_from_graph(graph, pages):
 
 def candidate_hash(candidate):
     fields = ("key", "printed_number", "section_path", "zones", "frames", "source_kind",
-              "source_instance_id", "source_item_kind", "material_id", "question_type")
+              "source_instance_id", "source_item_kind", "material_id", "question_type", "source_block_key", "source_block_label", "source_recovery_regions")
     return digest({key: candidate[key] for key in fields if key in candidate})
 
 
@@ -287,6 +287,9 @@ def _continue(store, job, head, started, *, allow_local_ocr):
             graph = assemble_plan(evidence, graph, job['source_plan'], job['directory_path'])
         job["evidence_ref"], job["graph_ref"] = store.put(evidence), store.put(graph)
         job["candidates"] = candidates_from_graph(graph, job["pages"])
+        if job.get('source_plan'):
+            from .wholebook import apply_source_regions
+            apply_source_regions(job['candidates'], graph, job['pages'])
         from .quality import assess
         for candidate in job['candidates']:assess(candidate,graph,evidence,job['pages'])
         # Answer-specific diagnostics remain on their candidates. Retain all

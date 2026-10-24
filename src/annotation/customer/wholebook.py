@@ -69,6 +69,12 @@ def read_source(path, selected=None):
             for name in ('source_exclusions', 'pairing_status', 'graphic_option_candidates', 'source_issues'):
                 if name in tables:
                     plan[name] = [dict(r) for r in db.execute('SELECT * FROM '+name+' WHERE scope_id=?', (scope['id'],))]
+            if 'source_item_context' in tables:
+                identities = {i['item_id'] for i in items}
+                plan['source_item_context'] = [dict(r) for r in db.execute('SELECT * FROM source_item_context') if r['item_id'] in identities]
+            if 'source_recovery_records' in tables:
+                identities = {i['item_id'] for i in items}
+                plan['source_recovery_records'] = [dict(r) for r in db.execute('SELECT * FROM source_recovery_records') if r['item_id'] in identities]
             if 'answer_marker_quality' in tables:
                 plan['answer_marker_quality'] = [dict(r) for r in db.execute(
                     'SELECT * FROM answer_marker_quality WHERE item_id IN (SELECT item_id FROM resolved_answer_items WHERE scope_id=?)', (scope['id'],))]
@@ -302,6 +308,37 @@ def answer_anchor_status(item, raw_line, pixel_spans):
     return 'NONNUMERIC_ITEM_REQUIRES_REVIEW'
 
 
+def apply_source_regions(candidates, graph, pages):
+    """Preserve measured recovery ROIs, including ink OCR did not recognize."""
+    from .prepare import _frame_fragments, candidate_hash
+    page_map = {p['asset_id']: p for p in pages}
+    for candidate in candidates:
+        question = next(q for q in graph['payload']['questions'] if q['question_id'] == candidate['question_id'])
+        regions = question.get('source_recovery_regions', [])
+        if not regions: continue
+        used = set(); frames = []
+        for region in regions:
+            page = page_map[region['asset_id']]; b = region['bbox']
+            if (region['source_sha256'] != page['raw_sha256'] or len(b) != 4 or
+                not all(type(v) in (int, float) and math.isfinite(v) for v in b) or
+                not 0 <= b[0] < b[2] <= page['width'] or not 0 <= b[1] < b[3] <= page['height']):
+                raise Hold('恢复题区与原图身份或坐标不一致。')
+            ids = [f['fragment_id'] for f in question['fragments'] if f['role'] == 'stem'
+                   and f['asset_id'] == region['asset_id'] and f['column'] == region['column']
+                   and any(ref in region['line_ids'] for ref in f['evidence_refs'])]
+            if used.intersection(ids): raise Hold('恢复题区重复声明同一题干片段。')
+            used.update(ids)
+            frames.append({'zone': 'question', 'content_type': 'text', 'asset_id': page['asset_id'],
+                'bbox': [math.floor(b[0]), math.floor(b[1]), math.ceil(b[2]), math.ceil(b[3])],
+                'source_sha256': page['raw_sha256'], 'source_dimensions': [page['width'], page['height']],
+                'coordinate_space': 'ORIGINAL_PIXELS', 'source_fragment_ids': ids, 'column': region['column'],
+                'source_recovery_region': copy.deepcopy(region), 'content_approved': False})
+        remaining = [f for f in question['fragments'] if f['role'] == 'stem' and f['fragment_id'] not in used]
+        candidate['frames'] = frames + _frame_fragments(remaining, page_map, 'question') + [f for f in candidate['frames'] if f['zone'] != 'question']
+        candidate['source_recovery_regions'] = copy.deepcopy(regions)
+        candidate['content_hash'] = candidate_hash(candidate)
+
+
 def assemble_plan(evidence, original_graph, plan, path):
     """Carry exact item instances across pages; pair only unique kind+label.
 
@@ -325,6 +362,14 @@ def assemble_plan(evidence, original_graph, plan, path):
     pixel_spans = {(s['item_id'], s['page'], s['row'], *s['text_span']): s
                    for s in evidence['payload'].get('pixel_answer_spans', [])}
     marker_quality = {m['item_id']: m for m in plan.get('answer_marker_quality', [])}
+    item_context = {c['item_id']: c for c in plan.get('source_item_context', [])}
+    question_blocks = {i['item_id']: item_context.get(i['item_id'], {}).get('block_key', 'main')
+                       for i in plan['items'] if i['role'] == 'question' and i['kind'] not in {'MATERIAL', 'DECORATION'}}
+    known_blocks = set(question_blocks.values())
+    ready_blocks = defaultdict(set)
+    for pairing in plan.get('pairing_status', []):
+        if pairing['status'] == 'READY_TO_PAIR' and pairing.get('answer_item_id'):
+            ready_blocks[pairing['answer_item_id']].add(question_blocks.get(pairing['question_item_id'], 'main'))
 
     def furniture(page, line):
         compact = re.sub(r'\s+', '', line['text'])
@@ -393,6 +438,13 @@ def assemble_plan(evidence, original_graph, plan, path):
             body, _ = fragments(item); materials[item['item_id']] = body
     for item in plan['items']:
         if item['kind'] == 'MATERIAL': continue
+        if item['kind'] == 'DECORATION':
+            rows = [(item['role'], f['page'], r) for f in item['fragments'] for r in f['row_indices']]
+            excluded_items.append({'item_id': item['item_id'], 'reason': 'EXPLICIT_DECORATION_NOT_QUESTION', 'source_rows': rows})
+            for role, n, r in rows:
+                page = by_number.get((role, n)); line = raw.get((role, r, page['asset_id'])) if page else None
+                if line: exclusions.append({'line_id': line['line_id'], 'reason': 'EXPLICIT_DECORATION_KIND'})
+            continue
         body, shared = fragments(item, item['role'] == 'answer')
         if not body or (item['role'] == 'answer' and not any(f['role'] == 'answer' and f['text'].strip() for f in body)):
             rows = [(item['role'], f['page'], r) for f in item['fragments'] for r in f['row_indices']]
@@ -407,6 +459,12 @@ def assemble_plan(evidence, original_graph, plan, path):
         common = {'book_id': evidence['book_id'], 'section_path': list(path), 'printed_number': item['label'],
                   'asset_id': body[0]['asset_id'], 'source_instance_id': item['item_id'],
                   'source_item_kind': item['kind'], 'verification_status': 'UNVERIFIED'}
+        block = item_context.get(item['item_id'], {}).get('block_key')
+        if block is None:
+            blocks = ready_blocks.get(item['item_id'], set())
+            block = next(iter(blocks)) if len(blocks) == 1 else 'main' if len(known_blocks) <= 1 else 'UNRESOLVED'
+        common['source_block_key'] = question_blocks.get(item['item_id'], block)
+        common['source_block_label'] = item_context.get(item['item_id'], {}).get('block_label', '')
         if item['role'] == 'answer':
             flags = ['ANSWER_ROLE_REGIONS_UNSPLIT'] if shared else []
             anchor_status = answer_anchor_status(item, anchor_line, pixel_spans)
@@ -425,6 +483,16 @@ def assemble_plan(evidence, original_graph, plan, path):
                 'evidence_refs': [ref for f in body for ref in f['evidence_refs']]})
         else:
             flags = []
+            recovered = []
+            for part in item['fragments']:
+                if not part.get('reviewed_region'): continue
+                page = by_number[item['role'], part['page']]
+                line_ids = [line['line_id'] for key, line in raw.items() if key[0] == item['role']
+                            and key[2] == page['asset_id'] and key[1] in part['row_indices']]
+                recovered.append({'asset_id': page['asset_id'], 'viewer_page': part['page'], 'column': part['column'],
+                    'bbox': copy.deepcopy(part['bbox']), 'part': part.get('part', 'full_question'),
+                    'source_sha256': part.get('source_sha256'), 'line_ids': line_ids,
+                    'provenance': 'SOURCE_RECOVERY_RECORD_ORIGINAL_IMAGE_REGION', 'content_approved': False})
             bare = {f['text'].strip() for f in body if re.fullmatch(r'[A-D]', f['text'].strip())}
             if bare == set('ABCD') or any(p['question_item_id'] == item['item_id'] for p in plan.get('graphic_option_candidates', [])):
                 flags.append('FIGURE_EXTENT_UNVERIFIED')
@@ -435,13 +503,14 @@ def assemble_plan(evidence, original_graph, plan, path):
             questions.append({**common, 'question_id': 'q-' + digest(item['item_id'])[:24], 'anchor_ref': anchor,
                 'fragments': body, 'flags': flags, 'candidate_answer_ids': [], 'selected_answer_id': None,
                 'parent_question_id': None, 'material_id': material,
+                'source_recovery_regions': recovered,
                 'text': '\n'.join(f['text'] for f in body), 'type_candidate': 'UNVERIFIED'})
     for q in questions:
-        matches = [a for a in answers if (a['source_item_kind'], a['printed_number']) ==
-                   (q['source_item_kind'], q['printed_number']) and
+        matches = [a for a in answers if (a['source_item_kind'], a['printed_number'], a['source_block_key']) ==
+                   (q['source_item_kind'], q['printed_number'], q['source_block_key']) and
                    a['anchor_validation'] in {'OBSERVED_PRIMARY_TOKEN', 'OBSERVED_ANSWER_KEY_TOKEN', 'OBSERVED_SIMPLE_DENSE_BLOCK'}]
-        same_questions = [o for o in questions if (o['source_item_kind'], o['printed_number']) ==
-                          (q['source_item_kind'], q['printed_number'])]
+        same_questions = [o for o in questions if (o['source_item_kind'], o['printed_number'], o['source_block_key']) ==
+                          (q['source_item_kind'], q['printed_number'], q['source_block_key'])]
         q['candidate_answer_ids'] = [a['answer_id'] for a in matches]
         if len(matches) == len(same_questions) == 1:
             q['selected_answer_id'] = matches[0]['answer_id']
@@ -460,7 +529,7 @@ def assemble_plan(evidence, original_graph, plan, path):
         if 'FIGURE_EXTENT_UNVERIFIED' in q['flags'] and graphic_labels == set('ABCD'):
             q['type_candidate'] = {'question_type': 'choice', 'option_role': 'option', 'selection_mode': 'UNVERIFIED_GRAPHIC_OPTIONS'}
     payload = {'questions': questions, 'answers': answers, 'issues': issues, 'answer_coverage': [],
-        'matching': 'scope+source_item_kind+printed_label; unique question and answer only',
+        'matching': 'scope+source_block_key+source_item_kind+printed_label; READY pairing exact answer instance required',
         'unmatched_answer_ids': [a['answer_id'] for a in answers if not any(q['selected_answer_id'] == a['answer_id'] for q in questions)],
         'selection_status': 'DRAFT_UNVERIFIED', 'platform_actions': [],
         'original_assembly': original_graph, 'source_plan_hash': digest(plan), 'source_exclusions': exclusions,
