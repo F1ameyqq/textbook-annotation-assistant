@@ -41,6 +41,7 @@ parser.add_argument("--recoveries", type=Path, help="reviewed original-image rec
 parser.add_argument("--geometry-deps", type=Path, help="run character geometry using this rapidocr package directory")
 parser.add_argument("--training2", type=Path, help="reviewed training question 2 source plan JSON")
 parser.add_argument("--boundaries7", type=Path, help="reviewed seven-region boundary plan JSON")
+parser.add_argument("--figures", type=Path, help="reviewed question figure binding plan JSON")
 args = parser.parse_args()
 if bool(args.training2) != bool(args.boundaries7):
     parser.error("--training2 and --boundaries7 must be supplied together")
@@ -575,6 +576,9 @@ def reconcile_sources(database, csv_path, geometry_dependencies=None):
         if kind=="QUESTION" and any(abs(int(label)-gap)==1 for gap in gaps):reasons.append("ADJACENT_TO_MISSING_NUMBER")
         status="READY_TO_PAIR" if not reasons else "CUSTOMER_REVIEW"
         detail={"kind":kind,"label":label,"question_fragments":cleaned.get(iid,[]),"answer_candidates":[a[0] for a in answers]}
+        if database.execute("SELECT 1 FROM sqlite_master WHERE type='table' AND name='question_figure_bindings'").fetchone():
+            for zone,field in [('stem','stem_figure_regions'),('options','option_graphic_regions')]:
+                detail[field]=[json.loads(r[0]) for r in database.execute('SELECT record_json FROM question_figure_bindings WHERE question_item_id=? AND zone=? ORDER BY page,figure_id',(iid,zone))]
         database.execute("INSERT INTO pairing_status VALUES(?,?,?,?,?,?)",(sid,iid,answers[0][0] if len(answers)==1 else None,status,";".join(reasons) or "UNIQUE_SOURCE_ANCHORS_SAME_SCOPE_KIND_LABEL",json.dumps(detail,ensure_ascii=False)))
     database.commit()
     with Path(csv_path).open(encoding="utf-8-sig",newline="") as f:rows=list(csv.DictReader(f));fieldnames=list(rows[0])
@@ -749,6 +753,29 @@ def observe_unique_explanation_heads(database):
         if straddles:database.execute('UPDATE resolved_answer_windows SET y1=? WHERE scope_id=? AND page=? AND column=? AND y0=?',(end,sid,n,c,y0))
         database.execute('INSERT INTO explanation_head_observations VALUES(?,?,?,?,?,?,?)',(sid,label,n,index,json.dumps(b),json.dumps([y0,y1]),json.dumps([y0,end])));accepted.add((sid,n,index))
     return accepted
+
+def apply_question_figure_bindings(database, plan_path):
+    """Bind visually located regions by source question identity, including unlettered figures."""
+    import json,hashlib
+    from pathlib import Path
+    raw=Path(plan_path).read_bytes();plan=json.loads(raw.decode('utf-8-sig'));sha=hashlib.sha256(raw).hexdigest()
+    pages={n:(source,w,h) for n,source,w,h in database.execute('SELECT page,sha,width,height FROM pages')}
+    for p in plan['source_images']:
+        if pages[p['page']]!=(p['source_sha256'],p['width'],p['height']):raise ValueError('Figure source page differs')
+    database.executescript('CREATE TABLE IF NOT EXISTS question_figure_bindings(figure_id TEXT PRIMARY KEY,scope_id TEXT,question_item_id TEXT,printed_question TEXT,zone TEXT,role TEXT,page INTEGER,column INTEGER,bbox_json TEXT,source_sha256 TEXT,source_width INTEGER,source_height INTEGER,label TEXT,figure_label TEXT,subquestion_refs_json TEXT,original_ocr_row_refs_json TEXT,visual_crop_checked INTEGER,assignment_basis TEXT,plan_sha TEXT,record_json TEXT);CREATE TABLE IF NOT EXISTS question_figure_scope_reviews(scope_id TEXT PRIMARY KEY,plan_sha TEXT,plan_json TEXT);')
+    database.execute('DELETE FROM question_figure_bindings WHERE scope_id=?',(plan['scope_id'],))
+    database.execute('INSERT OR REPLACE INTO question_figure_scope_reviews VALUES(?,?,?)',(plan['scope_id'],sha,json.dumps(plan,ensure_ascii=False)))
+    for item in plan['items']:
+        qid=item['question_item_id'];identity=database.execute("SELECT scope_id,label FROM source_items WHERE item_id=? AND role='question' AND kind='QUESTION'",(qid,)).fetchone()
+        if identity!=(item['scope_id'],item['printed_question']):raise ValueError('Figure question identity differs')
+        for region in [*item['stem_figure_regions'],*item['option_graphic_regions']]:
+            source,w,h=pages[region['page']];x0,y0,x1,y1=region['bbox']
+            if source!=region['source_sha256'] or not(0<=x0<x1<=w and 0<=y0<y1<=h):raise ValueError('Figure region is outside its source')
+            fid=region.get('figure_id') or f"{qid}/option-graphic/{region['label']}"
+            record={**region,'figure_id':fid,'question_item_id':qid,'scope_id':item['scope_id'],'assignment_basis':item['assignment_basis'],'position_note':item['position_note'],'plan_sha256':sha}
+            refs=region.get('original_ocr_row_refs',[region['original_label_ocr_row']] if 'original_label_ocr_row' in region else [])
+            database.execute('INSERT INTO question_figure_bindings VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)',(fid,item['scope_id'],qid,item['printed_question'],region['zone'],region['role'],region['page'],region['column'],json.dumps(region['bbox']),source,w,h,region.get('label'),region.get('figure_label'),json.dumps(region.get('subquestion_refs',[])),json.dumps(refs),int(region['visual_crop_checked']),item['assignment_basis'],sha,json.dumps(record,ensure_ascii=False)))
+    database.commit()
 
 def apply_source_region_updates(database, training_path, boundary_path):
     """Apply the supplied original-image regions to source instances."""
@@ -960,4 +987,6 @@ if args.recoveries:
     apply_reviewed_regions(db,args.recoveries.expanduser().resolve(strict=True))
 if args.training2:
     apply_source_region_updates(db,args.training2.expanduser().resolve(strict=True),args.boundaries7.expanduser().resolve(strict=True))
+if args.figures:
+    apply_question_figure_bindings(db,args.figures.expanduser().resolve(strict=True))
 reconcile_sources(db, output, args.geometry_deps.expanduser().resolve(strict=True) if args.geometry_deps else None)
