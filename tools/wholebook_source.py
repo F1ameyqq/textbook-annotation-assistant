@@ -45,6 +45,7 @@ parser.add_argument("--figures", type=Path, help="reviewed question figure bindi
 parser.add_argument("--answer-roi", action="append", default=[], metavar="SCOPE:PAGE:X0,Y0,X1,Y1", help="observe one local answer crop")
 parser.add_argument("--roi-deps", type=Path, help="rapidocr package directory for --answer-roi")
 parser.add_argument("--numeric-deps", type=Path, help="observe numeric answer boundaries using this rapidocr package directory")
+parser.add_argument("--visual-answers", type=Path, help="reviewed original-pixel answer plan JSON")
 args = parser.parse_args()
 if bool(args.training2) != bool(args.boundaries7):
     parser.error("--training2 and --boundaries7 must be supplied together")
@@ -563,6 +564,7 @@ def reconcile_sources(database, csv_path, geometry_dependencies=None):
     merge_answer_geometry(database)
     add_reviewed_block_answers(database)
     resolve_independent_roi_choices(database)
+    add_visual_answer_sources(database)
     store_answer_token_sources(database)
     for sid,iid,kind,label,sp,sr in database.execute("SELECT scope_id,item_id,kind,label,start_page,start_row FROM source_items WHERE role='question' AND kind IN ('QUESTION','READING_TASK','VARIANT')").fetchall():
         binding=database.execute('SELECT answer_item_id,block_key FROM reviewed_answer_block_bindings WHERE question_item_id=?',(iid,)).fetchone()
@@ -772,6 +774,52 @@ def observe_unique_explanation_heads(database):
         if straddles:database.execute('UPDATE resolved_answer_windows SET y1=? WHERE scope_id=? AND page=? AND column=? AND y0=?',(end,sid,n,c,y0))
         database.execute('INSERT INTO explanation_head_observations VALUES(?,?,?,?,?,?,?)',(sid,label,n,index,json.dumps(b),json.dumps([y0,y1]),json.dumps([y0,end])));accepted.add((sid,n,index))
     return accepted
+
+def apply_visual_answer_plan(database, plan_path):
+    """Keep original-pixel visual annotations separate from all OCR observations."""
+    import json,hashlib
+    from pathlib import Path
+    from PIL import Image
+    raw=Path(plan_path).read_bytes();plan=json.loads(raw.decode('utf-8-sig'));plan_sha=hashlib.sha256(raw).hexdigest();images={}
+    for source in plan['source_images']:
+        path,sha,w,h=database.execute('SELECT image,sha,width,height FROM pages WHERE page=?',(source['page'],)).fetchone()
+        if (sha,w,h)!=(source['source_sha256'],source['width'],source['height']) or hashlib.sha256(Path(path).read_bytes()).hexdigest()!=sha:raise ValueError('Visual answer source image differs')
+        images[source['page']]=Image.open(path).convert('L')
+    database.execute('CREATE TABLE IF NOT EXISTS visual_answer_reviews(plan_sha TEXT PRIMARY KEY,scope_id TEXT,plan_json TEXT)')
+    database.execute('INSERT OR REPLACE INTO visual_answer_reviews VALUES(?,?,?)',(plan_sha,plan['scope_id'],json.dumps(plan,ensure_ascii=False)))
+    database.execute('CREATE TABLE IF NOT EXISTS visual_answer_sources(answer_item_id TEXT PRIMARY KEY,scope_id TEXT,question_item_id TEXT,label TEXT,question_page INTEGER,answer_page INTEGER,source_sha256 TEXT,question_sha256 TEXT,bbox_json TEXT,answer_value_bbox_json TEXT,visual_reading TEXT,latex TEXT,plan_sha TEXT,evidence_kind TEXT,character_boxes_json TEXT,record_json TEXT)')
+    all_boxes=[]
+    for record in plan['records']:
+        qid=record['question_item_id'];label=record['printed_question'];sid=record['scope_id']
+        identity=database.execute("SELECT scope_id,label,start_page FROM source_items WHERE item_id=? AND role='question' AND kind='QUESTION'",(qid,)).fetchone()
+        if identity!=(sid,label,record['question_page']):raise ValueError('Visual answer question identity differs')
+        if database.execute('SELECT sha FROM pages WHERE page=?',(record['question_page'],)).fetchone()[0]!=record['question_source_sha256']:raise ValueError('Visual question image differs')
+        if database.execute('SELECT sha FROM pages WHERE page=?',(record['answer_page'],)).fetchone()[0]!=record['answer_source_sha256']:raise ValueError('Visual answer image differs')
+        full=record['full_label_and_answer_bbox'];checks=[]
+        for i,char in enumerate(record['character_boxes']):
+            b=char['bbox']
+            if not(full[0]<=b[0]<b[2]<=full[2] and full[1]<=b[1]<b[3]<=full[3]):raise ValueError('Visual character outside answer region')
+            ink=images[record['answer_page']].crop(b).point(lambda v:255 if v<185 else 0).getbbox();actual=[ink[0]+b[0],ink[1]+b[1],ink[2]+b[0],ink[3]+b[1]] if ink else None
+            if actual!=char['threshold185_ink_bbox']:raise ValueError('Visual character pixel evidence differs')
+            checks.append({'character_index':i,'observed_ink_bbox':actual,'threshold':185,'matches_declared':True});all_boxes.append((record['answer_page'],qid,i,b))
+        iid=f'{sid}/visual-answer/{plan_sha}/{label}'
+        stored={**record,'answer_item_id':iid,'pixel_checks':checks,'plan_sha256':plan_sha,'human_acceptance':False,'requires_review':True}
+        database.execute('INSERT OR REPLACE INTO visual_answer_sources VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)',(iid,sid,qid,label,record['question_page'],record['answer_page'],record['answer_source_sha256'],record['question_source_sha256'],json.dumps(full),json.dumps(record['answer_value_bbox']),record['visual_reading'],record['latex'],plan_sha,record['evidence_kind'],json.dumps(record['character_boxes'],ensure_ascii=False),json.dumps(stored,ensure_ascii=False)))
+    for i,(page,qid,index,b) in enumerate(all_boxes):
+        for other,other_qid,other_index,c in all_boxes[i+1:]:
+            if page==other and max(b[0],c[0])<min(b[2],c[2]) and max(b[1],c[1])<min(b[3],c[3]):raise ValueError('Visual answer characters overlap')
+    database.commit()
+
+def add_visual_answer_sources(database):
+    import json
+    if not database.execute("SELECT 1 FROM sqlite_master WHERE name='visual_answer_sources'").fetchone():return
+    for iid,sid,qid,label,page,source,bbox,plan_sha,record_json in database.execute('SELECT answer_item_id,scope_id,question_item_id,label,answer_page,source_sha256,bbox_json,plan_sha,record_json FROM visual_answer_sources').fetchall():
+        record=json.loads(record_json);number=''.join(c['text'] for c in record['character_boxes'] if c['role'] in ('question_number','number_separator'))
+        if number!=label+'.':raise ValueError('Visual answer full marker differs')
+        fragment={'page':page,'column':record['answer_column'],'row_indices':[],'bbox':json.loads(bbox),'source_sha256':source,'source_observation_kind':'ORIGINAL_PIXEL_VISUAL_TRANSCRIPTION','visual_answer_source_id':iid,'visual_plan_sha256':plan_sha,'answer_value_bbox':record['answer_value_bbox'],'requires_review':True}
+        database.execute('INSERT OR REPLACE INTO resolved_answer_items VALUES(?,?,?,?,?,?,?)',(sid,iid,'QUESTION',label,page,-2,json.dumps([fragment],ensure_ascii=False)))
+        # This marker is a visual annotation, never an OCR row or synthesized formula.
+        database.execute('INSERT OR REPLACE INTO answer_marker_quality VALUES(?,?,?,?,?,?,?,?,?)',(iid,'REVIEW','VISUAL_TRANSCRIPTION_REQUIRES_REVIEW',number,0,len(number),number,page,-2))
 
 def numeric_boundary_labels(text, next_text):
     import re
@@ -1237,6 +1285,8 @@ if args.training2:
     apply_source_region_updates(db,args.training2.expanduser().resolve(strict=True),args.boundaries7.expanduser().resolve(strict=True))
 if args.figures:
     apply_question_figure_bindings(db,args.figures.expanduser().resolve(strict=True))
+if args.visual_answers:
+    apply_visual_answer_plan(db,args.visual_answers.expanduser().resolve(strict=True))
 for scope_id, page, crop in answer_rois:
     observe_answer_roi(db,args.roi_deps.expanduser().resolve(strict=True),scope_id,page,crop)
 reconcile_sources(db, output, args.geometry_deps.expanduser().resolve(strict=True) if args.geometry_deps else None)
