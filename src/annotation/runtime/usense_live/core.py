@@ -55,6 +55,10 @@ def implementation_digest():
     root = Path(__file__).resolve().parent
     members = [{"path": p.name, "sha256": sha(p.read_bytes())}
                for p in sorted(root.glob("*.py"))]
+    customer = root.parents[1] / "customer"
+    if customer.is_dir():
+        members += [{"path": "customer/" + p.name, "sha256": sha(p.read_bytes())}
+                    for p in sorted(customer.glob("*.py"))]
     return sha(canonical(members))
 
 
@@ -151,7 +155,8 @@ def _load_binding(path, expected_sha256, *, now=None, manual_login=False):
     expected_schema = "UsenseLiveManualLoginConfig/v1" if manual_login else SCHEMA
     expected_operation = "MANUAL_LOGIN_ONLY" if manual_login else "READONLY_CAPTURE"
     expected_target = LOGIN if manual_login else TARGET
-    require(data["schema"] == expected_schema and data["book_id"] == "46007447" and
+    require(data["schema"] == expected_schema and type(data["book_id"]) is str and
+            re.fullmatch(r"[1-9][0-9]{0,31}", data["book_id"]) and
             data["operation"] == expected_operation and data["target_url"] == expected_target,
             "USENSE_READONLY_SCOPE_REQUIRED")
     run_pattern = r"usense-login-[a-z0-9-]{1,64}" if manual_login else r"usense-readonly-[a-z0-9-]{1,64}"
@@ -200,9 +205,10 @@ def _load_binding(path, expected_sha256, *, now=None, manual_login=False):
             session = parsed.path in {"/qieti/api/user_login/profile", "/qieti/api/user_login/config/permissions",
                                       "/qieti/api/user_login/config/teams"}
             book_fields = [value for key, value in pairs if key in ("file_id", "book_id", "id")]
-            book_path = re.search(r"(?:^|/)46007447(?:/|$)", parsed.path) is not None
+            book = data["book_id"]
+            book_path = re.search(r"(?:^|/)" + re.escape(book) + r"(?:/|$)", parsed.path) is not None
             require((session and not parsed.query) or
-                    ((book_path or "46007447" in book_fields) and all(value == "46007447" for value in book_fields)),
+                    ((book_path or book in book_fields) and all(value == book for value in book_fields)),
                     "BOOK_BOUND_READ_REQUIRED")
     require(expected_target in seen and next(r for r in rows if r["url"] == expected_target)["resource_types"] == ["document"],
             "TARGET_NAVIGATION_RULE_REQUIRED")

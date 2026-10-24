@@ -42,6 +42,12 @@ PREPARE = r"""async payload => {
 
 PREPARE_LESSON = PREPARE.replace('payload.annotations_upsert.length!==7',
     '![3,4].includes(payload.annotations_upsert.length)')
+PREPARE_CUSTOMER = PREPARE.replace('payload.annotations_upsert.length!==7',
+    '(payload.annotations_upsert.length<2||payload.annotations_upsert.length>128)')
+
+
+def is_customer(plan):
+    return isinstance(plan, dict) and plan.get('schema') == 'CustomerNativeWirePlan/v1'
 
 
 def is_lesson(plan):
@@ -50,6 +56,9 @@ def is_lesson(plan):
 
 def comparator(plan=None):
     # Kept separate for independent review and reuse by the readback process.
+    if is_customer(plan):
+        from annotation.customer import wire
+        return wire
     if is_lesson(plan):
         from . import lesson_insert
         return lesson_insert
@@ -59,7 +68,7 @@ def comparator(plan=None):
 
 def full_endpoints(plan=None):
     """Exactly the observed current 22-question book and four source-page reads."""
-    if is_lesson(plan):
+    if is_lesson(plan) or is_customer(plan):
         return comparator(plan).full_endpoints(plan)
     result = endpoints((), (10, 11, 12, 173), source=True)
     for first in (1, 7, 13, 19):
@@ -80,6 +89,8 @@ def same(left, right):
 
 
 def verify_evidence(plan):
+    if is_customer(plan):
+        return comparator(plan).verify_evidence(plan)
     if is_lesson(plan):
         from .lesson_batch import verify_evidence as verify_lesson_evidence
         return verify_lesson_evidence(plan)
@@ -135,7 +146,7 @@ def validate_inputs(plan, baseline, ledger_root, authorization_reference):
     require(all(same(native[name], plan['before_full'][name]) for name in paths), 'BASELINE_PLAN_CHANGED')
     require(api.check_prewrite(plan, native)['ok'], 'BASELINE_COMPARATOR_REJECTED')
     payload = plan['payload_candidate']
-    allowed_rows = (3, 4) if is_lesson(plan) else (7,)
+    allowed_rows = range(2, 129) if is_customer(plan) else (3, 4) if is_lesson(plan) else (7,)
     require(payload['created_by'] is None and len(payload['annotations_upsert']) in allowed_rows and
             all(row['user_id'] is None for row in payload['annotations_upsert']), 'UNBOUND_SEVEN_ROW_ACTOR_REQUIRED')
     require(payload['annotations_delete_rect_ids'] == [] and payload['ocr_delete_zones'] == [], 'COPY_FIRST_NO_DELETIONS')
@@ -150,7 +161,7 @@ def validate_inputs(plan, baseline, ledger_root, authorization_reference):
 
 async def record_and_send(*, page, policy, plan, claim, run, result):
     """Atomic durable intent before arming; never erase the intent on error."""
-    prepared = await asyncio.wait_for(page.evaluate(PREPARE_LESSON if is_lesson(plan) else PREPARE,
+    prepared = await asyncio.wait_for(page.evaluate(PREPARE_CUSTOMER if is_customer(plan) else PREPARE_LESSON if is_lesson(plan) else PREPARE,
         copy.deepcopy(plan['payload_candidate'])), timeout=10)
     require(prepared.get('created_by_bound') is True and prepared.get('seven_row_user_ids_bound') is True and
             re.fullmatch('[0-9a-f]{64}', prepared.get('sha256', '')) is not None, 'PAGE_ACTORS_NOT_BOUND')
@@ -197,6 +208,8 @@ async def execute(*, config_path, config_sha256, plan_path, plan_sha256, baselin
     require(sha(raw) == plan_sha256, 'PLAN_FILE_CHANGED')
     plan = parse(raw)
     binding = load_binding(config_path, config_sha256)
+    require(binding.data['book_id'] == plan['book_id'] if is_customer(plan) else binding.data['book_id'] == '46007447',
+            'WRITER_BOOK_BINDING_REQUIRED')
     require(Path(ledger_root).resolve() == Path(binding.data['profile']['directory']).parent / 'usense-existing-ledger',
             'LEDGER_ROOT_MUST_BELONG_TO_BOUND_PROFILE')
     native, paths, claim = validate_inputs(plan, plain_path(str(baseline)), Path(ledger_root), authorization_reference)
@@ -214,6 +227,9 @@ async def execute(*, config_path, config_sha256, plan_path, plan_sha256, baselin
         'ledger_key': plan['ledger_key'], 'prewrite_responses': {}}
     if is_lesson(plan):
         result.update(schema='UsenseActualLessonInsert/v1', operation=plan['operation'], independent_readback='PENDING_NEW_AND_TAIL')
+    if is_customer(plan):
+        result.update(schema='UsenseActualCustomerInsert/v1', operation=plan['operation'],
+                      book_id=plan['book_id'], independent_readback='PENDING_FULL_CURRENT_BOOK')
     write_new(run / 'claim.json', {'operation': result['operation'], 'config_sha256': config_sha256, 'plan_file_sha256': plan_sha256})
     (run / 'plan.json').write_bytes(raw)
     write_new(run / 'full-read-scope.json', paths)

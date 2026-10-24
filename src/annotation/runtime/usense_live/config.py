@@ -12,7 +12,8 @@ from .core import (APPROVED_CERT_DER, APPROVED_SPKI, LOGIN, ORIGIN, SCHEMA,
 ZONES = ("question", "choice", "answer", "analysis", "knowledge_point")
 
 
-def endpoints(orders=(), pages=(), *, source=False):
+def endpoints(orders=(), pages=(), *, source=False, book_id="46007447"):
+    require(type(book_id) is str and re.fullmatch(r"[1-9][0-9]{0,31}", book_id), "BOOK_ID_REQUIRED")
     orders, pages = list(orders), list(pages)
     require(len(orders) <= 6 and len(set(orders)) == len(orders) and
             all(type(n) is int and 1 <= n <= 9999 for n in orders), "ORDERS_ONE_BATCH_MAX_SIX")
@@ -30,7 +31,7 @@ def endpoints(orders=(), pages=(), *, source=False):
     for page in pages:
         result[f"page_{page}"] = f"/qieti/api/annotate_pic/pre_annotation/46007447?pageNum={page}&annotationType=mr_pre"
     require(len(result) < 64, "GET_BATCH_TOO_LARGE")
-    return result
+    return {name: path.replace("46007447", book_id) for name, path in result.items()}
 
 
 def capture_endpoints(binding):
@@ -38,6 +39,7 @@ def capture_endpoints(binding):
     require(binding.data["operation"] == "READONLY_CAPTURE" and binding.data["static_get"] ==
             {"mode": "DISABLED", "max_requests": 0}, "INERT_CAPTURE_CONFIG_REQUIRED")
     observed = {}
+    book_id = binding.data["book_id"]
     orders, pages, source = set(), set(), False
     for row in binding.data["allowed_get"]:
         if row["url"] == TARGET:
@@ -48,24 +50,24 @@ def capture_endpoints(binding):
         relative = url[len(ORIGIN):]
         p = urlsplit(relative)
         query = dict(parse_qsl(p.query))
-        m = re.fullmatch(r"/qieti/api/annotate_pic/(?:get_manual_annotations_unified_by_order_in_level|get_question_info)/46007447/([1-9][0-9]{0,3})", p.path)
+        m = re.fullmatch(r"/qieti/api/annotate_pic/(?:get_manual_annotations_unified_by_order_in_level|get_question_info)/" + re.escape(book_id) + r"/([1-9][0-9]{0,3})", p.path)
         if m:
             orders.add(int(m[1]))
         elif p.path == "/qieti/api/verify_annotation/get-ocr-annotation" and query.get("question_order", "").isdigit():
             orders.add(int(query["question_order"]))
-        elif p.path == "/qieti/api/annotate_pic/pre_annotation/46007447" and query.get("pageNum", "").isdigit():
+        elif p.path == "/qieti/api/annotate_pic/pre_annotation/" + book_id and query.get("pageNum", "").isdigit():
             pages.add(int(query["pageNum"]))
-        elif p.path == "/qieti/api/annotate_pic/pre_annotation_source/46007447":
+        elif p.path == "/qieti/api/annotate_pic/pre_annotation_source/" + book_id:
             source = True
         observed[relative] = row
-    expected = endpoints(sorted(orders), sorted(pages), source=source)
+    expected = endpoints(sorted(orders), sorted(pages), source=source, book_id=book_id)
     require(set(observed) == set(expected.values()), "CAPTURE_ENDPOINT_SET_INCOMPLETE_OR_UNOBSERVED")
     return expected
 
 
 def configure(*, profile, output_root, config_path, coordinator, executor, reviewer,
               authorization_reference, orders=(), pages=(), source=False, login=False,
-              tls_approval_reference=None, proxy_server=None, seconds=600, now=None):
+              tls_approval_reference=None, proxy_server=None, seconds=600, now=None, book_id="46007447"):
     require(type(seconds) is int and 30 <= seconds <= 900, "WINDOW_SECONDS_30_TO_900")
     current = now or datetime.now(timezone.utc)
     prefix = "usense-login-" if login else "usense-readonly-"
@@ -79,14 +81,14 @@ def configure(*, profile, output_root, config_path, coordinator, executor, revie
             rules.append({"url": ORIGIN + path, "resource_types": ["xhr", "fetch"], "max_requests": 2})
     else:
         rules += [{"url": ORIGIN + path, "resource_types": ["fetch", "xhr"], "max_requests": 1}
-                  for path in endpoints(orders, pages, source=source).values()]
+                  for path in endpoints(orders, pages, source=source, book_id=book_id).values()]
     tls = {"mode": "STRICT"}
     if tls_approval_reference is not None:
         require(isinstance(tls_approval_reference, str) and bool(tls_approval_reference.strip()), "EXPLICIT_TLS_APPROVAL_REFERENCE_REQUIRED")
         tls = {"mode": "USER_APPROVED_EXACT_CERT", "origin": ORIGIN, "leaf_der_sha256": APPROVED_CERT_DER,
                "spki_sha256_base64": APPROVED_SPKI, "approval_reference": tls_approval_reference}
     data = {"schema": "UsenseLiveManualLoginConfig/v1" if login else SCHEMA,
-        "book_id": "46007447", "operation": "MANUAL_LOGIN_ONLY" if login else "READONLY_CAPTURE", "run_id": run,
+        "book_id": book_id, "operation": "MANUAL_LOGIN_ONLY" if login else "READONLY_CAPTURE", "run_id": run,
         "actors": {"coordinator": coordinator, "executor": executor, "reviewer": reviewer},
         "target_url": target, "profile": {"directory": str(Path(profile).resolve()), "fingerprint": None,
                                           "usage": "DEDICATED_PROJECT"},

@@ -3,7 +3,7 @@
   "use strict";
   const $ = (id) => document.getElementById(id);
   const MATH_NS = "http://www.w3.org/1998/Math/MathML";
-  const roleLabel = (role) => role === "explanation" ? "解析" : "正文 / 答案";
+  const roleLabel = (role) => ({question: "题干", choice: "选项", answer: "答案", analysis: "解析", explanation: "解析"}[role] || "正文 / 答案");
   const authorLabels = { MODEL_DRAFT: "模型草稿", HUMAN_DRAFT: "人工草稿 · 未核准", SYNTHETIC_TEST: "合成测试草稿" };
   const ruleLabels = {
     CONTENT_REGION_REBUILD_DRAFT_UNVERIFIED: "来源区域重建的文字仍待逐字核对",
@@ -151,6 +151,10 @@
     if (!next || next.schema_version !== "b-content-review-state-trial/0.1" || !Array.isArray(next.answers) || !Array.isArray(next.issues)) throw new Error("工作区状态格式不受此界面支持。");
     if (next.decision !== "HOLD" || next.complete !== false || next.transcription_verified !== false || next.business_acceptance !== false || !Array.isArray(next.platform_actions) || next.platform_actions.length) throw new Error("工作区返回了不符合草稿边界的状态。");
     state = next;
+    $("customer-confirm").hidden = !next.customer?.can_confirm;
+    $("customer-status").textContent = next.customer ? next.customer.job_status + " · " + next.customer.message : "";
+    $("customer-source-checked").checked = false;
+    $("customer-content-checked").checked = false;
     if (typeof next.csrf_token === "string") csrfToken = next.csrf_token;
     currentAnswerId = next.answers.some((answer) => answer.answer_id === preferredAnswer) ? preferredAnswer : next.answers[0]?.answer_id ?? null;
     $("book-label").textContent = "书籍 " + next.book_id + " · " + next.scope_id;
@@ -181,6 +185,18 @@
     catch (error) { showError(error, "无法读取工作区"); }
     finally { setBusy(false); }
   }
+  $("customer-confirm-button").addEventListener("click", async () => {
+    if (busy || !state?.customer || !currentAnswerId) return;
+    if (dirtyDrafts().length) { feedback("请先保存编辑，再对照原图确认。", true); return; }
+    setBusy(true);
+    try {
+      const value = await request("/api/confirm", {expected_head: state.head, answer_id: currentAnswerId,
+        source_checked: $("customer-source-checked").checked, content_checked: $("customer-content-checked").checked});
+      applyState(value.state);
+      feedback("已记录本题客户核对。平台保存与独立读回仍分别记录。");
+    } catch (error) { showError(error, "内容尚不能确认"); }
+    finally { setBusy(false); }
+  });
   async function saveCurrent(afterSave) {
     if (busy) return false;
     const changed = dirtyDrafts();
@@ -246,6 +262,8 @@
     if (answer) selectAnswer(answer.answer_id);
   }
   function renderAnswer() {
+    $("customer-source-checked").checked = false;
+    $("customer-content-checked").checked = false;
     drafts = new Map();
     const answer = currentAnswer();
     if (!answer) { $("block-editors").replaceChildren(); renderIssues(); updateDirtyState(); return; }

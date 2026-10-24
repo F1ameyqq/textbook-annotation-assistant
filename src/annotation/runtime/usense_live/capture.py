@@ -27,7 +27,7 @@ FETCH = r"""async path => {
 async def capture(config_path, config_sha256):
     binding = load_binding(config_path, config_sha256)
     endpoints = capture_endpoints(binding)
-    result = {"schema": "UsenseNativeCapture/v1", "book_id": "46007447", "status": "NOT_STARTED",
+    result = {"schema": "UsenseNativeCapture/v1", "book_id": binding.data["book_id"], "status": "NOT_STARTED",
               "config_sha256": config_sha256, "run_id": binding.data["run_id"], "save_attempts": 0,
               "transport": binding.data["transport"],
               "document_mode": "LOCAL_INERT_SAME_ORIGIN_DOCUMENT", "viewer_rendered": False,

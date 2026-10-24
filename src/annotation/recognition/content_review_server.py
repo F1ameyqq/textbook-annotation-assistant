@@ -161,7 +161,10 @@ def make_server(workspace, *, host="127.0.0.1", port=0):
             parsed = urlsplit(self.path)
             self.server.request_counts["POST " + parsed.path] += 1
             try:
-                if parsed.query or parsed.path not in {"/api/save", "/api/restore", "/api/preview"}:
+                allowed = {"/api/save", "/api/restore", "/api/preview"}
+                if callable(getattr(workspace, "confirm", None)):
+                    allowed.add("/api/confirm")
+                if parsed.query or parsed.path not in allowed:
                     self._error(404, "NOT_FOUND", "未找到本地复核操作。")
                     return
                 lengths = self.headers.get_all("Content-Length", [])
@@ -184,7 +187,10 @@ def make_server(workspace, *, host="127.0.0.1", port=0):
                         raise ValueError("preview requires only raw text")
                     self._send(200, {"ok": True, "preview": parse_inline_formula_latex(request["text"])})
                 else:
-                    current = workspace.save(request) if parsed.path == "/api/save" else workspace.restore(request)
+                    if parsed.path == "/api/confirm":
+                        current = workspace.confirm(request)
+                    else:
+                        current = workspace.save(request) if parsed.path == "/api/save" else workspace.restore(request)
                     value = copy.deepcopy(current)
                     value["csrf_token"] = self.server.review_token
                     for answer in value["answers"]:

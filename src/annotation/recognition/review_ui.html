@@ -42,6 +42,12 @@
         <div class="editor-heading"><h3>逐块核对与编辑</h3><span class="muted">来源只读 · 草稿未核准</span></div>
         <p id="region-candidate-help" class="region-candidate-help" hidden>展开公式下的来源候选，可比较整式原始观察与分量派生组合。选择仅更新草稿；保存后记录来源并重新检查，仍需核对完整答案。顶栏可导出未核准的候选与来源资料，供离线交接。</p>
         <div id="block-editors" class="block-editors"></div>
+        <section id="customer-confirm" class="author-panel" hidden>
+          <h3>本地生产准备</h3><p id="customer-status"></p>
+          <label class="check-label"><input id="customer-source-checked" type="checkbox">已对照整页核对来源框、图形与内容完整性</label>
+          <label class="check-label"><input id="customer-content-checked" type="checkbox">已核对题干、选项、答案及公式；当前内容可进入生产准备</label>
+          <button id="customer-confirm-button" type="button">确认本题内容</button>
+        </section>
         <div id="no-editable-blocks" class="empty-note" hidden>此答案没有可编辑的正文片段。图形、结构标记与诊断 OCR 不作为文字编辑块。</div>
         <section class="author-panel" aria-labelledby="author-title"><h3 id="author-title">本次草稿作者</h3><div class="author-fields"><label class="field">类别<select id="author-kind"><option value="MODEL_DRAFT">模型草稿 · 未核准</option><option value="HUMAN_DRAFT">人工草稿 · 未核准</option><option value="SYNTHETIC_TEST">合成测试草稿</option></select></label><label class="field">作者标识<input id="author-id" type="text" maxlength="240" autocomplete="off" placeholder="填写作者或本次复核者"></label><label class="field author-note">说明<textarea id="author-note" rows="2" placeholder="说明本次改动的来源与仍待核对的部分"></textarea></label></div><p class="muted small">作者只记录本次快照的编辑者。任何类别都不会将文字升级为人工核准。</p></section>
       </div>
