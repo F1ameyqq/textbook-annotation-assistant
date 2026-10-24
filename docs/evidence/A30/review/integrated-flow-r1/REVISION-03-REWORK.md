@@ -1,0 +1,24 @@
+# A30 integrated flow revision 03 — independent minimum delta
+
+Decision: **REWORK** for integrated production reuse. Customer ready remains **false**. The separate continuation actual used accepted revision 02 and is accepted only for bounded source preparation and own release in `../continuation-actual-01/REVIEW.md`; this finding does not undo that source result or authorize replay.
+
+Frozen 03 manifest: `3162f40feefef2769a11edc818c5e1a04ed0734da4f470b86175bcb2beebb981`. Report: `55df6a70dbb886088d2416f401a11011dca3735e80f6656e13ad350e0224eae2`. Independent isolation: `D:/1800-private/a30-integrated-flow-independent-20261024-r1/input03`. Verified 212 program/configuration members, 92 evidence members and three metadata files, **307 total**. Compared with 02: 204 program members unchanged, five modified, three added, none deleted. Root index `f7468a98f3c23bc69976561ace83f7a42487d24d0a33c87ebe5f06de47444084` matches all 307 reviewer files. No active author tree was inspected.
+
+## P2 — Reuse compares an image URL to itself instead of the candidate's original
+
+`app/src/annotation/customer/existing_fill.py:29–41` matches source SHA/dimensions, native `page_index`, type and bounding box, then returns the old native frame without checking `image_path`. `legacy_ledger.py:158–164` builds the expected HTML with that same old frame's `image_path`. An old frame and old HTML that agree with each other can therefore pass while both point to the wrong source image.
+
+Independent fresh input uses synthetic book **829613**, candidate 84, question viewer page 33/resource page 32 and answer viewer page 144. A complete text, TeX and figure control is correctly reusable. The negative variant changes only the native image frame URL and matching native HTML from `page_32.jpg` to **`page_31.jpg`**, keeping page index, bounding box, types, source SHA/dimensions and rect associations unchanged. `validate_current` accepts this snapshot, and `existing_candidate` incorrectly returns `fresh-node-84`. Expected: **HOLD**, since the displayed figure is not bound to the candidate's original. This is a different input and failure from the retained 01/02 missing-image counterexample.
+
+Raw case, returned value and semantic result are retained under `D:/1800-private/a30-integrated-flow-independent-20261024-r1/review03/`. `result.json` records **FAIL_EXISTING_REUSE_ACCEPTS_DIFFERENT_IMAGE_SOURCE**. Two product function calls were made: one correct-source control and one wrong-source negative. There were no network, browser, model, save or full production calls. The shell tool returned nonzero; semantic failure is explicit and is not counted as a pass.
+
+Static caller consequence: `production.py:95–104` records the returned node as COMPLETE current-existing reuse and attaches its acceptance reference; native delivery can then use the same old record. The reviewer did not execute that successor. Bind each reusable image to the independently bound current original URL and exact expected crop, or retain HOLD for any unproven equivalence. Merely comparing native body and native frame URL to one another does not establish source equivalence.
+
+## Other delta and remaining checks
+
+- The old text-only body comparison has been removed. Exact native text/TeX/image HTML, per-zone associations and one-to-one frame correspondence are now checked, but the image provenance failure above prevents complete acceptance of that repair.
+- Static inspection confirms `source.py` now examines prior recognition records across engine identities, validates retained source/original binding, holds incomplete/failed/ambiguous records and preserves the original engine when reusing a completed result. The author's finite new test remains author evidence; independent dynamic cross-engine checks are **NOT_RUN_AFTER_FIRST_SEMANTIC_FAILURE**.
+- Static inspection confirms the region editor now binds callbacks and submit to generation, loaded asset, answer, head and attached canvas, clearing selection on page change. The author's finite Node check remains author evidence; independent dynamic image-race checks are **NOT_RUN_AFTER_FIRST_SEMANTIC_FAILURE**.
+- Previously unverified normal customer UI-to-production boundaries and full production remain **NOT_RUN_AFTER_FIRST_SEMANTIC_FAILURE**. Normal customer content review is allowed and is not a requirement to make all 16 candidates automatically pass. This review does not impose a new full-suite or old-OCR replay.
+
+Per the already applied frozen independent review rule, dynamic successors stop after this semantic failure. Original 01/02 failure records, 03 author results, spent authorities and prior accepted evidence remain unchanged. An isolated revised minimum image-provenance delta can resume the remaining finite checks; it must not replay old successful platform, OCR, display or browser runs. No platform/paid-model authority is activated by this report; `1800-a` stays PAUSED.
