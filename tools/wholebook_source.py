@@ -580,6 +580,7 @@ def reconcile_sources(database, csv_path, geometry_dependencies=None):
             for zone,field in [('stem','stem_figure_regions'),('options','option_graphic_regions')]:
                 detail[field]=[json.loads(r[0]) for r in database.execute('SELECT record_json FROM question_figure_bindings WHERE question_item_id=? AND zone=? ORDER BY page,figure_id',(iid,zone))]
         database.execute("INSERT INTO pairing_status VALUES(?,?,?,?,?,?)",(sid,iid,answers[0][0] if len(answers)==1 else None,status,";".join(reasons) or "UNIQUE_SOURCE_ANCHORS_SAME_SCOPE_KIND_LABEL",json.dumps(detail,ensure_ascii=False)))
+    observe_choice_boundary_candidates(database)
     database.commit()
     with Path(csv_path).open(encoding="utf-8-sig",newline="") as f:rows=list(csv.DictReader(f));fieldnames=list(rows[0])
     extra=["已定位答案窗口","已定位答案锚点","可直接配对候选","需客户审校实例","装饰页脚排除行","图形选项待审组","缺口定位","原图恢复实例","栏目实例","几何答案分组","几何来源待审"]
@@ -753,6 +754,32 @@ def observe_unique_explanation_heads(database):
         if straddles:database.execute('UPDATE resolved_answer_windows SET y1=? WHERE scope_id=? AND page=? AND column=? AND y0=?',(end,sid,n,c,y0))
         database.execute('INSERT INTO explanation_head_observations VALUES(?,?,?,?,?,?,?)',(sid,label,n,index,json.dumps(b),json.dumps([y0,y1]),json.dumps([y0,end])));accepted.add((sid,n,index))
     return accepted
+
+def observe_choice_boundary_candidates(database):
+    """Expose a witnessed choice-key boundary for review without approving numeric answers."""
+    import json,re
+    database.executescript('CREATE TABLE IF NOT EXISTS answer_choice_boundary_candidates(answer_item_id TEXT PRIMARY KEY,question_item_id TEXT,scope_id TEXT,label TEXT,page INTEGER,row_index INTEGER,raw_token TEXT,start_offset INTEGER,end_offset INTEGER,previous_question_item_id TEXT,previous_answer_item_id TEXT,source_sha256 TEXT,proof_json TEXT);DELETE FROM answer_choice_boundary_candidates;')
+    rows=database.execute("SELECT scope_id,question_item_id,answer_item_id,details_json FROM pairing_status WHERE status='CUSTOMER_REVIEW' AND reason='ANSWER_MARKER_REQUIRES_REVIEW'").fetchall()
+    for sid,qid,aid,detail_json in rows:
+        detail=json.loads(detail_json)
+        if detail['kind']!='QUESTION' or not aid:continue
+        n=int(detail['label']);text,a,b,page,index=database.execute('SELECT raw_text,start_offset,end_offset,page,row_index FROM answer_marker_quality WHERE item_id=?',(aid,)).fetchone()
+        if n<2 or '变式' in text or not text[b:].strip() or not re.fullmatch(str(n)+r'[.、．]',text[a:b]):continue
+        previous=re.search(r'(?<!\d)'+str(n-1)+r'[.、．][A-D]$',text[:a])
+        if previous is None:continue
+        if database.execute("SELECT count(*) FROM source_items WHERE scope_id=? AND role='question' AND kind='QUESTION' AND label=?",(sid,str(n))).fetchone()[0]!=1:continue
+        if database.execute("SELECT count(*) FROM resolved_answer_items WHERE scope_id=? AND kind='QUESTION' AND label=?",(sid,str(n))).fetchone()[0]!=1:continue
+        prev=database.execute("SELECT p.question_item_id,p.answer_item_id,q.raw_text,q.page,q.row_index,q.start_offset,q.end_offset FROM pairing_status p JOIN source_items i ON i.item_id=p.question_item_id JOIN answer_marker_quality q ON q.item_id=p.answer_item_id WHERE p.scope_id=? AND p.status='READY_TO_PAIR' AND i.kind='QUESTION' AND i.label=?",(sid,str(n-1))).fetchall()
+        if len(prev)!=1 or prev[0][2:5]!=(text,page,index) or prev[0][5:7]!=(previous.start(),previous.end()-1):continue
+        source,raw=database.execute('SELECT sha,rows_json FROM pages WHERE page=?',(page,)).fetchone();box,original,score=json.loads(raw)[index]
+        if original!=text:continue
+        cx=sum(p[0] for p in box)/4;cy=sum(p[1] for p in box)/4
+        windows=[list(w) for w in database.execute('SELECT column,x0,y0,x1,y1 FROM resolved_answer_windows WHERE scope_id=? AND page=?',(sid,page)) if w[1]<=cx<w[3] and w[2]<=cy<w[4]]
+        if len(windows)!=1:continue
+        proof={'rule':'READY_PREVIOUS_CHOICE_BOUNDARY','previous_choice':text[previous.start():previous.end()],'previous_span':[previous.start(),previous.end()],'current_span':[a,b],'raw_text':text,'window':windows[0],'original_row_bbox':box,'requires_review':True}
+        database.execute('INSERT INTO answer_choice_boundary_candidates VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?)',(aid,qid,sid,str(n),page,index,text[a:b],a,b,prev[0][0],prev[0][1],source,json.dumps(proof,ensure_ascii=False)))
+        detail['answer_boundary_candidate']=proof
+        database.execute('UPDATE pairing_status SET details_json=? WHERE question_item_id=?',(json.dumps(detail,ensure_ascii=False),qid))
 
 def apply_question_figure_bindings(database, plan_path):
     """Bind visually located regions by source question identity, including unlettered figures."""
