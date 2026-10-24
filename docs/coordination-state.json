@@ -2,7 +2,7 @@
   "schema_version": 1,
   "project": "D:\\1800",
   "coordinator_thread_id": "01a166c5-f93f-76e3-baf4-a3545ccddebd",
-  "updated_at": "2026-10-24T03:32:32.567005+00:00",
+  "updated_at": "2026-10-24T04:24:41.445922+00:00",
   "automation": {
     "id": "1800-a",
     "kind": "heartbeat",
@@ -16687,7 +16687,7 @@
     "A30": {
       "task_id": "A30",
       "created_at": "2026-10-24T03:32:32.567005+00:00",
-      "status": "EXECUTING_CUSTOMER_INDEPENDENT_PREPARATION",
+      "status": "V1_FIXED_IN_REVIEW_CONTINUING_COMPLETE_CUSTOMER_FLOW",
       "executor_thread_id": "01a16bf6-ed2d-7950-b2c9-9df30e7e6bd6",
       "reviewer_thread_id": "01a16bf6-f61d-7f40-a4cc-2f1201f2ece3",
       "host_id": "local",
@@ -16697,11 +16697,34 @@
       "review_task": "docs/tasks/A30-customer-independent-review-20261024.md",
       "scope": "Normal customer input to preparation, necessary review and production plan without external chat agent",
       "implementation_base": "4658243f2055c38846713d2292e5f3ac44cc216e",
-      "platform_owner": "NONE_CURRENT_IMPLEMENTATION_ONLY",
+      "platform_owner": "01a16bf6-ed2d-7950-b2c9-9df30e7e6bd6",
       "new_live_authority_activated": false,
       "new_paid_model_authority_activated": false,
       "old_success_and_OCR_replays": false,
-      "automation_1800_a": "PAUSED"
+      "automation_1800_a": "PAUSED",
+      "executor_cursor": "d250f469-61f0-445f-a4f6-a8d18c44fc0c:1",
+      "review_cursor": "d4b1b5f3-8fb8-42cf-ad15-01a40805f053:1",
+      "continuation_task": "docs/tasks/A30-customer-complete-flow-continuation-20261024.md",
+      "current_live_run_activated": false,
+      "v1_fixed": {
+        "commit": "8ac7be97c104c4cc57004de691ba21e5d4b92b33",
+        "status": "IN_INDEPENDENT_REVIEW",
+        "root_index": "D:/1800/.local/stages/a30-customer-independent-20261024/root-fixed-v1/root-index.json",
+        "root_index_sha256": "ba98f2ecf0f8eb4bcf6f8411304c12eb338404243d8cf2839cca7e4fdbf83d85",
+        "raw_source_files": 177,
+        "evidence_files": 23,
+        "raw_and_git_newlines_preserved": true,
+        "customer_ready": false
+      },
+      "current_authority": {
+        "basis": "Direct user request to continue complete customer book/range flow; do not stop at offline demonstration",
+        "book_id": "46007447",
+        "existing_nine_save_replay": false,
+        "old_authority_reuse": false,
+        "new_paid_model_calls_authorized": false,
+        "execution_binding": "Pending concrete fixed runtime and new target scope; coordinator binds without repeating user approval",
+        "single_platform_executor": "01a16bf6-ed2d-7950-b2c9-9df30e7e6bd6"
+      }
     }
   },
   "route": [
@@ -21877,7 +21900,7 @@
   ],
   "customer_delivery_readiness": {
     "at": "2026-10-24T03:32:32.567005+00:00",
-    "status": "NOT_READY_AGENT_DEPENDENT_PREPARATION",
+    "status": "NOT_READY_V1_IN_REVIEW_COMPLETE_FLOW_IMPLEMENTATION_ACTIVE",
     "accepted_release": "v1.0.0-lesson2-local-win64",
     "accepted_scope_preserved": "Nine actual lesson units and fixed current-machine execution package",
     "user_requirement": "Customer has no agent; routine use must not require per-lesson engineering preparation",
@@ -21890,7 +21913,8 @@
     "next_task": "A30",
     "acceptance_start": "Ordinary customer inputs, not author-prepared candidates or manifests",
     "human_role": "Initial setup/login, exceptions and batch review; no code or technical manifest editing",
-    "whole_project_completed": false
+    "whole_project_completed": false,
+    "v1_real_production": "NOT_RUN"
   },
   "next_content_delivery_gap": {
     "status": "NEXT_SECTION_INVENTORY_AND_INPUT_CONTRACT_ADAPTATION_RETAINED",
@@ -21909,5 +21933,11 @@
     "whole_chapter_and_book_goals_retained": true,
     "product_gap": "A28 new-question production is finite to book46007447 lesson2 q6/q7/q8/variant. Another lesson needs a newly bound input contract and minimal adaptation; arbitrary manifest substitution is not supported.",
     "current_completed_inputs_must_not_replay": true
+  },
+  "future_new_thread_settings": {
+    "model": "gpt-6.1-sol",
+    "thinking": "xhigh",
+    "existing_A30_settings_unchanged": true,
+    "source": "Direct user instruction: this round unchanged, next new chats use6.1sol xhigh"
   }
 }
