@@ -302,12 +302,239 @@ def wizard(store):
     refresh(); root.mainloop()
 
 
+def _offline_settings():
+    return {'platform_enabled': False, 'runtime': {'text_python': sys.executable,
+                                                   'formula_inference_activated': False}}
+
+
+def _offline_network():
+    import socket
+    connect = socket.socket.connect
+    connect_ex = socket.socket.connect_ex
+
+    def local_connect(self, address, *args):
+        if not isinstance(address, tuple) or address[0] not in {'127.0.0.1', '::1', 'localhost'}:
+            raise RuntimeError('离线审校仅使用本地服务，不连接外网。')
+        return connect(self, address, *args)
+
+    def local_connect_ex(self, address, *args):
+        if not isinstance(address, tuple) or address[0] not in {'127.0.0.1', '::1', 'localhost'}:
+            raise RuntimeError('离线审校仅使用本地服务，不连接外网。')
+        return connect_ex(self, address, *args)
+
+    socket.socket.connect = local_connect
+    socket.socket.connect_ex = local_connect_ex
+
+
+def _offline_database(root, workspace, expected_sha256):
+    from contextlib import closing
+    import hashlib
+    import sqlite3
+    original = root / 'data' / 'source.sqlite'
+    if hashlib.sha256(original.read_bytes()).hexdigest() != expected_sha256:
+        raise ValueError('包内题源数据库与随包记录不一致。')
+    database = workspace / 'source-local.sqlite'
+    with closing(sqlite3.connect(original.as_uri() + '?mode=ro', uri=True)) as source:
+        pages = source.execute('SELECT page FROM pages ORDER BY page').fetchall()
+        images = []
+        for (number,) in pages:
+            image = root / 'data' / 'images' / f'viewer-{number:03d}.jpg'
+            if not image.is_file():
+                raise FileNotFoundError(image)
+            images.append((str(image), number))
+        with closing(sqlite3.connect(database)) as target:
+            source.backup(target)
+            with target:
+                target.executemany('UPDATE pages SET image=? WHERE page=?', images)
+    return database, len(pages)
+
+
+def _offline_portal(store, result, root, bundle, report, *, self_test=False):
+    from html import escape
+    from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
+    from urllib.parse import parse_qs, urlsplit
+    import webbrowser
+    import urllib.request
+    from annotation.customer.review import CustomerReviewWorkspace
+    from annotation.recognition.content_review_server import make_server
+    jobs = {}
+    for item in result['results']:
+        job, _ = store.job(item['job'])
+        jobs[job['id']] = job
+    review_servers = {}
+    lock = threading.Lock()
+    rows = ''.join('<tr data-job="' + identity + '"><td>' + escape(job['lesson'])
+                   + '</td><td>' + str(len(job['candidates'])) + '</td><td>待审校</td><td>'
+                   + '<a target="_blank" href="/review?job=' + identity + '">打开审校</a> · '
+                   + '<a target="_blank" href="/export?job=' + identity + '">导出</a></td></tr>'
+                   for identity, job in jobs.items())
+    scope_count = len(jobs)
+    candidate_count = sum(len(job['candidates']) for job in jobs.values())
+    page_count = report['pages']
+    page = ('<!doctype html><html lang="zh-CN"><meta charset="utf-8"><meta name="viewport" content="width=device-width">'
+            '<title>全书离线审校 · 46007447</title><style>'
+            'body{margin:36px auto;padding:0 24px;max-width:1100px;font:16px/1.7 system-ui;color:#18352f;background:#f5f8f6}'
+            'h1{font-size:30px;margin-bottom:8px}p{color:#50655e}table{width:100%;border-collapse:collapse;background:white}'
+            'td,th{text-align:left;padding:12px 16px;border-bottom:1px solid #dce7e1}th{background:#e7f0eb}'
+            'a{color:#16664e}small{display:block;margin:12px 0 24px;color:#6f5730}</style>'
+            f'<h1>全书离线审校</h1><p>书 {bundle["book_id"]} · {page_count} 页材料 · {scope_count} 节 · {candidate_count} 个候选</p>'
+            '<p>选择课时打开审校，可查看原图、修改候选并导出。材料和修改均保存在解压后的文件夹。</p>'
+            '<small>候选待审校，请逐题核对题干、选项及答案。</small>'
+            '<table><thead><tr><th>课时</th><th>候选</th><th>状态</th><th>操作</th></tr></thead><tbody>'
+            + rows + '</tbody></table></html>').encode('utf-8')
+    preview = root / 'data' / 'graphic-preview.html'
+    if bundle.get('graphic_preview_sha256'):
+        preview_body = preview.read_bytes()
+        page = page.replace(b'<table>', '<p><a target="_blank" href="/graphic-preview">查看21题图形选项预览</a></p><table>'.encode('utf-8'), 1)
+
+    class Handler(BaseHTTPRequestHandler):
+        def log_message(self, *args):
+            pass
+
+        def send(self, body, content_type='text/html; charset=utf-8', download=None):
+            self.send_response(200)
+            self.send_header('Content-Type', content_type)
+            self.send_header('Content-Length', str(len(body)))
+            self.send_header('Cache-Control', 'no-store')
+            if download:
+                self.send_header('Content-Disposition', 'attachment; filename="' + download + '"')
+            self.end_headers()
+            self.wfile.write(body)
+
+        def do_GET(self):
+            parsed = urlsplit(self.path)
+            if parsed.path == '/':
+                self.send(page)
+                return
+            if parsed.path == '/graphic-preview' and bundle.get('graphic_preview_sha256'):
+                self.send(preview_body)
+                return
+            identity = parse_qs(parsed.query).get('job', [''])[0]
+            if identity not in jobs:
+                self.send_error(404)
+                return
+            if parsed.path == '/review':
+                with lock:
+                    if identity not in review_servers:
+                        review = make_server(CustomerReviewWorkspace(store, identity, settings_provider=_offline_settings))
+                        threading.Thread(target=review.serve_forever, daemon=True).start()
+                        review_servers[identity] = review
+                    review = review_servers[identity]
+                self.send_response(302)
+                self.send_header('Location', 'http://127.0.0.1:' + str(review.server_address[1]))
+                self.end_headers()
+            elif parsed.path in {'/export', '/download'}:
+                try:
+                    output = Path(export_local(store, identity))
+                    if parsed.path == '/export':
+                        self.send(('<!doctype html><meta charset="utf-8"><h1>课时已导出</h1><p>'
+                                   + escape(jobs[identity]['lesson']) + '</p><a href="/download?job=' + identity
+                                   + '&amp;kind=html">下载 HTML</a> · <a href="/download?job=' + identity
+                                   + '&amp;kind=json">下载 JSON</a>').encode('utf-8'))
+                    else:
+                        kind = parse_qs(parsed.query).get('kind', ['html'])[0]
+                        name = 'job.json' if kind == 'json' else 'index.html'
+                        self.send((output / name).read_bytes(), 'application/octet-stream', name)
+                except Exception as exc:
+                    self.send_error(500, str(exc))
+            else:
+                self.send_error(404)
+
+    server = ThreadingHTTPServer(('127.0.0.1', 0), Handler)
+    server.daemon_threads = True
+    url = 'http://127.0.0.1:' + str(server.server_address[1])
+    try:
+        if self_test:
+            thread = threading.Thread(target=server.serve_forever, daemon=True)
+            thread.start()
+            opener = urllib.request.build_opener(urllib.request.ProxyHandler({}))
+            with opener.open(url, timeout=15) as response:
+                body = response.read()
+                if response.status != 200 or body.count(b'data-job=') != len(jobs):
+                    raise RuntimeError('离线审校列表课时数不正确。')
+            report['portal'] = {'http_status': 200, 'rows': len(jobs)}
+            if bundle.get('graphic_preview_sha256'):
+                with opener.open(url + '/graphic-preview', timeout=15) as response:
+                    body = response.read()
+                    if response.status != 200:
+                        raise RuntimeError('图形选项预览未按包内原件打开。')
+                    report['graphic_preview'] = {'http_status': 200, 'articles': body.count(b'<article'),
+                                                 'images': body.count(b'<img')}
+            identity = next(iter(jobs))
+            with opener.open(url + '/review?job=' + identity, timeout=20) as response:
+                body = response.read()
+                if response.status != 200 or len(body) < 100:
+                    raise RuntimeError('课时审校页面未打开。')
+                report['review_page'] = {'http_status': 200, 'bytes': len(body)}
+            with opener.open(url + '/export?job=' + identity, timeout=20) as response:
+                response.read()
+            output = Path(export_local(store, identity))
+            if not all((output / name).is_file() for name in ['index.html', 'job.json']):
+                raise RuntimeError('样例导出文件不完整。')
+            report.update(status='PASS', sample_export=str(output))
+        else:
+            print('离线审校已打开：' + url + '。关闭此窗口可结束本地服务。', flush=True)
+            webbrowser.open(url)
+            server.serve_forever()
+    finally:
+        if self_test:
+            server.shutdown()
+            thread.join(timeout=5)
+        server.server_close()
+        for review in review_servers.values():
+            review.shutdown()
+            review.server_close()
+
+
+def start_offline_bundle(*, self_test=False):
+    import time
+    import urllib.request
+    from collections import Counter
+    from annotation.customer.wholebook import prepare_book
+    root = ROOT.parent
+    _offline_network()
+    workspace = root / 'workspace'
+    workspace.mkdir(exist_ok=True)
+    bundle = json.loads((root / 'bundle.json').read_text(encoding='utf-8'))
+    started = time.perf_counter()
+    database, page_count = _offline_database(root, workspace, bundle['source_database_sha256'])
+    store = Store(workspace)
+    result = prepare_book(store, database, book=bundle['book_id'],
+        graphic_review=root / 'data' / 'graphic-review.json',
+        graphic_review_sha256=bundle['graphic_review_sha256'])
+    (workspace / 'offline-results.json').write_bytes(encoded(result))
+    for item in result['results']:
+        if not item.get('job'):
+            raise RuntimeError(item.get('message') or str(item))
+    graphic_counts = Counter()
+    for item in result['results']:
+        job, _ = store.job(item['job'])
+        for candidate in job['candidates']:
+            for proposal in candidate.get('graphic_option_proposals', []):
+                graphic_counts[proposal['display_status']] += 1
+    report = {'status': 'STARTED', 'root': str(root), 'python': sys.executable,
+              'derived_database': str(database), 'pages': page_count,
+              'scopes': len(result['results']),
+              'candidates': sum(item.get('candidates', 0) for item in result['results']),
+              'graphic_proposals': dict(graphic_counts),
+              'new_model_calls': result['new_model_calls'],
+              'platform_actions': result['platform_actions']}
+    _offline_portal(store, result, root, bundle, report, self_test=self_test)
+    if self_test:
+        report['wall_seconds'] = time.perf_counter() - started
+        (workspace / 'startup-result.json').write_bytes(encoded(report))
+        print(json.dumps(report, ensure_ascii=True), flush=True)
+    return 0
+
+
 def main(argv=None):
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--workspace", type=Path, default=default_workspace())
     parser.add_argument('--customer-deployment', action='store_true',
                         help='交付 GUI：显式点击开始，原设置文件中的开发验收窗口仅保留历史')
     sub = parser.add_subparsers(dest="command")
+    p = sub.add_parser('offline', help='打开包内材料的本地审校')
+    p.add_argument('--self-test', action='store_true')
     p = sub.add_parser("prepare")
     p.add_argument("--book", required=True); p.add_argument("--lesson", required=True)
     p.add_argument("--questions", nargs="+", required=True); p.add_argument("--answers", nargs="*", default=[])
@@ -330,6 +557,8 @@ def main(argv=None):
     a = parser.parse_args(argv)
     if a.customer_deployment and a.command is not None:
         raise Hold('客户交付模式只用于图形入口，不能作为开发命令的授权覆盖。')
+    if a.command == 'offline':
+        return start_offline_bundle(self_test=a.self_test)
     store = Store(a.workspace)
     store.customer_start_mode = a.customer_deployment
     if a.command is None: wizard(store); return 0
