@@ -39,7 +39,11 @@ parser.add_argument("--output", type=Path, required=True, help="machine inventor
 parser.add_argument("--deps", type=Path, help="optional rapidocr_onnxruntime package directory")
 parser.add_argument("--recoveries", type=Path, help="reviewed original-image recovery plan JSON")
 parser.add_argument("--geometry-deps", type=Path, help="run character geometry using this rapidocr package directory")
+parser.add_argument("--training2", type=Path, help="reviewed training question 2 source plan JSON")
+parser.add_argument("--boundaries7", type=Path, help="reviewed seven-region boundary plan JSON")
 args = parser.parse_args()
+if bool(args.training2) != bool(args.boundaries7):
+    parser.error("--training2 and --boundaries7 must be supplied together")
 ROOT = Path(__file__).resolve().parent
 if args.deps:
     sys.path.insert(0, str(args.deps.expanduser().resolve(strict=True)))
@@ -541,10 +545,13 @@ def reconcile_sources(database, csv_path, geometry_dependencies=None):
     add_reading_solution_candidates(database)
     if geometry_dependencies is not None:observe_answer_geometry(database,geometry_dependencies)
     merge_answer_geometry(database)
+    add_reviewed_block_answers(database)
     store_answer_token_sources(database)
     for sid,iid,kind,label,sp,sr in database.execute("SELECT scope_id,item_id,kind,label,start_page,start_row FROM source_items WHERE role='question' AND kind IN ('QUESTION','READING_TASK','VARIANT')").fetchall():
-        answers=database.execute("SELECT item_id FROM resolved_answer_items WHERE scope_id=? AND kind=? AND label=?",(sid,kind,label)).fetchall()
+        binding=database.execute('SELECT answer_item_id,block_key FROM reviewed_answer_block_bindings WHERE question_item_id=?',(iid,)).fetchone()
+        answers=[(binding[0],)] if binding else database.execute("SELECT item_id FROM resolved_answer_items WHERE scope_id=? AND kind=? AND label=?",(sid,kind,label)).fetchall()
         question_count=database.execute("SELECT count(*) FROM source_items WHERE scope_id=? AND role='question' AND kind=? AND label=?",(sid,kind,label)).fetchone()[0]
+        if binding:question_count=database.execute("SELECT count(*) FROM source_items i JOIN source_item_context c ON c.item_id=i.item_id WHERE i.scope_id=? AND i.role='question' AND i.kind=? AND i.label=? AND c.block_key=?",(sid,kind,label,binding[1])).fetchone()[0]
         reasons=[]
         if len(answers)!=1:reasons.append("MISSING_OR_MULTIPLE_ANSWER_ANCHORS")
         elif database.execute("SELECT strength FROM answer_marker_quality WHERE item_id=?",(answers[0][0],)).fetchone()[0]!="STRONG":reasons.append("ANSWER_MARKER_REQUIRES_REVIEW")
@@ -743,6 +750,63 @@ def observe_unique_explanation_heads(database):
         database.execute('INSERT INTO explanation_head_observations VALUES(?,?,?,?,?,?,?)',(sid,label,n,index,json.dumps(b),json.dumps([y0,y1]),json.dumps([y0,end])));accepted.add((sid,n,index))
     return accepted
 
+def apply_source_region_updates(database, training_path, boundary_path):
+    """Apply the supplied original-image regions to source instances."""
+    import json,hashlib
+    from pathlib import Path
+    database.execute('CREATE TABLE IF NOT EXISTS source_review_inputs(name TEXT PRIMARY KEY,plan_sha TEXT,plan_json TEXT)')
+    plans={}
+    for name,path in [('training2',training_path),('boundaries7',boundary_path)]:
+        raw=Path(path).read_bytes();plan=json.loads(raw.decode('utf-8-sig'));plans[name]=plan
+        for p in plan['pages']:
+            if database.execute('SELECT sha FROM pages WHERE page=?',(p['page'],)).fetchone()[0]!=p['source_sha256']:raise ValueError('Source region image differs')
+        database.execute('INSERT OR REPLACE INTO source_review_inputs VALUES(?,?,?)',(name,hashlib.sha256(raw).hexdigest(),json.dumps(plan,ensure_ascii=False)))
+    plan=plans['training2'];sid=plan['scope_id'];q=plan['question'];iid=f'{sid}/question/QUESTION/recovered/training/2'
+    rows=json.loads(database.execute('SELECT rows_json FROM pages WHERE page=?',(q['page'],)).fetchone()[0])
+    fragments=[{'page':q['page'],'column':q['column'],'bbox':q['full_bbox'],'row_indices':q['original_ocr_rows'],'reviewed_region':True}]
+    record={'scope_id':sid,'printed_question':'2','subsection':q['subsection'],'start_page':q['page'],'start_bbox':q['start_bbox'],'fragments':fragments,'evidence':'VISUALLY_OBSERVED_ORIGINAL_IMAGE','block_key':'training'}
+    sha=database.execute("SELECT plan_sha FROM source_review_inputs WHERE name='training2'").fetchone()[0]
+    database.execute('INSERT OR REPLACE INTO source_items VALUES(?,?,?,?,?,?,?,?,?,?)',(sid,iid,'question','QUESTION','2',q['page'],q['original_ocr_rows'][0],q['page'],json.dumps(fragments,ensure_ascii=False),None))
+    database.execute('INSERT OR REPLACE INTO source_item_context VALUES(?,?,?,?,?)',(iid,'training','变式训练','VISUAL_SOURCE_RECOVERY',json.dumps({'plan_sha':sha,'start_bbox':q['start_bbox']},ensure_ascii=False)))
+    database.execute('INSERT OR REPLACE INTO source_recovery_records VALUES(?,?,?)',(iid,sha,json.dumps(record,ensure_ascii=False)))
+    old=plan['old_question1_resegmentation'];old_iid=old['item_id']
+    kept=[{'page':q['page'],'column':q['column'],'bbox':old['retain_bbox'],'row_indices':old['retain_rows'],'reviewed_region':True}]
+    database.execute('UPDATE source_items SET fragments_json=?,end_page=? WHERE item_id=?',(json.dumps(kept,ensure_ascii=False),q['page'],old_iid))
+    updated={}
+    for r in plans['boundaries7']['records']:
+        updated[(r['item_id'],r['page'])]=r['corrected_full_region_bbox']
+    for r in plans['boundaries7']['coupled_neighbor_adjustments']:
+        updated[(r['item_id'],r['page'])]=r['corrected_bbox']
+    for (target,page),region in updated.items():
+        fragments=json.loads(database.execute('SELECT fragments_json FROM source_items WHERE item_id=?',(target,)).fetchone()[0])
+        for f in fragments:
+            center=(f['bbox'][0]+f['bbox'][2])/2
+            if f['page']==page and region[0]<=center<region[2]:f.update(bbox=region,reviewed_region=True)
+        database.execute('UPDATE source_items SET fragments_json=? WHERE item_id=?',(json.dumps(fragments,ensure_ascii=False),target))
+    kinds=dict(database.execute("SELECT kind,count(*) FROM source_items WHERE scope_id=? AND role='question' GROUP BY kind",(sid,)))
+    blocks={}
+    for block,label in database.execute("SELECT c.block_key,i.label FROM source_items i JOIN source_item_context c ON c.item_id=i.item_id WHERE i.scope_id=? AND i.kind='QUESTION'",(sid,)):blocks.setdefault(block,set()).add(int(label))
+    gaps=sorted({n for nums in blocks.values() for n in set(range(1,max(nums,default=0)+1))-nums})
+    database.execute('UPDATE machine_counts SET item_count=?,numbered=?,number_gaps=? WHERE scope_id=?',(sum(kinds.get(k,0) for k in ['QUESTION','READING_TASK','VARIANT']),kinds.get('QUESTION',0),json.dumps(gaps),sid))
+    database.commit()
+
+def add_reviewed_block_answers(database):
+    import json,re
+    database.executescript('CREATE TABLE IF NOT EXISTS reviewed_answer_block_bindings(question_item_id TEXT PRIMARY KEY,answer_item_id TEXT,block_key TEXT,record_json TEXT);DELETE FROM reviewed_answer_block_bindings;')
+    if not database.execute("SELECT 1 FROM sqlite_master WHERE type='table' AND name='source_review_inputs'").fetchone():return
+    row=database.execute("SELECT plan_json FROM source_review_inputs WHERE name='training2'").fetchone()
+    if not row:return
+    plan=json.loads(row[0]);sid=plan['scope_id'];a=plan['answer'];s=plan['same_scope_selftest2']
+    for block,page,index,bbox,indices,qid in [
+        ('training',a['page'],a['shared_original_row'],a['full_bbox'],[a['shared_original_row'],*a['additional_original_rows']],f'{sid}/question/QUESTION/recovered/training/2'),
+        ('selftest',s['answer_page'],s['answer_row'],s['answer_bbox'],[s['answer_row']],s['question_item_id'])]:
+        rows=json.loads(database.execute('SELECT rows_json FROM pages WHERE page=?',(page,)).fetchone()[0]);text=rows[index][1];marker=re.search(r'(?<!\d)2[.、．]',text)
+        if marker is None:raise ValueError('Observed block answer 2 marker missing')
+        iid=f'{sid}/reviewed-block-answer/{block}/2';fragment={'page':page,'column':0,'row_indices':indices,'bbox':bbox,'reviewed_region':True,'answer_block_key':block,'requires_review':True,'text_spans':[{'row_index':index,'start':marker.start(),'end':len(text) if block=='training' else s['answer_original_text_span'][1]}]}
+        database.execute('INSERT OR REPLACE INTO resolved_answer_items VALUES(?,?,?,?,?,?,?)',(sid,iid,'QUESTION','2',page,index,json.dumps([fragment],ensure_ascii=False)))
+        database.execute('INSERT OR REPLACE INTO answer_marker_quality VALUES(?,?,?,?,?,?,?,?,?)',(iid,'REVIEW','VISUAL_SOURCE_BLOCK_ANSWER',marker.group(),marker.start(),marker.end(),text,page,index))
+        database.execute('INSERT INTO reviewed_answer_block_bindings VALUES(?,?,?,?)',(qid,iid,block,json.dumps({'block_title':a['block_title'] if block=='training' else s['answer_block_title'],'source':'training2'},ensure_ascii=False)))
+
 def store_answer_token_sources(database):
     """Keep source glyphs in raw_token and normalized spelling separately."""
     import unicodedata
@@ -892,4 +956,6 @@ def merge_answer_geometry(database):
 
 if args.recoveries:
     apply_reviewed_regions(db,args.recoveries.expanduser().resolve(strict=True))
+if args.training2:
+    apply_source_region_updates(db,args.training2.expanduser().resolve(strict=True),args.boundaries7.expanduser().resolve(strict=True))
 reconcile_sources(db, output, args.geometry_deps.expanduser().resolve(strict=True) if args.geometry_deps else None)
