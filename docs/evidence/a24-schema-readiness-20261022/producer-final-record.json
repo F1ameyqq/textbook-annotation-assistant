@@ -1,0 +1,94 @@
+{
+  "schema": "A24SchemaReadinessPatch/v2",
+  "date": "2026-10-22",
+  "decision": "HOLD_REAL_SCHEMA_UNBOUND",
+  "write_allowed": false,
+  "successors": "NOT_RUN",
+  "schema_profile": null,
+  "qualification": "NOT_RUN",
+  "supersession": {
+    "v1_patch_preserved": true,
+    "v1_patch_sha256": "981c4569354cefff1f318a54768242a9be53fec7fb5078eb036106d2eeca914f",
+    "v2_reason": "Remove unsupported per-question frame denominator equality after old R1 regression evidence."
+  },
+  "product_fix": {
+    "removed": "FRAME_QUESTION_DENOMINATOR exact equality between all question IDs and frame-owned question IDs",
+    "retained": [
+      "EMPTY_TARGET_DENOMINATOR for globally empty questions, frames, or question_content",
+      "FRAME_QUESTION_IDENTITY requiring every existing frame to reference an existing question",
+      "canonical non-empty trimmed question, frame, rect, and directory identities"
+    ],
+    "compatibility_control": "A question without a frame is accepted when the overall observed denominator remains non-empty."
+  },
+  "focused_new_tests": {
+    "tests": 14,
+    "failures": 0,
+    "errors": 0,
+    "seconds": 0.307,
+    "exit_code": 0,
+    "passed": true
+  },
+  "affected_r1_regression_tests": {
+    "tests": 6,
+    "failures": 0,
+    "errors": 0,
+    "seconds": 3.191,
+    "exit_code": 0,
+    "passed": true,
+    "old_expectations_modified": false
+  },
+  "baseline_r1_control": {
+    "record": "C:/Users/LIHAOYANG/Documents/Codex/2026-10-16/ni/work/a24-takeover-20261022/schema-readiness-main/baseline-r1-controls.json",
+    "tests": 20,
+    "passed_tests": 17,
+    "failures": 0,
+    "errors": 3,
+    "duration_ms": 63516,
+    "suite_passed": false,
+    "known_errors": [
+      "WindowsBackend.bootstrap_steps legacy fixture missing attribute",
+      "legacy independent reopen fixture requires REOPEN_OUTER_CERTIFICATE_REQUIRED",
+      "missing private D:/1800 request-accepted-content-v2.json"
+    ]
+  },
+  "v1_integrated_regression": {
+    "record": "C:/Users/LIHAOYANG/Documents/Codex/2026-10-16/ni/work/a24-takeover-20261022/schema-readiness-main/regression.json",
+    "new_suites_passed_before_r1": 35,
+    "r1_tests": 20,
+    "r1_failures": 6,
+    "r1_errors": 3
+  },
+  "fixed_baseline": {
+    "path": "C:/Users/LIHAOYANG/Documents/Codex/2026-10-16/ni/work/a24-takeover-20261022/offline-final-main-review/effective",
+    "wire_sha256": "e89057ecdcdcb4878c22138b6de99a47dcd621bb2ce52c938d6fcc83f1a88d08",
+    "quality_sha256": "6b5b9362bfab4879f8b2b676028848b3f7009fb3cf825ea7ba9dccc722d6ace6"
+  },
+  "patch_apply_check": {
+    "command": "git apply --check --whitespace=error-all <v2_patch>",
+    "exit_code": 0
+  },
+  "artifacts": {
+    "v2_patch": {
+      "path": "C:/Users/LIHAOYANG/Documents/Codex/2026-10-17/chapter1-content-sol56/outputs/a24-schema-readiness-20261022/a24-schema-readiness-v2.patch",
+      "sha256": "c0b36d24cdd8c29ad1f02c4194cd445c1dda26b3300921c9b3f0589607d63f7c"
+    },
+    "isolated_wire_sha256": "64885d7ac5d91d5351231a803ffeab4badb1b55528057a6abde1c03ac6131116",
+    "isolated_quality_sha256": "ea23ffe0a9aa4d70d364d5404303d4254a2185b90df823c3ee5473da3d9045f7",
+    "schema_capture_sha256": "a599b347c7737cb17d633b032dfe8a62403a56c91952f539ae7d5c082e96abe9",
+    "focused_tests_sha256": "7222f3121cb52282ce211f4c7dc03eebf198760b69991d31415ac7f689d47cdd"
+  },
+  "scope": {
+    "shared_b_revision": "2e43bcb",
+    "shared_b_modified": false,
+    "network_browser_api_live_authority_model_calls": 0
+  },
+  "open_blockers": [
+    "full raw-extra preservation for declarative snapshot projections",
+    "authoritative current catalog membership",
+    "snapshot-to-export state or version binding",
+    "hash-bound evidence references",
+    "real six-phase read, save receipt, and post-save readback coverage",
+    "complete identity safety beyond named identities and known containers"
+  ]
+}
+

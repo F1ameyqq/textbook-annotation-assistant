@@ -1,0 +1,42 @@
+{
+  "schema": "q16-reading-independent-adversarial/0.1",
+  "package_bundle_sha256": "e347e6eef8a87a60bcf314816a0b5ff7a9f3cf24b60109891f844d998fd5e39d",
+  "cases": [
+    {
+      "case": "coordinated_text_and_reference_rewrite",
+      "rejected": true,
+      "expected_guard": "FIXED_SOURCE_REVIEW",
+      "returncode": 1
+    },
+    {
+      "case": "eighteen_subjects_reordered_and_resigned",
+      "rejected": true,
+      "expected_guard": "INDEPENDENT_REVIEW_BINDING",
+      "returncode": 1
+    },
+    {
+      "case": "row_108_cross_task_rebind_and_resign",
+      "rejected": true,
+      "expected_guard": "RUN_AND_OWNER_BINDING",
+      "returncode": 1
+    },
+    {
+      "case": "whole_task_diagram_omitted_and_resigned",
+      "rejected": true,
+      "expected_guard": "NO_OMITTED_OR_DUPLICATE_REGIONS",
+      "returncode": 1
+    }
+  ],
+  "all_rejected": true,
+  "known_gaps": [
+    {
+      "case": "unreviewed_extra_source_artifact",
+      "unexpectedly_accepted": true,
+      "mutated_bundle_sha256": "e205878796563b46607ec4551bb3dd2ec62388ebc5c1ceca96781761290d650b",
+      "cause": "artifact kinds are mapped without exact artifact cardinality",
+      "release_blocking": true
+    }
+  ],
+  "release_ready": false,
+  "decision": "HOLD"
+}

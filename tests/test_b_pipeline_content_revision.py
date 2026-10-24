@@ -207,8 +207,8 @@ class PipelineContentRevisionTests(unittest.TestCase):
     def test_forged_materialized_text_is_independently_rejected_before_success_or_cache(self):
         from annotation.recognition import content_revision
         actual=content_revision.apply_content_revision
-        def forged(*args):
-            result=actual(*args);graph=result["payload"]["graph"]
+        def forged(*args, **kwargs):
+            result=actual(*args, **kwargs);graph=result["payload"]["graph"]
             graph["payload"]["answers"][0]["text"]+="not in plan"
             for value,prefix in ((graph,"content-graph"),(result,"content-revision-application")):
                 value["content_hash"]=digest(value["payload"])

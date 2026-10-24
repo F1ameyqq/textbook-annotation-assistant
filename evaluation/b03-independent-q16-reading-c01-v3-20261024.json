@@ -1,0 +1,113 @@
+{
+  "schema": "B03IndependentFourTaskRevisionReview/v1",
+  "date_local": "2026-10-24",
+  "timezone": "Asia/Shanghai",
+  "status": "PASS_B_CONTENT_SOURCE_DELTA_AND_PORTABLE_REPLAY",
+  "review_kind": "INDEPENDENT_MODEL_ORIGINAL_IMAGE_REVIEW_AND_MACHINE_COMPARISON_NOT_HUMAN",
+  "archive_name": "B-46007447-Q16-reading-C01-v3-20261024-final.zip",
+  "archive_sha256": "1362c7582bacce796b518bdf12e421537ef69be768da39bed99209777a46d2fd",
+  "archive_bytes": 6266082,
+  "zip_members": 119,
+  "manifest_members_verified": 118,
+  "frozen_delivery_files_rebuilt_byte_identical": 50,
+  "bundle_sha256": "ed656b23e1c343a2d11d09f6006bb22ddb90fbe64120d75f38facdd154c17f38",
+  "a24_complete_object_sha256": "a1d3311dd56a5ca8f7825f93e6b039c8c10602fda25dc05bc0a92fe027160282",
+  "fixed_a_commit": "c5aefbc8e995c410b3babf74a251f05a7724a1c2",
+  "fixed_a_source_files_independently_reverified": 50,
+  "predecessor_zip_sha256": "4725523ec499a3074b268b12f0282ca795c13ddd98e97350078a50db89f7dc93",
+  "predecessor_bundle_sha256": "95488a276535a7bee7094238b02c6b41574e37df19d7b946830c6c07f9a824d6",
+  "predecessor_original_archive_included_byte_identical": true,
+  "historical_json_files_preserved_byte_identical": 5,
+  "predecessor_member_pins_verified": 46,
+  "counts": {
+    "questions": 4,
+    "selected_answer_relations": 4,
+    "selected_answer_fragments": 10,
+    "shared_material_groups": 1,
+    "shared_fragments": 8,
+    "shared_material_users": 3,
+    "active_fragments": 26,
+    "source_images": 3,
+    "source_regions_and_crops": 37,
+    "unfilled_blanks": 6,
+    "diagnostic_formula_regions_not_answer_fragments": 11
+  },
+  "resolved_source_finding": {
+    "code": "Q16_PRINTED_SUBQUESTION_LABELS_MISSING",
+    "source_page": 15,
+    "source_asset_sha256": "7c1a4afec69a94371fa31b6111969ca3d6ec39d7d7c6b1c73764f90316a610dd",
+    "restored_blocks": [
+      "q16-task1",
+      "q16-task2",
+      "q16-task3"
+    ],
+    "restored_labels": [
+      "（1）",
+      "（2）",
+      "（3）"
+    ],
+    "graph_text_and_first_plain_runs_match": true,
+    "source_windows_and_crop_bytes_unchanged": true,
+    "other_body_formula_answer_blank_and_geometry_changes": 0
+  },
+  "independent_source_checks": {
+    "source_pages_visually_read": [
+      13,
+      15,
+      173
+    ],
+    "initial_source_crops_pixel_verified": 37,
+    "current_original_images_byte_identical": 3,
+    "current_source_crops_byte_identical": 37,
+    "all_11_formula_signs_numerators_denominators_individually_read": true,
+    "q16_is_single_question_page": 15,
+    "reading_is_single_question_page": 13,
+    "answer_page": 173,
+    "reading1_column_flow_preserved": true,
+    "reading2_3_answer_ownership_preserved": true,
+    "reading3_nonunique_note_and_complete_diagram_preserved": true,
+    "current_graph_and_check_bound": true,
+    "active_and_history_resource_refs_verified": 47,
+    "historical_qa_report_raw_markdown_sha256": "759e6874fa57868c4174fa2f2b3a6d6fd89a454feb6aeeb5cdd8754c51685baf"
+  },
+  "actual_delta_cases": {
+    "status": "PASS",
+    "tests_run": 19,
+    "failures": 0,
+    "errors": 0,
+    "normal_control": "Actual final bundle, compared with immutable predecessor and independent source label expectations",
+    "source_slot_numbers_restored": 3,
+    "producer_builder_or_comparator_used": false
+  },
+  "b_content_issues": [],
+  "c01_preapply_decision": "HOLD",
+  "c01_preapply_hold_scope": "Informational joint platform-policy and broader target-coverage scope, not an unresolved four-task source-content defect.",
+  "old_unlabelled_73cddd_draft_accepted": false,
+  "old_v2_modified": false,
+  "new_ocr_calls": 0,
+  "platform_requests": 0,
+  "platform_writes": 0,
+  "website_profile_access": false,
+  "a_owner_acceptance": false,
+  "independent_human_acceptance": false,
+  "whole_chapter_acceptance": false,
+  "public_contract_changed": false,
+  "validation_runtime": {
+    "Python": "3.12.14",
+    "Pillow": "12.3.0",
+    "Pydantic": "2.14.1",
+    "new_installs": false
+  },
+  "reproducible_commands": [
+    "python -I tools/safe_extract_b_content.py --archive B-46007447-Q16-reading-C01-v3-20261024-final.zip --sha256 1362c7582bacce796b518bdf12e421537ef69be768da39bed99209777a46d2fd --destination fresh-four --out extraction.json",
+    "python -I -B fresh-four/tools/replay_lesson_c01_b.py --package fresh-four --out fresh-four-replay",
+    "python -I tools/safe_extract_b_content.py --archive fresh-four/history/original-v2.zip --sha256 4725523ec499a3074b268b12f0282ca795c13ddd98e97350078a50db89f7dc93 --destination fresh-predecessor --out predecessor-extraction.json",
+    "python -I -S tools/replay_q16_reading_delta_cases_b.py --old fresh-predecessor/delivery --new fresh-four/delivery --out actual-delta-cases.json"
+  ],
+  "historical_scope_notes": [
+    "The original four UNRESOLVED relations and historical HOLD reports remain archived, not the active B content gate.",
+    "Lack of a human signature does not by itself negate source-confirmed B answer ownership.",
+    "Source windows are not claimed to be exclusive platform frames; known shared-source overlap is not a content defect.",
+    "This bounded four-task package does not establish whole-chapter or whole-book coverage."
+  ]
+}

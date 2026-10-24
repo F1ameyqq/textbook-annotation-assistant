@@ -1,0 +1,70 @@
+diff --git a/src/annotation/runtime/live_pilot/historical_preservation.py b/src/annotation/runtime/live_pilot/historical_preservation.py
+index a9a21ec..de8eb67 100644
+--- a/src/annotation/runtime/live_pilot/historical_preservation.py
++++ b/src/annotation/runtime/live_pilot/historical_preservation.py
+@@ -38,6 +38,8 @@ def _decode_record(raw):
+         require(False, "HISTORICAL_SOURCE_ENCODING", type(exc).__name__)
+     try:
+         value = json.loads(text, object_pairs_hook=_unique_object,
++                           parse_float=lambda token: require(
++                               False, "HISTORICAL_JSON_NUMBER", "FLOAT_UNSUPPORTED"),
+                            parse_constant=lambda token: require(False, "HISTORICAL_JSON_NONFINITE", token))
+     except json.JSONDecodeError as exc:
+         require(False, "HISTORICAL_JSONL_RECORD", type(exc).__name__)
+@@ -64,10 +66,9 @@ class HistoricalRecord:
+     line_ending: str
+     line_identity: str
+     content_fingerprint: str
+-    _value: dict
+ 
+     def value(self):
+-        return copy.deepcopy(self._value)
++        return _decode_record(self.record_bytes)
+ 
+     def byte_reference(self, source_sha256):
+         return {
+@@ -109,7 +110,7 @@ class HistoricalArchive:
+                 "line_identity": record.line_identity,
+                 "content_fingerprint": record.content_fingerprint,
+                 "raw_byte_ref": record.byte_reference(self.source_sha256),
+-                "field_names": list(record._value),
++                "field_names": list(record.value()),
+             } for record in self.records],
+         }
+ 
+@@ -148,7 +149,6 @@ def load_historical_original(path, expected_sha256, expected_bytes):
+             line_ending=line_ending,
+             line_identity=line_identity,
+             content_fingerprint=digest(value),
+-            _value=value,
+         ))
+         offset += len(span)
+     require(records and offset == len(raw), "HISTORICAL_JSONL_RECORD")
+diff --git a/tests/a24_historical_preservation/test_historical_preservation.py b/tests/a24_historical_preservation/test_historical_preservation.py
+index 89bbdb0..b1c6282 100644
+--- a/tests/a24_historical_preservation/test_historical_preservation.py
++++ b/tests/a24_historical_preservation/test_historical_preservation.py
+@@ -80,6 +80,23 @@ class HistoricalPreservationTests(unittest.TestCase):
+             load_historical_original(path, sha(raw), len(raw))
+         self.assertEqual(caught.exception.code, "HISTORICAL_JSON_DUPLICATE_KEY")
+ 
++    def test_float_numbers_reject_instead_of_rounding_or_overflowing(self):
++        for raw in (b'{"value":0.123456789012345678901234567890}', b'{"value":1e309}'):
++            with self.subTest(raw=raw):
++                path, _ = self.synthetic(raw)
++                with self.assertRaises(PilotError) as caught:
++                    load_historical_original(path, sha(raw), len(raw))
++                self.assertEqual(caught.exception.code, "HISTORICAL_JSON_NUMBER")
++
++    def test_record_value_is_reparsed_from_preserved_bytes(self):
++        raw = b'{"question":"original"}'
++        path, _ = self.synthetic(raw)
++        archive = load_historical_original(path, sha(raw), len(raw))
++        self.assertFalse(hasattr(archive.records[0], "_value"))
++        value = archive.records[0].value()
++        value["question"] = "mutated"
++        self.assertEqual(archive.full_records(), [{"question": "original"}])
++
+     def test_identity_disguise_rejects_and_many_to_many_never_selects(self):
+         path, raw = self.synthetic()
+         archive = load_historical_original(path, sha(raw), len(raw))

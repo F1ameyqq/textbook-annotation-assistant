@@ -83,12 +83,96 @@ def _read_object(root,descriptor):
     return value
 
 
-def _source_evidence(evidence,source,context,emit):
+def _independent_reviewed_partition(asset,image_path,lines,reviewed):
+    """Re-derive Viewer-13 structure from immutable pixels/OCR, not claimed kinds."""
+    gray = cv2.imread(str(image_path),cv2.IMREAD_GRAYSCALE)
+    if gray is None or gray.shape != (asset["height"],asset["width"]):
+        raise ValueError("reviewed source pixels are unavailable")
+    mask = gray < 160
+    band = mask[int(.18*asset["height"]):int(.94*asset["height"])]
+    ink = band.mean(axis=0)
+    candidates = range(int(.46*asset["width"]),int(.54*asset["width"]))
+    cut = min(candidates,key=lambda x:(float(ink[max(0,x-3):x+4].mean()),abs(x-asset["width"]/2)))
+    if cut != reviewed.get("cut_x"):
+        raise ValueError("reviewed cut is not independently reproduced from source pixels")
+    column=lambda line:int((line["bbox"][0]+line["bbox"][2])/2 >= cut)
+    order=lambda values:sorted(values,key=lambda line:(line["bbox"][1],line["bbox"][0],line["line_id"]))
+    def one(values,label):
+        if len(values) != 1: raise ValueError("expected one "+label)
+        return values[0]
+    q=one([v for v in lines if re.match(r"^\s*\d{1,2}\s*[.．、]\s*(?=[\u4e00-\u9fffA-Za-z（(])",v["text"])],"printed question anchor")
+    qnumber=re.match(r"^\s*(\d{1,2})\s*[.．、]",q["text"])[1]
+    variant=one([v for v in lines if v["text"].startswith("【变式】")],"variant anchor")
+    heading=one([v for v in lines if re.match(r"^\s*任务\s*[：:]",v["text"])],"task heading")
+    tasks={n:one([v for v in lines if re.match(r"^\s*[（(]"+n+r"[）)]",v["text"])],"task "+n) for n in "123"}
+    tl=one([v for v in lines if v["text"].startswith("漫话勾股世界")],"left title")
+    tr=one([v for v in lines if "教材P6" in v["text"] and "阅读" in v["text"] and "思考" in v["text"]],"right title")
+    overlap=min(tl["bbox"][3],tr["bbox"][3])-max(tl["bbox"][1],tr["bbox"][1])
+    if not (tl["bbox"][2] < tr["bbox"][0] < cut < tr["bbox"][2]
+            and overlap >= .5*min(tl["bbox"][3]-tl["bbox"][1],tr["bbox"][3]-tr["bbox"][1])):
+        raise ValueError("title geometry is not independently supported")
+    decorations=[v for v in lines if v["bbox"][1]>.93*asset["height"] and
+                 (re.fullmatch(r"\s*\d+\s*",v["text"]) or "数学" in v["text"])]
+    figures=[v for v in lines if v["text"].strip() in {"图1","图2","剪开","右边部分","上下翻转"}]
+    excluded={v["line_id"] for v in decorations+figures+[q,variant,heading,*tasks.values(),tl,tr]}
+    qrows=order([v for v in lines if column(v)==0 and q["bbox"][1]<=v["bbox"][1]<tl["bbox"][1] and v["line_id"] not in excluded])
+    vrows=order([v for v in lines if column(v)==1 and variant["bbox"][1]<=v["bbox"][1]<tl["bbox"][1] and v["line_id"] not in excluded])
+    decoration_ids={v["line_id"] for v in decorations}
+    t1l=order([v for v in lines if column(v)==0 and v["bbox"][1]>=tasks["1"]["bbox"][1] and v["line_id"] not in decoration_ids])
+    t1r=order([v for v in lines if column(v)==1 and tr["bbox"][3]<v["bbox"][1]<tasks["2"]["bbox"][1]])
+    t2=order([v for v in lines if column(v)==1 and tasks["2"]["bbox"][1]<=v["bbox"][1]<tasks["3"]["bbox"][1]])
+    t3=order([v for v in lines if column(v)==1 and v["bbox"][1]>=tasks["3"]["bbox"][1] and v["line_id"] not in decoration_ids])
+    consumed={v["line_id"] for v in decorations+figures+[q,variant,heading,tl,tr]+qrows+vrows+t1l+t1r+t2+t3}
+    body=order([v for v in lines if v["line_id"] not in consumed])
+    figure_bands=[]
+    for value in sorted(figures,key=lambda v:(v["bbox"][1],v["bbox"][0])):
+        center=(value["bbox"][1]+value["bbox"][3])/2
+        row=next((r for r in figure_bands if abs(r[0]-center)<=12),None)
+        if row is None: figure_bands.append([center,value])
+        else: row.append(value)
+    figures=[v for row in figure_bands for v in sorted(row[1:],key=lambda item:item["bbox"][0])]
+    ids=lambda values:[v["line_id"] for v in values]
+    result={
+        ("QUESTION",None):([q["line_id"],*ids(qrows)],[(0,[q["line_id"],*ids(qrows)])]),
+        ("VARIANT",None):([variant["line_id"],*ids(vrows)],[(1,[variant["line_id"],*ids(vrows)])]),
+        ("MATERIAL_TITLE",None):([tl["line_id"],tr["line_id"]],[(0,[tl["line_id"]]),(1,[tr["line_id"]])]),
+        ("MATERIAL_BODY",None):(ids(body),[(0,ids(body))]),
+        ("FIGURE_LABELS",None):(ids(figures),[(0,ids(figures))]),
+        ("TASK_SECTION_HEADING",None):([heading["line_id"]],[(0,[heading["line_id"]])]),
+        ("TASK","(1)"):(ids(t1l)+ids(t1r),[(0,ids(t1l)),(1,ids(t1r))]),
+        ("TASK","(2)"):(ids(t2),[(1,ids(t2))]),
+        ("TASK","(3)"):(ids(t3),[(1,ids(t3))]),
+        ("EXCLUDE",None):(ids(order(decorations)),[(1,ids(order(decorations)))])}
+    if any(not values or any(not part for _,part in segments) for values,segments in result.values()):
+        raise ValueError("required independently derived group is empty")
+    if Counter(v for values,_ in result.values() for v in values) != Counter(v["line_id"] for v in lines):
+        raise ValueError("independent groups do not partition the OCR scope")
+    return cut,result,{"question_number":qnumber,"variant_number":qnumber+":variant",
+                       "task_response_kind":"UNKNOWN"}
+
+
+def _source_evidence(evidence,source,context,emit,source_path=None):
     """Validate declared-source binding; do not reinterpret recognition text."""
-    if not _checked(evidence,{"b-evidence-trial/0.2","b-evidence-trial/0.3"},"EvidenceBundleTrial"):
+    expected={"b-context-trial/0.1":{"b-evidence-trial/0.2","b-evidence-trial/0.3"},
+              "b-context-trial/0.2":{"b-evidence-trial/0.4"}}.get(context.get("schema_version"),set())
+    if not _checked(evidence,expected,"EvidenceBundleTrial"):
         emit("PIPELINE_EVIDENCE_INVALID")
         return {}
     p = evidence["payload"]
+    if evidence["schema_version"]=="b-evidence-trial/0.4":
+        if (set(evidence)!={"schema_version","kind","artifact_id","revision","run_id","book_id","scope_id","input_refs",
+                           "producer","created_at","content_hash","payload"}
+                or set(p)!={"pages","quality_decision","context","history_annotations_consumed","limitations"}
+                or set(evidence.get("producer",{}))!={"module","version","code_sha256","baseline_producer","answer_row_scale"}
+                or evidence["producer"].get("module")!="annotation.recognition.offline"
+                or evidence["producer"].get("version")!="0.2.0" or evidence["producer"].get("answer_row_scale")!=3
+                or p.get("limitations")!=["Reviewed section windows are development input, not automatic directory recognition.",
+                    "OCR and figure candidates are unverified; two-column layouts only."]):
+            emit("PIPELINE_EVIDENCE_SHAPE_MISMATCH")
+        if (set(context)!={"schema_version","artifact_id","book_id","scope_id","pages","reference_quality","provenance"}
+                or context.get("reference_quality")!="MODEL_VISUAL_DEVELOPMENT_REVIEW"
+                or context.get("provenance")!="Explicit model draft over the frozen 48-row OCR; not human review."):
+            emit("PIPELINE_EVIDENCE_CONTEXT_MISMATCH",detail="structured context metadata")
     assets = sorted(source["assets"],key=lambda a:a["reading_order"])
     if (any(evidence.get(k) != source[k]for k in ("book_id","scope_id"))
             or [page.get("source")for page in p.get("pages",[])] != assets
@@ -98,6 +182,7 @@ def _source_evidence(evidence,source,context,emit):
         emit("PIPELINE_EVIDENCE_CONTEXT_MISMATCH")
     if p.get("history_annotations_consumed") is not False or p.get("quality_decision") != "NOT_EVALUATED":
         emit("PIPELINE_EVIDENCE_PROVENANCE_MISMATCH")
+    source_files={a["asset_id"]:path for a,path in load_source(source_path)[1]} if source_path is not None else {}
     units = {}
     for page in p.get("pages",[]):
         aid,asset = page.get("asset_id"),page["source"]
@@ -126,17 +211,230 @@ def _source_evidence(evidence,source,context,emit):
                     window = windows[index]
                     if location.get("column") != window["column"] or location.get("section_path") != window["path"]:
                         emit("PIPELINE_EVIDENCE_CONTEXT_MISMATCH",detail=lid)
+        reviewed=pc.get("reviewed_layout")
+        if evidence["schema_version"] == "b-evidence-trial/0.4":
+            try:
+                if (set(page)!={"asset_id","source","page_role","layout","ocr_lines","answer_detail_lines",
+                                "unscoped_line_ids","reviewed_layout_receipt"}
+                        or page.get("answer_detail_lines")!=[] or page.get("unscoped_line_ids")!=[]
+                        or any(set(line)!={"bbox","crop_id","score","text","line_id","location"}
+                               or not isinstance(line.get("location"),dict)
+                               or set(line["location"])!={"column","window_index","section_path"}
+                               for line in page.get("ocr_lines",[]))):
+                    raise ValueError("structured evidence page or OCR row shape changed")
+                if not reviewed or len(page.get("ocr_lines",[])) != reviewed.get("expected_line_count"):
+                    raise ValueError("structured evidence lacks its exact reviewed OCR count")
+                snapshots=[{"line_id":v["line_id"],"text":v["text"],"bbox":v["bbox"]} for v in page["ocr_lines"]]
+                if snapshots != reviewed.get("line_snapshots"):
+                    raise ValueError("structured OCR rows differ from reviewed snapshots")
+                if (evidence.get("input_refs") != [reviewed.get("baseline_ref"),_document_ref(context)]
+                        or evidence.get("producer",{}).get("baseline_producer") != reviewed.get("baseline_producer")):
+                    raise ValueError("structured evidence is not bound to the reviewed baseline ref and producer")
+                cut,derived,semantics=_independent_reviewed_partition(asset,source_files[aid],page["ocr_lines"],reviewed)
+                claims={}
+                for group in reviewed.get("groups",[]):
+                    key=(group.get("kind"),group.get("label") if group.get("kind")=="TASK" else None)
+                    if key in claims: raise ValueError("duplicate reviewed semantic group")
+                    claims[key]=(group.get("ordered_line_ids"),[(s.get("column"),s.get("line_ids")) for s in group.get("flow_segments",[])])
+                if claims != derived: raise ValueError("reviewed group claims differ from independent source derivation")
+                question=next(g for g in reviewed["groups"] if g["kind"]=="QUESTION")
+                variant=next(g for g in reviewed["groups"] if g["kind"]=="VARIANT")
+                tasks=[g for g in reviewed["groups"] if g["kind"]=="TASK"]
+                if (question.get("printed_number")!=semantics["question_number"]
+                        or variant.get("printed_number")!=semantics["variant_number"]
+                        or variant.get("parent_group_id")!=question.get("group_id")
+                        or any(g.get("response_kind")!=semantics["task_response_kind"] for g in tasks)):
+                    raise ValueError("reviewed semantic metadata differs from raw anchors")
+                crossing=[v["line_id"] for v in page["ocr_lines"] if v["bbox"][0]<cut<v["bbox"][2] and v["bbox"][3]>.2*asset["height"]]
+                receipt=page.get("reviewed_layout_receipt",{})
+                expected_group={line_id:g["group_id"] for g in reviewed["groups"] for line_id in g["ordered_line_ids"]}
+                expected_columns={line_id:column for _,segments in derived.values() for column,line_ids in segments for line_id in line_ids}
+                anchors={"printed_number":semantics["question_number"],
+                         "question_anchor":derived[("QUESTION",None)][0][0],
+                         "variant_anchor":derived[("VARIANT",None)][0][0],
+                         "title_line_ids":derived[("MATERIAL_TITLE",None)][0],
+                         "task_anchor_line_ids":{str(index):derived[("TASK",f"({index})")][0][0] for index in (1,2,3)},
+                         "task_section_heading_line_id":derived[("TASK_SECTION_HEADING",None)][0][0]}
+                layout=page.get("layout",{})
+                expected_layout={"mode":"two_columns_with_reviewed_spanning_headers","cut_x":cut,
+                    "body_crossing_boxes":len(crossing),"left_ocr_boxes":sum(v["bbox"][2]<=cut for v in page["ocr_lines"]),
+                    "right_ocr_boxes":sum(v["bbox"][0]>=cut for v in page["ocr_lines"]),
+                    "method":"central_gutter+ocr_box_separation","verified":False,
+                    "reviewed_spanning_line_ids":crossing,"reviewed_layout_hash":digest(reviewed)}
+                if (layout!=expected_layout
+                        or set(receipt)!={"policy","source_sha256","baseline_ref","cut_x","actual_crossing_line_ids",
+                                         "group_by_line_id","column_by_line_id","derived_anchors","reviewed_layout_hash",
+                                         "verification_status","review_kind"}
+                        or crossing != receipt.get("actual_crossing_line_ids")
+                        or receipt.get("reviewed_layout_hash") != digest(reviewed)
+                        or receipt.get("baseline_ref") != reviewed["baseline_ref"]
+                        or receipt.get("policy")!="EXACT_SOURCE_PARTITION/0.1"
+                        or receipt.get("source_sha256")!=asset["sha256"] or receipt.get("cut_x")!=cut
+                        or receipt.get("group_by_line_id")!=expected_group or receipt.get("column_by_line_id")!=expected_columns
+                        or receipt.get("derived_anchors")!=anchors
+                        or receipt.get("review_kind") != "MODEL_DRAFT" or receipt.get("verification_status") != "UNVERIFIED"):
+                    raise ValueError("reviewed layout receipt or explicit draft status differs from independent evidence")
+                for line in page["ocr_lines"]:
+                    if (line.get("location")or{}).get("column") != expected_columns[line["line_id"]]:
+                        raise ValueError("structured line location differs from independently derived column")
+            except (KeyError,TypeError,ValueError) as exc:
+                emit("PIPELINE_REVIEWED_LAYOUT_MISMATCH",detail=str(exc))
     return units
+
+
+def _structured_graph_sources(evidence,graph,units,emit):
+    gp=graph["payload"]
+    payload_keys={"questions","answers","issues","answer_coverage","matching","unmatched_answer_ids",
+                  "selection_status","platform_actions","shared_materials","question_source_coverage"}
+    if (set(gp) != payload_keys or gp.get("answers") != [] or gp.get("answer_coverage") != []
+            or gp.get("issues")!=[] or gp.get("unmatched_answer_ids")!=[]
+            or gp.get("matching")!="book+reviewed_section_path+printed_number; unique candidate only"
+            or gp.get("selection_status")!="DRAFT_UNVERIFIED" or gp.get("platform_actions")!=[]):
+        emit("PIPELINE_STRUCTURED_GRAPH_SHAPE_MISMATCH")
+    pages={p["asset_id"]:p for p in evidence["payload"]["pages"]}
+    context=evidence["payload"]["context"]
+    question_keys={"question_id","book_id","section_path","printed_number","parent_question_id","anchor_ref","asset_id",
+                   "fragments","candidate_answer_ids","selected_answer_id","verification_status","flags","structure_group_id",
+                   "counting_status","text","type_candidate"}
+    fragment_keys={"fragment_id","role","content_type","option_label","option_start","column","bbox","asset_id","text","evidence_refs"}
+    material_keys={"material_id","source_material_id","book_id","asset_id","section_path","verification_status","counting_status",
+                   "title_fragments","body_fragments","figure_label_fragments","task_section_heading_fragments","title","text","tasks","flags"}
+    task_keys={"task_id","material_id","label","anchor_ref","section_path","asset_id","response_kind","counting_status",
+               "verification_status","flow_segments","fragments","text","flags"}
+    groups={g["group_id"]:g for pc in context["pages"].values() for g in pc.get("reviewed_layout",{}).get("groups",[])}
+    derived_id=lambda role,anchor:role+"-"+digest({"evidence":_ref(evidence),"role":role,"anchor":anchor})[:24]
+    questions=gp.get("questions",[])
+    qmap={q.get("structure_group_id"):q for q in questions}
+    expected_question_groups=[g["group_id"] for g in groups.values() if g["kind"] in {"QUESTION","VARIANT"}]
+    if (len(questions)!=2 or len(qmap)!=2
+            or [q.get("structure_group_id") for q in questions]!=expected_question_groups):
+        emit("PIPELINE_STRUCTURED_QUESTION_COUNT_MISMATCH")
+    fragment_ids=[]
+    def check_fragments(fragments,group,role,prefix):
+        if not isinstance(fragments,list) or [f.get("evidence_refs",[None])[0] for f in fragments] != group["ordered_line_ids"]:
+            emit("PIPELINE_STRUCTURED_FRAGMENT_ORDER_MISMATCH",detail=group["group_id"]); return
+        for fragment,line_id in zip(fragments,group["ordered_line_ids"]):
+            fragment_ids.append(fragment.get("fragment_id"))
+            unit=units.get(line_id)
+            expected_id=prefix+"-"+digest({"evidence":_ref(evidence),"role":prefix,"anchor":line_id})[:24]
+            if (set(fragment)!=fragment_keys or not unit or fragment.get("fragment_id")!=expected_id
+                    or fragment.get("role")!=role or fragment.get("content_type")!="text"
+                    or fragment.get("option_label") is not None or fragment.get("option_start") is not False
+                    or fragment.get("asset_id")!=unit[0]["asset_id"] or fragment.get("bbox")!=unit[1]["bbox"]
+                    or fragment.get("column")!=(unit[1].get("location")or{}).get("column")
+                    or fragment.get("text")!=unit[1]["text"] or fragment.get("evidence_refs")!=[line_id]):
+                emit("PIPELINE_STRUCTURED_FRAGMENT_SOURCE_MISMATCH",detail=line_id)
+    for group_id,question in qmap.items():
+        group=groups.get(group_id,{})
+        anchor=(group.get("ordered_line_ids")or[None])[0]
+        anchor_text=units.get(anchor,({},{}))[1].get("text","")
+        if group.get("kind")=="QUESTION":
+            number_match=re.match(r"^\s*(\d{1,2})\s*[.．、]",anchor_text)
+            expected_number=number_match[1] if number_match else None
+            expected_parent=None
+        else:
+            parent_group=groups.get(group.get("parent_group_id"),{})
+            parent_anchor=(parent_group.get("ordered_line_ids")or[None])[0]
+            parent_text=units.get(parent_anchor,({},{}))[1].get("text","")
+            number_match=re.match(r"^\s*(\d{1,2})\s*[.．、]",parent_text)
+            expected_number=number_match[1]+":variant" if number_match else None
+            expected_parent=derived_id("q",parent_anchor) if parent_anchor else None
+        if (set(question)!=question_keys or group.get("kind") not in {"QUESTION","VARIANT"}
+                or question.get("question_id")!=derived_id("q",anchor)
+                or question.get("book_id")!=evidence["book_id"] or not units.get(anchor)
+                or question.get("asset_id")!=units[anchor][0]["asset_id"]
+                or question.get("section_path")!=group.get("section_path") or question.get("printed_number")!=expected_number
+                or question.get("anchor_ref")!=anchor or question.get("parent_question_id")!=expected_parent
+                or question.get("verification_status")!="UNVERIFIED" or question.get("counting_status")!=group.get("counting_status")
+                or question.get("candidate_answer_ids")!=[] or question.get("selected_answer_id") is not None
+                or question.get("type_candidate")!={"question_type":"open_response","selection_mode":None,"option_role":None}
+                or len(question.get("flags",[]))!=1 or set(question.get("flags",[]))!={"FIGURE_EXTENT_UNVERIFIED"}):
+            emit("PIPELINE_STRUCTURED_QUESTION_SOURCE_MISMATCH",detail=group_id)
+            continue
+        check_fragments(question.get("fragments"),group,"stem","f")
+        if question.get("text")!="\n".join(units[lid][1]["text"] for lid in group["ordered_line_ids"]):
+            emit("PIPELINE_GRAPH_TEXT_PROJECTION_MISMATCH",detail=question.get("question_id"))
+    materials=gp.get("shared_materials",[])
+    if len(materials)!=1: emit("PIPELINE_SHARED_MATERIAL_COUNT_MISMATCH")
+    material_ids=[material.get("material_id") for material in materials]
+    task_ids=[task.get("task_id") for material in materials for task in material.get("tasks",[])]
+    if (len(material_ids)!=len(set(material_ids)) or len(task_ids)!=len(set(task_ids))
+            or any(not isinstance(value,str) or not value for value in material_ids+task_ids)):
+        emit("PIPELINE_GRAPH_ENTITY_ID_REUSED")
+    for material in materials:
+        title_group=next((g for g in groups.values() if g.get("kind")=="MATERIAL_TITLE"
+                          and g.get("material_id")==material.get("source_material_id")),{})
+        expected_material_id=derived_id("material",(title_group.get("ordered_line_ids")or[None])[0])
+        if (set(material)!=material_keys or material.get("verification_status")!="UNVERIFIED"
+                or material.get("counting_status")!="NOT_A_QUESTION" or material.get("book_id")!=evidence["book_id"]
+                or not title_group or material.get("asset_id")!=units[title_group["ordered_line_ids"][0]][0]["asset_id"]
+                or material.get("section_path")!=title_group.get("section_path")
+                or material.get("material_id")!=expected_material_id
+                or len(material.get("flags",[]))!=3 or set(material.get("flags",[]))!={"TITLE_SEPARATOR_UNCAPTURED",
+                    "FIGURE_EXTENT_UNVERIFIED","BUSINESS_REVIEW_REQUIRED"} or len(material.get("tasks",[]))!=3):
+            emit("PIPELINE_SHARED_MATERIAL_SOURCE_MISMATCH",detail=material.get("material_id")); continue
+        mgroups={g["kind"]:g for g in groups.values() if g.get("material_id")==material.get("source_material_id") and g["kind"]!="TASK"}
+        projections=(("title_fragments","MATERIAL_TITLE","material_title"),("body_fragments","MATERIAL_BODY","material_body"),
+                     ("figure_label_fragments","FIGURE_LABELS","figure_label"),("task_section_heading_fragments","TASK_SECTION_HEADING","task_section_heading"))
+        for field,kind,role in projections:
+            if kind not in mgroups: emit("PIPELINE_SHARED_MATERIAL_SOURCE_MISMATCH",detail=kind)
+            else: check_fragments(material.get(field),mgroups[kind],role,"mf")
+        if (material.get("title")!="\n".join(v["text"] for v in material.get("title_fragments",[]))
+                or material.get("text")!="\n".join(v["text"] for v in material.get("body_fragments",[]))):
+            emit("PIPELINE_GRAPH_TEXT_PROJECTION_MISMATCH",detail=material.get("material_id"))
+        task_by_label={v.get("label"):v for v in material.get("tasks",[])}
+        if ([v.get("label") for v in material.get("tasks",[])]!="(1) (2) (3)".split()
+                or set(task_by_label)!={"(1)","(2)","(3)"}): emit("PIPELINE_SHARED_TASK_COUNT_MISMATCH")
+        for label,task in task_by_label.items():
+            group=next((g for g in groups.values() if g.get("kind")=="TASK" and g.get("label")==label),{})
+            expected_task_id=derived_id("task",(group.get("ordered_line_ids")or[None])[0])
+            if (set(task)!=task_keys or task.get("task_id")!=expected_task_id or task.get("material_id")!=expected_material_id
+                    or task.get("anchor_ref")!=(group.get("ordered_line_ids")or[None])[0]
+                    or task.get("section_path")!=group.get("section_path") or task.get("asset_id")!=material.get("asset_id")
+                    or task.get("response_kind")!="UNKNOWN" or group.get("response_kind")!="UNKNOWN"
+                    or task.get("counting_status")!="UNKNOWN"
+                    or task.get("verification_status")!="UNVERIFIED" or task.get("flow_segments")!=group.get("flow_segments")
+                    or len(task.get("flags",[]))!=2 or set(task.get("flags",[]))!={"BUSINESS_REVIEW_REQUIRED","FIGURE_EXTENT_UNVERIFIED"}):
+                emit("PIPELINE_SHARED_TASK_SOURCE_MISMATCH",detail=label); continue
+            check_fragments(task.get("fragments"),group,"task_prompt","tf")
+            if task.get("text")!="\n".join(v["text"] for v in task.get("fragments",[])):
+                emit("PIPELINE_GRAPH_TEXT_PROJECTION_MISMATCH",detail=task.get("task_id"))
+    if len(fragment_ids)!=len(set(fragment_ids)) or any(not isinstance(v,str) or not v for v in fragment_ids):
+        emit("PIPELINE_GRAPH_FRAGMENT_ID_REUSED")
+    owner={}
+    expected_material_ids={source_id:derived_id("material",group["ordered_line_ids"][0])
+        for source_id in {g.get("material_id") for g in groups.values() if g.get("kind")=="MATERIAL_TITLE"}
+        for group in [next(g for g in groups.values() if g.get("kind")=="MATERIAL_TITLE" and g.get("material_id")==source_id)]}
+    for group in groups.values():
+        if group["kind"] in {"QUESTION","VARIANT"}:
+            kind,status="question","CONSUMED_QUESTION"; eid=derived_id("q",group["ordered_line_ids"][0])
+        elif group["kind"]=="TASK":
+            kind,status,eid="task","CONSUMED_SHARED_TASK",derived_id("task",group["ordered_line_ids"][0])
+        elif group["kind"]=="EXCLUDE": kind,status,eid="exclusion","EXCLUDED_DECORATION",group["group_id"]
+        else:
+            kind,eid="shared_material",expected_material_ids.get(group.get("material_id"))
+            status={"MATERIAL_TITLE":"CONSUMED_SHARED_TITLE","MATERIAL_BODY":"CONSUMED_SHARED_BODY",
+                    "FIGURE_LABELS":"CONSUMED_FIGURE_LABEL","TASK_SECTION_HEADING":"CONSUMED_TASK_SECTION_HEADING"}[group["kind"]]
+        for line_id in group["ordered_line_ids"]:
+            owner[line_id]={"asset_id":units[line_id][0]["asset_id"],"line_id":line_id,"status":status,
+                            "owner_kind":kind,"owner_id":eid,"group_id":group["group_id"]}
+    expected=[owner[line["line_id"]] for page in evidence["payload"]["pages"] for line in page["ocr_lines"]]
+    if gp.get("question_source_coverage")!=expected:
+        emit("PIPELINE_GRAPH_LEDGER_SOURCE_MISMATCH")
 
 
 def _graph_sources(evidence,graph,units,emit):
     """Check actual graph content against source units, without assembling gold."""
-    schemas = {"b-graph-trial/0.3"}if evidence["schema_version"].endswith("/0.3")else{"b-graph-trial/0.2"}
+    schemas={"b-evidence-trial/0.2":{"b-graph-trial/0.2"},"b-evidence-trial/0.3":{"b-graph-trial/0.3"},
+             "b-evidence-trial/0.4":{"b-graph-trial/0.9"}}.get(evidence.get("schema_version"),set())
     if not _checked(graph,schemas,"QuestionGraphTrial"):
         emit("PIPELINE_GRAPH_INVALID")
         return
     if (graph.get("input_refs") != [_ref(evidence)] or any(graph.get(k) != evidence.get(k)for k in ("book_id","scope_id","run_id"))):
         emit("PIPELINE_GRAPH_EVIDENCE_REFERENCE_MISMATCH")
+    if evidence["schema_version"] == "b-evidence-trial/0.4":
+        _structured_graph_sources(evidence,graph,units,emit)
+        return
     gp = graph["payload"]
     if gp.get("selection_status") != "DRAFT_UNVERIFIED" or gp.get("platform_actions") != []:
         emit("PIPELINE_GRAPH_FALSE_VERIFICATION")
@@ -238,8 +536,80 @@ def _graph_sources(evidence,graph,units,emit):
             emit("PIPELINE_GRAPH_LEDGER_SOURCE_MISMATCH",detail=lid)
 
 
+def _structured_review_matches(evidence,review):
+    pages=evidence["payload"]["pages"]
+    expected_census={page["asset_id"]:{"sha256":page["source"]["sha256"],"printed_numbers":[
+        group["printed_number"] for group in evidence["payload"]["context"]["pages"][page["asset_id"]]["reviewed_layout"]["groups"]
+        if group["kind"]=="QUESTION"]} for page in pages}
+    return (set(review)=={"schema_version","artifact_id","book_id","scope_id","reference_quality","provenance",
+                          "question_census","answer_checks"}
+            and review.get("schema_version")=="b-review-trial/0.1" and isinstance(review.get("artifact_id"),str)
+            and bool(review.get("artifact_id")) and review.get("book_id")==evidence["book_id"]
+            and review.get("scope_id")==evidence["scope_id"]
+            and review.get("reference_quality")=="MODEL_VISUAL_DEVELOPMENT_REVIEW"
+            and review.get("provenance")==("Coordinator original-image observation before recognition. Top-level printed question 8, "
+                "its unnumbered variant, and separately unnumbered reading material with tasks (1)(2)(3). "
+                "The numeric census alone does not certify material coverage.")
+            and review.get("question_census")==expected_census and review.get("answer_checks")==[])
+
+
+def _structured_expected_check(evidence,review):
+    """Reconstruct the only valid Check 0.9 payload without quality producer helpers."""
+    context=evidence["payload"]["context"]
+    groups=[group for page in context["pages"].values() for group in page["reviewed_layout"]["groups"]]
+    identity=lambda role,anchor:role+"-"+digest({"evidence":_ref(evidence),"role":role,"anchor":anchor})[:24]
+    issues=[]
+    def add(code,scope,refs=(),severity="ERROR",detail=None):
+        issues.append({"issue_id":"issue-"+digest([code,scope,refs,detail])[:24],"code":code,
+            "scope_type":"question" if scope.startswith("q-") else "answer" if scope.startswith("a-") else
+                         "asset" if any(scope==page["asset_id"] for page in evidence["payload"]["pages"]) else "scope",
+            "scope_id":scope,"evidence_refs":list(refs),"severity":severity,"blocks":["PRE_APPLY"],
+            "suggested_strategy":"REVIEW_OFFLINE","detail":detail})
+    for group in groups:
+        if group["kind"] not in {"QUESTION","VARIANT"}: continue
+        scope=identity("q",group["ordered_line_ids"][0]); refs=[group["ordered_line_ids"][0]]
+        add("ANSWER_MISSING_OR_AMBIGUOUS",scope,refs)
+        add("FIGURE_EXTENT_UNVERIFIED",scope,refs,"REVIEW")
+        add("FIGURE_OR_FORMULA_REVIEW",scope,refs,"REVIEW")
+    for title in (group for group in groups if group["kind"]=="MATERIAL_TITLE"):
+        source_material=title["material_id"]
+        material_groups=[group for group in groups if group.get("material_id")==source_material]
+        by_kind={group["kind"]:group for group in material_groups if group["kind"]!="TASK"}
+        tasks=[group for group in material_groups if group["kind"]=="TASK"]
+        refs=[line_id for kind in ("MATERIAL_TITLE","MATERIAL_BODY","FIGURE_LABELS","TASK_SECTION_HEADING")
+              for line_id in by_kind[kind]["ordered_line_ids"]]
+        scope=identity("material",title["ordered_line_ids"][0])
+        add("SHARED_MATERIAL_TRANSCRIPTION_UNVERIFIED",scope,refs,"REVIEW",
+            {"tasks":len(tasks),"counting_status":"NOT_A_QUESTION"})
+        add("FIGURE_EXTENT_UNVERIFIED",scope,refs,"REVIEW")
+        for task in tasks:
+            add("SHARED_TASK_COUNT_AND_SCORING_UNKNOWN",identity("task",task["ordered_line_ids"][0]),
+                task["ordered_line_ids"],"REVIEW",{"label":task["label"],"response_kind":"UNKNOWN"})
+    add("BUSINESS_REVIEW_REQUIRED",evidence["scope_id"],severity="REVIEW",
+        detail="Development visual references and shared OCR are not independent business acceptance.")
+    coverage=[]
+    for page in evidence["payload"]["pages"]:
+        if page["page_role"]!="question": continue
+        aid=page["asset_id"]
+        printed=[group["printed_number"] for group in context["pages"][aid]["reviewed_layout"]["groups"]
+                 if group["kind"]=="QUESTION"]
+        coverage.append({"asset_id":aid,"expected":printed,"actual":printed,"census_matches":True,
+                         "reference_quality":"MODEL_VISUAL_DEVELOPMENT_REVIEW","business_acceptance":False})
+    summary={"questions":sum(group["kind"] in {"QUESTION","VARIANT"} for group in groups),"answers":0,
+        "unique_candidate_links":0,"issues":len(issues),"answer_raw_lines":0,"answer_fragment_count":0,
+        "multi_fragment_answers":0,"explanation_candidates":0,"multiline_answers":0,
+        "bounded_answer_candidates":0,"unassigned_answer_lines":0,"ocr_transcription_verified":False,
+        "shared_materials":sum(group["kind"]=="MATERIAL_TITLE" for group in groups),
+        "shared_tasks":sum(group["kind"]=="TASK" for group in groups),
+        "question_source_rows":sum(len(page["ocr_lines"]) for page in evidence["payload"]["pages"])}
+    return {"stage":"PRE_APPLY","decision":"HOLD","issues":issues,"page_coverage":coverage,
+            "reason":"Unverified offline draft; blocking issues require review. No platform actions authorized.",
+            "summary":summary}
+
+
 def _quality_bindings(evidence,graph,check,review,emit):
-    schemas = {"b-check-trial/0.3"}if evidence["schema_version"].endswith("/0.3")else{"b-check-trial/0.2"}
+    schemas={"b-evidence-trial/0.2":{"b-check-trial/0.2"},"b-evidence-trial/0.3":{"b-check-trial/0.3"},
+             "b-evidence-trial/0.4":{"b-check-trial/0.9"}}.get(evidence.get("schema_version"),set())
     if not _checked(check,schemas,"CheckReportTrial"):
         emit("PIPELINE_QUALITY_INVALID")
         return
@@ -247,6 +617,13 @@ def _quality_bindings(evidence,graph,check,review,emit):
             or any(check.get(k) != evidence.get(k)for k in ("book_id","scope_id","run_id"))):
         emit("PIPELINE_QUALITY_INPUT_REFERENCE_MISMATCH")
     cp,gp = check["payload"],graph["payload"]
+    if evidence["schema_version"] == "b-evidence-trial/0.4":
+        if not _structured_review_matches(evidence,review):
+            emit("PIPELINE_QUALITY_REVIEW_MISMATCH")
+        if cp != _structured_expected_check(evidence,review):
+            emit("PIPELINE_QUALITY_STRUCTURED_REPORT_MISMATCH")
+        if set(cp)!={"stage","decision","issues","page_coverage","reason","summary"}:
+            emit("PIPELINE_QUALITY_PAYLOAD_SHAPE_MISMATCH")
     if cp.get("decision") != "HOLD" or cp.get("stage") != "PRE_APPLY":
         emit("PIPELINE_QUALITY_FALSE_VERIFICATION")
     if not any(i.get("code") == "BUSINESS_REVIEW_REQUIRED"for i in cp.get("issues",[])):
@@ -256,13 +633,32 @@ def _quality_bindings(evidence,graph,check,review,emit):
             or summary.get("unique_candidate_links") != sum(q.get("selected_answer_id")is not None for q in gp.get("questions",[]))
             or summary.get("issues") != len(cp.get("issues",[]))):
         emit("PIPELINE_QUALITY_SUMMARY_MISMATCH")
+    if evidence["schema_version"] == "b-evidence-trial/0.4":
+        expected_extra={"shared_materials":len(gp.get("shared_materials",[])),
+                        "shared_tasks":sum(len(v.get("tasks",[])) for v in gp.get("shared_materials",[])),
+                        "question_source_rows":len(gp.get("question_source_coverage",[]))}
+        if any(summary.get(key)!=value for key,value in expected_extra.items()):
+            emit("PIPELINE_QUALITY_SUMMARY_MISMATCH")
+        required={"SHARED_MATERIAL_TRANSCRIPTION_UNVERIFIED","FIGURE_EXTENT_UNVERIFIED",
+                  "SHARED_TASK_COUNT_AND_SCORING_UNKNOWN","BUSINESS_REVIEW_REQUIRED"}
+        if not required.issubset({v.get("code") for v in cp.get("issues",[])}):
+            emit("PIPELINE_QUALITY_BUSINESS_REVIEW_MISSING")
+        groups=[g for pc in evidence["payload"]["context"]["pages"].values()
+                for g in pc.get("reviewed_layout",{}).get("groups",[])]
+        identity=lambda role,anchor:role+"-"+digest({"evidence":_ref(evidence),"role":role,"anchor":anchor})[:24]
+        expected_materials={identity("material",g["ordered_line_ids"][0]) for g in groups if g["kind"]=="MATERIAL_TITLE"}
+        expected_tasks={identity("task",g["ordered_line_ids"][0]) for g in groups if g["kind"]=="TASK"}
+        issue_scopes={v.get("scope_id") for v in cp.get("issues",[])}
+        if not expected_materials.issubset(issue_scopes) or not expected_tasks.issubset(issue_scopes):
+            emit("PIPELINE_QUALITY_STRUCTURED_SCOPE_MISMATCH")
     expected_coverage = []
     for page in evidence["payload"]["pages"]:
         if page["page_role"] != "question": continue
         aid = page["asset_id"]
         census = review.get("question_census",{}).get(aid)
         expected = census["printed_numbers"]if census else[]
-        actual = [q["printed_number"]for q in gp["questions"]if q["asset_id"] == aid and not q.get("parent_question_id")]
+        actual = [q["printed_number"]for q in gp["questions"]if q["asset_id"] == aid and not q.get("parent_question_id")
+                  and q.get("counting_status","PRINTED_TOP_LEVEL") == "PRINTED_TOP_LEVEL"]
         expected_coverage.append({"asset_id":aid,"expected":expected,"actual":actual,
             "census_matches":bool(census)and actual == expected,"reference_quality":review["reference_quality"],"business_acceptance":False})
     if cp.get("page_coverage") != expected_coverage:
@@ -286,7 +682,8 @@ def _offline_global_values(path):
     for node in ast.parse(path.read_text(encoding="utf-8-sig")).body:
         if not isinstance(node,ast.Assign)or len(node.targets) != 1 or not isinstance(node.targets[0],ast.Name): continue
         name,value = node.targets[0].id,node.value
-        if name in {"CONTEXT_SCHEMA","EVIDENCE_SCHEMA","GRAPH_SCHEMA","CHECK_SCHEMA"}:
+        if name in {"CONTEXT_SCHEMA","EVIDENCE_SCHEMA","GRAPH_SCHEMA","CHECK_SCHEMA","CONTEXT_STRUCTURED_SCHEMA",
+                    "EVIDENCE_STRUCTURED_SCHEMA","GRAPH_STRUCTURED_SCHEMA","CHECK_STRUCTURED_SCHEMA","REVIEWED_LAYOUT_POLICY"}:
             result[name] = ast.literal_eval(value)
         elif name in {"QSTART","ASTART","OPTION","CAPTION","DECORATION"}:
             if not isinstance(value,ast.Call)or len(value.args) != 1: raise ValueError("unsupported regex source profile")
@@ -379,7 +776,7 @@ def _audit_pipeline(source_path,context_path,review_path,report,workdir,*,eviden
         if inline_path is None:raise ValueError("content revision requires explicit inline inputs")
         content_plan,receipts["content_revision"]=_content_plan_input(content_revision_path)
     mode = "CACHED_INPUT"if imported is not None else"LIVE_BATCH"
-    if (context.get("schema_version") != "b-context-trial/0.1"or review.get("schema_version") != "b-review-trial/0.1"
+    if (context.get("schema_version") not in {"b-context-trial/0.1","b-context-trial/0.2"}or review.get("schema_version") != "b-review-trial/0.1"
             or any(document.get(k) != source[k]for document in (context,review)for k in ("book_id","scope_id"))
             or set(context.get("pages",{})) != {a["asset_id"]for a in assets}):
         emit("PIPELINE_INPUT_SCOPE_MISMATCH")
@@ -593,8 +990,9 @@ def _audit_pipeline(source_path,context_path,review_path,report,workdir,*,eviden
         inline_functions={"inline_prepare":("inline_stage","prepare_inline_stage"),"inline_apply":("inline_stage","apply_inline_stage"),"inline_quality":("inline_stage","build_inline_quality")}
         content_functions={"content_apply":("content_revision","apply_content_revision"),"content_quality":("content_revision","build_content_quality")}
         function_owner,function_name = content_functions[stage]if stage in content_stages else inline_functions[stage]if stage in inline_stages else continued_functions[stage]if stage in continuation_stages else("batch","run_batch")if stage == "recognition"else("pipeline","_validate_evidence")if stage == "evidence"else("recovery_stage","recover_evidence"if stage == "recover"else"build_recovery_review")if stage in {"recover","recovery_review"}else("offline","quality_check"if stage == "quality"else stage)
-        helper_names = []if stage == "recognition"else["check_artifact","validate_context"]if stage == "evidence"else["artifact","ref","check_artifact"]+{
-            "refine":["validate_context","detect_columns","locate"],"assemble":["entity_id","scope_key"],"quality":["scalar_issues","scope_key"],"recover":["validate_context"],"recovery_review":[],
+        helper_names = []if stage == "recognition"else["check_artifact","validate_context","_reviewed_layout_syntax"]if stage == "evidence"else["artifact","ref","check_artifact"]+{
+            "refine":["validate_context","detect_columns","locate","_locate_column","_reviewed_layout_syntax","_derive_reviewed_structure","_reviewed_layout_receipt"],
+            "assemble":["entity_id","scope_key","_assemble_reviewed_question_page"],"quality":["scalar_issues","scope_key"],"recover":["validate_context"],"recovery_review":[],
             "continuation_prepare":["assemble","entity_id","scope_key"],"continuation_proof":[],"continuation_apply":[],"continuation_quality":[],**{s:[]for s in inline_stages+content_stages}}[stage]
         if stage in {"continuation_proof","continuation_apply",*inline_stages}: helper_names = []
         if stage == "continuation_quality": helper_names = ["scalar_issues","scope_key"]
@@ -609,10 +1007,11 @@ def _audit_pipeline(source_path,context_path,review_path,report,workdir,*,eviden
                     "inline_candidates","inline_formula_quality","formula_canvas","formula_canvas_quality","formula_syntax","formula_quality","formula_backend","batch","baseline"]for name in inline_stages},
             **{name:["content_revision","content_revision_quality","question_quality","offline","policy","baseline"]for name in content_stages}}[stage]
         if stage == "continuation_quality": module_names += ["continued_quality","continuation_stage_quality","question_quality","answer_quality","recovery_quality","recovery_apply","policy"]
-        global_names = {"recognition":[],"evidence":["CONTEXT_SCHEMA","EVIDENCE_SCHEMA"],"refine":["CONTEXT_SCHEMA","EVIDENCE_SCHEMA","ASTART"],
+        structured_globals=["CONTEXT_STRUCTURED_SCHEMA","EVIDENCE_STRUCTURED_SCHEMA","GRAPH_STRUCTURED_SCHEMA","CHECK_STRUCTURED_SCHEMA","REVIEWED_LAYOUT_POLICY"]
+        global_names = {"recognition":[],"evidence":["CONTEXT_SCHEMA","EVIDENCE_SCHEMA",*structured_globals],"refine":["CONTEXT_SCHEMA","EVIDENCE_SCHEMA","ASTART","QSTART",*structured_globals],
             "recover":["EVIDENCE_SCHEMA","CONTEXT_SCHEMA"],"recovery_review":["EVIDENCE_SCHEMA"],
-            "assemble":["EVIDENCE_SCHEMA","GRAPH_SCHEMA","QSTART","ASTART","OPTION","CAPTION","DECORATION"],
-            "quality":["EVIDENCE_SCHEMA","GRAPH_SCHEMA","CHECK_SCHEMA"],**{name:[]for name in continuation_stages+inline_stages+content_stages}}[stage]
+            "assemble":["EVIDENCE_SCHEMA","GRAPH_SCHEMA","QSTART","ASTART","OPTION","CAPTION","DECORATION",*structured_globals],
+            "quality":["EVIDENCE_SCHEMA","GRAPH_SCHEMA","CHECK_SCHEMA",*structured_globals],**{name:[]for name in continuation_stages+inline_stages+content_stages}}[stage]
         if stage == "continuation_prepare": global_names = ["EVIDENCE_SCHEMA","GRAPH_SCHEMA","QSTART","ASTART","OPTION","CAPTION","DECORATION"]
         module_paths = {n:(Path(__file__).resolve().parents[3]/"tools/route_a_layout.py"if n == "legacy"else Path(__file__).with_name(n+".py"))for n in module_names}
         refinement_mode = implementation.get("configuration",{}).get("refinement_mode")
@@ -715,12 +1114,12 @@ def _audit_pipeline(source_path,context_path,review_path,report,workdir,*,eviden
                 if state != expected_state: emit("PIPELINE_RECOGNITION_COMPLETENESS_MISMATCH",stage)
                 if complete: results["baseline"] = _read_object(root/"recognition",result["payload"]["bundle"])
             elif stage in {"evidence","refine"}:
-                _source_evidence(result,source,context,lambda code,**kwargs:emit(code,stage,kwargs.get("detail")))
+                _source_evidence(result,source,context,lambda code,**kwargs:emit(code,stage,kwargs.get("detail")),source_path)
                 if stage == "evidence"and result != imported: emit("PIPELINE_CACHED_INPUT_CHANGED",stage)
                 if stage == "refine"and result.get("input_refs") != [dependencies["baseline"]["result_ref"],receipts["context"]["reference"]]:
                     emit("PIPELINE_REFINED_INPUT_REFERENCE_MISMATCH",stage)
             elif stage == "recover":
-                _source_evidence(result,source,context,lambda code,**kwargs:emit(code,stage,kwargs.get("detail")))
+                _source_evidence(result,source,context,lambda code,**kwargs:emit(code,stage,kwargs.get("detail")),source_path)
                 recovery_check = audit_recovery_stage(source_path,recovery_path,results["evidence"],result)
                 if not recovery_check["payload"]["accepted"]:
                     emit("PIPELINE_RECOVERY_MIGRATION_REJECTED",stage,recovery_check["payload"]["issues"])
@@ -732,7 +1131,7 @@ def _audit_pipeline(source_path,context_path,review_path,report,workdir,*,eviden
                 e = results["evidence"]
                 if (continuation_path is not None or inline_path is not None)and "created_at"in result:
                     emit("PIPELINE_CONTINUATION_VOLATILE_TIME",stage)
-                units = _source_evidence(e,source,context,lambda code,**kwargs:emit(code,stage,kwargs.get("detail")))
+                units = _source_evidence(e,source,context,lambda code,**kwargs:emit(code,stage,kwargs.get("detail")),source_path)
                 _graph_sources(e,result,units,lambda code,**kwargs:emit(code,stage,kwargs.get("detail")))
             elif stage == "quality":
                 if inline_path is not None and "created_at"in result:emit("PIPELINE_INLINE_VOLATILE_TIME",stage)
@@ -765,8 +1164,8 @@ def _audit_pipeline(source_path,context_path,review_path,report,workdir,*,eviden
                 e=results["inline_prepare"]["payload"]["base_evidence_archive"]
                 g=results["inline_apply"]["payload"]["graph"]
                 c=results["inline_quality"]
-                checked=(audit_content_application(e,g,c,content_plan,result)if stage=="content_apply"else
-                    audit_content_quality(e,g,c,content_plan,results["content_apply"],results.get("active_review",review),result))
+                checked=(audit_content_application(e,g,c,content_plan,result,source_path=source_path)if stage=="content_apply"else
+                    audit_content_quality(e,g,c,content_plan,results["content_apply"],results.get("active_review",review),result,source_path=source_path))
                 cp=checked.get("payload",{})
                 flags=dict(decision="HOLD",complete=False,transcription_verified=False,business_acceptance=False,platform_actions=[],new_model_calls=0)
                 if (checked.get("schema_version")!="b-content-revision-check-trial/0.1"or checked.get("kind")!="ContentRevisionCheckTrial"

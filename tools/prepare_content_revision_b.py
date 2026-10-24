@@ -45,6 +45,7 @@ def _read(path):
 def _region_sources(operations, evidence, source_paths):
     """Bind draft regions to actual original pixels, never to OCR strings."""
     from annotation.recognition.baseline import file_digest, load_source
+    from annotation.recognition.content_revision import GEOMETRY_DARK_THRESHOLD
     from PIL import Image
 
     regions = [op for op in operations if isinstance(op, dict) and op.get("kind") == "REBUILD_TEXT_REGION"]
@@ -85,11 +86,35 @@ def _region_sources(operations, evidence, source_paths):
                 or not 0 <= bbox[0] < bbox[2] <= asset["width"]
                 or not 0 <= bbox[1] < bbox[3] <= asset["height"]):
             raise ValueError("region bbox must be an integer crop inside the original image")
+        geometry_receipts = []
         with Image.open(path) as image:
-            crop = image.convert("RGB").crop(tuple(bbox))
+            rgb = image.convert("RGB")
+            crop = rgb.crop(tuple(bbox))
             crop_sha = hashlib.sha256(crop.tobytes()).hexdigest()
-        receipts.append({"operation_id": op["operation_id"], **region,
-                         "source_crop_rgb_sha256": crop_sha})
+            for revision in op.get("source_geometry_revisions", []):
+                if (revision.get("source_sha256") != asset["sha256"]
+                        or type(revision.get("dark_threshold")) is not int
+                        or revision["dark_threshold"] != GEOMETRY_DARK_THRESHOLD
+                        or type(revision.get("trimmed_dark_pixels")) is not int
+                        or revision["trimmed_dark_pixels"] != 0):
+                    raise ValueError("geometry revision source or fixed zero-dark policy differs")
+                trimmed = revision.get("trimmed_bbox")
+                if (not isinstance(trimmed, list) or len(trimmed) != 4 or any(type(v) is not int for v in trimmed)
+                        or not 0 <= trimmed[0] < trimmed[2] <= asset["width"]
+                        or not 0 <= trimmed[1] < trimmed[3] <= asset["height"]):
+                    raise ValueError("geometry revision trimmed bbox must be an integer source crop")
+                trimmed_crop = rgb.crop(tuple(trimmed)); raw = trimmed_crop.tobytes()
+                trimmed_sha = hashlib.sha256(raw).hexdigest()
+                dark = sum(1 for r, g, b in trimmed_crop.get_flattened_data()
+                           if 299*r+587*g+114*b < GEOMETRY_DARK_THRESHOLD*1000)
+                if trimmed_sha != revision.get("trimmed_crop_rgb_sha256") or dark != 0:
+                    raise ValueError("geometry revision trimmed pixels differ from the fixed zero-dark receipt")
+                geometry_receipts.append({"revision_id": revision["revision_id"], "fragment_id": revision["fragment_id"],
+                    "trimmed_bbox": trimmed, "trimmed_crop_rgb_sha256": trimmed_sha,
+                    "dark_threshold": GEOMETRY_DARK_THRESHOLD, "trimmed_dark_pixels": dark})
+        receipt = {"operation_id": op["operation_id"], **region, "source_crop_rgb_sha256": crop_sha}
+        if geometry_receipts: receipt["source_geometry_receipts"] = geometry_receipts
+        receipts.append(receipt)
     if any(file_digest(path) != sha for path, sha in watched.items()):
         raise ValueError("region original image or manifest changed while checking pixels")
     return receipts, watched

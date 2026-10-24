@@ -1,0 +1,54 @@
+{
+  "schema": "A24OfflineReplayPackageReceipt/v2",
+  "date": "2026-10-22",
+  "release": "v2-final",
+  "archive": "a24-offline-replay-20261022-v2-final.zip",
+  "archive_bytes": 2034326,
+  "archive_sha256": "c4ad1b298dd34a8b0a5ec8706a3514fefe19d9a33582cd27fa826ef1a94ec89e",
+  "baseline": {
+    "members": 522,
+    "bytes": 9060211,
+    "original_manifest_sha256": "a927a201988a277520275509791401e00cc45fdd9edcde140056bf85060633a9"
+  },
+  "overlays": {
+    "members": 3,
+    "replacements": 2,
+    "additions": 1
+  },
+  "effective": {
+    "members": 523,
+    "manifest_sha256": "c92e891b9644f1a24c6352a40ba4abc8691f76390ad892ad6b81209a84c50fe0"
+  },
+  "root_manifest_sha256": "0770e2a17278a8f046e224d178113e0cbcebc08e206d5e56a2501c1833572d56",
+  "archive_replay_test_receipt_sha256": "89268363daca8dcb446a259d02d616169ac194fe88ce955b6a04847971689aa6",
+  "archive_replay": {
+    "package_verification": "PASS_REQUIRED_ROOT_MANIFEST",
+    "effective_tree_verification": "PASS_EXACT_523_FILES_AND_HASHES",
+    "suites": [
+      {"name": "controlled_capture", "tests": 7, "failures": 0, "errors": 0},
+      {"name": "minimum_gate", "tests": 10, "failures": 0, "errors": 0},
+      {"name": "book_snapshot", "tests": 4, "failures": 0, "errors": 0}
+    ],
+    "tests": 21,
+    "passed": true,
+    "failure_record_contract": "test_id_and_original_traceback",
+    "path_rejection_checks": 9,
+    "tampered_tree_rejected_before_report_or_temp_creation": true
+  },
+  "guard": {
+    "scope": [
+      "asyncio MemoryPolicy",
+      "socket.create_connection",
+      "socket.socket.connect",
+      "subprocess.Popen",
+      "urllib.request.urlopen"
+    ],
+    "observed_guarded_entrypoint_calls_in_fixed_suites": 0,
+    "limit": "This is not an OS filesystem sandbox and does not prove every possible I/O API is blocked"
+  },
+  "superseded_archives_preserved": [
+    "outputs/a24-offline-replay-20261022/a24-offline-replay-20261022-v1.zip",
+    "outputs/a24-offline-replay-20261022-v2/a24-offline-replay-20261022-v2.zip"
+  ],
+  "hold": "NO_CURRENT_REAL_SCHEMA_OR_PLATFORM_ACCEPTANCE; WRITES_REMAIN_LOCKED"
+}

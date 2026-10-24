@@ -7,6 +7,7 @@
   const authorLabels = { MODEL_DRAFT: "模型草稿", HUMAN_DRAFT: "人工草稿 · 未核准", SYNTHETIC_TEST: "合成测试草稿" };
   const ruleLabels = {
     CONTENT_REGION_REBUILD_DRAFT_UNVERIFIED: "来源区域重建的文字仍待逐字核对",
+    CONTENT_REGION_SOURCE_GEOMETRY_DRAFT_UNVERIFIED: "来源裁边记录仍待人工核对",
     CONTENT_REVISION_DRAFT_UNVERIFIED: "当前正文含未核准的草稿修订",
     CONTENT_EDIT_DRAFT_UNVERIFIED: "显式文字编辑仍待核对",
     CONTENT_INLINE_SELECTION_DRAFT_UNVERIFIED: "所选模型候选仍待核对",
@@ -391,6 +392,16 @@
     original.setAttribute("aria-label", roleLabel(block.role) + "原始来源文字，第 " + (index + 1) + " 块");
     original.placeholder = "无原 OCR 字串；仍绑定来源图像区域。"; source.append(original);
     source.append(node("p", "source-coordinates mono", block.asset_id + " · [" + formatBox(block.bbox) + "]"));
+    if (block.source_geometry_revisions?.length) {
+      const geometry = node("details", "source-geometry");
+      geometry.append(node("summary", "", "来源裁边记录 · 未核准"));
+      geometry.append(node("p", "source-proof-note", "已核对原图和被裁掉的像素。未检出深色像素不代表裁切或文字已获人工核准；本页仅编辑文字。"));
+      for (const revision of block.source_geometry_revisions) {
+        geometry.append(node("p", "source-coordinates mono", "原范围 [" + formatBox(revision.original_bbox) + "] → 当前范围 [" + formatBox(revision.revised_bbox) + "]"));
+        geometry.append(button("查看裁边前原图", () => showSource(block.asset_id, revision.original_bbox, "裁边前的原始范围"), "link-button small-button"));
+      }
+      source.append(geometry);
+    }
     if (block.kind === "FRAGMENT") {
       const spanControl = node("div", "span-control"); const span = node("span"); draft.spanLabel = span;
       const updateSelection = () => {

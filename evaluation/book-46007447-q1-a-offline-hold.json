@@ -1,0 +1,323 @@
+{
+  "format": "b-q1-a-hold-probe/0.1",
+  "a_commit": "37089f9e0229da76ae1c45461b7e63929590be56",
+  "a_source_members_verified": 76,
+  "a_source_pin_sha256": "3174f9981ffc336b3d576d78afe3e6932e042521011555272dc94d9b564e1fe0",
+  "input_mapping_sha256": "09f9937a411a5ed5a7003019306a456937a422fc874a9baaae52817f02ccf06a",
+  "input_mapping_manifest_sha256": "a831da5d89f2620220cff19565c5aff1825e47c5b0d900f7e269c61dbd590e2f",
+  "question_id": "q-e92a499995ca1bbd570a2a09",
+  "input_refs": {
+    "SourceBundle": {
+      "artifact_id": "source-q1-c01-55886e21fe56d8e891a268b7",
+      "revision": 1,
+      "kind": "SourceBundle",
+      "content_hash": "100c8a5ac5f195e1de136eb550f63ce6dfa5340d9fec3add01d293fa4afddab7"
+    },
+    "EvidenceBundle": {
+      "artifact_id": "evidence-q1-c01-55886e21fe56d8e891a268b7",
+      "revision": 1,
+      "kind": "EvidenceBundle",
+      "content_hash": "abcec8c919eb1de18321a1335de81c549346169924d1f0ebbd0e909d758ac283"
+    },
+    "QuestionGraph": {
+      "artifact_id": "graph-q1-c01-55886e21fe56d8e891a268b7",
+      "revision": 1,
+      "kind": "QuestionGraph",
+      "content_hash": "f6038862a0cca69d726aef466b7974aa3be0fb8ac8a310c248558680140b5d1b"
+    }
+  },
+  "policy_ref": {
+    "policy_id": "policy-q1-c01-dd1bad730124ca11e6fdc7bf",
+    "revision": 1,
+    "content_hash": "f5517faf42c6c0d07fdcfbdfc9d05e92300effeef2e98c46a742471478037b0c"
+  },
+  "pre_ref": {
+    "artifact_id": "b-q1-pre-diagnostic-696724b02ea651fdd147",
+    "revision": 1,
+    "kind": "CheckReport",
+    "content_hash": "3bb4b920abdf757f2d8baffe4222b63232e39ced7534cbcb65dbdf68a27d7942"
+  },
+  "target_ref": {
+    "artifact_id": "b-q1-a-target-696724b02ea651fdd147",
+    "revision": 1,
+    "kind": "CheckReport",
+    "content_hash": "3b2dfc5a658af522b42a07527805cd99d375e03eb3a5a4ea8233b6ad9d39db52"
+  },
+  "plan_ref": {
+    "artifact_id": "b-q1-a-plan-696724b02ea651fdd147",
+    "revision": 1,
+    "kind": "ApplyPlan",
+    "content_hash": "a7e84b1e7c4418714f5e08a2818c52458b2892749b318747147f37bba50cd9da"
+  },
+  "receipt_ref": {
+    "artifact_id": "b-q1-a-receipt-696724b02ea651fdd147",
+    "revision": 1,
+    "kind": "ExecutionReceipt",
+    "content_hash": "184599d83dc98f269863c1a541dfab75b371b4f2fd4e225e3a20860a9d0cf134"
+  },
+  "decision": "HOLD",
+  "business_acceptance": false,
+  "a_mapping_accepted": false,
+  "a_formal_pre_apply": false,
+  "positive_simulation_complete": false,
+  "pre_decision": "HOLD",
+  "target_decision": "EXCEPTION",
+  "plan_readiness": "BLOCKED",
+  "receipt_execution_mode": "NOT_EXECUTED",
+  "write_disposition": "NOT_EXECUTED",
+  "action_count": 0,
+  "dispatch_count": 0,
+  "target_unchanged": true,
+  "platform_requests": 0,
+  "model_calls": 0,
+  "target_issues": [
+    {
+      "issue_id": "issue-a02-baaaa5c4459fee90aa09-authorized_scope",
+      "code": "TARGET_CHANGED",
+      "scope_type": "scope",
+      "scope_id": "single-question-q-e92a499995ca1bbd570a2a09",
+      "evidence_refs": [
+        "b-q1-local-target-proof-696724b02ea651fdd147"
+      ],
+      "severity": "blocking",
+      "blocks": [
+        "PLAN",
+        "APPLY"
+      ],
+      "suggested_strategy": {
+        "strategy_id": "HUMAN_REVIEW",
+        "max_attempts": 0,
+        "max_cost": 0.0
+      },
+      "reason": "CREATE_FRAMES is not authorized"
+    },
+    {
+      "issue_id": "issue-a02-baaaa5c4459fee90aa09-capabilities",
+      "code": "TARGET_CHANGED",
+      "scope_type": "scope",
+      "scope_id": "single-question-q-e92a499995ca1bbd570a2a09",
+      "evidence_refs": [
+        "b-q1-local-target-proof-696724b02ea651fdd147"
+      ],
+      "severity": "blocking",
+      "blocks": [
+        "PLAN",
+        "APPLY"
+      ],
+      "suggested_strategy": {
+        "strategy_id": "HUMAN_REVIEW",
+        "max_attempts": 0,
+        "max_cost": 0.0
+      },
+      "reason": "frame_readback: capability not VERIFIED with evidence; same_session_handoff: capability not VERIFIED with evidence"
+    },
+    {
+      "issue_id": "issue-a02-baaaa5c4459fee90aa09-policy",
+      "code": "POLICY_UNRESOLVED",
+      "scope_type": "scope",
+      "scope_id": "single-question-q-e92a499995ca1bbd570a2a09",
+      "evidence_refs": [
+        "b-q1-local-target-proof-696724b02ea651fdd147"
+      ],
+      "severity": "blocking",
+      "blocks": [
+        "PLAN",
+        "APPLY"
+      ],
+      "suggested_strategy": {
+        "strategy_id": "HUMAN_REVIEW",
+        "max_attempts": 0,
+        "max_cost": 0.0
+      },
+      "reason": "policy confirmation is UNRESOLVED; A02 only supports SYNTHETIC inputs; q-e92a499995ca1bbd570a2a09: choice needs explicit synthetic SEPARATE assumption; q-e92a499995ca1bbd570a2a09: selected answer closure required"
+    },
+    {
+      "issue_id": "issue-a02-baaaa5c4459fee90aa09-coverage",
+      "code": "UNASSIGNED_CONTENT",
+      "scope_type": "scope",
+      "scope_id": "single-question-q-e92a499995ca1bbd570a2a09",
+      "evidence_refs": [
+        "b-q1-local-target-proof-696724b02ea651fdd147"
+      ],
+      "severity": "blocking",
+      "blocks": [
+        "PLAN",
+        "APPLY"
+      ],
+      "suggested_strategy": {
+        "strategy_id": "HUMAN_REVIEW",
+        "max_attempts": 0,
+        "max_cost": 0.0
+      },
+      "reason": "independent scope/pages/clues are incomplete"
+    }
+  ],
+  "environment": {
+    "python": "3.11.8",
+    "pydantic": "2.13.4",
+    "Pillow": "12.2.0",
+    "clean_install": false
+  },
+  "b_input_commit": "ef6ba4dd083e7fd5378e80123b2b038dd11d7052",
+  "archive": {
+    "path": "handoffs/b/46007447/B-46007447-Q1-C01-HOLD-probe-2026-10-18.zip",
+    "sha256": "e8f461c3b73caa968c9b053ccffdeadc388722aa1cf47bcd5362b86e05147d99",
+    "manifest_sha256": "3f29cbbc5a92303898ba7c99f08fff96c323a5b45d62f1fbde4ec0d9e2118734",
+    "members_excluding_manifest": 78
+  },
+  "code_files": {
+    "build_q1_c01_mapping.py": "fecffb512c4a5a574281170db2bc803f7153b67400fe7e55cfaec67261904c0e",
+    "probe_q1_a_hold_b.py": "a6d212bd3ec796cebde580b1949925ef926c754f260be6be58b724ffa3fb367e",
+    "verify_q1_source_candidate_b.py": "d3c002fcad36ad1f3d9fd311a6697b4a56d4caedbb0432b24579a4917e703a67",
+    "q1_a_hold_acceptance.py": "5948af975e255607ed9bcab6a4cdf0d9f6ac953f7986377d3f5105672be720dd"
+  },
+  "independent_acceptance": {
+    "schema": "q1-a-hold-independent-acceptance/0.1",
+    "accepted": true,
+    "technical_scope": "negative gate closure only",
+    "business_acceptance": false,
+    "positive_simulation_complete": false,
+    "a_commit": "37089f9e0229da76ae1c45461b7e63929590be56",
+    "a_source_members_verified": 76,
+    "mapping_sha256": "09f9937a411a5ed5a7003019306a456937a422fc874a9baaae52817f02ccf06a",
+    "mapping_manifest_sha256": "a831da5d89f2620220cff19565c5aff1825e47c5b0d900f7e269c61dbd590e2f",
+    "mapping_manifest_members_verified": 10,
+    "portable_mapping_text_members_checked": 9,
+    "stage_bundles_validated": [
+      "c01-candidate-bundle.json",
+      "prechecked.json",
+      "targetchecked.json",
+      "planned.json",
+      "executed.json"
+    ],
+    "stage_chain_append_only": true,
+    "executed_sha256": "81e50431bfdd97fa64edcdd28fded06b2a339d82ed7943a065f09d30be61e33d",
+    "question_id": "q-e92a499995ca1bbd570a2a09",
+    "pre_decision": "HOLD",
+    "target_decision": "EXCEPTION",
+    "plan_readiness": "BLOCKED",
+    "receipt_execution_mode": "NOT_EXECUTED",
+    "write_disposition": "NOT_EXECUTED",
+    "action_log_empty": true,
+    "target_state_unchanged": true,
+    "negative_tests": [
+      {
+        "label": "blocked plan eligibility",
+        "rejected": true,
+        "codes": [
+          "PLAN_BLOCKED"
+        ],
+        "exception": "ContractError",
+        "detail": "$.plan.readiness: [PLAN_BLOCKED] diagnostic plan is not eligible"
+      },
+      {
+        "label": "stale current snapshot",
+        "rejected": true,
+        "codes": [
+          "TARGET_CHANGED"
+        ],
+        "exception": "ContractError",
+        "detail": "$.a02: [TARGET_CHANGED] explicit current snapshot changed; recheck target"
+      },
+      {
+        "label": "changed graph with old precheck",
+        "rejected": true,
+        "codes": [
+          "VERSION_CONFLICT"
+        ],
+        "exception": "ContractError",
+        "detail": "$.a02: [VERSION_CONFLICT] report graph/policy differs from requested plan"
+      },
+      {
+        "label": "changed policy with old precheck",
+        "rejected": true,
+        "codes": [
+          "VERSION_CONFLICT"
+        ],
+        "exception": "ContractError",
+        "detail": "$.a02: [VERSION_CONFLICT] report graph/policy differs from requested plan"
+      },
+      {
+        "label": "wrong source asset digest",
+        "rejected": true,
+        "codes": [
+          "RESOURCE_HASH"
+        ],
+        "exception": "ContractError",
+        "detail": "$.artifacts[0].payload.assets[0].sha256: [RESOURCE_HASH] resource bytes differ"
+      },
+      {
+        "label": "unknown answer candidate fragment",
+        "rejected": true,
+        "codes": [
+          "MISSING_REFERENCE"
+        ],
+        "exception": "ContractError",
+        "detail": "$.artifacts[2].payload.answer_relations[0].candidate_fragment_ids[0]: [MISSING_REFERENCE] unknown reference qa-missing-candidate"
+      },
+      {
+        "label": "out-of-bounds source box",
+        "rejected": true,
+        "codes": [],
+        "exception": "ValidationError",
+        "detail": "1 validation error for tagged-union[SourceBundle,EvidenceBundle,QuestionGraph,PlatformSnapshot,CheckReport,ApplyPlan,ExecutionReceipt,ReviewPatch,BatchReport]\nEvidenceBundle.payload.regions.0.box\n  Value error, bbox must have positive area within bound original image [type=value_error, input_value={'image': {'asset_id': 'v..., 332.0, 1218.0, 445.0]}, input_type=dict]\n    For further information visit https://errors.pydantic.dev/2.13/v/value_error"
+      },
+      {
+        "label": "distinct IDs with duplicate geometry",
+        "generic_contract_accepted": true,
+        "q1_high_level_guard_rejected": true,
+        "duplicates": [
+          {
+            "asset_id": "viewer-10",
+            "bbox": [
+              70.0,
+              332.0,
+              590.0,
+              445.0
+            ],
+            "region_ids": [
+              "region-q1-c01-78c3d12285e161bae642bfff",
+              "qa-duplicate-region"
+            ]
+          }
+        ]
+      }
+    ],
+    "capability_boundary": [
+      "OBSERVED source/graph plus SYNTHETIC diagnostic snapshot is valid only for this fail-closed diagnostic chain.",
+      "No A formal PRE_APPLY, mapping acceptance, platform authorization, positive execution, content verification, or business PASS is established.",
+      "Exact duplicate geometry is a Q1 high-level rejection, not a generic C01 guarantee."
+    ]
+  },
+  "independent_replay_receipt_sha256": "d110a798bbeccb0b28e0c6a168e9cdbab57a1d026399524b304a80fbb554cb65",
+  "a_confirmations_pending": [
+    "A-Q1-01",
+    "A-Q1-02",
+    "A-Q1-03",
+    "A-Q1-04",
+    "A-Q1-05",
+    "A-Q1-06"
+  ],
+  "verification_scope": "Targeted fixed-input integration and rejection checks; not full suite, clean install or platform validation.",
+  "final_archive_verification": {
+    "archive_sha256": "e8f461c3b73caa968c9b053ccffdeadc388722aa1cf47bcd5362b86e05147d99",
+    "manifest_members_verified": 78,
+    "fresh_extraction": true,
+    "a_public_consumers_reloaded": [
+      "mapping/c01-candidate-bundle.json",
+      "run/prechecked.json",
+      "run/targetchecked.json",
+      "run/planned.json",
+      "run/executed.json"
+    ],
+    "artifact_counts": [
+      3,
+      4,
+      6,
+      7,
+      8
+    ],
+    "new_business_execution": false,
+    "decision": "HOLD"
+  }
+}

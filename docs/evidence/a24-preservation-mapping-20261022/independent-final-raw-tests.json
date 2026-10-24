@@ -1,0 +1,110 @@
+{
+  "schema": "A24HistoricalPreservationIndependentReceipt/v1",
+  "date": "2026-10-22",
+  "decision": "PASS_BOUNDED_HISTORICAL_PRESERVATION_WITH_MINIMAL_FIX_NATURAL_CODEC_OPEN",
+  "inputs": {
+    "baseline_tree": "C:/Users/LIHAOYANG/Documents/Codex/2026-10-16/ni/work/a24-takeover-20261022/source-readiness-v2",
+    "baseline_commit_user_declared_only": "16b2c6b",
+    "historical_original": "C:/Users/LIHAOYANG/Documents/Codex/2026-10-16/ni/work/a24-takeover-20261022/historical-download-export-20261022/46007447_paper_questions.jsonl",
+    "historical_bytes": 11625,
+    "historical_sha256": "02a8aaae2bc907649a03f3676806a02da103e0b487fb43f7e187b29a67fc7a8c",
+    "combined_patch": "C:/Users/LIHAOYANG/Documents/Codex/2026-10-17/chapter1-content-sol56/outputs/a24-historical-preservation-20261022/a24-historical-preservation-adopted-v2.patch",
+    "combined_patch_bytes": 16928,
+    "combined_patch_sha256": "524467067bc0f33d976e8dd1c41a46bc45809d0a863d3c65266f3cf6ac02d820",
+    "independent_patch_mirror_sha256": "1d37397099edf16363772a54ae56d7a8431faf7081ec8c5669769545543d1312",
+    "official_and_mirror_resulting_source_files_byte_identical": true
+  },
+  "application": {
+    "copy": "Fresh filesystem copy of unchanged source-readiness-v2",
+    "git_apply_check_whitespace_error_all_exit_code": 0,
+    "git_apply_whitespace_error_all_exit_code": 0,
+    "added_files": [
+      {
+        "path": "src/annotation/runtime/live_pilot/historical_preservation.py",
+        "bytes": 8823,
+        "sha256": "636707c2fec0889627220657ef7099ea2a135ce8263165a2987e14e9d40ccf27"
+      },
+      {
+        "path": "tests/a24_historical_preservation/test_historical_preservation.py",
+        "bytes": 7529,
+        "sha256": "295263cc873af9e247edf79d26c6793c5ffb621305631cf448d293228dbac380"
+      }
+    ],
+    "modified_existing_files": [],
+    "removed_files": []
+  },
+  "environment": {
+    "python": "C:/Users/LIHAOYANG/.cache/codex-runtimes/codex-primary-runtime/dependencies/python/python.exe",
+    "PYTHONDONTWRITEBYTECODE": "1",
+    "PYTHONPATH": "$TREE/src",
+    "A24_HISTORICAL_EXPORT_PATH": "$RAW"
+  },
+  "commands": [
+    "git -C $TREE apply --check --whitespace=error-all $PATCH",
+    "git -C $TREE apply --whitespace=error-all $PATCH",
+    "$PYTHON -m unittest discover -s $TREE/tests/a24_historical_preservation -p test_historical_preservation.py -v",
+    "$PYTHON tools/a24_historical_preservation_independent_tests.py -v",
+    "$PYTHON -m unittest discover -s $TREE/tests/a24_schema_readiness -p test_schema_readiness.py -v"
+  ],
+  "results": [
+    {
+      "suite": "candidate_historical_preservation",
+      "tests": 7,
+      "passed": 7,
+      "failed": 0,
+      "errors": 0,
+      "exit_code": 0
+    },
+    {
+      "suite": "independent_historical_preservation",
+      "tests": 6,
+      "passed": 6,
+      "failed": 0,
+      "errors": 0,
+      "exit_code": 0,
+      "script": "tools/a24_historical_preservation_independent_tests.py",
+      "script_sha256": "84d4b035a95e39d20bc86e3a04e0c00d53ac6fca33aa02ab088cd71eb7ae8d72"
+    },
+    {
+      "suite": "schema_readiness_related_regression",
+      "tests": 14,
+      "passed": 14,
+      "failed": 0,
+      "errors": 0,
+      "exit_code": 0
+    }
+  ],
+  "actual_original_assertions": {
+    "record_count": 19,
+    "raw_bytes_roundtrip": true,
+    "all_fields_and_field_order_match": true,
+    "record_order_match": true,
+    "strings_html_tex_option_order_empty_values_unknown_extra_match": true,
+    "public_manifest_matches_regeneration": true,
+    "public_identity_ledger_matches_regeneration": true
+  },
+  "identity_and_safety": {
+    "all_19_canonical_question_id_null": true,
+    "all_19_selected_candidate_null": true,
+    "ambiguous_many_to_many_holds": true,
+    "write_allowed": false,
+    "authority_generated": false,
+    "current_denominator_inferred": false,
+    "public_business_body_values": false
+  },
+  "known_open": [
+    "Natural codec retains raw_record_hash but not full unknown extra values.",
+    "Natural codec identity path provenance can accept synthetic string tixu, DOM key, line number or content hash under fabricated qualification/inventory.",
+    "Current fresh export, canonical server IDs, full denominator, platform save, refresh and independent reopen remain unproved or NOT_RUN."
+  ],
+  "adopted_numeric_policy": "REJECT_ALL_JSON_FLOAT_TOKENS_WITH_HISTORICAL_JSON_NUMBER",
+  "unadopted_decimal_experiment": true,
+  "shared_tree_side_effects": {
+    "source_edits": 0,
+    "initial_review_cache_files_created_then_removed": 20,
+    "initial_review_cache_directories_created_then_removed": 10,
+    "later_unknown_cache_files_observed_and_not_removed": 13
+  },
+  "commits": 0,
+  "browser_network_paid_model_calls": 0
+}

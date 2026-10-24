@@ -7,6 +7,9 @@
 *.json text eol=lf
 *.jsonl text eol=lf
 *.py text eol=lf
+/src/annotation/prebox/*.html text eol=lf
+/src/annotation/prebox/*.css text eol=lf
+/tests/prebox_geometry.cjs text eol=lf
 *.yml text eol=lf
 *.jpg binary
 *.jpeg binary
@@ -22,3 +25,34 @@
 /项目交接说明.docx -text
 /文件清单与校验.json -text
 
+# Immutable single-question evidence and its byte-hash manifest.
+/handoffs/b/46007447/single-question-q1/** -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
+
+# Preserve intentional Markdown hard breaks in hash-bound Q1 evidence/templates.
+/docs/reviews/q1-a-hold-v1-independent-final-audit.md whitespace=-blank-at-eol
+/tools/build_q1_c01_mapping.py whitespace=-blank-at-eol
+
+# Archived unapplied diff: blank context lines must retain their space prefix.
+/docs/evidence/q9-team-20261021/pending-staging-hardening.patch text eol=lf whitespace=-blank-at-eol
+/docs/evidence/a24-takeover-20261022/test-fixture-fix.patch text eol=lf whitespace=-blank-at-eol
+/docs/evidence/a24-readonly-acquisition-20261022/*.patch text eol=lf whitespace=-blank-at-eol
+
+# Preserve this raw review receipt's CRLF bytes bound by the evidence manifest.
+/docs/evidence/a24-offline-replay-20261022/first-version-rejection.json -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
+
+# Preserve raw review terminal newlines and intentional patch context spaces.
+/docs/evidence/a24-schema-readiness-20261022/** -text whitespace=blank-at-eol,-blank-at-eof,space-before-tab,cr-at-eol
+/docs/evidence/a24-schema-readiness-20261022/*.patch -text whitespace=-blank-at-eol,-blank-at-eof,cr-at-eol
+/handoffs/b/a24/*.patch text eol=lf whitespace=-blank-at-eol,-blank-at-eof
+
+# Hash-bound de-identified publication copies; private DOM and raw exports stay outside Git.
+/docs/evidence/a24-current-platform-20261022/** -text
+/docs/evidence/a24-preservation-mapping-20261022/** -text
+/docs/evidence/a24-preservation-mapping-20261022/*.patch -text whitespace=-blank-at-eol,-blank-at-eof,cr-at-eol
+/docs/evidence/a24-readonly-runtime-20261022/** -text
+/docs/evidence/a24-current-q1-20261022/** -text
+/docs/evidence/a24-runtime-preservation-20261022/** -text
+
+# Preserve portable delivery containers and document previews as binary.
+*.zip binary
+*.pdf binary
