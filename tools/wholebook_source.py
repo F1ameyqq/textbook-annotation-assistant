@@ -561,6 +561,7 @@ def reconcile_sources(database, csv_path, geometry_dependencies=None):
     if geometry_dependencies is not None:observe_answer_geometry(database,geometry_dependencies)
     merge_answer_geometry(database)
     add_reviewed_block_answers(database)
+    resolve_independent_roi_choices(database)
     store_answer_token_sources(database)
     for sid,iid,kind,label,sp,sr in database.execute("SELECT scope_id,item_id,kind,label,start_page,start_row FROM source_items WHERE role='question' AND kind IN ('QUESTION','READING_TASK','VARIANT')").fetchall():
         binding=database.execute('SELECT answer_item_id,block_key FROM reviewed_answer_block_bindings WHERE question_item_id=?',(iid,)).fetchone()
@@ -769,6 +770,40 @@ def observe_unique_explanation_heads(database):
         if straddles:database.execute('UPDATE resolved_answer_windows SET y1=? WHERE scope_id=? AND page=? AND column=? AND y0=?',(end,sid,n,c,y0))
         database.execute('INSERT INTO explanation_head_observations VALUES(?,?,?,?,?,?,?)',(sid,label,n,index,json.dumps(b),json.dumps([y0,y1]),json.dumps([y0,end])));accepted.add((sid,n,index))
     return accepted
+
+def resolve_independent_roi_choices(database):
+    """A full observed n.choice key with separate character geometry becomes a review source."""
+    import json,re,math
+    database.executescript('CREATE TABLE IF NOT EXISTS independent_roi_answer_sources(answer_item_id TEXT PRIMARY KEY,question_item_id TEXT,observation_id TEXT,observation_row_index INTEGER,source_sha256 TEXT,page INTEGER,bbox_json TEXT,char_span_json TEXT,marker_span_json TEXT,raw_text TEXT,group_text TEXT,character_scores_json TEXT,proof_json TEXT);DELETE FROM independent_roi_answer_sources;')
+    if not database.execute("SELECT 1 FROM sqlite_master WHERE name='answer_roi_observations'").fetchone():return
+    groups=[]
+    for oid,sid,page,source,raw in database.execute('SELECT observation_id,scope_id,page,source_sha256,rows_json FROM answer_roi_observations').fetchall():
+        for index,row in enumerate(json.loads(raw)):
+            text=row['text'];boxes=row.get('char_boxes',[]);scores=row.get('character_scores',[])
+            if len(boxes)!=len(text) or len(scores)!=len(text):continue
+            if re.search(r'变式|解|证明|答案|答|[=∵∴]',text):continue
+            for m in re.finditer(r'(?<!\d)([1-9]\d?)[.、．][A-D](?=\d|[^A-Za-z]|$)',text):
+                a,b=m.span();points=[p for box in boxes[a:b] for p in box];confidence=min(scores[a:b])
+                if text[b:].strip() and not re.match(r'\s*\d',text[b:]):continue
+                if confidence<.95:continue
+                bounds=[min(p[0] for p in points),min(p[1] for p in points),max(p[0] for p in points),max(p[1] for p in points)]
+                bbox=[math.floor(bounds[0])-2,math.floor(bounds[1])-1,math.ceil(bounds[2])+2,math.ceil(bounds[3])+1]
+                windows=[list(w) for w in database.execute('SELECT column,x0,y0,x1,y1 FROM resolved_answer_windows WHERE scope_id=? AND page=?',(sid,page)) if w[1]<=bbox[0]<bbox[2]<=w[3] and w[2]<=bbox[1]<bbox[3]<=w[4]]
+                if len(windows)!=1:continue
+                qids=database.execute("SELECT item_id FROM source_items WHERE scope_id=? AND role='question' AND kind='QUESTION' AND label=?",(sid,m[1])).fetchall()
+                if len(qids)!=1:continue
+                groups.append({'oid':oid,'sid':sid,'page':page,'source':source,'row':index,'text':text,'label':m[1],'a':a,'b':b,'marker_end':a+len(m[1])+1,'bbox':bbox,'char_bounds':bounds,'scores':scores[a:b],'qid':qids[0][0],'window':windows[0]})
+    for g in groups:
+        same=[o for o in groups if o['sid']==g['sid'] and o['label']==g['label']]
+        overlap=[o for o in groups if o is not g and o['page']==g['page'] and max(o['bbox'][0],g['bbox'][0])<min(o['bbox'][2],g['bbox'][2]) and max(o['bbox'][1],g['bbox'][1])<min(o['bbox'][3],g['bbox'][3])]
+        if len(same)!=1 or overlap:continue
+        if database.execute("SELECT 1 FROM resolved_answer_items WHERE scope_id=? AND kind='QUESTION' AND label=?",(g['sid'],g['label'])).fetchone():continue
+        iid=f"{g['sid']}/roi-answer/{g['oid']}/{g['label']}"
+        proof={'rule':'COMPLETE_CHOICE_TOKEN_SEPARATE_CHARACTER_GEOMETRY','minimum_character_confidence':min(g['scores']),'character_bbox':g['char_bounds'],'padding':[2,1,2,1],'within_answer_window':g['window'],'positive_area_overlap':False,'requires_review':True,'original_page_row_index':None}
+        fragment={'page':g['page'],'column':g['window'][0],'row_indices':[],'bbox':g['bbox'],'roi_observation_id':g['oid'],'observation_row_index':g['row'],'observation_text':g['text'],'observed_text_span':[g['a'],g['b']],'independent_roi_source':True,'source_sha256':g['source'],'requires_review':True}
+        database.execute('INSERT INTO resolved_answer_items VALUES(?,?,?,?,?,?,?)',(g['sid'],iid,'QUESTION',g['label'],g['page'],-1,json.dumps([fragment],ensure_ascii=False)))
+        database.execute('INSERT INTO answer_marker_quality VALUES(?,?,?,?,?,?,?,?,?)',(iid,'REVIEW','INDEPENDENT_ROI_SOURCE_REQUIRES_REVIEW',g['text'][g['a']:g['marker_end']],g['a'],g['marker_end'],g['text'],g['page'],-1))
+        database.execute('INSERT INTO independent_roi_answer_sources VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?)',(iid,g['qid'],g['oid'],g['row'],g['source'],g['page'],json.dumps(g['bbox']),json.dumps([g['a'],g['b']]),json.dumps([g['a'],g['marker_end']]),g['text'],g['text'][g['a']:g['b']],json.dumps(g['scores']),json.dumps(proof,ensure_ascii=False)))
 
 def collect_supplemental_answer_candidates(database):
     """Collect original-row and local-ROI answer material for review only."""
