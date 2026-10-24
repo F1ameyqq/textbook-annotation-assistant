@@ -44,6 +44,7 @@ parser.add_argument("--boundaries7", type=Path, help="reviewed seven-region boun
 parser.add_argument("--figures", type=Path, help="reviewed question figure binding plan JSON")
 parser.add_argument("--answer-roi", action="append", default=[], metavar="SCOPE:PAGE:X0,Y0,X1,Y1", help="observe one local answer crop")
 parser.add_argument("--roi-deps", type=Path, help="rapidocr package directory for --answer-roi")
+parser.add_argument("--numeric-deps", type=Path, help="observe numeric answer boundaries using this rapidocr package directory")
 args = parser.parse_args()
 if bool(args.training2) != bool(args.boundaries7):
     parser.error("--training2 and --boundaries7 must be supplied together")
@@ -597,6 +598,7 @@ def reconcile_sources(database, csv_path, geometry_dependencies=None):
         database.execute("INSERT INTO pairing_status VALUES(?,?,?,?,?,?)",(sid,iid,answers[0][0] if len(answers)==1 else None,status,";".join(reasons) or "UNIQUE_SOURCE_ANCHORS_SAME_SCOPE_KIND_LABEL",json.dumps(detail,ensure_ascii=False)))
     observe_choice_boundary_candidates(database)
     collect_supplemental_answer_candidates(database)
+    attach_numeric_boundary_candidates(database)
     database.commit()
     with Path(csv_path).open(encoding="utf-8-sig",newline="") as f:rows=list(csv.DictReader(f));fieldnames=list(rows[0])
     extra=["已定位答案窗口","已定位答案锚点","可直接配对候选","需客户审校实例","装饰页脚排除行","图形选项待审组","缺口定位","原图恢复实例","栏目实例","几何答案分组","几何来源待审"]
@@ -771,13 +773,104 @@ def observe_unique_explanation_heads(database):
         database.execute('INSERT INTO explanation_head_observations VALUES(?,?,?,?,?,?,?)',(sid,label,n,index,json.dumps(b),json.dumps([y0,y1]),json.dumps([y0,end])));accepted.add((sid,n,index))
     return accepted
 
+def numeric_boundary_labels(text, next_text):
+    import re
+    current=re.fullmatch(r'([1-9]\d?)[.、．]([+\-−]?\d+(?:[.．]\d+)?)',text)
+    following=re.match(r'^([1-9]\d?)[.、．]',next_text)
+    if current and following and int(following[1])==int(current[1])+1:return int(current[1]),int(following[1])
+    return None
+
+def attach_numeric_boundary_candidates(database):
+    import json
+    if not database.execute("SELECT 1 FROM sqlite_master WHERE name='numeric_boundary_answer_candidates'").fetchone():return
+    for qid, in database.execute('SELECT DISTINCT question_item_id FROM numeric_boundary_answer_candidates').fetchall():
+        row=database.execute('SELECT details_json FROM pairing_status WHERE question_item_id=?',(qid,)).fetchone()
+        if row:
+            detail=json.loads(row[0]);detail['numeric_boundary_candidates']=[{'candidate_id':cid,'requires_review':True} for cid, in database.execute('SELECT candidate_id FROM numeric_boundary_answer_candidates WHERE question_item_id=?',(qid,))]
+            database.execute('UPDATE pairing_status SET details_json=? WHERE question_item_id=?',(json.dumps(detail,ensure_ascii=False),qid))
+
+def observe_numeric_boundary_sources(database, dependency_path):
+    """One rule: pure number bounded by complete adjacent heads and a measured white gap."""
+    import json,re,sys,math,hashlib,statistics
+    from pathlib import Path
+    sys.path.insert(0,str(dependency_path))
+    import numpy as np
+    from PIL import Image
+    from rapidocr_onnxruntime import RapidOCR
+    database.executescript('CREATE TABLE IF NOT EXISTS numeric_boundary_answer_candidates(candidate_id TEXT PRIMARY KEY,scope_id TEXT,question_item_id TEXT,label TEXT,page INTEGER,source_sha256 TEXT,observation_id TEXT,observation_rows_json TEXT,char_span_json TEXT,bbox_json TEXT,group_text TEXT,next_label TEXT,next_marker_bbox_json TEXT,next_question_item_id TEXT,proof_json TEXT);DELETE FROM numeric_boundary_answer_candidates;')
+    database.executescript('CREATE TABLE IF NOT EXISTS numeric_boundary_rule_checks(case_name TEXT PRIMARY KEY,input_json TEXT,expected_json TEXT,actual_json TEXT,passed INTEGER);DELETE FROM numeric_boundary_rule_checks;')
+    for name,text,next_text,expected in [('integer','2.10','3.(1)',(2,3)),('decimal','6.7.58','7.94',(6,7)),('full_11_not_1','11.6','12.3',(11,12)),('wrong_next_11','1.6','11.3',None),('equation_body','6.y=5x','7.1',None),('variant_insert','7.C【变式】B8.60','9.C',None),('multi_expression','3.25-2-5','4.D',None)]:
+        actual=numeric_boundary_labels(text,next_text);passed=actual==expected
+        database.execute('INSERT INTO numeric_boundary_rule_checks VALUES(?,?,?,?,?)',(name,json.dumps({'text':text,'next_text':next_text,'kind':'SYNTHETIC_RULE_CHECK'},ensure_ascii=False),json.dumps(expected),json.dumps(actual),int(passed)))
+        if not passed:raise ValueError('Numeric boundary rule check failed: '+name)
+    targets={}
+    for sid,qid,aid,detail in database.execute("SELECT scope_id,question_item_id,answer_item_id,details_json FROM pairing_status WHERE reason='ANSWER_MARKER_REQUIRES_REVIEW'").fetchall():
+        if json.loads(detail)['kind']!='QUESTION':continue
+        if database.execute('SELECT 1 FROM answer_choice_boundary_candidates WHERE question_item_id=?',(qid,)).fetchone() or database.execute('SELECT 1 FROM independent_roi_answer_sources WHERE question_item_id=?',(qid,)).fetchone():continue
+        page,index,text=database.execute('SELECT page,row_index,raw_text FROM answer_marker_quality WHERE item_id=?',(aid,)).fetchone()
+        if index<0 or re.search(r'解|证明|答案|答|变式|[=∵∴]',text) or len(re.findall(r'\d+[.、．]',text))<2:continue
+        targets.setdefault((sid,page,index),{})[json.loads(detail)['label']]=qid
+    print('NUMERIC_TARGETS',sum(map(len,targets.values())),len(targets),'rows',flush=True)
+    engine=RapidOCR(intra_op_num_threads=2,inter_op_num_threads=1,det_use_cuda=False,cls_use_cuda=False,rec_use_cuda=False,det_use_dml=False,cls_use_dml=False,rec_use_dml=False)
+    images={}
+    for position,((sid,page,index),questions) in enumerate(sorted(targets.items()),1):
+        path,source,w,h,raw=database.execute('SELECT image,sha,width,height,rows_json FROM pages WHERE page=?',(page,)).fetchone();box,original,confidence=json.loads(raw)[index]
+        bound=[min(p[0] for p in box),min(p[1] for p in box),max(p[0] for p in box),max(p[1] for p in box)];baseline=(bound[1]+bound[3])/2
+        crop=[max(0,math.floor(bound[0])-6),max(0,math.floor(bound[1])-8),min(w,math.ceil(bound[2])+6),min(h,math.ceil(bound[3])+8)]
+        oid=observe_answer_roi(database,dependency_path,sid,page,crop,engine=engine,purpose='NUMERIC_BOUNDARY_SOURCE')
+        observed=json.loads(database.execute('SELECT rows_json FROM answer_roi_observations WHERE observation_id=?',(oid,)).fetchone()[0]);selected=[];other=[]
+        for ri,row in enumerate(observed):
+            b=row['bbox'];cy=(min(p[1] for p in b)+max(p[1] for p in b))/2
+            if abs(cy-baseline)<=7 and len(row.get('char_boxes',[]))==len(row['text'])==len(row.get('character_scores',[])):selected.append((ri,row))
+            else:other.append(row)
+        selected.sort(key=lambda r:min(p[0] for p in r[1]['bbox']))
+        if any(max(p[0] for p in a[1]['bbox'])>min(p[0] for p in b[1]['bbox'])+2 for a,b in zip(selected,selected[1:])):continue
+        chars=[]
+        for ri,row in selected:
+            for ci,(char,b,score) in enumerate(zip(row['text'],row['char_boxes'],row['character_scores'])):chars.append((char,b,score,ri,ci))
+        if len(chars)<6:continue
+        median=statistics.median(max(p[0] for p in b)-min(p[0] for p in b) for ch,b,sc,ri,ci in chars)
+        if page not in images:images[page]=np.asarray(Image.open(path).convert('L'))
+        gray=images[page];gaps=[]
+        for i in range(1,len(chars)):
+            left=max(p[0] for p in chars[i-1][1]);right=min(p[0] for p in chars[i][1])
+            if right-left<max(4,median*1.4):continue
+            top=math.floor(min(p[1] for c in chars[i-1:i+1] for p in c[1]));bottom=math.ceil(max(p[1] for c in chars[i-1:i+1] for p in c[1]))
+            x0=math.ceil(left);x1=math.floor(right);pixels=gray[max(0,top):min(h,bottom),x0:x1]
+            white=(pixels<160).mean(axis=0)<=.02 if pixels.size else [];start=best_a=best_b=0
+            for x,value in enumerate(white):
+                if not value:start=x+1
+                elif x+1-start>best_b-best_a:best_a,best_b=start,x+1
+            if best_b-best_a>=max(4,median):gaps.append({'before_character':i,'white_bbox':[x0+best_a,top,x0+best_b,bottom],'white_width':best_b-best_a,'median_char_width':median})
+        cuts=[0,*[g['before_character'] for g in gaps],len(chars)];groups=[(a,b,''.join(c[0] for c in chars[a:b])) for a,b in zip(cuts,cuts[1:])]
+        for (a,b,text),(na,nb,next_text) in zip(groups,groups[1:]):
+            labels=numeric_boundary_labels(text,next_text)
+            if labels is None:continue
+            label,next_label=map(str,labels)
+            if label not in questions:continue
+            current=database.execute("SELECT item_id FROM source_items WHERE scope_id=? AND role='question' AND kind='QUESTION' AND label=?",(sid,label)).fetchall();following=database.execute("SELECT item_id FROM source_items WHERE scope_id=? AND role='question' AND kind='QUESTION' AND label=?",(sid,next_label)).fetchall()
+            if len(current)!=1 or len(following)!=1 or current[0][0]!=questions[label]:continue
+            next_end=na+len(next_label)+1;minimum=min(c[2] for c in [*chars[a:b],*chars[na:next_end]])
+            if minimum<.95:continue
+            pts=[p for ch,box,sc,ri,ci in chars[a:b] for p in box];bbox=[math.floor(min(p[0] for p in pts))-1,math.floor(min(p[1] for p in pts))-1,math.ceil(max(p[0] for p in pts))+1,math.ceil(max(p[1] for p in pts))+1]
+            next_pts=[p for ch,box,sc,ri,ci in chars[na:next_end] for p in box];next_bbox=[min(p[0] for p in next_pts),min(p[1] for p in next_pts),max(p[0] for p in next_pts),max(p[1] for p in next_pts)]
+            if any(max(bbox[0],min(p[0] for p in row['bbox']))<min(bbox[2],max(p[0] for p in row['bbox'])) for row in other):continue
+            windows=[list(v) for v in database.execute('SELECT column,x0,y0,x1,y1 FROM resolved_answer_windows WHERE scope_id=? AND page=?',(sid,page)) if v[1]<=bbox[0]<bbox[2]<=v[3] and v[2]<=bbox[1]<bbox[3]<=v[4]]
+            if len(windows)!=1:continue
+            proof={'rule':'PURE_NUMBER_TO_NEXT_COMPLETE_HEAD','original_page_row_index':index,'original_text':original,'full_observed_line':''.join(c[0] for c in chars),'minimum_character_confidence':minimum,'right_gap':next(g for g in gaps if g['before_character']==b),'within_answer_window':windows[0],'next_complete_head':next_text[:len(next_label)+1],'requires_review':True}
+            cid=hashlib.sha256(json.dumps([oid,label,a,b,next_label],sort_keys=True).encode()).hexdigest();refs=[{'observation_row_index':ri,'character_index':ci} for ch,box,sc,ri,ci in chars[a:b]]
+            database.execute('INSERT INTO numeric_boundary_answer_candidates VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)',(cid,sid,current[0][0],label,page,source,oid,json.dumps(refs),json.dumps([a,b]),json.dumps(bbox),text,next_label,json.dumps(next_bbox),following[0][0],json.dumps(proof,ensure_ascii=False)))
+        if position%10==0:print('NUMERIC_SCANNED',position,flush=True)
+    attach_numeric_boundary_candidates(database);database.commit()
+    print('NUMERIC_BOUNDARY_CANDIDATES',database.execute('SELECT count(*) FROM numeric_boundary_answer_candidates').fetchone()[0],flush=True)
+
 def resolve_independent_roi_choices(database):
     """A full observed n.choice key with separate character geometry becomes a review source."""
     import json,re,math
     database.executescript('CREATE TABLE IF NOT EXISTS independent_roi_answer_sources(answer_item_id TEXT PRIMARY KEY,question_item_id TEXT,observation_id TEXT,observation_row_index INTEGER,source_sha256 TEXT,page INTEGER,bbox_json TEXT,char_span_json TEXT,marker_span_json TEXT,raw_text TEXT,group_text TEXT,character_scores_json TEXT,proof_json TEXT);DELETE FROM independent_roi_answer_sources;')
     if not database.execute("SELECT 1 FROM sqlite_master WHERE name='answer_roi_observations'").fetchone():return
     groups=[]
-    for oid,sid,page,source,raw in database.execute('SELECT observation_id,scope_id,page,source_sha256,rows_json FROM answer_roi_observations').fetchall():
+    for oid,sid,page,source,raw in database.execute("SELECT observation_id,scope_id,page,source_sha256,rows_json FROM answer_roi_observations WHERE coalesce(json_extract(method_json,'$.purpose'),'')!='NUMERIC_BOUNDARY_SOURCE'").fetchall():
         for index,row in enumerate(json.loads(raw)):
             text=row['text'];boxes=row.get('char_boxes',[]);scores=row.get('character_scores',[])
             if len(boxes)!=len(text) or len(scores)!=len(text):continue
@@ -854,7 +947,7 @@ def collect_supplemental_answer_candidates(database):
             detail=json.loads(row[0]);detail['supplemental_answer_candidates']=[{'candidate_id':cid,'origin':origin,'requires_review':True} for cid,origin in database.execute('SELECT candidate_id,origin FROM supplemental_answer_candidates WHERE question_item_id=?',(qid,))]
             database.execute('UPDATE pairing_status SET details_json=? WHERE question_item_id=?',(json.dumps(detail,ensure_ascii=False),qid))
 
-def observe_answer_roi(database, dependency_path, scope_id, page, crop, scale=3):
+def observe_answer_roi(database, dependency_path, scope_id, page, crop, scale=3, engine=None, purpose=None):
     """Retain a local OCR observation separately from immutable full-page rows."""
     import sys,json,hashlib
     from pathlib import Path
@@ -867,11 +960,12 @@ def observe_answer_roi(database, dependency_path, scope_id, page, crop, scale=3)
     path,source=database.execute('SELECT image,sha FROM pages WHERE page=?',(page,)).fetchone()
     if hashlib.sha256(Path(path).read_bytes()).hexdigest()!=source:raise ValueError('ROI source image differs')
     method={'engine':'rapidocr_onnxruntime','version':'1.4.4','device':'CPU','scale':scale,'return_word_box':True}
+    if purpose:method['purpose']=purpose
     package=Path(rapidocr_onnxruntime.__file__).parent;method['models']={p.name:hashlib.sha256(p.read_bytes()).hexdigest() for p in (package/'models').glob('*.onnx')}
     oid=hashlib.sha256(json.dumps([scope_id,page,source,crop,method],sort_keys=True).encode()).hexdigest()
     if database.execute('SELECT 1 FROM answer_roi_observations WHERE observation_id=?',(oid,)).fetchone():return oid
     image=Image.open(path).convert('RGB').crop(tuple(crop));image=image.resize((image.width*scale,image.height*scale))
-    engine=RapidOCR(intra_op_num_threads=2,inter_op_num_threads=1,det_use_cuda=False,cls_use_cuda=False,rec_use_cuda=False,det_use_dml=False,cls_use_dml=False,rec_use_dml=False)
+    if engine is None:engine=RapidOCR(intra_op_num_threads=2,inter_op_num_threads=1,det_use_cuda=False,cls_use_dml=False,rec_use_dml=False,det_use_dml=False,cls_use_cuda=False,rec_use_cuda=False)
     results,_=engine(np.asarray(image)[:,:,::-1].copy(),use_cls=False,text_score=0,return_word_box=True)
     transform=lambda box:[[float(x)/scale+crop[0],float(y)/scale+crop[1]] for x,y in box]
     observed=[]
@@ -1146,3 +1240,5 @@ if args.figures:
 for scope_id, page, crop in answer_rois:
     observe_answer_roi(db,args.roi_deps.expanduser().resolve(strict=True),scope_id,page,crop)
 reconcile_sources(db, output, args.geometry_deps.expanduser().resolve(strict=True) if args.geometry_deps else None)
+if args.numeric_deps:
+    observe_numeric_boundary_sources(db,args.numeric_deps.expanduser().resolve(strict=True))
