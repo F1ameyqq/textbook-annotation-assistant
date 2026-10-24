@@ -38,6 +38,7 @@ parser.add_argument("--database", type=Path, required=True, help="SQLite databas
 parser.add_argument("--output", type=Path, required=True, help="machine inventory CSV to write")
 parser.add_argument("--deps", type=Path, help="optional rapidocr_onnxruntime package directory")
 parser.add_argument("--recoveries", type=Path, help="reviewed original-image recovery plan JSON")
+parser.add_argument("--geometry-deps", type=Path, help="run character geometry using this rapidocr package directory")
 args = parser.parse_args()
 ROOT = Path(__file__).resolve().parent
 if args.deps:
@@ -361,7 +362,7 @@ with output.open("w",encoding="utf-8-sig",newline="") as stream:
     writer.writerows(count_rows)
 print(f"DONE pages=214 scopes={len(ordered)} source_items={sum(r[2] for r in count_rows)} {DB} {output}",flush=True)
 
-def reconcile_sources(database, csv_path):
+def reconcile_sources(database, csv_path, geometry_dependencies=None):
     """Add source resolutions without changing the in-use source_items snapshot."""
     import csv, json, re, unicodedata
     from pathlib import Path
@@ -534,6 +535,8 @@ def reconcile_sources(database, csv_path):
             iid=f"{sid}/resolved-answer/{item['kind']}/{j+1}"
             database.execute("INSERT INTO resolved_answer_items VALUES(?,?,?,?,?,?,?)",(sid,iid,item["kind"],item["label"],item["page"],item["row"],json.dumps(item["fragments"],ensure_ascii=False)))
             m=item['marker'];database.execute("INSERT INTO answer_marker_quality VALUES(?,?,?,?,?,?,?,?,?)",(iid,"STRONG" if m['strong'] else "REVIEW",m['reason'],m['token'],m['start'],m['end'],item['raw_text'],item['page'],item['row']))
+    if geometry_dependencies is not None:observe_answer_geometry(database,geometry_dependencies)
+    merge_answer_geometry(database)
     for sid,iid,kind,label,sp,sr in database.execute("SELECT scope_id,item_id,kind,label,start_page,start_row FROM source_items WHERE role='question' AND kind IN ('QUESTION','READING_TASK','VARIANT')").fetchall():
         answers=database.execute("SELECT item_id FROM resolved_answer_items WHERE scope_id=? AND kind=? AND label=?",(sid,kind,label)).fetchall()
         question_count=database.execute("SELECT count(*) FROM source_items WHERE scope_id=? AND role='question' AND kind=? AND label=?",(sid,kind,label)).fetchone()[0]
@@ -550,6 +553,7 @@ def reconcile_sources(database, csv_path):
         if question_count!=1:reasons.append("DUPLICATE_QUESTION_IDENTITY")
         if iid in graphics:reasons.append("GRAPHIC_OPTIONS_REQUIRE_REVIEW")
         if not cleaned.get(iid):reasons.append("NO_BODY_AFTER_EXCLUSIONS")
+        if database.execute("SELECT 1 FROM sqlite_master WHERE type='table' AND name='answer_geometry_merge_decisions'").fetchone() and database.execute("SELECT 1 FROM answer_geometry_merge_decisions WHERE scope_id=? AND printed_number=? AND status IN ('CONFLICTING_STRONG_SOURCE','MULTIPLE_SOURCE_GROUPS','UNLABELED_PHYSICAL_CONTINUATION')",(sid,label)).fetchone():reasons.append('GEOMETRY_SOURCE_CONFLICT_REVIEW')
         context=database.execute("SELECT block_key,origin FROM source_item_context WHERE item_id=?",(iid,)).fetchone()
         if context and context[0] in ('training','selftest'):reasons.append("ANSWER_BLOCK_CONTEXT_REVIEW")
         if context and context[1] in ('VISUAL_SOURCE_RECOVERY','LAYOUT_RECUT','SOURCE_REANCHORED'):reasons.append("RECOVERED_SOURCE_REGION_REVIEW")
@@ -562,7 +566,7 @@ def reconcile_sources(database, csv_path):
         database.execute("INSERT INTO pairing_status VALUES(?,?,?,?,?,?)",(sid,iid,answers[0][0] if len(answers)==1 else None,status,";".join(reasons) or "UNIQUE_SOURCE_ANCHORS_SAME_SCOPE_KIND_LABEL",json.dumps(detail,ensure_ascii=False)))
     database.commit()
     with Path(csv_path).open(encoding="utf-8-sig",newline="") as f:rows=list(csv.DictReader(f));fieldnames=list(rows[0])
-    extra=["已定位答案窗口","已定位答案锚点","可直接配对候选","需客户审校实例","装饰页脚排除行","图形选项待审组","缺口定位","原图恢复实例","栏目实例"]
+    extra=["已定位答案窗口","已定位答案锚点","可直接配对候选","需客户审校实例","装饰页脚排除行","图形选项待审组","缺口定位","原图恢复实例","栏目实例","几何答案分组","几何来源待审"]
     for field in extra:
         if field not in fieldnames:fieldnames.append(field)
     for row in rows:
@@ -574,6 +578,9 @@ def reconcile_sources(database, csv_path):
         row.update(dict(zip(extra,[database.execute("SELECT count(*) FROM resolved_answer_windows WHERE scope_id=?",(sid,)).fetchone()[0],database.execute("SELECT count(*) FROM resolved_answer_items WHERE scope_id=?",(sid,)).fetchone()[0],database.execute("SELECT count(*) FROM pairing_status WHERE scope_id=? AND status='READY_TO_PAIR'",(sid,)).fetchone()[0],database.execute("SELECT count(*) FROM pairing_status WHERE scope_id=? AND status='CUSTOMER_REVIEW'",(sid,)).fetchone()[0],database.execute("SELECT count(*) FROM source_exclusions WHERE scope_id=?",(sid,)).fetchone()[0],database.execute("SELECT count(DISTINCT question_item_id) FROM graphic_option_candidates WHERE scope_id=?",(sid,)).fetchone()[0],';'.join(f"{t}:{lab}@{p}/{i}" for t,lab,p,i in database.execute("SELECT issue_type,label,page,row_index FROM source_issues WHERE scope_id=?",(sid,)))])))
         row['原图恢复实例']=database.execute('SELECT count(*) FROM source_recovery_records r JOIN source_items i ON i.item_id=r.item_id WHERE i.scope_id=?',(sid,)).fetchone()[0]
         row['栏目实例']=';'.join(f'{block}:{count}' for block,count in database.execute('SELECT c.block_key,count(*) FROM source_item_context c JOIN source_items i ON i.item_id=c.item_id WHERE i.scope_id=? GROUP BY c.block_key',(sid,)))
+        has_geometry=database.execute("SELECT 1 FROM sqlite_master WHERE type='table' AND name='answer_geometry_links'").fetchone()
+        row['几何答案分组']=database.execute('SELECT count(*) FROM answer_geometry_links g JOIN resolved_answer_items a ON a.item_id=g.answer_item_id WHERE a.scope_id=?',(sid,)).fetchone()[0] if has_geometry else 0
+        row['几何来源待审']=database.execute("SELECT count(*) FROM answer_geometry_merge_decisions WHERE scope_id=? AND status!='MERGED'",(sid,)).fetchone()[0] if has_geometry else 0
     with Path(csv_path).open("w",encoding="utf-8-sig",newline="") as f:writer=csv.DictWriter(f,fieldnames);writer.writeheader();writer.writerows(rows)
     print("RECONCILED",database.execute("SELECT status,count(*) FROM pairing_status GROUP BY status").fetchall(),flush=True)
 
@@ -709,6 +716,105 @@ def apply_reviewed_regions(database, plan_path):
         database.execute('UPDATE machine_counts SET item_count=?,numbered=?,reading_tasks=?,variants=?,examples=?,number_gaps=? WHERE scope_id=?',(count,kinds.get('QUESTION',0),kinds.get('READING_TASK',0),kinds.get('VARIANT',0),kinds.get('WORKED_EXAMPLE',0),json.dumps(gaps),sid))
     database.commit();print('RECOVERED',len(prepared),'records',len(affected),'scopes',plan_sha,flush=True)
 
+def observe_answer_geometry(database, dependency_path, target_rows=None):
+    import json,re,sys,hashlib,statistics,unicodedata
+    from pathlib import Path
+    sys.path.insert(0,str(dependency_path))
+    import numpy as np
+    from PIL import Image
+    import rapidocr_onnxruntime
+    from rapidocr_onnxruntime import RapidOCR
+    database.executescript('''CREATE TABLE IF NOT EXISTS answer_geometry_observations(observation_id TEXT PRIMARY KEY,scope_id TEXT,page INTEGER,row_index INTEGER,original_text TEXT,source_sha TEXT,crop_json TEXT,ocr_text TEXT,char_boxes_json TEXT,char_texts_json TEXT,char_scores_json TEXT,method_json TEXT,status TEXT,gaps_json TEXT);
+    CREATE TABLE IF NOT EXISTS answer_geometry_groups(group_id TEXT PRIMARY KEY,observation_id TEXT,printed_number TEXT,text TEXT,bbox_json TEXT,char_span_json TEXT,status TEXT,proof_json TEXT);''')
+    normalize=lambda t:unicodedata.normalize('NFKC',t)
+    candidates={}
+    for sid,n,row,text in database.execute('SELECT DISTINCT a.scope_id,q.page,q.row_index,q.raw_text FROM resolved_answer_items a JOIN answer_marker_quality q ON q.item_id=a.item_id').fetchall():
+        t=normalize(text)
+        if target_rows is not None and (n,row) not in set(target_rows):continue
+        keys=re.findall(r'(?<!\d)[1-9]\d?[.、][A-G](?=\d|[^A-Za-z]|$)',t)
+        if len(keys)>=2 and not re.search('解|证明|答案|答',t):candidates[(sid,n,row)]=text
+    method={'engine':'rapidocr_onnxruntime','version':'1.4.4','observation_format':3,'device':'CPU','scale':2,'return_word_box':True,'crop_padding':[6,4,7,5],'gap_width_to_median_character':1.4,'ink_threshold':160,'maximum_white_column_ink_ratio':.02,'minimum_white_run_to_median_character':1.,'minimum_character_confidence':.85}
+    package=Path(rapidocr_onnxruntime.__file__).parent
+    method['models']={p.name:hashlib.sha256(p.read_bytes()).hexdigest() for p in (package/'models').glob('*.onnx')}
+    method_json=json.dumps(method,sort_keys=True);engine=None;images={};count=0
+    for (sid,n,row),original in sorted(candidates.items(),key=lambda pair:(pair[0][1],pair[0][2],pair[0][0])):
+        image_path,sha,w,h,rows_json=database.execute('SELECT image,sha,width,height,rows_json FROM pages WHERE page=?',(n,)).fetchone();box=json.loads(rows_json)[row][0]
+        raw=[min(v[0] for v in box),min(v[1] for v in box),max(v[0] for v in box),max(v[1] for v in box)]
+        oid=hashlib.sha256(json.dumps([sid,n,row,sha,original,method_json],ensure_ascii=False).encode()).hexdigest()
+        if database.execute('SELECT 1 FROM answer_geometry_observations WHERE observation_id=?',(oid,)).fetchone():continue
+        if engine is None:engine=RapidOCR(intra_op_num_threads=2,inter_op_num_threads=1,det_use_cuda=False,cls_use_cuda=False,rec_use_cuda=False,det_use_dml=False,cls_use_dml=False,rec_use_dml=False)
+        if n not in images:images[n]=Image.open(image_path).convert('RGB')
+        image=images[n];crop=[max(0,int(raw[0])-6),max(0,int(raw[1])-4),min(w,int(raw[2])+7),min(h,int(raw[3])+5)]
+        roi=image.crop(tuple(crop));roi=roi.resize((roi.width*2,roi.height*2));recognized,_=engine(np.asarray(roi)[:,:,::-1].copy(),use_cls=False,text_score=0,return_word_box=True)
+        matching=[r for r in recognized or [] if len(r)==6 and normalize(r[1])==normalize(original) and len(r[3])==len(r[4])==len(r[5])==len(r[1])]
+        observation_method_json=method_json
+        if not matching:
+            pieces=[r for r in recognized or [] if len(r)==6 and len(r[3])==len(r[4])==len(r[5])==len(r[1]) and abs((min(v[1] for v in r[0])+max(v[1] for v in r[0]))/4+crop[1]-(raw[1]+raw[3])/2)<=max(8,(raw[3]-raw[1])*.6)]
+            pieces.sort(key=lambda r:min(v[0] for v in r[0]))
+            if pieces and normalize(''.join(r[1] for r in pieces))==normalize(original):
+                pts=[v for r in pieces for v in r[0]];x0=min(v[0] for v in pts);y0=min(v[1] for v in pts);x1=max(v[0] for v in pts);y1=max(v[1] for v in pts)
+                matching=[[[[x0,y0],[x1,y0],[x1,y1],[x0,y1]],''.join(r[1] for r in pieces),min(r[2] for r in pieces),[b for r in pieces for b in r[3]],[c for r in pieces for c in r[4]],[s for r in pieces for s in r[5]]]]
+                observation_method_json=json.dumps({**method,'detector_regions':[{'text':r[1],'bbox':[[float(x)/2+crop[0],float(y)/2+crop[1]] for x,y in r[0]],'confidence':float(r[2])} for r in pieces]},ensure_ascii=False)
+        if not matching:
+            database.execute('INSERT INTO answer_geometry_observations VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?)',(oid,sid,n,row,original,sha,json.dumps(crop),json.dumps([r[1] for r in recognized or []],ensure_ascii=False),'[]','[]','[]',method_json,'OCR_TEXT_REVIEW','[]'));database.commit();continue
+        r=min(matching,key=lambda r:abs((min(v[1] for v in r[0])+max(v[1] for v in r[0]))/4+crop[1]-(raw[1]+raw[3])/2))
+        chars=r[4];scores=[float(s) for s in r[5]];char_boxes=[[[float(x)/2+crop[0],float(y)/2+crop[1]] for x,y in b] for b in r[3]]
+        if any(len(normalize(c))!=1 for c in chars) or len(normalize(original))!=len(original):status='NORMALIZATION_REVIEW';breaks=[];gaps=[]
+        else:
+            widths=[max(v[0] for v in b)-min(v[0] for v in b) for b in char_boxes];median=statistics.median(widths);gray=np.asarray(image.convert('L'));breaks=[];gaps=[]
+            for i in range(1,len(chars)):
+                previous=char_boxes[i-1];current=char_boxes[i];left=max(v[0] for v in previous);right=min(v[0] for v in current);gap=right-left
+                if gap<max(4,median*1.4):continue
+                top=min(min(v[1] for v in previous),min(v[1] for v in current));bottom=max(max(v[1] for v in previous),max(v[1] for v in current));gap_box=[int(left)+1,max(0,int(top)),int(right)-1,min(h,int(bottom)+1)];pixels=gray[gap_box[1]:gap_box[3],gap_box[0]:gap_box[2]];ink=float((pixels<160).mean()) if pixels.size else 1.
+                white=(pixels<160).mean(axis=0)<=.02 if pixels.size else [];best_a=best_b=run_a=0
+                for column,is_white in enumerate(white):
+                    if not is_white:run_a=column+1
+                    elif column+1-run_a>best_b-best_a:best_a,best_b=run_a,column+1
+                white_width=best_b-best_a;passed=white_width>=max(4,median);gaps.append({'before_character':i,'width':gap,'median_char_width':median,'bbox':gap_box,'ink_ratio':ink,'white_run_bbox':[gap_box[0]+best_a,gap_box[1],gap_box[0]+best_b,gap_box[3]],'white_run_width':white_width,'passed':passed})
+                if passed:breaks.append(i)
+            status='PIXEL_GROUPS_OBSERVED'
+        database.execute('INSERT INTO answer_geometry_observations VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?)',(oid,sid,n,row,original,sha,json.dumps(crop),r[1],json.dumps(char_boxes),json.dumps(chars,ensure_ascii=False),json.dumps(scores),observation_method_json,status,json.dumps(gaps)))
+        groups=[];bounds=[0,*breaks,len(chars)]
+        for a,b in zip(bounds,bounds[1:]):
+            text=''.join(chars[a:b]);m=re.match(r'^([1-9]\d?)[.、．]',normalize(text))
+            if m:groups.append({'number':m[1],'a':a,'b':b})
+            elif groups:groups[-1]['b']=b
+        numbers=[int(g['number']) for g in groups];ordered=len(groups)>=2 and numbers==sorted(set(numbers))
+        windows=database.execute('SELECT x0,y0,x1,y1 FROM resolved_answer_windows WHERE scope_id=? AND page=?',(sid,n)).fetchall();within=any(x0-8<=raw[0] and raw[2]<=x1+8 and y0<=(raw[1]+raw[3])/2<y1 for x0,y0,x1,y1 in windows)
+        for j,g in enumerate(groups):
+            a,b=g['a'],g['b'];text=''.join(chars[a:b]);boxes=char_boxes[a:b];gb=[min(v[0] for box in boxes for v in box),min(v[1] for box in boxes for v in box),max(v[0] for box in boxes for v in box),max(v[1] for box in boxes for v in box)];body=re.sub(r'^[1-9]\d?[.、．]','',normalize(text),count=1).strip();strong=status=='PIXEL_GROUPS_OBSERVED' and ordered and within and bool(body) and min(scores[a:b])>=.85 and not re.search(r'\d+\.\d+',body) and not re.search(r'[A-G][1-9]\d?[.、]',body)
+            proof={'original_char_span':[a,b],'left_gap':next((gap for gap in gaps if gap['before_character']==a),None),'right_gap':next((gap for gap in gaps if gap['before_character']==b),None),'at_row_start':a==0,'at_row_end':b==len(chars),'group_numbers_observed':numbers,'within_answer_window':within,'minimum_confidence':min(scores[a:b]),'font_height':statistics.median(max(v[1] for v in box)-min(v[1] for v in box) for box in boxes)}
+            database.execute('INSERT INTO answer_geometry_groups VALUES(?,?,?,?,?,?,?,?)',(f'{oid}/group/{j+1}',oid,g['number'],text,json.dumps(gb),json.dumps([a,b]),'VERIFIED_PIXEL_GAP' if strong else 'GEOMETRY_REVIEW',json.dumps(proof)))
+        database.commit();count+=1;print(f'GEOMETRY page={n} row={row} groups={len(groups)} status={status}',flush=True)
+    return count
+
+def merge_answer_geometry(database):
+    import json,re,unicodedata
+    if not database.execute("SELECT 1 FROM sqlite_master WHERE type='table' AND name='answer_geometry_groups'").fetchone():return
+    database.executescript('CREATE TABLE IF NOT EXISTS answer_geometry_links(answer_item_id TEXT PRIMARY KEY,group_id TEXT,observation_id TEXT);CREATE TABLE IF NOT EXISTS answer_geometry_merge_decisions(group_id TEXT PRIMARY KEY,scope_id TEXT,printed_number TEXT,status TEXT,existing_answer_id TEXT);DELETE FROM answer_geometry_links;DELETE FROM answer_geometry_merge_decisions;')
+    candidates=database.execute("SELECT g.group_id,g.observation_id,g.printed_number,g.text,g.bbox_json,g.char_span_json,g.proof_json,o.scope_id,o.page,o.row_index,o.original_text FROM answer_geometry_groups g JOIN answer_geometry_observations o ON o.observation_id=g.observation_id WHERE g.status='VERIFIED_PIXEL_GAP' AND o.rowid=(SELECT max(newer.rowid) FROM answer_geometry_observations newer WHERE newer.scope_id=o.scope_id AND newer.page=o.page AND newer.row_index=o.row_index)").fetchall()
+    counts={}
+    for candidate in candidates:counts[(candidate[7],candidate[2])]=counts.get((candidate[7],candidate[2]),0)+1
+    for gid,oid,label,text,bbox,span,proof,sid,n,row,original in candidates:
+        existing=database.execute("SELECT item_id FROM resolved_answer_items WHERE scope_id=? AND kind='QUESTION' AND label=?",(sid,label)).fetchall()
+        if len(existing)>1:continue
+        chars,gaps=database.execute('SELECT char_texts_json,gaps_json FROM answer_geometry_observations WHERE observation_id=?',(oid,)).fetchone();chars=json.loads(chars);a,b=json.loads(span);cuts=[g['before_character'] for g in json.loads(gaps) if g['passed'] and a<g['before_character']<b]
+        unlabeled=any(not re.match(r'^\([1-9]\d?\)',unicodedata.normalize('NFKC',''.join(chars[cut:b]))) for cut in cuts)
+        if unlabeled:
+            database.execute('INSERT INTO answer_geometry_merge_decisions VALUES(?,?,?,?,?)',(gid,sid,label,'UNLABELED_PHYSICAL_CONTINUATION',existing[0][0] if existing else None));continue
+        baseline=database.execute('SELECT a.item_id,a.start_page,a.start_row,q.strength FROM resolved_answer_items a JOIN answer_marker_quality q ON q.item_id=a.item_id WHERE a.scope_id=? AND a.kind=\'QUESTION\' AND a.label=?',(sid,label)).fetchall()
+        conflict=bool(baseline and baseline[0][3]=='STRONG' and baseline[0][1:3]!=(n,row))
+        multi=counts[(sid,label)]>1 and not (baseline and baseline[0][3]=='STRONG' and baseline[0][1:3]==(n,row))
+        if conflict or multi:
+            database.execute('INSERT INTO answer_geometry_merge_decisions VALUES(?,?,?,?,?)',(gid,sid,label,'CONFLICTING_STRONG_SOURCE' if conflict else 'MULTIPLE_SOURCE_GROUPS',baseline[0][0] if baseline else None));continue
+        if existing:
+            iid=existing[0][0];database.execute('DELETE FROM resolved_answer_items WHERE item_id=?',(iid,));database.execute('DELETE FROM answer_marker_quality WHERE item_id=?',(iid,))
+        iid=f'{sid}/geometry-answer/{gid}';a,b=json.loads(span);geometry_proof=json.loads(proof);fragment={'page':n,'column':next((c for c,x0,x1 in database.execute('SELECT column,x0,x1 FROM resolved_answer_windows WHERE scope_id=? AND page=?',(sid,n)) if x0<=(json.loads(bbox)[0]+json.loads(bbox)[2])/2<x1),0),'row_indices':[row],'text_spans':[{'row_index':row,'start':a,'end':b}],'bbox':json.loads(bbox),'geometry_observation_id':oid,'geometry_group_id':gid,'observation_text':text,'original_row_text':original,'geometry_proof':geometry_proof}
+        database.execute('INSERT INTO resolved_answer_items VALUES(?,?,?,?,?,?,?)',(sid,iid,'QUESTION',label,n,row,json.dumps([fragment],ensure_ascii=False)))
+        normalized=unicodedata.normalize('NFKC',text);m=re.match(r'([1-9]\d?)[.、]',normalized)
+        database.execute('INSERT INTO answer_marker_quality VALUES(?,?,?,?,?,?,?,?,?)',(iid,'STRONG','GEOMETRY_WHITE_GAP',m.group(),0,m.end(),text,n,row));database.execute('INSERT INTO answer_geometry_links VALUES(?,?,?)',(iid,gid,oid))
+        database.execute('INSERT INTO answer_geometry_merge_decisions VALUES(?,?,?,?,?)',(gid,sid,label,'MERGED',iid))
+
 if args.recoveries:
     apply_reviewed_regions(db,args.recoveries.expanduser().resolve(strict=True))
-reconcile_sources(db, output)
+reconcile_sources(db, output, args.geometry_deps.expanduser().resolve(strict=True) if args.geometry_deps else None)
