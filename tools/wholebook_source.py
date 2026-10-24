@@ -762,15 +762,15 @@ def apply_source_region_updates(database, training_path, boundary_path):
             if database.execute('SELECT sha FROM pages WHERE page=?',(p['page'],)).fetchone()[0]!=p['source_sha256']:raise ValueError('Source region image differs')
         database.execute('INSERT OR REPLACE INTO source_review_inputs VALUES(?,?,?)',(name,hashlib.sha256(raw).hexdigest(),json.dumps(plan,ensure_ascii=False)))
     plan=plans['training2'];sid=plan['scope_id'];q=plan['question'];iid=f'{sid}/question/QUESTION/recovered/training/2'
-    rows=json.loads(database.execute('SELECT rows_json FROM pages WHERE page=?',(q['page'],)).fetchone()[0])
-    fragments=[{'page':q['page'],'column':q['column'],'bbox':q['full_bbox'],'row_indices':q['original_ocr_rows'],'reviewed_region':True}]
+    source_sha=database.execute('SELECT sha FROM pages WHERE page=?',(q['page'],)).fetchone()[0]
+    fragments=[{'page':q['page'],'column':q['column'],'bbox':q['full_bbox'],'row_indices':q['original_ocr_rows'],'reviewed_region':True,'source_sha256':source_sha,'part':'full_question'}]
     record={'scope_id':sid,'printed_question':'2','subsection':q['subsection'],'start_page':q['page'],'start_bbox':q['start_bbox'],'fragments':fragments,'evidence':'VISUALLY_OBSERVED_ORIGINAL_IMAGE','block_key':'training'}
     sha=database.execute("SELECT plan_sha FROM source_review_inputs WHERE name='training2'").fetchone()[0]
     database.execute('INSERT OR REPLACE INTO source_items VALUES(?,?,?,?,?,?,?,?,?,?)',(sid,iid,'question','QUESTION','2',q['page'],q['original_ocr_rows'][0],q['page'],json.dumps(fragments,ensure_ascii=False),None))
     database.execute('INSERT OR REPLACE INTO source_item_context VALUES(?,?,?,?,?)',(iid,'training','变式训练','VISUAL_SOURCE_RECOVERY',json.dumps({'plan_sha':sha,'start_bbox':q['start_bbox']},ensure_ascii=False)))
     database.execute('INSERT OR REPLACE INTO source_recovery_records VALUES(?,?,?)',(iid,sha,json.dumps(record,ensure_ascii=False)))
     old=plan['old_question1_resegmentation'];old_iid=old['item_id']
-    kept=[{'page':q['page'],'column':q['column'],'bbox':old['retain_bbox'],'row_indices':old['retain_rows'],'reviewed_region':True}]
+    kept=[{'page':q['page'],'column':q['column'],'bbox':old['retain_bbox'],'row_indices':old['retain_rows'],'reviewed_region':True,'source_sha256':source_sha,'part':'full_question'}]
     database.execute('UPDATE source_items SET fragments_json=?,end_page=? WHERE item_id=?',(json.dumps(kept,ensure_ascii=False),q['page'],old_iid))
     updated={}
     for r in plans['boundaries7']['records']:
@@ -781,7 +781,8 @@ def apply_source_region_updates(database, training_path, boundary_path):
         fragments=json.loads(database.execute('SELECT fragments_json FROM source_items WHERE item_id=?',(target,)).fetchone()[0])
         for f in fragments:
             center=(f['bbox'][0]+f['bbox'][2])/2
-            if f['page']==page and region[0]<=center<region[2]:f.update(bbox=region,reviewed_region=True)
+            if f['page']==page and region[0]<=center<region[2]:
+                f.update(bbox=region,reviewed_region=True,source_sha256=database.execute('SELECT sha FROM pages WHERE page=?',(page,)).fetchone()[0]);f.setdefault('part','full_question')
         database.execute('UPDATE source_items SET fragments_json=? WHERE item_id=?',(json.dumps(fragments,ensure_ascii=False),target))
     kinds=dict(database.execute("SELECT kind,count(*) FROM source_items WHERE scope_id=? AND role='question' GROUP BY kind",(sid,)))
     blocks={}
@@ -806,6 +807,7 @@ def add_reviewed_block_answers(database):
         database.execute('INSERT OR REPLACE INTO resolved_answer_items VALUES(?,?,?,?,?,?,?)',(sid,iid,'QUESTION','2',page,index,json.dumps([fragment],ensure_ascii=False)))
         database.execute('INSERT OR REPLACE INTO answer_marker_quality VALUES(?,?,?,?,?,?,?,?,?)',(iid,'REVIEW','VISUAL_SOURCE_BLOCK_ANSWER',marker.group(),marker.start(),marker.end(),text,page,index))
         database.execute('INSERT INTO reviewed_answer_block_bindings VALUES(?,?,?,?)',(qid,iid,block,json.dumps({'block_title':a['block_title'] if block=='training' else s['answer_block_title'],'source':'training2'},ensure_ascii=False)))
+        database.execute('INSERT OR REPLACE INTO source_item_context VALUES(?,?,?,?,?)',(iid,block,'变式训练' if block=='training' else '复习自测','VISUAL_BLOCK_SOURCE',json.dumps({'question_item_id':qid,'source':'training2'},ensure_ascii=False)))
 
 def store_answer_token_sources(database):
     """Keep source glyphs in raw_token and normalized spelling separately."""
