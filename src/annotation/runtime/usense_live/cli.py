@@ -26,7 +26,7 @@ def main(argv=None):
     c.add_argument("--source", action="store_true")
     c.add_argument("--login", action="store_true")
     c.add_argument("--seconds", type=int, default=600)
-    for command in ("validate", "capture", "login"):
+    for command in ("validate", "capture", "login", "export"):
         action = sub.add_parser(command)
         action.add_argument("--config", required=True)
         action.add_argument("--sha256", required=True)
@@ -53,6 +53,10 @@ def main(argv=None):
         loader(args.config, args.sha256).check(profile=True)
         result = {"configuration_valid": True, "platform_ready": False, "resources_created": False}
         status = 0
+    elif args.command == 'export':
+        from .native_export import capture
+        result=asyncio.run(capture(args.config,args.sha256))
+        status=0 if result['status']=='NATIVE_EXPORT_CAPTURED_PENDING_MAPPING' and result['release']['context_runtime_release_confirmed'] else 2
     elif args.command == "capture":
         from .capture import capture
         result = asyncio.run(capture(args.config, args.sha256))

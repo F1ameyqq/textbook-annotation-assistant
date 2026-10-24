@@ -6,6 +6,7 @@ entry after local preparation. This module is not exercised by offline checks.
 from __future__ import annotations
 
 from datetime import datetime, timezone
+import copy
 import importlib.util
 import json
 from pathlib import Path
@@ -41,16 +42,23 @@ class UsenseTransport:
         self.out.mkdir(parents=True)
         self.sequence = 0
         self.processes = []
-        self.intent = "customer-start:" + book + ":" + self.out.name
+        self.intent = settings.get('authorization_reference') or "customer-start:" + book + ":" + self.out.name
 
-    def _config(self, orders=(), pages=(), *, login=False):
+    def _remaining(self):
+        expiry=self.settings.get('expires_at')
+        if expiry is None: return 900
+        remaining=int((datetime.fromisoformat(expiry)-datetime.now(timezone.utc)).total_seconds())
+        native_plan.require(remaining>0,'本次授权窗口已结束，停止后继。')
+        return min(900,remaining)
+
+    def _config(self, orders=(), pages=(), *, login=False, native_export=False):
         self.sequence += 1
         path = self.out / f"config-{self.sequence}.json"
         configure(profile=self.profile, output_root=self.out, config_path=path,
                   coordinator="customer-desktop", executor="native-child", reviewer="independent-readback-process",
                   authorization_reference=self.intent, book_id=self.book, orders=orders, pages=pages,
-                  source=not login, login=login, tls_approval_reference=self.settings.get("tls_reference"),
-                  proxy_server=self.settings.get("proxy_server"), seconds=900)
+                  source=not login and not native_export, login=login, native_export=native_export, tls_approval_reference=self.settings.get("tls_reference"),
+                  proxy_server=self.settings.get("proxy_server"), seconds=self._remaining())
         return path, byte_hash(path.read_bytes())
 
     def _child(self, args, label):
@@ -81,6 +89,16 @@ class UsenseTransport:
     def login(self):
         path, sha = self._config(login=True)
         return self._child(["login", "--config", path, "--sha256", sha], "login")
+
+    def export_native(self):
+        config, sha = self._config(native_export=True)
+        result = self._child(['export','--config',config,'--sha256',sha],'export')
+        native_plan.require(result.get('status')=='NATIVE_EXPORT_CAPTURED_PENDING_MAPPING'
+            and result.get('save_attempts')==0 and result.get('release',{}).get('context_runtime_release_confirmed') is True,
+            '平台原生导出或释放未证。')
+        path=self.out/result['run_id']/'paper-questions.jsonl'
+        native_plan.require(byte_hash(path.read_bytes())==result['platform_export']['sha256'],'原生导出字节已改变。')
+        return {'path':str(path),'sha256':byte_hash(path.read_bytes()),'capture':result,'processes':copy.deepcopy(self.processes)}
 
     def _capture(self, orders=(), pages=()):
         path, sha = self._config(orders, pages)
@@ -149,6 +167,13 @@ class UsenseTransport:
         return wire.snapshot(flat, self.book, pages), flat
 
     def _source_image(self, url, source):
+        official=self.store.operation('official-original',digest([self.book,url]))
+        if official:
+            if official['state']!='COMPLETE':raise Hold('当前原图已有未知下载；不能重取。')
+            saved=self.store.get(official['output'])
+            raw=Path(saved['raw_path']).read_bytes()
+            native_plan.require(saved['raw_sha256']==source['raw_sha256']==byte_hash(raw),'已取得原图与当前来源绑定不一致。')
+            return raw
         key = digest([url, source["raw_sha256"]])
         old = self.store.operation("source-download", key)
         if old:
@@ -162,7 +187,7 @@ class UsenseTransport:
         self.store.begin("source-download", key)
         try:
             opener = urllib.request.build_opener(urllib.request.ProxyHandler({}), NoRedirect())
-            with opener.open(url, timeout=30) as response:
+            with opener.open(url, timeout=min(30,self._remaining())) as response:
                 native_plan.require(response.status == 200, "原图下载未成功。")
                 raw = response.read(64 * 1024 * 1024 + 1)
             native_plan.require(len(raw) <= 64 * 1024 * 1024 and byte_hash(raw) == source["raw_sha256"], "本地原图与当前书页字节不一致。")
@@ -171,6 +196,45 @@ class UsenseTransport:
             return raw
         except BaseException as exc:
             self.store.finish("source-download", key, "FAILED_NO_RETRY", {"type": type(exc).__name__, "message": str(exc)})
+            raise
+
+    def download_original(self, url, *, allow_crop=False):
+        """Acquire the current official image without a customer-supplied hash."""
+        key = digest([self.book, url])
+        old = self.store.operation('official-original', key)
+        if old:
+            if old['state'] != 'COMPLETE': raise Hold('原图已有失败或未知下载，不能自动重试。')
+            saved = self.store.get(old['output'])
+            native_plan.require(byte_hash(Path(saved['raw_path']).read_bytes()) == saved['raw_sha256'], '原图缓存改变。')
+            return saved
+        parsed = urlsplit(url)
+        import re
+        query_allowed = not parsed.query or allow_crop and re.fullmatch(r'x-oss-process=image/crop,x_\d+,y_\d+,w_\d+,h_\d+',parsed.query)
+        native_plan.require(parsed.scheme == 'https' and query_allowed and not parsed.fragment and not parsed.username
+            and parsed.netloc.endswith('.aliyuncs.com') and '/' + self.book + '/' in parsed.path, '本书官方原图 URL 无效。')
+        self.store.begin('official-original', key)
+        try:
+            opener = urllib.request.build_opener(urllib.request.ProxyHandler({}), NoRedirect())
+            with opener.open(url, timeout=min(30,self._remaining())) as response:
+                status = response.status; raw = response.read(64 * 1024 * 1024 + 1)
+            capture = self.out / ('source-' + key + '.raw')
+            with capture.open('xb') as stream: stream.write(raw)
+            native_plan.require(status == 200 and len(raw) <= 64 * 1024 * 1024, '原图下载未成功。')
+            from PIL import Image
+            import io
+            with Image.open(io.BytesIO(raw)) as image:
+                native_plan.require(image.width * image.height <= 40_000_000 and getattr(image, 'n_frames', 1) == 1, '原图格式或像素范围不支持。')
+                image.load(); width, height = image.size
+                suffix = { 'JPEG': '.jpg', 'PNG': '.png', 'WEBP': '.webp', 'TIFF': '.tif', 'BMP': '.bmp' }.get(image.format)
+                native_plan.require(suffix is not None, '原图格式不支持。')
+            from .source import _copy_bytes
+            value = {'raw_path': _copy_bytes(self.store, raw, suffix), 'raw_sha256': byte_hash(raw),
+                'width': width, 'height': height, 'image_url': url, 'book_id': self.book, 'http_status': status,
+                'raw_capture': str(capture), 'observed_at': datetime.now(timezone.utc).isoformat()}
+            self.store.finish('official-original', key, 'COMPLETE', value)
+            return value
+        except BaseException as exc:
+            self.store.finish('official-original', key, 'FAILED_NO_RETRY', {'type': type(exc).__name__, 'message': str(exc)})
             raise
 
     def write_once(self, product, flat, job):

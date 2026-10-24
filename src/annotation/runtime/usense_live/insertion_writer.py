@@ -43,7 +43,7 @@ PREPARE = r"""async payload => {
 PREPARE_LESSON = PREPARE.replace('payload.annotations_upsert.length!==7',
     '![3,4].includes(payload.annotations_upsert.length)')
 PREPARE_CUSTOMER = PREPARE.replace('payload.annotations_upsert.length!==7',
-    '(payload.annotations_upsert.length<2||payload.annotations_upsert.length>128)')
+    '(payload.is_new_question_insertion ? (payload.annotations_upsert.length<2||payload.annotations_upsert.length>128) : payload.annotations_upsert.length!==0)')
 
 
 def is_customer(plan):
@@ -146,7 +146,7 @@ def validate_inputs(plan, baseline, ledger_root, authorization_reference):
     require(all(same(native[name], plan['before_full'][name]) for name in paths), 'BASELINE_PLAN_CHANGED')
     require(api.check_prewrite(plan, native)['ok'], 'BASELINE_COMPARATOR_REJECTED')
     payload = plan['payload_candidate']
-    allowed_rows = range(2, 129) if is_customer(plan) else (3, 4) if is_lesson(plan) else (7,)
+    allowed_rows = ((0,) if plan['product']['schema']=='CustomerNativeExistingFillPlan/v1' else range(2,129)) if is_customer(plan) else (3, 4) if is_lesson(plan) else (7,)
     require(payload['created_by'] is None and len(payload['annotations_upsert']) in allowed_rows and
             all(row['user_id'] is None for row in payload['annotations_upsert']), 'UNBOUND_SEVEN_ROW_ACTOR_REQUIRED')
     require(payload['annotations_delete_rect_ids'] == [] and payload['ocr_delete_zones'] == [], 'COPY_FIRST_NO_DELETIONS')
@@ -171,10 +171,12 @@ async def record_and_send(*, page, policy, plan, claim, run, result):
     verify_evidence(plan)
     policy.body_sha = prepared['sha256']
     sent_at = datetime.now(timezone.utc).isoformat()
-    write_new(claim, {'operation': plan.get('operation', 'Q7_COPY_FIRST_VARIANT_INSERT'), 'run_id': run.name,
+    intent = {'operation': plan.get('operation', 'Q7_COPY_FIRST_VARIANT_INSERT'), 'run_id': run.name,
         'ledger_key': plan['ledger_key'], 'plan_sha256': plan['plan_sha256'],
         'native_body_sha256': policy.body_sha, 'intent_at': sent_at, 'automatic_retry_allowed': False,
-        'state': 'INTENT_REQUIRES_INDEPENDENT_ALL23_READBACK'})
+        'state': 'INTENT_REQUIRES_INDEPENDENT_ALL23_READBACK'}
+    if is_customer(plan):intent['book_id']=plan['book_id']
+    write_new(claim, intent)
     result.update(status='SEND_INTENT_RECORDED', post_attempts=1, send_intent_at=sent_at,
                   native_body_sha256=policy.body_sha, actor_binding='username and seven user IDs bound only inside page',
                   runtime_actor_hashes={key: prepared[key] for key in ('runtime_actor_sha256', 'runtime_user_id_sha256')})

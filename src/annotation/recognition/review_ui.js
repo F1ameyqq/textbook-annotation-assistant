@@ -155,6 +155,7 @@
     $("customer-status").textContent = next.customer ? next.customer.job_status + " · " + next.customer.message : "";
     $("customer-source-checked").checked = false;
     $("customer-content-checked").checked = false;
+    $("customer-structure-checked").checked = false;
     if (typeof next.csrf_token === "string") csrfToken = next.csrf_token;
     currentAnswerId = next.answers.some((answer) => answer.answer_id === preferredAnswer) ? preferredAnswer : next.answers[0]?.answer_id ?? null;
     $("book-label").textContent = "书籍 " + next.book_id + " · " + next.scope_id;
@@ -191,11 +192,21 @@
     setBusy(true);
     try {
       const value = await request("/api/confirm", {expected_head: state.head, answer_id: currentAnswerId,
-        source_checked: $("customer-source-checked").checked, content_checked: $("customer-content-checked").checked});
+        source_checked: $("customer-source-checked").checked, content_checked: $("customer-content-checked").checked,
+        structure_checked: $("customer-structure-checked").checked,author:getAuthor()});
       applyState(value.state);
       feedback("已记录本题客户核对。平台保存与独立读回仍分别记录。");
     } catch (error) { showError(error, "内容尚不能确认"); }
     finally { setBusy(false); }
+  });
+  $("customer-formula-batch-button").addEventListener("click",async()=>{
+    if(busy||!state?.customer)return;
+    if(dirtyDrafts().length){feedback("请先保存当前文字编辑，再准备本课公式候选。",true);return;}
+    setBusy(true);feedback("正在准备本课明确区域的公式候选；中文混排区域会保留给原图审校…");
+    try{const value=await request("/api/formula-batch",{expected_head:state.head,author:getAuthor()});applyState(value.state);
+      const report=state.customer.formula_batch_result;feedback(report?.status==="NO_CLEAR_REGIONS"?"没有待准备的明确数学行，请对照原图审校混排区域。":"本课公式候选已保留，请逐项检查后放入草稿；内容尚未确认。");}
+    catch(error){showError(error,"本次公式准备已停止，已有结果及失败记录保留，后继未运行");}
+    finally{setBusy(false);}
   });
   async function saveCurrent(afterSave) {
     if (busy) return false;
@@ -270,12 +281,57 @@
     $("answer-title").textContent = "第 " + answer.printed_number + " 题 · 答案候选";
     $("answer-section").textContent = pathText(answer.section_path);
     $("answer-identity").textContent = answer.answer_id;
-    renderRegionDraftRisks(answer); renderQuestions(answer); renderSources(answer); renderActive(answer);
+    renderRegionDraftRisks(answer); renderQuestions(answer); renderSources(answer); renderActive(answer); renderUnassigned(answer); renderRegionBinding(answer);
     $("block-editors").replaceChildren();
     $("no-editable-blocks").hidden = (answer.blocks || []).length !== 0;
     $("region-candidate-help").hidden = !(answer.blocks || []).some((block) => block.kind === "REGION" && block.region_candidates?.length);
     for (const [index, block] of (answer.blocks || []).entries()) $("block-editors").append(renderBlock(block, index));
     renderIssues(); updateAnswerArrows(); updateDirtyState();
+  }
+  function renderUnassigned(answer) {
+    const parent = $("customer-unassigned"); parent.replaceChildren();
+    const lines = (state.customer?.unassigned_sources || []).filter(line => JSON.stringify(line.location?.section_path) === JSON.stringify(answer.section_path));
+    parent.hidden = !lines.length;
+    if (!lines.length) return;
+    parent.append(node("h4", "", "未归属答案来源"), node("p", "muted small", "对照整页核对题号、公式和完整内容。可按连续段落整组关联，也可保留逐行选择；分组不会推断题号或核准答案。"));
+    const checks = [];
+    async function assignSources(lineIds, groupId = null) {
+      if (busy || dirtyDrafts().length) { feedback("请先保存当前编辑。", true); return; }
+      setBusy(true);
+      try {
+        const payload = {expected_head:state.head, answer_id:currentAnswerId,
+          line_ids:lineIds, source_checked:$("customer-source-checked").checked};
+        if (groupId !== null) payload.group_id = groupId;
+        const value = await request("/api/assign", payload);
+        applyState(value.state); feedback("已按原始来源建立配答；公式、内容及原图完整性仍须核对后确认。");
+      } catch (error) { showError(error, "来源尚不能关联"); }
+      finally { setBusy(false); }
+    }
+    const available = new Set(lines.map(line => line.line_id));
+    const groups = (state.customer?.unassigned_groups || []).filter(group =>
+      JSON.stringify(group.location?.section_path) === JSON.stringify(answer.section_path) &&
+      group.line_ids.every(id => available.has(id)));
+    for (const group of groups) {
+      const row = node("div", "customer-orphan-group");
+      row.append(node("h4", "", "连续段落 · " + group.line_ids.length + " 条原始来源"),
+        node("p", "muted small", "同页、同栏和同范围的连续来源；未识别的原图内容仍可能缺失，公式阅读顺序未经核对。"));
+      const view = node("button", "", "查看段落来源"); view.type = "button";
+      view.addEventListener("click", () => showSource(group.asset_id, group.bbox, "未归属段落 · 请结合整页核对"));
+      const assignGroup = node("button", "", "整段关联为本题答案并重检"); assignGroup.type = "button";
+      assignGroup.addEventListener("click", () => assignSources([...group.line_ids], group.group_id));
+      const controls = node("div", "button-row"); controls.append(view, assignGroup); row.append(controls); parent.append(row);
+    }
+    for (const line of lines) {
+      const row = node("div", "button-row"), label = node("label", "check-label");
+      const input = node("input"); input.type = "checkbox"; checks.push({input, line});
+      label.append(input, document.createTextNode(line.text));
+      const view = node("button", "", "查看来源"); view.type = "button";
+      view.addEventListener("click", () => showSource(line.asset_id, line.bbox, "未归属答案原文"));
+      row.append(label, view); parent.append(row);
+    }
+    const assign = node("button", "", "关联所选来源为本题答案并重检"); assign.type = "button";
+    assign.addEventListener("click", () => assignSources(checks.filter(row => row.input.checked).map(row => row.line.line_id)));
+    parent.append(assign);
   }
   function renderQuestions(answer) {
     const parent = $("question-candidates"); parent.replaceChildren();
@@ -381,15 +437,160 @@
     card.append(open, content); return card;
   }
   function renderSources(answer) {
-    const assetIds = [...new Set([...(answer.blocks || []).map((block) => block.asset_id), ...(answer.figures || []).map((figure) => figure.asset_id)])];
-    $("source-overview").replaceChildren();
-    for (const id of assetIds) $("source-overview").append(sourceCard(id, null, "来源页"));
-    for (const [index, figure] of (answer.figures || []).entries()) $("source-overview").append(sourceCard(figure.asset_id, figure.bbox, "图形 " + (index + 1) + " · " + roleLabel(figure.role)));
-    $("source-overview-count").textContent = assetIds.length + " 来源页 · " + (answer.figures || []).length + " 图形";
-    if (!assetIds.length) $("source-overview").append(node("p", "muted small", "该答案没有可显示的来源范围。"));
+    const assetIds = [...new Set([...(answer.blocks || []).map(block => block.asset_id), ...(answer.figures || []).map(figure => figure.asset_id)])];
+    const host = $("source-overview"); host.replaceChildren();
+    const projection = answer.source_projection;
+    if (projection?.status === "SOURCE_MAPPING_UNAVAILABLE") {
+      host.append(node("p", "source-error", "来源分段映射暂不可用；原编辑内容与来源页保留，不能把未知对应关系当作已核准。"));
+    }
+    for (const zone of projection?.zones || []) {
+      host.append(node("h4", "", roleLabel(zone.zone) + " · 按原始组题顺序的来源"));
+      if (zone.edit_mapping !== "EXACT_SOURCE_TEXT" || zone.issues?.length) {
+        host.append(node("p", "muted small", "当前完整分区文字没有逐段编辑映射；下方仅显示原始来源，编辑区保持整区编辑，不猜测文字属于哪一个框。"));
+      }
+      for (const segment of zone.segments || []) {
+        const card = sourceCard(segment.asset_id, segment.preview_bbox,
+          roleLabel(zone.zone) + " · 来源段 " + (segment.order + 1));
+        card.append(node("pre", "", segment.source_text || "此段没有可核准文字"));
+        if (segment.formula_hints?.length) {
+          const hints = node("details"); hints.append(node("summary", "", "已有公式结构观察 · 未核准"),
+            node("p", "muted small", "这些是已有分子、分母或行内来源观察，不是可直接应用的公式候选。"),
+            node("pre", "", JSON.stringify(segment.formula_hints, null, 2))); card.append(hints);
+        }
+        host.append(card);
+      }
+      if (!zone.segments?.length) host.append(node("p", "muted small", "此分区尚无可可靠对应的来源段；保留完整编辑区和来源页。"));
+    }
+    for (const id of assetIds) host.append(sourceCard(id, null, "来源整页"));
+    const images = (answer.figures || []).filter(figure => figure.content_type === "image");
+    for (const [index, figure] of images.entries()) host.append(sourceCard(figure.asset_id, figure.bbox, "已绑定题图 " + (index + 1) + " · " + roleLabel(figure.role)));
+    $("source-overview-count").textContent = assetIds.length + " 来源页 · " + images.length + " 已绑定题图";
+    if (!assetIds.length && !projection?.zones?.length) host.append(node("p", "muted small", "该答案没有可显示的来源范围。"));
+  }
+
+  function renderRegionBinding(answer) {
+    $("customer-region").hidden = !state.customer?.region_binding;
+    const host=$("customer-region-editor");host.replaceChildren();
+    if (!state.customer?.region_binding) return;
+    const assetSelect=node("select"),zoneSelect=node("select"),canvas=node("canvas"),note=node("p","muted");
+    const proposals=answer.figure_discovery?.proposals||[];
+    const ids=[...new Set([...(answer.figures||[]).map(f=>f.asset_id),...proposals.map(p=>p.asset_id)])];
+    for(const id of ids){const o=node("option","",id);o.value=id;assetSelect.append(o);}
+    for(const block of answer.blocks||[]){const o=node("option","",roleLabel(block.role));o.value=block.role;zoneSelect.append(o);}
+    canvas.style.cssText="max-width:100%;height:auto;touch-action:none;cursor:crosshair;border:1px solid #9ab";
+    const bindingAnswerId=currentAnswerId,bindingHead=state.head;
+    let picture=null,start=null,box=null,generation=0,loaded=null,boxBinding=null,replacement=null,textReplacement=null;
+    const textBounds=node("div","text-source-bounds"),edgeInputs=[];
+    const readEdges=()=>{
+      if(!picture)return null;const values=edgeInputs.map(input=>Number(input.value));
+      if(edgeInputs.some(input=>input.value.trim()==="")||values.some(value=>!Number.isInteger(value))
+        ||values[0]<0||values[1]<0||values[2]>picture.naturalWidth||values[3]>picture.naturalHeight
+        ||values[0]>=values[2]||values[1]>=values[3])return null;
+      return values;
+    };
+    textBounds.append(node("p","muted","精确调整文字边界（原图像素，可用键盘上下键微调 1 像素）"));
+    for(const [index,name] of ["左边界","上边界","右边界","下边界"].entries()){
+      const field=node("input"),fieldLabel=node("label","check-label");field.type="number";field.step="1";field.min="0";
+      fieldLabel.append(document.createTextNode("文字来源"+name),field);textBounds.append(fieldLabel);edgeInputs.push(field);
+      field.addEventListener("input",()=>{
+        if(!textReplacement)return;checked.checked=false;if(!ready())return;const values=readEdges();
+        if(!values){box=null;boxBinding=null;paint();refreshConflicts();note.textContent="边界无效，请填写原页内有宽度和高度的整数范围，再核对完整性。";return;}
+        const sx=canvas.width/picture.naturalWidth,sy=canvas.height/picture.naturalHeight;
+        box=[values[0]*sx,values[1]*sy,values[2]*sx,values[3]*sy];boxBinding={...loaded,sourceBBox:values};
+        paint();refreshConflicts();note.textContent="边界已按原图像素更新，请核对全部文字后再保存。";
+      });
+    }
+    const showEdges=()=>{const values=chosenBox();if(values)edgeInputs.forEach((input,index)=>{input.value=String(values[index]);});};
+    const conflictsHost=node("div","source-overlap-review");let transferChoices=[];
+    const chosenBox=()=>{if(!picture||!box)return null;const sx=picture.naturalWidth/canvas.width,sy=picture.naturalHeight/canvas.height;
+      return boxBinding?.sourceBBox?[...boxBinding.sourceBBox]:[Math.floor(box[0]*sx),Math.floor(box[1]*sy),Math.ceil(box[2]*sx),Math.ceil(box[3]*sy)];};
+    const refreshConflicts=()=>{
+      conflictsHost.replaceChildren();transferChoices=[];const selected=chosenBox();if(!selected||!loaded)return;
+      const hits=(state.customer?.source_occupancy||[]).filter(item=>item.owner_key!==bindingAnswerId&&item.asset_id===loaded.assetId
+        &&Math.max(item.bbox[0],selected[0])<Math.min(item.bbox[2],selected[2])&&Math.max(item.bbox[1],selected[1])<Math.min(item.bbox[3],selected[3]));
+      if(hits.length)conflictsHost.append(node("p","source-proof-note","所选图内有其他题已认领的来源。只有确为本图文字、被原题误归时才逐项勾选；题号、已保存题或无法映射的范围不能移交。移交不改正文，原题必须回去核对并保存完整文字，再重新确认双方。"));
+      for(const item of hits){const row=node("div","source-overlap-row"),within=selected[0]<=item.bbox[0]&&selected[1]<=item.bbox[1]&&selected[2]>=item.bbox[2]&&selected[3]>=item.bbox[3];
+        const fragmentWithin=!item.fragment_bbox||(selected[0]<=item.fragment_bbox[0]&&selected[1]<=item.fragment_bbox[1]&&selected[2]>=item.fragment_bbox[2]&&selected[3]>=item.fragment_bbox[3]);
+        if(!textReplacement&&item.can_transfer&&within&&fragmentWithin){const input=node("input");input.type="checkbox";const choice={input,item};transferChoices.push(choice);
+          const label=node("label","check-label");label.append(input,document.createTextNode("这是本图文字，原第"+item.printed_number+"题误归："+(item.text||"")));row.append(label);
+        }else row.append(node("p","source-error","第"+item.printed_number+"题的受保护来源与图相交，请调整范围或保留异常。"));
+        row.append(button("查看这段原始来源",()=>showSource(item.asset_id,item.bbox,"原第"+item.printed_number+"题来源 · 只读"),"link-button small-button"));conflictsHost.append(row);
+      }
+    };
+    const current=()=>host.contains(canvas)&&currentAnswerId===bindingAnswerId&&state.head===bindingHead;
+    const ready=()=>current()&&picture&&loaded&&loaded.generation===generation&&loaded.assetId===assetSelect.value;
+    const paint=()=>{const ctx=canvas.getContext("2d");if(!picture)return;ctx.drawImage(picture,0,0,canvas.width,canvas.height);if(box){ctx.strokeStyle="#d23d25";ctx.lineWidth=2;ctx.strokeRect(box[0],box[1],box[2]-box[0],box[3]-box[1]);}};
+    const point=e=>{const r=canvas.getBoundingClientRect();return [Math.max(0,Math.min(canvas.width,(e.clientX-r.left)*canvas.width/r.width)),Math.max(0,Math.min(canvas.height,(e.clientY-r.top)*canvas.height/r.height))];};
+    const load=(preset=null)=>{
+      const requestGeneration=++generation,assetId=assetSelect.value;
+      replacement=preset?.replace_region_id||null;textReplacement=preset?.replace_text_region_id||null;
+      textBounds.hidden=!textReplacement;
+      zoneSelect.disabled=Boolean(replacement||textReplacement);assetSelect.disabled=Boolean(textReplacement);
+      save.textContent=textReplacement?"保存文字来源范围":"绑定所选题图";
+      labelText.textContent=textReplacement?"调整后仍完整包含本段文字，未包含其他题目":"所选区域是本题原图，范围完整";
+      box=null;start=null;picture=null;loaded=null;boxBinding=null;checked.checked=false;save.disabled=true;conflictsHost.replaceChildren();transferChoices=[];
+      canvas.getContext("2d").clearRect(0,0,canvas.width,canvas.height);note.textContent="正在读取来源原页…";
+      const observed=state.assets.find(asset=>asset.asset_id===assetId);
+      if(preset&&(!observed||preset.asset_id!==assetId||preset.source_sha256!==observed.sha256)){note.textContent="题图候选来源已变化，请刷新后重新核对。";return;}
+      const image=new Image();
+      const isCurrent=()=>current()&&requestGeneration===generation&&assetSelect.value===assetId;
+      image.onload=()=>{
+        if(!isCurrent())return;
+        if(!image.naturalWidth||!image.naturalHeight){note.textContent="来源图片尺寸无效。";return;}
+        if(preset&&(image.naturalWidth!==preset.source_dimensions[0]||image.naturalHeight!==preset.source_dimensions[1])){note.textContent="题图候选与原页尺寸不同，停止关联。";return;}
+        picture=image;loaded={assetId,generation:requestGeneration};canvas.width=Math.min(680,image.naturalWidth);
+        canvas.height=Math.round(image.naturalHeight*canvas.width/image.naturalWidth);
+        if(preset){const sx=canvas.width/image.naturalWidth,sy=canvas.height/image.naturalHeight;
+          box=[preset.bbox[0]*sx,preset.bbox[1]*sy,preset.bbox[2]*sx,preset.bbox[3]*sy];
+          boxBinding={...loaded,proposalId:preset.proposal_id,sourceBBox:[...preset.bbox],needsAdjustment:!preset.can_confirm_extent_without_adjustment};
+          note.textContent=textReplacement?"仅可在最初文字框内调整边界；拖得过窄时可以回调。请保留全部文字，正文和原识别记录保持不变。":boxBinding.needsAdjustment?"程序发现了低置信范围，请在原页调整后核对；不能直接确认完整图。":"程序已提出范围，请对照整页核对完整性，再勾选确认。";
+        }else note.textContent="程序尚未提出可用范围时，可在原页框选题图。";
+        paint();refreshConflicts();showEdges();save.disabled=false;
+      };
+      image.onerror=()=>{if(isCurrent())note.textContent="无法读取来源原页。";};image.src=sourceUrl(assetId,null);
+    };
+    assetSelect.addEventListener("change",()=>load());
+    zoneSelect.addEventListener("change",()=>{checked.checked=false;refreshConflicts();});
+    canvas.addEventListener("pointerdown",e=>{if(!ready())return;start=point(e);box=null;boxBinding={...loaded};checked.checked=false;conflictsHost.replaceChildren();transferChoices=[];canvas.setPointerCapture(e.pointerId);});
+    canvas.addEventListener("pointermove",e=>{if(!start||!ready()||boxBinding?.generation!==generation)return;const p=point(e);box=[Math.min(start[0],p[0]),Math.min(start[1],p[1]),Math.max(start[0],p[0]),Math.max(start[1],p[1])];paint();});
+    canvas.addEventListener("pointerup",()=>{start=null;refreshConflicts();showEdges();note.textContent=textReplacement?"请核对新范围完整包含本段文字，且仍在原框内；保存后需重新确认本题。":box?"已框选，请核对是否完整包含题图且没有其他题目。":"请拖动框选题图。";});
+    const checked=node("input");checked.type="checkbox";const label=node("label","check-label"),labelText=document.createTextNode("所选区域是本题原图，范围完整");label.append(checked,labelText);
+    const save=button("绑定所选题图",async()=>{
+      if(busy||dirtyDrafts().length||!ready()||!box||!checked.checked||boxBinding?.generation!==loaded.generation||boxBinding?.assetId!==loaded.assetId){feedback("请先保存文字编辑，再框选并核对题图。",true);return;}
+      const selected=chosenBox(),bbox=textReplacement?readEdges():selected;
+      if(textReplacement&&(!bbox||bbox.some((value,index)=>value!==selected[index]))){checked.checked=false;feedback("当前文字边界无效或已改变，请重新调整并核对完整性。",true);return;}
+      if(boxBinding.needsAdjustment){feedback("此候选范围仍需在原页调整，不能直接视为完整题图。",true);return;}
+      const sourceTransfers=transferChoices.filter(choice=>choice.input.checked).map(({item})=>({owner_key:item.owner_key,frame_index:item.frame_index,fragment_id:item.fragment_id}));
+      setBusy(true);try{const payload={expected_head:bindingHead,answer_id:bindingAnswerId,asset_id:loaded.assetId,zone:zoneSelect.value,bbox,source_checked:true};if(textReplacement){payload.replace_text_region_id=textReplacement;payload.text_complete_checked=true;}else{if(replacement)payload.replace_region_id=replacement;if(sourceTransfers.length)payload.source_transfers=sourceTransfers;if(boxBinding.proposalId)payload.proposal_id=boxBinding.proposalId;}const value=await request("/api/bind-region",payload);applyState(value.state);feedback(textReplacement?"文字来源边界已收窄，原框和识别记录已保留。请重新核对并确认本题。":sourceTransfers.length?"题图及已核对的误归来源已绑定。请回原题核对并保存完整文字，再重新确认双方。":replacement?"题图范围已调整，原范围仍保留在记录中。请核对新图后重新确认本题。":"题图已绑定原始像素范围，请再确认本题内容。");}catch(error){showError(error,textReplacement?"文字来源范围未保存":"题图未绑定");}finally{setBusy(false);}
+    });
+    const proposed=node("div","customer-figure-proposals");
+    if(answer.platform_status==="NOT_RUN")for(const [index,figure] of (answer.figures||[]).filter(f=>f.content_type==="image").entries()){
+      const row=node("div","button-row");row.append(node("span","","已绑定题图 "+(index+1)));
+      row.append(button("调整这张题图的范围",()=>{if(busy||dirtyDrafts().length){feedback("请先保存当前文字编辑。",true);return;}
+        const asset=state.assets.find(a=>a.asset_id===figure.asset_id);if(!asset){feedback("来源页已变化，请刷新。",true);return;}
+        assetSelect.value=figure.asset_id;zoneSelect.value=figure.role;load({...figure,zone:figure.role,source_sha256:asset.sha256,
+          source_dimensions:[asset.width,asset.height],replace_region_id:figure.region_id,can_confirm_extent_without_adjustment:false});}));proposed.append(row);
+    }
+    if(answer.platform_status==="NOT_RUN")for(const [index,figure] of (answer.figures||[]).filter(f=>f.content_type==="text").entries()){
+      const row=node("div","button-row");row.append(node("span","","文字来源 "+(index+1)+" · "+roleLabel(figure.role)));
+      row.append(button("调整这段文字的来源范围",()=>{if(busy||dirtyDrafts().length){feedback("请先保存当前文字编辑。",true);return;}
+        const asset=state.assets.find(a=>a.asset_id===figure.asset_id);if(!asset){feedback("来源页已变化，请刷新。",true);return;}
+        assetSelect.value=figure.asset_id;zoneSelect.value=figure.role;load({...figure,zone:figure.role,source_sha256:asset.sha256,
+          source_dimensions:[asset.width,asset.height],replace_text_region_id:figure.region_id,can_confirm_extent_without_adjustment:false});}));proposed.append(row);
+    }
+    if(answer.source_reassignment_pending_zones?.length)proposed.append(node("p","source-error","本题有误归的图内文字来源已移交。请核对并保存完整的"+answer.source_reassignment_pending_zones.map(roleLabel).join("、")+"，再重新确认本题；来源移交没有自动修改正文。"));
+    if(answer.figure_requirements?.length)proposed.append(node("p","source-error","本题明确引用题图，必须先完成来源题图绑定；内容确认不能代替这一步。"));
+    for(const proposal of proposals){
+      const row=node("div","button-row");row.append(node("span","",proposal.confidence==="LOW"?"题图线索 · 范围待调整":"程序提出的题图范围 · 待确认"));
+      row.append(button("查看并使用这个范围",()=>{if(busy||dirtyDrafts().length){feedback("请先保存当前文字编辑。",true);return;}assetSelect.value=proposal.asset_id;zoneSelect.value=proposal.zone;load(proposal);}));proposed.append(row);
+    }
+    if(answer.figure_discovery?.issues?.length&&!proposals.length)proposed.append(node("p","muted small","题图范围仍无法可靠自动确定；来源映射、题号或分栏边界的未知状态继续保留，请在原页核对。"));
+    host.append(proposed,assetSelect,zoneSelect,canvas,note,textBounds,conflictsHost,label,save);if(ids.length)load();
   }
 
   function renderBlock(block, index) {
+    const sourceZone=currentAnswer()?.source_projection?.zones?.find(zone=>zone.zone===block.role);
+    const multipleSources=(sourceZone?.segments?.length||0)>1;
     const initialRuns = rawRuns(block.runs);
     const formats = new Set(initialRuns.map((run) => run.format));
     const initialFormat = formats.size === 1 ? initialRuns[0].format : "";
@@ -404,7 +605,7 @@
     draft.resetButton = button("撤销此处编辑", () => resetBlock(draft), "small-button"); draft.resetButton.hidden = true;
     heading.append(title, draft.resetButton); card.append(heading);
     const compare = node("div", "block-compare"); const source = node("div", "source-column"); const editor = node("div", "draft-column");
-    const sourceHeading = node("div", "column-heading"); sourceHeading.append(node("h4", "", "原始来源文字 · 只读"), button("查看图像", () => showSource(block.asset_id, block.bbox, roleLabel(block.role) + " · 来源区域"), "link-button small-button")); source.append(sourceHeading);
+    const sourceHeading = node("div", "column-heading"); sourceHeading.append(node("h4", "", "原始来源文字 · 只读"), button(multipleSources?"查看上方全部来源段":"查看图像", () => multipleSources?$("source-overview").scrollIntoView({block:"start"}):showSource(block.asset_id, block.bbox, roleLabel(block.role) + " · 来源区域"), "link-button small-button")); source.append(sourceHeading);
     const original = node("textarea", "source-text"); original.readOnly = true; original.spellcheck = false;
     original.value = block.source_text || ""; original.rows = Math.min(8, Math.max(3, (block.source_text || "").split("\n").length + 1));
     original.setAttribute("aria-label", roleLabel(block.role) + "原始来源文字，第 " + (index + 1) + " 块");
@@ -433,15 +634,79 @@
       spanControl.append(span, all); source.append(spanControl); updateSpanLabel(draft);
       source.append(node("p", "source-proof-note", "候选替换只使用此原文选区；区间按 Unicode 码点计算，与右侧当前草稿的位置不同。"));
     } else source.append(node("p", "source-proof-note", "来源几何与原片段不可在此修改。空原 OCR 不等于没有像素来源；区域转写仍是未核准草稿。"));
+    if(multipleSources)source.append(node("p","muted small","此完整分区有多段来源，按上方原始顺序核对；当前整区编辑不会被分配到单个来源框。"));
     const crop = node("img", "source-crop"); crop.loading = "lazy"; crop.alt = "第 " + (index + 1) + " 块的原图来源区域";
     crop.tabIndex = 0; crop.setAttribute("role", "button"); crop.addEventListener("click", () => showSource(block.asset_id, block.bbox, "第 " + (index + 1) + " 块来源"));
     crop.addEventListener("keydown", (event) => { if (event.key === "Enter" || event.key === " ") { event.preventDefault(); crop.click(); } });
-    const cropError = node("p", "source-error"); cropError.hidden = true; source.append(crop, cropError); loadSourceImage(crop, block.asset_id, block.bbox, cropError);
+    const cropError = node("p", "source-error"); cropError.hidden = true; if(!multipleSources){source.append(crop, cropError); loadSourceImage(crop, block.asset_id, block.bbox, cropError);}
     draft.editor = editor;
     compare.append(source, editor); card.append(compare);
     renderDraftEditor(draft);
     if (block.kind === "FRAGMENT" && block.candidates?.length) card.append(renderCandidates(draft));
+    if (state.customer && block.kind === "FRAGMENT") card.append(renderCustomerFormulas(draft));
     return card;
+  }
+  function renderCustomerFormulas(draft) {
+    const answer=currentAnswer(),host=node("div","customer-formulas");
+    const proposals=(answer.formula_regions?.regions||[]).filter(item=>item.zone===draft.block.role);
+    const observations=answer.formula_observations||[];
+    if (!proposals.length) return host;
+    const details=node("details");details.append(node("summary","","原图中的公式候选（"+proposals.length+" 个区域）"),
+      node("p","muted small","逐个对照原图核对范围；中文混排可拖动选择公式。识别结果需检查后放入右侧当前草稿，再保存和确认。"));host.append(details);
+    for(const [index,proposal] of proposals.entries()) {
+      const row=node("details","formula-region");row.append(node("summary","","区域 "+(index+1)+(proposal.recognition_blocked?" · 已有识别记录，请查看原记录或人工核对":proposal.boundary_review_required?" · 与相邻题目或分区重叠，请调整边界":proposal.uncertainty==="MIXED_TEXT_COARSE_REGION"?" · 中文混排，核对公式范围":" · 核对来源")));
+      if(proposal.recognition_blocked) row.append(node("p","warning",proposal.manual_resolution_required?"此区域的失败记录永久保留，不再识别；请对照原图人工修正文字。修复后的程序只继续原批次尚未调用的区域。":"此区域已有原始识别候选，请使用已保留的记录，不再调用模型。"));
+      if(proposal.boundary_review_required) row.append(node("p","warning","此区域已退出自动批次。请在下方原图中拖动，选择不与相邻题目或分区重叠的公式范围，再勾选核对并识别。"));
+      const retained=observations.filter(item=>item.proposal_id===proposal.proposal_id);
+      const answerId=currentAnswerId,head=state.head,bounds=proposal.adjustment_bounds||proposal.bbox;
+      const canvas=node("canvas"),note=node("p","muted small"),checked=node("input"),label=node("label","check-label");
+      checked.type="checkbox";label.append(checked,document.createTextNode("已对照原图核对公式范围"));
+      canvas.style.cssText="max-width:100%;height:auto;touch-action:none;cursor:crosshair;border:1px solid #9ab";
+      canvas.setAttribute("aria-label","公式区域 "+(index+1)+" 的来源与可调整范围");
+      let picture=null,start=null,box=[...proposal.bbox],loaded=false;
+      const current=()=>host.isConnected&&currentAnswerId===answerId&&state.head===head;
+      const paint=()=>{if(!picture)return;const ctx=canvas.getContext("2d"),sx=canvas.width/(bounds[2]-bounds[0]),sy=canvas.height/(bounds[3]-bounds[1]);
+        ctx.drawImage(picture,0,0,canvas.width,canvas.height);ctx.strokeStyle="#c23824";ctx.lineWidth=2;
+        ctx.strokeRect((box[0]-bounds[0])*sx,(box[1]-bounds[1])*sy,(box[2]-box[0])*sx,(box[3]-box[1])*sy);};
+      const point=e=>{const r=canvas.getBoundingClientRect();return [Math.max(bounds[0],Math.min(bounds[2],bounds[0]+(e.clientX-r.left)/r.width*(bounds[2]-bounds[0]))),
+        Math.max(bounds[1],Math.min(bounds[3],bounds[1]+(e.clientY-r.top)/r.height*(bounds[3]-bounds[1])))];};
+      row.addEventListener("toggle",()=>{if(!row.open||loaded)return;loaded=true;const image=new Image();note.textContent="正在读取原图…";
+        image.onload=()=>{if(!current())return;if(image.naturalWidth!==bounds[2]-bounds[0]||image.naturalHeight!==bounds[3]-bounds[1]){note.textContent="来源区域尺寸已变化，请刷新。";return;}
+          picture=image;canvas.width=Math.min(800,Math.max(400,image.naturalWidth));canvas.height=Math.round(image.naturalHeight*canvas.width/image.naturalWidth);paint();note.textContent="红框是当前公式范围，可在图中拖动重新框选。";};
+        image.onerror=()=>{if(current())note.textContent="来源图片未能读取。";};image.src=sourceUrl(proposal.asset_id,bounds);});
+      canvas.addEventListener("pointerdown",e=>{if(!picture||busy||!current()||retained.length)return;start=point(e);checked.checked=false;canvas.setPointerCapture(e.pointerId);});
+      canvas.addEventListener("pointermove",e=>{if(!start||!current())return;const p=point(e);box=[Math.floor(Math.min(start[0],p[0])),Math.floor(Math.min(start[1],p[1])),Math.ceil(Math.max(start[0],p[0])),Math.ceil(Math.max(start[1],p[1]))];paint();});
+      canvas.addEventListener("pointerup",()=>{start=null;});
+      const recognize=button("识别当前公式区域",async()=>{
+        if(proposal.recognition_blocked){feedback("此范围已有识别记录，不换裁剪重跑；请使用原记录或人工修正。",true);return;}
+        if(busy||!current()||!picture||!checked.checked||box[0]>=box[2]||box[1]>=box[3]){feedback("请先在原图核对有效的公式范围。",true);return;}
+        if(dirtyDrafts().length){feedback("请先保存当前文字编辑，再识别下一处公式。",true);return;}
+        if(proposal.boundary_review_required && (box.every((value,i)=>value===proposal.bbox[i]) || (proposal.boundary_conflicts||[]).some(peer=>Math.max(box[0],peer.bbox[0])<Math.min(box[2],peer.bbox[2]) && Math.max(box[1],peer.bbox[1])<Math.min(box[3],peer.bbox[3])))) {
+          feedback("请先在原图中调整为不与相邻题目或分区重叠的公式范围。",true);return;
+        }
+        setBusy(true);feedback("正在本机识别此区域，结果会保留供核对…");
+        try{const value=await request("/api/formula",{expected_head:head,answer_id:answerId,proposal_id:proposal.proposal_id,
+          adjusted_bbox:box,source_checked:true,author:getAuthor()});applyState(value.state);feedback("公式候选已保留，请核对后放入草稿。");}
+        catch(error){showError(error,"公式识别未完成，原记录已保留");}finally{setBusy(false);}
+      });
+      if(answer.platform_status!=="NOT_RUN") {recognize.disabled=true;note.textContent="此题已有平台处理记录，保留现有内容。";}
+      if(proposal.recognition_blocked) {recognize.disabled=true;recognize.textContent="保留原记录，不再识别";}
+      if(retained.length) {recognize.disabled=true;recognize.textContent="已有公式记录";box=[...retained[0].candidate.source_bbox];}
+      row.append(canvas,note,label,recognize);
+      for(const record of retained){
+        const raw=record.candidate.raw_latex, candidate=node("div","formula-candidate");
+        candidate.append(node("pre","",raw),node("p","muted small","本地识别原始候选 · 仍待逐字核对"));
+        candidate.append(button("放入当前草稿选区",()=>{
+          if(busy||!current()||answer.platform_status!=="NOT_RUN")return;
+          const textarea=draft.editor.querySelector("textarea.draft-text");if(!textarea)return;
+          const a=textarea.selectionStart,b=textarea.selectionEnd;
+          draft.text=textarea.value.slice(0,a)+"$"+raw+"$"+textarea.value.slice(b);draft.format="plain";draft.candidate=null;
+          renderDraftEditor(draft);updateDirtyState();feedback("候选已放入当前草稿选区，请对照原图检查后保存。");
+        },"small-button"));row.append(candidate);
+      }
+      details.append(row);
+    }
+    return host;
   }
   function updateSpanLabel(draft) {
     draft.spanLabel.textContent = (draft.sourceExplicitSelection ? "已选原文" : "默认整段") + " [" + draft.sourceSpan.join(", ") + ") · " + (draft.sourceSpan[1] - draft.sourceSpan[0]) + " 码点";

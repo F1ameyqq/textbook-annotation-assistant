@@ -273,7 +273,7 @@ class ImageAndProduction(unittest.TestCase):
         self.assertTrue((output / "index.html").is_file())
         self.assertEqual(transport.sends, 2)
         with patch("annotation.customer.transport.UsenseTransport", side_effect=AssertionError("must not acquire")):
-            produce(self.store, job["id"], {})
+            produce(self.store, job["id"], {}, transport_factory=lambda *args: (_ for _ in ()).throw(AssertionError('must not reacquire synthetic transport')))
         self.assertEqual(transport.sends, 2)
 
     def test_missing_image_cache_does_not_call_ocr(self):
@@ -346,13 +346,14 @@ class ImageAndProduction(unittest.TestCase):
         finally:
             server.shutdown(); server.server_close(); thread.join()
 
-    def test_confirm_does_not_enable_unsupported_native_formula(self):
+    def test_confirmed_safe_formula_can_be_encoded_after_r1_rich_content_support(self):
         job, before = self.image_job()
         candidate = copy.deepcopy(job["candidates"][0])
         candidate["zones"]["question"] = "求 $x^2$ 的值。"
         candidate["content_hash"] = candidate_hash(candidate)
         candidate["review"]["content_hash"] = candidate["content_hash"]
-        with self.assertRaises(Hold): make_plan(before, candidate, job["lesson"])
+        plan=make_plan(before,candidate,job['lesson'])
+        self.assertIn('$x^2$',plan['payload']['ocr_submissions'][0]['ocr_result'])
 
     def test_unknown_with_receipt_can_reconcile_without_writer(self):
         job, before = self.image_job()

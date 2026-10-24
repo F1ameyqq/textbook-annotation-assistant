@@ -164,6 +164,14 @@ def make_server(workspace, *, host="127.0.0.1", port=0):
                 allowed = {"/api/save", "/api/restore", "/api/preview"}
                 if callable(getattr(workspace, "confirm", None)):
                     allowed.add("/api/confirm")
+                if callable(getattr(workspace, "assign", None)):
+                    allowed.add("/api/assign")
+                if callable(getattr(workspace, "bind_region", None)):
+                    allowed.add("/api/bind-region")
+                if callable(getattr(workspace, "formula", None)):
+                    allowed.add("/api/formula")
+                if callable(getattr(workspace, "formula_batch", None)):
+                    allowed.add("/api/formula-batch")
                 if parsed.query or parsed.path not in allowed:
                     self._error(404, "NOT_FOUND", "未找到本地复核操作。")
                     return
@@ -189,6 +197,14 @@ def make_server(workspace, *, host="127.0.0.1", port=0):
                 else:
                     if parsed.path == "/api/confirm":
                         current = workspace.confirm(request)
+                    elif parsed.path == "/api/assign":
+                        current = workspace.assign(request)
+                    elif parsed.path == '/api/bind-region':
+                        current = workspace.bind_region(request)
+                    elif parsed.path == '/api/formula':
+                        current = workspace.formula(request)
+                    elif parsed.path == '/api/formula-batch':
+                        current = workspace.formula_batch(request)
                     else:
                         current = workspace.save(request) if parsed.path == "/api/save" else workspace.restore(request)
                     value = copy.deepcopy(current)

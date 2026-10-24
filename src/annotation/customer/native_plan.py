@@ -8,6 +8,8 @@ from __future__ import annotations
 
 import copy
 import re
+import math
+from datetime import timedelta
 from urllib.parse import urlsplit
 from uuid import UUID, uuid5, NAMESPACE_URL
 
@@ -16,6 +18,7 @@ from .prepare import candidate_hash
 from .store import Hold, digest
 
 ZONES = ("question", "choice", "answer", "analysis", "knowledge_point")
+CLOCK_TOLERANCE_SECONDS = 5
 
 
 def require(value, message):
@@ -97,10 +100,18 @@ def _overlap(left, right):
 def make_plan(current, candidate, lesson):
     rows, questions = validate_current(current)
     require(candidate["content_hash"] == candidate_hash(candidate), "候选内容已改变。")
-    require(candidate["content_status"] in {"READY_EXACT_TEXT", "READY_CUSTOMER_REVIEWED"}
+    require(candidate["content_status"] in {"READY_EXACT_TEXT", "READY_CUSTOMER_REVIEWED", "READY_SOURCE_CHECKED"}
             and not candidate["issues"], "候选仍需内容审校。")
-    require(not re.search(r"如图|图示|下图|[\\$<>]", "\n".join(candidate["zones"].values())),
-            "此题含图形引用或公式标记；当前普通输入接线尚不支持原生图形/公式生产，保留待适配。")
+    if candidate['content_status']=='READY_SOURCE_CHECKED':
+        quality=candidate.get('quality',{})
+        require(quality.get('machine_checked') is True and quality.get('exceptions')==[]
+                and quality.get('content_hash')==candidate_hash(candidate),'来源质量记录与当前内容不一致。')
+    from .review_features import figure_requirements
+    image_pages={}
+    for frame in candidate['frames']:
+        source=current['pages'].get(frame['source_sha256'])
+        if source:image_pages[frame['asset_id']]={'kind':'image','asset_id':frame['asset_id'],'raw_sha256':source['sha256'],'width':source['dimensions'][0],'height':source['dimensions'][1]}
+    require(not figure_requirements(candidate,list(image_pages.values())),'明确图引用还没有已确认且来源一致的原始题图区域。')
     if candidate["content_status"] == "READY_CUSTOMER_REVIEWED":
         receipt = candidate.get("review") or {}
         require(receipt.get("content_hash") == candidate_hash(candidate) and receipt.get("source_checked") is True
@@ -121,6 +132,8 @@ def make_plan(current, candidate, lesson):
     # A parent with child directories would need an explicit subdirectory
     # selection; appending to it can create ambiguous traversal order.
     require(not any(not r["question"] for r in descendants), "请选择末级课时目录。")
+    from .existing_fill import locate,make
+    if locate(current,candidate) is not None:return make(current,candidate,lesson,target)
     book, new_order = current["book_id"], insert_after + 1
     key = source_key(book, candidate)
     native_frames = _response(current["frames"])
@@ -143,10 +156,16 @@ def make_plan(current, candidate, lesson):
         for old in native_frames:
             if old.get("page_index") == page["viewer_page"] and old.get("type") == frame["zone"]:
                 try:
-                    old_box = [int(x) for x in old["rect_bbox"].split(",")]
+                    old_box = [float(x) for x in old["rect_bbox"].split(",")]
                 except (ValueError, AttributeError, KeyError):
                     raise Hold("既有题框几何未知，先核对，不能重复插入。") from None
-                require(len(old_box) == 4 and not _overlap(frame["bbox"], old_box), "候选与已有同区题框重叠；请先核对原任务，不能重复保存。")
+                require(len(old_box) == 4 and all(math.isfinite(x) for x in old_box)
+                        and old_box[0]<old_box[2] and old_box[1]<old_box[3]
+                        and not _overlap(frame["bbox"], old_box),
+                        "第" + str(candidate.get('printed_number','?')) + "题 · "
+                        + {'question':'题干','choice':'选项','answer':'答案','analysis':'解析'}.get(frame['zone'],frame['zone'])
+                        + " · 来源页" + str(page['viewer_page']) + " · 来源框" + str(index+1)
+                        + " 与已有同区题框重叠；请返回本题审校，核对对应来源范围，不能重复保存。")
         rect_id = str(uuid5(NAMESPACE_URL, "customer/" + key + "/" + str(index)))
         require(rect_id not in {f["rect_id"] for f in native_frames}, "候选题框已存在，先对账。")
         zone = frame["zone"]
@@ -155,12 +174,13 @@ def make_plan(current, candidate, lesson):
             "order_in_level": str(new_order), "image_order_in_annotation_zone": image_order,
             "rect_bbox": ",".join(map(str, frame["bbox"])), "page_index": page["viewer_page"],
             "image_path": page["image_url"] + f"?x-oss-process=image/crop,x_{x1},y_{y1},w_{x2-x1},h_{y2-y1}",
-            "parent_rect_id": None, "directory_id": target["node"]["id"], "content_type": "text",
+            "parent_rect_id": None, "directory_id": target["node"]["id"], "content_type": frame.get('content_type','text'),
             "user_id": None, "is_pre_annotation": False, "pre_annotations_id": None})
     require(set(candidate["zones"]) == set(zone_counts) and {"question", "answer"} <= set(zone_counts), "内容分区缺少来源题框。")
     # Plain text is escaped before entering the platform's HTML-bearing field.
-    from html import escape
-    zone_values = {name: escape(text, quote=True).replace("\n", "<br>") for name, text in candidate["zones"].items()}
+    from .rich_content import zone_html
+    zone_values = {name: zone_html(text,[f for f in new_frames if f['type']==name and f['content_type']=='image'])
+                   for name,text in candidate['zones'].items()}
     payload = {"file_id": book, "target_directory_id": target["node"]["id"], "question_order": None,
         "is_new_question_insertion": True, "insert_after_order": insert_after,
         "annotations_upsert": new_frames, "annotations_delete_rect_ids": [],
@@ -186,13 +206,29 @@ def check_prewrite(plan, current):
     require(json_same(current, plan["before"]), "平台当前状态已变化，停止保存并重新核对。")
 
 
+def send_window_bounds(send_window):
+    """Customer native metadata: bounded aware send plus five seconds of skew.
+
+    Keep the original at-most-120-second, aware send interval validation.
+    This finite tolerance already exists in the native finalize contract; it
+    does not change timestamps, infer a clock cause, or relax content/identity.
+    """
+    from annotation.runtime.usense_live.lesson_insert import _window
+    start, end = _window(send_window)  # Includes one second on each side.
+    extra = timedelta(seconds=CLOCK_TOLERANCE_SECONDS - 1)
+    return start - extra, end + extra
+
+
 def compare_readback(plan, after, receipt, *, runtime_actor_hashes=None, send_window=None):
     """Strict whole-book preservation. Unknown metadata changes are held."""
     check_plan(plan)
+    if plan.get('schema')=='CustomerNativeExistingFillPlan/v1':
+        from .existing_fill import compare
+        return compare(plan,after,receipt,runtime_actor_hashes=runtime_actor_hashes,send_window=send_window)
     _, old_questions = validate_current(plan["before"])
     _, new_questions = validate_current(after)
     from annotation.runtime.usense_live import insertion, lesson_insert
-    window = lesson_insert._window(send_window) if send_window is not None else None
+    window = send_window_bounds(send_window) if send_window is not None else None
 
     def shifted(old, actual):
         expected = copy.deepcopy(old)
@@ -213,8 +249,10 @@ def compare_readback(plan, after, receipt, *, runtime_actor_hashes=None, send_wi
     require(type(data) is dict and data.get("inserted") is True and data.get("success") is True
             and type(data.get("question_order")) is int and data["question_order"] == plan["new_order"], "保存回执未知，禁止重发。")
     new_node = data.get("inserted_question_node")
+    actual_node = new_questions[plan["new_order"] - 1]["node"]
     require(type(new_node) is dict and new_node.get("id") not in {q["node"]["id"] for q in old_questions}
-            and json_same(new_questions[plan["new_order"] - 1]["node"], new_node), "新题节点回执与读回不一致。")
+            and set(actual_node) == set(new_node)
+            and all(json_same(actual_node[key], new_node[key]) for key in new_node), "新题节点回执与读回不一致。")
     require(len(new_questions) == len(old_questions) + 1 and after["book_id"] == plan["book_id"], "读回题数或书籍不一致。")
     expected_directory = copy.deepcopy(plan["before"]["directory"])
     rows, _ = directory_rows(expected_directory)
@@ -224,7 +262,10 @@ def compare_readback(plan, after, receipt, *, runtime_actor_hashes=None, send_wi
                 row["node"]["label"] = str(int(row["node"]["label"]) + 1)
             row["node"]["order_in_level"] = str(int(row["node"]["order_in_level"]) + 1)
     parent = next(r["node"] for r in rows if r["node"]["id"] == plan["payload"]["target_directory_id"])
-    parent.setdefault("children", []).append(copy.deepcopy(new_node))
+    # The save receipt and directory GET serialize the same new node's keys
+    # in different orders. Only this cross-endpoint new object uses field
+    # equality. Every old directory object retains the original strict order.
+    parent.setdefault("children", []).append(copy.deepcopy(actual_node))
     require(json_same(expected_directory, after["directory"]), "目录旧值或新增节点位置未保全。")
     expected_frames = copy.deepcopy(_response(plan["before"]["frames"]))
     actual_frames = _response(after["frames"])
@@ -273,4 +314,5 @@ def compare_readback(plan, after, receipt, *, runtime_actor_hashes=None, send_wi
     require(json_same(plan["before"]["pages"], after["pages"]), "来源页字节绑定已变化。")
     return {"match": True, "old_questions_preserved": len(old_questions), "old_frames_preserved": len(expected_frames),
             "new_node_id": new_node["id"], "new_info_id": info["id"], "readback_hash": digest(after),
+            "native_clock_tolerance_seconds": CLOCK_TOLERANCE_SECONDS if window is not None else None,
             "runtime_actor_and_send_window_checked": runtime_actor_hashes is not None and window is not None}

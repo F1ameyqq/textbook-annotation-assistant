@@ -67,14 +67,19 @@ def capture_endpoints(binding):
 
 def configure(*, profile, output_root, config_path, coordinator, executor, reviewer,
               authorization_reference, orders=(), pages=(), source=False, login=False,
-              tls_approval_reference=None, proxy_server=None, seconds=600, now=None, book_id="46007447"):
+              tls_approval_reference=None, proxy_server=None, seconds=600, now=None, book_id="46007447", native_export=False):
     require(type(seconds) is int and 30 <= seconds <= 900, "WINDOW_SECONDS_30_TO_900")
     current = now or datetime.now(timezone.utc)
     prefix = "usense-login-" if login else "usense-readonly-"
     run = prefix + current.strftime("%Y%m%d-%H%M%S-") + uuid.uuid4().hex[:8]
     target = LOGIN if login else TARGET
     rules = [{"url": target, "resource_types": ["document"], "max_requests": 1}]
-    if login:
+    if native_export:
+        require(not login and not list(orders) and not list(pages) and not source, 'EXPORT_ONLY_SCOPE_REQUIRED')
+        require(type(book_id) is str and re.fullmatch(r'[1-9][0-9]{0,31}',book_id), 'BOOK_ID_REQUIRED')
+        rules.append({'url':ORIGIN+'/qieti/api/annotate_ocr/export-paper-questions/'+book_id,
+                      'resource_types':['fetch','xhr'],'max_requests':1})
+    elif login:
         require(not list(orders) and not list(pages) and not source, "LOGIN_HAS_NO_BUSINESS_READS")
         for path in ("/qieti/api/user_login/profile", "/qieti/api/user_login/config/permissions",
                      "/qieti/api/user_login/config/teams", "/qieti/version.json"):

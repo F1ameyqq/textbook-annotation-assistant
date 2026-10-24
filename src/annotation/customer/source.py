@@ -8,6 +8,7 @@ from __future__ import annotations
 import copy
 import importlib.metadata
 import io
+import json
 import math
 from pathlib import Path
 import re
@@ -129,19 +130,78 @@ def engine_identity():
             "backend": byte_hash(baseline.LEGACY_PATH.read_bytes()), "packages": versions}
 
 
+def _prior_recognition(store, page, book):
+    """Reconcile original intents across engines before permitting recognition.
+
+    Every original recognition writes source.json before its durable intent.
+    Failed and interrupted operations have no result identity, so that retained
+    source binding is required; an unbound record cannot be treated as a miss.
+    """
+    with store.connect() as db:
+        rows = db.execute("SELECT key,state,output FROM operations WHERE kind='recognition' ORDER BY key").fetchall()
+    matches = []
+    for key, state, output in rows:
+        if not isinstance(key, str) or re.fullmatch('[0-9a-f]{64}', key) is None:
+            raise Hold('旧识别记录编号无效；请保留原记录核对。')
+        directory = store.root / 'recognition' / key
+        try:
+            original = json.loads((directory / 'source.json').read_bytes())
+            assets = original['assets']
+            valid = (original['schema_version'] == 'b-source-trial/0.1'
+                     and original['artifact_id'] == 'customer-source-' + key[:24]
+                     and isinstance(original['book_id'], str) and len(assets) == 1
+                     and re.fullmatch('[0-9a-f]{64}', assets[0]['sha256']) is not None
+                     and original['scope_id'] == 'image-' + assets[0]['sha256'])
+        except (OSError, ValueError, KeyError, TypeError):
+            valid = False
+        if not valid:
+            raise Hold('旧识别执行记录缺少可验证的书籍和来源绑定；不能通过更换识别器重跑。')
+        if original['book_id'] != book or assets[0]['sha256'] != page['raw_sha256']:
+            continue
+        asset = assets[0]
+        if (asset.get('width') != page['width'] or asset.get('height') != page['height']
+                or not isinstance(asset.get('path'), str)
+                or Path(asset['path']).name != asset['path']):
+            raise Hold('旧识别的来源尺寸或原件路径不一致。')
+        try:
+            original_matches = byte_hash((directory / asset['path']).read_bytes()) == page['raw_sha256']
+        except OSError:
+            original_matches = False
+        if not original_matches:
+            raise Hold('旧识别原件缺失或变化；先核对原记录，不能重新识别。')
+        if state != 'COMPLETE':
+            raise Hold('这张原图已有未完成或失败的识别记录；先核对原记录，不能自动重跑。')
+        cached = store.get(output)
+        if (cached.get('raw_sha256') != page['raw_sha256']
+                or digest([book, page['raw_sha256'], cached.get('engine')]) != key):
+            raise Hold('旧识别缓存与原图或原识别器绑定不一致。')
+        validate_lines(cached['lines'], page['width'], page['height'])
+        matches.append((key, cached))
+    if len(matches) > 1:
+        raise Hold('同一原图存在多份识别执行记录；保留全部记录，先核对，不能自动选择或重跑。')
+    return matches[0] if matches else None
+
+
 def ocr_page(store, page, book, *, allow_local_ocr=False):
     """Call the existing B adapter once; the customer never supplies evidence."""
+    from .recognition_cache import cached_page,bootstrap
+    bootstrap(store,book)
+    prior = _prior_recognition(store, page, book)
+    if prior is not None:
+        key, cached = prior
+        page['recognition_provenance'] = {'operation_key': key, 'engine': copy.deepcopy(cached['engine']),
+                                          'original_engine_preserved': True}
+        return copy.deepcopy(cached['lines']), 'CACHE'
+    historical = cached_page(store, page, book)
+    if historical is not None:
+        page['historical_detail_lines'] = historical['detail_lines']
+        page['recognition_provenance'] = historical['provenance']
+        return historical['lines'], 'HISTORICAL_CACHE_NO_NEW_OCR'
+    if store.operation('historic-partial-recognition',digest([book,page['raw_sha256']])) is not None:
+        raise Hold('这张来源已有局部 OCR 原记录；不能整页重跑。程序需先确定未识别范围，旧局部原件保留。')
     from annotation.recognition.baseline import recognize
     identity = engine_identity()
     key = digest([book, page["raw_sha256"], identity])
-    prior = store.operation("recognition", key)
-    if prior is not None:
-        if prior["state"] != "COMPLETE":
-            raise Hold("这张原图已有未完成或失败的识别记录；先核对原记录，不能自动重跑。")
-        cached = store.get(prior["output"])
-        if cached["raw_sha256"] != page["raw_sha256"] or cached["engine"] != identity:
-            raise Hold("识别缓存与原图或本机识别器不一致。")
-        return copy.deepcopy(cached["lines"]), "CACHE"
     if not allow_local_ocr:
         raise Hold("这张图片没有当前识别缓存。安装首次配置中的本地识别依赖后，勾选本地识别再启动。")
     if any(value is None for value in identity["packages"].values()):

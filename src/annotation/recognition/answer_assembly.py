@@ -333,13 +333,18 @@ def assemble_answers(evidence, make_id):
                 match = PRIMARY.match(line["text"])
                 is_primary = False
                 reviewed_primary = match and line.get("reviewed_primary_number") == match[1]
+                # Exact digital answer material has literal numbered lines;
+                # whitespace after the separator excludes decimal arithmetic.
+                # This does not relax scanned/OCR primary-anchor rules.
+                digital_primary = (match and page.get('source', {}).get('input_kind') == 'EXACT_TEXT_IMPORT'
+                                   and re.match(r'^\s*\d{1,2}\s*[.．、]\s+\S', line['text']) is not None)
                 if match and (line["bbox"][0] <= margin + 12 or reviewed_primary):
                     value = match[2]
                     # Prefixes inside decimals/fractions or solution arithmetic
                     # are not a primary number just because they contain a dot.
                     semantic_value = bool(re.match(r"[\u4e00-\u9fffA-G（(【]", value))
                     numeric_value = bool(re.fullmatch(r"[+-]?\d+(?:\.\d+)?(?:cm|mm|m|km|°)?", value.strip()))
-                    is_primary = reviewed_primary or semantic_value or (numeric_value and (int(match[1]) == expected_number
+                    is_primary = reviewed_primary or digital_primary or semantic_value or (numeric_value and (int(match[1]) == expected_number
                                                                                   or current is None and int(match[1]) == 1))
                 if is_primary:
                     finish(current, "NEXT_PRIMARY_ANSWER", [line["line_id"]])

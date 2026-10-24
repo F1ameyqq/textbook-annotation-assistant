@@ -48,11 +48,14 @@ def full_endpoints(plan):
 def make_wire_plan(product, flat, sources):
     native.check_plan(product)
     native.require(json_same(snapshot(flat, product["book_id"], product["before"]["pages"]), product["before"]), "原生快照与准备计划不一致。")
-    value = {"schema": SCHEMA, "operation": "CUSTOMER_SOURCE_BOUND_INSERT", "book_id": product["book_id"],
+    value = {"schema": SCHEMA, "operation": "CUSTOMER_SOURCE_BOUND_EXISTING_FILL" if product['schema']=='CustomerNativeExistingFillPlan/v1' else "CUSTOMER_SOURCE_BOUND_INSERT", "book_id": product["book_id"],
              "product": copy.deepcopy(product), "before_full": copy.deepcopy(flat),
              "payload_candidate": copy.deepcopy(product["payload"]), "source_refs": sources,
              "ledger_key": "customer-" + product["key"], "new_order": product["new_order"]}
     native.require(set(flat) == set(full_endpoints(value)), "当前快照响应集合不完整。")
+    # The response collection is an application envelope, assembled in batches.
+    # Canonical endpoint order does not normalize any native response content.
+    value['before_full']={name:copy.deepcopy(flat[name]) for name in full_endpoints(value)}
     value["plan_sha256"] = digest(value)
     verify_evidence(value)
     return value
@@ -77,13 +80,17 @@ def verify_evidence(plan):
 
 def check_prewrite(plan, flat):
     validate_insert_plan(plan)
-    native.require(json_same(flat, plan["before_full"]), "保存前当前状态已改变。")
+    native.require(set(flat)==set(plan['before_full']) and all(json_same(flat[name],plan['before_full'][name]) for name in flat),
+                   "保存前当前状态已改变。")
     native.check_prewrite(plan["product"], snapshot(flat, plan["book_id"], plan["product"]["before"]["pages"]))
     return {"ok": True}
 
 
 def decode_receipt(plan, receipt):
     validate_insert_plan(plan)
+    if plan['product']['schema']=='CustomerNativeExistingFillPlan/v1':
+        from .existing_fill import decode
+        return decode(plan['product'],receipt)
     data = native._response(receipt)
     old_ids = {row["node"]["id"] for row in native.directory_rows(plan["before_full"]["directory"])[0]}
     node = data.get("inserted_question_node")

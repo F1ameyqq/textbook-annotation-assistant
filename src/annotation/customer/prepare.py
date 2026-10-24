@@ -9,6 +9,8 @@ import time
 from .source import import_pages, ocr_page, text_lines, validate_lines, verify_sources
 from .store import Hold, digest
 
+PREPARATION_VERSION='r1-20261024-03'
+
 
 def utcnow():
     return datetime.now(timezone.utc).isoformat()
@@ -69,6 +71,10 @@ def candidates_from_graph(graph, pages):
         answer = answers.get(question["selected_answer_id"])
         stem = [f for f in question["fragments"] if f["role"] == "stem"]
         choices = [f for f in question["fragments"] if f["role"] == "option"]
+        # OCR top coordinates can differ slightly on a two-option row. Native
+        # option order follows explicit labels while preserving wrapped lines.
+        choices = sorted(enumerate(choices),key=lambda pair:(pair[1].get('option_label') or '',pair[0]))
+        choices = [f for _,f in choices]
         zones = {"question": "\n".join(f["text"] for f in stem)}
         if choices:
             zones["choice"] = "\n".join(f["text"] for f in choices)
@@ -127,7 +133,8 @@ def candidate_hash(candidate):
 
 
 def prepare(store, *, book, lesson, question_files, answer_files=(), question_pages="全部",
-            answer_pages="全部", allow_local_ocr=False, question_first_page=None, answer_first_page=None):
+            answer_pages="全部", allow_local_ocr=False, question_first_page=None, answer_first_page=None,
+            page_bindings=None, directory_path=None, section_titles=None):
     from annotation.recognition.offline import artifact, assemble
     started = time.perf_counter()
     if not isinstance(book, str) or not re.fullmatch(r"[1-9][0-9]{0,31}", book):
@@ -143,17 +150,27 @@ def prepare(store, *, book, lesson, question_files, answer_files=(), question_pa
             if type(first) is not int or not 1 <= first <= 9999:
                 raise Hold("书中页码需要为正整数。")
             page["viewer_page"] = first + page["selected_page"] - 1
+        if page_bindings is not None:
+            number = page_bindings.get(page['raw_sha256'])
+            if type(number) is not int or not 1 <= number <= 9999: raise Hold('已取得原图缺少平台页码绑定。')
+            page['viewer_page'] = number
     if not any(p["role"] == "question" for p in pages):
         raise Hold("请至少选择一页题目材料。")
     if len({p["asset_id"] for p in pages}) != len(pages):
         raise Hold("题目与答案使用了同一页；当前请分别导入题页和答案页。")
-    identity = digest([book, lesson, [(p["asset_id"], p["role"], p.get("viewer_page")) for p in pages]])
+    if directory_path is not None and (type(directory_path) is not list or not directory_path or directory_path[-1] != lesson):
+        raise Hold('平台目录完整路径不一致。')
+    identity_data = [book, lesson, [(p["asset_id"], p["role"], p.get("viewer_page")) for p in pages]]
+    if directory_path is not None: identity_data.append(directory_path)
+    identity = digest(identity_data)
     with store.book_lock(book):
         with store.connect() as db:
             existing = db.execute("SELECT head FROM jobs WHERE id=?", (identity,)).fetchone()
         if existing:
             job, _ = store.job(identity)
             verify_sources(job["pages"])
+            if job.get('preparation_version')!=PREPARATION_VERSION and job['platform_status']=='NOT_RUN' and job['metrics']['review_actions']==0:
+                return _continue(store,job,existing[0],started,allow_local_ocr=allow_local_ocr)
             return job  # exact input resumes the edited task, never re-recognizes
         job = {"schema": "CustomerPreparation/v1", "id": identity, "book_id": book, "lesson": lesson,
                "pages": pages, "candidates": [], "issues": [], "created_at": utcnow(), "revision": 1,
@@ -161,6 +178,8 @@ def prepare(store, *, book, lesson, question_files, answer_files=(), question_pa
                "metrics": {"prepare_invocations": 1, "review_actions": 0, "new_model_pages": 0,
                            "cache_pages": 0, "elapsed_seconds": None},
                "customer_ready": False, "legacy_decision": "HOLD"}
+        if directory_path is not None: job['directory_path'] = list(directory_path)
+        if section_titles is not None: job['section_titles'] = list(section_titles)
         head = store.save_job(job)
         return _continue(store, job, head, started, allow_local_ocr=allow_local_ocr)
 
@@ -178,23 +197,50 @@ def resume(store, identity, *, allow_local_ocr=False):
 def _continue(store, job, head, started, *, allow_local_ocr):
     from annotation.recognition.offline import artifact, assemble
     verify_sources(job["pages"])
-    pages, context = [], {}
+    pages, context, observations = [], {}, []
+    closed_roles=set();job['unused_source_pages']=[]
     try:
+        job['preparation_version']=PREPARATION_VERSION
         for page in job["pages"]:
+            if page['role'] in closed_roles:
+                job['unused_source_pages'].append({'asset_id':page['asset_id'],'raw_sha256':page['raw_sha256'],
+                    'reason':'PREVIOUS_PAGE_HAS_OBSERVED_NEXT_SECTION_BOUNDARY','new_model_calls':0})
+                continue
             if page["kind"] == "text":
                 lines, mode = text_lines(page), "EXACT_TEXT_IMPORT"
             else:
                 lines, mode = ocr_page(store, page, job["book_id"], allow_local_ocr=allow_local_ocr)
             validate_lines(lines, page["width"], page["height"])
-            located, windows = _located(page, lines, job["lesson"])
-            context[page["asset_id"]] = {"role": page["role"], "windows": windows, "sha256": page["raw_sha256"]}
-            source = {"asset_id": page["asset_id"], "width": page["width"], "height": page["height"], "sha256": page["raw_sha256"]}
-            pages.append({"asset_id": page["asset_id"], "source": source, "page_role": page["role"],
-                          "ocr_lines": located, "answer_detail_lines": [],
-                          "unscoped_line_ids": [line["line_id"] for line in located if not line["location"]]})
+            observations.append((page, lines))
             job["recognition"].append({"asset_id": page["asset_id"], "mode": mode, "at": utcnow()})
             job["metrics"]["new_model_pages"] += int(mode == "LOCAL_OCR")
-            job["metrics"]["cache_pages"] += int(mode == "CACHE")
+            job["metrics"]["cache_pages"] += int(mode in {"CACHE", "HISTORICAL_CACHE_NO_NEW_OCR"})
+            if job.get('section_titles'):
+                from .section_scope import select_section
+                same_role=[pair for pair in observations if pair[0]['role']==page['role']]
+                discovered=select_section(same_role,job['lesson'],job['section_titles'],require_roles=(page['role'],))
+                if not discovered[-1]['continuation_at_end']:closed_roles.add(page['role'])
+        scoped = None
+        if job.get('section_titles'):
+            from .section_scope import select_section
+            scoped = select_section(observations, job['lesson'], job['section_titles'])
+            job['section_scope_ref'] = store.put(scoped)
+            job['source_scope_complete']=closed_roles=={'question','answer'}
+        for index, (page, lines) in enumerate(observations):
+            if scoped is not None:
+                located, windows, details = scoped[index]['lines'], scoped[index]['windows'], scoped[index]['details']
+            else:
+                located, windows = _located(page, lines, job["lesson"])
+                details = []
+            from .dense_answers import partition
+            details,partitions=partition(page,located,details)
+            context[page["asset_id"]] = {"role": page["role"], "windows": windows, "sha256": page["raw_sha256"]}
+            source = {"asset_id": page["asset_id"], "width": page["width"], "height": page["height"], "sha256": page["raw_sha256"]}
+            if page['kind'] == 'text': source['input_kind'] = 'EXACT_TEXT_IMPORT'
+            pages.append({"asset_id": page["asset_id"], "source": source, "page_role": page["role"],
+                          "ocr_lines": located, "answer_detail_lines": details,
+                          "derived_dense_partitions":partitions,
+                          "unscoped_line_ids": [line["line_id"] for line in located if not line["location"]]})
         evidence = artifact("b-evidence-trial/0.2", "EvidenceBundleTrial",
             {"book_id": job["book_id"], "scope_id": job["id"]},
             {"pages": pages, "context": {"pages": context}, "quality_decision": "NOT_EVALUATED",
@@ -204,6 +250,8 @@ def _continue(store, job, head, started, *, allow_local_ocr):
         graph = assemble(evidence)
         job["evidence_ref"], job["graph_ref"] = store.put(evidence), store.put(graph)
         job["candidates"] = candidates_from_graph(graph, job["pages"])
+        from .quality import assess
+        for candidate in job['candidates']:assess(candidate,graph,evidence,job['pages'])
         # Answer-specific diagnostics remain on their candidates. Retain all
         # original diagnostics unchanged in graph_ref; global orphans still
         # stop the whole selected range.

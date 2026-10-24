@@ -44,8 +44,14 @@
         <div id="block-editors" class="block-editors"></div>
         <section id="customer-confirm" class="author-panel" hidden>
           <h3>本地生产准备</h3><p id="customer-status"></p>
+          <div id="customer-unassigned" hidden></div>
+          <button id="customer-formula-batch-button" type="button">准备本课明确区域的公式候选</button>
+          <p class="muted small">一次准备尚未处理题目中的明确数学行，结果统一待审；中文混排和范围不明处在各分区对照原图调整。</p>
+          <details id="customer-region" hidden><summary>补充缺失题图：在原页拖动框选</summary><div id="customer-region-editor"></div></details>
+          <p>公式可在正文中使用成对的 $，例如 $a^2+b^2=c^2$。题图从原页框选，程序自动生成来源框。</p>
           <label class="check-label"><input id="customer-source-checked" type="checkbox">已对照整页核对来源框、图形与内容完整性</label>
           <label class="check-label"><input id="customer-content-checked" type="checkbox">已核对题干、选项、答案及公式；当前内容可进入生产准备</label>
+          <label class="check-label"><input id="customer-structure-checked" type="checkbox">本题有跨栏或共用材料时，已确认正文包含本题完整材料与各小问</label>
           <button id="customer-confirm-button" type="button">确认本题内容</button>
         </section>
         <div id="no-editable-blocks" class="empty-note" hidden>此答案没有可编辑的正文片段。图形、结构标记与诊断 OCR 不作为文字编辑块。</div>

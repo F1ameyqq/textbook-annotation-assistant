@@ -117,6 +117,16 @@ class Store:
         except sqlite3.IntegrityError:
             raise Hold("已有执行记录；成功项直接复用，未知或失败项必须先对账，不能重发。") from None
 
+    def record_read(self, kind, key, value):
+        """Atomically retain an already completed read; never create a send intent."""
+        ref = self.put(value)
+        with self.connect() as db:
+            try:
+                db.execute("INSERT INTO operations VALUES(?,?,?,?)", (kind, key, 'COMPLETE', ref))
+            except sqlite3.IntegrityError:
+                raise Hold('来源已有执行状态；不能以当前读取覆盖原记录。') from None
+        return ref
+
     def finish(self, kind, key, state, value):
         ref = self.put(value)
         with self.connect() as db:
