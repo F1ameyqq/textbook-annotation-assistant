@@ -80,7 +80,11 @@ def required_figure_issues(zones, frames, *, source_bindings):
                     or frame.get("source_dimensions") != source.get("dimensions")
                     or frame.get("coordinate_space") != "ORIGINAL_PIXELS"
                     or binding.get("source_checked") is not True
-                    or binding.get("kind") not in {"CUSTOMER_SOURCE_REGION", "CUSTOMER_CONFIRMED_FIGURE_PROPOSAL"}):
+                    or binding.get("kind") not in {"CUSTOMER_SOURCE_REGION", "CUSTOMER_CONFIRMED_FIGURE_PROPOSAL", "REVIEWED_SOURCE_GEOMETRY"}):
+                continue
+            if binding.get('kind') == 'REVIEWED_SOURCE_GEOMETRY' and (binding.get('geometry_checked') is not True
+                    or not isinstance(binding.get('visual_review_sha256'), str)
+                    or not re.fullmatch(r'[0-9a-f]{64}', binding['visual_review_sha256'])):
                 continue
             try:
                 width, height = source["dimensions"]

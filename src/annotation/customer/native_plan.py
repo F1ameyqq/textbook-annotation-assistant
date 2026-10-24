@@ -102,6 +102,8 @@ def make_plan(current, candidate, lesson):
     require(candidate["content_hash"] == candidate_hash(candidate), "候选内容已改变。")
     from .graphic_options import all_confirmed
     require(all_confirmed(candidate),'图形选项仍有未逐框核对的原图范围。')
+    from .question_figures import all_confirmed as referenced_figures_confirmed
+    require(referenced_figures_confirmed(candidate),'题干图仍有未逐框核对的原图范围。')
     require(candidate["content_status"] in {"READY_EXACT_TEXT", "READY_CUSTOMER_REVIEWED", "READY_SOURCE_CHECKED"}
             and not candidate["issues"], "候选仍需内容审校。")
     if candidate['content_status']=='READY_SOURCE_CHECKED':

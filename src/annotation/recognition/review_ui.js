@@ -479,7 +479,8 @@
     for (const id of assetIds) host.append(sourceCard(id, null, "来源整页"));
     const images = (answer.figures || []).filter(figure => figure.content_type === "image");
     for (const [index, figure] of images.entries()) host.append(sourceCard(figure.asset_id, figure.bbox,
-      figure.graphic_option_label?("选项 "+figure.graphic_option_label+(figure.source_checked?" · 已核对来源":" · 来源待核对")):"已绑定题图 " + (index + 1) + " · " + roleLabel(figure.role)));
+      figure.graphic_option_label?("选项 "+figure.graphic_option_label+(figure.source_checked?" · 已核对来源":" · 来源待核对")):
+      figure.referenced_figure_id?("题干图 "+(index+1)+(figure.source_checked?" · 已核对来源":" · 来源待核对")):"已绑定题图 " + (index + 1) + " · " + roleLabel(figure.role)));
     for(const child of host.children)if(!child.classList.contains("source-card")){child.style.flexBasis="100%";child.style.minWidth="0";}
     $("source-overview-count").textContent = assetIds.length + " 来源页 · " + images.length + " 图片来源框";
     if (!assetIds.length && !projection?.zones?.length) host.append(node("p", "muted small", "该答案没有可显示的来源范围。"));
@@ -560,7 +561,7 @@
         if(preset){const sx=canvas.width/image.naturalWidth,sy=canvas.height/image.naturalHeight;
           box=[preset.bbox[0]*sx,preset.bbox[1]*sy,preset.bbox[2]*sx,preset.bbox[3]*sy];
           boxBinding={...loaded,proposalId:preset.proposal_id,sourceBBox:[...preset.bbox],needsAdjustment:!preset.can_confirm_extent_without_adjustment};
-          note.textContent=textReplacement?"仅可在最初文字框内调整边界；拖得过窄时可以回调。请保留全部文字，正文和原识别记录保持不变。":boxBinding.needsAdjustment?"程序发现了低置信范围，请在原页调整后核对；不能直接确认完整图。":"程序已提出范围，请对照整页核对完整性，再勾选确认。";
+          note.textContent=textReplacement?"可收窄空白；补齐框外遗漏符号须使用已固定审校清单的完整题区，保留最初文字框并避开其他来源。请核对全部文字。":boxBinding.needsAdjustment?"程序发现了低置信范围，请在原页调整后核对；不能直接确认完整图。":"程序已提出范围，请对照整页核对完整性，再勾选确认。";
         }else note.textContent="程序尚未提出可用范围时，可在原页框选题图。";
         paint();refreshConflicts();showEdges();save.disabled=false;
       };
@@ -570,7 +571,7 @@
     zoneSelect.addEventListener("change",()=>{checked.checked=false;refreshConflicts();});
     canvas.addEventListener("pointerdown",e=>{if(!ready())return;start=point(e);box=null;boxBinding={...loaded};checked.checked=false;conflictsHost.replaceChildren();transferChoices=[];canvas.setPointerCapture(e.pointerId);});
     canvas.addEventListener("pointermove",e=>{if(!start||!ready()||boxBinding?.generation!==generation)return;const p=point(e);box=[Math.min(start[0],p[0]),Math.min(start[1],p[1]),Math.max(start[0],p[0]),Math.max(start[1],p[1])];paint();});
-    canvas.addEventListener("pointerup",()=>{start=null;refreshConflicts();showEdges();note.textContent=textReplacement?"请核对新范围完整包含本段文字，且仍在原框内；保存后需重新确认本题。":box?"已框选，请核对是否完整包含题图且没有其他题目。":"请拖动框选题图。";});
+    canvas.addEventListener("pointerup",()=>{start=null;refreshConflicts();showEdges();note.textContent=textReplacement?"请核对文字及遗漏符号完整，新增范围没有占用其他来源；保存后需重新确认本题。":box?"已框选，请核对是否完整包含题图且没有其他题目。":"请拖动框选题图。";});
     const checked=node("input");checked.type="checkbox";const label=node("label","check-label"),labelText=document.createTextNode("所选区域是本题原图，范围完整");label.append(checked,labelText);
     const save=button("绑定所选题图",async()=>{
       if(busy||dirtyDrafts().length||!ready()||!box||!checked.checked||boxBinding?.generation!==loaded.generation||boxBinding?.assetId!==loaded.assetId){feedback("请先保存文字编辑，再框选并核对题图。",true);return;}
@@ -578,11 +579,12 @@
       if(textReplacement&&(!bbox||bbox.some((value,index)=>value!==selected[index]))){checked.checked=false;feedback("当前文字边界无效或已改变，请重新调整并核对完整性。",true);return;}
       if(boxBinding.needsAdjustment){feedback("此候选范围仍需在原页调整，不能直接视为完整题图。",true);return;}
       const sourceTransfers=transferChoices.filter(choice=>choice.input.checked).map(({item})=>({owner_key:item.owner_key,frame_index:item.frame_index,fragment_id:item.fragment_id}));
-      setBusy(true);try{const payload={expected_head:bindingHead,answer_id:bindingAnswerId,asset_id:loaded.assetId,zone:zoneSelect.value,bbox,source_checked:true};if(textReplacement){payload.replace_text_region_id=textReplacement;payload.text_complete_checked=true;}else{if(replacement)payload.replace_region_id=replacement;if(sourceTransfers.length)payload.source_transfers=sourceTransfers;if(boxBinding.proposalId)payload.proposal_id=boxBinding.proposalId;}const value=await request("/api/bind-region",payload);applyState(value.state);feedback(textReplacement?"文字来源边界已收窄，原框和识别记录已保留。请重新核对并确认本题。":sourceTransfers.length?"题图及已核对的误归来源已绑定。请回原题核对并保存完整文字，再重新确认双方。":replacement?"题图范围已调整，原范围仍保留在记录中。请核对新图后重新确认本题。":"题图已绑定原始像素范围，请再确认本题内容。");}catch(error){showError(error,textReplacement?"文字来源范围未保存":"题图未绑定");}finally{setBusy(false);}
+      setBusy(true);try{const payload={expected_head:bindingHead,answer_id:bindingAnswerId,asset_id:loaded.assetId,zone:zoneSelect.value,bbox,source_checked:true};if(textReplacement){payload.replace_text_region_id=textReplacement;payload.text_complete_checked=true;payload.expand_complete_source=true;}else{if(replacement)payload.replace_region_id=replacement;if(sourceTransfers.length)payload.source_transfers=sourceTransfers;if(boxBinding.proposalId)payload.proposal_id=boxBinding.proposalId;}const value=await request("/api/bind-region",payload);applyState(value.state);feedback(textReplacement?"文字来源边界已调整，原框和识别记录已保留。请重新核对并确认本题。":sourceTransfers.length?"题图及已核对的误归来源已绑定。请回原题核对并保存完整文字，再重新确认双方。":replacement?"题图范围已调整，原范围仍保留在记录中。请核对新图后重新确认本题。":"题图已绑定原始像素范围，请再确认本题内容。");}catch(error){showError(error,textReplacement?"文字来源范围未保存":"题图未绑定");}finally{setBusy(false);}
     });
     const proposed=node("div","customer-figure-proposals");
     if(answer.platform_status==="NOT_RUN")for(const [index,figure] of (answer.figures||[]).filter(f=>f.content_type==="image").entries()){
-      const row=node("div","button-row");row.append(node("span","",figure.graphic_option_label?("选项 "+figure.graphic_option_label+(figure.source_checked?" · 已核对来源":" · 来源待核对")):"已绑定题图 "+(index+1)));
+      const row=node("div","button-row");row.append(node("span","",figure.graphic_option_label?("选项 "+figure.graphic_option_label+(figure.source_checked?" · 已核对来源":" · 来源待核对")):
+        figure.referenced_figure_id?("题干图 "+(index+1)+(figure.source_checked?" · 已核对来源":" · 来源待核对")):"已绑定题图 "+(index+1)));
       row.append(button("调整这张题图的范围",()=>{if(busy||dirtyDrafts().length){feedback("请先保存当前文字编辑。",true);return;}
         const asset=state.assets.find(a=>a.asset_id===figure.asset_id);if(!asset){feedback("来源页已变化，请刷新。",true);return;}
         assetSelect.value=figure.asset_id;zoneSelect.value=figure.role;load({...figure,zone:figure.role,source_sha256:asset.sha256,

@@ -132,7 +132,9 @@ def project_candidate(candidate, graph, evidence, *, layouts=()):
             previous = key
         for segment in segments:
             frame = candidate['frames'][segment['frame_index']]
-            segment["preview_bbox"] = (copy.deepcopy(frame['bbox']) if frame.get('graphic_option_label')
+            checked_expansion = any(r.get('kind') == 'CUSTOMER_CHECKED_TEXT_FRAME_EXPANSION'
+                                    for r in frame.get('text_source_adjustment_history', []))
+            segment["preview_bbox"] = (copy.deepcopy(frame['bbox']) if frame.get('graphic_option_label') or checked_expansion
                                        else _union([f["bbox"] for f in segment["fragments"]]))
             if frame.get('graphic_option_label'):
                 segment['option_label'] = frame['graphic_option_label']

@@ -65,13 +65,15 @@ def read_source(path, selected=None, *, graphic_review=None, graphic_review_sha2
                                                byte_hash(Path(__file__).with_name('prepare.py').read_bytes()),
                                                byte_hash(Path(__file__).with_name('graphic_options.py').read_bytes()),
                                                byte_hash(Path(__file__).with_name('answer_geometry.py').read_bytes()),
-                                               byte_hash(Path(__file__).with_name('reading_contexts.py').read_bytes())]),
+                                               byte_hash(Path(__file__).with_name('reading_contexts.py').read_bytes()),
+                                               byte_hash(Path(__file__).with_name('question_figures.py').read_bytes())]),
                     'windows': windows, 'items': items, 'path': paths.get(scope['id'], [scope['label']]),
                     'kind': scope['kind'], 'source_database': str(path)}
             if scope['kind'] == 'EXTRA_PAPER':
                 plan['path'] = ['附加试卷', scope['label']]
                 plan['platform_directory_status'] = 'OFFLINE_VIRTUAL_DIRECTORY'
-            for name in ('source_exclusions', 'pairing_status', 'graphic_option_candidates', 'source_issues'):
+            for name in ('source_exclusions', 'pairing_status', 'graphic_option_candidates', 'source_issues',
+                         'question_figure_bindings', 'question_figure_scope_reviews'):
                 if name in tables:
                     plan[name] = [dict(r) for r in db.execute('SELECT * FROM '+name+' WHERE scope_id=?', (scope['id'],))]
             if reviewed_graphics:
@@ -553,6 +555,8 @@ def assemble_plan(evidence, original_graph, plan, path):
                 'parent_question_id': None, 'material_id': material,
                 'source_recovery_regions': recovered,
                 'text': '\n'.join(f['text'] for f in body), 'type_candidate': 'UNVERIFIED'})
+    from .question_figures import annotate
+    annotate(questions, plan, evidence)
     from .graphic_options import annotate_question
     for q in questions:
         annotate_question(q, plan, evidence, questions)

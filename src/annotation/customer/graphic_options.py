@@ -202,9 +202,16 @@ def confirm_frame(candidate, previous, frame):
 def all_confirmed(candidate):
     if not candidate.get('graphic_option_proposals'): return True
     frames = [f for f in candidate['frames'] if f.get('graphic_option_label')]
-    return (len(frames) == 4 and {f['graphic_option_label'] for f in frames} == set('ABCD')
-            and all(f.get('binding', {}).get('source_checked') is True
-                    and f.get('binding', {}).get('kind') == 'CUSTOMER_SOURCE_REGION' for f in frames))
+    if len(frames) != 4 or {f['graphic_option_label'] for f in frames} != set('ABCD'): return False
+    for frame in frames:
+        binding = frame.get('binding', {})
+        if binding.get('source_checked') is not True: return False
+        if binding.get('kind') == 'CUSTOMER_SOURCE_REGION': continue
+        proposed = next((p for p in candidate['graphic_option_proposals'] if p['proposal_id'] == frame.get('graphic_proposal_id')), {})
+        if (binding.get('kind') != 'REVIEWED_SOURCE_GEOMETRY' or binding.get('geometry_checked') is not True
+                or not proposed.get('referenced_figure_review_sha256')
+                or binding.get('visual_review_sha256') != proposed['referenced_figure_review_sha256']): return False
+    return True
 
 
 def recheck(candidate):

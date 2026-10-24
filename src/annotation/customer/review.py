@@ -9,7 +9,7 @@ from pathlib import Path
 
 from .prepare import candidate_hash, preparation_status, utcnow
 from .source import verify_sources
-from .store import Hold, digest
+from .store import Hold, digest, byte_hash
 from .orphan_groups import group_unassigned_sources
 from .review_features import figure_requirements, candidate_support
 from .figure_proposals import BLOCKER
@@ -40,6 +40,8 @@ def recheck_structure(candidate, *, pages=(), graph=None, evidence=None):
     candidate['issues']=sorted(issues)
     from .graphic_options import recheck
     recheck(candidate)
+    from .question_figures import recheck as recheck_referenced_figures
+    recheck_referenced_figures(candidate)
     if requirements:candidate['content_status']='NEEDS_REVIEW'
 
 
@@ -105,7 +107,8 @@ class CustomerReviewWorkspace:
                 "section_path": candidate["section_path"], "text": candidate["zones"]["answer"],
                 "explanation_text": candidate["zones"].get("analysis", ""), "blocks": blocks,
                 "figures": [{"region_id": "source-" + str(i), "asset_id": f["asset_id"], "bbox": f["bbox"], "role": f["zone"], "content_type": f.get("content_type","text"),
-                             'graphic_option_label':f.get('graphic_option_label'),'source_checked':f.get('binding',{}).get('source_checked') is True}
+                             'graphic_option_label':f.get('graphic_option_label'),'referenced_figure_id':f.get('referenced_figure_id'),
+                             'source_checked':f.get('binding',{}).get('source_checked') is True}
                             for i, f in enumerate(candidate["frames"])],
                 "issue_ids": linked, "question_candidates": [{"question_id": candidate["question_id"],
                     "printed_number": candidate["printed_number"], "section_path": candidate["section_path"],
@@ -307,7 +310,7 @@ class CustomerReviewWorkspace:
                 replacement=int(region_id[7:])
                 if replacement>=len(candidate['frames']):raise Hold('待调整题图已变化。')
                 previous=candidate['frames'][replacement]
-                if (previous.get('content_type')!='image' or previous.get('binding',{}).get('kind') not in {'CUSTOMER_SOURCE_REGION','GRAPHIC_OPTION_PROPOSAL'}
+                if (previous.get('content_type')!='image' or previous.get('binding',{}).get('kind') not in {'CUSTOMER_SOURCE_REGION','GRAPHIC_OPTION_PROPOSAL','REFERENCED_FIGURE_PROPOSAL','REVIEWED_SOURCE_GEOMETRY'}
                     or previous['asset_id']!=page['asset_id'] or previous['zone']!=zone):
                     raise Hold('只能调整当前题已绑定的同页、同分区题图。')
             graph=self.store.get(job['graph_ref']) if job.get('graph_ref') else None
@@ -331,6 +334,8 @@ class CustomerReviewWorkspace:
             if replacement is not None:
                 from .graphic_options import confirm_frame
                 confirm_frame(candidate,candidate['frames'][replacement],frame)
+                from .question_figures import confirm_frame as confirm_referenced_frame
+                confirm_referenced_frame(candidate,candidate['frames'][replacement],frame)
             for donor in apply_transfers(job,candidate,frame,transfers,head,graph,evidence):
                 self._review_recheck(job,donor)
                 donor['content_hash']=candidate_hash(donor)
@@ -349,7 +354,7 @@ class CustomerReviewWorkspace:
         return self.state()
 
     def adjust_text_region(self,request):
-        """Adjust an unsaved text frame within its retained original bounds."""
+        """Adjust original text bounds; checked expansion retains every original pixel."""
         from .source_occupancy import contains,intersects
         from annotation.recognition.baseline import valid_bbox
         job,head=self._load()
@@ -379,16 +384,47 @@ class CustomerReviewWorkspace:
                 or previous['source_dimensions']!=[page['width'],page['height']]
                 or type(box) is not list or any(type(v) is not int for v in box)
                 or not valid_bbox(box,page['width'],page['height'])
-                or box==previous['bbox'] or not contains(original['bbox'],box)):
-                raise Hold('只能在同页、同分区的最初文字原框内调整边界；不能扩出原框或替换来源。')
+                or box==previous['bbox']):
+                raise Hold('文字范围须为同原图、同分区的有效新边界，不能替换来源。')
+            expansion=not contains(original['bbox'],box)
+            if expansion and (request.get('expand_complete_source') is not True or not contains(box,original['bbox'])):
+                raise Hold('补齐遗漏符号时必须明确核对外扩，且新框须完整包含最初文字框。')
+            review_sha=request.get('review_input_sha256')
+            if review_sha is not None and (not isinstance(review_sha,str) or not re.fullmatch(r'[0-9a-f]{64}',review_sha)):
+                raise Hold('文字范围审校输入摘要无效。')
+            if expansion:
+                raw_review=request.get('field_review_json')
+                if (not isinstance(raw_review,str) or len(raw_review)>1_000_000
+                    or byte_hash(raw_review.encode('utf-8'))!=review_sha):
+                    raise Hold('文字外扩需使用已固定的字段审校清单。')
+                try:
+                    document=json.loads(raw_review)
+                    entries=[r for r in document['items'] if r['source_instance_id']==candidate.get('source_instance_id')
+                             and r['candidate_key']==candidate['key']]
+                    record=entries[0]['additional_layout_mark_evidence'] if len(entries)==1 else {}
+                    source_rows=[r for r in document['source_images'] if r['page']==page.get('viewer_page')]
+                    checked=(document['schema']=='FieldLevelSourceCheckedPreparation/v1' and document['book_id']==job['book_id']
+                        and document['scope_id']==job.get('source_plan',{}).get('scope_id')
+                        and record.get('source_page')==page.get('viewer_page') and record.get('source_sha256')==page['raw_sha256']
+                        and record.get('current_text_frame_bbox')==original['bbox']
+                        and record.get('full_printed_stem_region_if_new_source_window_supported')==box
+                        and len(source_rows)==1 and source_rows[0]['source_sha256']==page['raw_sha256']
+                        and [source_rows[0]['width'],source_rows[0]['height']]==previous['source_dimensions'])
+                except (ValueError,KeyError,TypeError,IndexError):checked=False
+                if not checked:raise Hold('文字外扩不符合本题已核对的原页及完整题区。')
             for other in job['candidates']:
-                if other['key']==candidate['key']:continue
-                if any(f['asset_id']==page['asset_id'] and f['zone']==zone and intersects(f['bbox'],box)
-                       for f in other['frames']):
-                    raise Hold('调整后仍与其他题同区来源框相交，请继续核对边界。')
+                for frame_index,f in enumerate(other['frames']):
+                    if other['key']==candidate['key'] and frame_index==index:continue
+                    if f['asset_id']!=page['asset_id'] or not intersects(f['bbox'],box):continue
+                    if expansion:
+                        overlap=[max(f['bbox'][0],box[0]),max(f['bbox'][1],box[1]),min(f['bbox'][2],box[2]),min(f['bbox'][3],box[3])]
+                        if not contains(previous['bbox'],overlap):raise Hold('新增文字范围与受保护题目、选项或题图相交。')
+                    elif other['key']!=candidate['key'] and f['zone']==zone:
+                        raise Hold('调整后仍与其他题同区来源框相交，请继续核对边界。')
             revised=copy.deepcopy(previous);revised['bbox']=list(box)
             revised.setdefault('text_source_adjustment_history',[]).append({
-                'kind':'CUSTOMER_CHECKED_TEXT_FRAME_TIGHTENING','previous_head':head,'at':utcnow(),
+                'kind':'CUSTOMER_CHECKED_TEXT_FRAME_EXPANSION' if expansion else 'CUSTOMER_CHECKED_TEXT_FRAME_TIGHTENING',
+                'previous_head':head,'at':utcnow(),'review_input_sha256':review_sha,
                 'previous_source_frame':copy.deepcopy(previous),'source_checked':True,'text_complete_checked':True,
                 'content_rewritten':False,'original_ocr_rewritten':False})
             candidate['frames'][index]=revised

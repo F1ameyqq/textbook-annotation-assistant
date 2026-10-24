@@ -138,7 +138,7 @@ def candidates_from_graph(graph, pages):
 def candidate_hash(candidate):
     fields = ("key", "printed_number", "section_path", "zones", "frames", "source_kind",
               "source_instance_id", "source_item_kind", "material_id", "question_type", "source_block_key", "source_block_label", "source_recovery_regions",
-              "graphic_option_proposals", "graphic_extent_only")
+              "graphic_option_proposals", "graphic_extent_only", "referenced_figure_bindings")
     return digest({key: candidate[key] for key in fields if key in candidate})
 
 
@@ -301,6 +301,8 @@ def _continue(store, job, head, started, *, allow_local_ocr):
             apply_source_regions(job['candidates'], graph, job['pages'])
             from .graphic_options import attach_frames
             attach_frames(job['candidates'], graph)
+            from .question_figures import attach
+            attach(job['candidates'], graph)
             for candidate in job['candidates']: candidate['content_hash'] = candidate_hash(candidate)
         from .quality import assess
         for candidate in job['candidates']:assess(candidate,graph,evidence,job['pages'])
@@ -312,7 +314,8 @@ def _continue(store, job, head, started, *, allow_local_ocr):
             if page["unscoped_line_ids"]:
                 job["issues"].append({"code": "UNSCOPED_SOURCE_LINES", "evidence_refs": page["unscoped_line_ids"]})
         if graph["payload"]["unmatched_answer_ids"]:
-            job["issues"].append({"code": "UNMATCHED_ANSWERS", "evidence_refs": graph["payload"]["unmatched_answer_ids"]})
+            from .selection import unmatched_scope_issue
+            job["issues"].append(unmatched_scope_issue(job,graph,evidence))
         if not job["candidates"]:
             job["issues"].append({"code": "NO_QUESTION_ANCHORS", "detail": "未识别到可靠题号；补充清晰来源或拆分混合页。"})
         job["status"] = preparation_status(job)
