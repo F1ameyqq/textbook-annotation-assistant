@@ -76,6 +76,7 @@ def candidates_from_graph(graph, pages):
         choices = sorted(enumerate(choices),key=lambda pair:(pair[1].get('option_label') or '',pair[0]))
         choices = [f for _,f in choices]
         zones = {"question": "\n".join(f["text"] for f in stem)}
+        # 有选项须完整选项框；填空/解答无选项时不造 A/B/C/D，图形选项保留审校。
         if choices:
             zones["choice"] = "\n".join(f["text"] for f in choices)
         zones["answer"] = answer["text"] if answer else ""
@@ -112,29 +113,36 @@ def candidates_from_graph(graph, pages):
         stable = digest({"book": graph["book_id"], "lesson": question["section_path"],
                          "number": question["printed_number"],
                          "anchor": question["anchor_ref"]})
+        if question.get('source_instance_id'):
+            stable = digest([stable, question['source_instance_id']])
         candidate = {"key": stable, "printed_number": question["printed_number"],
                      "question_id": question["question_id"], "section_path": question["section_path"],
                      "zones": zones, "frames": frames, "issues": sorted(set(issues)),
                      "source_kind": "IMAGE_OCR" if image_based else "EXACT_TEXT_IMPORT",
                      "content_status": "NEEDS_REVIEW" if issues else "READY_EXACT_TEXT",
                      "review": None, "platform_status": "NOT_RUN"}
+        for field in ('source_instance_id', 'source_item_kind', 'material_id'):
+            if question.get(field) is not None: candidate[field] = question[field]
         candidate["content_hash"] = candidate_hash(candidate)
         candidates.append(candidate)
     # Printed numbers are local to a selected lesson, never global order IDs.
     for item in candidates:
-        if sum(q["printed_number"] == item["printed_number"] for q in candidates) != 1:
+        if sum((q["printed_number"], q.get('source_item_kind')) ==
+               (item["printed_number"], item.get('source_item_kind')) for q in candidates) != 1:
             item["issues"].append("DUPLICATE_PRINTED_NUMBER")
             item["content_status"] = "NEEDS_REVIEW"
     return candidates
 
 
 def candidate_hash(candidate):
-    return digest({key: candidate[key] for key in ("key", "printed_number", "section_path", "zones", "frames", "source_kind")})
+    fields = ("key", "printed_number", "section_path", "zones", "frames", "source_kind",
+              "source_instance_id", "source_item_kind", "material_id")
+    return digest({key: candidate[key] for key in fields if key in candidate})
 
 
 def prepare(store, *, book, lesson, question_files, answer_files=(), question_pages="全部",
             answer_pages="全部", allow_local_ocr=False, question_first_page=None, answer_first_page=None,
-            page_bindings=None, directory_path=None, section_titles=None):
+            page_bindings=None, directory_path=None, section_titles=None, source_plan=None):
     from annotation.recognition.offline import artifact, assemble
     started = time.perf_counter()
     if not isinstance(book, str) or not re.fullmatch(r"[1-9][0-9]{0,31}", book):
@@ -160,8 +168,12 @@ def prepare(store, *, book, lesson, question_files, answer_files=(), question_pa
         raise Hold("题目与答案使用了同一页；当前请分别导入题页和答案页。")
     if directory_path is not None and (type(directory_path) is not list or not directory_path or directory_path[-1] != lesson):
         raise Hold('平台目录完整路径不一致。')
+    if source_plan is not None:
+        source_plan = copy.deepcopy(source_plan)
+        source_plan['page_assets'] = {str(p['viewer_page']): p['asset_id'] for p in pages}
     identity_data = [book, lesson, [(p["asset_id"], p["role"], p.get("viewer_page")) for p in pages]]
     if directory_path is not None: identity_data.append(directory_path)
+    if source_plan is not None: identity_data.append(digest(source_plan))
     identity = digest(identity_data)
     with store.book_lock(book):
         with store.connect() as db:
@@ -180,6 +192,7 @@ def prepare(store, *, book, lesson, question_files, answer_files=(), question_pa
                "customer_ready": False, "legacy_decision": "HOLD"}
         if directory_path is not None: job['directory_path'] = list(directory_path)
         if section_titles is not None: job['section_titles'] = list(section_titles)
+        if source_plan is not None: job['source_plan'] = copy.deepcopy(source_plan)
         head = store.save_job(job)
         return _continue(store, job, head, started, allow_local_ocr=allow_local_ocr)
 
@@ -209,19 +222,31 @@ def _continue(store, job, head, started, *, allow_local_ocr):
             if page["kind"] == "text":
                 lines, mode = text_lines(page), "EXACT_TEXT_IMPORT"
             else:
-                lines, mode = ocr_page(store, page, job["book_id"], allow_local_ocr=allow_local_ocr)
+                if job.get('source_plan'):
+                    from .recognition_cache import cached_page
+                    retained = cached_page(store, page, job['book_id'])
+                    if retained is None: raise Hold('全书来源计划没有对应的完整旧识别缓存。')
+                    lines, mode = retained['lines'], 'HISTORICAL_CACHE_NO_NEW_OCR'
+                    page['recognition_provenance'] = retained['provenance']
+                else:
+                    lines, mode = ocr_page(store, page, job["book_id"], allow_local_ocr=allow_local_ocr)
             validate_lines(lines, page["width"], page["height"])
             observations.append((page, lines))
             job["recognition"].append({"asset_id": page["asset_id"], "mode": mode, "at": utcnow()})
             job["metrics"]["new_model_pages"] += int(mode == "LOCAL_OCR")
             job["metrics"]["cache_pages"] += int(mode in {"CACHE", "HISTORICAL_CACHE_NO_NEW_OCR"})
-            if job.get('section_titles'):
+            if job.get('section_titles') and not job.get('source_plan'):
                 from .section_scope import select_section
                 same_role=[pair for pair in observations if pair[0]['role']==page['role']]
                 discovered=select_section(same_role,job['lesson'],job['section_titles'],require_roles=(page['role'],))
                 if not discovered[-1]['continuation_at_end']:closed_roles.add(page['role'])
         scoped = None
-        if job.get('section_titles'):
+        if job.get('source_plan'):
+            from .wholebook import locate_plan
+            scoped = locate_plan(observations, job['source_plan'], job['directory_path'])
+            job['section_scope_ref'] = store.put(scoped)
+            job['source_scope_complete'] = all(w['start_observed'] for w in job['source_plan']['windows'])
+        elif job.get('section_titles'):
             from .section_scope import select_section
             scoped = select_section(observations, job['lesson'], job['section_titles'])
             job['section_scope_ref'] = store.put(scoped)
@@ -248,6 +273,9 @@ def _continue(store, job, head, started, *, allow_local_ocr):
                              "No dense answer-row rerun or remote model calls."]}, [],
             {"module": __name__, "version": "1", "input_kind": "ORDINARY_LOCAL_MATERIALS"})
         graph = assemble(evidence)
+        if job.get('source_plan'):
+            from .wholebook import assemble_plan
+            graph = assemble_plan(evidence, graph, job['source_plan'], job['directory_path'])
         job["evidence_ref"], job["graph_ref"] = store.put(evidence), store.put(graph)
         job["candidates"] = candidates_from_graph(graph, job["pages"])
         from .quality import assess

@@ -323,6 +323,9 @@ def main(argv=None):
     p = sub.add_parser('platform'); p.add_argument('--book',required=True);p.add_argument('--directory',required=True)
     p.add_argument('--question-pages');p.add_argument('--answer-pages');p.add_argument('--local-ocr',action='store_true')
     p = sub.add_parser('import-cache');p.add_argument('evidence',type=Path);p.add_argument('--member')
+    p = sub.add_parser('wholebook', help='复用全书 OCR 数据库，按来源窗口离线准备与审校')
+    p.add_argument('--database', required=True, type=Path); p.add_argument('--book', required=True)
+    p.add_argument('--scopes', nargs='+', help='仅准备所选目录；省略时准备所有普通双栏课时')
     a = parser.parse_args(argv)
     if a.customer_deployment and a.command is not None:
         raise Hold('客户交付模式只用于图形入口，不能作为开发命令的授权覆盖。')
@@ -359,6 +362,9 @@ def main(argv=None):
     elif a.command == 'import-cache':
         from annotation.customer.recognition_cache import import_evidence
         result = import_evidence(store,a.evidence,member=a.member)
+    elif a.command == 'wholebook':
+        from annotation.customer.wholebook import prepare_book
+        result = prepare_book(store,a.database,book=a.book,scope_ids=a.scopes)
     else: result = configure_first_use(store, existing_profile=a.existing_profile, enable_platform=a.enable_platform,
                                        approved_known_certificate=a.approved_known_certificate)
     print(json.dumps(result, ensure_ascii=False, allow_nan=False))
