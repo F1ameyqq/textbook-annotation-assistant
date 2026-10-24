@@ -123,6 +123,7 @@ def candidates_from_graph(graph, pages):
                      "review": None, "platform_status": "NOT_RUN"}
         for field in ('source_instance_id', 'source_item_kind', 'material_id'):
             if question.get(field) is not None: candidate[field] = question[field]
+        if question.get('source_instance_id'): candidate['question_type'] = question['type_candidate']
         candidate["content_hash"] = candidate_hash(candidate)
         candidates.append(candidate)
     # Printed numbers are local to a selected lesson, never global order IDs.
@@ -136,7 +137,7 @@ def candidates_from_graph(graph, pages):
 
 def candidate_hash(candidate):
     fields = ("key", "printed_number", "section_path", "zones", "frames", "source_kind",
-              "source_instance_id", "source_item_kind", "material_id")
+              "source_instance_id", "source_item_kind", "material_id", "question_type")
     return digest({key: candidate[key] for key in fields if key in candidate})
 
 
@@ -192,7 +193,10 @@ def prepare(store, *, book, lesson, question_files, answer_files=(), question_pa
                "customer_ready": False, "legacy_decision": "HOLD"}
         if directory_path is not None: job['directory_path'] = list(directory_path)
         if section_titles is not None: job['section_titles'] = list(section_titles)
-        if source_plan is not None: job['source_plan'] = copy.deepcopy(source_plan)
+        if source_plan is not None:
+            job['source_plan'] = copy.deepcopy(source_plan)
+            if source_plan.get('platform_directory_status'):
+                job['platform_directory_status'] = source_plan['platform_directory_status']
         head = store.save_job(job)
         return _continue(store, job, head, started, allow_local_ocr=allow_local_ocr)
 
@@ -266,9 +270,14 @@ def _continue(store, job, head, started, *, allow_local_ocr):
                           "ocr_lines": located, "answer_detail_lines": details,
                           "derived_dense_partitions":partitions,
                           "unscoped_line_ids": [line["line_id"] for line in located if not line["location"]]})
+        pixel_answer_spans = []
+        if job.get('source_plan'):
+            from .wholebook import derive_answer_gutters
+            pixel_answer_spans = derive_answer_gutters(pages, job['source_plan'], job['pages'])
         evidence = artifact("b-evidence-trial/0.2", "EvidenceBundleTrial",
             {"book_id": job["book_id"], "scope_id": job["id"]},
             {"pages": pages, "context": {"pages": context}, "quality_decision": "NOT_EVALUATED",
+             "pixel_answer_spans": pixel_answer_spans,
              "limitations": ["Customer selects semantic scope; automatic physical layout is unverified.",
                              "No dense answer-row rerun or remote model calls."]}, [],
             {"module": __name__, "version": "1", "input_kind": "ORDINARY_LOCAL_MATERIALS"})
