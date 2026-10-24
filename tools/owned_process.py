@@ -91,8 +91,13 @@ def observe(pid, held, result):
         value=Wait(h,0);detail['held_handle_wait_result']=value
         if value==0xffffffff:detail['held_handle_wait_winerror']=c.get_last_error()
         item['metadata_failure']=detail
-        # Access denial alone is not evidence of a short-lived process. The
-        # exact retained handle must already be signaled; never reopen its PID.
+        # An image path is optional once creation identity and the owned handle
+        # exist. Keep supervising that handle; this does not assert an exit.
+        if (getattr(exc,'winerror',None)==5 and detail['api']=='QueryFullProcessImageNameW'
+                and item['creation_filetime'] is not None and value==258):
+            item['metadata_status']='UNAVAILABLE_ACCESS_DENIED_HANDLE_RETAINED'
+            return
+        # Only a signaled retained handle proves an exit race; never reopen PID.
         if getattr(exc,'winerror',None)==5 and value==0:
             item['metadata_status']='UNAVAILABLE_AFTER_PROVEN_EXIT'
             return

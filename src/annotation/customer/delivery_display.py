@@ -17,7 +17,7 @@ from pathlib import Path
 import sys
 from urllib.parse import urlsplit
 
-HOLDER_SHA256 = "90babd87d0ec8e7bcda00f4ff0d2aa3f148ac26b84884735c4301c2a12a74e57"
+HOLDER_SHA256 = "e21314716eb27dd7176fcd995fa137f806c1c6a9ec3750f2dd798f8a318e2063"
 MATHJAX_SHA256 = "d4295dc33744836935c1399feece5159577b34c5c8ffb9f1c6324cd82e03a882"
 FILES = ("index.html", "receipt.json", "mapping.json", "formulas.json", "assets/tex-svg.js")
 

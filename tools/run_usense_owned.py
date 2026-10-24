@@ -14,7 +14,7 @@ ROOT = Path(__file__).resolve().parents[1]
 # In a release the child cwd is app/, but outputs must stay outside its parent
 # package as well. Source-checkout invocations keep the repository boundary.
 PACKAGE_ROOT = ROOT.parent if ROOT.name.casefold() == "app" else ROOT
-HOLDER_SHA = "90babd87d0ec8e7bcda00f4ff0d2aa3f148ac26b84884735c4301c2a12a74e57"
+HOLDER_SHA = "e21314716eb27dd7176fcd995fa137f806c1c6a9ec3750f2dd798f8a318e2063"
 ENTRIES = {"batch": "run_usense_reviewed_batch.py", "recovery": "run_usense_postsave_readback.py", "live": "run_usense_live.py"}
 
 
