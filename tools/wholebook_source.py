@@ -1,4 +1,4 @@
-"""Build a searchable source database from retained whole-book images and OCR."""
+"""Build a source database from retained whole-book images and OCR."""
 import argparse
 import json
 import re
@@ -32,14 +32,14 @@ def scan_answer_markers(text, reading=False):
     return markers
 
 parser = argparse.ArgumentParser(description=__doc__)
-parser.add_argument("--cache", type=Path, required=True, help="folder with mapping-seed.json, image-manifest.json and retained images/OCR")
+parser.add_argument("--cache", type=Path, required=True, help="folder containing mapping-seed.json, image-manifest.json, images and OCR")
 parser.add_argument("--inventory", type=Path, required=True, help="current-directory-inventory.json")
 parser.add_argument("--database", type=Path, required=True, help="SQLite database to build or resume")
 parser.add_argument("--output", type=Path, required=True, help="machine inventory CSV to write")
-parser.add_argument("--deps", type=Path, help="optional directory containing rapidocr_onnxruntime")
+parser.add_argument("--deps", type=Path, help="optional rapidocr_onnxruntime package directory")
+parser.add_argument("--recoveries", type=Path, help="reviewed original-image recovery plan JSON")
 args = parser.parse_args()
 ROOT = Path(__file__).resolve().parent
-sys.path.insert(0, str(ROOT.parent / "src"))
 if args.deps:
     sys.path.insert(0, str(args.deps.expanduser().resolve(strict=True)))
 CACHE = args.cache.expanduser().resolve(strict=True)
@@ -377,6 +377,8 @@ def reconcile_sources(database, csv_path):
     CREATE TABLE IF NOT EXISTS resolved_answer_items(scope_id TEXT,item_id TEXT,kind TEXT,label TEXT,start_page INTEGER,start_row INTEGER,fragments_json TEXT,PRIMARY KEY(item_id));
     CREATE TABLE IF NOT EXISTS pairing_status(scope_id TEXT,question_item_id TEXT,answer_item_id TEXT,status TEXT,reason TEXT,details_json TEXT,PRIMARY KEY(question_item_id));
     CREATE TABLE IF NOT EXISTS answer_marker_quality(item_id TEXT PRIMARY KEY,strength TEXT,reason TEXT,raw_token TEXT,start_offset INTEGER,end_offset INTEGER,raw_text TEXT,page INTEGER,row_index INTEGER);
+    CREATE TABLE IF NOT EXISTS source_item_context(item_id TEXT PRIMARY KEY,block_key TEXT,block_label TEXT,origin TEXT,evidence_json TEXT);
+    CREATE TABLE IF NOT EXISTS source_recovery_records(item_id TEXT PRIMARY KEY,plan_sha TEXT,record_json TEXT);
     DELETE FROM source_exclusions;
     DELETE FROM graphic_option_candidates;
     DELETE FROM source_issues;
@@ -405,7 +407,7 @@ def reconcile_sources(database, csv_path):
                     if role=="question" and re.fullmatch(r"[ABCD]",t):letters.append((f["page"],index,t,b,f))
             if indices:
                 boxes=[bbox(p["rows"][i][0]) for i in indices]
-                kept.append({**f,"row_indices":indices,"bbox":[min(b[0] for b in boxes),min(b[1] for b in boxes),max(b[2] for b in boxes),max(b[3] for b in boxes)]})
+                kept.append({**f,"row_indices":indices,"bbox":f['bbox'] if f.get('reviewed_region') else [min(b[0] for b in boxes),min(b[1] for b in boxes),max(b[2] for b in boxes),max(b[3] for b in boxes)]})
         cleaned[iid]=kept
         for n in {l[0] for l in letters}:
             group=[l for l in letters if l[0]==n]
@@ -429,6 +431,14 @@ def reconcile_sources(database, csv_path):
                     database.execute("INSERT INTO graphic_option_candidates VALUES(?,?,?,?,?,?,?,?)",(sid,iid,pn,letter,ri,json.dumps(lb),json.dumps(proposal),"GRID_REGION_REVIEW" if grid else "BARE_LABEL_GROUP_REVIEW"))
                     graphics.add(iid)
     for sid,gaps in database.execute("SELECT scope_id,number_gaps FROM machine_counts WHERE number_gaps!='[]'").fetchall():
+        block_numbers={}
+        for block,label in database.execute("SELECT c.block_key,i.label FROM source_item_context c JOIN source_items i ON i.item_id=c.item_id WHERE i.scope_id=? AND i.kind='QUESTION'",(sid,)):
+            block_numbers.setdefault(block,set()).add(int(label))
+        if len(block_numbers)>1:
+            for block,numbers in block_numbers.items():
+                for label in sorted(set(range(1,max(numbers,default=0)+1))-numbers):
+                    database.execute('INSERT INTO source_issues VALUES(?,?,?,?,?,?)',(sid,'BLOCK_NUMBERING_REVIEW',f'{block}/{label}',scopes[sid]['qpages'][0],-1,json.dumps({'block_key':block,'observed_labels':sorted(numbers),'action':'REVIEW_ORIGINAL_BLOCK_WITHOUT_BORROWING_SAME_NUMBER_FROM_OTHER_BLOCK'},ensure_ascii=False)))
+            continue
         for label in json.loads(gaps):
             found=[]
             for n in scopes[sid]["qpages"]:
@@ -524,7 +534,7 @@ def reconcile_sources(database, csv_path):
             iid=f"{sid}/resolved-answer/{item['kind']}/{j+1}"
             database.execute("INSERT INTO resolved_answer_items VALUES(?,?,?,?,?,?,?)",(sid,iid,item["kind"],item["label"],item["page"],item["row"],json.dumps(item["fragments"],ensure_ascii=False)))
             m=item['marker'];database.execute("INSERT INTO answer_marker_quality VALUES(?,?,?,?,?,?,?,?,?)",(iid,"STRONG" if m['strong'] else "REVIEW",m['reason'],m['token'],m['start'],m['end'],item['raw_text'],item['page'],item['row']))
-    for sid,iid,kind,label,sp,sr in database.execute("SELECT scope_id,item_id,kind,label,start_page,start_row FROM source_items WHERE role='question' AND kind NOT IN ('MATERIAL','WORKED_EXAMPLE')").fetchall():
+    for sid,iid,kind,label,sp,sr in database.execute("SELECT scope_id,item_id,kind,label,start_page,start_row FROM source_items WHERE role='question' AND kind IN ('QUESTION','READING_TASK','VARIANT')").fetchall():
         answers=database.execute("SELECT item_id FROM resolved_answer_items WHERE scope_id=? AND kind=? AND label=?",(sid,kind,label)).fetchall()
         question_count=database.execute("SELECT count(*) FROM source_items WHERE scope_id=? AND role='question' AND kind=? AND label=?",(sid,kind,label)).fetchone()[0]
         reasons=[]
@@ -540,6 +550,9 @@ def reconcile_sources(database, csv_path):
         if question_count!=1:reasons.append("DUPLICATE_QUESTION_IDENTITY")
         if iid in graphics:reasons.append("GRAPHIC_OPTIONS_REQUIRE_REVIEW")
         if not cleaned.get(iid):reasons.append("NO_BODY_AFTER_EXCLUSIONS")
+        context=database.execute("SELECT block_key,origin FROM source_item_context WHERE item_id=?",(iid,)).fetchone()
+        if context and context[0] in ('training','selftest'):reasons.append("ANSWER_BLOCK_CONTEXT_REVIEW")
+        if context and context[1] in ('VISUAL_SOURCE_RECOVERY','LAYOUT_RECUT','SOURCE_REANCHORED'):reasons.append("RECOVERED_SOURCE_REGION_REVIEW")
         text=unicodedata.normalize("NFKC",pages[sp]["rows"][sr][1])
         if kind=="QUESTION" and not re.match(r"^\s*\d+[.、]\s*(?:[（(]|[A-Z]?[\u4e00-\u9fff]|\d+[\u4e00-\u9fff])",text):reasons.append("MATH_OR_UNCLEAR_ANCHOR_REVIEW")
         gaps=json.loads(database.execute("SELECT number_gaps FROM machine_counts WHERE scope_id=?",(sid,)).fetchone()[0])
@@ -549,13 +562,153 @@ def reconcile_sources(database, csv_path):
         database.execute("INSERT INTO pairing_status VALUES(?,?,?,?,?,?)",(sid,iid,answers[0][0] if len(answers)==1 else None,status,";".join(reasons) or "UNIQUE_SOURCE_ANCHORS_SAME_SCOPE_KIND_LABEL",json.dumps(detail,ensure_ascii=False)))
     database.commit()
     with Path(csv_path).open(encoding="utf-8-sig",newline="") as f:rows=list(csv.DictReader(f));fieldnames=list(rows[0])
-    extra=["已定位答案窗口","已定位答案锚点","可直接配对候选","需客户审校实例","装饰页脚排除行","图形选项待审组","缺口定位"]
+    extra=["已定位答案窗口","已定位答案锚点","可直接配对候选","需客户审校实例","装饰页脚排除行","图形选项待审组","缺口定位","原图恢复实例","栏目实例"]
     for field in extra:
         if field not in fieldnames:fieldnames.append(field)
     for row in rows:
         sid=row["目录ID"]
+        m=database.execute("SELECT item_count,numbered,reading_tasks,variants,examples,number_gaps FROM machine_counts WHERE scope_id=?",(sid,)).fetchone()
+        if m:
+            for field,value in zip(['机器候选数','编号题','阅读任务','变式','例题另列','题号缺口'],m):row[field]=value
+            known=row.get('可确认题数_既有逐项枚举','');row['待判候选或计数差异']=abs(m[0]-int(known)) if known else m[0]
         row.update(dict(zip(extra,[database.execute("SELECT count(*) FROM resolved_answer_windows WHERE scope_id=?",(sid,)).fetchone()[0],database.execute("SELECT count(*) FROM resolved_answer_items WHERE scope_id=?",(sid,)).fetchone()[0],database.execute("SELECT count(*) FROM pairing_status WHERE scope_id=? AND status='READY_TO_PAIR'",(sid,)).fetchone()[0],database.execute("SELECT count(*) FROM pairing_status WHERE scope_id=? AND status='CUSTOMER_REVIEW'",(sid,)).fetchone()[0],database.execute("SELECT count(*) FROM source_exclusions WHERE scope_id=?",(sid,)).fetchone()[0],database.execute("SELECT count(DISTINCT question_item_id) FROM graphic_option_candidates WHERE scope_id=?",(sid,)).fetchone()[0],';'.join(f"{t}:{lab}@{p}/{i}" for t,lab,p,i in database.execute("SELECT issue_type,label,page,row_index FROM source_issues WHERE scope_id=?",(sid,)))])))
+        row['原图恢复实例']=database.execute('SELECT count(*) FROM source_recovery_records r JOIN source_items i ON i.item_id=r.item_id WHERE i.scope_id=?',(sid,)).fetchone()[0]
+        row['栏目实例']=';'.join(f'{block}:{count}' for block,count in database.execute('SELECT c.block_key,count(*) FROM source_item_context c JOIN source_items i ON i.item_id=c.item_id WHERE i.scope_id=? GROUP BY c.block_key',(sid,)))
     with Path(csv_path).open("w",encoding="utf-8-sig",newline="") as f:writer=csv.DictWriter(f,fieldnames);writer.writeheader();writer.writerows(rows)
     print("RECONCILED",database.execute("SELECT status,count(*) FROM pairing_status GROUP BY status").fetchall(),flush=True)
 
+def apply_reviewed_regions(database, plan_path):
+    import json,re,hashlib
+    from pathlib import Path
+    plan_bytes=Path(plan_path).read_bytes();plan=json.loads(plan_bytes.decode('utf-8-sig'));plan_sha=hashlib.sha256(plan_bytes).hexdigest()
+    pages={n:{'rows':json.loads(raw),'sha':sha,'w':w,'h':h} for n,raw,sha,w,h in database.execute('SELECT page,rows_json,sha,width,height FROM pages')}
+    for p in plan['pages']:
+        if pages[p['page']]['sha']!=p['source_sha256']:raise ValueError('Recovery image hash differs from source page')
+    database.executescript('CREATE TABLE IF NOT EXISTS source_item_context(item_id TEXT PRIMARY KEY,block_key TEXT,block_label TEXT,origin TEXT,evidence_json TEXT);CREATE TABLE IF NOT EXISTS source_recovery_records(item_id TEXT PRIMARY KEY,plan_sha TEXT,record_json TEXT);')
+    reset_scope='dir-1792063578574-xrojh8iro'
+    records=list(plan['items'])+list(plan.get('additional_tail_items',[]))
+    for s in plan.get('additional_same_subsection_instances',[]):
+        records.append({**s,'start_page':s['page'],'start_bbox':s['bbox'],'fragments':[{'page':s['page'],'column':s['column'],'part':'full_question','bbox':s['bbox'],'row_indices':s['row_indices'],'source_sha256':pages[s['page']]['sha']}],'evidence':'VISUALLY_OBSERVED_ORIGINAL_IMAGE'})
+    for finding in plan.get('structural_findings',[]):
+        for region in finding.get('repair_regions',[]):
+            sid=finding['scope_id'];label=region['label'];iid=database.execute("SELECT item_id FROM source_items WHERE scope_id=? AND role='question' AND kind='QUESTION' AND label=?",(sid,label)).fetchone()[0]
+            n=region['page'];b=region['bbox'];indices=[]
+            for i,(box,text,score) in enumerate(pages[n]['rows']):
+                cx=sum(v[0] for v in box)/4;cy=sum(v[1] for v in box)/4
+                if b[0]<=cx<b[2] and b[1]<=cy<b[3]:indices.append(i)
+            records.append({'scope_id':sid,'printed_question':label,'subsection':'原图重切','start_page':n,'column':region['column'],'start_bbox':b,'fragments':[{'page':n,'column':region['column'],'bbox':b,'row_indices':indices,'source_sha256':pages[n]['sha'],'part':'full_question'}],'existing_item_id':iid,'evidence':'VISUALLY_OBSERVED_ORIGINAL_IMAGE'})
+    assigned={};prepared=[];affected=set()
+    for record in records:
+        sid=record['scope_id'];affected.add(sid);label=str(record['printed_question']);block='selftest' if sid==reset_scope else 'main'
+        iid=record.get('existing_item_id') or f'{sid}/question/QUESTION/recovered/{block}/{label}'
+        fragments=[]
+        for f in record['fragments']:
+            if f['source_sha256']!=pages[f['page']]['sha']:raise ValueError('Recovery fragment image mismatch')
+            indices=[int(i) for i in f['row_indices']];fragments.append({**f,'row_indices':indices,'reviewed_region':True})
+            for i in indices:assigned[(sid,f['page'],i)]=iid
+        n=record['start_page'];b=record['start_bbox'];candidates=[]
+        for f in fragments:
+            if f['page']!=n:continue
+            for i in f['row_indices']:
+                box,text,score=pages[n]['rows'][i];cx=sum(v[0] for v in box)/4;cy=sum(v[1] for v in box)/4
+                if b[0]<=cx<b[2] and b[1]<=cy<b[3]:candidates.append((min(v[1] for v in box),i))
+        start_row=min(candidates)[1] if candidates else fragments[0]['row_indices'][0]
+        prepared.append((iid,sid,label,n,start_row,fragments,block,record))
+    # Keep each observed OCR row in one question instance after an explicit reassignment.
+    for sid,iid,fragments in database.execute("SELECT scope_id,item_id,fragments_json FROM source_items WHERE role='question'").fetchall():
+        if sid not in affected:continue
+        kept=[]
+        for f in json.loads(fragments):
+            indices=[i for i in f['row_indices'] if assigned.get((sid,f['page'],i),iid)==iid]
+            if not indices:continue
+            boxes=[pages[f['page']]['rows'][i][0] for i in indices]
+            kept.append({**f,'row_indices':indices,'bbox':[min(v[0] for box in boxes for v in box),min(v[1] for box in boxes for v in box),max(v[0] for box in boxes for v in box),max(v[1] for box in boxes for v in box)]})
+        database.execute('UPDATE source_items SET fragments_json=?,end_page=? WHERE item_id=?',(json.dumps(kept,ensure_ascii=False),max((f['page'] for f in kept),default=database.execute('SELECT start_page FROM source_items WHERE item_id=?',(iid,)).fetchone()[0]),iid))
+    for iid,sid,label,n,start_row,fragments,block,record in prepared:
+        database.execute('INSERT OR REPLACE INTO source_items VALUES(?,?,?,?,?,?,?,?,?,?)',(sid,iid,'question','QUESTION',label,n,start_row,max(f['page'] for f in fragments),json.dumps(fragments,ensure_ascii=False),None))
+        database.execute('INSERT OR REPLACE INTO source_item_context VALUES(?,?,?,?,?)',(iid,block,record.get('subsection',''),'VISUAL_SOURCE_RECOVERY',json.dumps({'plan_sha':plan_sha,'start_bbox':record['start_bbox'],'evidence':record['evidence']},ensure_ascii=False)))
+        database.execute('INSERT OR REPLACE INTO source_recovery_records VALUES(?,?,?)',(iid,plan_sha,json.dumps(record,ensure_ascii=False)))
+    # The printed self-test restarts at 1, independently of the preceding variant training.
+    for iid,kind,n,row in database.execute("SELECT item_id,kind,start_page,start_row FROM source_items WHERE scope_id=? AND role='question'",(reset_scope,)).fetchall():
+        text=pages[n]['rows'][row][1]
+        if kind=='VARIANT' and text.strip()=='变式训练':database.execute("UPDATE source_items SET kind='DECORATION' WHERE item_id=?",(iid,));continue
+        if kind!='QUESTION':continue
+        box=pages[n]['rows'][row][0];col=int(sum(v[0] for v in box)/4/(pages[n]['w']/2));y=min(v[1] for v in box)
+        block='selftest' if n>126 or n==126 and (col==1 or y>=397) else 'training'
+        old=database.execute('SELECT origin,evidence_json FROM source_item_context WHERE item_id=?',(iid,)).fetchone()
+        database.execute('INSERT OR REPLACE INTO source_item_context VALUES(?,?,?,?,?)',(iid,block,'复习自测' if block=='selftest' else '变式训练',old[0] if old else 'OBSERVED_COLUMN_BLOCK',old[1] if old else json.dumps({'block_start':[126,0,397]})))
+    # Correct a weak numeric/decimal anchor only when its existing source contains the same real label.
+    for sid in affected:
+        for iid,label,n,row,raw in database.execute("SELECT item_id,label,start_page,start_row,fragments_json FROM source_items WHERE scope_id=? AND role='question' AND kind='QUESTION'",(sid,)).fetchall():
+            if database.execute('SELECT 1 FROM source_recovery_records WHERE item_id=?',(iid,)).fetchone():continue
+            text=pages[n]['rows'][row][1]
+            strong=lambda t:bool(re.match(r'^\s*'+re.escape(label)+r'[.、．]\s*(?:[（(]|[A-Z]?[\u4e00-\u9fff])',t))
+            if strong(text):continue
+            matches=[]
+            for f in json.loads(raw):
+                for i in f['row_indices']:
+                    box,t,score=pages[f['page']]['rows'][i]
+                    if strong(t):matches.append((f['page'],f['column'],min(v[1] for v in box),i))
+            if matches:
+                page,col,y,index=min(matches);database.execute('UPDATE source_items SET start_page=?,start_row=? WHERE item_id=?',(page,index,iid));database.execute('INSERT OR REPLACE INTO source_item_context VALUES(?,?,?,?,?)',(iid,'main','真实同号源锚','SOURCE_REANCHORED',json.dumps({'old_anchor':[n,row],'new_anchor':[page,index]})))
+    # Return text preceding a corrected anchor to its actual preceding question.
+    reanchored=database.execute("SELECT i.scope_id,i.item_id,i.start_page,i.start_row,i.fragments_json FROM source_items i JOIN source_item_context c ON c.item_id=i.item_id WHERE c.origin='SOURCE_REANCHORED'").fetchall()
+    for sid,iid,n,row,raw in reanchored:
+        anchors=[]
+        for other,p,r in database.execute("SELECT item_id,start_page,start_row FROM source_items WHERE scope_id=? AND role='question' AND kind='QUESTION'",(sid,)):
+            box=pages[p]['rows'][r][0];c=int(sum(v[0] for v in box)/4/(pages[p]['w']/2));anchors.append(((p,c,min(v[1] for v in box)),other))
+        anchor=next(a for a,other in anchors if other==iid);remaining=[];transfers=[]
+        for f in json.loads(raw):
+            keep=[]
+            for index in f['row_indices']:
+                box=pages[f['page']]['rows'][index][0];position=(f['page'],f['column'],min(v[1] for v in box))
+                if position<anchor:
+                    preceding=[(a,other) for a,other in anchors if a<=position and other!=iid]
+                    if preceding:transfers.append((max(preceding)[1],f['page'],f['column'],index));continue
+                keep.append(index)
+            if keep:
+                boxes=[pages[f['page']]['rows'][i][0] for i in keep];bounds=[min(v[0] for b in boxes for v in b),min(v[1] for b in boxes for v in b),max(v[0] for b in boxes for v in b),max(v[1] for b in boxes for v in b)]
+                remaining.append({**f,'row_indices':keep,'bbox':bounds})
+        database.execute('UPDATE source_items SET fragments_json=?,end_page=? WHERE item_id=?',(json.dumps(remaining,ensure_ascii=False),max((f['page'] for f in remaining),default=n),iid))
+        for target,p,c,index in transfers:
+            fragments=json.loads(database.execute('SELECT fragments_json FROM source_items WHERE item_id=?',(target,)).fetchone()[0]);f=next((f for f in fragments if f['page']==p and f['column']==c),None)
+            if f is None:f={'page':p,'column':c,'row_indices':[],'bbox':[0,0,0,0]};fragments.append(f)
+            f['row_indices']=sorted(set([*f['row_indices'],index]),key=lambda i:min(v[1] for v in pages[p]['rows'][i][0]));boxes=[pages[p]['rows'][i][0] for i in f['row_indices']];f['bbox']=[min(v[0] for b in boxes for v in b),min(v[1] for b in boxes for v in b),max(v[0] for b in boxes for v in b),max(v[1] for b in boxes for v in b)]
+            database.execute('UPDATE source_items SET fragments_json=? WHERE item_id=?',(json.dumps(fragments,ensure_ascii=False),target))
+    # The last test paper is printed in two columns on all four source images.
+    sid='unit-volume-205';items=database.execute("SELECT item_id,start_page,start_row,fragments_json FROM source_items WHERE scope_id=? AND role='question' AND kind='QUESTION'",(sid,)).fetchall();anchors=[]
+    for iid,n,row,raw in items:
+        box=pages[n]['rows'][row][0];x=sum(v[0] for v in box)/4;y=min(v[1] for v in box);anchors.append(((n,int(x/(pages[n]['w']/2)),y),iid))
+    anchors.sort();pool={iid:[] for _,iid in anchors};protected={}
+    for iid,ss,label,n,row,fragments,block,record in prepared:
+        if ss==sid:
+            pool[iid]=fragments
+            for f in fragments:
+                for index in f['row_indices']:protected[(f['page'],index)]=iid
+    for n in range(205,209):
+        p=pages[n];cw=p['w']/2;database.execute("DELETE FROM scope_windows WHERE scope_id=? AND role='question' AND page=?",(sid,n))
+        for c in range(2):database.execute('INSERT INTO scope_windows VALUES(?,?,?,?,?,?,?,?,?,?)',(sid,'question',n,c,c*cw,0,(c+1)*cw,p['h']*.95,1,'ORIGINAL_IMAGE_TWO_COLUMNS'))
+        for index,(box,text,score) in enumerate(p['rows']):
+            if (n,index) in protected:continue
+            x=sum(v[0] for v in box)/4;y=min(v[1] for v in box);c=min(1,int(x/cw));eligible=[(a,iid) for a,iid in anchors if a<=(n,c,y)]
+            if not eligible or y>=p['h']*.95:continue
+            iid=max(eligible)[1];f=next((f for f in pool[iid] if f['page']==n and f['column']==c and not f.get('reviewed_region')),None)
+            if f is None:f={'page':n,'column':c,'row_indices':[],'bbox':[c*cw,y,(c+1)*cw,y]};pool[iid].append(f)
+            f['row_indices'].append(index)
+    for iid,fragments in pool.items():
+        for f in fragments:
+            if f.get('reviewed_region') or not f['row_indices']:continue
+            boxes=[pages[f['page']]['rows'][i][0] for i in f['row_indices']];f['bbox']=[min(v[0] for box in boxes for v in box),min(v[1] for box in boxes for v in box),max(v[0] for box in boxes for v in box),max(v[1] for box in boxes for v in box)]
+        database.execute('UPDATE source_items SET fragments_json=?,end_page=? WHERE item_id=?',(json.dumps(fragments,ensure_ascii=False),max(f['page'] for f in fragments),iid))
+        if not database.execute('SELECT 1 FROM source_item_context WHERE item_id=?',(iid,)).fetchone():database.execute('INSERT INTO source_item_context VALUES(?,?,?,?,?)',(iid,'main','期末试卷双栏','LAYOUT_RECUT',json.dumps({'columns':2,'pages':[205,206,207,208]})))
+    for sid in affected:
+        kinds=dict(database.execute("SELECT kind,count(*) FROM source_items WHERE scope_id=? AND role='question' GROUP BY kind",(sid,)).fetchall());blocks={}
+        for iid,label in database.execute("SELECT item_id,label FROM source_items WHERE scope_id=? AND role='question' AND kind='QUESTION'",(sid,)):
+            context=database.execute('SELECT block_key FROM source_item_context WHERE item_id=?',(iid,)).fetchone();blocks.setdefault(context[0] if context else 'main',set()).add(int(label))
+        gaps=sorted({n for nums in blocks.values() for n in set(range(1,max(nums,default=0)+1))-nums});count=sum(kinds.get(k,0) for k in ['QUESTION','READING_TASK','VARIANT'])
+        database.execute('UPDATE machine_counts SET item_count=?,numbered=?,reading_tasks=?,variants=?,examples=?,number_gaps=? WHERE scope_id=?',(count,kinds.get('QUESTION',0),kinds.get('READING_TASK',0),kinds.get('VARIANT',0),kinds.get('WORKED_EXAMPLE',0),json.dumps(gaps),sid))
+    database.commit();print('RECOVERED',len(prepared),'records',len(affected),'scopes',plan_sha,flush=True)
+
+if args.recoveries:
+    apply_reviewed_regions(db,args.recoveries.expanduser().resolve(strict=True))
 reconcile_sources(db, output)
