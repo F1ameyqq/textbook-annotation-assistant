@@ -437,8 +437,10 @@
     card.append(open, content); return card;
   }
   function renderSources(answer) {
-    const assetIds = [...new Set([...(answer.blocks || []).map(block => block.asset_id), ...(answer.figures || []).map(figure => figure.asset_id)])];
+    const assetIds = [...new Set([...(answer.blocks || []).map(block => block.asset_id), ...(answer.figures || []).map(figure => figure.asset_id),
+      ...(answer.reading_answer_candidates||[]).flatMap(candidate=>candidate.windows.map(window=>window.asset_id))])];
     const host = $("source-overview"); host.replaceChildren();
+    host.style.flexWrap="wrap";host.style.alignItems="flex-start";
     const projection = answer.source_projection;
     if (projection?.status === "SOURCE_MAPPING_UNAVAILABLE") {
       host.append(node("p", "source-error", "来源分段映射暂不可用；原编辑内容与来源页保留，不能把未知对应关系当作已核准。"));
@@ -461,10 +463,25 @@
       }
       if (!zone.segments?.length) host.append(node("p", "muted small", "此分区尚无可可靠对应的来源段；保留完整编辑区和来源页。"));
     }
+    for(const candidate of answer.reading_answer_candidates||[]){
+      host.append(node("h4","","阅读答案待选素材 · 第（"+candidate.printed_number+"）题"),
+        node("p","muted small","以下是共享原页上下文，题号片段仅用于定位，尚未配答或确认；请结合完整原图核对公式和分母。"),
+        node("pre","",candidate.anchor_excerpt));
+      for(const window of candidate.windows){
+        const card=sourceCard(window.asset_id,window.bbox,"共享答案原页 · 待核对");card.style.flexBasis="100%";
+        card.firstElementChild.style.height="auto";
+        const image=card.querySelector("img");image.style.height="auto";image.style.maxHeight="520px";
+        host.append(card);
+      }
+      const original=node("details");original.append(node("summary","","查看共享上下文的原识别行"),
+        node("pre","",candidate.source_rows.map(row=>row.text).join("\n")));host.append(original);
+    }
     for (const id of assetIds) host.append(sourceCard(id, null, "来源整页"));
     const images = (answer.figures || []).filter(figure => figure.content_type === "image");
-    for (const [index, figure] of images.entries()) host.append(sourceCard(figure.asset_id, figure.bbox, "已绑定题图 " + (index + 1) + " · " + roleLabel(figure.role)));
-    $("source-overview-count").textContent = assetIds.length + " 来源页 · " + images.length + " 已绑定题图";
+    for (const [index, figure] of images.entries()) host.append(sourceCard(figure.asset_id, figure.bbox,
+      figure.graphic_option_label?("选项 "+figure.graphic_option_label+(figure.source_checked?" · 已核对来源":" · 来源待核对")):"已绑定题图 " + (index + 1) + " · " + roleLabel(figure.role)));
+    for(const child of host.children)if(!child.classList.contains("source-card")){child.style.flexBasis="100%";child.style.minWidth="0";}
+    $("source-overview-count").textContent = assetIds.length + " 来源页 · " + images.length + " 图片来源框";
     if (!assetIds.length && !projection?.zones?.length) host.append(node("p", "muted small", "该答案没有可显示的来源范围。"));
   }
 

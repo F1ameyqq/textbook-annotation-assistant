@@ -148,4 +148,6 @@ def candidate_support(candidate, pages, graph, evidence, layouts=(), *, raw_load
     if graphic:
         discovery['proposals'].extend(graphic)
         discovery['status'] = 'NEEDS_REVIEW'
-    return {"source_projection": view, "figure_requirements": requirements, "figure_discovery": discovery}
+    from .reading_contexts import candidates as reading_candidates
+    return {"source_projection": view, "figure_requirements": requirements, "figure_discovery": discovery,
+            'reading_answer_candidates': reading_candidates(candidate, graph, evidence)}

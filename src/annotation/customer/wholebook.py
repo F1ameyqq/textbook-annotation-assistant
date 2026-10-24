@@ -63,7 +63,9 @@ def read_source(path, selected=None, *, graphic_review=None, graphic_review_sha2
             plan = {'schema': 'CustomerObservedSourcePlan/v1', 'bridge_version': '4', 'scope_id': scope['id'],
                     'bridge_code_hash': digest([byte_hash(Path(__file__).read_bytes()),
                                                byte_hash(Path(__file__).with_name('prepare.py').read_bytes()),
-                                               byte_hash(Path(__file__).with_name('graphic_options.py').read_bytes())]),
+                                               byte_hash(Path(__file__).with_name('graphic_options.py').read_bytes()),
+                                               byte_hash(Path(__file__).with_name('answer_geometry.py').read_bytes()),
+                                               byte_hash(Path(__file__).with_name('reading_contexts.py').read_bytes())]),
                     'windows': windows, 'items': items, 'path': paths.get(scope['id'], [scope['label']]),
                     'kind': scope['kind'], 'source_database': str(path)}
             if scope['kind'] == 'EXTRA_PAPER':
@@ -80,12 +82,22 @@ def read_source(path, selected=None, *, graphic_review=None, graphic_review_sha2
             if 'source_item_context' in tables:
                 identities = {i['item_id'] for i in items}
                 plan['source_item_context'] = [dict(r) for r in db.execute('SELECT * FROM source_item_context') if r['item_id'] in identities]
+            if 'reading_answer_contexts' in tables:
+                plan['reading_answer_contexts'] = [dict(r) for r in db.execute('SELECT * FROM reading_answer_contexts WHERE scope_id=?', (scope['id'],))]
             if 'source_recovery_records' in tables:
                 identities = {i['item_id'] for i in items}
                 plan['source_recovery_records'] = [dict(r) for r in db.execute('SELECT * FROM source_recovery_records') if r['item_id'] in identities]
             if 'answer_marker_quality' in tables:
                 plan['answer_marker_quality'] = [dict(r) for r in db.execute(
                     'SELECT * FROM answer_marker_quality WHERE item_id IN (SELECT item_id FROM resolved_answer_items WHERE scope_id=?)', (scope['id'],))]
+            if {'answer_geometry_links', 'answer_geometry_groups', 'answer_geometry_observations', 'answer_geometry_merge_decisions'} <= tables:
+                identities = {i['item_id'] for i in items}
+                links = [dict(r) for r in db.execute('SELECT * FROM answer_geometry_links') if r['answer_item_id'] in identities]
+                plan['answer_geometry_links'] = links
+                group_ids = {r['group_id'] for r in links}; observation_ids = {r['observation_id'] for r in links}
+                plan['answer_geometry_groups'] = [dict(r) for r in db.execute('SELECT * FROM answer_geometry_groups') if r['group_id'] in group_ids]
+                plan['answer_geometry_observations'] = [dict(r) for r in db.execute('SELECT * FROM answer_geometry_observations') if r['observation_id'] in observation_ids]
+                plan['answer_geometry_merge_decisions'] = [dict(r) for r in db.execute('SELECT * FROM answer_geometry_merge_decisions WHERE scope_id=?', (scope['id'],))]
             count = db.execute('SELECT * FROM machine_counts WHERE scope_id=?', (scope['id'],)).fetchone()
             plan['machine_counts'] = dict(count) if count else None
             result.append(plan)
@@ -245,6 +257,7 @@ def derive_answer_gutters(pages, plan, sources):
     for item in plan['items']:
         if item['role'] != 'answer' or item['kind'] != 'QUESTION': continue
         for part in item['fragments']:
+            if part.get('geometry_group_id'): continue
             for span in part.get('text_spans', []):
                 groups[part['page'], span['row_index']].append((span['start'], span['end'], item['item_id']))
     derived = []
@@ -291,6 +304,11 @@ def derive_answer_gutters(pages, plan, sources):
 def answer_anchor_status(item, raw_line, pixel_spans):
     """Independently reject a suffix of 11./12. and a complex inline formula."""
     if raw_line is None: return 'ANCHOR_LINE_MISSING'
+    if raw_line.get('geometry_verified') is True:
+        match = re.match(r'^([1-9]\d?)[.．、]', raw_line['text'])
+        if match and match[1] == item['label'] and raw_line['text'][match.end():].strip():
+            return 'OBSERVED_CHARACTER_GEOMETRY_BLOCK'
+        return 'ANCHOR_PRINTED_LABEL_MISMATCH'
     ranges = [(s['start'], s['end']) for p in item['fragments'] if p['page'] == item['start_page']
               for s in p.get('text_spans', []) if s['row_index'] == item['start_row']]
     a, b = ranges[0] if ranges else (0, len(raw_line['text']))
@@ -372,6 +390,9 @@ def assemble_plan(evidence, original_graph, plan, path):
     declared_exclusions = {(e['role'], e['page'], e['row_index']): e for e in plan.get('source_exclusions', [])}
     pixel_spans = {(s['item_id'], s['page'], s['row'], *s['text_span']): s
                    for s in evidence['payload'].get('pixel_answer_spans', [])}
+    geometry_spans = {s['item_id']: s for s in evidence['payload'].get('character_geometry_spans', [])}
+    geometry_lines = {line['line_id']: line for p in page_map.values() for line in p.get('answer_detail_lines', [])
+                      if line.get('geometry_verified') is True}
     marker_quality = {m['item_id']: m for m in plan.get('answer_marker_quality', [])}
     item_context = {c['item_id']: c for c in plan.get('source_item_context', [])}
     question_blocks = {i['item_id']: item_context.get(i['item_id'], {}).get('block_key', 'main')
@@ -402,6 +423,10 @@ def assemble_plan(evidence, original_graph, plan, path):
                 spans.setdefault(span['row_index'], []).append((span['start'], span['end']))
             for row in dict.fromkeys(part['row_indices']):
                 line = raw.get((item['role'], row, page['asset_id']))
+                geometry = geometry_spans.get(item['item_id']) if part.get('geometry_group_id') else None
+                if part.get('geometry_group_id'):
+                    if geometry is None: raise Hold('独立答案字符组尚未通过原图几何校验。')
+                    line = geometry_lines[geometry['line_id']]
                 if line is None:
                     if row in plan.get('empty_rows', {}).get(str(part['page']), []): continue
                     raise Hold('来源片段找不到原始 OCR 行。')
@@ -411,7 +436,7 @@ def assemble_plan(evidence, original_graph, plan, path):
                 if reason:
                     exclusions.append({'line_id': line['line_id'], 'reason': reason})
                     if not caption: continue
-                text = line['text']; ranges = spans.get(row, [(0, len(text))])
+                text = line['text']; ranges = [(0, len(text))] if geometry else spans.get(row, [(0, len(text))])
                 for lo, hi in ranges:
                     if type(lo) is not int or type(hi) is not int or not 0 <= lo < hi <= len(text):
                         raise Hold('来源答案文字区间无效。')
@@ -439,6 +464,11 @@ def assemble_plan(evidence, original_graph, plan, path):
                             'option_label': opt[1] if opt else previous['option_label'] if wrapped_option else None, 'option_start': bool(opt),
                             'evidence_refs': [pixel['line_id'] if pixel else line['line_id']], 'parent_line_id': line['line_id'],
                             'geometry_precision': 'OBSERVED_BLANK_GUTTER_BLOCK' if pixel else 'OCR_LINE_SHARED_TEXT_SPAN' if shared else 'OCR_ELEMENT'})
+                        if geometry:
+                            output[-1].update(geometry_precision='OBSERVED_CHARACTER_GEOMETRY_BLOCK',
+                                geometry_group_id=geometry['group_id'], geometry_observation_id=geometry['observation_id'],
+                                original_parent_text=geometry['original_row_text'], observation_char_span=geometry['char_span'],
+                                parent_line_id=geometry['parent_line_id'])
         return output, shared
 
     questions, answers, issues, materials, excluded_items = [], [], [], {}, []
@@ -466,6 +496,8 @@ def assemble_plan(evidence, original_graph, plan, path):
                                        'source_rows': rows}); continue
             issues.append({'code': 'SOURCE_ITEM_EMPTY', 'detail': item['item_id']}); continue
         anchor_line = raw.get((item['role'], item['start_row'], by_number[item['role'], item['start_page']]['asset_id']))
+        if item['item_id'] in geometry_spans:
+            anchor_line = geometry_lines[geometry_spans[item['item_id']]['line_id']]
         anchor = anchor_line['line_id'] if anchor_line else body[0]['evidence_refs'][0]
         common = {'book_id': evidence['book_id'], 'section_path': list(path), 'printed_number': item['label'],
                   'asset_id': body[0]['asset_id'], 'source_instance_id': item['item_id'],
@@ -478,6 +510,9 @@ def assemble_plan(evidence, original_graph, plan, path):
         common['source_block_label'] = item_context.get(item['item_id'], {}).get('block_label', '')
         if item['role'] == 'answer':
             flags = ['ANSWER_ROLE_REGIONS_UNSPLIT'] if shared else []
+            reading_shared = any(p.get('shared_answer_bbox') or p.get('anchor_only') for p in item['fragments'])
+            if reading_shared:
+                shared = True; flags.append('READING_ANSWER_SHARED_CONTEXT_REVIEW')
             anchor_status = answer_anchor_status(item, anchor_line, pixel_spans)
             marker = marker_quality.get(item['item_id'])
             if marker is not None:
@@ -491,6 +526,8 @@ def assemble_plan(evidence, original_graph, plan, path):
                 'complete': not shared, 'assembly_flags': flags, 'assembly_status': 'AMBIGUOUS' if shared else 'BOUNDED',
                 'boundary': {'kind': 'OBSERVED_SOURCE_ITEM_SPANS'}, 'bbox': body[0]['bbox'],
                 'anchor_validation': anchor_status,
+                'shared_reading_context_ids': sorted({p['shared_reading_context_id'] for p in item['fragments'] if p.get('shared_reading_context_id')}),
+                'anchor_only': reading_shared,
                 'evidence_refs': [ref for f in body for ref in f['evidence_refs']]})
         else:
             flags = []
@@ -522,7 +559,8 @@ def assemble_plan(evidence, original_graph, plan, path):
     for q in questions:
         matches = [a for a in answers if (a['source_item_kind'], a['printed_number'], a['source_block_key']) ==
                    (q['source_item_kind'], q['printed_number'], q['source_block_key']) and
-                   a['anchor_validation'] in {'OBSERVED_PRIMARY_TOKEN', 'OBSERVED_ANSWER_KEY_TOKEN', 'OBSERVED_SIMPLE_DENSE_BLOCK'}]
+                   a['anchor_validation'] in {'OBSERVED_PRIMARY_TOKEN', 'OBSERVED_ANSWER_KEY_TOKEN', 'OBSERVED_SIMPLE_DENSE_BLOCK',
+                                              'OBSERVED_CHARACTER_GEOMETRY_BLOCK'}]
         same_questions = [o for o in questions if (o['source_item_kind'], o['printed_number'], o['source_block_key']) ==
                           (q['source_item_kind'], q['printed_number'], q['source_block_key'])]
         q['candidate_answer_ids'] = [a['answer_id'] for a in matches]

@@ -501,6 +501,7 @@ def reconcile_sources(database, csv_path, geometry_dependencies=None):
             for col,top,bottom,sid,txt,indices in sorted(h for h in all_headers[n] if h[0]==c):
                 window(top);active=sid;title=txt;title_rows=indices;y0=bottom
             window(p["h"]*.95)
+    unique_explanation_heads=observe_unique_explanation_heads(database)
     for sid,s in scopes.items():
         labels=[int(r[0]) for r in database.execute("SELECT label FROM source_items WHERE scope_id=? AND role='question' AND kind IN ('QUESTION','READING_TASK')",(sid,))];maximum=max(labels,default=0);items=[];current=None;seen_numbers=set()
         reading="阅读" in s["label"].split(" / ")[-1]
@@ -520,11 +521,13 @@ def reconcile_sources(database, csv_path, geometry_dependencies=None):
                 raw_matches=scan_answer_markers(text,reading)
                 first=raw_matches[0] if raw_matches else None
                 at_start=first is not None and first['at_start']
-                main_line=at_start and x<=anchor_x+12
+                observed_head=(sid,n,index) in unique_explanation_heads
+                main_line=at_start and (x<=anchor_x+12 or observed_head)
                 if main_line:
                     for m in raw_matches:
                         number=m['number']
                         if 0<number<=maximum and number not in seen_numbers:
+                            if observed_head:m={**m,'reason':'UNIQUE_EXPLANATION_HEAD_IN_WINDOW'}
                             matches.append((number,m['start'],m['end'],m));seen_numbers.add(number)
                 segments=[(None,0,len(text))] if not matches else [(m,m[1],matches[j+1][1] if j+1<len(matches) else len(text)) for j,m in enumerate(matches)]
                 for m,a,z in segments:
@@ -538,6 +541,7 @@ def reconcile_sources(database, csv_path, geometry_dependencies=None):
     add_reading_solution_candidates(database)
     if geometry_dependencies is not None:observe_answer_geometry(database,geometry_dependencies)
     merge_answer_geometry(database)
+    store_answer_token_sources(database)
     for sid,iid,kind,label,sp,sr in database.execute("SELECT scope_id,item_id,kind,label,start_page,start_row FROM source_items WHERE role='question' AND kind IN ('QUESTION','READING_TASK','VARIANT')").fetchall():
         answers=database.execute("SELECT item_id FROM resolved_answer_items WHERE scope_id=? AND kind=? AND label=?",(sid,kind,label)).fetchall()
         question_count=database.execute("SELECT count(*) FROM source_items WHERE scope_id=? AND role='question' AND kind=? AND label=?",(sid,kind,label)).fetchone()[0]
@@ -716,6 +720,37 @@ def apply_reviewed_regions(database, plan_path):
         gaps=sorted({n for nums in blocks.values() for n in set(range(1,max(nums,default=0)+1))-nums});count=sum(kinds.get(k,0) for k in ['QUESTION','READING_TASK','VARIANT'])
         database.execute('UPDATE machine_counts SET item_count=?,numbered=?,reading_tasks=?,variants=?,examples=?,number_gaps=? WHERE scope_id=?',(count,kinds.get('QUESTION',0),kinds.get('READING_TASK',0),kinds.get('VARIANT',0),kinds.get('WORKED_EXAMPLE',0),json.dumps(gaps),sid))
     database.commit();print('RECOVERED',len(prepared),'records',len(affected),'scopes',plan_sha,flush=True)
+
+def observe_unique_explanation_heads(database):
+    import json,re,unicodedata,collections
+    pages={n:(json.loads(raw),h) for n,raw,h in database.execute('SELECT page,rows_json,height FROM pages')};counts={(sid,label):count for sid,label,count in database.execute("SELECT scope_id,label,count(*) FROM source_items WHERE role='question' AND kind='QUESTION' GROUP BY scope_id,label")};blocked={sid for sid, in database.execute("SELECT DISTINCT i.scope_id FROM source_item_context c JOIN source_items i ON i.item_id=c.item_id WHERE c.block_key IN ('training','selftest')")}
+    for sid,n,row in database.execute("SELECT scope_id,start_page,start_row FROM source_items WHERE role='question' AND kind='VARIANT'"):
+        if pages[n][0][row][1].strip().startswith('变式训练'):blocked.add(sid)
+    found=collections.defaultdict(dict)
+    for sid,n,c,x0,y0,x1,y1 in database.execute('SELECT scope_id,page,column,x0,y0,x1,y1 FROM resolved_answer_windows').fetchall():
+        if sid in blocked:continue
+        for index,(box,text,score) in enumerate(pages[n][0]):
+            t=unicodedata.normalize('NFKC',text);m=re.match(r'^\s*([1-9]\d?)[.、]\s*(?:解|证明)\s*[:：]',t)
+            if not m or counts.get((sid,m[1]))!=1:continue
+            b=[min(v[0] for v in box),min(v[1] for v in box),max(v[0] for v in box),max(v[1] for v in box)];inside=y0<=(b[1]+b[3])/2<y1;straddles=abs(y1-pages[n][1]*.95)<.01 and y0<=b[1]<y1<b[3]<=pages[n][1]
+            if x0-8<=b[0] and b[2]<=x1+8 and (inside or straddles):found[(sid,m[1])][(n,index)]=(c,y0,y1,b,straddles)
+    database.executescript('CREATE TABLE IF NOT EXISTS explanation_head_observations(scope_id TEXT,label TEXT,page INTEGER,row_index INTEGER,bbox_json TEXT,window_before_json TEXT,window_after_json TEXT,PRIMARY KEY(scope_id,label,page,row_index));DELETE FROM explanation_head_observations;')
+    accepted=set()
+    for (sid,label),positions in found.items():
+        if len(positions)!=1:continue
+        (n,index),(c,y0,y1,b,straddles)=next(iter(positions.items()));end=b[3]+1 if straddles else y1
+        if straddles:database.execute('UPDATE resolved_answer_windows SET y1=? WHERE scope_id=? AND page=? AND column=? AND y0=?',(end,sid,n,c,y0))
+        database.execute('INSERT INTO explanation_head_observations VALUES(?,?,?,?,?,?,?)',(sid,label,n,index,json.dumps(b),json.dumps([y0,y1]),json.dumps([y0,end])));accepted.add((sid,n,index))
+    return accepted
+
+def store_answer_token_sources(database):
+    """Keep source glyphs in raw_token and normalized spelling separately."""
+    import unicodedata
+    database.executescript('CREATE TABLE IF NOT EXISTS answer_marker_normalization(item_id TEXT PRIMARY KEY,normalized_token TEXT);DELETE FROM answer_marker_normalization;')
+    for iid,a,b,text in database.execute('SELECT item_id,start_offset,end_offset,raw_text FROM answer_marker_quality').fetchall():
+        token=text[a:b]
+        database.execute('UPDATE answer_marker_quality SET raw_token=? WHERE item_id=?',(token,iid))
+        database.execute('INSERT INTO answer_marker_normalization VALUES(?,?)',(iid,unicodedata.normalize('NFKC',token)))
 
 def add_reading_solution_candidates(database):
     import json,re,unicodedata

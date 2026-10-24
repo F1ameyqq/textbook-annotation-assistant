@@ -272,13 +272,21 @@ def _continue(store, job, head, started, *, allow_local_ocr):
                           "derived_dense_partitions":partitions,
                           "unscoped_line_ids": [line["line_id"] for line in located if not line["location"]]})
         pixel_answer_spans = []
+        character_geometry_spans = []
+        reading_answer_contexts = []
         if job.get('source_plan'):
             from .wholebook import derive_answer_gutters
             pixel_answer_spans = derive_answer_gutters(pages, job['source_plan'], job['pages'])
+            from .answer_geometry import derive
+            character_geometry_spans = derive(pages, job['source_plan'], job['pages'])
+            from .reading_contexts import compile_contexts
+            reading_answer_contexts = compile_contexts(pages, job['source_plan'])
         evidence = artifact("b-evidence-trial/0.2", "EvidenceBundleTrial",
             {"book_id": job["book_id"], "scope_id": job["id"]},
             {"pages": pages, "context": {"pages": context}, "quality_decision": "NOT_EVALUATED",
              "pixel_answer_spans": pixel_answer_spans,
+             "character_geometry_spans": character_geometry_spans,
+             "reading_answer_contexts": reading_answer_contexts,
              "limitations": ["Customer selects semantic scope; automatic physical layout is unverified.",
                              "No dense answer-row rerun or remote model calls."]}, [],
             {"module": __name__, "version": "1", "input_kind": "ORDINARY_LOCAL_MATERIALS"})
