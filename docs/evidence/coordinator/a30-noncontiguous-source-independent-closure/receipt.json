@@ -1,0 +1,85 @@
+{
+  "schema": "RootFormalReviewReceptionReceipt/v1",
+  "created_at_utc": "2026-10-24T09:46:34.865069+00:00",
+  "status": "REWORK_SOURCE_OCCUPANCY_NOT_EXPOSED_TO_ORDINARY_UI",
+  "reception_status": "VERIFIED_FIXED_FORMAL_REVIEW_BYTES_AND_LIMITED_CONCLUSION",
+  "scope": "Static root reception of designated fixed independent review; no replay or live inspection.",
+  "formal_decision": {
+    "path": "D:/1800-private/a30-noncontiguous-source-independent-20261024-01/decision.json",
+    "bytes": 1054,
+    "sha256": "ad12049b4a29d05576608f0545b86295f94cc6e6f0f2781d40995aaaa6ec9759",
+    "status": "REWORK_SOURCE_OCCUPANCY_NOT_EXPOSED_TO_ORDINARY_UI"
+  },
+  "review_manifest": {
+    "path": "D:/1800-private/a30-noncontiguous-source-independent-20261024-01/review-manifest.json",
+    "bytes": 5369,
+    "sha256": "18f908ceb75cfce0bc9393cd21e05fde9e7c210cdf7369a5dfb5a0a9c5768b5a"
+  },
+  "public_report": {
+    "path": "D:/1800/docs/evidence/A30/review/noncontiguous-source-01/REVIEW.md",
+    "bytes": 3374,
+    "sha256": "53c87f1aa66ccb77bda336c38aa64d446182666d18a50b5106702f0269a05c00",
+    "binding": "Hash and byte size recorded by public-report-ref.json, itself a verified manifest member."
+  },
+  "root_frozen": "D:/1800/.local/stages/a30-customer-independent-20261024/root-noncontiguous-source-independent-01",
+  "root_index": {
+    "path": "D:/1800/docs/evidence/coordinator/a30-noncontiguous-source-independent-closure/root-index.json",
+    "bytes": 15738,
+    "sha256": "ce4698869190183d22322348236040d20babaae12cc42726cc6cf0b0ec2f9a70"
+  },
+  "verification_counts": {
+    "review_manifest_members": 22,
+    "extra_manifest_and_bound_public_report": 2,
+    "raw_files_copied_and_read_back": 24,
+    "reviewer_input_files_rehashed_by_root_this_closure": 0
+  },
+  "formal_decision_finite_facts": {
+    "status": "REWORK_SOURCE_OCCUPANCY_NOT_EXPOSED_TO_ORDINARY_UI",
+    "customer_ready": false,
+    "input_count": 16,
+    "assembled_frozen_source_count": 237,
+    "independent_new_counterexamples": 1,
+    "counterexample_status": "FAIL",
+    "affected_successors": "NOT_RUN",
+    "source_recheck": "253 input and assembled files unchanged",
+    "author_checks_reexecuted": 0,
+    "real_workspace_model_browser_platform_actions": 0,
+    "blocking_findings": [
+      {
+        "priority": "P1",
+        "file": "src/annotation/customer/review.py",
+        "line": 124,
+        "finding": "state() computes source_occupancy at line 112 but omits customer.source_occupancy from its returned object; renderRegionBinding reads only that field and falls back to []. Normal customers cannot explicitly select the misassigned source fragment required by bind_region."
+      }
+    ],
+    "not_accepted": [
+      "normal UI transfer workflow",
+      "successful transfer transaction",
+      "full text save and both-party re-review after transfer",
+      "customer readiness"
+    ]
+  },
+  "limitations": [
+    "Formal findings and counts above are attributed to the fixed independent decision. Root only checked bytes and metadata consistency.",
+    "Complete private review raw and generated copies remain private/.local. Public closure includes finite sanitized receipt and path/hash index only.",
+    "This receipt creates no new execution authority and does not reset spent guards or alter historical failures."
+  ],
+  "root_actions": {
+    "product_runs": 0,
+    "tests": 0,
+    "model_calls": 0,
+    "platform_calls": 0,
+    "browser_operations": 0,
+    "UI_operations": 0,
+    "actual_workspace_changes": 0,
+    "coordination_state_changes": 0,
+    "agents_md_changes": 0,
+    "git_operations": 0
+  },
+  "mismatches": [],
+  "helper_failure_preserved": {
+    "path": "D:/1800/.local/stages/a30-customer-independent-20261024/root-noncontiguous-source-independent-01/read-helper-failure.json",
+    "bytes": 346,
+    "sha256": "9045482e9b5e7d99bd6812a20de6c37767b9dd453cd7b9a042f32319dcc22789"
+  }
+}
