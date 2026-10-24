@@ -159,7 +159,11 @@ def existing_candidate(current,candidate):
     for zone,value in candidate['zones'].items():
         data=_response(record['zones'][zone])
         images=[f for f in bound if f['type']==zone and f['content_type']=='image']
-        require(data.get('success') is True and data['ocr_result']==zone_html(value,images)
+        expected=zone_html(value,images)
+        if zone=='choice' and candidate.get('graphic_option_proposals'):
+            from .graphic_options import choice_html
+            expected=choice_html(value,candidate['frames'],bound)
+        require(data.get('success') is True and data['ocr_result']==expected
                 and data['rect_ids']==[f['rect_id'] for f in _response(record['annotations']) if f['type']==zone],
                 '已有题来源重合但完整正文、公式、题图或关联不同，保留原题并核对。')
     for zone,data in record['zones'].items():

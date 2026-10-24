@@ -143,4 +143,9 @@ def candidate_support(candidate, pages, graph, evidence, layouts=(), *, raw_load
             except (ValueError, OSError, KeyError, TypeError) as exc:
                 discovery["issues"].append("FIGURE_DISCOVERY_UNAVAILABLE:" + str(exc))
         discovery["issues"] = sorted(set(discovery["issues"]))
+    from .graphic_options import review_proposals
+    graphic = review_proposals(candidate)
+    if graphic:
+        discovery['proposals'].extend(graphic)
+        discovery['status'] = 'NEEDS_REVIEW'
     return {"source_projection": view, "figure_requirements": requirements, "figure_discovery": discovery}

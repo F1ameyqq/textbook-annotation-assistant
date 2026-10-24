@@ -17,8 +17,10 @@ from collections import defaultdict
 from .store import Hold, byte_hash, digest, encoded
 
 
-def read_source(path, selected=None):
+def read_source(path, selected=None, *, graphic_review=None, graphic_review_sha256=None):
     path = Path(path).resolve(strict=True)
+    from .graphic_options import load_review
+    reviewed_graphics = load_review(graphic_review, graphic_review_sha256)
     db = sqlite3.connect(path.as_uri() + '?mode=ro', uri=True)
     db.row_factory = sqlite3.Row
     try:
@@ -60,7 +62,8 @@ def read_source(path, selected=None):
             items.sort(key=order)
             plan = {'schema': 'CustomerObservedSourcePlan/v1', 'bridge_version': '4', 'scope_id': scope['id'],
                     'bridge_code_hash': digest([byte_hash(Path(__file__).read_bytes()),
-                                               byte_hash(Path(__file__).with_name('prepare.py').read_bytes())]),
+                                               byte_hash(Path(__file__).with_name('prepare.py').read_bytes()),
+                                               byte_hash(Path(__file__).with_name('graphic_options.py').read_bytes())]),
                     'windows': windows, 'items': items, 'path': paths.get(scope['id'], [scope['label']]),
                     'kind': scope['kind'], 'source_database': str(path)}
             if scope['kind'] == 'EXTRA_PAPER':
@@ -69,6 +72,11 @@ def read_source(path, selected=None):
             for name in ('source_exclusions', 'pairing_status', 'graphic_option_candidates', 'source_issues'):
                 if name in tables:
                     plan[name] = [dict(r) for r in db.execute('SELECT * FROM '+name+' WHERE scope_id=?', (scope['id'],))]
+            if reviewed_graphics:
+                plan['graphic_review'] = {'sha256': reviewed_graphics['sha256'], 'groups': {
+                    r['question_item_id']: reviewed_graphics['groups'][r['question_item_id']]
+                    for r in plan.get('graphic_option_candidates', [])
+                    if r['question_item_id'] in reviewed_graphics['groups']}}
             if 'source_item_context' in tables:
                 identities = {i['item_id'] for i in items}
                 plan['source_item_context'] = [dict(r) for r in db.execute('SELECT * FROM source_item_context') if r['item_id'] in identities]
@@ -88,6 +96,8 @@ def read_source(path, selected=None):
             if row is None: raise Hold('来源分段引用了尚未识别的页面。')
             pages[n] = dict(row)
         for plan in result:
+            plan['source_images'] = {str(n): pages[n]['image']
+                                      for n in sorted({w['page'] for w in plan['windows']})}
             plan['page_rows'] = {str(n): digest(json.loads(pages[n]['rows_json']))
                                  for n in sorted({w['page'] for w in plan['windows']})}
             plan['empty_rows'] = {str(n): [i for i, row in enumerate(json.loads(pages[n]['rows_json'])) if not row[1].strip()]
@@ -141,10 +151,11 @@ def import_database_pages(store, book, pages):
         import_evidence(store, target)
 
 
-def prepare_book(store, database, *, book, scope_ids=None):
+def prepare_book(store, database, *, book, scope_ids=None, graphic_review=None, graphic_review_sha256=None):
     """One offline subcommand; existing jobs resume without producing anything."""
     from .prepare import prepare
-    pages, plans = read_source(database, scope_ids)
+    pages, plans = read_source(database, scope_ids, graphic_review=graphic_review,
+                               graphic_review_sha256=graphic_review_sha256)
     needed = {w['page'] for p in plans for w in p['windows']}
     page_errors = {}
     for n in sorted(needed):
@@ -505,6 +516,9 @@ def assemble_plan(evidence, original_graph, plan, path):
                 'parent_question_id': None, 'material_id': material,
                 'source_recovery_regions': recovered,
                 'text': '\n'.join(f['text'] for f in body), 'type_candidate': 'UNVERIFIED'})
+    from .graphic_options import annotate_question
+    for q in questions:
+        annotate_question(q, plan, evidence, questions)
     for q in questions:
         matches = [a for a in answers if (a['source_item_kind'], a['printed_number'], a['source_block_key']) ==
                    (q['source_item_kind'], q['printed_number'], q['source_block_key']) and

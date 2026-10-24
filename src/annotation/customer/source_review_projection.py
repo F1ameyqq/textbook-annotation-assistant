@@ -90,7 +90,8 @@ def project_candidate(candidate, graph, evidence, *, layouts=()):
     for zone, current_text in candidate["zones"].items():
         _need(zone in ROLES and isinstance(current_text, str), "SUPPORTED_TEXT_ZONE_REQUIRED")
         frames = [(i, f) for i, f in enumerate(candidate["frames"])
-                  if f["zone"] == zone and f.get("content_type") == "text"]
+                  if f["zone"] == zone and (f.get("content_type") == "text" or
+                      (zone == 'choice' and f.get('graphic_option_label') and f.get('content_type') == 'image'))]
         declared = [fid for _, f in frames for fid in f.get("source_fragment_ids", [])]
         problems = []
         if len(set(declared)) != len(declared):
@@ -130,7 +131,12 @@ def project_candidate(candidate, graph, evidence, *, layouts=()):
             segment["fragments"].append(copy.deepcopy(fragment))
             previous = key
         for segment in segments:
-            segment["preview_bbox"] = _union([f["bbox"] for f in segment["fragments"]])
+            frame = candidate['frames'][segment['frame_index']]
+            segment["preview_bbox"] = (copy.deepcopy(frame['bbox']) if frame.get('graphic_option_label')
+                                       else _union([f["bbox"] for f in segment["fragments"]]))
+            if frame.get('graphic_option_label'):
+                segment['option_label'] = frame['graphic_option_label']
+                segment['source_checked'] = frame.get('binding', {}).get('source_checked') is True
             segment["source_text"] = "\n".join(f["text"] for f in segment["fragments"])
             segment["evidence_refs"] = list(dict.fromkeys(r for f in segment["fragments"] for r in f.get("evidence_refs", [])))
             segment["status"] = "SOURCE_PREVIEW_NOT_CONTENT_APPROVAL"

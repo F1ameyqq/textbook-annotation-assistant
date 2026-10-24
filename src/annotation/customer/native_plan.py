@@ -100,6 +100,8 @@ def _overlap(left, right):
 def make_plan(current, candidate, lesson):
     rows, questions = validate_current(current)
     require(candidate["content_hash"] == candidate_hash(candidate), "候选内容已改变。")
+    from .graphic_options import all_confirmed
+    require(all_confirmed(candidate),'图形选项仍有未逐框核对的原图范围。')
     require(candidate["content_status"] in {"READY_EXACT_TEXT", "READY_CUSTOMER_REVIEWED", "READY_SOURCE_CHECKED"}
             and not candidate["issues"], "候选仍需内容审校。")
     if candidate['content_status']=='READY_SOURCE_CHECKED':
@@ -181,6 +183,9 @@ def make_plan(current, candidate, lesson):
     from .rich_content import zone_html
     zone_values = {name: zone_html(text,[f for f in new_frames if f['type']==name and f['content_type']=='image'])
                    for name,text in candidate['zones'].items()}
+    if candidate.get('graphic_option_proposals'):
+        from .graphic_options import choice_html
+        zone_values['choice'] = choice_html(candidate['zones']['choice'],candidate['frames'],new_frames)
     payload = {"file_id": book, "target_directory_id": target["node"]["id"], "question_order": None,
         "is_new_question_insertion": True, "insert_after_order": insert_after,
         "annotations_upsert": new_frames, "annotations_delete_rect_ids": [],

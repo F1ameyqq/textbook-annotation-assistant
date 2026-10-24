@@ -38,6 +38,8 @@ def recheck_structure(candidate, *, pages=(), graph=None, evidence=None):
     if candidate.get('source_reassignment_pending_zones'):
         issues.add('SOURCE_REGION_REASSIGNED_TEXT_CHECK')
     candidate['issues']=sorted(issues)
+    from .graphic_options import recheck
+    recheck(candidate)
     if requirements:candidate['content_status']='NEEDS_REVIEW'
 
 
@@ -102,7 +104,8 @@ class CustomerReviewWorkspace:
             answers.append({"answer_id": candidate["key"], "printed_number": candidate["printed_number"],
                 "section_path": candidate["section_path"], "text": candidate["zones"]["answer"],
                 "explanation_text": candidate["zones"].get("analysis", ""), "blocks": blocks,
-                "figures": [{"region_id": "source-" + str(i), "asset_id": f["asset_id"], "bbox": f["bbox"], "role": f["zone"], "content_type": f.get("content_type","text")}
+                "figures": [{"region_id": "source-" + str(i), "asset_id": f["asset_id"], "bbox": f["bbox"], "role": f["zone"], "content_type": f.get("content_type","text"),
+                             'graphic_option_label':f.get('graphic_option_label'),'source_checked':f.get('binding',{}).get('source_checked') is True}
                             for i, f in enumerate(candidate["frames"])],
                 "issue_ids": linked, "question_candidates": [{"question_id": candidate["question_id"],
                     "printed_number": candidate["printed_number"], "section_path": candidate["section_path"],
@@ -304,7 +307,7 @@ class CustomerReviewWorkspace:
                 replacement=int(region_id[7:])
                 if replacement>=len(candidate['frames']):raise Hold('待调整题图已变化。')
                 previous=candidate['frames'][replacement]
-                if (previous.get('content_type')!='image' or previous.get('binding',{}).get('kind')!='CUSTOMER_SOURCE_REGION'
+                if (previous.get('content_type')!='image' or previous.get('binding',{}).get('kind') not in {'CUSTOMER_SOURCE_REGION','GRAPHIC_OPTION_PROPOSAL'}
                     or previous['asset_id']!=page['asset_id'] or previous['zone']!=zone):
                     raise Hold('只能调整当前题已绑定的同页、同分区题图。')
             graph=self.store.get(job['graph_ref']) if job.get('graph_ref') else None
@@ -323,8 +326,11 @@ class CustomerReviewWorkspace:
                     or proposed['asset_id']!=page['asset_id'] or proposed['zone']!=zone or proposed['source_sha256']!=page['raw_sha256']):
                     raise Hold('题图候选已变化或范围仍需调整，请在当前原页重新核对。')
                 frame['binding']['proposal_id']=proposed['proposal_id']
-            if any(f.get('content_type')=='image' and f['asset_id']==page['asset_id'] and f['bbox']==box for f in candidate['frames']):
+            if any(i!=replacement and f.get('content_type')=='image' and f['asset_id']==page['asset_id'] and f['bbox']==box for i,f in enumerate(candidate['frames'])):
                 raise Hold('此题图已经绑定。')
+            if replacement is not None:
+                from .graphic_options import confirm_frame
+                confirm_frame(candidate,candidate['frames'][replacement],frame)
             for donor in apply_transfers(job,candidate,frame,transfers,head,graph,evidence):
                 self._review_recheck(job,donor)
                 donor['content_hash']=candidate_hash(donor)

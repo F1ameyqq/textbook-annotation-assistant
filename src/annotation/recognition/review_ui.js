@@ -565,7 +565,7 @@
     });
     const proposed=node("div","customer-figure-proposals");
     if(answer.platform_status==="NOT_RUN")for(const [index,figure] of (answer.figures||[]).filter(f=>f.content_type==="image").entries()){
-      const row=node("div","button-row");row.append(node("span","","已绑定题图 "+(index+1)));
+      const row=node("div","button-row");row.append(node("span","",figure.graphic_option_label?("选项 "+figure.graphic_option_label+(figure.source_checked?" · 已核对来源":" · 来源待核对")):"已绑定题图 "+(index+1)));
       row.append(button("调整这张题图的范围",()=>{if(busy||dirtyDrafts().length){feedback("请先保存当前文字编辑。",true);return;}
         const asset=state.assets.find(a=>a.asset_id===figure.asset_id);if(!asset){feedback("来源页已变化，请刷新。",true);return;}
         assetSelect.value=figure.asset_id;zoneSelect.value=figure.role;load({...figure,zone:figure.role,source_sha256:asset.sha256,
@@ -581,7 +581,7 @@
     if(answer.source_reassignment_pending_zones?.length)proposed.append(node("p","source-error","本题有误归的图内文字来源已移交。请核对并保存完整的"+answer.source_reassignment_pending_zones.map(roleLabel).join("、")+"，再重新确认本题；来源移交没有自动修改正文。"));
     if(answer.figure_requirements?.length)proposed.append(node("p","source-error","本题明确引用题图，必须先完成来源题图绑定；内容确认不能代替这一步。"));
     for(const proposal of proposals){
-      const row=node("div","button-row");row.append(node("span","",proposal.confidence==="LOW"?"题图线索 · 范围待调整":"程序提出的题图范围 · 待确认"));
+      const row=node("div","button-row");row.append(node("span","",proposal.option_label?("选项 "+proposal.option_label+(proposal.confidence==="LOW"?" · 重裁提案待调整":" · 原图范围待确认")):proposal.confidence==="LOW"?"题图线索 · 范围待调整":"程序提出的题图范围 · 待确认"));
       row.append(button("查看并使用这个范围",()=>{if(busy||dirtyDrafts().length){feedback("请先保存当前文字编辑。",true);return;}assetSelect.value=proposal.asset_id;zoneSelect.value=proposal.zone;load(proposal);}));proposed.append(row);
     }
     if(answer.figure_discovery?.issues?.length&&!proposals.length)proposed.append(node("p","muted small","题图范围仍无法可靠自动确定；来源映射、题号或分栏边界的未知状态继续保留，请在原页核对。"));

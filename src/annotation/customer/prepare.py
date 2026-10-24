@@ -137,7 +137,8 @@ def candidates_from_graph(graph, pages):
 
 def candidate_hash(candidate):
     fields = ("key", "printed_number", "section_path", "zones", "frames", "source_kind",
-              "source_instance_id", "source_item_kind", "material_id", "question_type", "source_block_key", "source_block_label", "source_recovery_regions")
+              "source_instance_id", "source_item_kind", "material_id", "question_type", "source_block_key", "source_block_label", "source_recovery_regions",
+              "graphic_option_proposals", "graphic_extent_only")
     return digest({key: candidate[key] for key in fields if key in candidate})
 
 
@@ -290,6 +291,9 @@ def _continue(store, job, head, started, *, allow_local_ocr):
         if job.get('source_plan'):
             from .wholebook import apply_source_regions
             apply_source_regions(job['candidates'], graph, job['pages'])
+            from .graphic_options import attach_frames
+            attach_frames(job['candidates'], graph)
+            for candidate in job['candidates']: candidate['content_hash'] = candidate_hash(candidate)
         from .quality import assess
         for candidate in job['candidates']:assess(candidate,graph,evidence,job['pages'])
         # Answer-specific diagnostics remain on their candidates. Retain all
