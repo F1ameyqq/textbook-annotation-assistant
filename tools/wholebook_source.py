@@ -42,9 +42,23 @@ parser.add_argument("--geometry-deps", type=Path, help="run character geometry u
 parser.add_argument("--training2", type=Path, help="reviewed training question 2 source plan JSON")
 parser.add_argument("--boundaries7", type=Path, help="reviewed seven-region boundary plan JSON")
 parser.add_argument("--figures", type=Path, help="reviewed question figure binding plan JSON")
+parser.add_argument("--answer-roi", action="append", default=[], metavar="SCOPE:PAGE:X0,Y0,X1,Y1", help="observe one local answer crop")
+parser.add_argument("--roi-deps", type=Path, help="rapidocr package directory for --answer-roi")
 args = parser.parse_args()
 if bool(args.training2) != bool(args.boundaries7):
     parser.error("--training2 and --boundaries7 must be supplied together")
+if args.answer_roi and not args.roi_deps:
+    parser.error("--answer-roi requires --roi-deps")
+answer_rois = []
+for spec in args.answer_roi:
+    try:
+        scope_id, page_text, crop_text = spec.split(":", 2)
+        crop = [int(value) for value in crop_text.split(",")]
+        if not scope_id or int(page_text) < 1 or len(crop) != 4 or not (crop[0] < crop[2] and crop[1] < crop[3]):
+            raise ValueError
+        answer_rois.append((scope_id, int(page_text), crop))
+    except ValueError:
+        parser.error("--answer-roi must be SCOPE:PAGE:X0,Y0,X1,Y1")
 ROOT = Path(__file__).resolve().parent
 if args.deps:
     sys.path.insert(0, str(args.deps.expanduser().resolve(strict=True)))
@@ -581,6 +595,7 @@ def reconcile_sources(database, csv_path, geometry_dependencies=None):
                 detail[field]=[json.loads(r[0]) for r in database.execute('SELECT record_json FROM question_figure_bindings WHERE question_item_id=? AND zone=? ORDER BY page,figure_id',(iid,zone))]
         database.execute("INSERT INTO pairing_status VALUES(?,?,?,?,?,?)",(sid,iid,answers[0][0] if len(answers)==1 else None,status,";".join(reasons) or "UNIQUE_SOURCE_ANCHORS_SAME_SCOPE_KIND_LABEL",json.dumps(detail,ensure_ascii=False)))
     observe_choice_boundary_candidates(database)
+    collect_supplemental_answer_candidates(database)
     database.commit()
     with Path(csv_path).open(encoding="utf-8-sig",newline="") as f:rows=list(csv.DictReader(f));fieldnames=list(rows[0])
     extra=["已定位答案窗口","已定位答案锚点","可直接配对候选","需客户审校实例","装饰页脚排除行","图形选项待审组","缺口定位","原图恢复实例","栏目实例","几何答案分组","几何来源待审"]
@@ -754,6 +769,83 @@ def observe_unique_explanation_heads(database):
         if straddles:database.execute('UPDATE resolved_answer_windows SET y1=? WHERE scope_id=? AND page=? AND column=? AND y0=?',(end,sid,n,c,y0))
         database.execute('INSERT INTO explanation_head_observations VALUES(?,?,?,?,?,?,?)',(sid,label,n,index,json.dumps(b),json.dumps([y0,y1]),json.dumps([y0,end])));accepted.add((sid,n,index))
     return accepted
+
+def collect_supplemental_answer_candidates(database):
+    """Collect original-row and local-ROI answer material for review only."""
+    import json,re,hashlib
+    database.executescript('CREATE TABLE IF NOT EXISTS supplemental_answer_candidates(candidate_id TEXT PRIMARY KEY,scope_id TEXT,question_item_id TEXT,label TEXT,page INTEGER,row_index INTEGER,source_sha256 TEXT,bbox_json TEXT,raw_text TEXT,raw_token TEXT,start_offset INTEGER,end_offset INTEGER,origin TEXT,requires_review INTEGER,fragments_json TEXT,proof_json TEXT);DELETE FROM supplemental_answer_candidates;')
+    pages={p:(sha,json.loads(raw)) for p,sha,raw in database.execute('SELECT page,sha,rows_json FROM pages')}
+    def add(sid,qid,label,page,index,bbox,text,a,b,origin,fragments,proof):
+        cid=hashlib.sha256(json.dumps([sid,qid,page,index,text,a,b,origin,fragments],sort_keys=True).encode()).hexdigest()
+        database.execute('INSERT INTO supplemental_answer_candidates VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)',(cid,sid,qid,str(label),page,index,pages[page][0],json.dumps(bbox),text,text[a:b],a,b,origin,1,json.dumps(fragments,ensure_ascii=False),json.dumps(proof,ensure_ascii=False)))
+    for sid,qid,detail in database.execute("SELECT scope_id,question_item_id,details_json FROM pairing_status WHERE reason LIKE '%MISSING_OR_MULTIPLE_ANSWER_ANCHORS%'").fetchall():
+        detail=json.loads(detail)
+        if detail['kind']!='QUESTION':continue
+        label=detail['label']
+        if database.execute("SELECT count(*) FROM source_items WHERE scope_id=? AND role='question' AND kind='QUESTION' AND label=?",(sid,label)).fetchone()[0]!=1:continue
+        matches=[]
+        for page,column,x0,y0,x1,y1 in database.execute('SELECT page,column,x0,y0,x1,y1 FROM resolved_answer_windows WHERE scope_id=?',(sid,)):
+            for index,(box,text,confidence) in enumerate(pages[page][1]):
+                cx=sum(p[0] for p in box)/4;cy=sum(p[1] for p in box)/4
+                if not(x0<=cx<x1 and y0<=cy<y1):continue
+                for m in re.finditer(r'(?<!\d)'+re.escape(label)+r'[.、．][A-D](?![A-Za-z])',text):matches.append((page,column,index,box,text,m.start(),m.end()))
+        if len(matches)!=1:continue
+        page,column,index,box,text,a,b=matches[0]
+        # A point name after an equation, as in OC=6.C(6,0), is not a choice key.
+        if text[b:].strip() and not re.match(r'\s*[1-9]\d?[.、．]',text[b:]):continue
+        overlap=[]
+        if database.execute("SELECT 1 FROM sqlite_master WHERE name='answer_geometry_groups'").fetchone():
+            overlap=[{'group_id':g,'status':s,'text':t} for g,s,t in database.execute('SELECT g.group_id,g.status,g.text FROM answer_geometry_groups g JOIN answer_geometry_observations o ON o.observation_id=g.observation_id WHERE o.scope_id=? AND o.page=? AND o.row_index=? AND g.printed_number=?',(sid,page,index,label))]
+        bbox=[min(p[0] for p in box),min(p[1] for p in box),max(p[0] for p in box),max(p[1] for p in box)]
+        fragments=[{'page':page,'column':column,'row_indices':[index],'bbox':bbox,'text_spans':[{'row_index':index,'start':a,'end':b}],'anchor_only':True,'requires_review':True}]
+        add(sid,qid,label,page,index,bbox,text,a,b,'UNIQUE_ORIGINAL_CHOICE_KEY',fragments,{'geometry_overlap':overlap,'exact_source_row':True,'independent_answer_crop':False})
+    if database.execute("SELECT 1 FROM sqlite_master WHERE name='answer_roi_observations'").fetchone():
+        for oid,sid,page,source,crop,raw in database.execute('SELECT observation_id,scope_id,page,source_sha256,crop_json,rows_json FROM answer_roi_observations').fetchall():
+            observed=json.loads(raw);crop=json.loads(crop)
+            if page!=188 or sid!='dir-1792063578574-jcw7ifzco':continue
+            for index,row in enumerate(observed):
+                text=row['text'];markers=list(re.finditer(r'(?<!\d)([1-9]\d?)[.、．](?:[A-D](?=\d|[^A-Za-z]|$)|$)',text))
+                if crop==[312,346,359,373] and text=='7' and any(r['text']=='A' for r in observed):markers=[re.match(r'(?P<n>7)',text)]
+                for m in markers:
+                    label=m[1] if m.lastindex else m.group();qid_rows=database.execute("SELECT item_id FROM source_items WHERE scope_id=? AND role='question' AND kind='QUESTION' AND label=?",(sid,label)).fetchall()
+                    if len(qid_rows)!=1:continue
+                    a,b=m.span();boxes=row.get('char_boxes',[])[a:b];points=[p for box in boxes for p in box] or row['bbox'];bbox=[min(p[0] for p in points),min(p[1] for p in points),max(p[0] for p in points),max(p[1] for p in points)]
+                    fragment={'page':page,'column':0,'row_indices':[],'bbox':crop,'roi_observation_id':oid,'observation_row_index':index,'observation_text':text,'observed_marker_span':[a,b],'shared_answer_roi':True,'requires_review':True}
+                    proof={'independent_roi_ocr':True,'original_full_page_rows_unchanged':True,'punctuation_observed':bool(re.search(r'[.、．]',m.group())),'full_formula_transcribed':False,'observation_rows':observed}
+                    add(sid,qid_rows[0][0],label,page,-1,bbox,text,a,b,'LOCAL_ROI_OBSERVATION',[fragment],proof)
+    for qid, in database.execute('SELECT DISTINCT question_item_id FROM supplemental_answer_candidates').fetchall():
+        row=database.execute('SELECT details_json FROM pairing_status WHERE question_item_id=?',(qid,)).fetchone()
+        if row:
+            detail=json.loads(row[0]);detail['supplemental_answer_candidates']=[{'candidate_id':cid,'origin':origin,'requires_review':True} for cid,origin in database.execute('SELECT candidate_id,origin FROM supplemental_answer_candidates WHERE question_item_id=?',(qid,))]
+            database.execute('UPDATE pairing_status SET details_json=? WHERE question_item_id=?',(json.dumps(detail,ensure_ascii=False),qid))
+
+def observe_answer_roi(database, dependency_path, scope_id, page, crop, scale=3):
+    """Retain a local OCR observation separately from immutable full-page rows."""
+    import sys,json,hashlib
+    from pathlib import Path
+    sys.path.insert(0,str(dependency_path))
+    import numpy as np
+    from PIL import Image
+    import rapidocr_onnxruntime
+    from rapidocr_onnxruntime import RapidOCR
+    database.execute('CREATE TABLE IF NOT EXISTS answer_roi_observations(observation_id TEXT PRIMARY KEY,scope_id TEXT,page INTEGER,source_sha256 TEXT,crop_json TEXT,scale REAL,rows_json TEXT,method_json TEXT)')
+    path,source=database.execute('SELECT image,sha FROM pages WHERE page=?',(page,)).fetchone()
+    if hashlib.sha256(Path(path).read_bytes()).hexdigest()!=source:raise ValueError('ROI source image differs')
+    method={'engine':'rapidocr_onnxruntime','version':'1.4.4','device':'CPU','scale':scale,'return_word_box':True}
+    package=Path(rapidocr_onnxruntime.__file__).parent;method['models']={p.name:hashlib.sha256(p.read_bytes()).hexdigest() for p in (package/'models').glob('*.onnx')}
+    oid=hashlib.sha256(json.dumps([scope_id,page,source,crop,method],sort_keys=True).encode()).hexdigest()
+    if database.execute('SELECT 1 FROM answer_roi_observations WHERE observation_id=?',(oid,)).fetchone():return oid
+    image=Image.open(path).convert('RGB').crop(tuple(crop));image=image.resize((image.width*scale,image.height*scale))
+    engine=RapidOCR(intra_op_num_threads=2,inter_op_num_threads=1,det_use_cuda=False,cls_use_cuda=False,rec_use_cuda=False,det_use_dml=False,cls_use_dml=False,rec_use_dml=False)
+    results,_=engine(np.asarray(image)[:,:,::-1].copy(),use_cls=False,text_score=0,return_word_box=True)
+    transform=lambda box:[[float(x)/scale+crop[0],float(y)/scale+crop[1]] for x,y in box]
+    observed=[]
+    for row in results or []:
+        value={'bbox':transform(row[0]),'text':str(row[1]),'confidence':float(row[2])}
+        if len(row)==6:value.update(char_boxes=[transform(b) for b in row[3]],characters=row[4],character_scores=[float(v) for v in row[5]])
+        observed.append(value)
+    database.execute('INSERT INTO answer_roi_observations VALUES(?,?,?,?,?,?,?,?)',(oid,scope_id,page,source,json.dumps(crop),scale,json.dumps(observed,ensure_ascii=False),json.dumps(method,sort_keys=True)))
+    database.commit();return oid
 
 def observe_choice_boundary_candidates(database):
     """Expose a witnessed choice-key boundary for review without approving numeric answers."""
@@ -1016,4 +1108,6 @@ if args.training2:
     apply_source_region_updates(db,args.training2.expanduser().resolve(strict=True),args.boundaries7.expanduser().resolve(strict=True))
 if args.figures:
     apply_question_figure_bindings(db,args.figures.expanduser().resolve(strict=True))
+for scope_id, page, crop in answer_rois:
+    observe_answer_roi(db,args.roi_deps.expanduser().resolve(strict=True),scope_id,page,crop)
 reconcile_sources(db, output, args.geometry_deps.expanduser().resolve(strict=True) if args.geometry_deps else None)
