@@ -535,6 +535,7 @@ def reconcile_sources(database, csv_path, geometry_dependencies=None):
             iid=f"{sid}/resolved-answer/{item['kind']}/{j+1}"
             database.execute("INSERT INTO resolved_answer_items VALUES(?,?,?,?,?,?,?)",(sid,iid,item["kind"],item["label"],item["page"],item["row"],json.dumps(item["fragments"],ensure_ascii=False)))
             m=item['marker'];database.execute("INSERT INTO answer_marker_quality VALUES(?,?,?,?,?,?,?,?,?)",(iid,"STRONG" if m['strong'] else "REVIEW",m['reason'],m['token'],m['start'],m['end'],item['raw_text'],item['page'],item['row']))
+    add_reading_solution_candidates(database)
     if geometry_dependencies is not None:observe_answer_geometry(database,geometry_dependencies)
     merge_answer_geometry(database)
     for sid,iid,kind,label,sp,sr in database.execute("SELECT scope_id,item_id,kind,label,start_page,start_row FROM source_items WHERE role='question' AND kind IN ('QUESTION','READING_TASK','VARIANT')").fetchall():
@@ -715,6 +716,45 @@ def apply_reviewed_regions(database, plan_path):
         gaps=sorted({n for nums in blocks.values() for n in set(range(1,max(nums,default=0)+1))-nums});count=sum(kinds.get(k,0) for k in ['QUESTION','READING_TASK','VARIANT'])
         database.execute('UPDATE machine_counts SET item_count=?,numbered=?,reading_tasks=?,variants=?,examples=?,number_gaps=? WHERE scope_id=?',(count,kinds.get('QUESTION',0),kinds.get('READING_TASK',0),kinds.get('VARIANT',0),kinds.get('WORKED_EXAMPLE',0),json.dumps(gaps),sid))
     database.commit();print('RECOVERED',len(prepared),'records',len(affected),'scopes',plan_sha,flush=True)
+
+def add_reading_solution_candidates(database):
+    import json,re,unicodedata
+    database.executescript('CREATE TABLE IF NOT EXISTS reading_answer_contexts(context_id TEXT PRIMARY KEY,scope_id TEXT,windows_json TEXT,rows_json TEXT);DELETE FROM reading_answer_contexts;')
+    for sid,maximum in database.execute("SELECT scope_id,max(cast(label AS INTEGER)) FROM source_items WHERE role='question' AND kind='READING_TASK' GROUP BY scope_id").fetchall():
+        windows=database.execute('SELECT page,column,x0,y0,x1,y1,title_rows_json FROM resolved_answer_windows WHERE scope_id=? ORDER BY page,column,y0',(sid,)).fetchall();rows=[]
+        for n,c,x0,y0,x1,y1,title_rows in windows:
+            headings=set(json.loads(title_rows));observed=json.loads(database.execute('SELECT rows_json FROM pages WHERE page=?',(n,)).fetchone()[0])
+            for index,(box,text,score) in enumerate(observed):
+                x=min(v[0] for v in box);cy=sum(v[1] for v in box)/4;cx=sum(v[0] for v in box)/4
+                if x0<=cx<x1 and y0<=cy<y1 and index not in headings:rows.append((n,c,cy,x,index,text,[x0,y0,x1,y1]))
+        bands=[]
+        for r in sorted(rows):
+            if bands and r[:2]==bands[-1][0][:2] and abs(r[2]-bands[-1][0][2])<=8:bands[-1].append(r)
+            else:bands.append([r])
+        started=False;expected=1;anchors=[]
+        for band in bands:
+            for n,c,cy,x,index,text,window in sorted(band,key=lambda r:r[3]):
+                normalized=unicodedata.normalize('NFKC',text)
+                prefix=re.match(r'^\s*解\s*[:：]\s*\(1\)',normalized)
+                if not started:
+                    if not prefix:continue
+                    started=True
+                if len(normalized)!=len(text):continue
+                for m in re.finditer(r'\(([1-9]\d?)\)',normalized):
+                    if int(m[1])==expected and expected<=maximum:
+                        anchors.append((expected,n,c,index,text,m.start(),m.end(),window));expected+=1
+            if expected>maximum:break
+        if not anchors:continue
+        context_id=f'{sid}/answer/shared-reading-context'
+        database.execute('INSERT INTO reading_answer_contexts VALUES(?,?,?,?)',(context_id,sid,json.dumps(windows),json.dumps([{'page':n,'column':c,'row_index':i} for n,c,cy,x,i,t,w in rows])))
+        previous=database.execute("SELECT item_id FROM resolved_answer_items WHERE scope_id=? AND kind='READING_TASK'",(sid,)).fetchall()
+        for iid, in previous:database.execute('DELETE FROM answer_marker_quality WHERE item_id=?',(iid,))
+        database.execute("DELETE FROM resolved_answer_items WHERE scope_id=? AND kind='READING_TASK'",(sid,))
+        for number,n,c,index,text,a,b,window in anchors:
+            iid=f'{sid}/reading-solution-answer/{number}';end=next((aa for nn,p,cc,ii,tt,aa,bb,ww in anchors if p==n and ii==index and aa>a),len(text))
+            fragment={'page':n,'column':c,'row_indices':[index],'text_spans':[{'row_index':index,'start':a,'end':end}],'bbox':window,'shared_reading_context_id':context_id,'shared_answer_bbox':True,'anchor_only':True,'requires_review':True}
+            database.execute('INSERT INTO resolved_answer_items VALUES(?,?,?,?,?,?,?)',(sid,iid,'READING_TASK',str(number),n,index,json.dumps([fragment],ensure_ascii=False)))
+            normalized=unicodedata.normalize('NFKC',text);database.execute('INSERT INTO answer_marker_quality VALUES(?,?,?,?,?,?,?,?,?)',(iid,'REVIEW','READING_SOLUTION_SHARED_CONTEXT',normalized[a:b],a,b,text,n,index))
 
 def observe_answer_geometry(database, dependency_path, target_rows=None):
     import json,re,sys,hashlib,statistics,unicodedata
