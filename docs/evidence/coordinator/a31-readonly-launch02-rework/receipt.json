@@ -1,0 +1,108 @@
+{
+  "schema": "A31RootReadonlyLaunch02Review/v1",
+  "at": "2026-10-25T19:41:56.926092+08:00",
+  "status": "FORMAL_AND_ROOT_REWORK_ADMISSION_RAW_STABILITY",
+  "manifest": {
+    "path": "D:\\1800-private\\a31-readonly-launch-independent-20261025-02\\manifest.json",
+    "sha256": "39b4dfce22b747caa603d61cd6bb837b997eb553a1888b380fdbf656fde957ee",
+    "bytes": 8471
+  },
+  "decision": {
+    "path": "D:\\1800-private\\a31-readonly-launch-independent-20261025-02\\decision.json",
+    "sha256": "21ea87d0c73dbb16595ec6afe55ac5ce9cab27a5dc3220c4fd4d166802dfe35f",
+    "bytes": 9666
+  },
+  "root_member_verification": {
+    "path": "D:\\1800-private\\a31-root-coordinator-20261025\\fixed-intake-01\\readonly-launch-review02-verification.json",
+    "sha256": "2bdba1a47379ab1bdd749315e30fb51a0e4d18a771299e866b88173df8b6a932",
+    "bytes": 744
+  },
+  "members": 39,
+  "external_refs_verified": 1,
+  "prior_findings_closure": [
+    {
+      "id": "A31-LAUNCH-DEADLINE-01",
+      "status": "CLOSED_OFFLINE",
+      "scope": "Absolute business/release UTC covers setup, CreateProcess, AssignJob, handoff, preResume, monitor; late finished_at prevents success/envelope",
+      "evidence": "raw/deadline-review/deadline-review.json"
+    },
+    {
+      "id": "A31-WORKER-INTENT-ADMISSION-01",
+      "status": "PARTIALLY_CLOSED_OFFLINE_REWORK_REMAINS",
+      "scope": "Complete strict v2 schema/identity/deadlines, parent+child PID/FILETIME, exact namedJob and atomic consumer before current_runtime/profile now present. Raw proof identity across observation remains open.",
+      "evidence": "raw/admission-review/decision.json"
+    },
+    {
+      "id": "A31-SELECTED-FRAME-STOP-01",
+      "status": "CLOSED_OFFLINE",
+      "scope": "Target or unknown/conflicting frames stop before original download and retain finite identities/NOT_RUN;143 known unrelated historical frames pass",
+      "evidence": "raw/frame-review/decision.json"
+    }
+  ],
+  "remaining_findings": [
+    {
+      "id": "PROOF_BYTES_CHANGED_DURING_OWNERSHIP_OBSERVATION_ARE_HASHED_AS_ACCEPTED",
+      "priority": 2,
+      "source": "code/worker_gate.py",
+      "lines": [
+        66,
+        81,
+        85,
+        90,
+        91,
+        93,
+        94,
+        95,
+        96,
+        97,
+        98,
+        99
+      ],
+      "trigger": "The durable intent or handoff changes after the parsed/hash checks but during the process/namedJob ownership observation, before consumer creation.",
+      "actual": "After observe returns, admit_worker checks only the observed metadata dictionary, then freshly hashes marker/handoff for the receipt without comparing those fresh bytes to the snapshots that passed semantic/hash validation. It can create the exclusive consumer and return a receipt bound to unvalidated changed bytes.",
+      "independent_evidence": [
+        "A new synthetic fixture observer changes intent.spent from1 toFalse and nonce after the original checks. The gate returns ADMITTED_CHANGED_INTENT and creates worker-used. Its receipt.intent_sha256 equals changed raw20394852... while the verified handoff.intent_sha256 is original59c09de0...",
+        "A second synthetic fixture observer changes handoff.child_pid and job_assigned_before_resume tofalse after checks. The gate returns ADMITTED_CHANGED_HANDOFF and creates worker-used; receipt.handoff_sha256 is the unvalidated new06132ab7... raw rather than originala2723140..."
+      ],
+      "required_fix": "Bind parsing and receipt hashes to exact captured raw snapshots, and maintain or revalidate their byte identity across the ownership observation and before once-only consumer admission. Do not silently substitute a fresh unvalidated hash into an accepted receipt. Changed intent/handoff must stop before runtime/profile/ledger effects; preserve the old files/failures and do not reuse any actual authority.",
+      "impact_limit": "This is a concrete pure admission/provenance counterexample using only local synthetic files. No real concurrent actor, actual Windows metadata/Job operation, runtime/profile access or business replay was executed or claimed."
+    }
+  ],
+  "finite_acceptances": [
+    "All65 fixed members, declared parent/rework references and254 accepted source members match SHA/size; active author work not read.",
+    "Absolute deadline is no longer converted to a relative timer beginning after Resume. New controls demonstrate startup/handoff crossing expiry prevents Resume, long running worker is terminated at the original cutoff, and late closes cannot pass parent release gate.",
+    "Named Job183 collision closes only the returned foreign-job handle, never queries/terminates that job. Assign→handoff publish→Resume order and recorded owned-handle evidence gates remain.",
+    "Malformed/incomplete/bool-state/reused stable intents, absent handoff and unrelated namedJob fail in the new admission gate. Atomic worker-used receipt precedes current_runtime and profile/ledger effects for stable proof files.",
+    "Selected direct orphan frames, unknown/missing/crossbook/duplicate/conflicting associations stop before original, preserve finite facts and leave successors NOT_RUN;143 frozen old frames are correctly recognized as other directories.",
+    "Six request/validation function ASTs and all exact source/profile/runtime/TLS/limits/counting bindings are unchanged; previously accepted finite request boundary is inherited without rerunning old tests."
+  ],
+  "request_counting": {
+    "logical_api_fetches_max": 4,
+    "context_guard_per_object_max": 1,
+    "native_guard_per_object_max": 1,
+    "navigation_max": 1,
+    "original17_opener_calls_max": 1,
+    "tls_probe_max": 1,
+    "ocr_formula_save_login_retry": 0,
+    "physical_HTTP_sends": "NOT_MEASURED",
+    "physical_deduplication": "NOT_MEASURED",
+    "physical_wire_upper_bound": "NOT_INDEPENDENTLY_ESTABLISHED",
+    "acceptance": "Unchanged finite call graph/guard allowance only; no new native request or explicit retry path introduced by these deltas"
+  },
+  "new_controls": {
+    "deadline_new": 9,
+    "frame_new_groups": 8,
+    "frame_negative_subcases": 13,
+    "directory_owner_conflict_subcases": 3,
+    "admission_new": 9,
+    "admission_ordinary_cases": 7,
+    "admission_remaining_mutation_counterexamples": 2,
+    "helper_expectation_mismatch": "Missing-handoff expected error string omitted a filename: expected_met=false while actual FileNotFound correctly rejected before observer/consumer. Original output retained, not counted as a product failure and not rerun.",
+    "author43_or_prior_review_tests_replayed": 0,
+    "method": "New exact AST, injected OS/time, fake APIs and fresh synthetic files only"
+  },
+  "next_action": "Same sole author minimal launch03 raw snapshot stability fix; preserve finite deadline/frame acceptance and independent product03 repair. Same designated reviewer receives each frozen new delivery.",
+  "live_activated": false,
+  "actual": "NOT_RUN",
+  "automation_1800_a": "PAUSED"
+}
