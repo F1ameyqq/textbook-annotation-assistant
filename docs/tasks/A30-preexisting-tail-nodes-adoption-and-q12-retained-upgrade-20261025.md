@@ -104,7 +104,13 @@ actual 必须等独立代码评审通过、根绑定新唯一授权后另行派�
 - `settings_sha256 56f07eb98e9712b662a13b016d9758c3d2c12109421a7b1f557a972e2b565f5f`；
 - 产品 manifest/`app_root`/`source_files` 各文件 sha；entry/binding/plan 自身 sha；
 - profile 指纹沿用现有机械方法（只读指纹，不读凭据内容）；
-- `limits`：`save_posts_max: 0`、`native_exports_max: 1`、`local_display_max: 1`、`official_bound_crop_downloads_max: 5`、`platform_contexts_max: 8`、`business_get_responses_max`（按 capture 公式，上限不得低于 1200 且不高于 2997）、`readonly_reconcile_calls_max: 0`、`retained_reconcile_calls_max: 1`、`ocr_calls: 0`、`formula_model_calls: 0`、`paid_model_calls: 0`、`login: 0`、`automatic_retries: 0`、`old_nine_resaves: 0`、`accepted_eleven_resaves: 0`、`original_q12_resaves: 0`、`q13_16_resaves: 0`、`uploads_or_signatures: 0`；
+- `limits`（**沿用 launch03-r1 已正式接受的同一全量预算**，只把保存 POST 降为 0）：
+  `save_posts_max: 0`、`native_exports_max: 1`、`local_display_max: 1`、
+  `official_bound_crop_downloads_max: 11`、`platform_contexts_max: 59`、`business_get_responses_max: 2997`、
+  `readonly_reconcile_calls_max: 0`、`retained_reconcile_calls_max: 1`、`ocr_calls: 0`、`formula_model_calls: 0`、
+  `paid_model_calls: 0`、`login: 0`、`automatic_retries: 0`、`old_nine_resaves: 0`、`accepted_eleven_resaves: 0`、
+  `original_q12_resaves: 0`、`q13_16_resaves: 0`、`uploads_or_signatures: 0`。
+  为什么不是更小：本次虽然只有 4 个待采纳项，`produce` 仍会做**整书只读 capture**（launch03-r1 实测 9 个分片上下文、661 GET），随后 `finish()` 还要 1 次原生导出上下文、1 次本地展示上下文，以及交付时最多 11 次绑定图下载。把 contexts/crops 写成个位数会让一次性的真实运行在预算处 Hold。只在有实测依据时才允许把上限调低；调高必须写明理由。
 - Q12 绑定：save key `56232bbf755aaf07…`（全长从工作区读）、output `27361bc49a9df05d…`、pending_plan_ref `6163be59…`、node `1792848391723`、info `2113985491617890305`、reconcile key `d779d3db6997363af73144a23b74ac02529d433bcadd16ff7e86ec602dde07db`、reconcile output `521de423…`；
 - 保留读回组 `native/008bb17292dd4399a4d8e9d3f3351470`，9 个 `usense-readonly-20261025-04*` run 的 `capture-summary.json` sha、成员总数 302；
 - 13–16 采纳绑定（逐题）：

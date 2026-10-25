@@ -9,7 +9,7 @@
 
 ## 输入
 
-- 实现任务书：`docs/tasks/A30-preexisting-tail-nodes-adoption-and-q12-retained-upgrade-20261025.md`（sha256 `d84c414c85629ad65116ccecc571fbb909817d842290da5d6d086c42bdeeb0ea`）
+- 实现任务书：`docs/tasks/A30-preexisting-tail-nodes-adoption-and-q12-retained-upgrade-20261025.md`（sha256 `3132a89043f1dc6c0a9af9036d897d5cdd5ba0924353aafc4d44ab2d876fe5bd`，17357 字节；该 sha 已含预算修正，2026-10-25 由根更新，旧引用 `d84c414c…` 作废）
 - 基线依据（已正式/根接受，不要重开）：`docs/evidence/coordinator/a30-launch-r1-actual-closure/receipt.json`（`9b6a05a5…`）、`root-index.json`（`a837dec0…`）
 - 执行者交付：`D:/1800-private/a30-adoption-completion-build-20261025-01/`（`REPORT.md`、`build-report.json`、`manifest.json`、`raw/`）
 - 产品新修订：交付报告声明的产品目录（`D:/1800-private/a30-integrated-flow-r1-fixed-20261025-01`）与 manifest
