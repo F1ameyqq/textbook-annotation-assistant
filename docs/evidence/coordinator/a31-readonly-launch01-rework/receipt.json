@@ -1,0 +1,93 @@
+{
+  "schema": "A31RootReadonlyLaunch01Rework/v1",
+  "at": "2026-10-25T19:08:58.178257+08:00",
+  "status": "REWORK_NO_AUTHORITY_ACTIVATION",
+  "review": {
+    "path": "D:\\1800-private\\a31-readonly-launch-independent-20261025-01\\manifest.json",
+    "sha256": "02389dd14e52052b11b03ce4ee0b99e832458335f06c086daef1f5b981c3be67",
+    "bytes": 6488
+  },
+  "decision": {
+    "path": "D:\\1800-private\\a31-readonly-launch-independent-20261025-01\\decision.json",
+    "sha256": "ba12ad9533ca6f6899bd0947fbb1b8f80ed7699fc08fdf352c6cac3cee2354fd",
+    "bytes": 9313
+  },
+  "root_verified_members": 33,
+  "root_verified_external_references": 1,
+  "findings": [
+    {
+      "id": "A31-LAUNCH-DEADLINE-01",
+      "priority": "P1",
+      "title": "Absolute deadline not enforced across holder startup",
+      "source": "code/readonly_once.py",
+      "lines": [
+        157,
+        163,
+        359,
+        361
+      ],
+      "dependency": "accepted tools/owned_process.py:127-170",
+      "evidence": "raw/release-review/deadline-counterexample.json",
+      "actual": "remaining-1 is computed before holder.run, but holder starts its relative timer after CreateJob/CreateProcess/AssignJob/Resume. A startup/scheduling delay shifts the cutoff.",
+      "counterexample": "Memory-only AST model: expiry900, relative budget899 computed at0, startup delay70, termination969; beyond business900 and release960.",
+      "impact": "Image streaming has only socket timeouts and checks expiry only before download. The whole worker can remain active beyond the root absolute window; a one-second margin does not bound startup delay.",
+      "minimum_fix": "Enforce the absolute business cutoff including setup/launch delay and recheck before Resume; enforce original body/callback work against that cutoff and use the separate absolute release budget. Do not repair by increasing allowance or merely guessing another fixed margin.",
+      "actual_late_network_or_process": "NOT_RUN; counterexample is synthetic, not a claim of observed actual overrun"
+    },
+    {
+      "id": "A31-WORKER-INTENT-ADMISSION-01",
+      "priority": "P1",
+      "title": "Worker admission accepts untrusted/reused minimal intent and unrelated Job membership",
+      "source": "code/readonly_once.py",
+      "lines": [
+        242,
+        259,
+        336,
+        339
+      ],
+      "evidence": "raw/authority-review/new-authority-ast-control-result.json",
+      "actual": "Worker checks only authority_id/hash, parent PID and spent1/rem0; it does not validate full durable marker schema/manifest/nonce/creation identity or atomically consume a one-time worker admission. IsProcessInJob(current,None) only establishes any Job.",
+      "counterexample": "Three new fully stubbed AST-prefix cases reach current_runtime: five-field intent missing schema/manifest/nonce/at; the same intent again; wrong schema/manifest and boolean state values.",
+      "impact": "The stated bootstrap-only, single-admission gate is not established before runtime/profile effects. Repeated prefix admission can reach profile_identity/exclusive_profile before profile-observation x-write could reject it.",
+      "minimum_fix": "Bind the worker to the verified bootstrap durable intent and intended ownership; validate complete marker identities/types and atomically consume worker admission before any runtime/profile/ledger access. Reject malformed/changed/reused marker and unrelated Job admission without changing old claims.",
+      "actual_completed_worker_or_platform_replay": "NOT_RUN_NOT_PROVEN; normal repeated bootstrap is correctly blocked by exclusive claim"
+    },
+    {
+      "id": "A31-SELECTED-FRAME-STOP-01",
+      "priority": "P2",
+      "title": "Selected-directory frames do not trigger required pre-download stop",
+      "source": "code/readonly_once.py",
+      "lines": [
+        127,
+        142,
+        224,
+        233
+      ],
+      "evidence": "raw/directory-frame-control.json",
+      "actual": "selected_directory requires selected children=[] and frames is a list, but never checks frames bound to the selected directory.",
+      "counterexample": "Synthetic empty selected directory plus one frame with its exact directory_id returns success; source_stage reaches the downloader spy.",
+      "impact": "Violates the frozen readonly-gap-plan stop condition for any next-section child/frame identities. No wrong save or actual download was executed.",
+      "minimum_fix": "Validate and retain relevant frame identities, HOLD before the image download on any selected-section frame or unresolvable frame association, and mark successors NOT_RUN; do not infer empty frame state from children=[]."
+    }
+  ],
+  "request_count_qualification": {
+    "application_level": "ACCEPTED_OFFLINE_ONLY_CALL_GRAPH_AND_GUARD_BOUNDARY",
+    "logical_API_fetches_max": 4,
+    "context_guard_per_object_max": 1,
+    "native_guard_per_object_max": 1,
+    "original_opener_calls_max": 1,
+    "navigation_max": 1,
+    "TLS_probe_max": 1,
+    "explicit_retry_redirect_extra_forward_path": "NONE_FOUND_IN_FROZEN_SOURCE",
+    "physical_HTTP_sends": "NOT_MEASURED",
+    "physical_deduplication": "NOT_MEASURED",
+    "physical_wire_upper_bound": "NOT_INDEPENDENTLY_ESTABLISHED",
+    "interpretation": "Do not call4 logical endpoints four physical transmissions or add dual layer events and call8 physical sends. NOT_MEASURED alone is not the reason for REWORK; the three reproducible admission/deadline/stop defects are."
+  },
+  "limits": "Offline counterexamples only; no actual late network, process overrun, full worker replay, wrong download or save observed",
+  "next_action": "Same sole author minimal three-point repair in new launch02, then same independent review. Product02 ordinary page-preview repair proceeds separately.",
+  "new_authority_generated": false,
+  "actual": "NOT_RUN",
+  "old_authorities": "SPENT_UNCHANGED",
+  "automation_1800_a": "PAUSED"
+}
