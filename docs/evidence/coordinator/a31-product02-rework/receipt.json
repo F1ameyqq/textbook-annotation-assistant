@@ -1,0 +1,86 @@
+{
+  "schema": "A31RootProduct02Review03/v1",
+  "at": "2026-10-25T19:25:20.462058+08:00",
+  "status": "LIMITED_PAGE_SELECTION_FIX_RECEIVED_REMAINING_TWO_REWORK",
+  "review_manifest": {
+    "path": "D:\\1800-private\\a31-customer-flow-independent-20261025-03\\manifest.json",
+    "sha256": "b339ab40a98fe4206f0072db1c4b4cf8d789b31ec4b35fae7bee5afb22f8235d",
+    "bytes": 8952
+  },
+  "review_decision": {
+    "path": "D:\\1800-private\\a31-customer-flow-independent-20261025-03\\decision.json",
+    "sha256": "fdecacdb2734614bf004e86a686f01fc2dd53ca8c22f5dfa835bcd98748e62d7",
+    "bytes": 9942
+  },
+  "root_verified_review_members": 47,
+  "root_verified_external_refs": 1,
+  "original_gap": {
+    "id": "A31-EMPTY-DIRECTORY-PAGE-NUMBER-SEMANTICS",
+    "page_number_semantics_and_visible_source_basis": "CLOSED_OFFLINE_ONLY_IN_STABLE_SAME_BOOK_CURRENT_RETAINED_PAGE_CONTEXT",
+    "complete_normal_entry_release_gate": "NOT_CLOSED_REWORK_REMAINING",
+    "proof": "One-based viewer caption and true-original presenter wiring precede viewed rawSHA; explicit role choice; readonly display variables are not used as source plan input; no preview proof means empty scope HOLD before acquire",
+    "limitation": "No real Tk/PIL display, click or customer observation. No claim about missing/unretained viewer17, arbitrary new books or complete new section readiness."
+  },
+  "finite_acceptances": {
+    "page_selection_model": "ACCEPTED_OFFLINE_ONLY",
+    "source_semantics_and_no_typed_integer_bypass": "ACCEPTED_SYNTHETIC_CURRENT_CONTEXT_ONLY",
+    "previous_cache_and_same_book_identity_helper": "UNCHANGED_FINITE_ACCEPTANCE_PRESERVED",
+    "source_proof_persistence": "STATIC_APPEND_ONLY_WIRING; not content approval or actual workspace import"
+  },
+  "remaining_findings": [
+    {
+      "id": "A31-PICKER-STALE-CONTEXT-01",
+      "priority": "P1",
+      "source": "app/tools/customer.py",
+      "lines": [
+        191,
+        251
+      ],
+      "title": "Old catalog/picker selection remains actionable after normal main book/catalog switch",
+      "trigger": "After selecting retained pages for book46007447, change main book field or open another catalog before older dialog starts preparation.",
+      "actual": "Old nonmodal closure retains value.catalog_ref; chosen/start check directory only. They do not compare current main book or active catalog/source generation. Dialog titles do not identify an independent frozen book context.",
+      "evidence": "raw/ui-review/new-ui-ast-control-result.json",
+      "counterexample": "Two new AST/fakeUI controls set main book to99999999, one also opens the new catalog, and the older dialog still passes book46007447 plan to fake acquire.",
+      "impact": "Current normal book/source selection invalidation is not established. No actual GET/OCR/save or wrong-book persistence was performed or claimed.",
+      "minimum_repair": "Track/bind the active book and catalog/source generation; revoke or disable old picker/dialog selections and delayed callbacks on a book/catalog/source change. Verify this binding at picker use and start. Alternatively make an explicitly isolated frozen-book interaction that prevents ambiguous main switching. Do not treat model rejection under a newly supplied catalog as proof the old UI closure was revoked."
+    },
+    {
+      "id": "A31-PATH-DOS-DEVICE-01",
+      "priority": "P1",
+      "sources": [
+        {
+          "path": "app/src/annotation/customer/page_selection.py",
+          "lines": [
+            17,
+            37,
+            64,
+            68
+          ]
+        },
+        {
+          "path": "app/src/annotation/customer/page_picker_ui.py",
+          "lines": [
+            15,
+            33,
+            73,
+            96
+          ]
+        }
+      ],
+      "title": "DOS reserved device components reach potential path/content IO before rejection",
+      "trigger": "Malformed retained raw_path uses C:/NUL, C:/NUL.jpg or C:/CON, which are Windows reserved device names.",
+      "actual": "Both new guards admit the path to GetDriveTypeW and lstat. Fake normal metadata allows the normal retained model to reach read_bytes/PIL and the picker to reach load_preview/commit.",
+      "evidence": "raw/path-review/dos-reserved-result.json",
+      "impact": "The requested pre-IO device-path rejection is not met. Actual device behavior was deliberately not exercised; no real UNC/remote/device IO occurred.",
+      "minimum_repair": "Reject Windows device namespace and reserved DOS device components, including extension/case/normalization aliases and parent components, using lexical checks before path probing/read/resolve/PIL. Keep valid local non-reparse absolute retained-source/cache paths working.",
+      "preserved_boundary": "cached_official_page function AST is identical to parent01; its older direct-caller boundary is recorded, not falsely counted as a new product02 regression. Model first guard rejects mixed UNC; no separate ordinary UNC bypass is claimed."
+    }
+  ],
+  "qualification": "Synthetic offline controls only; no real wrong-book action, device/UNC/network access, GUI, platform/OCR/save observed",
+  "next_action": "Same sole author produces minimal product03; launch02 three-point repair proceeds independently. Transfer each fixed delivery to same reviewer immediately.",
+  "live_activated": false,
+  "actual": "NOT_RUN",
+  "old16_and_separate9": "PRESERVED",
+  "all_old_authorities": "SPENT_UNCHANGED",
+  "automation_1800_a": "PAUSED"
+}
