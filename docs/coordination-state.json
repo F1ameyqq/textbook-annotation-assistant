@@ -2,7 +2,7 @@
   "schema_version": 1,
   "project": "D:\\1800",
   "coordinator_thread_id": "01a171f5-e73e-7452-982b-1885115e96ff",
-  "updated_at": "2026-10-25T15:24:29.129044+00:00",
+  "updated_at": "2026-10-25T15:38:44.050809+00:00",
   "automation": {
     "id": "1800-a",
     "kind": "heartbeat",
@@ -19611,7 +19611,7 @@
       "executor_title": "A31 普通客户完整流程开发与执行",
       "reviewer_title": "A31 内容核验与客户流程独立验收",
       "created_via": "codex_app.create_thread",
-      "updated_at": "2026-10-25T15:24:29.129044+00:00",
+      "updated_at": "2026-10-25T15:38:44.050809+00:00",
       "registration": {
         "path": "D:\\1800\\docs\\evidence\\coordinator\\a31-initial-dispatch\\registration.json",
         "sha256": "c98dc5d7afa5a117e2033d7a387696f61be93bba815c49b8aa0d47773130701a",
@@ -20275,8 +20275,27 @@
           "sha256": "dc7a3ecf5678fbbc3f4527b59bd8a1e4bab44fedb076dc5eb5c1b457175aedc5",
           "bytes": 1725
         },
-        "status": "INDEPENDENT_REVIEW_PENDING",
-        "real_import": "NOT_RUN"
+        "status": "FORMAL_AND_ROOT_ACCEPTED_OFFLINE_SOURCE_BRIDGE_SUPPORT_ONLY",
+        "real_import": "NOT_RUN",
+        "independent_review": {
+          "path": "D:/1800-private/a31-customer-flow-independent-20261025-05/manifest.json",
+          "bytes": 4647,
+          "sha256": "1961f65dd8e590f24cee1a24e66a0ae4a51aa9b7ebdc6b2a5e485909a0f9ec9f"
+        },
+        "root_closure": {
+          "path": "D:/1800/docs/evidence/coordinator/a31-product04-closure/receipt.json",
+          "bytes": 7108,
+          "sha256": "6ae6c7ee23816079d6a9dc2bfe10b937819e432d98dd483c1ede9c8d14af5eae"
+        },
+        "real_success_capsule_adapter": "NOT_IMPLEMENTED_OR_ACCEPTED",
+        "storage_exclusion": {
+          "counterexample": "replace makes published.json visible and then reports an outcome-unknown exception, while both failure.json persistence and DB UNKNOWN latch persistence are unavailable. Caller gets HOLD, yet the valid published marker plus COMPLETE row can remain readable as closed through Store.get.",
+          "classification": "REPRODUCED_DECLARED_EXCLUDED_STORAGE_BOUNDARY_NOT_AUTOMATIC_REWORK",
+          "author_disclosure": "Failure records are best-effort dual stop markers; no guarantee that new failure evidence persists when all relevant storage paths are unwritable.",
+          "allowed_claim": "With a writable failure latch in the tested finite fault boundary, consumption was refused; missing closure proof fails closed.",
+          "forbidden_overclaim": "Do not claim every UNKNOWN or publication exception reliably persists quarantine or always prevents future consumption.",
+          "actual_machine_occurrence": "NOT_OBSERVED; synthetic compound after-effect/storage failure only"
+        }
       },
       "readonly_actual04": {
         "authority_id": "ed18081c-e51b-4d38-a1f2-2a3d2727a542",
@@ -22808,12 +22827,12 @@
     }
   ],
   "last_action": {
-    "at": "2026-10-25T15:24:29.129044+00:00",
-    "action": "ACCEPT_A31_ACTUAL04_FOUR_API_RAW_CONTRACT_STOP_AND_OWN_RELEASE_ONLY",
+    "at": "2026-10-25T15:38:44.050809+00:00",
+    "action": "ACCEPT_A31_PRODUCT04_OFFLINE_SOURCE_BRIDGE_ONLY",
     "receipt": {
-      "path": "D:/1800/docs/evidence/coordinator/a31-readonly-actual04-closure/receipt.json",
-      "bytes": 16833,
-      "sha256": "a588bd883748055239030ded94970c656d7344395efaa402d71169394f8f2a2b"
+      "path": "D:/1800/docs/evidence/coordinator/a31-product04-closure/receipt.json",
+      "bytes": 7108,
+      "sha256": "6ae6c7ee23816079d6a9dc2bfe10b937819e432d98dd483c1ede9c8d14af5eae"
     },
     "new_live_activation": false
   },
