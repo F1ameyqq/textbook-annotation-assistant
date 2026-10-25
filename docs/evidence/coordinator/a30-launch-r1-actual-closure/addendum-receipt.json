@@ -1,0 +1,104 @@
+{
+  "schema": "A30RootLaunchR1ActualClosureAddendumReceipt/v1",
+  "created_utc": "2026-10-25T06:32:16.865682+00:00",
+  "status": "ACCEPTED_ADDENDUM_COMPARATOR_RECONSTRUCTION_OFFLINE",
+  "base_closure": {
+    "path": "D:\\1800\\docs\\evidence\\coordinator\\a30-launch-r1-actual-closure\\receipt.json",
+    "sha256": "9b6a05a5d1eaff1c656139aa094891c1a47b03e7147c8297efa98f13ccd8b258",
+    "status": "ACCEPTED_FIXED_FAILURE_AND_OWN_RELEASE_ONLY"
+  },
+  "reason": "team-lead addendum: independently reconstruct the merged readback from the nine retained read-only capture runs and re-run the frozen comparator with only the four pre-existing tail nodes (orders 39-42) removed",
+  "public_review_supersession": {
+    "note": "the closure receipt records the public review as it stood at closure time; the reviewer then appended the addendum to the same file, so the path now holds a longer document",
+    "sha256_at_closure": "732570e987cf7dd0a3691268a789c2e93ef8de3c09dc09f73f6d48c6d2d260c0",
+    "bytes_at_closure": 4440,
+    "sha256_current": "570e42e3e449699fde27b26377ac82f2544b9f408a7437cf5392d94b2871a08b",
+    "bytes_current": 6731,
+    "original_content_retained": true,
+    "root_index_and_closure_receipt_not_rewritten": true
+  },
+  "addendum_artifacts": {
+    "decision_addendum": {
+      "path": "D:\\1800-private\\a30-launch-r1-actual-review-20261025-01\\decision-addendum.json",
+      "sha256": "405fc228162a773029c465cba83e257ba6e9800807e0048536a2798f897df032",
+      "bytes": 4176
+    },
+    "private_review": {
+      "path": "D:\\1800-private\\a30-launch-r1-actual-review-20261025-01\\REVIEW.md",
+      "sha256": "71fedde64daa22ffb2434e70e341717e739d3ebcc15155ba6bd4950274791c03",
+      "bytes": 10540
+    },
+    "manifest": {
+      "path": "D:\\1800-private\\a30-launch-r1-actual-review-20261025-01\\manifest.json",
+      "sha256": "c90c5c2a3c0a8915d44771b6f36b902f166e6718ff50717a3a080ec085d006c6",
+      "bytes": 5763
+    },
+    "reconstruction_script": {
+      "path": "D:\\1800-private\\a30-launch-r1-actual-review-20261025-01\\reconstruct_compare.py",
+      "sha256": "9793df57c7c6595a658b59e8a453a6ed60662c1d6b6365a192748aca5399ec47",
+      "bytes": 11181
+    },
+    "reconstruction_output": {
+      "path": "D:\\1800-private\\a30-launch-r1-actual-review-20261025-01\\raw\\comparator-reconstruction.txt",
+      "sha256": "097e21202c224b041fc661b5a191843af2eacd25b02e4fd864e789f6d049134b",
+      "bytes": 3345
+    },
+    "public_review": {
+      "path": "D:\\1800\\docs\\evidence\\A30\\review\\launch-r1-actual-01\\REVIEW.md",
+      "sha256": "570e42e3e449699fde27b26377ac82f2544b9f408a7437cf5392d94b2871a08b",
+      "bytes": 6731
+    },
+    "manifest_members": 32
+  },
+  "root_independent_verification": {
+    "root_own_reconstruction": {
+      "path": "D:\\1800-private\\a30-root-20261025\\preexisting-q13-16-report.json",
+      "sha256": "e3c06c5b31ee2b8ba6cf053de5247167d977361d51499f1393a827b9669a1226",
+      "bytes": 7295
+    },
+    "agrees_with_addendum": true,
+    "agreed_fields": [
+      "readback_hash",
+      "new_node_id",
+      "new_info_id",
+      "old_questions_preserved",
+      "old_frames_preserved",
+      "match"
+    ],
+    "readback_hash": "cceb4298fb93bb8b4afd01c489bf4cdf7284bc52834594bb92dfc7a38094d449",
+    "reconstruction_script_offline": true,
+    "script_forbidden_tokens_found": [],
+    "platform_calls": 0,
+    "workspace_writes": 0,
+    "profile_reads": 0
+  },
+  "decision_unchanged": "ACCEPTED_FIXED_FAILURE_AND_OWN_RELEASE_ONLY",
+  "what_the_addendum_proves": "the original Hold was correct for the live readback (42 questions vs 38 expected); with only the four bound pre-existing tail nodes removed, the frozen comparator accepts the Q12 receipt, node/info, frames, actor hashes and the send window",
+  "what_the_addendum_does_not_prove": [
+    "does not make Q12 an accepted business result (stays UNKNOWN_NO_RETRY)",
+    "does not authorize a resend, a supplementary reconcile, or a new run",
+    "does not attribute Q13-16 (their platform presence remains UNKNOWN in origin; never resend or overwrite)",
+    "does not produce the full16 native export or display"
+  ],
+  "report_defects": [
+    {
+      "defect": "decision-addendum.json renders the Hold message as mojibake in results.uncleaned_compare_at_line_256.message",
+      "cause": "encoding of the copied string in the addendum JSON only",
+      "material_effect": "none: the hold text is recorded correctly in the closure receipt, the hold output blob 521de423 and the public REVIEW.md"
+    }
+  ],
+  "scope_limits": {
+    "does_not_accept_q12_business_result": true,
+    "does_not_accept_q13_to16_as_saved": true,
+    "does_not_authorize_resend": true,
+    "customer_ready": false,
+    "automation_1800_a": "PAUSED"
+  },
+  "root_activity": {
+    "executed_actual": false,
+    "platform_calls": 0,
+    "workspace_writes": 0,
+    "profile_reads": 0,
+    "commit_or_push_by_this_script": false
+  }
+}
