@@ -1,0 +1,59 @@
+{
+  "schema": "A31RootReadonlyLaunch03Intake/v1",
+  "at": "2026-10-25T19:57:12.614983+08:00",
+  "status": "FIXED_RECEIVED_INDEPENDENT_REVIEW_PENDING",
+  "manifest": {
+    "path": "D:\\1800-private\\a31-readonly-launch-20261025-03\\manifest.json",
+    "sha256": "92049727253314bf34d4e84e58000842771292b6bf0a5080ad2b3c1dbd8077fb",
+    "bytes": 16315
+  },
+  "root_member_verification": {
+    "path": "D:\\1800-private\\a31-root-coordinator-20261025\\fixed-intake-01\\readonly-launch03-verification.json",
+    "sha256": "2de9489f8a8ccfb59abad09cd22c5783010fa1d72309d27ab809b55ea097e369",
+    "bytes": 725
+  },
+  "members": 69,
+  "parent_review_refs_verified": 2,
+  "unchanged_verified": [
+    "code/absolute_owned_process.py",
+    "code/frame_guard.py",
+    "code/readonly_once.py",
+    "authority-template.json",
+    "generic-cache-contract.json"
+  ],
+  "binding_additions_only": {
+    "parent_launch02": {
+      "path": "D:\\1800-private\\a31-readonly-launch-20261025-02\\manifest.json",
+      "sha256": "439544a45976e314a63dad6b6b7ea0e22f60297bb28b82f1ce630e6278f1add2"
+    },
+    "raw_stability_review": {
+      "path": "D:\\1800-private\\a31-readonly-launch-independent-20261025-02\\manifest.json",
+      "sha256": "39b4dfce22b747caa603d61cd6bb837b997eb553a1888b380fdbf656fde957ee"
+    },
+    "raw_stability": "Each intent/handoff raw is captured once; strict parsing, semantic checks and receipt hashes use those same bytes. Compare current bytes before/after observe, inside exclusive consumer before write, after fsync and after close. A change raises before return; never replace captured hashes. Reserved/partial consumer remains; no retry/reset."
+  },
+  "code_changed_only": {
+    "path": "D:\\1800-private\\a31-readonly-launch-20261025-03\\code\\worker_gate.py",
+    "sha256": "88ecd686f27c9479387275803186075f68b70374ff34b42defaa83001c6618c2",
+    "bytes": 8129
+  },
+  "command_template_final_root_verified": true,
+  "addresses": "Single remaining admission raw-snapshot stability finding",
+  "author_reported_new_controls": 7,
+  "root_did_not_replay_tests": true,
+  "root_helper_observation": {
+    "initial_helper": {
+      "path": "D:\\1800\\.local\\stages\\a31-root-coordinator-20261025\\receive_launch03.initial.py",
+      "sha256": "d49ec58e08d892a4bb53dbe8c07db4794cf536c695bd72e036411de2d30b9608",
+      "bytes": 3280
+    },
+    "initial_exit": 1,
+    "reason": "Helper overasserted full binding.json byte equality; only raw stability note and exact parent/review references were added. Corrected helper verifies all preexisting binding fields unchanged. No public receipt/state had been written.",
+    "original_tool_output": "Retained in root chat transcript"
+  },
+  "old_review_finite_closure": "Deadline/frame/request bounds inherited; old rework/unknown/failure preserved",
+  "ordinary_product03": "SEPARATE_REVIEW_PENDING",
+  "live_activation": false,
+  "actual": "NOT_RUN",
+  "automation_1800_a": "PAUSED"
+}
