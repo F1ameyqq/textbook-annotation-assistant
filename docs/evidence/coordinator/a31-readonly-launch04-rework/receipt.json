@@ -1,0 +1,140 @@
+{
+  "schema": "A31RootReadonlyLaunch04Rework/v1",
+  "at": "2026-10-25T13:56:10.807117+00:00",
+  "status": "FORMAL_AND_ROOT_REWORK_TWO_FINITE_FINDINGS",
+  "review_manifest": {
+    "path": "D:/1800-private/a31-readonly-launch-independent-20261025-04/manifest.json",
+    "sha256": "f6948fc9af15a192afb1c950e15508f601c48c04ed9066f891e95c29bf029f48",
+    "bytes": 5895
+  },
+  "review_decision": {
+    "path": "D:/1800-private/a31-readonly-launch-independent-20261025-04/decision.json",
+    "sha256": "8fa68e1bd74838b3ae5dc47edb75382de5f852905a8c9aa5eed99f2f9f4dc75f",
+    "bytes": 10245
+  },
+  "root_member_verification": {
+    "path": "D:/1800-private/a31-root-coordinator-20261025/fixed-intake-01/readonly-launch-review04-verification.json",
+    "sha256": "937747cdd20dd2b7abb0add9eded0226ae7b2226b0b23c3f12e12523bdd01567",
+    "bytes": 743
+  },
+  "review_members": 30,
+  "external_refs_verified": 2,
+  "input_manifest": {
+    "path": "D:\\1800-private\\a31-readonly-launch-20261025-04\\manifest.json",
+    "bytes": 53568,
+    "sha256": "c906858f26cba2eb220edb45a8470604967fc6b9f12e70f2bd482b1ad3b6faf7"
+  },
+  "findings": [
+    {
+      "id": "CURRENT_BINDING_REFERENCES_OLD_HOLDER_HASH_AND_ADMISSION_SCHEMAS",
+      "priority": 2,
+      "status": "REWORK",
+      "locations": [
+        {
+          "file": "binding.json",
+          "line": 154,
+          "end": 168
+        }
+      ],
+      "facts": {
+        "declared_holder_sha256": "bb57e323de1bfd1686e5b4550b8d3f7c7c963a4ffa0bc9a276e1b994017e1926",
+        "actual_holder_sha256": "61ee7287c75aea16a4b3a7b2ba5cbd8364e25fbe30bb73c4f1bb65269c28aec1",
+        "declared_intent_schema": "A31ReadonlySingleIntent/v2",
+        "actual_intent_schema": "A31ReadonlySingleIntent/v3",
+        "declared_handoff_schema": "A31ReadonlyWorkerHandoff/v1",
+        "actual_handoff_schema": "A31ReadonlyWorkerHandoff/v2"
+      },
+      "reason": "These fields describe current code/path/admission with no historical marker. fixed_inputs does not use holder_delta.sha as a runtime selector, so this is a contradictory current contract, not proof of runtime fallback to old holder.",
+      "minimum_fix": "Update current holder SHA and current intent/handoff schema + identity/creator/observation descriptions in frozen binding. Keep historical base/parent references clearly historical. Re-freeze package; never patch path/hash at actual launch."
+    },
+    {
+      "id": "HANDOFF_CREATOR_FLAGS_NONINTEGER_NUMERIC_EQUALITY_IS_ADMITTED",
+      "priority": 2,
+      "status": "REWORK",
+      "locations": [
+        {
+          "file": "code/worker_gate.py",
+          "line": 88
+        },
+        {
+          "file": "code/worker_gate.py",
+          "line": 96,
+          "end": 102
+        },
+        {
+          "file": "code/owned_worker_observer.py",
+          "line": 61,
+          "end": 69
+        }
+      ],
+      "counterexample": {
+        "input": "handoff.creator_proof.flags=float(0x08000004)=134217732.0 instead of exact int134217732",
+        "gate_observe_calls": 1,
+        "admission_receipt_returned": true,
+        "atomic_consumer_reserved": true,
+        "receipt_expected_flags_type": "int",
+        "method": "Exact new gate AST and pure validator AST, all-memory read/open/fsync/close and fake observation. No native observer or authority run."
+      },
+      "reason": "Dictionary equality permits numeric int/float equivalence. Gate builds validator expected.creator_proof from constant, so strict int check in pure validator never validates the original handoff proof type. This is a strict malformed-proof acceptance gap, not an arbitrary-process or real ownership bypass proof.",
+      "minimum_fix": "Strictly validate source handoff creator_proof dict keys and scalar types, especially type(flags)is int, against exact constant before observation. Reuse strict pure contract validation if appropriate; preserve raw capture, trusted construction basis and one-use/deadline gates."
+    }
+  ],
+  "finite_passes_not_whole_product_acceptance": {
+    "observer": "Pure/collector relation checks pass finite DIRECT or ONE_EXACT_ENTRY_CHILD. No arbitrary same-Job/unknown parent/deeper hop accepted; exact positive identities/creation/liveness and exact namedJob both memberships required.",
+    "construction_vs_observation": "Entry-to-bootstrap is the bound basic CreateProcessW construction path/creator proof, not fresh entry PPID or loaded-code attestation. New observations retain entry_parent_pid=NOT_OBSERVED.",
+    "native_failure_facts": "Default collector captures own OS/PID/PPID before native adapter init; failures retain only measured partial operands and close results, admission saves original observation serialization. Native adapter compatibility remains unrun.",
+    "holder": "Only identity policy and handoff v2 creator fields changed; original CreateProcess/Assign/handoff/Resume deadlines, cleanup absolute budget, original handles, new Job ownership and release predicates preserved by source/AST comparison.",
+    "raw_stability": "New observation serialization is captured once and bound by hash with old intent/handoff bytes; close-time replacement with semantically equivalent extra whitespace is rejected before consumer. Finite checkpoint acceptance, not permanent lock/arbitrary concurrent zero-window guarantee.",
+    "once_and_deadline": "Exclusive UUID consumer, partial claim preservation and no retry retained. New post-observe/pre-consume/pre-runtime business time checks added; no timer reset or budget widening found.",
+    "startup": "New04 recorder, bootstrap, cwd and package paths are explicit; authority v2 and common root-pinned artifact hash/policy must agree. Templates are inactive; full10 outer and8 bootstrap literals present. Runtime functions/frame/request boundaries inherited by byte/AST comparison, not old matrix replay."
+  },
+  "independent_new_delta_controls": {
+    "observer_cases": {
+      "count": 9,
+      "result": "PASS finite collector/validator scope only"
+    },
+    "holder_semantic_cases": {
+      "count": 2,
+      "result": "PASS after correcting only one failed fixture; passed case not repeated"
+    },
+    "startup_chain_groups": {
+      "count": 4,
+      "result": "PASS for exercised current paths/hash/AST invariants; current binding metadata separately REWORK"
+    },
+    "gate_new_cases": {
+      "count": 2,
+      "results": [
+        "Malformed float creator flags admitted: concrete REWORK counterexample",
+        "New observation bytes replaced at close: intended HOLD before consumer"
+      ]
+    },
+    "method": "Only exact delta function/class AST with fake in-memory files/adapters/runner/clock/native calls. No candidate whole-module/native observer/runtime execution.",
+    "old_accepted_author_or_independent_matrix_replay": 0,
+    "actual_process_profile_runtime_browser_network_platform_GUI_OCR_model_save_calls": 0
+  },
+  "helper_and_report_failures_preserved": {
+    "gate": "Initial harness omitted default observe_named_job symbol; function-definition default evaluation failed before first gate case. Original script/error preserved; repaired only harness and ran the two previously unentered cases.",
+    "holder": "First helper had1 pass and1 fixture error due omitted re. Original files/results retained; r1 executed only failed case, no passed-case replay.",
+    "report_draft": "Initial findings decimal label for flags was wrong; corrected reporting only to0x08000004=134217732, with original draft retained. Executed control always used float of source-extracted constant; no source/control/result rerun."
+  },
+  "historical_and_permission": {
+    "actual02_worker_PID_PPID_and_exact_failed_operand": "UNKNOWN_NOT_RECORDED; no retrospective new observation",
+    "base35108_as_actual02_worker_or_parent_relation": "UNKNOWN_NOT_INFERRED",
+    "actual02_exit2_to_shell1_cause": "UNKNOWN_PRESERVED",
+    "f590ad5f-f63c-48d6-adae-556a689605a1": "PERMANENT_SPENT1_REMAIN0_INACTIVE",
+    "b1cddd22-d28f-4a1f-9371-2ebc709da14b": "PERMANENT_SPENT1_REMAIN0_INACTIVE",
+    "new_authority_UUID_window_activation": "NONE_NOT_ASSIGNED_NOT_AUTHORIZED",
+    "old16_old9_sources_OCR_saves_failures_UNKNOWN_spent": "PRESERVED_NO_REPLAY",
+    "1800-a": "PAUSED"
+  },
+  "not_run_unknown": [
+    "Real native observer/WinAPI and bound runtime compatibility",
+    "Current profile/runtime/ledger/claim/output state",
+    "New source17 image/question count/section boundary",
+    "Real cache bridge/customer GUI/OCR/formula/paidmodel/save/readback/export/display",
+    "Future own release or customer time/manual actions"
+  ],
+  "minimum_next_step": "Same author freezes a new revision correcting current binding and strict source handoff proof typing; same independent delta re-review. Root may consider new exact unique binding only after those findings close. No actual or diagnostic is dispatched here.",
+  "same_author_dispatched": true,
+  "root_tests_or_actual_replay": 0
+}
