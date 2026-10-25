@@ -2,7 +2,7 @@
   "schema_version": 1,
   "project": "D:\\1800",
   "coordinator_thread_id": "01a171f5-e73e-7452-982b-1885115e96ff",
-  "updated_at": "2026-10-25T13:04:41.591870+00:00",
+  "updated_at": "2026-10-25T13:13:37.472044+00:00",
   "automation": {
     "id": "1800-a",
     "kind": "heartbeat",
@@ -19550,7 +19550,7 @@
     "A31": {
       "task_id": "A31",
       "created_at": "2026-10-25T18:12:13.051404+08:00",
-      "status": "READONLY_ACTUAL02_FIXED_IN_REVIEW__OFFLINE_IDENTITY_ANALYSIS",
+      "status": "READONLY_ACTUAL02_FAILURE_OWN_RELEASE_ACCEPTED__MINIMAL_IDENTITY_REPAIR",
       "model": "gpt-6.1-sol",
       "thinking": "ultra",
       "book_id": "46007447",
@@ -19611,7 +19611,7 @@
       "executor_title": "A31 普通客户完整流程开发与执行",
       "reviewer_title": "A31 内容核验与客户流程独立验收",
       "created_via": "codex_app.create_thread",
-      "updated_at": "2026-10-25T13:04:41.591870+00:00",
+      "updated_at": "2026-10-25T13:13:37.472044+00:00",
       "registration": {
         "path": "D:\\1800\\docs\\evidence\\coordinator\\a31-initial-dispatch\\registration.json",
         "sha256": "c98dc5d7afa5a117e2033d7a387696f61be93bba815c49b8aa0d47773130701a",
@@ -19957,7 +19957,7 @@
           "sha256": "7eba3b9730e94e08719142492da65a47af59532c88fea27088844abb5ede2b64",
           "bytes": 4197
         },
-        "status": "FIXED_NONZERO_RESULT_INDEPENDENT_REVIEW_PENDING",
+        "status": "FORMAL_AND_ROOT_ACCEPTED_FIXED_WORKER_ADMISSION_FAILURE_RECORDED_OWN_RELEASE_ONLY",
         "active": false,
         "spend": "SPENT_NO_RETRY",
         "not_before": "2026-10-25T12:55:33.554428+00:00",
@@ -19972,7 +19972,7 @@
           "message_id": "msg_09debb377f5677e5016addfc7f3074819185d725bd41258793",
           "at_recorded": "2026-10-25T12:57:38.537732+00:00"
         },
-        "actual_outcome": "UNKNOWN_PENDING_FIXED_RAW",
+        "actual_outcome": "WORKER_ADMISSION_FAILED_NO_RETRY",
         "root_stop_notice": {
           "path": "D:\\1800\\docs\\evidence\\coordinator\\a31-readonly-actual02-stopped\\receipt.json",
           "sha256": "b16928fc01dea7fe2404d2eaf3351a25182d35a7221d625341e533051f4dfa0e",
@@ -19997,7 +19997,23 @@
           "sha256": "2115a80a9a4ff19ae688c0f3ae52cbf9e7469a48ce6af2389862d594302b46f1",
           "bytes": 962
         },
-        "recorded_worker_error": "GATE_PROCESS_PARENT_CHANGED"
+        "recorded_worker_error": "GATE_PROCESS_PARENT_CHANGED",
+        "root_closure": {
+          "path": "D:\\1800\\docs\\evidence\\coordinator\\a31-readonly-actual02-closure\\receipt.json",
+          "sha256": "65e40b7a20916ef4fd5265a104078439b231cc6588c2baf2beb384181cf87b8e",
+          "bytes": 11884
+        },
+        "own_release": "ACCEPTED_RECORDED_HOLDER_JOB_AND_THREE_IDENTITIES_ONLY",
+        "business": "NOT_RUN_ON_RECORDED_FAILURE_PATH",
+        "exact_root_cause": "UNKNOWN_NOT_ESTABLISHED"
+      },
+      "identity_integration_followup": {
+        "status": "OPEN_ACTUAL_WORKER_IDENTITY_INTEGRATION_STOP; NO_REPAIRED_PRODUCT_ACCEPTED",
+        "minimal_locations": "worker_gate.py observe_named_job line47 / admit_worker line99, readonly_once.py worker line243; owned launcher/handoff identity relation in existing outer.process.json.",
+        "facts": "Expected child71420 and bootstrap48968 are bound; observed Job includes venv executable71420 and base Python35108, but actual executing worker PID/PPID values and their parent relation are absent.",
+        "hypothesis_only": "A launcher-to-interpreter identity handoff may be relevant; the two Python images alone do not establish it or identify the failed operand.",
+        "minimum_repair_direction": "Reconcile the exact held launcher, actual executing worker and bootstrap identities/creation times/parent chain/owned Job contract from immutable source and existing evidence. A future frozen revision can retain the observed operands and enforce the exact permitted chain. Do not replace the guard with arbitrary same-Job process acceptance or erase existing failure.",
+        "not_authorized_here": "No live diagnostic, probe, retry, actual code import/execution, product repair, new source call or authority activation. Any next implementation/actual must be separately frozen/reviewed/root bound."
       }
     }
   },
@@ -22435,12 +22451,12 @@
     }
   ],
   "last_action": {
-    "at": "2026-10-25T13:04:41.591870+00:00",
-    "action": "RECEIVE_AND_DISPATCH_A31_READONLY_ACTUAL02_FIXED_RESULT",
+    "at": "2026-10-25T13:13:37.472044+00:00",
+    "action": "ACCEPT_A31_READONLY_ACTUAL02_FIXED_FAILURE_AND_RECORDED_OWN_RELEASE_ONLY",
     "receipt": {
-      "path": "D:\\1800\\docs\\evidence\\coordinator\\a31-readonly-actual02-intake\\receipt.json",
-      "sha256": "0b76d978fd6d9d145babc78087f2b1bae673420f3b574eb2f3bd203543e058cf",
-      "bytes": 2130
+      "path": "D:\\1800\\docs\\evidence\\coordinator\\a31-readonly-actual02-closure\\receipt.json",
+      "sha256": "65e40b7a20916ef4fd5265a104078439b231cc6588c2baf2beb384181cf87b8e",
+      "bytes": 11884
     },
     "new_live_activation": false
   },
@@ -25694,7 +25710,7 @@
     "historical_gaps": "Preserved in customer_delivery_readiness_history; not erased or reclassified as tests"
   },
   "next_content_delivery_gap": {
-    "status": "READONLY_ACTUAL02_FIXED_IN_REVIEW__OFFLINE_IDENTITY_ANALYSIS",
+    "status": "READONLY_ACTUAL02_FAILURE_OWN_RELEASE_ACCEPTED__MINIMAL_IDENTITY_REPAIR",
     "task_id": "A31",
     "book_id": "46007447",
     "selected_next_section": {
