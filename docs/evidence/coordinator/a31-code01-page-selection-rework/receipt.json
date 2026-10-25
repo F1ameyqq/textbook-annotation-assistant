@@ -1,0 +1,55 @@
+{
+  "schema": "A31RootCode01AndPageInputRework/v1",
+  "at": "2026-10-25T18:45:12.307042+08:00",
+  "input_manifest": {
+    "path": "D:\\1800-private\\a31-customer-flow-execution-20261025-01\\manifest.json",
+    "sha256": "c7b84099ce320ac43c4015aa2198286b10b4761840e295d7c5561d264c2c3d07"
+  },
+  "review01": {
+    "path": "D:\\1800-private\\a31-customer-flow-independent-20261025-01\\manifest.json",
+    "sha256": "42efaa157192e2a14959767af5c5c3f64de86750a5cbf990abcb5f36f400362b",
+    "bytes": 4305
+  },
+  "review02": {
+    "path": "D:\\1800-private\\a31-customer-flow-independent-20261025-02\\manifest.json",
+    "sha256": "94f0b4b37c26f26effd8100f42b64154bd2066e2b26a6f73e66bcaa19a46f331",
+    "bytes": 2145
+  },
+  "decisions": {
+    "ordinary_empty_directory_range_input": "REWORK_REQUIRED",
+    "cache_delta": "ACCEPTED_OFFLINE_ONLY_UNCHANGED",
+    "same_book_identity_helper_and_callback": "ACCEPTED_STATIC_REACHABILITY_ONLY_UNCHANGED",
+    "inventory_and_readonly_scope": "ACCEPTED_PROPOSED_SCOPE_ONLY_UNCHANGED",
+    "exact_actual_execution": "EXECUTION_NOT_READY",
+    "live_activation": false
+  },
+  "root_decision": "ACCEPT_LIMITED_CACHE_AND_SAME_BOOK_CODE_AND_READONLY_SCOPE_PROPOSAL__REWORK_ORDINARY_EMPTY_DIRECTORY_PAGE_SELECTION",
+  "root_verified_review_members": [
+    19,
+    9
+  ],
+  "root_verified_external_references": 5,
+  "independent_new_controls": 12,
+  "new_page_counterexample": 1,
+  "page_counterexample_raw_stdout_separately_retained": false,
+  "page_counterexample_source_and_result_retained": true,
+  "finding": {
+    "id": "A31-EMPTY-DIRECTORY-PAGE-NUMBER-SEMANTICS",
+    "priority": "P2",
+    "effect": "Printed8/25 is accepted as viewer8/25, while selected retained section needs viewer16/173. Pre-input visible selection basis and page-number semantics are missing. No wrong request or save was executed.",
+    "minimum_repair": [
+      "Explicitly name the range input as platform viewer one-based page ordinal, distinguish printed footer numbering and correct the normal instructions; do not call16/173 printed book pages.",
+      "Provide a customer-visible, normally reachable way to identify/select those viewer pages before committing acquisition: e.g. retained source page previews/normal book viewer with visible ordinal, or a verified printed-page-to-viewer mapping. A renamed numeric field alone must not rely on an agent handing over16/173.",
+      "When the mapping/source page selection is unknown, show a clear selection-required state; do not guess one constant offset or silently interpret printed8/25 as the requested section.",
+      "Validate only the affected input/selection path with a new finite offline control; no old source/OCR/save/GUI/START replay and no change to accepted old questions."
+    ]
+  },
+  "next_actions": [
+    "Same sole author freezes exact readonly runner, command, owner/environment and counters for independent review.",
+    "Same author makes minimal ordinary page-selection repair in a new fixed product02; frozen originals remain."
+  ],
+  "live_activation": false,
+  "all_old_authorities": "SPENT_UNCHANGED",
+  "old16_and_old9": "PRESERVED",
+  "automation_1800_a": "PAUSED"
+}
