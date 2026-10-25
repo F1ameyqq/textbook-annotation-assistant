@@ -1,0 +1,101 @@
+{
+  "schema": "A30LaunchR1ActualReviewDecision/v1",
+  "reviewer": "a30-review-actual-r1-20261025-01",
+  "reviewed_at": "2026-10-25T05:30:00+00:00",
+  "decision": "ACCEPTED_FIXED_FAILURE_AND_OWN_RELEASE_ONLY",
+  "independence_limitations": [
+    "Same model family as executor; fresh isolated agent session (not the executor a30-exec-20261025-01).",
+    "Original Codex review budget exhausted; this review runs under the user-approved M1 disposition.",
+    "This review is not the original formal review and not a different model vendor."
+  ],
+  "actual_platform_calls": 0,
+  "workspace_writes": 0,
+  "profile_reads": 0,
+  "run_observed": "STOPPED",
+  "authority_sha256": "10e9330b19254c50f8f369c143de3a66fbe40989114baf2b583675c82e3ce14d",
+  "authority_spent": 1,
+  "customer_ready": false,
+  "verified_facts": {
+    "authority": {
+      "schema": "A30Full16ReconcileContinueAuthority/v1",
+      "activated": true,
+      "executor": "a30-exec-20261025-01",
+      "window_seconds": 1800.0,
+      "run_within_window": true,
+      "entry_sha256": "fbfa867331c141f70f4d1e10a9393b78dd67aaabcb4fc61310d2a5d03ef7606a",
+      "binding_sha256": "35f87bd50b1e08f0241557ac8a65517697995b56c1e605955ea41152e2905688",
+      "plan_sha256": "eabbb944c938304d96969a8fae02d5f194e28717d114225e4781f7d4dc1860c8",
+      "package_manifest_sha256": "55a6af3120f50288a3c28a002495a06a4467cba728931e07ddf79b063ce855df",
+      "limits_equal_binding": true,
+      "expected_cost_equal_plan_budget": true,
+      "selected_keys_order_matches_plan": true,
+      "root_receipts_hashes_match": true
+    },
+    "single_shot": {
+      "launch_intent_count": 1,
+      "child_entered_count": 1,
+      "spent": 1,
+      "remaining": 0,
+      "automatic_retry": false,
+      "retry_files_found": 0,
+      "reconcile_result_present": false
+    },
+    "q12": {
+      "save_operation_state": "UNKNOWN_NO_RETRY",
+      "reconcile_operation_state": "FAILED_NO_RETRY",
+      "reconcile_output_blob": "521de42316d48df43ea54b810a5fc4354469188f0cc916689227bc66ecc0c8b0",
+      "post_events_in_run": 0,
+      "resend_evidence": "NONE"
+    },
+    "comparator_cause": {
+      "failure_side": "count",
+      "old_questions": 37,
+      "readback_questions": 42,
+      "node_check_passed": true,
+      "book_id_side_passed": true,
+      "message": "读回题数或书籍不一致。"
+    },
+    "extra_nodes_39_42": {
+      "created_before_window": true,
+      "content_matches_candidates_13_16": true,
+      "rect_ids_match_deterministic_uuid5": true,
+      "save_operations": 0,
+      "acceptance_refs": "null",
+      "platform_status": "NOT_RUN",
+      "attribution": "UNKNOWN"
+    },
+    "budgets": {
+      "business_gets": 661,
+      "gets_limit": 2997,
+      "posts": 0,
+      "posts_limit": 4,
+      "contexts": 9,
+      "contexts_limit": 59,
+      "crop_downloads": 0,
+      "crops_limit": 11,
+      "ocr": 0,
+      "formula_model_calls": 0,
+      "paid_model_calls": 0,
+      "login": 0,
+      "old_nine_resaves": 0,
+      "original_source_regets": 0,
+      "settings_sha256": "56f07eb98e9712b662a13b016d9758c3d2c12109421a7b1f557a972e2b565f5f"
+    },
+    "failure_semantics": {
+      "status": "STOPPED_NO_RETRY",
+      "type": "Hold",
+      "message": "读回题数或书籍不一致。",
+      "successors": "NOT_RUN",
+      "elapsed_seconds": 92.09928860000218,
+      "exit_code": 2,
+      "owned_os_release_confirmed": true,
+      "job_head_platform_status": "UNKNOWN_NO_RETRY",
+      "remaining_unaccepted_count": 12
+    }
+  },
+  "not_accepted": [
+    "Q13-16 attribution remains UNKNOWN: content on platform matches candidates and rect_ids are deterministic, but there are no save receipts, no acceptance_refs, platform_status NOT_RUN, and no write outputs; they must never be resent or overwritten.",
+    "Q12 remains UNKNOWN_NO_RETRY; the new reconcile operation is FAILED_NO_RETRY; no resend occurred and none is authorized by this review.",
+    "Full16 export/display did not run this round; customer_ready remains false."
+  ]
+}

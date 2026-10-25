@@ -1,0 +1,249 @@
+{
+  "schema": "A30Launch03R1ActualExecutorReport/v1",
+  "report_dir": "D:\\1800-private\\a30-launch03-r1-actual-executor-report-20261025-01",
+  "authority_id": "a30-full16-reconcile-continue-20261025-01",
+  "authority_sha256": "10e9330b19254c50f8f369c143de3a66fbe40989114baf2b583675c82e3ce14d",
+  "entry_run_once_sha256": "fbfa867331c141f70f4d1e10a9393b78dd67aaabcb4fc61310d2a5d03ef7606a",
+  "binding_sha256": "35f87bd50b1e08f0241557ac8a65517697995b56c1e605955ea41152e2905688",
+  "window": {
+    "start": "2026-10-25T04:07:37Z",
+    "end": "2026-10-25T04:37:37Z"
+  },
+  "outer_started_at": "2026-10-25T04:09:16.048751+00:00",
+  "child_entered_at": "2026-10-25T04:09:30.389530+00:00",
+  "finished_at": "2026-10-25T04:11:02.584543+00:00",
+  "exit_code": 2,
+  "timeout": null,
+  "elapsed_seconds": 92.09928860000218,
+  "spent": 1,
+  "remaining": 0,
+  "status": "STOPPED_NO_RETRY",
+  "type": "Hold",
+  "message": "读回题数或书籍不一致。",
+  "successors": "NOT_RUN",
+  "automatic_retry": false,
+  "original_settings_unchanged": true,
+  "settings_sha256_verified_unchanged": "56f07eb98e9712b662a13b016d9758c3d2c12109421a7b1f557a972e2b565f5f",
+  "own_release_evidence": {
+    "owned_os_release_confirmed": true,
+    "process_record": "raw/production-outer.process.json",
+    "launcher_pid": 73292,
+    "launcher_exit_code": 2,
+    "job_assigned_before_resume": true,
+    "job_handle_closed": true,
+    "job_active_processes_after": 0,
+    "thread_handle_closed": true,
+    "process_handle_closed": true,
+    "launcher_exit_signaled": true,
+    "launcher_exit_wait_result": 0,
+    "errors": [],
+    "observed_processes_total": 151,
+    "observed_processes_by_image": {
+      "msedge.exe": 88,
+      "python.exe": 36,
+      "conhost.exe": 10,
+      "node.exe": 9,
+      "identity_helper.exe": 6,
+      "python.exe_exit_2": 2
+    },
+    "observed_processes_all_exit_signaled_and_handle_closed": true,
+    "identity_helper_observed_exit_code_3221226029_cause_unknown_retained": true
+  },
+  "network_analysis": {
+    "rounds": 9,
+    "events_total": 661,
+    "get_total": 661,
+    "post_total": 0,
+    "write_upload_login_ocr_model_calls": 0,
+    "distinct_urls": 303,
+    "url_plaintext_retained": false,
+    "per_round_event_counts": {
+      "040937-e87913eb": 7,
+      "040949-0a92335f": 91,
+      "041000-b1c974a7": 91,
+      "041009-59694c8e": 91,
+      "041019-e137795a": 91,
+      "041027-10367a41": 91,
+      "041036-9881e526": 91,
+      "041045-bef27ba8": 91,
+      "041055-c18ce2f0": 17
+    },
+    "repeated_endpoint_url_sha256_prefixes": [
+      "ad956ec7a1b6488f4e4a6 (native/document x9)",
+      "4c9cf018ae6fe16d8592 (native/xhr + context/fetch x9)",
+      "daf663875dc5914f8c8d (native/xhr + context/fetch x9)",
+      "b122b5f505ffa529721e (native/xhr + context/fetch x9)"
+    ],
+    "all_rounds_status": "NATIVE_GETS_CAPTURED",
+    "save_attempts_per_round": 0
+  },
+  "state_sqlite_analysis": {
+    "operations_before_expected": 85,
+    "operations_after": 86,
+    "new_operation_rowid_86": {
+      "kind": "reconcile",
+      "key": "d779d3db6997363af731d4b6f5f2371a56d3ea964f4b29f8e51a4b20b79a02d5",
+      "state": "FAILED_NO_RETRY",
+      "output_blob": "521de42316d48df43ea54b810a5fc4354469188f0cc916689227bc66ecc0c8b0",
+      "output_content": {
+        "type": "Hold",
+        "message": "读回题数或书籍不一致。"
+      }
+    },
+    "pre_existing_reconcile_op": {
+      "key": "06937fa7f75900de04305de09a68e46eef4d4a45c0d7676cd7d209d12848f220",
+      "state": "COMPLETE",
+      "note": "2026-10-24 Q1 CustomerSaveReadback record, predates this run"
+    },
+    "save_ops_total": 12,
+    "save_ops_complete": 11,
+    "save_ops_unknown_no_retry": [
+      {
+        "key": "56232bbf755aaf07eb1eecd41dfbebd13f4db25811d86e282ad82c828f5e2e82",
+        "printed": "12"
+      }
+    ],
+    "new_save_op_added": false,
+    "save_op_for_13_16": false,
+    "q12_complete": false,
+    "jobs_rows": [
+      {
+        "rowid": 6,
+        "book": "46007447",
+        "head": "a12f0f6c9c2d89a99afaac18004fde22abf8a43561f98129ed00f47931961f0b",
+        "note": "older revision-1 head from a30-current-preparation-20261024 workspace, predates run"
+      },
+      {
+        "rowid": 100,
+        "book": "46007447",
+        "head": "28274dab55969aa33d365ee2e4078c6ad58593929b589aa2a7581a3de20b1abc",
+        "note": "current head updated by this run from 7077df60... (platform_status RUNNING->UNKNOWN_NO_RETRY, stop message appended)"
+      }
+    ]
+  },
+  "comparator_diagnosis": {
+    "hold_site": "app/src/annotation/customer/native_plan.py:256",
+    "hold_code": "require(len(new_questions) == len(old_questions) + 1 and after[\"book_id\"] == plan[\"book_id\"], \"读回题数或书籍不一致。\")",
+    "plan_blob": "6163be59a6823aa7a6cb03760a5737f775f8b6817daa8121bd6f81f31f20aac0",
+    "plan_book_id": "46007447",
+    "plan_before_count": 37,
+    "plan_new_order": 38,
+    "plan_before_frame_count": 125,
+    "plan_candidate_printed": "12",
+    "fresh_capture_question_count": 42,
+    "fresh_capture_book_id": "46007447",
+    "expected_count": 38,
+    "classification": "COUNT_MISMATCH_ONLY",
+    "book_identity_matched": true,
+    "note": "The single combined require message covers both predicates; the failing predicate is the count (42 != 37+1) while book_id is equal on both sides (46007447)."
+  },
+  "extra_nodes_orders_39_42": [
+    {
+      "order_in_level": "39",
+      "node_id": "1792864390658",
+      "created_utc": "2026-10-24T17:53:10.658Z",
+      "frames_created_at_platform_local": "2026-10-25T01:53:11",
+      "matches_printed_candidate": "13",
+      "candidate_key": "6bf4a76f5c11ec1bca7fb7034e4b9ad76dade4ac4b82e6daa386c5172994a917",
+      "source_key_digest": "6ecc8fdcc9c6f62ee01e469c0dba7c1de68b3902f98f8380f1ca6dc47d08e6ca",
+      "rect_ids_all_match": [
+        "82e61cfa-94bf-574a-9666-c7d9ec1e1818",
+        "f94901b7-4227-56cd-b613-051c9a478f01",
+        "315b2db9-854e-51a5-a5f7-cbc855ccc972",
+        "e70c1110-6348-566f-9542-e80a2488e9b4"
+      ]
+    },
+    {
+      "order_in_level": "40",
+      "node_id": "1792864454350",
+      "created_utc": "2026-10-24T17:54:14.350Z",
+      "frames_created_at_platform_local": "2026-10-25T01:54:14",
+      "matches_printed_candidate": "14",
+      "candidate_key": "a674158fe86027cfc391c7e307f5c369a9155d41aff35a98776b041ad5be865a",
+      "source_key_digest": "b753d684b4bf276344cb8491204a1c83bf4c5a2e4dae5f3b47dd4cc7a5636128",
+      "rect_ids_all_match": [
+        "0eeddf0b-1c0f-5e93-8b72-afed19d3b61d",
+        "4216f69d-9e5f-5f5b-88d5-bd833de75bd0"
+      ]
+    },
+    {
+      "order_in_level": "41",
+      "node_id": "1792864513549",
+      "created_utc": "2026-10-24T17:55:13.549Z",
+      "frames_created_at_platform_local": "2026-10-25T01:55:14",
+      "matches_printed_candidate": "15",
+      "candidate_key": "c1e7eedd4e182bf55baf2248affbbc3fc627caee91e9906a1a4a14866fcdb235",
+      "source_key_digest": "27cf0df9a7d95d017a9aa2ba413d6e97ba1a1d7ad4d1a211a6be24d3aaac83a14",
+      "rect_ids_all_match": [
+        "df78ab22-8ebc-5bbb-80ca-4d1d86c6dbeb",
+        "b945fc57-df04-51c6-9aa0-7dd97360213c",
+        "e9bdfd9a-aca3-5422-ad28-716cd705d068",
+        "f72e1317-74db-5f2b-85b1-fd5785dfe20e",
+        "e4f9448a-bc38-5711-bf1b-8de207afb67e"
+      ]
+    },
+    {
+      "order_in_level": "42",
+      "node_id": "1792864580902",
+      "created_utc": "2026-10-24T17:56:20.902Z",
+      "frames_created_at_platform_local": "2026-10-25T01:56:21",
+      "matches_printed_candidate": "16",
+      "candidate_key": "b8a07ee507eaae59d69550bd0064264770ef4aa49431095f93ddc97e809369b8",
+      "source_key_digest": "e749cf34711de316bd300e6e9e3eb42e9041ec3acf6e1de38a9b93dc5e2782f2",
+      "rect_ids_all_match": [
+        "92a58361-6398-5ef9-8faa-6af7e20d7550",
+        "47445b8c-35b2-537a-873b-8655b9dda1b8",
+        "f6b1281e-1274-530d-99a1-842d1ef4aa36",
+        "c546611a-6f1d-559c-b83a-e3cf78879d22"
+      ]
+    }
+  ],
+  "extra_nodes_conclusion": {
+    "predate_run_window": true,
+    "first_capture_already_shows_42": true,
+    "save_receipt_or_operation_in_retained_workspace": false,
+    "candidate_platform_status_13_16_in_head": "NOT_RUN",
+    "rect_id_derivation_match": "ALL_15_RECT_IDS_MATCH_UUID5_DERIVATION_FOR_PRINTED_13_16",
+    "attribution": "UNKNOWN",
+    "q13_16_claimed_accepted": false,
+    "no_resend": true
+  },
+  "raw_files": {
+    "launch-intent.json": {
+      "bytes": 814,
+      "sha256": "48a899bed501ad9cab3f693d0c135648bc2b474b7473d72a1c732fa876f2d34f"
+    },
+    "child-entered.json": {
+      "bytes": 146,
+      "sha256": "2f5440cc61c7027aa46f8594ccc82e8a064f0db85dc37a87d3639d430bd15770"
+    },
+    "outer-outcome.json": {
+      "bytes": 434,
+      "sha256": "778b86d58869ec839b05855db2dc278e2e6c4c8dfd2df3a2f4d4a971be2b0a02"
+    },
+    "production-result.json": {
+      "bytes": 2042,
+      "sha256": "eef4f5a160c9c64d4e6941e53bb4422a9ba957d595e390d4fbfa58a30a4d8900"
+    },
+    "console.stdout.txt": {
+      "bytes": 403,
+      "sha256": "e000b0203a698fa698fb44b8105c9dfa0f3b7d25fbaee0434e6060c643083a68"
+    },
+    "console.stderr.txt": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "console.exit.txt": {
+      "bytes": 1,
+      "sha256": "d4735e3a265e16eee03f59718b9b5d03019c07d8b6c51f90da3a666eec13ab35"
+    },
+    "production-outer.process.json": {
+      "bytes": 66553,
+      "sha256": "8866cc2f1f4f449d598a9e2e709d1c8b661ebfdbab0044a27789aadfd9a8cb17"
+    },
+    "production-outer.stderr": {
+      "bytes": 96,
+      "sha256": "431f684b6889f51fb7a5d5cde50c700393e78c6fc40b3b333a5aeba7a761bf0a"
+    }
+  }
+}
