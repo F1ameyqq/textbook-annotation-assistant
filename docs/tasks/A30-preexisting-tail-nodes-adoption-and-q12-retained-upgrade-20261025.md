@@ -109,14 +109,24 @@ actual 必须等独立代码评审通过、根绑定新唯一授权后另行派�
 - 保留读回组 `native/008bb17292dd4399a4d8e9d3f3351470`，9 个 `usense-readonly-20261025-04*` run 的 `capture-summary.json` sha、成员总数 302；
 - 13–16 采纳绑定（逐题）：
 
-| 印刷 | node | info | order | created_at | zones → rect_ids（候选顺序） |
-|---|---|---|---|---|---|
-| 13 | 1792864390658 | 2114052595989790722 | 39 | 2026-10-25T01:53:11 | question `82e61cfa…,e70c1110…`; choice `f94901b7…`; answer `315b2db9…` |
-| 14 | 1792864454350 | 2114052863003377666 | 40 | 2026-10-25T01:54:14 | question `0eeddf0b…`; answer `4216f69d…` |
-| 15 | 1792864513549 | 2114053111524278273 | 41 | 2026-10-25T01:55:14 | question `df78ab22…,f72e1317…`; answer `b945fc57…,e9bdfd9a…,e4f9448a…` |
-| 16 | 1792864580902 | 2114053393872240642 | 42 | 2026-10-25T01:56:21 | question `92a58361…,f6b1281e…`; answer `47445b8c…,c546611a…` |
+| 印刷 | node | info | order | created_at |
+|---|---|---|---|---|
+| 13 | 1792864390658 | 2114052595989790722 | 39 | 2026-10-25T01:53:11 |
+| 14 | 1792864454350 | 2114052863003377666 | 40 | 2026-10-25T01:54:14 |
+| 15 | 1792864513549 | 2114053111524278273 | 41 | 2026-10-25T01:55:14 |
+| 16 | 1792864580902 | 2114053393872240642 | 42 | 2026-10-25T01:56:21 |
 
-（完整 UUID 必须从工作区 blob 实测写入，不得用省略号。content_hash/key/source_key 同样实测。）
+各分区 rect_ids（`image_order_in_annotation_zone` 升序，根于 2026-10-25 从保留快照独立重算）：
+
+| 印刷 | question | choice | answer |
+|---|---|---|---|
+| 13 | `82e61cfa-94bf-574a-9666-c7d9ec1e1818`, `e70c1110-6348-566f-9542-e80a2488e9b4` | `f94901b7-4227-56cd-b613-051c9a478f01` | `315b2db9-854e-51a5-a5f7-cbc855ccc972` |
+| 14 | `0eeddf0b-1c0f-5e93-8b72-afed19d3b61d` | —（候选无此分区） | `4216f69d-9e5f-5f5b-88d5-bd833de75bd0` |
+| 15 | `df78ab22-8ebc-5bbb-80ca-4d1d86c6dbeb`, `f72e1317-74db-5f2b-85b1-fd5785dfe20e` | —（候选无此分区） | `b945fc57-df04-51c6-9aa0-7dd97360213c`, `e9bdfd9a-aca3-5422-ad28-716cd705d068`, `e4f9448a-bc38-5711-bf1b-8de207afb67e` |
+| 16 | `92a58361-6398-5ef9-8faa-6af7e20d7550`, `f6b1281e-1274-530d-99a1-842d1ef4aa36` | —（候选无此分区） | `47445b8c-35b2-537a-873b-8655b9dda1b8`, `c546611a-6f1d-559c-b83a-e3cf78879d22` |
+
+上表是根已独立重算的期望值，**不是**可直接照抄的输入：执行者必须自行从工作区 blob（merged snapshot 的 `annotations`，按 `image_order_in_annotation_zone` 排序）重算并断言与本表逐项相等，再写入 binding；任何不一致必须报告根而不是自行改表。Q15 的 `annotations` 数组顺序为 `b945fc57, df78ab22, e4f9448a, e9bdfd9a, f72e1317`，与候选顺序不同——这正是变更 3 的动机，不要按数组顺序绑定。
+`content_hash`/`key`/`source_key` 同样必须实测。
 
 `completion-plan.json`：`expected_initial_native_count 42`、`expected_final_native_count 42`、selection 仅 13–16 且 `intended_operation='ADOPT_EXISTING_MATCH'`、`expected_api_budget` 与 `limits` 相等、`maximum_window_seconds 1800`、`outer_release_grace_seconds 60`。
 
