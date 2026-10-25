@@ -1,0 +1,123 @@
+{
+  "schema": "A31RootOriginalOnly01Rework/v1",
+  "at": "2026-10-25T15:54:00.426337+00:00",
+  "status": "FORMAL_REWORK_RECEIVED_ROOT_ACTIVATION_BLOCKED",
+  "review_manifest": {
+    "path": "D:/1800-private/a31-original-only-launch-independent-20261025-01/manifest.json",
+    "bytes": 4130,
+    "sha256": "5c5b80e91151c5aca910864a7cdcc6db10c252c9e29fbc2fede8fad4cf2ebcfd"
+  },
+  "review_decision": {
+    "path": "D:/1800-private/a31-original-only-launch-independent-20261025-01/decision.json",
+    "bytes": 12280,
+    "sha256": "7f7abfc02d94badf91703a2cdc420f2846c46f225c9a2bc74b7188bf21102ad2"
+  },
+  "input_manifest": {
+    "path": "D:\\1800-private\\a31-original-only-launch-20261025-01\\manifest.json",
+    "bytes": 192595,
+    "sha256": "454c9426a78622501a80d87b309596fb20dff7b147b8568bb96e1205f10fdf7c"
+  },
+  "member_verification": {
+    "path": "D:/1800-private/a31-root-coordinator-20261025/fixed-intake-01/original-only-review01-verification.json",
+    "bytes": 746,
+    "sha256": "f08663f0dd4e94ee1e2e57dbe6dde1394a7cc4d6df6270e87c4682c17bd73c6b"
+  },
+  "review_members": 22,
+  "findings": [
+    {
+      "id": "A31-ORIGINAL-ONLY-01-P2-RAW-PARSE-IDENTITY",
+      "priority": 2,
+      "title": "Hash and parse the retained response from the same captured bytes",
+      "file": "D:\\1800-private\\a31-original-only-launch-20261025-01\\code\\readonly_once.py",
+      "start": 209,
+      "end": 212,
+      "affected_new_entry": "retained_capture:231-260 -> worker:293-310 / source_stage:263-285",
+      "problem": "validate_capture_result hashes the body, reads it again for JSON parsing, and hashes it a third time for its reference. A transient change during only the parser read can therefore enter flat while references and origin attest the original raw SHA. The earlier whole-manifest check does not bind the later parser read, and no later body-to-flat identity check rejects the returned mismatch.",
+      "minimum_counterexample": {
+        "field": "page_17.data.pages[0].image",
+        "original_basename": "46007447_page_16.jpg",
+        "parser_only_basename": "46007447_page_15.jpg",
+        "other_fields_changed": [],
+        "same_raw_length": true
+      },
+      "evidence": {
+        "original_raw_sha256": "3a6638137d07e4179cda4f8da80769918585c2434b13ab8d8f56155d9835fb2a",
+        "parser_read_sha256": "560fa5eebf14f4d354f56faaddd1bc7cd46d0da242bbc5ff7087e5e5e5bc4948",
+        "returned_reference_sha256": "3a6638137d07e4179cda4f8da80769918585c2434b13ab8d8f56155d9835fb2a",
+        "returned_origin_reference_sha256": "3a6638137d07e4179cda4f8da80769918585c2434b13ab8d8f56155d9835fb2a",
+        "page_image_url_accepts_parser_URL": true,
+        "counterexample": "raw/source-review/retained-parse-delta-result.json",
+        "read_sequence": [
+          {
+            "operation": "page.read_bytes",
+            "number": 1,
+            "bytes_sha256": "3a6638137d07e4179cda4f8da80769918585c2434b13ab8d8f56155d9835fb2a",
+            "role": "whole_manifest_hash"
+          },
+          {
+            "operation": "page.read_bytes",
+            "number": 2,
+            "bytes_sha256": "3a6638137d07e4179cda4f8da80769918585c2434b13ab8d8f56155d9835fb2a",
+            "role": "capture_body_hash"
+          },
+          {
+            "operation": "page.read_bytes",
+            "number": 3,
+            "bytes_sha256": "560fa5eebf14f4d354f56faaddd1bc7cd46d0da242bbc5ff7087e5e5e5bc4948",
+            "role": "transient_parser_read"
+          },
+          {
+            "operation": "page.read_bytes",
+            "number": 4,
+            "bytes_sha256": "3a6638137d07e4179cda4f8da80769918585c2434b13ab8d8f56155d9835fb2a",
+            "role": "reference_hash"
+          }
+        ]
+      },
+      "impact": "The new one-shot original operation can consume a URL that was not in the accepted response bytes while its provenance still cites those accepted bytes. Same host, same book and source page_index16 do not reject the changed basename. Worker/download reachability beyond the pure URL gate is static reasoning; no worker, source_stage, Store, adapter or download was executed for this counterexample.",
+      "classification": "Inherited helper pattern exposed at the new retained-reuse contract; no retroactive reversal of actual04 finite acceptance.",
+      "minimum_repair": "Read each body once into raw; verify its byte length and digest and perform duplicate-key/nonfinite-rejecting JSON parsing on that same raw. Derive references/origin from that same verified digest. A later digest alone cannot reject a transient replacement restored before the digest.",
+      "actual_filesystem_mutation_or_wrong_download_observed": false
+    }
+  ],
+  "independent_controls": {
+    "author_control_or_old_matrix_reexecutions": 0,
+    "source": {
+      "new_groups": 1,
+      "runs": 1,
+      "status": "COUNTEREXAMPLE_REPRODUCED",
+      "real_effects": 0
+    },
+    "adapter": {
+      "new_cases": 1,
+      "runs": 1,
+      "status": "PASS",
+      "scope": "Less-than-one-second remaining boundary, real inherited function AST/all-memory effects"
+    },
+    "envelope": {
+      "new_groups": 1,
+      "memory_branches": 8,
+      "runs": 1,
+      "status": "PASS",
+      "scope": "Exact success/envelope AST fragment and pure helper only"
+    },
+    "helper_errors": 0,
+    "controls_expanded_after_blocking_finding": false
+  },
+  "not_run_or_unknown": [
+    "New actual activation, native admission/holder/runtime compatibility and timely own release: NOT_RUN",
+    "Image-host TLS, original HTTP/image bytes/content/printed question count/boundaries: NOT_RUN/UNKNOWN",
+    "Physical HTTP sends: NOT_MEASURED",
+    "Real Store/SQL import/customer workspace/migration/GUI/platform/OCR/model/save/readback/export/display: NOT_RUN",
+    "Transient on-disk replacement in any real run: NOT_OBSERVED"
+  ],
+  "minimum_next": "Same author returns a new exact frozen candidate with the body read/hash/parse identity repair and only necessary changed-delta evidence. Preserve this counterexample and all previous results; do not refetch the four APIs, run the original, replay passed controls or reuse an old authority. This fixed candidate is not accepted for actual activation.",
+  "new_actual_activation": false,
+  "root_controls_run": 0,
+  "unarmed_administrative_draft": {
+    "path": "D:/1800/.local/stages/a31-root-coordinator-20261025/activate_original_only01.draft.py",
+    "bytes": 8398,
+    "sha256": "8aa1f90c892b9e2fe8a2f4abf420e244e01a0a51e3789faefc94f67f70fa04c8"
+  },
+  "draft_status": "NOT_EXECUTED_UNARMED_AND_CANDIDATE_REWORK_NO_AUTHORITY_OR_WINDOW_CREATED"
+}
