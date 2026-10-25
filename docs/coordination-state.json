@@ -2,7 +2,7 @@
   "schema_version": 1,
   "project": "D:\\1800",
   "coordinator_thread_id": "01a171f5-e73e-7452-982b-1885115e96ff",
-  "updated_at": "2026-10-25T17:48:59.921396+08:00",
+  "updated_at": "2026-10-25T18:15:56.796817+08:00",
   "automation": {
     "id": "1800-a",
     "kind": "heartbeat",
@@ -19546,6 +19546,62 @@
       "current_authority_status": "SPENT_1_REMAINING_0_INACTIVE_NO_RETRY",
       "local_start_authority_status": "SPENT_1_REMAINING_0_INACTIVE_NO_RETRY",
       "whole_book_completed": false
+    },
+    "A31": {
+      "task_id": "A31",
+      "created_at": "2026-10-25T18:12:13.051404+08:00",
+      "status": "NEW_ULTRA_CHATS_ACTIVE_OFFLINE_CONTENT_AND_NEXT_SECTION_INVENTORY",
+      "model": "gpt-6.1-sol",
+      "thinking": "ultra",
+      "book_id": "46007447",
+      "initial_input_manifest": {
+        "path": "D:\\1800-private\\a31-root-input-20261025-01\\manifest.json",
+        "sha256": "0f18cee1339202e4aec8e49f83f72cd26f1a3dc8c8504634817e19e291bad52a",
+        "bytes": 4244
+      },
+      "approval": {
+        "path": "D:\\1800\\docs\\approvals\\A31-customer-full-flow-and-new-ultra-chats-20261025.json",
+        "sha256": "4a526af53dccc0d1e77370ce56a5e8762e903bc5a61e5d9570784110bee66c79",
+        "bytes": 4987
+      },
+      "execution_task": {
+        "path": "D:\\1800\\docs\\tasks\\A31-customer-flow-execution-20261025.md",
+        "sha256": "b70946d0ae7348e05e083375ba714eecc59d6e694f4b3b5d01f3177ffd1b8045",
+        "bytes": 6186
+      },
+      "review_task": {
+        "path": "D:\\1800\\docs\\tasks\\A31-customer-flow-independent-review-20261025.md",
+        "sha256": "0b31c5c38684b895b08dd4a90ad94ec9af75258864c2b9865f912125a79d9754",
+        "bytes": 3819
+      },
+      "executor_thread_id": "01a1728c-b1aa-7dd3-8bbf-4b253d24b330",
+      "reviewer_thread_id": "01a1728c-bba0-7d10-880f-7ef505d2c4ec",
+      "initial_review": "New independent16 content/mathematics audit on frozen retained originals",
+      "initial_execution": "Next unfinished section offline inventory and ordinary-customer flow gap analysis",
+      "current_phase_limits": {
+        "platform_requests": 0,
+        "browser_or_GUI_launches": 0,
+        "OCR_or_formula_pipeline_calls": 0,
+        "paid_model_calls": 0,
+        "real_workspace_writes": 0,
+        "profile_access": 0,
+        "old_success_replays": 0
+      },
+      "live_authority_activated": false,
+      "next_section_identity": "UNKNOWN_PENDING_RETAINED_INVENTORY",
+      "automation_1800_a": "PAUSED",
+      "host_id": "local",
+      "sole_prospective_platform_executor": "01a1728c-b1aa-7dd3-8bbf-4b253d24b330",
+      "current_platform_executor": null,
+      "executor_title": "A31 普通客户完整流程开发与执行",
+      "reviewer_title": "A31 内容核验与客户流程独立验收",
+      "created_via": "codex_app.create_thread",
+      "updated_at": "2026-10-25T18:15:56.796817+08:00",
+      "registration": {
+        "path": "D:\\1800\\docs\\evidence\\coordinator\\a31-initial-dispatch\\registration.json",
+        "sha256": "c98dc5d7afa5a117e2033d7a387696f61be93bba815c49b8aa0d47773130701a",
+        "bytes": 1887
+      }
     }
   },
   "route": [
@@ -21982,17 +22038,15 @@
     }
   ],
   "last_action": {
-    "at": "2026-10-25T17:48:59.921396+08:00",
-    "action": "CLOSE_A30_CURRENT_MACHINE_LESSON16_FINAL_HANDOFF",
-    "coordinator": "01a171f5-e73e-7452-982b-1885115e96ff",
-    "root_receipt": {
-      "path": "D:\\1800\\docs\\evidence\\coordinator\\a30-codex-final-v115-closure\\receipt.json",
-      "sha256": "28faa584c5cd0e8ab88100d4b7335c6546ba0acc4109b4c8be57ee4a09b31e04",
-      "bytes": 11139
+    "at": "2026-10-25T18:15:56.796817+08:00",
+    "action": "CREATE_AND_DISPATCH_A31_NEW_GPT61_SOL_ULTRA_CHATS",
+    "registration": {
+      "path": "D:\\1800\\docs\\evidence\\coordinator\\a31-initial-dispatch\\registration.json",
+      "sha256": "c98dc5d7afa5a117e2033d7a387696f61be93bba815c49b8aa0d47773130701a",
+      "bytes": 1887
     },
-    "metadata_only": true,
-    "business_actions": 0,
-    "new_authorities": 0
+    "phase": "OFFLINE_ONLY",
+    "new_platform_calls": 0
   },
   "limitations": [
     "Current route uses mock B artifacts until independently agreed interface/artifact versions exist.",
@@ -22190,12 +22244,12 @@
     "accepted_A01_integration": "c6bebdf43eb93f7a6ae21e96ec07ed155686777d"
   },
   "agent_policy": {
-    "reasoning_effort": "max",
-    "source": "Explicit user instruction 2026-10-25: task dispatch uses new conversations with max thinking; M1 approved. Prior 2026-10-17 xhigh default superseded for new delegated task contexts only; A03 exception preserved.",
-    "applies_to": "New delegated execution/review task contexts from 2026-10-25; historical A30 formal chats and A03 settings unchanged.",
-    "interrupt_current_work_for_setting": false,
+    "model": "gpt-6.1-sol",
+    "reasoning_effort": "ultra",
+    "source": "Direct user instruction for newly dispatched tasks on2026-10-25",
+    "applies_to": "New A31 and subsequent newly dispatched formal task chats; existing chats and A03 remain unchanged",
+    "existing_chat_settings_changed": false,
     "account_global_setting_changed": false,
-    "recorded_at": "2026-10-25T11:54:15.360292+08:00",
     "exceptions": {
       "A03": {
         "task_id": "A03",
@@ -22212,8 +22266,11 @@
         "historical_dispatch_effort_fields": "Historical only; do not use them to override current A03 settings."
       }
     },
-    "historical_default": "xhigh (2026-10-17 to 2026-10-24)",
-    "m1_note": "Agent-tool fresh contexts are the formal new conversations for this phase; reviewer independence is same-model-family/different-session, limitation recorded."
+    "approval": {
+      "path": "D:\\1800\\docs\\approvals\\A31-customer-full-flow-and-new-ultra-chats-20261025.json",
+      "sha256": "4a526af53dccc0d1e77370ce56a5e8762e903bc5a61e5d9570784110bee66c79",
+      "bytes": 4987
+    }
   },
   "publication": {
     "status": "PUBLISHED",
@@ -25241,79 +25298,29 @@
     "historical_gaps": "Preserved in customer_delivery_readiness_history; not erased or reclassified as tests"
   },
   "next_content_delivery_gap": {
-    "status": "CURRENT_LESSON16_ACCEPTED_NO_NEXT_SECTION_DISPATCHED",
-    "scope": {
-      "current_machine_only": true,
-      "book_id": "46007447",
-      "section_title": "2 一定是直角三角形吗",
-      "item_count": 16,
-      "whole_chapter_or_book": false,
-      "arbitrary_other_books": false,
-      "cross_machine_portability": false,
-      "validation_layers": [
-        "Offline accepted normal GUI/CLI recovery routing and source",
-        "Exact v115 current-machine package",
-        "Fixed Q12 retained recovery and four existing-record adoptions",
-        "Unique16 native mapping and recorded automatic display",
-        "One normal START own visible responsive window, normal close, state preservation and release"
-      ],
-      "lesson": "2 一定是直角三角形吗",
-      "whole_book_completed": false,
-      "whole_chapter_completed": false,
-      "arbitrary_book_or_section_validated": false,
-      "old_nine": "SEPARATE_ACCEPTED_A28_A29_SCOPE_PRESERVED_NOT_MERGED"
-    },
-    "a30_current_progress": {
-      "accepted_items": 16,
-      "prior_accepted_items_reused": 11,
-      "q12": {
-        "current_state": "COMPLETE",
-        "mode": "RETAINED_RECOVERY_NO_PLATFORM_CALL",
-        "prior_unknown_and_failed_reconcile_history": "PRESERVED",
-        "resaves": 0
-      },
-      "q13_16": {
-        "mode": "ADOPT_EXISTING_MATCH",
-        "items": 4,
-        "origin": "UNKNOWN",
-        "new_saves": 0,
-        "resend_overwrite_delete_allowed": false
-      },
-      "new_save_posts": 0,
-      "native_export_record_count": 42,
-      "mapped_lesson_items": 16,
-      "formula_units": 76,
-      "embedded_images": 11,
-      "automated_display": "ACCEPTED_FIXED_EVIDENCE_ONLY",
-      "original_success_or_spent_round_replayed": false,
-      "final_root_receipt": {
-        "path": "D:\\1800\\docs\\evidence\\coordinator\\a30-codex-final-v115-closure\\receipt.json",
-        "sha256": "28faa584c5cd0e8ab88100d4b7335c6546ba0acc4109b4c8be57ee4a09b31e04",
-        "bytes": 11139
-      }
-    },
-    "remaining_in_current_scope": 0,
-    "concrete_gap": "No remaining work in this finite accepted handoff; further book/section scope is not dispatched",
-    "whole_chapter_and_book_goals_retained": true,
+    "status": "A31_USER_AUTHORIZED_OFFLINE_CONTENT_AND_NEXT_SECTION_INVENTORY",
+    "task_id": "A31",
+    "book_id": "46007447",
+    "selected_next_section": "UNKNOWN_PENDING_INVENTORY",
+    "prior_current16_acceptance_preserved": true,
     "whole_book_completed": false,
-    "current_completed_inputs_must_not_replay": true,
-    "customer_ready": true,
-    "final_root_receipt": {
-      "path": "D:\\1800\\docs\\evidence\\coordinator\\a30-codex-final-v115-closure\\receipt.json",
-      "sha256": "28faa584c5cd0e8ab88100d4b7335c6546ba0acc4109b4c8be57ee4a09b31e04",
-      "bytes": 11139
+    "current_live_authority": null,
+    "concrete_gap": "Independent content audit of retained16 plus next unfinished section scope, then complete ordinary customer workflow under new exact finite authority",
+    "approval": {
+      "path": "D:\\1800\\docs\\approvals\\A31-customer-full-flow-and-new-ultra-chats-20261025.json",
+      "sha256": "4a526af53dccc0d1e77370ce56a5e8762e903bc5a61e5d9570784110bee66c79",
+      "bytes": 4987
     }
   },
   "future_new_thread_settings": {
     "model": "gpt-6.1-sol",
-    "thinking": "xhigh",
-    "existing_A30_settings_unchanged": true,
-    "source": "Direct user instruction: this round unchanged, next new chats use6.1sol xhigh",
-    "m1_delegated_contexts": {
-      "model": "inherited current host session model",
-      "thinking": "max",
-      "source": "Direct user instruction 2026-10-25",
-      "note": "Prior gpt-6.1-sol/xhigh rule remains historical for the now-unavailable Codex chats; existing A30 settings unchanged."
+    "thinking": "ultra",
+    "existing_chat_settings_unchanged": true,
+    "source": "Direct user instruction: new tasks use new chats,6.1sol ultra",
+    "approval": {
+      "path": "D:\\1800\\docs\\approvals\\A31-customer-full-flow-and-new-ultra-chats-20261025.json",
+      "sha256": "4a526af53dccc0d1e77370ce56a5e8762e903bc5a61e5d9570784110bee66c79",
+      "bytes": 4987
     }
   },
   "current_delivery_pointer_history": [
@@ -25418,6 +25425,74 @@
           "q13_16": "PLATFORM_PRESENT_UNATTRIBUTED_ADOPT_ONLY_NO_SAVE"
         }
       }
+    },
+    {
+      "at": "2026-10-25T18:12:13.051404+08:00",
+      "reason": "User explicitly authorized A31 next step",
+      "value": {
+        "status": "CURRENT_LESSON16_ACCEPTED_NO_NEXT_SECTION_DISPATCHED",
+        "scope": {
+          "current_machine_only": true,
+          "book_id": "46007447",
+          "section_title": "2 一定是直角三角形吗",
+          "item_count": 16,
+          "whole_chapter_or_book": false,
+          "arbitrary_other_books": false,
+          "cross_machine_portability": false,
+          "validation_layers": [
+            "Offline accepted normal GUI/CLI recovery routing and source",
+            "Exact v115 current-machine package",
+            "Fixed Q12 retained recovery and four existing-record adoptions",
+            "Unique16 native mapping and recorded automatic display",
+            "One normal START own visible responsive window, normal close, state preservation and release"
+          ],
+          "lesson": "2 一定是直角三角形吗",
+          "whole_book_completed": false,
+          "whole_chapter_completed": false,
+          "arbitrary_book_or_section_validated": false,
+          "old_nine": "SEPARATE_ACCEPTED_A28_A29_SCOPE_PRESERVED_NOT_MERGED"
+        },
+        "a30_current_progress": {
+          "accepted_items": 16,
+          "prior_accepted_items_reused": 11,
+          "q12": {
+            "current_state": "COMPLETE",
+            "mode": "RETAINED_RECOVERY_NO_PLATFORM_CALL",
+            "prior_unknown_and_failed_reconcile_history": "PRESERVED",
+            "resaves": 0
+          },
+          "q13_16": {
+            "mode": "ADOPT_EXISTING_MATCH",
+            "items": 4,
+            "origin": "UNKNOWN",
+            "new_saves": 0,
+            "resend_overwrite_delete_allowed": false
+          },
+          "new_save_posts": 0,
+          "native_export_record_count": 42,
+          "mapped_lesson_items": 16,
+          "formula_units": 76,
+          "embedded_images": 11,
+          "automated_display": "ACCEPTED_FIXED_EVIDENCE_ONLY",
+          "original_success_or_spent_round_replayed": false,
+          "final_root_receipt": {
+            "path": "D:\\1800\\docs\\evidence\\coordinator\\a30-codex-final-v115-closure\\receipt.json",
+            "sha256": "28faa584c5cd0e8ab88100d4b7335c6546ba0acc4109b4c8be57ee4a09b31e04",
+            "bytes": 11139
+          }
+        },
+        "remaining_in_current_scope": 0,
+        "concrete_gap": "No remaining work in this finite accepted handoff; further book/section scope is not dispatched",
+        "whole_chapter_and_book_goals_retained": true,
+        "whole_book_completed": false,
+        "current_completed_inputs_must_not_replay": true,
+        "customer_ready": true,
+        "final_root_receipt": {
+          "path": "D:\\1800\\docs\\evidence\\coordinator\\a30-codex-final-v115-closure\\receipt.json",
+          "sha256": "28faa584c5cd0e8ab88100d4b7335c6546ba0acc4109b4c8be57ee4a09b31e04",
+          "bytes": 11139
+        }
+      }
     }
   ],
   "lesson_delivery_history": [
@@ -25452,6 +25527,50 @@
         "no_concrete_artifact_defect_found": true,
         "whole_chapter_and_book_complete": false
       }
+    }
+  ],
+  "agent_policy_history": [
+    {
+      "at": "2026-10-25T18:12:13.051404+08:00",
+      "agent_policy": {
+        "reasoning_effort": "max",
+        "source": "Explicit user instruction 2026-10-25: task dispatch uses new conversations with max thinking; M1 approved. Prior 2026-10-17 xhigh default superseded for new delegated task contexts only; A03 exception preserved.",
+        "applies_to": "New delegated execution/review task contexts from 2026-10-25; historical A30 formal chats and A03 settings unchanged.",
+        "interrupt_current_work_for_setting": false,
+        "account_global_setting_changed": false,
+        "recorded_at": "2026-10-25T11:54:15.360292+08:00",
+        "exceptions": {
+          "A03": {
+            "task_id": "A03",
+            "policy": "PRESERVE_USER_SETTING",
+            "send_message_thinking": "OMIT",
+            "current_user_selected_effort": "NOT_SPECIFIED",
+            "thread_ids": [
+              "01a145aa-2fea-7942-97f9-ad260acf4e30",
+              "01a145aa-8d59-7c70-8d81-731712103a9a"
+            ],
+            "source": "Direct user instruction 2026-10-17: user manually changed A03 reasoning because it was too slow; do not change it back.",
+            "recorded_at": "2026-10-17T16:27:06.073469+08:00",
+            "interrupt_or_restart": false,
+            "historical_dispatch_effort_fields": "Historical only; do not use them to override current A03 settings."
+          }
+        },
+        "historical_default": "xhigh (2026-10-17 to 2026-10-24)",
+        "m1_note": "Agent-tool fresh contexts are the formal new conversations for this phase; reviewer independence is same-model-family/different-session, limitation recorded."
+      },
+      "future_new_thread_settings": {
+        "model": "gpt-6.1-sol",
+        "thinking": "xhigh",
+        "existing_A30_settings_unchanged": true,
+        "source": "Direct user instruction: this round unchanged, next new chats use6.1sol xhigh",
+        "m1_delegated_contexts": {
+          "model": "inherited current host session model",
+          "thinking": "max",
+          "source": "Direct user instruction 2026-10-25",
+          "note": "Prior gpt-6.1-sol/xhigh rule remains historical for the now-unavailable Codex chats; existing A30 settings unchanged."
+        }
+      },
+      "source": "Preserved before direct new gpt-6.1-sol/ultra user request"
     }
   ]
 }
