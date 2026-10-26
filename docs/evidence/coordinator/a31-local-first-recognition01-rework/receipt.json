@@ -1,0 +1,123 @@
+{
+  "schema": "A31RootLocalFirstRecognition01Rework/v1",
+  "at": "2026-10-26T02:16:49.660439+00:00",
+  "status": "FORMAL_REWORK_RECEIVED_ROOT_ACTUAL_ROUTE_BLOCKED",
+  "review_manifest": {
+    "path": "D:/1800-private/a31-local-first-recognition-independent-20261026-01/manifest.json",
+    "bytes": 3448,
+    "sha256": "3dacb1b3c32eb7f9693c48f556a2e7357257998e55956788618ac3b7603c527c"
+  },
+  "review_decision": {
+    "path": "D:/1800-private/a31-local-first-recognition-independent-20261026-01/decision.json",
+    "bytes": 26029,
+    "sha256": "6ad89f8181ac5d9d6f2368524415b10035b249081fee214150d29d924278a68f"
+  },
+  "input_manifest": {
+    "path": "D:\\1800-private\\a31-local-first-recognition-execution-20261026-01\\manifest.json",
+    "bytes": 683675,
+    "sha256": "193ed69a16c520ff93e9b1548f5a86cb3da3f49cc77bdcc6492c9f1cb09484fe"
+  },
+  "member_verification": {
+    "path": "D:/1800-private/a31-root-coordinator-20261025/fixed-intake-01/local-first-recognition-review01-verification.json",
+    "bytes": 760,
+    "sha256": "74e240e227878e1d2e14cab5c793e41e54f2aec4e2a677a8ac3d967cfae7c630"
+  },
+  "review_members": 18,
+  "findings": [
+    {
+      "id": "PERSISTED_SOURCE_PROVENANCE_MASKED_BY_PREVERIFY_STAMP",
+      "priority": "P2",
+      "location": "retained_source.py:173-175 (_stamp153-165); prepare.py170-176/190-206; platform_source.py225-244",
+      "problem": "SourcePreparationStore.job replaces persisted mode/policy/ref/catalog/snapshot/preview fields with the current action before verify_cached_job can inspect the original persisted bindings. A mismatched earliest catalog provenance can therefore be masked as a valid current binding.",
+      "evidence": "One exact-AST memory case: only persisted source_catalog_ref mismatched. Raw verify HOLDs before deep eligibility; SourcePreparationStore.job stamps it to current action binding and the same verify accepts/calls the deep stub once. Underlying memory job neither saved nor changed.",
+      "persistence_limit": "Existing prepare_acquired reload at230, stamp235 and save242 make replacement statically reachable only; that save/prepare/resume path was not executed independently.",
+      "scope_limit": "Synthetic altered state and deep source/page validators stubbed. No actual record damage, persistence mutation, source eligibility, backend call, OCR replay or FAILED/UNKNOWN recognition guard bypass proved.",
+      "minimum_repair": "Validate the existing persisted policy/ref/provenance before applying this action stamp. A legitimate explicit mode/action transition must verify and preserve the earlier provenance or produce a separate deliberate transition; a mismatched existing binding must HOLD and remain unchanged. Keep explicit NORMAL for a separate new scope working.",
+      "file": "D:\\1800-private\\a31-local-first-recognition-execution-20261026-01\\app\\src\\annotation\\customer\\retained_source.py",
+      "start": 173,
+      "end": 175
+    },
+    {
+      "id": "LEGACY_EFFECTIVE_CACHE_POLICY_NOT_CHECKED",
+      "priority": "P2",
+      "location": "app/src/annotation/customer/retained_source.py:99-104",
+      "problem": "The fast path tests stored value.get('source_acquisition_policy') rather than its effective source_policy(value). A product04 RETAINED_ONLY value legitimately has neither explicit policy nor catalog_ref, so the implicit CACHE_ONLY constraint is missed.",
+      "evidence": "One exact-AST memory differential group with3 variants of one legitimate product04 no-policy/no-catalog RETAINED_ONLY source value: preserved job mode, missing job mode, or job mode changed to PLATFORM. All return through fastpath; stored value effective policy stays RETAINED_ONLY/CACHE_ONLY while altered job effective policy becomes PLATFORM/NORMAL; later validators0.",
+      "static_limit": "prepare.resume later disables OCR only when job.source_mode is RETAINED_ONLY; loss of that mode removes this static clamp without verifier rejection. Actual/direct resume/_continue/backend were not executed.",
+      "scope_limit": "No real corruption, permission use, backend/OCR execution or recognition-history bypass proved. Untampered legitimate legacy mode still grants OCR0.",
+      "minimum_repair": "Validate the stored source value's effective mode/policy before accepting the fast path, and reject contradictory/lost legacy job mode without granting new rights. Preserve valid no-catalog legacy OCR0 behavior. Product code was not changed by this review.",
+      "file": "D:\\1800-private\\a31-local-first-recognition-execution-20261026-01\\app\\src\\annotation\\customer\\retained_source.py",
+      "start": 99,
+      "end": 104
+    }
+  ],
+  "independent_review_accounting": {
+    "new_groups_total": 2,
+    "new_group_results": "Both COUNTEREXAMPLE_REPRODUCED, not PASS",
+    "preparation": {
+      "groups": 1,
+      "cases": 1,
+      "executions": 1,
+      "control_helper_errors": 0,
+      "script_sha256": "ee88c6bd5c81811a91a754af06885b7e1242d827a17aa2a99955b44a956042c9",
+      "result_sha256": "ef8692bacfdcbdba33a8015594698ca63ddff6d5a797aafe0f3b7726e70fe833"
+    },
+    "policy": {
+      "groups": 1,
+      "variants": 3,
+      "control_helper_errors": 0,
+      "script_sha256": "42e45016f03bbca717b4d48fdde3744af6186ca6384a21b1552dbb939d0f0177",
+      "result_sha256": "5eaee19d0de7e9e9890e48d0e2778853b3c96fba27606b0d9607ed1967a22567"
+    },
+    "route": {
+      "decision": "ACCEPTED_OFFLINE_UI_CALLBACK_ROUTE_SUBSCOPE_ONLY",
+      "new_controls": 0,
+      "function_execution": 0,
+      "limited_static_support": "Local first branch and local task reopen use current local catalog/snapshot/preview; no settings/read_catalog/acquire/registry call in that action. Resume callback verifies job/policy before any settings/preparation/fallback. This does not fix lower wrapper/legacy findings."
+    },
+    "author_or_old_controls_replayed": 0,
+    "new_controls_or_SQL_executed_by_assembly": 0
+  },
+  "supported_finite_behavior": {
+    "UI": "Unchanged context class plus current catalog/selection callbacks retain clicked-identity/book/generation and preview/opt-in checks. Existing completion selects returned A job; does not relabel it B.",
+    "fresh_save": "Fresh first-save/error mode/policy/catalog/snapshot/preview stamping remains finite support; it does not establish preservation of an existing earliest binding.",
+    "cache_boundary": "CACHE_ONLY prepare_section forces additional pages0; per-action continued flag avoids immediate same-action double continuation. These are limited by two P2 findings.",
+    "history": "Source recognition code raw-unchanged; COMPLETE reuse and FAILED/UNKNOWN/INTENT/partial-history guards remain. Neither new counterexample proves those guards bypassed.",
+    "NORMAL": "Separate explicit NORMAL new-scope route remains an intended requirement; repair must not globally forbid legitimate first-unrun new scopes.",
+    "customer_input": "Local/current normal flow needs no per-lesson registry/root signature/technical JSON; historical migration pins remain separate."
+  },
+  "non_findings_and_exclusions": {
+    "product04_storage_exclusion": "Unchanged accepted finite exclusion: visible publication followed by outcome-unknown plus both failure latches unavailable can leave COMPLETE closed data consumable despite caller HOLD. No universal UNKNOWN quarantine claimed; no new REWORK for this inherited exclusion.",
+    "registry_entries": 0,
+    "real_success_adapter": "NOT_IMPLEMENTED_OR_ACCEPTED",
+    "real_migration": "NOT_RUN; empty registry/missing real adapter are scope limits, not extra REWORK findings.",
+    "actual_UI_SQL_OCR_model_platform_customer_flow": "NOT_RUN_OR_ACCEPTED_BY_THIS_SCOPE",
+    "original_only02_actual_outputs": "Route subreviews/controls/assembly did not read them. A later root dispatch authorized primary review of a separate frozen actual; that review is sealed separately and is not used as route behavior or repair evidence.",
+    "page17_content_count_boundary_answer_coverage": "UNKNOWN_IN_THIS_FIXED_CANDIDATE_NOT_PROMOTED",
+    "customer_ready": "NOT_ESTABLISHED",
+    "new_actual_authority_or_activation": false
+  },
+  "helper_history": {
+    "assembly_report_lookup_error": {
+      "count": 1,
+      "exit": 1,
+      "reason": "Report-format helper tried iterating the primary intake members integer as though it were a list; report reading only, no control/product function/SQL ran.",
+      "original_raw_output_copy": "NOT_CAPTURED_SEPARATE_RAW; tool transcript stdout/traceback only, no retrospective reconstruction",
+      "correction": "Only unfinished intake summary formatting corrected to members count and verified_members list; no test/subject replay."
+    },
+    "preparation_readonly_lookup_error": {
+      "preserved": true,
+      "not_a_control_failure": true,
+      "operation": "Exploratory rg included nonexistent frozen app/src/annotation/customer/recognition.py; prepare imports source.ocr_page and source.py was then read.",
+      "original_error": "rg: D:/1800-private/a31-local-first-recognition-execution-20261026-01/app/src/annotation/customer/recognition.py: 系统找不到指定的文件。 (os error 2)",
+      "effect": "No product execution or input mutation."
+    },
+    "policy_control_helper_errors": 0,
+    "route_helper_errors": 0,
+    "author_preparation_error": "One rejected same-path apply_patch before author controls, retained as author history not a failed/repeated control."
+  },
+  "minimum_next": "Same author returns one new frozen candidate repairing only pre-stamp persisted-binding verification and legacy effective-policy loss detection. Preserve valid legacy no-catalog OCR0, deliberate valid action transitions and explicit NORMAL new scopes. Keep all counterexamples, author passes and failures; no actual OCR/migration/platform action, old-source refetch or passed-control replay is authorized by this review.",
+  "root_product_control_or_actual_calls": 0,
+  "new_actual_activation": false,
+  "same_author_integration": "Two surgical route repairs may be frozen together with the already-authorized strict two-stage source adapter, one complete app package; retain per-delta controls and no replay. No real registration/import/GUI/OCR authorized."
+}
