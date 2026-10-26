@@ -436,12 +436,18 @@ def _offline_portal(store, result, root, bundle, report, *, self_test=False):
     if bundle.get('graphic_preview_sha256'):
         preview_body = preview.read_bytes()
 
-    def portal_state():
-        batch = first_batch(store, result, limit=50)
+    def portal_state(batch_name='first'):
+        rows = first_batch(store, result, limit=100)
+        batch = rows[:50] if batch_name == 'first' else rows[50:100]
         return batch, pending_manifest(store, batch)
 
-    def portal_page():
-        batch, manifest = portal_state()
+    def portal_page(batch_name='first'):
+        batch, manifest = portal_state(batch_name)
+        first = batch_name == 'first'
+        heading = '首批50个来源实例' if first else '第51–100个来源实例'
+        batch_url = '/' if first else '/?batch=next'
+        download_url = '/pending.json' if first else '/pending-next.json'
+        download_name = 'wholebook-review-queue.json' if first else 'wholebook-review-queue-next.json'
         pending = manifest.get('pending_save', [])
         queue_groups = ('review_required', 'preflight_required', 'pending_save',
                         'already_saved', 'blocked', 'unknown')
@@ -453,7 +459,7 @@ def _offline_portal(store, result, root, bundle, report, *, self_test=False):
         queue_status = {(row['job_id'], row['key']): (group, row['reason'])
                         for group in queue_groups for row in manifest[group]}
         queue_rows = []
-        for index, row in enumerate(batch, 1):
+        for index, row in enumerate(batch, 1 if first else 51):
             job_id, key = row['job_id'], row['key']
             group, reason = queue_status[(job_id, key)]
             query = escape(urlencode({'job': job_id, 'answer': key}), quote=True)
@@ -501,17 +507,21 @@ def _offline_portal(store, result, root, bundle, report, *, self_test=False):
             '.queue-tools label{display:grid;gap:4px}.queue-tools input,.queue-tools select{font:inherit;padding:7px;min-width:220px}'
             '.queue-tools p{margin:0 0 7px}.queue-table{overflow-x:auto}</style>'
             f'<h1>全书离线审校</h1><p>书 {escape(bundle["book_id"])} · {page_count} 页原图 · {scope_count} 节 · {candidate_count} 个来源候选</p>'
-            '<p>首批 50 题按来源次序列出。进入题目可对照原图、调整来源框、修改文字并逐题确认。'
+            '<p>来源实例按原书次序列出；其中可能包含例题和变式，不能直接等同于已交付题目。'
+            '进入实例可对照原图、调整来源框、修改文字并逐题确认。'
             '确认后返回此页刷新，待保存清单会按当前记录重新生成。</p>'
-            '<div class="actions"><strong>首批 ' + str(len(batch)) + ' 题 · 已审校待平台核对 '
-            + str(len(manifest.get('preflight_required', []))) + ' 题 · 已核对可保存 '
-            + str(len(pending)) + ' 题</strong><br>'
-            '<a href="/pending.json" download="wholebook-review-queue.json">下载审校与平台核对清单</a>'
-            '<a href="/batch-plan">逐课时批次预演</a><a href="/">刷新状态</a></div>'
+            '<div class="actions"><a href="/">首批50个来源实例</a>'
+            '<a href="/?batch=next">第51–100个来源实例</a><br><strong>' + heading + ' · '
+            + str(len(batch)) + ' 条 · 已审校待平台核对 '
+            + str(len(manifest.get('preflight_required', []))) + ' 条 · 已核对可保存 '
+            + str(len(pending)) + ' 条</strong><br>'
+            '<a href="' + download_url + '" download="' + download_name + '">下载本批审校与平台核对清单</a>'
+            '<a href="/batch-plan' + ('' if first else '?batch=next') + '">逐课时批次预演</a>'
+            '<a href="' + batch_url + '">刷新状态</a></div>'
             '<p><small>本地审校通过后仍须只读核对当前平台库存；包内没有旧平台完整账本。清单和预演都不执行平台保存。</small></p>'
             '<div class="queue-tools"><label>筛选阶段<select id="queue-filter"><option value="">全部阶段 · ' + str(len(batch)) + '</option>'
-            + filter_options + '</select></label><label>查找首批题<input id="queue-search" type="search" placeholder="课时、题号或来源身份"></label>'
-            '<p id="queue-visible" role="status" aria-live="polite">显示 ' + str(len(batch)) + ' / ' + str(len(batch)) + ' 题</p></div>'
+            + filter_options + '</select></label><label>查找本批来源实例<input id="queue-search" type="search" placeholder="课时、题号或来源身份"></label>'
+            '<p id="queue-visible" role="status" aria-live="polite">显示 ' + str(len(batch)) + ' / ' + str(len(batch)) + ' 条</p></div>'
             '<div class="queue-table"><table id="first-batch"><thead><tr><th>#</th><th>课时</th><th>题号</th><th>来源题身份</th>'
             '<th>内容 / 平台状态</th><th>下一步与原因</th><th>操作</th></tr></thead><tbody>'
             + ''.join(queue_rows) + '</tbody></table></div>' + graphics
@@ -523,12 +533,12 @@ def _offline_portal(store, result, root, bundle, report, *, self_test=False):
               'function filterQueue(){const stage=queueFilter.value;const term=queueSearch.value.trim().toLocaleLowerCase();'
               'let visible=0;for(const row of queueRows){const show=(!stage||row.dataset.queueStatus===stage)'
               '&&(!term||row.textContent.toLocaleLowerCase().includes(term));row.hidden=!show;if(show)visible++;}'
-              'document.getElementById("queue-visible").textContent=`显示 ${visible} / ${queueRows.length} 题`;}'
+              'document.getElementById("queue-visible").textContent=`显示 ${visible} / ${queueRows.length} 条`;}'
               'queueFilter.addEventListener("change",filterQueue);queueSearch.addEventListener("input",filterQueue);</script></html>')
         return html.encode('utf-8')
 
-    def batch_plan_page():
-        _, manifest = portal_state()
+    def batch_plan_page(batch_name='first'):
+        _, manifest = portal_state(batch_name)
         pending = manifest.get('preflight_required', [])
         counts = {identity: sum(row['job_id'] == identity for row in pending) for identity in jobs}
         options = []
@@ -537,16 +547,19 @@ def _offline_portal(store, result, root, bundle, report, *, self_test=False):
             job, _ = store.job(identity)
             directory_id = job.get('source_plan', {}).get('scope_id') or ''
             options.append('<option value="' + escape(identity, quote=True) + '">'
-                           + escape(job['lesson']) + ' · ' + str(counts[identity]) + ' 题待保存</option>')
+                           + escape(job['lesson']) + ' · ' + str(counts[identity])
+                           + ' 条已审校待平台核对</option>')
             rows.append('<tr><td>' + escape(job['lesson']) + '</td><td><code>'
                         + escape(directory_id) + '</code></td><td>' + str(counts[identity]) + '</td></tr>')
         return ('<!doctype html><html lang="zh-CN"><meta charset="utf-8"><meta name="viewport" content="width=device-width">'
             '<title>逐课时批次预演</title><style>body{font:16px/1.7 system-ui;max-width:1050px;margin:32px auto;padding:0 20px}'
             'label{display:block;margin:14px 0}input,select{font:inherit;padding:8px;min-width:330px}button{font:inherit;padding:9px 18px}'
             'table{width:100%;border-collapse:collapse}td,th{padding:7px;border-bottom:1px solid #ddd;text-align:left}code{overflow-wrap:anywhere}</style>'
-            '<p><a href="/">返回首批题目</a></p><h1>逐课时批次预演</h1>'
+            '<p><a href="' + ('/' if batch_name == 'first' else '/?batch=next')
+            + '">返回本批来源实例</a></p><h1>逐课时批次预演</h1>'
             '<p>本页仅生成本地计划。先在原图审校并确认题答；当前书籍平台目录 ID 和已有题数必须由操作人核对后填写。</p>'
-            '<form action="/batch-preview" method="get"><label>课时 <select name="job" required>'
+            '<form action="/batch-preview" method="get"><input type="hidden" name="batch" value="'
+            + batch_name + '"><label>课时 <select name="job" required>'
             + ''.join(options) + '</select></label>'
             '<label>平台末级目录 ID <input name="directory_id" required placeholder="从下方目录表核对后填写"></label>'
             '<label>当前平台已有题数 <input name="initial_count" type="number" min="0" step="1" required></label>'
@@ -571,27 +584,35 @@ def _offline_portal(store, result, root, bundle, report, *, self_test=False):
 
         def do_GET(self):
             parsed = urlsplit(self.path)
-            if parsed.path == '/':
-                self.send(portal_page())
+            query = parse_qs(parsed.query)
+            batch_name = query.get('batch', ['first'])[0]
+            if batch_name not in {'first', 'next'}:
+                self.send_error(400, '无效的来源实例批次。')
                 return
-            if parsed.path == '/batch-plan' and not parsed.query:
-                self.send(batch_plan_page())
+            if parsed.path == '/':
+                self.send(portal_page(batch_name))
+                return
+            if parsed.path == '/batch-plan':
+                self.send(batch_plan_page(batch_name))
                 return
             if parsed.path == '/pending.json' and not parsed.query:
                 _, manifest = portal_state()
                 self.send(encoded(manifest), 'application/json; charset=utf-8', 'wholebook-review-queue.json')
                 return
+            if parsed.path == '/pending-next.json' and not parsed.query:
+                _, manifest = portal_state('next')
+                self.send(encoded(manifest), 'application/json; charset=utf-8', 'wholebook-review-queue-next.json')
+                return
             if parsed.path == '/batch-preview':
                 try:
                     from annotation.customer.wholebook_queue import build_scope
                     from annotation.customer.wholebook_live_batch import run as run_wholebook_batch
-                    query = parse_qs(parsed.query)
                     identity = query.get('job', [''])[0]
                     directory_id = query.get('directory_id', [''])[0]
                     count_text = query.get('initial_count', [''])[0]
                     if identity not in jobs or not count_text.isdecimal():
                         raise Hold('请选择课时并填写当前平台已有题数。')
-                    _, manifest = portal_state()
+                    _, manifest = portal_state(batch_name)
                     keys = [row['key'] for row in manifest.get('preflight_required', []) if row['job_id'] == identity]
                     scope = build_scope(store, identity, keys, directory_id=directory_id,
                                         expected_initial_native_count=int(count_text))
@@ -604,7 +625,6 @@ def _offline_portal(store, result, root, bundle, report, *, self_test=False):
             if parsed.path == '/graphic-preview' and bundle.get('graphic_preview_sha256'):
                 self.send(preview_body)
                 return
-            query = parse_qs(parsed.query)
             identity = query.get('job', [''])[0]
             if identity not in jobs:
                 self.send_error(404)
@@ -665,13 +685,40 @@ def _offline_portal(store, result, root, bundle, report, *, self_test=False):
                 manifest = json.loads(response.read())
                 if response.status != 200 or manifest['batch_count'] != len(first_batch(store, result, limit=50)):
                     raise RuntimeError('首批待保存清单不完整。')
+            expanded = first_batch(store, result, limit=100)
+            next_batch = expanded[50:100]
+            if len(expanded) != 100 or len(next_batch) != 50:
+                raise RuntimeError('第二批来源实例不足 50 条。')
+            with opener.open(url + '/?batch=next', timeout=15) as response:
+                body = response.read()
+                if (response.status != 200 or body.count(b'data-queue=') != 50
+                        or body.count(b'data-queue-status=') != 50
+                        or b'data-queue="51"' not in body or b'data-queue="100"' not in body):
+                    raise RuntimeError('第51–100个来源实例未完整显示。')
+            with opener.open(url + '/pending-next.json', timeout=15) as response:
+                next_manifest = json.loads(response.read())
+                if response.status != 200 or next_manifest['batch_count'] != 50:
+                    raise RuntimeError('第二批审校清单不完整。')
+            next_ids = {row['source_instance_id'] for row in next_batch}
+            manifest_ids = {row['source_instance_id'] for group in
+                            ('review_required', 'preflight_required', 'pending_save',
+                             'already_saved', 'blocked', 'unknown') for row in next_manifest[group]}
+            if next_ids != manifest_ids or next_ids & {
+                    row['source_instance_id'] for row in expanded[:50]}:
+                raise RuntimeError('两批来源题身份重叠或清单与页面不符。')
             with opener.open(url + '/batch-plan', timeout=15) as response:
                 if response.status != 200 or b'<form' not in response.read():
                     raise RuntimeError('批次预演入口未打开。')
+            with opener.open(url + '/batch-plan?batch=next', timeout=15) as response:
+                if response.status != 200 or b'name="batch" value="next"' not in response.read():
+                    raise RuntimeError('第二批批次预演入口未打开。')
             report['portal'] = {'http_status': 200, 'rows': len(jobs),
                                 'queue_rows': manifest['batch_count'], 'failed_scopes': len(failures),
                                 'preflight_required': len(manifest.get('preflight_required', [])),
-                                'pending_save': len(manifest['pending_save'])}
+                                'pending_save': len(manifest['pending_save']),
+                                'next_queue_rows': next_manifest['batch_count'],
+                                'next_preflight_required': len(next_manifest['preflight_required']),
+                                'next_pending_save': len(next_manifest['pending_save'])}
             if bundle.get('graphic_preview_sha256'):
                 with opener.open(url + '/graphic-preview', timeout=15) as response:
                     body = response.read()
@@ -694,6 +741,12 @@ def _offline_portal(store, result, root, bundle, report, *, self_test=False):
                         if response.status != 200 or selected != batch[0]['key']:
                             raise RuntimeError('逐题审校链接未保留来源题身份。')
                     report['direct_question_link'] = 'PASS'
+                query = urlencode({'job': next_batch[0]['job_id'], 'answer': next_batch[0]['key']})
+                with opener.open(url + '/review?' + query, timeout=20) as response:
+                    selected = parse_qs(urlsplit(response.geturl()).fragment).get('answer', [''])[0]
+                    if response.status != 200 or selected != next_batch[0]['key']:
+                        raise RuntimeError('第二批逐题链接未保留来源题身份。')
+                report['next_direct_question_link'] = 'PASS'
                 with opener.open(url + '/export?job=' + identity, timeout=20) as response:
                     response.read()
                 output = Path(export_local(store, identity))

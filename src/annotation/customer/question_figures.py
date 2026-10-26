@@ -13,6 +13,7 @@ BLOCKER = 'REFERENCED_FIGURE_REGIONS_REQUIRE_REVIEW'
 CAPTION_HINT_FILES = {
     'dir-1792063578574-2a6vq8zom': 'first_lesson_figure_hints.json',
     'dir-1792063578574-lvqkxdluj': 'second_lesson_figure_hints.json',
+    'dir-1792063578574-hzrhienmk': 'retrospective_lesson_figure_hints.json',
 }
 
 

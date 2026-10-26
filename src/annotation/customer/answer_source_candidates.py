@@ -2,8 +2,10 @@
 from __future__ import annotations
 
 import copy
+import hashlib
 import json
 import math
+from pathlib import Path
 import re
 
 
@@ -136,6 +138,115 @@ def _geometry_answers(questions, plan, evidence, by_number):
                               "parent_line_id": span["parent_line_id"],
                               "char_span": copy.deepcopy(span["char_span"]),
                               "original_row_text": span["original_row_text"]},
+        })
+
+
+def _isolated_short_answers(questions, plan, by_number):
+    """Offer a paired, whole-row short answer only after checking original ink.
+
+    This is for a genuinely separate answer line such as ``9.能``. The
+    tightened box is measured from the original image; neighboring OCR lines
+    and a blank pixel border must leave it independent of adjacent answers.
+    The observation remains unselected until a person reads the source.
+    """
+    from PIL import Image
+    import numpy as np
+
+    by_question = {q["source_instance_id"]: q for q in questions}
+    items = {item["item_id"]: item for item in plan["items"] if item["role"] == "answer"}
+    owners = {}
+    for item in items.values():
+        for part in item.get("fragments", []):
+            for row in part.get("row_indices", []):
+                owners.setdefault((part["page"], row), set()).add(item["item_id"])
+    for pairing in plan.get("pairing_status", []):
+        if (pairing.get("status") != "CUSTOMER_REVIEW" or
+                pairing.get("reason") != "ANSWER_MARKER_REQUIRES_REVIEW"):
+            continue
+        question = by_question.get(pairing.get("question_item_id"))
+        item = items.get(pairing.get("answer_item_id"))
+        if (not question or not item or item["label"] != question["printed_number"] or
+                len(item.get("fragments", [])) != 1 or
+                any(s["candidate_id"] == item["item_id"]
+                    for s in question["answer_source_candidates"])):
+            continue
+        part = item["fragments"][0]
+        rows = part.get("row_indices", [])
+        if (len(rows) != 1 or part.get("geometry_group_id") or
+                owners.get((part["page"], rows[0])) != {item["item_id"]}):
+            continue
+        page = by_number.get(part["page"])
+        if not page or page["page_role"] != "answer":
+            continue
+        source = page["source"]
+        parent = next((line for line in page["ocr_lines"]
+                       if line.get("source_row_index") == rows[0]), None)
+        if not parent or parent.get("bbox") != part.get("bbox"):
+            continue
+        raw_text = parent["text"]
+        if part.get("text_spans") != [{"row_index": rows[0], "start": 0, "end": len(raw_text)}]:
+            continue
+        match = re.fullmatch(r"\s*" + re.escape(item["label"]) +
+                             r"\s*[.．、]\s*([\u4e00-\u9fff]{1,2})\s*", raw_text)
+        if not match:
+            continue
+        original = plan.get("source_images", {}).get(str(part["page"]))
+        if not original:
+            continue
+        try:
+            data = Path(original).read_bytes()
+            if hashlib.sha256(data).hexdigest() != source["sha256"]:
+                continue
+            with Image.open(original) as image:
+                if image.size != (source["width"], source["height"]):
+                    continue
+                gray = np.asarray(image.convert("L"))
+        except (OSError, ValueError):
+            continue
+        row_box = parent["bbox"]
+        if (not isinstance(row_box, (tuple, list)) or len(row_box) != 4 or
+                not all(type(v) in (int, float) and math.isfinite(v) for v in row_box)):
+            continue
+        x0, y0, x1, y1 = (math.floor(row_box[0]), math.floor(row_box[1]),
+                          math.ceil(row_box[2]), math.ceil(row_box[3]))
+        if not (0 <= x0 < x1 <= source["width"] and 0 <= y0 < y1 <= source["height"]):
+            continue
+        ink_y, ink_x = np.nonzero(gray[y0:y1, x0:x1] < 160)
+        if len(ink_x) < 12:
+            continue
+        ink_box = [x0 + int(ink_x.min()), y0 + int(ink_y.min()),
+                   x0 + int(ink_x.max()) + 1, y0 + int(ink_y.max()) + 1]
+        box = [ink_box[0] - 2, ink_box[1] - 1, ink_box[2] + 2, ink_box[3] + 1]
+        if not (x0 < box[0] < ink_box[0] < ink_box[2] < box[2] < x1 and
+                y0 < box[1] < ink_box[1] < ink_box[3] < box[3] < y1 and
+                (ink_box[2] - ink_box[0]) >= (x1 - x0) * .4 and
+                (ink_box[3] - ink_box[1]) >= (y1 - y0) * .35):
+            continue
+        if any(line is not parent and isinstance(line.get("bbox"), list) and
+               len(line["bbox"]) == 4 and
+               max(box[0], line["bbox"][0]) < min(box[2], line["bbox"][2]) and
+               max(box[1], line["bbox"][1]) < min(box[3], line["bbox"][3])
+               for line in page["ocr_lines"]):
+            continue
+        question["answer_source_candidates"].append({
+            "candidate_id": item["item_id"],
+            "question_item_id": question["source_instance_id"],
+            "source_kind": "isolated_short_answer_pixels",
+            "page": part["page"], "asset_id": page["asset_id"],
+            "source_sha256": source["sha256"], "bbox": box,
+            "text": raw_text, "suggested_answer_text": match.group(1),
+            "source_binding_status": "ORIGINAL_PAGE_BOUND", "direct_binding_allowed": True,
+            "binding_note": "原图摘要、独立识别行和四边空白像素已核对；内容仍须人工逐字检查",
+            "original_ocr_row_index": rows[0],
+            "observation_id": parent["line_id"] + "/original-ink",
+            "requires_review": True, "selected": False, "content_approved": False,
+            "proof": {"source_sha256": source["sha256"], "original_row_bbox": row_box,
+                      "measured_ink_bbox": ink_box, "ink_threshold": 160,
+                      "pixel_padding": [2, 1, 2, 1], "unique_answer_row": True,
+                      "nonoverlap_with_other_ocr_lines": True,
+                      "pairing_status": pairing["status"], "pairing_reason": pairing["reason"]},
+            "source_record": {"answer_item_id": item["item_id"],
+                              "parent_line_id": parent["line_id"], "fragment": copy.deepcopy(part)},
         })
 
 
@@ -294,6 +405,7 @@ def attach(questions, plan, evidence):
             }
             question["answer_source_candidates"].append(preview)
     _geometry_answers(questions, plan, evidence, by_number)
+    _isolated_short_answers(questions, plan, by_number)
     _shared_answer_previews(questions, plan, by_number)
     for question in questions:
         question["answer_source_candidates"].sort(
