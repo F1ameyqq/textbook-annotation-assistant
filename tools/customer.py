@@ -102,10 +102,16 @@ def wizard(store):
     from tkinter import filedialog, messagebox, ttk
     root = tk.Tk(); root.title("教辅 · 材料准备与生产"); root.geometry("840x760")
     frame = ttk.Frame(root, padding=18); frame.pack(fill="both", expand=True)
-    ttk.Label(frame, text="选择材料与范围，然后准备", font=("Microsoft YaHei UI", 17)).pack(anchor="w")
-    ttk.Label(frame, text="图片使用本地识别。异常在现有审校页面处理；已成功任务直接复用。", wraplength=780).pack(anchor="w", pady=(4, 14))
+    heading = ("全书来源已准备 · 选择课时审校" if getattr(store, 'customer_book_id', None)
+               else "选择材料与范围，然后准备")
+    ttk.Label(frame, text=heading, font=("Microsoft YaHei UI", 17)).pack(anchor="w")
+    subtitle = ("已复用包内原图与本地识别记录；逐题审校后再按需核对平台当前库存。"
+                if getattr(store, 'customer_book_id', None) else
+                "图片使用本地识别。异常在现有审校页面处理；已成功任务直接复用。")
+    ttk.Label(frame, text=subtitle, wraplength=780).pack(anchor="w", pady=(4, 14))
     fields = {}
-    for key, label, default in (("book", "书籍编号", ""), ("lesson", "课时名称（与平台末级目录相同）", ""),
+    for key, label, default in (("book", "书籍编号", getattr(store, 'customer_book_id', '')),
+            ("lesson", "课时名称（与平台末级目录相同）", ""),
             ("question_pages", "题目材料页范围（按选择顺序）", "全部"), ("answer_pages", "答案材料页范围", "全部"),
             ("question_first_page", "题目首张对应书中页码（离线可留空）", ""),
             ("answer_first_page", "答案首张对应书中页码（离线可留空）", "")):
@@ -125,13 +131,16 @@ def wizard(store):
         ttk.Button(row, text=label, command=choose).pack(side="left", padx=(0, 8)); selected_label.pack(side="left")
     local_ocr = tk.BooleanVar(value=False)
     ttk.Checkbutton(frame, text="允许对没有缓存的新图片运行本地 OCR（没有远端付费调用）", variable=local_ocr).pack(anchor="w", pady=8)
-    status = tk.StringVar(value="离线准备可以直接开始。首次平台配置与登录只需在本机完成一次。")
+    status = tk.StringVar(value=("包内全书来源已准备；平台库存核对须显式点击并先完成可见登录。"
+                                 if getattr(store, 'customer_book_id', None) else
+                                 "离线准备可以直接开始。首次平台配置与登录只需在本机完成一次。"))
     ttk.Label(frame, textvariable=status, wraplength=780).pack(anchor="w", pady=8)
     jobs = ttk.Treeview(frame, columns=("book", "lesson", "status"), show="headings", height=7)
     for key, title, width in (("book", "书籍", 110), ("lesson", "课时", 330), ("status", "状态", 300)):
         jobs.heading(key, text=title); jobs.column(key, width=width)
     jobs.pack(fill="both", expand=True)
-    servers, active = [], {"busy": False}
+    servers, active = [], {"busy": False, "visible_login_completed": False,
+                           "portal_starting": False, "portal_url": None}
 
     def refresh():
         chosen = jobs.selection()
@@ -335,7 +344,62 @@ def wizard(store):
         from annotation.customer.transport import UsenseTransport
         def execute():
             with store.book_lock(book): return UsenseTransport(store, settings(store), book).login()
-        task(execute, lambda result: status.set("登录步骤结束；登录状态以随后当前书籍采集为准。"))
+        def done(result):
+            active['visible_login_completed'] = True
+            status.set("可见登录步骤结束；登录状态以随后当前书籍只读采集为准。")
+        task(execute, done)
+
+    def inventory_action():
+        book = fields['book'].get().strip()
+        if not book.isdigit():
+            messagebox.showerror('书籍编号', '先填写书籍编号。'); return
+        if not active['visible_login_completed']:
+            messagebox.showinfo('先完成可见登录', '请先点击“首次登录 / 登录失效”，在可见 Edge 中登录后再核对库存。')
+            return
+        from annotation.customer.platform_inventory import read_inventory
+        def execute():
+            prepared_path = store.root / 'offline-results.json'
+            if not prepared_path.is_file():
+                raise Hold('请先通过产品入口准备本书来源课时。')
+            prepared = json.loads(prepared_path.read_text(encoding='utf-8'))
+            return read_inventory(store, settings(store), book, prepared)
+        def done(result):
+            summary = result['summary']
+            status.set('当前库存只读报告已生成：原像素框唯一对应 '
+                       + str(summary['exact']) + '、歧义 ' + str(summary['ambiguous'])
+                       + '、未找到 ' + str(summary['missing']) + '；均非平台完成确认。')
+            webbrowser.open(Path(result['output']).as_uri())
+        task(execute, done)
+
+    def open_wholebook_portal():
+        context = getattr(store, 'customer_portal_context', None)
+        if context is None:
+            messagebox.showinfo('先准备全书来源', '请从产品入口启动并完成包内课时准备。')
+            return
+        if active['portal_url']:
+            webbrowser.open(active['portal_url'])
+            return
+        if active['portal_starting']:
+            return
+        active['portal_starting'] = True
+        def register(server, url):
+            def ready():
+                servers.append(server)
+                active['portal_url'] = url
+                active['portal_starting'] = False
+                status.set('前200个来源实例的本地审校入口已打开；平台库存核对仍须单独点击。')
+            root.after(0, ready)
+        def serve():
+            try:
+                _offline_portal(store, *context, on_server=register)
+            except BaseException as exc:
+                message = str(exc)
+                def failed():
+                    active['portal_starting'] = False
+                    status.set('本地审校入口未打开：' + message)
+                    messagebox.showerror('本地审校入口', message)
+                root.after(0, failed)
+        threading.Thread(target=serve, daemon=True).start()
 
     row = ttk.Frame(frame); row.pack(fill="x", pady=12)
     for label, callback in (("准备材料", prepare_action), ("继续准备", lambda: action("resume")),
@@ -349,8 +413,14 @@ def wizard(store):
     ttk.Button(row, text="未知保存只读对账", command=lambda: action("reconcile")).pack(side="left", padx=3)
     ttk.Button(row, text="本地显示复查", command=lambda: action("display")).pack(side="left", padx=3)
     ttk.Button(row, text="全书逐题批次预演", command=lambda: action("batch-preview")).pack(side="left", padx=3)
+    row = ttk.Frame(frame); row.pack(fill="x", pady=(8, 0))
+    if getattr(store, 'customer_portal_context', None) is not None:
+        ttk.Button(row, text="打开前200来源实例审校入口", command=open_wholebook_portal).pack(side="left", padx=3)
+    ttk.Button(row, text="只读核对当前平台库存", command=inventory_action).pack(side="left", padx=3)
+    ttk.Label(row, text="先在可见 Edge 登录；只读取当前书的目录、题节点和题框，报告不作保存。",
+              wraplength=620).pack(side="left", padx=8)
     def close():
-        if active["busy"]:
+        if active["busy"] or active['portal_starting']:
             messagebox.showinfo("任务进行中", "请等待本次记录与释放完成，再关闭窗口。"); return
         for server in servers: server.shutdown(); server.server_close()
         root.destroy()
@@ -405,7 +475,7 @@ def _offline_database(root, workspace, expected_sha256):
     return database, len(pages)
 
 
-def _offline_portal(store, result, root, bundle, report, *, self_test=False):
+def _offline_portal(store, result, root, bundle, report, *, self_test=False, on_server=None):
     from html import escape
     from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
     from urllib.parse import parse_qs, urlencode, urlsplit
@@ -726,6 +796,8 @@ def _offline_portal(store, result, root, bundle, report, *, self_test=False):
     server = ThreadingHTTPServer(('127.0.0.1', 0), Handler)
     server.daemon_threads = True
     url = 'http://127.0.0.1:' + str(server.server_address[1])
+    if on_server is not None:
+        on_server(server, url)
     try:
         if self_test:
             thread = threading.Thread(target=server.serve_forever, daemon=True)
@@ -894,6 +966,89 @@ def start_offline_bundle(*, self_test=False):
     return 0
 
 
+def _warm_packaged_tcl():
+    """Initialize Tcl's current-directory state in the bundled Python only."""
+    runtime = Path(sys.executable).resolve().parent
+    if runtime != (ROOT.parent / 'python').resolve():
+        return False
+    dll = runtime / 'DLLs' / 'tcl86t.dll'
+    if not dll.is_file():
+        raise Hold('随包图形界面运行时缺少 Tcl 文件。')
+    import ctypes
+    tcl = ctypes.CDLL(str(dll))
+    tcl.Tcl_CreateInterp.restype = ctypes.c_void_p
+    tcl.Tcl_FSGetCwd.argtypes = [ctypes.c_void_p]
+    tcl.Tcl_FSGetCwd.restype = ctypes.c_void_p
+    tcl.Tcl_DeleteInterp.argtypes = [ctypes.c_void_p]
+    tcl.Tcl_DeleteInterp.restype = None
+    interpreter = tcl.Tcl_CreateInterp()
+    if not interpreter:
+        raise Hold('随包图形界面运行时无法初始化 Tcl。')
+    try:
+        if not tcl.Tcl_FSGetCwd(interpreter):
+            raise Hold('随包图形界面运行时无法定位 Tcl 工作目录。')
+    finally:
+        tcl.Tcl_DeleteInterp(interpreter)
+    return True
+
+
+def start_product_bundle(*, self_test=False):
+    """Prepare bundled sources in one workspace, then open the customer GUI.
+
+    This is the product launcher path. Preparation uses only bundled bytes; any
+    platform read remains behind a later explicit GUI click and visible login.
+    """
+    import time
+    from annotation.customer.wholebook import prepare_book
+
+    root = ROOT.parent
+    workspace = root / 'workspace'
+    workspace.mkdir(exist_ok=True)
+    bundle = json.loads((root / 'bundle.json').read_text(encoding='utf-8'))
+    started = time.perf_counter()
+    database, page_count = _offline_database(root, workspace, bundle['source_database_sha256'])
+    store = Store(workspace)
+    store.customer_start_mode = True
+    result = prepare_book(store, database, book=bundle['book_id'],
+        graphic_review=root / 'data' / 'graphic-review.json',
+        graphic_review_sha256=bundle['graphic_review_sha256'])
+    (workspace / 'offline-results.json').write_bytes(encoded(result))
+    prepared = sum(bool(item.get('job')) for item in result['results'])
+    report = {'schema': 'CustomerProductStartup/v1', 'book_id': bundle['book_id'],
+              'pages': page_count, 'scopes': len(result['results']),
+              'prepared_scopes': prepared, 'failed_scopes': len(result['results']) - prepared,
+              'source_candidates': sum(item.get('candidates', 0) for item in result['results']),
+              'platform_actions': [], 'new_model_calls': result['new_model_calls'],
+              'workspace': str(workspace), 'gui_started': False}
+    if (report['failed_scopes'] or
+            (bundle.get('scope_count') is not None and prepared != bundle['scope_count']) or
+            (bundle.get('candidate_count') is not None and report['source_candidates'] != bundle['candidate_count'])):
+        report['status'] = 'FAIL_INCOMPLETE_SOURCE_PREPARATION'
+        (workspace / 'product-startup-result.json').write_bytes(encoded(report))
+        raise Hold('包内课时未完整准备；请保留 workspace 和 product-startup-result.json。')
+    store.customer_book_id = bundle['book_id']
+    report['packaged_tcl_warmed'] = _warm_packaged_tcl()
+    if self_test:
+        import tkinter as tk
+        root_window = tk.Tk()
+        root_window.withdraw()
+        root_window.update_idletasks()
+        root_window.destroy()
+        report['status'] = 'PASS'
+        report['tk_ready'] = True
+        report['wall_seconds'] = time.perf_counter() - started
+        (workspace / 'product-startup-result.json').write_bytes(encoded(report))
+        print(json.dumps(report, ensure_ascii=True), flush=True)
+        return 0
+    report['status'] = 'GUI_OPENING'
+    report['gui_started'] = True
+    report['wall_seconds'] = time.perf_counter() - started
+    (workspace / 'product-startup-result.json').write_bytes(encoded(report))
+    store.customer_portal_context = (result, root, bundle, report)
+    wizard(store)
+    return 0
+
+
 def main(argv=None):
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--workspace", type=Path, default=default_workspace())
@@ -901,6 +1056,8 @@ def main(argv=None):
                         help='交付 GUI：显式点击开始，原设置文件中的开发验收窗口仅保留历史')
     sub = parser.add_subparsers(dest="command")
     p = sub.add_parser('offline', help='打开包内材料的本地审校')
+    p.add_argument('--self-test', action='store_true')
+    p = sub.add_parser('product', help='准备包内全书材料并打开客户图形入口')
     p.add_argument('--self-test', action='store_true')
     p = sub.add_parser("prepare")
     p.add_argument("--book", required=True); p.add_argument("--lesson", required=True)
@@ -930,6 +1087,8 @@ def main(argv=None):
         raise Hold('客户交付模式只用于图形入口，不能作为开发命令的授权覆盖。')
     if a.command == 'offline':
         return start_offline_bundle(self_test=a.self_test)
+    if a.command == 'product':
+        return start_product_bundle(self_test=a.self_test)
     store = Store(a.workspace)
     store.customer_start_mode = a.customer_deployment
     if a.command is None: wizard(store); return 0

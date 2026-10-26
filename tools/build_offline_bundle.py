@@ -1,4 +1,4 @@
-"""Rebuild a private offline bundle without launching it or copying old state."""
+"""Build a clean Windows product bundle with product and offline entries."""
 from __future__ import annotations
 
 import argparse
@@ -69,8 +69,28 @@ def main():
         path.write_bytes(content)
     runtime = args.runtime_source.resolve(strict=True) if args.runtime_source else base / 'python'
     shutil.copytree(runtime, stage / 'python')
-    subprocess.run([str(stage / 'python' / 'python.exe'), '-I', '-B', '-X', 'utf8',
-                    '-c', 'import PIL.Image, numpy, sqlite3'], check=True, timeout=30)
+    portable_python = stage / 'python' / 'python.exe'
+    dependency_smoke = (
+        'import ctypes,pathlib,sys,tkinter; import PIL.Image,numpy,sqlite3; '
+        'from playwright.sync_api import sync_playwright; '
+        "library=pathlib.Path(sys.executable).parent/'DLLs'/'tcl86t.dll'; "
+        'dll=ctypes.CDLL(str(library)); '
+        'dll.Tcl_CreateInterp.restype=ctypes.c_void_p; '
+        'dll.Tcl_FSGetCwd.argtypes=[ctypes.c_void_p]; '
+        'dll.Tcl_FSGetCwd.restype=ctypes.c_void_p; '
+        'dll.Tcl_DeleteInterp.argtypes=[ctypes.c_void_p]; '
+        'interp=dll.Tcl_CreateInterp(); '
+        "assert dll.Tcl_FSGetCwd(interp), 'Tcl filesystem unavailable'; "
+        'dll.Tcl_DeleteInterp(interp); '
+        'window=tkinter.Tk(); window.withdraw(); window.update(); window.destroy(); '
+        "print('TK_PLAYWRIGHT_IMPORT_PASS')")
+    subprocess.run([str(portable_python), '-I', '-B', '-X', 'utf8', '-c', dependency_smoke],
+                   check=True, timeout=30)
+    help_check = subprocess.run([str(portable_python), '-I', '-B', '-X', 'utf8',
+                                 str(stage / 'app' / 'tools' / 'customer.py'), 'product', '--help'],
+                                check=True, timeout=30, capture_output=True, text=True, encoding='utf-8')
+    if '--self-test' not in help_check.stdout:
+        raise RuntimeError('Packaged product entry does not expose the startup smoke option.')
     data = stage / 'data'
     (data / 'images').mkdir(parents=True)
     shutil.copy2(args.database, data / 'source.sqlite')
@@ -86,11 +106,14 @@ def main():
         shutil.copy2(source, destination)
         if sha(destination) != digest:
             raise ValueError('Image hash mismatch: ' + str(n))
-    launcher = ('@echo off\r\nchcp 65001 >nul\r\nsetlocal\r\n'
-                '"%~dp0python\\python.exe" -I -B -X utf8 "%~dp0app\\tools\\customer.py" offline %*\r\n'
+    def launcher(mode):
+        return ('@echo off\r\nchcp 65001 >nul\r\nsetlocal\r\n'
+                '"%~dp0python\\python.exe" -I -B -X utf8 "%~dp0app\\tools\\customer.py" '
+                + mode + ' %*\r\n'
                 'set "A30_EXIT=%ERRORLEVEL%"\r\n'
                 'if not "%A30_EXIT%"=="0" pause\r\nexit /b %A30_EXIT%\r\n')
-    (stage / 'START_CUSTOMER.cmd').write_bytes(launcher.encode('utf-8'))
+    (stage / 'START_PRODUCT.cmd').write_bytes(launcher('product').encode('utf-8'))
+    (stage / 'START_CUSTOMER.cmd').write_bytes(launcher('offline').encode('utf-8'))
     for name, key in [('graphic-review.json', 'graphic_review_sha256'),
                       ('graphic-preview.html', 'graphic_preview_sha256')]:
         source = base / 'data' / name
@@ -98,28 +121,34 @@ def main():
             if not source.is_file() or sha(source) != base_meta[key]:
                 raise ValueError('Bundled graphic source changed: ' + name)
             shutil.copy2(source, data / name)
-    meta = {'scope': 'SELF_CONTAINED_WINDOWS_X64_OFFLINE_REVIEW', 'book_id': '46007447',
+    meta = {'scope': 'SELF_CONTAINED_WINDOWS_X64_CUSTOMER_PRODUCT', 'book_id': '46007447',
             'source_database_sha256': expected, 'key_source_sha256': key_hashes,
-            'python_entry': 'app/tools/customer.py offline', 'images': 214,
+            'python_entry': 'app/tools/customer.py product',
+            'offline_python_entry': 'app/tools/customer.py offline', 'images': 214,
             'graphic_review_sha256': base_meta.get('graphic_review_sha256'),
             'graphic_preview_sha256': base_meta.get('graphic_preview_sha256'),
             'runtime_included': True, 'credentials_or_profiles_included': False,
             'old_workspace_included': False, 'candidate_count': args.candidates,
             'scope_count': args.scopes, 'known_missing_questions': args.missing_questions,
-            'source_index_complete': False, 'entry': 'START_CUSTOMER.cmd',
-            'interface': 'LOCAL_BROWSER_OFFLINE_PORTAL', 'startup_check': 'NOT_RUN_THIS_BUILD'}
+            'source_index_complete': False, 'entry': 'START_PRODUCT.cmd',
+            'offline_entry': 'START_CUSTOMER.cmd',
+            'interface': 'LOCAL_GUI_WITH_OFFLINE_BROWSER_REVIEW',
+            'runtime_dependency_smoke': 'TK_PLAYWRIGHT_IMPORT_PASS',
+            'startup_check': 'NOT_RUN_THIS_BUILD'}
     (stage / 'bundle.json').write_text(json.dumps(meta, ensure_ascii=False, indent=2) + '\n', encoding='utf-8')
     (stage / '使用说明.txt').write_text(
-        '完整解压后双击 START_CUSTOMER.cmd。首次启动会准备来源材料，随后在本机浏览器打开统一入口。\n'
-        '首页可切换前四批、每批50个来源实例（含例题、变式）：逐条打开课时审校、查看214页原图、改框、人工核对题答、确认，并可导出课时结果。\n'
+        '完整解压后双击 START_PRODUCT.cmd。首次启动会从包内214页原图和题源自动准备课时，随后打开产品窗口；可从同一工作区进入审校、导出、首次配置、人工登录和只读平台目录。\n'
+        'START_CUSTOMER.cmd 是离线网页审校备用入口，与产品窗口共用解压目录下的 workspace。两入口都不会在启动时自动连接平台或写入。\n'
+        '平台首次登录需要本机已安装 Microsoft Edge；只有你在产品窗口点击对应操作后才会打开可见浏览器。\n'
+        '网页审校首页可切换前四批、每批50个来源实例（含例题、变式）：逐条打开课时审校、查看原图、改框、人工核对题答、确认，并可导出课时结果。\n'
         '“已审校待平台核对”和“已核对可保存”分别显示；新包不含旧平台账本，不会把本地未执行冒充线上不存在。\n'
-        '逐题批次预演只生成本地计划，不执行平台保存。材料与修改保存在解压目录的 workspace；关闭启动窗口可结束本地服务。\n'
+        '逐题批次预演只生成本地计划，不执行平台保存。材料与修改保存在解压目录的 workspace；关闭各启动窗口可结束对应入口。\n'
         '来源候选仍需逐题核对，本包不是全书最终完成版。请勿公开推送原图或题源。\n', encoding='utf-8')
     if (sha(args.database) != expected
             or any((app / name).read_bytes() != content for name, content in source_files.items())):
         raise ValueError('Source changed while building; staging files retained in work.')
-    if (stage / 'workspace').exists():
-        raise ValueError('A clean bundle must not contain an existing workspace.')
+    if any((stage / name).exists() for name in ('workspace', 'environment', 'settings.json', 'state.sqlite')):
+        raise ValueError('A clean bundle must not contain old workspace, credentials or configuration.')
     temporary_zip = stage.with_suffix('.zip')
     with zipfile.ZipFile(temporary_zip, 'x', zipfile.ZIP_DEFLATED, compresslevel=1) as z:
         for path in sorted(stage.rglob('*')):
