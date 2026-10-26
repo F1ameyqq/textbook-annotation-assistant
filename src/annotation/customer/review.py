@@ -30,7 +30,7 @@ def recheck_structure(candidate, *, pages=(), graph=None, evidence=None):
         if not option_set_valid(labels) or not choice_answer_valid(zones['answer'],labels):issues.add('CHOICE_OR_ANSWER_STRUCTURE')
     if not zones['answer'].strip() or not any(f['zone']=='answer' for f in candidate['frames']):
         issues.add('ANSWER_MISSING_OR_AMBIGUOUS')
-    elif candidate.get('manual_answer_binding'):
+    elif candidate.get('manual_answer_binding') or candidate.get('source_candidate_answer_binding'):
         issues.discard('ANSWER_MISSING_OR_AMBIGUOUS')
     requirements=figure_requirements(candidate,pages,graph,evidence)
     candidate['figure_requirements']=requirements
@@ -262,6 +262,81 @@ class CustomerReviewWorkspace:
             candidate['content_hash']=candidate_hash(candidate)
             job['revision']+=1;job['metrics']['review_actions']+=1;job['status']=preparation_status(job)
             self.store.save_job(job,head,'CUSTOMER_ASSIGN_SOURCE')
+        return self.state()
+
+    def assign_source_candidate(self, request):
+        """Bind one reviewed source observation to one local question only."""
+        job, head = self._load()
+        with self.store.book_lock(job['book_id']):
+            job, head = self._load()
+            candidate = self._target(job, request, head)
+            if candidate['platform_status'] != 'NOT_RUN' or candidate.get('acceptance_ref'):
+                raise Hold('已有平台状态，不能改写本题配答。')
+            if candidate['zones']['answer'].strip() or any(f['zone'] == 'answer' for f in candidate['frames']):
+                raise Hold('本题已有答案来源，不能直接覆盖。')
+            if request.get('source_checked') is not True or request.get('content_checked') is not True:
+                raise Hold('请先逐字核对原图答案及来源框。')
+            answer_text = request.get('answer_text')
+            if not isinstance(answer_text, str) or not answer_text.strip() or len(answer_text) > 100000:
+                raise Hold('请输入核对后的完整答案文字。')
+            from .rich_content import zone_html
+            zone_html(answer_text)
+            source_id = request.get('source_candidate_id')
+            sources = [s for s in candidate.get('answer_source_candidates', [])
+                       if s['candidate_id'] == source_id]
+            if len(sources) != 1:
+                raise Hold('答案来源候选已变化，请刷新后重新核对。')
+            source = sources[0]
+            if (source['question_item_id'] != candidate.get('source_instance_id') or
+                    source['source_binding_status'] != 'ORIGINAL_PAGE_BOUND' or
+                    source.get('direct_binding_allowed') is not True or
+                    not source['requires_review'] or source['selected'] or
+                    not source['asset_id'] or not source['bbox']):
+                raise Hold('此来源未绑定本题原始答页与原图框。')
+            page = next((p for p in job['pages'] if p['asset_id'] == source['asset_id']), None)
+            from annotation.recognition.baseline import valid_bbox
+            if (page is None or page['role'] != 'answer' or page['kind'] != 'image' or
+                    page['raw_sha256'] != source['source_sha256'] or
+                    not valid_bbox(source['bbox'], page['width'], page['height'])):
+                raise Hold('来源原图身份或坐标已经变化。')
+            pairings = [p for p in job.get('source_plan', {}).get('pairing_status', [])
+                        if p['question_item_id'] == candidate.get('source_instance_id')]
+            if len(pairings) != 1:
+                raise Hold('本题来源配答身份不唯一。')
+            pairing = pairings[0]
+            details = json.loads(pairing.get('details_json') or '{}')
+            supplemental = {r['candidate_id'] for r in details.get('supplemental_answer_candidates', [])}
+            if source_id != pairing.get('answer_item_id') and source_id not in supplemental:
+                raise Hold('此来源没有列入本题原始配答候选。')
+            frame = {'zone': 'answer', 'content_type': 'text',
+                     'asset_id': page['asset_id'], 'bbox': list(source['bbox']),
+                     'source_sha256': page['raw_sha256'],
+                     'source_dimensions': [page['width'], page['height']],
+                     'coordinate_space': 'ORIGINAL_PIXELS',
+                     'source_fragment_ids': ['customer-source-candidate:' + source_id]}
+            candidate['frames'].append(frame)
+            candidate['zones']['answer'] = answer_text
+            candidate['source_candidate_answer_binding'] = {
+                'source_candidate_id': source_id,
+                'source_kind': source['source_kind'],
+                'source_item_id': pairing.get('answer_item_id'),
+                'question_item_id': candidate['source_instance_id'],
+                'asset_id': page['asset_id'], 'source_sha256': page['raw_sha256'],
+                'bbox': list(source['bbox']), 'original_observation': source['text'],
+                'suggested_answer_text': source['suggested_answer_text'],
+                'human_entered_answer_text': answer_text,
+                'source_checked': True, 'content_checked': True,
+                'at': utcnow(), 'previous_head': head,
+                'content_approved': False}
+            candidate['review'] = None
+            candidate['content_status'] = 'NEEDS_REVIEW'
+            candidate['issues'] = sorted(set(candidate['issues']) | {'EDITED_CONTENT_REVIEW'})
+            self._review_recheck(job, candidate)
+            candidate['content_hash'] = candidate_hash(candidate)
+            job['revision'] += 1
+            job['metrics']['review_actions'] += 1
+            job['status'] = preparation_status(job)
+            self.store.save_job(job, head, 'CUSTOMER_ASSIGN_SOURCE_CANDIDATE')
         return self.state()
 
     def source_png(self, aid, bbox=None):

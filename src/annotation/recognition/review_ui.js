@@ -25,7 +25,9 @@
   };
   let state = null;
   let csrfToken = "";
-  let currentAnswerId = null;
+  // A local review link may identify an exact source question. It is only
+  // navigation; the server still validates every edit and confirmation.
+  let currentAnswerId = new URLSearchParams(window.location.hash.slice(1)).get("answer");
   let drafts = new Map();
   let busy = false;
   let pendingNavigation = null;
@@ -438,7 +440,8 @@
   }
   function renderSources(answer) {
     const assetIds = [...new Set([...(answer.blocks || []).map(block => block.asset_id), ...(answer.figures || []).map(figure => figure.asset_id),
-      ...(answer.reading_answer_candidates||[]).flatMap(candidate=>candidate.windows.map(window=>window.asset_id))])];
+      ...(answer.reading_answer_candidates||[]).flatMap(candidate=>candidate.windows.map(window=>window.asset_id)),
+      ...(answer.answer_source_candidates||[]).map(candidate=>candidate.asset_id).filter(Boolean)])];
     const host = $("source-overview"); host.replaceChildren();
     host.style.flexWrap="wrap";host.style.alignItems="flex-start";
     const projection = answer.source_projection;
@@ -476,13 +479,75 @@
       const original=node("details");original.append(node("summary","","查看共享上下文的原识别行"),
         node("pre","",candidate.source_rows.map(row=>row.text).join("\n")));host.append(original);
     }
+    const sourceCandidates = answer.answer_source_candidates || [];
+    if (sourceCandidates.length) {
+      host.append(node("h4", "", "新增答案来源 · " + sourceCandidates.length + " 条待逐题核对"),
+        node("p", "muted small", "下列片段来自固定来源库，只供对照原图。查看它们不会改写当前答案、配对或确认状态。"));
+    }
+    for (const candidate of sourceCandidates) {
+      const label = "答案来源候选 · " + (candidate.source_kind || "待审来源");
+      const card = candidate.asset_id && candidate.bbox
+        ? sourceCard(candidate.asset_id, candidate.bbox, label)
+        : node("div", "source-card");
+      card.style.flexBasis = "100%";
+      card.append(node("p", "source-proof-note", candidate.source_binding_status === "ORIGINAL_PAGE_BOUND"
+        ? "原图与范围已绑定；答案内容仍待审校。" : "原图绑定未完成，暂只能查看来源记录。"));
+      card.append(node("p", "mono muted", "来源 ID：" + candidate.candidate_id));
+      if (candidate.text) card.append(node("pre", "", "原始观察：" + candidate.text));
+      if (candidate.suggested_answer_text) card.append(node("pre", "", "候选答案：" + candidate.suggested_answer_text));
+      const details = node("details");
+      details.append(node("summary", "", "查看来源性质与证明记录"),
+        node("pre", "", JSON.stringify({source_kind:candidate.source_kind, page:candidate.page,
+          asset_id:candidate.asset_id, source_binding_status:candidate.source_binding_status,
+          original_ocr_row_index:candidate.original_ocr_row_index, observation_id:candidate.observation_id,
+          requires_review:candidate.requires_review, selected:candidate.selected,
+          content_approved:candidate.content_approved, proof:candidate.proof,
+          source_record:candidate.source_record}, null, 2)));
+      card.append(details);
+      if (candidate.source_binding_status === "ORIGINAL_PAGE_BOUND" &&
+          !answer.text?.trim() && !candidate.selected) {
+        const inputLabel = node("label", "field", "核对原图后填写本题答案");
+        const answerInput = node("textarea"); answerInput.rows = 2;
+        answerInput.value = candidate.suggested_answer_text || "";
+        inputLabel.append(answerInput); card.append(inputLabel);
+        const sourceCheck = node("input"), contentCheck = node("input");
+        sourceCheck.type = "checkbox"; contentCheck.type = "checkbox";
+        const sourceLabel = node("label", "check-label");
+        sourceLabel.append(sourceCheck, document.createTextNode("已对照原图核对题号与来源范围"));
+        const contentLabel = node("label", "check-label");
+        contentLabel.append(contentCheck, document.createTextNode("已逐字核对所填答案"));
+        card.append(sourceLabel, contentLabel);
+        card.append(button("采用来源到本地答案", async () => {
+          if (busy) return;
+          if (dirtyDrafts().length) {
+            feedback("请先保存或放弃当前编辑，再绑定新的答案来源。", true); return;
+          }
+          const answerText = answerInput.value.trim();
+          if (!sourceCheck.checked || !contentCheck.checked || !answerText) {
+            feedback("请先核对原图、逐字核对答案并填写答案文字。", true); return;
+          }
+          setBusy(true);
+          try {
+            const value = await request("/api/assign-source-candidate", {
+              expected_head: state.head, answer_id: currentAnswerId,
+              source_candidate_id: candidate.candidate_id, answer_text: answerText,
+              source_checked: true, content_checked: true
+            });
+            applyState(value.state);
+            feedback("来源已绑定到本地答案；请核对全部题干、选项、框与答案，再单独确认本题。");
+          } catch (error) { showError(error, "答案来源未绑定"); }
+          finally { setBusy(false); }
+        }, "small-button"));
+      }
+      host.append(card);
+    }
     for (const id of assetIds) host.append(sourceCard(id, null, "来源整页"));
     const images = (answer.figures || []).filter(figure => figure.content_type === "image");
     for (const [index, figure] of images.entries()) host.append(sourceCard(figure.asset_id, figure.bbox,
       figure.graphic_option_label?("选项 "+figure.graphic_option_label+(figure.source_checked?" · 已核对来源":" · 来源待核对")):
       figure.referenced_figure_id?("题干图 "+(index+1)+(figure.source_checked?" · 已核对来源":" · 来源待核对")):"已绑定题图 " + (index + 1) + " · " + roleLabel(figure.role)));
     for(const child of host.children)if(!child.classList.contains("source-card")){child.style.flexBasis="100%";child.style.minWidth="0";}
-    $("source-overview-count").textContent = assetIds.length + " 来源页 · " + images.length + " 图片来源框";
+    $("source-overview-count").textContent = assetIds.length + " 来源页 · " + images.length + " 图片来源框 · " + sourceCandidates.length + " 答案来源候选";
     if (!assetIds.length && !projection?.zones?.length) host.append(node("p", "muted small", "该答案没有可显示的来源范围。"));
   }
 

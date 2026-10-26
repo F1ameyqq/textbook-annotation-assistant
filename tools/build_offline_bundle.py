@@ -2,13 +2,12 @@
 from __future__ import annotations
 
 import argparse
-import ast
 import hashlib
 import json
 from pathlib import Path
-import re
 import shutil
 import sqlite3
+import subprocess
 from contextlib import closing
 import uuid
 import zipfile
@@ -22,8 +21,9 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--base-package', type=Path, required=True,
                         help='Previously repaired self-contained folder; reuse only runtime and launcher.')
+    parser.add_argument('--runtime-source', type=Path,
+                        help='Known working portable Python folder; defaults to base-package/python.')
     parser.add_argument('--app', type=Path, required=True, help='New frozen application source folder.')
-    parser.add_argument('--entry-template', type=Path, default=Path(__file__).with_name('offline_start.py'))
     parser.add_argument('--output-dir', type=Path, default=Path.cwd() / 'outputs')
     parser.add_argument('--database', type=Path, required=True)
     parser.add_argument('--database-sha256', required=True)
@@ -44,7 +44,7 @@ def main():
         raise FileExistsError('Existing packages are preserved; choose a new name.')
     output_dir.mkdir(parents=True, exist_ok=True)
     expected = args.database_sha256.lower()
-    if not re.fullmatch('[a-f0-9]{64}', expected) or sha(args.database) != expected:
+    if len(expected) != 64 or any(c not in '0123456789abcdef' for c in expected) or sha(args.database) != expected:
         raise ValueError('Source SQLite does not match the supplied frozen hash.')
     base = args.base_package.resolve(strict=True)
     base_meta = json.loads((base / 'bundle.json').read_text(encoding='utf-8'))
@@ -67,7 +67,10 @@ def main():
         path = stage / 'app' / name
         path.parent.mkdir(parents=True, exist_ok=True)
         path.write_bytes(content)
-    shutil.copytree(base / 'python', stage / 'python')
+    runtime = args.runtime_source.resolve(strict=True) if args.runtime_source else base / 'python'
+    shutil.copytree(runtime, stage / 'python')
+    subprocess.run([str(stage / 'python' / 'python.exe'), '-I', '-B', '-X', 'utf8',
+                    '-c', 'import PIL.Image, numpy, sqlite3'], check=True, timeout=30)
     data = stage / 'data'
     (data / 'images').mkdir(parents=True)
     shutil.copy2(args.database, data / 'source.sqlite')
@@ -83,35 +86,35 @@ def main():
         shutil.copy2(source, destination)
         if sha(destination) != digest:
             raise ValueError('Image hash mismatch: ' + str(n))
-    entry = args.entry_template.read_text(encoding='utf-8')
-    old_scope = base_meta.get('scope_count', base_meta.get('startup_check', {}).get('scopes', 106))
-    entry = entry.replace(base_meta['source_database_sha256'], expected)
-    entry = entry.replace('source-cf968.sqlite', 'source.sqlite')
-    entry = re.sub(r'\b' + str(base_meta['candidate_count']) + r'\b', str(args.candidates), entry)
-    entry = re.sub(r'\b' + str(old_scope) + r'\b', str(args.scopes), entry)
-    old_missing = '当前题源仍有至少' + str(base_meta.get('known_missing_questions', 14)) + '道真题待补'
-    new_missing = ('当前题源仍有至少' + str(args.missing_questions) + '道真题待补'
-                   if args.missing_questions is not None else '当前来源清单仍需补核')
-    entry = entry.replace(old_missing, new_missing)
-    ast.parse(entry)
-    (stage / 'offline_start.py').write_text(entry, encoding='utf-8')
     launcher = ('@echo off\r\nchcp 65001 >nul\r\nsetlocal\r\n'
-                '"%~dp0python\\python.exe" -I -B -X utf8 "%~dp0offline_start.py" %*\r\n'
+                '"%~dp0python\\python.exe" -I -B -X utf8 "%~dp0app\\tools\\customer.py" offline %*\r\n'
                 'set "A30_EXIT=%ERRORLEVEL%"\r\n'
                 'if not "%A30_EXIT%"=="0" pause\r\nexit /b %A30_EXIT%\r\n')
     (stage / 'START_CUSTOMER.cmd').write_bytes(launcher.encode('utf-8'))
+    for name, key in [('graphic-review.json', 'graphic_review_sha256'),
+                      ('graphic-preview.html', 'graphic_preview_sha256')]:
+        source = base / 'data' / name
+        if key in base_meta:
+            if not source.is_file() or sha(source) != base_meta[key]:
+                raise ValueError('Bundled graphic source changed: ' + name)
+            shutil.copy2(source, data / name)
     meta = {'scope': 'SELF_CONTAINED_WINDOWS_X64_OFFLINE_REVIEW', 'book_id': '46007447',
             'source_database_sha256': expected, 'key_source_sha256': key_hashes,
-            'offline_entry_sha256': sha(stage / 'offline_start.py'), 'images': 214,
+            'python_entry': 'app/tools/customer.py offline', 'images': 214,
+            'graphic_review_sha256': base_meta.get('graphic_review_sha256'),
+            'graphic_preview_sha256': base_meta.get('graphic_preview_sha256'),
             'runtime_included': True, 'credentials_or_profiles_included': False,
             'old_workspace_included': False, 'candidate_count': args.candidates,
             'scope_count': args.scopes, 'known_missing_questions': args.missing_questions,
             'source_index_complete': False, 'entry': 'START_CUSTOMER.cmd',
             'interface': 'LOCAL_BROWSER_OFFLINE_PORTAL', 'startup_check': 'NOT_RUN_THIS_BUILD'}
     (stage / 'bundle.json').write_text(json.dumps(meta, ensure_ascii=False, indent=2) + '\n', encoding='utf-8')
-    (stage / '使用说明.txt').write_text('完整解压后双击 START_CUSTOMER.cmd。入口使用包内Python、214页原图和固定题源，'
-        '在本机浏览器打开离线审校。原库不变，定位副本及修改保存在包内 workspace。'
-        '候选仍需逐题核对，当前并非全书完成版。关闭启动窗口可结束本地服务。材料请勿公开推送。\n', encoding='utf-8')
+    (stage / '使用说明.txt').write_text(
+        '完整解压后双击 START_CUSTOMER.cmd。首次启动会准备来源材料，随后在本机浏览器打开统一入口。\n'
+        '首页先列首批50题：逐题打开课时审校、查看214页原图、改框、人工核对题答、确认，并可导出课时结果。\n'
+        '“已审校待平台核对”和“已核对可保存”分别显示；新包不含旧平台账本，不会把本地未执行冒充线上不存在。\n'
+        '逐题批次预演只生成本地计划，不执行平台保存。材料与修改保存在解压目录的 workspace；关闭启动窗口可结束本地服务。\n'
+        '来源候选仍需逐题核对，本包不是全书最终完成版。请勿公开推送原图或题源。\n', encoding='utf-8')
     if (sha(args.database) != expected
             or any((app / name).read_bytes() != content for name, content in source_files.items())):
         raise ValueError('Source changed while building; staging files retained in work.')

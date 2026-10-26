@@ -90,6 +90,93 @@ def _unmatched_disjoint(job, selected, evidence, issue):
     return True
 
 
+def _source_item_empty_scoped(job, selected, issue):
+    """An empty source item belongs to one exact question, not its neighbors."""
+    identity = issue.get('detail')
+    if type(identity) is not str or not job.get('source_plan'):
+        return False
+    items = {i['item_id']: i for i in job['source_plan']['items']}
+    item = items.get(identity)
+    if item is None:
+        return False
+    if item['role'] == 'question':
+        owners = [identity]
+    elif item['role'] == 'answer':
+        owners = [p['question_item_id'] for p in job['source_plan'].get('pairing_status', [])
+                  if p.get('answer_item_id') == identity]
+    else:
+        return False
+    if len(owners) != 1:
+        return False
+    selected_owner = [c for c in selected if c.get('source_instance_id') == owners[0]]
+    if not selected_owner:
+        return True
+    if len(selected_owner) != 1 or item['role'] != 'answer':
+        return False
+    candidate = selected_owner[0]
+    binding = candidate.get('source_candidate_answer_binding', {})
+    return (binding.get('source_item_id') == identity and
+            binding.get('question_item_id') == owners[0] and
+            binding.get('source_checked') is True and
+            binding.get('content_checked') is True and
+            bool(candidate['zones']['answer'].strip()) and
+            any(f['zone'] == 'answer' and f['asset_id'] == binding.get('asset_id')
+                and f['bbox'] == binding.get('bbox') and
+                f['source_sha256'] == binding.get('source_sha256')
+                for f in candidate['frames']))
+
+
+def _unmatched_disjoint_from_bound_source(job, selected, evidence, issue):
+    """Keep other questions' unresolved answers local when pixels are separate."""
+    if not evidence or not job.get('source_plan'):
+        return False
+    # Only the customer's exact answer-source selection enables this narrower
+    # proof. Other unreviewed scopes still use the original strict gate.
+    if not selected or any(not c.get('source_candidate_answer_binding') for c in selected):
+        return False
+    refs = issue.get('evidence_refs')
+    if type(refs) is not list or not refs or len(set(refs)) != len(refs):
+        return False
+    plan = job['source_plan']
+    answers = {'a-' + digest(i['item_id'])[:24]: i for i in plan['items']
+               if i['role'] == 'answer'}
+    questions = {i['item_id']: i for i in plan['items'] if i['role'] == 'question'}
+    pairings = job['source_plan'].get('pairing_status', [])
+    pages = {p['asset_id']: p['source'] for p in evidence['payload']['pages']}
+    page_assets = plan.get('page_assets', {})
+    selected_ids = {c.get('source_instance_id') for c in selected}
+    for ref in refs:
+        answer = answers.get(ref)
+        if not answer:
+            return False
+        owners = [p['question_item_id'] for p in pairings
+                  if p.get('answer_item_id') == answer.get('item_id')]
+        if len(owners) != 1 or owners[0] in selected_ids:
+            return False
+        owner = questions.get(owners[0])
+        if (not owner or owner['label'] != answer['label'] or
+                owner['kind'] != answer['kind']):
+            return False
+        if not answer['fragments']:
+            return False
+        for fragment in answer['fragments']:
+            aid = page_assets.get(str(fragment['page']))
+            source = pages.get(aid)
+            box = fragment['bbox']
+            if (not source or type(box) is not list or len(box) != 4 or
+                    not all(type(v) in (int, float) and math.isfinite(v) for v in box) or
+                    not 0 <= box[0] < box[2] <= source['width'] or
+                    not 0 <= box[1] < box[3] <= source['height']):
+                return False
+            for candidate in selected:
+                for frame in candidate['frames']:
+                    if (frame['asset_id'] == aid and
+                            max(box[0], frame['bbox'][0]) < min(box[2], frame['bbox'][2]) and
+                            max(box[1], frame['bbox'][1]) < min(box[3], frame['bbox'][3])):
+                        return False
+    return True
+
+
 def blockers(job, selected, evidence=None):
     if not job['issues']:
         return []
@@ -97,7 +184,11 @@ def blockers(job, selected, evidence=None):
              for line in page.get('ocr_lines', [])}
     result = []
     for issue in job['issues']:
-        if issue['code'] == 'UNMATCHED_ANSWERS' and _unmatched_disjoint(job, selected, evidence, issue):
+        if issue['code'] == 'SOURCE_ITEM_EMPTY' and _source_item_empty_scoped(job, selected, issue):
+            continue
+        if issue['code'] == 'UNMATCHED_ANSWERS' and (
+                _unmatched_disjoint(job, selected, evidence, issue) or
+                _unmatched_disjoint_from_bound_source(job, selected, evidence, issue)):
             continue
         # Only explicitly located orphan answer lines can be proved disjoint.
         # Unknown geometry, unscoped material and unmatched identities stay held.

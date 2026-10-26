@@ -66,7 +66,8 @@ def read_source(path, selected=None, *, graphic_review=None, graphic_review_sha2
                                                byte_hash(Path(__file__).with_name('graphic_options.py').read_bytes()),
                                                byte_hash(Path(__file__).with_name('answer_geometry.py').read_bytes()),
                                                byte_hash(Path(__file__).with_name('reading_contexts.py').read_bytes()),
-                                               byte_hash(Path(__file__).with_name('question_figures.py').read_bytes())]),
+                                               byte_hash(Path(__file__).with_name('question_figures.py').read_bytes()),
+                                               byte_hash(Path(__file__).with_name('answer_source_candidates.py').read_bytes())]),
                     'windows': windows, 'items': items, 'path': paths.get(scope['id'], [scope['label']]),
                     'kind': scope['kind'], 'source_database': str(path)}
             if scope['kind'] == 'EXTRA_PAPER':
@@ -76,6 +77,20 @@ def read_source(path, selected=None, *, graphic_review=None, graphic_review_sha2
                          'question_figure_bindings', 'question_figure_scope_reviews'):
                 if name in tables:
                     plan[name] = [dict(r) for r in db.execute('SELECT * FROM '+name+' WHERE scope_id=?', (scope['id'],))]
+            # These are source observations for customer review, not selected
+            # answers. In particular ROI and visual records are not OCR rows.
+            for name in ('answer_choice_boundary_candidates', 'supplemental_answer_candidates',
+                         'numeric_boundary_answer_candidates', 'visual_answer_sources',
+                         'missing_short_answer_candidates'):
+                if name in tables:
+                    plan[name] = [dict(r) for r in db.execute(
+                        'SELECT * FROM '+name+' WHERE scope_id=?', (scope['id'],))]
+            if 'independent_roi_answer_sources' in tables:
+                question_ids = [i['item_id'] for i in items if i['role'] == 'question']
+                plan['independent_roi_answer_sources'] = (
+                    [dict(r) for r in db.execute(
+                        'SELECT * FROM independent_roi_answer_sources WHERE question_item_id IN ('
+                        + ','.join('?' for _ in question_ids) + ')', question_ids)] if question_ids else [])
             if reviewed_graphics:
                 plan['graphic_review'] = {'sha256': reviewed_graphics['sha256'], 'groups': {
                     r['question_item_id']: reviewed_graphics['groups'][r['question_item_id']]
@@ -560,6 +575,8 @@ def assemble_plan(evidence, original_graph, plan, path):
     from .graphic_options import annotate_question
     for q in questions:
         annotate_question(q, plan, evidence, questions)
+    from .answer_source_candidates import attach as attach_answer_sources
+    attach_answer_sources(questions, plan, evidence)
     for q in questions:
         matches = [a for a in answers if (a['source_item_kind'], a['printed_number'], a['source_block_key']) ==
                    (q['source_item_kind'], q['printed_number'], q['source_block_key']) and

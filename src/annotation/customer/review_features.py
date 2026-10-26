@@ -154,5 +154,10 @@ def candidate_support(candidate, pages, graph, evidence, layouts=(), *, raw_load
         discovery['proposals'].extend(referenced)
         discovery['status'] = 'NEEDS_REVIEW'
     from .reading_contexts import candidates as reading_candidates
+    answer_sources = copy.deepcopy(candidate.get('answer_source_candidates', []))
+    chosen = candidate.get('source_candidate_answer_binding', {}).get('source_candidate_id')
+    for source in answer_sources:
+        source['selected'] = source['candidate_id'] == chosen
     return {"source_projection": view, "figure_requirements": requirements, "figure_discovery": discovery,
-            'reading_answer_candidates': reading_candidates(candidate, graph, evidence)}
+            'reading_answer_candidates': reading_candidates(candidate, graph, evidence),
+            'answer_source_candidates': answer_sources}

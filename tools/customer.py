@@ -233,6 +233,9 @@ def wizard(store):
                 task(continue_prepare,lambda job:status.set(job['status']+'：'+job.get('last_message','准备完成')))
             elif kind == "produce":
                 job, _ = store.job(identity)
+                if job.get('source_plan'):
+                    action('batch-preview')
+                    return
                 from annotation.customer.selection import select
                 dialog=tk.Toplevel(root);dialog.title('选择本次生产题目');dialog.geometry('720x440')
                 ttk.Label(dialog,text='书籍 '+job['book_id']+' · '+job['lesson']+'\n只生产本次选择；已完成记录直接复用。其余异常及整节未完成状态会保留。',wraplength=680).pack(padx=12,pady=12)
@@ -253,6 +256,58 @@ def wizard(store):
                     dialog.destroy()
                     task(lambda:produce(store,identity,settings(store),selected_keys=keys),lambda output:(status.set('所选题目已读回，原生交付与自动显示检查完成；其余范围状态保留。'),webbrowser.open((output/'index.html').as_uri())))
                 ttk.Button(dialog,text='保存所选题目并独立读回',command=begin_selected).pack(pady=12)
+            elif kind == 'batch-preview':
+                from annotation.customer.wholebook_queue import build_scope, pending_manifest
+                from annotation.customer.wholebook_live_batch import run as run_wholebook_batch
+                job, _ = store.job(identity)
+                if not job.get('source_plan'):
+                    raise Hold('当前任务不是全书来源课时。')
+                batch = [{'job_id': identity, 'key': item['key'],
+                          'source_instance_id': item.get('source_instance_id')}
+                         for item in job['candidates']]
+                manifest = pending_manifest(store, batch)
+                rows = manifest.get('preflight_required', [])
+                if not rows:
+                    raise Hold('本课时没有已逐题确认且可做本地预演的来源题。')
+                dialog = tk.Toplevel(root); dialog.title('全书逐题批次预演'); dialog.geometry('760x510')
+                ttk.Label(dialog, text='仅在本地固定待核对题的来源身份、分区和框。平台已有题数须先独立核对；本步骤不连接平台。',
+                          wraplength=720).pack(padx=12, pady=10)
+                listing = ttk.Treeview(dialog, columns=('number', 'source', 'status'),
+                                       show='headings', selectmode='extended')
+                for key, label, width in [('number', '印刷号', 80), ('source', '来源题身份', 430),
+                                          ('status', '本地状态', 190)]:
+                    listing.heading(key, text=label); listing.column(key, width=width)
+                listing.pack(fill='both', expand=True, padx=12)
+                for row in rows:
+                    listing.insert('', 'end', iid=row['key'],
+                        values=(row['printed_number'], row['source_instance_id'], '已审校待平台核对'))
+                listing.selection_set([row['key'] for row in rows])
+                directory = tk.StringVar(value=job['source_plan'].get('scope_id', ''))
+                native_count = tk.StringVar()
+                for label, variable in [('核对后的平台末级目录 ID', directory),
+                                        ('当前平台已有题数', native_count)]:
+                    line = ttk.Frame(dialog); line.pack(fill='x', padx=12, pady=4)
+                    ttk.Label(line, text=label, width=25).pack(side='left')
+                    ttk.Entry(line, textvariable=variable).pack(side='left', fill='x', expand=True)
+                def begin_preview():
+                    try:
+                        keys = list(listing.selection())
+                        count = native_count.get().strip()
+                        if not count.isdecimal(): raise Hold('请填写独立核对后的非负已有题数。')
+                        scope = build_scope(store, identity, keys,
+                            directory_id=directory.get().strip(), expected_initial_native_count=int(count))
+                    except Exception as exc:
+                        messagebox.showerror('批次未生成', str(exc)); return
+                    def run_preview():
+                        preview = run_wholebook_batch(store, identity, settings(store), scope, dry_run=True)
+                        output = store.root / 'exports' / identity / 'wholebook-batch-preview.json'
+                        output.parent.mkdir(parents=True, exist_ok=True)
+                        output.write_bytes(encoded({'scope': scope, 'preview': preview, 'platform_actions': []}))
+                        return output
+                    dialog.destroy()
+                    task(run_preview, lambda output: (status.set('本地逐题批次预演已生成；仍须平台库存核对和新范围授权。'),
+                                                     webbrowser.open(output.as_uri())))
+                ttk.Button(dialog, text='生成本地预演', command=begin_preview).pack(pady=10)
             elif kind == 'display':
                 from annotation.customer.native_delivery import check_display
                 task(lambda:check_display(store,identity,explicit_recheck=True),lambda output:(status.set('本地显示复查通过；未调用平台保存或导出。'),webbrowser.open((output/'index.html').as_uri())))
@@ -293,6 +348,7 @@ def wizard(store):
     ttk.Button(row, text="从平台选课时并准备", command=platform_action).pack(side="left", padx=3)
     ttk.Button(row, text="未知保存只读对账", command=lambda: action("reconcile")).pack(side="left", padx=3)
     ttk.Button(row, text="本地显示复查", command=lambda: action("display")).pack(side="left", padx=3)
+    ttk.Button(row, text="全书逐题批次预演", command=lambda: action("batch-preview")).pack(side="left", padx=3)
     def close():
         if active["busy"]:
             messagebox.showinfo("任务进行中", "请等待本次记录与释放完成，再关闭窗口。"); return
@@ -352,40 +408,123 @@ def _offline_database(root, workspace, expected_sha256):
 def _offline_portal(store, result, root, bundle, report, *, self_test=False):
     from html import escape
     from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
-    from urllib.parse import parse_qs, urlsplit
+    from urllib.parse import parse_qs, urlencode, urlsplit
     import webbrowser
     import urllib.request
     from annotation.customer.review import CustomerReviewWorkspace
+    from annotation.customer.wholebook_queue import first_batch, pending_manifest
     from annotation.recognition.content_review_server import make_server
     jobs = {}
     for item in result['results']:
-        job, _ = store.job(item['job'])
-        jobs[job['id']] = job
+        if item.get('job'):
+            job, _ = store.job(item['job'])
+            jobs[job['id']] = job
+    failures = [item for item in result['results'] if not item.get('job')]
+    scope_labels = {}
+    if failures:
+        import sqlite3
+        source = root / 'data' / 'source.sqlite'
+        with sqlite3.connect(source.as_uri() + '?mode=ro', uri=True) as db:
+            scope_labels = {identity: ' / '.join(json.loads(path))
+                            for identity, path in db.execute('SELECT id,path FROM scopes')}
     review_servers = {}
     lock = threading.Lock()
-    rows = ''.join('<tr data-job="' + identity + '"><td>' + escape(job['lesson'])
-                   + '</td><td>' + str(len(job['candidates'])) + '</td><td>待审校</td><td>'
-                   + '<a target="_blank" href="/review?job=' + identity + '">打开审校</a> · '
-                   + '<a target="_blank" href="/export?job=' + identity + '">导出</a></td></tr>'
-                   for identity, job in jobs.items())
     scope_count = len(jobs)
     candidate_count = sum(len(job['candidates']) for job in jobs.values())
     page_count = report['pages']
-    page = ('<!doctype html><html lang="zh-CN"><meta charset="utf-8"><meta name="viewport" content="width=device-width">'
-            '<title>全书离线审校 · 46007447</title><style>'
-            'body{margin:36px auto;padding:0 24px;max-width:1100px;font:16px/1.7 system-ui;color:#18352f;background:#f5f8f6}'
-            'h1{font-size:30px;margin-bottom:8px}p{color:#50655e}table{width:100%;border-collapse:collapse;background:white}'
-            'td,th{text-align:left;padding:12px 16px;border-bottom:1px solid #dce7e1}th{background:#e7f0eb}'
-            'a{color:#16664e}small{display:block;margin:12px 0 24px;color:#6f5730}</style>'
-            f'<h1>全书离线审校</h1><p>书 {bundle["book_id"]} · {page_count} 页材料 · {scope_count} 节 · {candidate_count} 个候选</p>'
-            '<p>选择课时打开审校，可查看原图、修改候选并导出。材料和修改均保存在解压后的文件夹。</p>'
-            '<small>候选待审校，请逐题核对题干、选项及答案。</small>'
-            '<table><thead><tr><th>课时</th><th>候选</th><th>状态</th><th>操作</th></tr></thead><tbody>'
-            + rows + '</tbody></table></html>').encode('utf-8')
     preview = root / 'data' / 'graphic-preview.html'
     if bundle.get('graphic_preview_sha256'):
         preview_body = preview.read_bytes()
-        page = page.replace(b'<table>', '<p><a target="_blank" href="/graphic-preview">查看21题图形选项预览</a></p><table>'.encode('utf-8'), 1)
+
+    def portal_state():
+        batch = first_batch(store, result, limit=50)
+        return batch, pending_manifest(store, batch)
+
+    def portal_page():
+        batch, manifest = portal_state()
+        pending = manifest.get('pending_save', [])
+        queue_rows = []
+        for index, row in enumerate(batch, 1):
+            job_id, key = row['job_id'], row['key']
+            query = escape(urlencode({'job': job_id, 'answer': key}), quote=True)
+            export_query = escape(urlencode({'job': job_id}), quote=True)
+            source_id = escape(row.get('source_instance_id') or '未提供', quote=True)
+            queue_rows.append(
+                '<tr data-queue="' + str(index) + '"><td>' + str(index) + '</td><td>'
+                + escape(row['lesson']) + '</td><td>第 ' + escape(str(row['printed_number'])) + ' 题</td><td>'
+                + '<code title="' + source_id + '">' + source_id + '</code></td><td>'
+                + escape(row['content_status']) + '<br><small>' + escape(row['platform_status']) + '</small></td><td>'
+                + '<a target="_blank" href="/review?' + query + '">原图、改框、确认</a> · '
+                + '<a target="_blank" href="/export?' + export_query + '">导出课时</a></td></tr>')
+        scope_rows = []
+        for identity in jobs:
+            current, _ = store.job(identity)
+            query = escape(urlencode({'job': identity}), quote=True)
+            scope_rows.append('<tr data-job="' + escape(identity, quote=True) + '"><td>'
+                + escape(current['lesson']) + '</td><td>' + str(len(current['candidates']))
+                + '</td><td>' + escape(current['status']) + '</td><td><a target="_blank" href="/review?'
+                + query + '">打开审校</a> · <a target="_blank" href="/export?' + query + '">导出</a></td></tr>')
+        graphics = ('<p><a target="_blank" href="/graphic-preview">查看图形选项原图预览</a></p>'
+                    if bundle.get('graphic_preview_sha256') else '')
+        failure_rows = []
+        for item in failures:
+            message = item.get('message') or json.dumps(item.get('errors', {}), ensure_ascii=False) or item['status']
+            failure_rows.append('<tr data-failed-scope="' + escape(item['scope_id'], quote=True) + '"><td>'
+                + escape(scope_labels.get(item['scope_id'], item['scope_id'])) + '</td><td>'
+                + escape(item['status']) + '</td><td>' + escape(message) + '</td></tr>')
+        failed_section = ('<h2>暂未生成任务的课时 · ' + str(len(failures)) + '</h2>'
+            '<p>下列课时仍需处理来源或准备错误；首批题目仅从上方已生成任务中选取。</p>'
+            '<table><thead><tr><th>课时</th><th>状态</th><th>原因</th></tr></thead><tbody>'
+            + ''.join(failure_rows) + '</tbody></table>') if failures else ''
+        html = ('<!doctype html><html lang="zh-CN"><meta charset="utf-8"><meta name="viewport" content="width=device-width">'
+            '<title>全书审校 · 46007447</title><style>'
+            'body{margin:28px auto;padding:0 22px;max-width:1350px;font:15px/1.6 system-ui;color:#18352f;background:#f5f8f6}'
+            'h1{font-size:29px;margin-bottom:5px}h2{margin-top:34px}p{color:#50655e}table{width:100%;border-collapse:collapse;background:white}'
+            'td,th{text-align:left;padding:9px 11px;border-bottom:1px solid #dce7e1;vertical-align:top}th{background:#e7f0eb}'
+            'a{color:#16664e}small{color:#6f5730}code{font:11px ui-monospace,monospace;overflow-wrap:anywhere}'
+            '.actions{padding:14px 18px;background:#e7f0eb;border-radius:10px}.actions a{margin-right:18px}</style>'
+            f'<h1>全书离线审校</h1><p>书 {escape(bundle["book_id"])} · {page_count} 页原图 · {scope_count} 节 · {candidate_count} 个来源候选</p>'
+            '<p>首批 50 题按来源次序列出。进入题目可对照原图、调整来源框、修改文字并逐题确认。'
+            '确认后返回此页刷新，待保存清单会按当前记录重新生成。</p>'
+            '<div class="actions"><strong>首批 ' + str(len(batch)) + ' 题 · 已审校待平台核对 '
+            + str(len(manifest.get('preflight_required', []))) + ' 题 · 已核对可保存 '
+            + str(len(pending)) + ' 题</strong><br>'
+            '<a href="/pending.json" download="wholebook-review-queue.json">下载审校与平台核对清单</a>'
+            '<a href="/batch-plan">逐课时批次预演</a><a href="/">刷新状态</a></div>'
+            '<p><small>本地审校通过后仍须只读核对当前平台库存；包内没有旧平台完整账本。清单和预演都不执行平台保存。</small></p>'
+            '<table><thead><tr><th>#</th><th>课时</th><th>题号</th><th>来源题身份</th><th>内容 / 平台状态</th><th>操作</th></tr></thead><tbody>'
+            + ''.join(queue_rows) + '</tbody></table>' + graphics
+            + '<h2>全部课时</h2><table><thead><tr><th>课时</th><th>候选</th><th>状态</th><th>操作</th></tr></thead><tbody>'
+            + ''.join(scope_rows) + '</tbody></table>' + failed_section + '</html>')
+        return html.encode('utf-8')
+
+    def batch_plan_page():
+        _, manifest = portal_state()
+        pending = manifest.get('preflight_required', [])
+        counts = {identity: sum(row['job_id'] == identity for row in pending) for identity in jobs}
+        options = []
+        rows = []
+        for identity in jobs:
+            job, _ = store.job(identity)
+            directory_id = job.get('source_plan', {}).get('scope_id') or ''
+            options.append('<option value="' + escape(identity, quote=True) + '">'
+                           + escape(job['lesson']) + ' · ' + str(counts[identity]) + ' 题待保存</option>')
+            rows.append('<tr><td>' + escape(job['lesson']) + '</td><td><code>'
+                        + escape(directory_id) + '</code></td><td>' + str(counts[identity]) + '</td></tr>')
+        return ('<!doctype html><html lang="zh-CN"><meta charset="utf-8"><meta name="viewport" content="width=device-width">'
+            '<title>逐课时批次预演</title><style>body{font:16px/1.7 system-ui;max-width:1050px;margin:32px auto;padding:0 20px}'
+            'label{display:block;margin:14px 0}input,select{font:inherit;padding:8px;min-width:330px}button{font:inherit;padding:9px 18px}'
+            'table{width:100%;border-collapse:collapse}td,th{padding:7px;border-bottom:1px solid #ddd;text-align:left}code{overflow-wrap:anywhere}</style>'
+            '<p><a href="/">返回首批题目</a></p><h1>逐课时批次预演</h1>'
+            '<p>本页仅生成本地计划。先在原图审校并确认题答；当前书籍平台目录 ID 和已有题数必须由操作人核对后填写。</p>'
+            '<form action="/batch-preview" method="get"><label>课时 <select name="job" required>'
+            + ''.join(options) + '</select></label>'
+            '<label>平台末级目录 ID <input name="directory_id" required placeholder="从下方目录表核对后填写"></label>'
+            '<label>当前平台已有题数 <input name="initial_count" type="number" min="0" step="1" required></label>'
+            '<button type="submit">下载本地预演 JSON</button></form>'
+            '<p>预演只纳入此课时已审校、尚待平台库存核对的题；不会触发平台请求，也不证明线上不存在该题。</p>'
+            '<table><thead><tr><th>课时</th><th>来源目录 ID</th><th>当前可预演题数</th></tr></thead><tbody>'
+            + ''.join(rows) + '</tbody></table></html>').encode('utf-8')
 
     class Handler(BaseHTTPRequestHandler):
         def log_message(self, *args):
@@ -404,16 +543,50 @@ def _offline_portal(store, result, root, bundle, report, *, self_test=False):
         def do_GET(self):
             parsed = urlsplit(self.path)
             if parsed.path == '/':
-                self.send(page)
+                self.send(portal_page())
+                return
+            if parsed.path == '/batch-plan' and not parsed.query:
+                self.send(batch_plan_page())
+                return
+            if parsed.path == '/pending.json' and not parsed.query:
+                _, manifest = portal_state()
+                self.send(encoded(manifest), 'application/json; charset=utf-8', 'wholebook-review-queue.json')
+                return
+            if parsed.path == '/batch-preview':
+                try:
+                    from annotation.customer.wholebook_queue import build_scope
+                    from annotation.customer.wholebook_live_batch import run as run_wholebook_batch
+                    query = parse_qs(parsed.query)
+                    identity = query.get('job', [''])[0]
+                    directory_id = query.get('directory_id', [''])[0]
+                    count_text = query.get('initial_count', [''])[0]
+                    if identity not in jobs or not count_text.isdecimal():
+                        raise Hold('请选择课时并填写当前平台已有题数。')
+                    _, manifest = portal_state()
+                    keys = [row['key'] for row in manifest.get('preflight_required', []) if row['job_id'] == identity]
+                    scope = build_scope(store, identity, keys, directory_id=directory_id,
+                                        expected_initial_native_count=int(count_text))
+                    preview = run_wholebook_batch(store, identity, _offline_settings(), scope, dry_run=True)
+                    self.send(encoded({'scope': scope, 'preview': preview, 'platform_actions': []}),
+                              'application/json; charset=utf-8', 'batch-preview.json')
+                except (Hold, KeyError, ValueError) as exc:
+                    self.send_error(400, str(exc))
                 return
             if parsed.path == '/graphic-preview' and bundle.get('graphic_preview_sha256'):
                 self.send(preview_body)
                 return
-            identity = parse_qs(parsed.query).get('job', [''])[0]
+            query = parse_qs(parsed.query)
+            identity = query.get('job', [''])[0]
             if identity not in jobs:
                 self.send_error(404)
                 return
             if parsed.path == '/review':
+                answer = query.get('answer', [''])[0]
+                if answer:
+                    job, _ = store.job(identity)
+                    if answer not in {item['key'] for item in job['candidates']}:
+                        self.send_error(404)
+                        return
                 with lock:
                     if identity not in review_servers:
                         review = make_server(CustomerReviewWorkspace(store, identity, settings_provider=_offline_settings))
@@ -421,7 +594,8 @@ def _offline_portal(store, result, root, bundle, report, *, self_test=False):
                         review_servers[identity] = review
                     review = review_servers[identity]
                 self.send_response(302)
-                self.send_header('Location', 'http://127.0.0.1:' + str(review.server_address[1]))
+                self.send_header('Location', 'http://127.0.0.1:' + str(review.server_address[1])
+                                 + ('/#' + urlencode({'answer': answer}) if answer else ''))
                 self.end_headers()
             elif parsed.path in {'/export', '/download'}:
                 try:
@@ -432,7 +606,7 @@ def _offline_portal(store, result, root, bundle, report, *, self_test=False):
                                    + '&amp;kind=html">下载 HTML</a> · <a href="/download?job=' + identity
                                    + '&amp;kind=json">下载 JSON</a>').encode('utf-8'))
                     else:
-                        kind = parse_qs(parsed.query).get('kind', ['html'])[0]
+                        kind = query.get('kind', ['html'])[0]
                         name = 'job.json' if kind == 'json' else 'index.html'
                         self.send((output / name).read_bytes(), 'application/octet-stream', name)
                 except Exception as exc:
@@ -452,7 +626,21 @@ def _offline_portal(store, result, root, bundle, report, *, self_test=False):
                 body = response.read()
                 if response.status != 200 or body.count(b'data-job=') != len(jobs):
                     raise RuntimeError('离线审校列表课时数不正确。')
-            report['portal'] = {'http_status': 200, 'rows': len(jobs)}
+                if body.count(b'data-queue=') != len(first_batch(store, result, limit=50)):
+                    raise RuntimeError('首批逐题审校列表数量不正确。')
+                if body.count(b'data-failed-scope=') != len(failures):
+                    raise RuntimeError('失败课时没有完整列出。')
+            with opener.open(url + '/pending.json', timeout=15) as response:
+                manifest = json.loads(response.read())
+                if response.status != 200 or manifest['batch_count'] != len(first_batch(store, result, limit=50)):
+                    raise RuntimeError('首批待保存清单不完整。')
+            with opener.open(url + '/batch-plan', timeout=15) as response:
+                if response.status != 200 or b'<form' not in response.read():
+                    raise RuntimeError('批次预演入口未打开。')
+            report['portal'] = {'http_status': 200, 'rows': len(jobs),
+                                'queue_rows': manifest['batch_count'], 'failed_scopes': len(failures),
+                                'preflight_required': len(manifest.get('preflight_required', [])),
+                                'pending_save': len(manifest['pending_save'])}
             if bundle.get('graphic_preview_sha256'):
                 with opener.open(url + '/graphic-preview', timeout=15) as response:
                     body = response.read()
@@ -460,18 +648,28 @@ def _offline_portal(store, result, root, bundle, report, *, self_test=False):
                         raise RuntimeError('图形选项预览未按包内原件打开。')
                     report['graphic_preview'] = {'http_status': 200, 'articles': body.count(b'<article'),
                                                  'images': body.count(b'<img')}
-            identity = next(iter(jobs))
-            with opener.open(url + '/review?job=' + identity, timeout=20) as response:
-                body = response.read()
-                if response.status != 200 or len(body) < 100:
-                    raise RuntimeError('课时审校页面未打开。')
-                report['review_page'] = {'http_status': 200, 'bytes': len(body)}
-            with opener.open(url + '/export?job=' + identity, timeout=20) as response:
-                response.read()
-            output = Path(export_local(store, identity))
-            if not all((output / name).is_file() for name in ['index.html', 'job.json']):
-                raise RuntimeError('样例导出文件不完整。')
-            report.update(status='PASS', sample_export=str(output))
+            if jobs:
+                identity = next(iter(jobs))
+                with opener.open(url + '/review?job=' + identity, timeout=20) as response:
+                    body = response.read()
+                    if response.status != 200 or len(body) < 100:
+                        raise RuntimeError('课时审校页面未打开。')
+                    report['review_page'] = {'http_status': 200, 'bytes': len(body)}
+                batch = first_batch(store, result, limit=50)
+                if batch:
+                    query = urlencode({'job': batch[0]['job_id'], 'answer': batch[0]['key']})
+                    with opener.open(url + '/review?' + query, timeout=20) as response:
+                        selected = parse_qs(urlsplit(response.geturl()).fragment).get('answer', [''])[0]
+                        if response.status != 200 or selected != batch[0]['key']:
+                            raise RuntimeError('逐题审校链接未保留来源题身份。')
+                    report['direct_question_link'] = 'PASS'
+                with opener.open(url + '/export?job=' + identity, timeout=20) as response:
+                    response.read()
+                output = Path(export_local(store, identity))
+                if not all((output / name).is_file() for name in ['index.html', 'job.json']):
+                    raise RuntimeError('样例导出文件不完整。')
+                report['sample_export'] = str(output)
+            report['status'] = 'PASS'
         else:
             print('离线审校已打开：' + url + '。关闭此窗口可结束本地服务。', flush=True)
             webbrowser.open(url)
@@ -503,11 +701,10 @@ def start_offline_bundle(*, self_test=False):
         graphic_review=root / 'data' / 'graphic-review.json',
         graphic_review_sha256=bundle['graphic_review_sha256'])
     (workspace / 'offline-results.json').write_bytes(encoded(result))
-    for item in result['results']:
-        if not item.get('job'):
-            raise RuntimeError(item.get('message') or str(item))
     graphic_counts = Counter()
     for item in result['results']:
+        if not item.get('job'):
+            continue
         job, _ = store.job(item['job'])
         for candidate in job['candidates']:
             for proposal in candidate.get('graphic_option_proposals', []):
@@ -515,6 +712,8 @@ def start_offline_bundle(*, self_test=False):
     report = {'status': 'STARTED', 'root': str(root), 'python': sys.executable,
               'derived_database': str(database), 'pages': page_count,
               'scopes': len(result['results']),
+              'prepared_scopes': sum(bool(item.get('job')) for item in result['results']),
+              'failed_scopes': sum(not item.get('job') for item in result['results']),
               'candidates': sum(item.get('candidates', 0) for item in result['results']),
               'graphic_proposals': dict(graphic_counts),
               'new_model_calls': result['new_model_calls'],
@@ -545,6 +744,10 @@ def main(argv=None):
         p = sub.add_parser(name); p.add_argument("job")
         if name == "resume": p.add_argument("--local-ocr", action="store_true")
         if name == 'produce': p.add_argument('--questions',nargs='+',help='本次明确选择的印刷题号')
+    p = sub.add_parser('batch-preview', help='全书来源题按精确身份做本地逐题预演，不连接平台')
+    p.add_argument('job'); p.add_argument('--directory-id', required=True)
+    p.add_argument('--native-count', required=True, type=int)
+    p.add_argument('--keys', nargs='+', required=True, help='本次已确认的来源候选 key，不能只用印刷题号')
     p = sub.add_parser("setup"); p.add_argument("--existing-profile", type=Path); p.add_argument("--enable-platform", action="store_true")
     p.add_argument("--approved-known-certificate", action="store_true")
     p = sub.add_parser('platform'); p.add_argument('--book',required=True);p.add_argument('--directory',required=True)
@@ -570,6 +773,9 @@ def main(argv=None):
     elif a.command == "review": open_review(store, a.job); return 0
     elif a.command == "export": result = {"output": str(export_local(store, a.job))}
     elif a.command == "produce":
+        job, _ = store.job(a.job)
+        if job.get('source_plan'):
+            raise Hold('全书来源题请使用 batch-preview 精确逐题预演；当前入口未获得新范围平台写入授权。')
         keys=None
         if a.questions:
             job,_=store.job(a.job)
@@ -577,6 +783,14 @@ def main(argv=None):
                 raise Hold('所选印刷题号不存在、重复或不唯一。')
             keys=[q['key'] for q in job['candidates'] if q['printed_number'] in a.questions]
         result = {"output": str(produce(store, a.job, settings(store),selected_keys=keys))}
+    elif a.command == 'batch-preview':
+        from annotation.customer.wholebook_queue import build_scope
+        from annotation.customer.wholebook_live_batch import run as run_wholebook_batch
+        scope = build_scope(store, a.job, a.keys, directory_id=a.directory_id,
+                            expected_initial_native_count=a.native_count)
+        result = {'scope': scope,
+                  'preview': run_wholebook_batch(store, a.job, settings(store), scope, dry_run=True),
+                  'platform_actions': []}
     elif a.command == 'display':
         from annotation.customer.native_delivery import check_display
         result={'output':str(check_display(store,a.job,explicit_recheck=True))}

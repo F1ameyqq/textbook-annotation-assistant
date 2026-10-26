@@ -166,6 +166,8 @@ def make_server(workspace, *, host="127.0.0.1", port=0):
                     allowed.add("/api/confirm")
                 if callable(getattr(workspace, "assign", None)):
                     allowed.add("/api/assign")
+                if callable(getattr(workspace, "assign_source_candidate", None)):
+                    allowed.add("/api/assign-source-candidate")
                 if callable(getattr(workspace, "bind_region", None)):
                     allowed.add("/api/bind-region")
                 if callable(getattr(workspace, "formula", None)):
@@ -199,6 +201,8 @@ def make_server(workspace, *, host="127.0.0.1", port=0):
                         current = workspace.confirm(request)
                     elif parsed.path == "/api/assign":
                         current = workspace.assign(request)
+                    elif parsed.path == "/api/assign-source-candidate":
+                        current = workspace.assign_source_candidate(request)
                     elif parsed.path == '/api/bind-region':
                         current = workspace.bind_region(request)
                     elif parsed.path == '/api/formula':

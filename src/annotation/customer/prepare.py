@@ -123,6 +123,8 @@ def candidates_from_graph(graph, pages):
                      "review": None, "platform_status": "NOT_RUN"}
         for field in ('source_instance_id', 'source_item_kind', 'material_id', 'source_block_key', 'source_block_label'):
             if question.get(field) is not None: candidate[field] = question[field]
+        if question.get('answer_source_candidates'):
+            candidate['answer_source_candidates'] = copy.deepcopy(question['answer_source_candidates'])
         if question.get('source_instance_id'): candidate['question_type'] = question['type_candidate']
         candidate["content_hash"] = candidate_hash(candidate)
         candidates.append(candidate)
@@ -138,7 +140,8 @@ def candidates_from_graph(graph, pages):
 def candidate_hash(candidate):
     fields = ("key", "printed_number", "section_path", "zones", "frames", "source_kind",
               "source_instance_id", "source_item_kind", "material_id", "question_type", "source_block_key", "source_block_label", "source_recovery_regions",
-              "graphic_option_proposals", "graphic_extent_only", "referenced_figure_bindings")
+              "graphic_option_proposals", "graphic_extent_only", "referenced_figure_bindings",
+              "answer_source_candidates", "source_candidate_answer_binding")
     return digest({key: candidate[key] for key in fields if key in candidate})
 
 
