@@ -7,6 +7,7 @@ import json
 import math
 from pathlib import Path
 import re
+import sqlite3
 
 
 TABLES = (
@@ -284,6 +285,193 @@ def _isolated_short_answers(questions, plan, by_number):
         })
 
 
+def _supplemental_roi_choices(questions, plan, by_number):
+    """Recover an exact choice frame from an existing independent ROI reading.
+
+    A supplemental item names the exact source question but its full-page OCR
+    row is shared. Keep that row as a read-only preview. Only a unique local
+    ROI observation with individually scored characters and clear source ink
+    may supply the candidate ID accepted by the manual review operation.
+    """
+    from PIL import Image
+    import numpy as np
+
+    database = plan.get("source_database")
+    if not database or not Path(database).is_file():
+        return
+    by_question = {q["source_instance_id"]: q for q in questions}
+    pairings = {p["question_item_id"]: p for p in plan.get("pairing_status", [])}
+    supplemental = plan.get("supplemental_answer_candidates", [])
+    for record in supplemental:
+        question = by_question.get(record.get("question_item_id"))
+        pairing = pairings.get(record.get("question_item_id"))
+        if (not question or question.get("source_item_kind") != "QUESTION" or
+                not pairing or pairing.get("status") != "CUSTOMER_REVIEW" or
+                pairing.get("answer_item_id") is not None or
+                record.get("origin") != "UNIQUE_ORIGINAL_CHOICE_KEY" or
+                record.get("requires_review") != 1 or
+                record.get("label") != question.get("printed_number") or
+                sum(r.get("question_item_id") == record["question_item_id"] for r in supplemental) != 1):
+            continue
+        details = _decode(pairing.get("details_json")) or {}
+        linked = details.get("supplemental_answer_candidates", [])
+        if (details.get("kind") != "QUESTION" or details.get("label") != record["label"] or
+                details.get("answer_candidates") != [] or len(linked) != 1 or
+                linked[0].get("candidate_id") != record["candidate_id"] or
+                linked[0].get("origin") != record["origin"] or
+                sum(any(s.get("candidate_id") == record["candidate_id"]
+                        for s in (_decode(p.get("details_json")) or {}).get("supplemental_answer_candidates", []))
+                    for p in plan.get("pairing_status", [])) != 1):
+            continue
+        preview = next((s for s in question["answer_source_candidates"]
+                        if s["candidate_id"] == record["candidate_id"] and
+                        s["source_kind"] == "supplemental_answer_candidates" and
+                        s["direct_binding_allowed"] is False and
+                        s["source_binding_status"] == "ORIGINAL_PAGE_BOUND"), None)
+        page = by_number.get(record.get("page"))
+        if not preview or not page or page["page_role"] != "answer":
+            continue
+        source = page["source"]
+        parent = next((l for l in page["ocr_lines"]
+                       if l.get("source_row_index") == record.get("row_index")), None)
+        raw = record.get("raw_text")
+        start, end = record.get("start_offset"), record.get("end_offset")
+        token = record.get("raw_token")
+        if (not parent or parent["text"] != raw or parent["bbox"] != _decode(record.get("bbox_json")) or
+                record.get("source_sha256") != source["sha256"] or
+                type(start) is not int or type(end) is not int or
+                not 0 <= start < end <= len(raw) or raw[start:end] != token or
+                not re.fullmatch(re.escape(record["label"]) + r"[.．、][A-D]", token)):
+            continue
+        try:
+            connection = sqlite3.connect(Path(database).as_uri() + "?mode=ro", uri=True)
+            try:
+                observations = [dict(zip([c[0] for c in cursor.description], row))
+                                for cursor in [connection.execute(
+                                    "SELECT observation_id, scope_id, page, source_sha256, crop_json, "
+                                    "scale, rows_json, method_json FROM answer_roi_observations "
+                                    "WHERE scope_id=? AND page=? AND source_sha256=?",
+                                    (plan["scope_id"], record["page"], source["sha256"]))]
+                                for row in cursor.fetchall()]
+            finally:
+                connection.close()
+        except (OSError, sqlite3.DatabaseError, ValueError):
+            continue
+        eligible = []
+        for observation in observations:
+            try:
+                crop = _decode(observation["crop_json"])
+                method = _decode(observation["method_json"])
+                rows = _decode(observation["rows_json"])
+                if (not isinstance(crop, list) or len(crop) != 4 or
+                        not all(type(v) in (int, float) and math.isfinite(v) for v in crop) or
+                        not 0 <= crop[0] <= parent["bbox"][0] < parent["bbox"][2] <= crop[2] <= source["width"] or
+                        not 0 <= crop[1] <= parent["bbox"][1] < parent["bbox"][3] <= crop[3] <= source["height"] or
+                        not isinstance(rows, list) or not isinstance(method, dict) or
+                        method.get("engine") != "rapidocr_onnxruntime" or
+                        method.get("purpose") != "SHORT_ANSWER_TRIPLET_SOURCE" or
+                        method.get("return_word_box") is not True or
+                        method.get("scale") != observation["scale"] or
+                        len(method.get("models", {})) < 2 or
+                        not all(re.fullmatch(r"[0-9a-f]{64}", h)
+                                for h in method["models"].values())):
+                    continue
+                ordered = sorted(rows, key=lambda r: min(p[0] for p in r["bbox"]))
+                for offset in range(len(ordered)):
+                    for count in (1, 2):
+                        selected = ordered[offset:offset + count]
+                        if len(selected) != count or "".join(r["text"] for r in selected) != token:
+                            continue
+                        chars = [c for r in selected for c in r["characters"]]
+                        boxes = [b for r in selected for b in r["char_boxes"]]
+                        scores = [v for r in selected for v in r["character_scores"]]
+                        if ("".join(chars) != token or not len(chars) == len(boxes) == len(scores) or
+                                min(scores) < .95 or
+                                any(r["confidence"] < .95 for r in selected) or
+                                any(len(b) != 4 or any(len(p) != 2 or
+                                    not all(type(v) in (int, float) and math.isfinite(v) for v in p)
+                                    for p in b) for b in boxes)):
+                            continue
+                        all_x = [p[0] for b in boxes for p in b]
+                        all_y = [p[1] for b in boxes for p in b]
+                        if (not crop[0] <= min(all_x) < max(all_x) <= crop[2] or
+                                not crop[1] <= min(all_y) < max(all_y) <= crop[3]):
+                            continue
+                        eligible.append((observation, crop, ordered, offset, count,
+                                         [min(all_x), min(all_y), max(all_x), max(all_y)], scores))
+            except (KeyError, TypeError, ValueError, IndexError):
+                continue
+        if len(eligible) != 1:
+            continue
+        observation, crop, ordered, offset, count, characters_box, scores = eligible[0]
+        path = plan.get("source_images", {}).get(str(record["page"]))
+        if not path:
+            continue
+        try:
+            data = Path(path).read_bytes()
+            if hashlib.sha256(data).hexdigest() != source["sha256"]:
+                continue
+            with Image.open(path) as image:
+                if image.size != (source["width"], source["height"]):
+                    continue
+                gray = np.asarray(image.convert("L"))
+        except (OSError, ValueError):
+            continue
+        scan = [math.floor(characters_box[0]) - 4, math.floor(characters_box[1]) - 4,
+                math.ceil(characters_box[2]) + 4, math.ceil(characters_box[3]) + 4]
+        if (not crop[0] <= scan[0] < scan[2] <= crop[2] or
+                not crop[1] <= scan[1] < scan[3] <= crop[3]):
+            continue
+        ys, xs = np.nonzero(gray[scan[1]:scan[3], scan[0]:scan[2]] < 160)
+        if len(xs) < 12:
+            continue
+        ink_box = [scan[0] + int(xs.min()), scan[1] + int(ys.min()),
+                   scan[0] + int(xs.max()) + 1, scan[1] + int(ys.max()) + 1]
+        box = [ink_box[0] - 2, ink_box[1] - 1, ink_box[2] + 2, ink_box[3] + 1]
+        if (not crop[0] <= box[0] - 3 < box[2] + 3 <= crop[2] or
+                not crop[1] <= box[1] - 2 < box[3] + 2 <= crop[3] or
+                not parent["bbox"][0] <= box[0] < box[2] <= parent["bbox"][2] or
+                not parent["bbox"][1] <= box[1] < box[3] <= parent["bbox"][3]):
+            continue
+        # Both the candidate border and an outer moat must be free of other ink.
+        bands = ([box[0] - 3, box[1], box[0], box[3]],
+                 [box[2], box[1], box[2] + 3, box[3]],
+                 [box[0], box[1] - 2, box[2], box[1]],
+                 [box[0], box[3], box[2], box[3] + 2])
+        if any(np.any(gray[y0:y1, x0:x1] < 160) for x0, y0, x1, y1 in bands):
+            continue
+        if any(line is not parent and isinstance(line.get("bbox"), list) and
+               len(line["bbox"]) == 4 and
+               max(box[0], line["bbox"][0]) < min(box[2], line["bbox"][2]) and
+               max(box[1], line["bbox"][1]) < min(box[3], line["bbox"][3])
+               for line in page["ocr_lines"]):
+            continue
+        preview["candidate_id"] = record["candidate_id"] + "/shared-ocr"
+        question["answer_source_candidates"].append({
+            "candidate_id": record["candidate_id"],
+            "question_item_id": question["source_instance_id"],
+            "source_kind": "supplemental_independent_roi_pixels",
+            "page": record["page"], "asset_id": page["asset_id"],
+            "source_sha256": source["sha256"], "bbox": box,
+            "text": token, "suggested_answer_text": token[-1],
+            "source_binding_status": "ORIGINAL_PAGE_BOUND", "direct_binding_allowed": True,
+            "binding_note": "独立ROI字符与原图四侧空白已核对；答案内容仍须人工逐字检查",
+            "original_ocr_row_index": record["row_index"],
+            "observation_id": observation["observation_id"],
+            "requires_review": True, "selected": False, "content_approved": False,
+            "proof": {"source_sha256": source["sha256"], "parent_line_id": parent["line_id"],
+                      "original_row_text": raw, "text_span": [start, end],
+                      "roi_crop": crop, "roi_row_range": [offset, offset + count],
+                      "character_bbox": characters_box, "minimum_character_confidence": min(scores),
+                      "measured_ink_bbox": ink_box, "ink_threshold": 160,
+                      "pixel_padding": [2, 1, 2, 1], "blank_moat": [3, 2, 3, 2],
+                      "unique_supplemental_question_binding": True},
+            "source_record": {"supplemental_candidate_id": record["candidate_id"],
+                              "roi_observation_id": observation["observation_id"],
+                              "original_parent_line_id": parent["line_id"]},
+        })
+
+
 def _shared_answer_previews(questions, plan, by_number):
     """Keep existing paired OCR spans visible when their pixels are shared.
 
@@ -440,6 +628,7 @@ def attach(questions, plan, evidence):
             question["answer_source_candidates"].append(preview)
     _geometry_answers(questions, plan, evidence, by_number)
     _isolated_short_answers(questions, plan, by_number)
+    _supplemental_roi_choices(questions, plan, by_number)
     _shared_answer_previews(questions, plan, by_number)
     for question in questions:
         question["answer_source_candidates"].sort(
