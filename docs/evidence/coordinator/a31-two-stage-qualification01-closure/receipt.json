@@ -1,0 +1,255 @@
+{
+  "schema": "A31RootTwoStageQualification01Closure/v1",
+  "at": "2026-10-26T03:14:46.814735+00:00",
+  "status": "ACCEPTED_OFFLINE_TWO_STAGE_QUALIFICATION_AND_ROUTE_REPAIR_ONLY",
+  "review_manifest": {
+    "path": "D:/1800-private/a31-two-stage-qualification-independent-20261026-01/manifest.json",
+    "bytes": 4004,
+    "sha256": "2fb41a979ab7589f9fa938280f7606f4aa6adc5b562d6a8662a6dd11334fe55f"
+  },
+  "review_decision": {
+    "path": "D:/1800-private/a31-two-stage-qualification-independent-20261026-01/decision.json",
+    "bytes": 18637,
+    "sha256": "23a42ba9d0c93ac763238067ecf3c87392f819445a335de1a2da4f91a9384084"
+  },
+  "inputs": [
+    {
+      "path": "D:\\1800-private\\a31-two-stage-qualification-execution-20261026-01\\manifest.json",
+      "bytes": 1312445,
+      "sha256": "b2640741e319dbaa464a319f836a08920a5ab10288d120f1272b2614151f89c4",
+      "members": 4712,
+      "member_bytes": 58830993
+    },
+    {
+      "path": "D:\\1800-private\\a31-next-local-preparation-plan-fixed-20261026-01\\manifest.json",
+      "bytes": 1786,
+      "sha256": "60eec3188b58813baca5cd4f04f9b15f458acfe73c90f4d5123708ed3033d994",
+      "members": 10,
+      "member_bytes": 1348269
+    }
+  ],
+  "root_intake": {
+    "path": "D:/1800/docs/evidence/coordinator/a31-two-stage-qualification01-intake/receipt.json",
+    "bytes": 7311,
+    "sha256": "de415188b59e893ddb70f2d8ab0ad048d4cdea44f6b5089615f6473f857c7300"
+  },
+  "review_member_verification": {
+    "path": "D:/1800-private/a31-root-coordinator-20261025/fixed-intake-01/two-stage-qualification-review01-verification.json",
+    "bytes": 760,
+    "sha256": "db7089f3a55360fe37692202cba52e14e0df795be1bb1466438baa00bdaa3905"
+  },
+  "review_members": 19,
+  "review_member_bytes": 1466956,
+  "product": {
+    "status": "ACCEPTED_OFFLINE_TWO_STAGE_QUALIFICATION_AND_ROUTE_REPAIR_ONLY",
+    "ready_for_root_finite_offline_adoption": true,
+    "actual_native_capsule_qualification": "NOT_RUN"
+  },
+  "plan": {
+    "status": "SUPPORTED_FINITE_STATIC_PLAN_IN_SAME_DECISION_ONLY",
+    "execution": "NOT_READY_NOT_ACTIVATED",
+    "manifest": {
+      "path": "D:\\1800-private\\a31-next-local-preparation-plan-fixed-20261026-01\\manifest.json",
+      "bytes": 1786,
+      "sha256": "60eec3188b58813baca5cd4f04f9b15f458acfe73c90f4d5123708ed3033d994"
+    },
+    "new_approval_stage_added": false
+  },
+  "closed_previous_findings": [
+    {
+      "id": "PERSISTED_SOURCE_PROVENANCE_MASKED_BY_PREVERIFY_STAMP",
+      "priority": "P2",
+      "status": "CLOSED_IN_CURRENT_OFFLINE_CANDIDATE_ONLY",
+      "new_source_lines": "SourcePreparationStore166-207; verify_cached_job105-136",
+      "basis": [
+        "Constructor computes digest refs without Store.put; it cannot write new action blobs before old provenance validation.",
+        "_stamp queries existing head and reads previous record first; existing previous and current caller both pass verify_cached_job before action input eligibility, job source comparison or any put/stamp. Missing persisted refs are rejected rather than treated as a fresh NORMAL job.",
+        "Only after verification/history validation does it put the action value/preview and write source fields. job and save_job share _stamp, so read/save/direct-stamp entry points use the same ordering.",
+        "Legitimate transitions append the validated earlier platform_source_ref once to source_preparation_history, preserving old immutable value/job blobs. No implicit repair of a mismatched old binding remains."
+      ],
+      "finite_limit": "This closes the synthetic wrapper-before-verify relation; no actual persistent damage or backend/OCR replay was claimed or newly measured."
+    },
+    {
+      "id": "LEGACY_EFFECTIVE_CACHE_POLICY_NOT_CHECKED",
+      "priority": "P2",
+      "status": "CLOSED_IN_CURRENT_OFFLINE_CANDIDATE_ONLY",
+      "new_source_lines": "source_policy16-22; verify_cached_job105-136; unchanged prepare190-200/platform_source274-279",
+      "basis": [
+        "verify_cached_job applies source_policy to both persisted job and referenced value before the NORMAL fast path, then requires effective mode/policy equality.",
+        "A legitimate old RETAINED_ONLY value with no explicit policy and no catalog remains effective CACHE_ONLY. A missing/changed job mode becomes contradictory and rejects before deeper eligibility.",
+        "Only that narrow legacy shape allows absent source_snapshot_ref; supplied snapshot/catalog/preview mismatches still reject. The valid no-catalog path calls verify_retained_value and compares bound job book/directory/pages.",
+        "Valid legacy mode remains RETAINED_ONLY; unchanged resume/platform preparation clamps OCR off and additional pages0."
+      ],
+      "finite_limit": "No real OCR/backend/native behavior was tested. The inherited per-image recognition history guards are unchanged."
+    }
+  ],
+  "parent_REWORK": {
+    "candidate_sha256": "193ed69a16c520ff93e9b1548f5a86cb3da3f49cc77bdcc6492c9f1cb09484fe",
+    "review_sha256": "3dacb1b3c32eb7f9693c48f556a2e7357257998e55956788618ac3b7603c527c",
+    "decision_sha256": "6ad89f8181ac5d9d6f2368524415b10035b249081fee214150d29d924278a68f",
+    "status": "PRESERVED_REWORK_OLD_REVISION_ONLY"
+  },
+  "finite_acceptance": [
+    "Current fixed277-file app only: two retained-source route P2 closures, native two-stage provenance/acceptance adapter and finite integration into the unchanged importer/Store/facade/GUI call chain.",
+    "The fixed60eec plan receives conditional static support in this same decision, including twelve exact source pins, one-handle source-row read accounting and one-page backend-entry trace. No authority or runtime fact is created.",
+    "No real source SQL rows/indexes, capsule/registry qualification, source-target import/commit, native decoder/runtime/GUI/OCR, content correctness, section end/answer coverage, platform production or customer readiness is accepted."
+  ],
+  "two_stage_protocol": {
+    "status": "SUPPORTED_FINITE_STATIC_NATIVE_FIELD_CORRESPONDENCE_ONLY",
+    "old_stage": "Four retained HTTP200 entities, original SOURCE_VERSION_CHANGED stop/null comparison/no bundle, separate original authority/window and recorded release remain unchanged; four equal core fields plus exact boolean manifest_exists=false only.",
+    "new_stage": "Distinct first-original authority/window, exact original request/raw doubles and PRE_RELEASE/PENDING native records remain unchanged; later exact external formal/root acceptance supplies only its finite accepted scope.",
+    "acceptance_graph": "Separate bounded same-buffer Readers; exact old/new stage roles and actual manifest membership; exact native schema/status/scope, input path/hash/strict length, root formal links and formal decision membership. Native page_index and field names independently checked against fixed original JSON.",
+    "real_rows": "Two unique exact COMPLETE kind/key/state/output rows and two covered original blobs must be read from the immutable read-only source DB, then page/snapshot/provenance/image checks. Image presence or expected capsule values cannot substitute for true rows.",
+    "subreview": {
+      "path": "D:\\1800-private\\a31-two-stage-qualification-independent-20261026-01\\raw\\protocol-review\\decision.json",
+      "bytes": 11215,
+      "sha256": "acbd7915b33813874cde0fefd83917fb8f9165347a65c13cc09643f651c9e615"
+    }
+  },
+  "integration": {
+    "status": "SUPPORTED_FINITE_STATIC_ONLY",
+    "facts": "Exact new closure dispatch returns the unchanged verified-facts contract. Sealed Inspection/fresh/Plan, source/target separation, three-key target CAS, same-book lock, staged receipt/publication and Store closure remain inherited raw unchanged.",
+    "ordinary_customer_flow": "App-owned qualification for retained historical captures does not introduce per-lesson agent/root approval, signatures or customer technical JSON. Ordinary acquisition and task-source reopen/first-recognition routes remain.",
+    "declared_storage_exclusion": "Published marker visible then outcome-unknown with both failure latches unwritable may remain consumable; inherited declared exclusion unchanged, no universal UNKNOWN quarantine claim.",
+    "subreview": {
+      "path": "D:\\1800-private\\a31-two-stage-qualification-independent-20261026-01\\raw\\integration-plan-review\\decision.json",
+      "bytes": 15413,
+      "sha256": "ce5188e4fe9e6c3d4c11c692dde6c2f86a4915c6365934d4fb3229814e3c019c"
+    }
+  },
+  "plan_static_support": {
+    "complete_manifest_copy_and_12_pins": "INDEPENDENTLY_RAW_MATCHED",
+    "original_plan_sidecar": "Only final full manifest and source-root/status pins supersede original plan unbound fields. Original four plan members remain raw unchanged. No runtime/row/target/first-state/holder/deadline UNKNOWN is resolved by static hash pins.",
+    "source_row_budget": {
+      "counting_premises": [
+        "Exactly one applicable registered handle for the selected fixed folder/source; list once and import once, with no refresh/retry/repeated selection",
+        "Successful fresh import branch; failures stop early, existing closed import may use fewer checks; fresh checks are not skipped to save budget",
+        "Each _source_rows check has one readonly connection and two exact SELECTs; PRAGMA/BEGIN/ROLLBACK are separate SQL statement types, not counted as SELECTs"
+      ],
+      "initial_qualification_observation": {
+        "readonly_connections_max": 1,
+        "exact_SELECT_max": 2,
+        "status": "PROPOSED_NOT_RUN"
+      },
+      "one_GUI_list_import": {
+        "row_checks_max": 6,
+        "readonly_connections_max": 6,
+        "exact_SELECT_max": 12,
+        "calls": [
+          {
+            "stage": "list.inspect",
+            "line": "service61",
+            "count": 1
+          },
+          {
+            "stage": "import.inspect",
+            "line": "service84",
+            "count": 1
+          },
+          {
+            "stage": "plan._fresh",
+            "line": "core222",
+            "count": 1
+          },
+          {
+            "stage": "commit before-lock _fresh",
+            "line": "core265",
+            "count": 1
+          },
+          {
+            "stage": "commit in-lock _fresh",
+            "line": "core271",
+            "count": 1
+          },
+          {
+            "stage": "commit prepublication _fresh",
+            "line": "core327",
+            "count": 1
+          }
+        ]
+      },
+      "combined_source_cap": {
+        "readonly_connections_max": 7,
+        "exact_SELECT_max": 14
+      },
+      "target_CAS_separate": "_rows compares3 target keys at plan226, commit266/272 and final same-connection transaction332. Target Store closure/history/index reads, writes, transaction statements and job-head CAS are separate, not included in source14 SELECTs.",
+      "not_universal": "A folder with multiple applicable registry entries or repeated list/import needs different exact accounting; this finite budget cannot silently cover it."
+    },
+    "OCR_budget": {
+      "viewer17_first_recognition": "At most1 page recognize and at most1 backend engine(bgr) entry, conditional on exact dimensions/CFG and independently confirmed first-unrun target state; proposal only, actual0 in this review.",
+      "viewer16_173": "Valid existing original/OCR references required before new OCR; reuse only, newOCR0.",
+      "source_SQL": "Initial qualification1 read-only connection/2 exact SELECT plus one eligible registry handle and one list/import path6 read-only connections/12 SELECT = proposed total7/14. Multiple handles or repeated GUI actions are outside this bound. Target rows/CAS checks are separate.",
+      "native_execution": "No separate OCR worker process is created by this fixed ordinary route; GUI task is a non-daemon thread. Installed library/model/provider availability and native behavior were not observed.",
+      "forbidden_by_proposal": "New API/original downloads/network/additional pages/profile/login/platform saves/readback/export/display/model changes/retry all0. Ordinary RETAINED_ONLY remains OCR0."
+    },
+    "remaining_bindings": [
+      "Two true unique COMPLETE source rows, exact key/output and original blobs, DB before/after identity and no sidecars; no real SQL query has occurred.",
+      "One real capsule/closure/registry handle; current registry remains empty.",
+      "Existing resolved target workspace/file identity, same-book job/head and preserved old rows/events, closed migration and all-engine recognition states; no target observation has occurred.",
+      "Exact runtime/dependency versions/model assets/provider and exact page/preview bindings.",
+      "New unique once authority, exact command/OS owner/owned identities and absolute business/release deadlines; current GUI has no enforced business deadline."
+    ],
+    "unknowns_are_not_new_code_findings": true,
+    "single_next_finite_action": "Source observation, concrete qualification, target inventory/runtime/holder/command/deadline and once scope remain to be concretely bound under the existing coordinator process; no additional independent approval stage is introduced by this review."
+  },
+  "independent_verification_accounting": {
+    "independent_new_subject_controls": 0,
+    "author_adapter_records": "Four first-run methods /26 synthetic cases; SQLite/image-dimension stub/Inspection-fresh-plan records read and preserved, not rerun; commit NOT_RUN.",
+    "author_route_records": "Two distinct first-run AST memory methods /5+3 checkpoints, read and preserved, not rerun. These six methods are not six real integrations.",
+    "prior_author4_PASS_and_formal2_counterexamples": "PRESERVED_NOT_RERUN",
+    "why_no_new_control": "Assigned source/AST/native JSON/call-chain reviews and prior first-run coverage exposed no distinct necessary uncovered semantic delta. No repeated successful matrix or counterexample was needed.",
+    "author_history": {
+      "path": "D:\\1800-private\\a31-two-stage-qualification-independent-20261026-01\\raw\\author-record-history-review.json",
+      "bytes": 12884,
+      "sha256": "6b8201bc28e69e9af5b804a1668ba2357c3b9913e02dbbe071c809d0482741ec"
+    },
+    "preparation_and_helper_errors": "Original CRLF-assumption correction, Python-as-JSON acceptance-copy error, Python3.9 write_text newline TypeError, original NOT_RUN preparation snapshots and reviewer report-count helper TypeError remain explicitly preserved. No subject controls were replayed to repair report helpers.",
+    "reviewer_product_SQL_Store_GUI_OCR_imageview_decode_network_profile_real_workspace_calls": 0,
+    "external_unbound_paths_followed": false,
+    "subreviews": [
+      {
+        "path": "D:\\1800-private\\a31-two-stage-qualification-independent-20261026-01\\raw\\route-repair-review\\decision.json",
+        "bytes": 15942,
+        "sha256": "b147493437aed764636603bd5b4dc3113b0ff8739cf44643ea3e8b4802816bec"
+      },
+      {
+        "path": "D:\\1800-private\\a31-two-stage-qualification-independent-20261026-01\\raw\\route-repair-review\\REVIEW.md",
+        "bytes": 5606,
+        "sha256": "05bebdcc6b0df9b515a842c3f37cc85069055ed5c04a5869cc02b7fdf165d282"
+      },
+      {
+        "path": "D:\\1800-private\\a31-two-stage-qualification-independent-20261026-01\\raw\\protocol-review\\decision.json",
+        "bytes": 11215,
+        "sha256": "acbd7915b33813874cde0fefd83917fb8f9165347a65c13cc09643f651c9e615"
+      },
+      {
+        "path": "D:\\1800-private\\a31-two-stage-qualification-independent-20261026-01\\raw\\protocol-review\\REVIEW.md",
+        "bytes": 7352,
+        "sha256": "c757731d92254acd2f031dd344bd01f4bb563afb894826c378e775ae9cc1437d"
+      },
+      {
+        "path": "D:\\1800-private\\a31-two-stage-qualification-independent-20261026-01\\raw\\integration-plan-review\\decision.json",
+        "bytes": 15413,
+        "sha256": "ce5188e4fe9e6c3d4c11c692dde6c2f86a4915c6365934d4fb3229814e3c019c"
+      },
+      {
+        "path": "D:\\1800-private\\a31-two-stage-qualification-independent-20261026-01\\raw\\integration-plan-review\\REVIEW.md",
+        "bytes": 8145,
+        "sha256": "a57bcc4a3db0477d445c4c862a405392d3562b487406361a53d6906c15c8fd74"
+      }
+    ],
+    "intermediate_duplicate": "raw/integration-review is an identical earlier intermediate copy; retained as history. raw/integration-plan-review is the named final subreview, not a second independent review."
+  },
+  "preserved": {
+    "registry": "EMPTY_NO_REAL_CAPSULE_INSTALLED",
+    "source_SQL_target_runtime_native_compatibility": "UNKNOWN_NOT_OBSERVED_OR_NOT_RUN",
+    "whole_section_end_answer_coverage_content_new_save_count_customer_completion": "UNKNOWN_NOT_ACCEPTED",
+    "five_prior_actual_authorities": "ALL_SPENT1_REMAIN0_INACTIVE_NO_RETRY_OR_BUDGET_BORROW",
+    "old16_separate_old9_source_OCR_success_failure_UNKNOWN": "PRESERVED_NO_REPLAY_NO_BACKFILL",
+    "1800-a": "PAUSED"
+  },
+  "root_tests_or_actual_calls": 0,
+  "ready_for_actual": false,
+  "new_actual_activation": false,
+  "next": "Same sole author prepares frozen minimum local observation contract for source two rows, exact target/protected recognition history and runtime identity; execute only after concrete once binding. No source network/OCR/GUI/real registration/import activated by this closure."
+}
