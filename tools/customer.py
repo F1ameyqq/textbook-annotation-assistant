@@ -443,19 +443,33 @@ def _offline_portal(store, result, root, bundle, report, *, self_test=False):
     def portal_page():
         batch, manifest = portal_state()
         pending = manifest.get('pending_save', [])
+        queue_groups = ('review_required', 'preflight_required', 'pending_save',
+                        'already_saved', 'blocked', 'unknown')
+        queue_labels = {'review_required': '待逐题审校',
+                        'preflight_required': '已审校，待平台只读核对',
+                        'pending_save': '已核对可保存',
+                        'already_saved': '已有保存或复用记录',
+                        'blocked': '当前受阻', 'unknown': '保存状态待对账'}
+        queue_status = {(row['job_id'], row['key']): (group, row['reason'])
+                        for group in queue_groups for row in manifest[group]}
         queue_rows = []
         for index, row in enumerate(batch, 1):
             job_id, key = row['job_id'], row['key']
+            group, reason = queue_status[(job_id, key)]
             query = escape(urlencode({'job': job_id, 'answer': key}), quote=True)
             export_query = escape(urlencode({'job': job_id}), quote=True)
             source_id = escape(row.get('source_instance_id') or '未提供', quote=True)
             queue_rows.append(
-                '<tr data-queue="' + str(index) + '"><td>' + str(index) + '</td><td>'
+                '<tr data-queue="' + str(index) + '" data-queue-status="' + group + '"><td>' + str(index) + '</td><td>'
                 + escape(row['lesson']) + '</td><td>第 ' + escape(str(row['printed_number'])) + ' 题</td><td>'
                 + '<code title="' + source_id + '">' + source_id + '</code></td><td>'
                 + escape(row['content_status']) + '<br><small>' + escape(row['platform_status']) + '</small></td><td>'
+                + '<strong>' + escape(queue_labels[group]) + '</strong><br><small>' + escape(reason) + '</small></td><td>'
                 + '<a target="_blank" href="/review?' + query + '">原图、改框、确认</a> · '
                 + '<a target="_blank" href="/export?' + export_query + '">导出课时</a></td></tr>')
+        filter_options = ''.join('<option value="' + group + '">' + escape(queue_labels[group])
+                                 + ' · ' + str(manifest['counts'][group]) + '</option>'
+                                 for group in queue_groups)
         scope_rows = []
         for identity in jobs:
             current, _ = store.job(identity)
@@ -482,7 +496,10 @@ def _offline_portal(store, result, root, bundle, report, *, self_test=False):
             'h1{font-size:29px;margin-bottom:5px}h2{margin-top:34px}p{color:#50655e}table{width:100%;border-collapse:collapse;background:white}'
             'td,th{text-align:left;padding:9px 11px;border-bottom:1px solid #dce7e1;vertical-align:top}th{background:#e7f0eb}'
             'a{color:#16664e}small{color:#6f5730}code{font:11px ui-monospace,monospace;overflow-wrap:anywhere}'
-            '.actions{padding:14px 18px;background:#e7f0eb;border-radius:10px}.actions a{margin-right:18px}</style>'
+            '.actions{padding:14px 18px;background:#e7f0eb;border-radius:10px}.actions a{margin-right:18px}'
+            '.queue-tools{display:flex;flex-wrap:wrap;gap:12px;align-items:end;margin:18px 0}'
+            '.queue-tools label{display:grid;gap:4px}.queue-tools input,.queue-tools select{font:inherit;padding:7px;min-width:220px}'
+            '.queue-tools p{margin:0 0 7px}.queue-table{overflow-x:auto}</style>'
             f'<h1>全书离线审校</h1><p>书 {escape(bundle["book_id"])} · {page_count} 页原图 · {scope_count} 节 · {candidate_count} 个来源候选</p>'
             '<p>首批 50 题按来源次序列出。进入题目可对照原图、调整来源框、修改文字并逐题确认。'
             '确认后返回此页刷新，待保存清单会按当前记录重新生成。</p>'
@@ -492,10 +509,22 @@ def _offline_portal(store, result, root, bundle, report, *, self_test=False):
             '<a href="/pending.json" download="wholebook-review-queue.json">下载审校与平台核对清单</a>'
             '<a href="/batch-plan">逐课时批次预演</a><a href="/">刷新状态</a></div>'
             '<p><small>本地审校通过后仍须只读核对当前平台库存；包内没有旧平台完整账本。清单和预演都不执行平台保存。</small></p>'
-            '<table><thead><tr><th>#</th><th>课时</th><th>题号</th><th>来源题身份</th><th>内容 / 平台状态</th><th>操作</th></tr></thead><tbody>'
-            + ''.join(queue_rows) + '</tbody></table>' + graphics
+            '<div class="queue-tools"><label>筛选阶段<select id="queue-filter"><option value="">全部阶段 · ' + str(len(batch)) + '</option>'
+            + filter_options + '</select></label><label>查找首批题<input id="queue-search" type="search" placeholder="课时、题号或来源身份"></label>'
+            '<p id="queue-visible" role="status" aria-live="polite">显示 ' + str(len(batch)) + ' / ' + str(len(batch)) + ' 题</p></div>'
+            '<div class="queue-table"><table id="first-batch"><thead><tr><th>#</th><th>课时</th><th>题号</th><th>来源题身份</th>'
+            '<th>内容 / 平台状态</th><th>下一步与原因</th><th>操作</th></tr></thead><tbody>'
+            + ''.join(queue_rows) + '</tbody></table></div>' + graphics
             + '<h2>全部课时</h2><table><thead><tr><th>课时</th><th>候选</th><th>状态</th><th>操作</th></tr></thead><tbody>'
-            + ''.join(scope_rows) + '</tbody></table>' + failed_section + '</html>')
+            + ''.join(scope_rows) + '</tbody></table>' + failed_section
+            + '<script>const queueRows=[...document.querySelectorAll("#first-batch tbody tr")];'
+              'const queueFilter=document.getElementById("queue-filter");'
+              'const queueSearch=document.getElementById("queue-search");'
+              'function filterQueue(){const stage=queueFilter.value;const term=queueSearch.value.trim().toLocaleLowerCase();'
+              'let visible=0;for(const row of queueRows){const show=(!stage||row.dataset.queueStatus===stage)'
+              '&&(!term||row.textContent.toLocaleLowerCase().includes(term));row.hidden=!show;if(show)visible++;}'
+              'document.getElementById("queue-visible").textContent=`显示 ${visible} / ${queueRows.length} 题`;}'
+              'queueFilter.addEventListener("change",filterQueue);queueSearch.addEventListener("input",filterQueue);</script></html>')
         return html.encode('utf-8')
 
     def batch_plan_page():
@@ -628,6 +657,8 @@ def _offline_portal(store, result, root, bundle, report, *, self_test=False):
                     raise RuntimeError('离线审校列表课时数不正确。')
                 if body.count(b'data-queue=') != len(first_batch(store, result, limit=50)):
                     raise RuntimeError('首批逐题审校列表数量不正确。')
+                if body.count(b'data-queue-status=') != len(first_batch(store, result, limit=50)):
+                    raise RuntimeError('首批逐题审校阶段与原因未完整显示。')
                 if body.count(b'data-failed-scope=') != len(failures):
                     raise RuntimeError('失败课时没有完整列出。')
             with opener.open(url + '/pending.json', timeout=15) as response:

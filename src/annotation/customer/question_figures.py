@@ -10,7 +10,10 @@ from .graphic_options import contains, overlaps, pixel_box
 from .store import Hold, digest
 
 BLOCKER = 'REFERENCED_FIGURE_REGIONS_REQUIRE_REVIEW'
-CAPTION_HINT_SCOPE = 'dir-1792063578574-2a6vq8zom'
+CAPTION_HINT_FILES = {
+    'dir-1792063578574-2a6vq8zom': 'first_lesson_figure_hints.json',
+    'dir-1792063578574-lvqkxdluj': 'second_lesson_figure_hints.json',
+}
 
 
 def need(value, detail):
@@ -24,9 +27,10 @@ def _captioned_source_hints(questions, plan, evidence):
     customer crop editor. It never adds a candidate frame or clears an issue.
     The customer must redraw/check the full figure in the source image.
     """
-    if plan['scope_id'] != CAPTION_HINT_SCOPE:
+    filename = CAPTION_HINT_FILES.get(plan['scope_id'])
+    if filename is None:
         return
-    document = json.loads(Path(__file__).with_name('first_lesson_figure_hints.json').read_text(encoding='utf-8'))
+    document = json.loads(Path(__file__).with_name(filename).read_text(encoding='utf-8'))
     need(document.get('schema') == 'CaptionedFigureHints/v1' and
          document.get('book_id') == evidence['book_id'] and
          document.get('scope_id') == plan['scope_id'] and
