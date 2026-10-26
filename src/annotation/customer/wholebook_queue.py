@@ -215,5 +215,6 @@ def build_scope(store, job_id, candidate_keys, *, directory_id, expected_initial
                            "zones": list(candidate["zones"]),
                            "source_frames": copy.deepcopy(candidate["frames"])}
                           for candidate in selected],
+            "readonly_plan_ref": None,
             "sole_executor": False, "platform_absence_proven": False,
             "platform_write_authorized": False}

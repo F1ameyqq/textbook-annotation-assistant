@@ -160,15 +160,105 @@ def _scope_selection(store, job, scope):
     return selected
 
 
-def run(store, identity, settings, scope, *, dry_run=True,
-        approved_question_ids=(), executor_session_id=None):
-    """Preview locally by default; live requires the caller's exact grant.
+def capture_readonly_execution_plan(store, identity, settings, scope, *, transport_factory=None):
+    """Read the current native book and retain a non-authorizing baseline plan.
 
-    ``approved_question_ids`` are candidate keys, never printed numbers or
-    native order. The caller must own the unique platform session named in
-    ``scope['executor_session_id']`` and the durable book lock.
+    This is a separate customer action from ``run``.  The complete native GET
+    snapshot is captured before any candidate is classified as insertable; an
+    existing or overlapping question causes a HOLD, never a proposed duplicate.
+    The returned reference is evidence for human review, not a write token.
     """
     job, _ = store.job(identity)
+    _scope_selection(store, job, scope)
+    from .transport import UsenseTransport
+
+    with store.book_lock(job["book_id"]):
+        job, head = store.job(identity)
+        selected = _scope_selection(store, job, scope)
+        verify_sources(job["pages"])
+        transport = (transport_factory or UsenseTransport)(store, settings, job["book_id"])
+        current, _ = capture_initial(transport, job)
+        native_count = len(native_plan.directory_rows(current["directory"])[1])
+        native_plan.require(native_count == scope["expected_initial_native_count"],
+                            "当前平台题数与本次范围不一致，请重新核对。")
+        entries = []
+        for candidate in selected:
+            plan = _execution_plan(current, candidate, scope["directory_path"], scope)
+            native_plan.require(plan["schema"] == "CustomerNativeInsertPlan/v1" and
+                                plan["payload"]["target_directory_id"] == scope["directory_id"] and
+                                plan["payload"]["is_new_question_insertion"] is True and
+                                plan["payload"]["annotations_delete_rect_ids"] == [] and
+                                plan["payload"]["ocr_delete_zones"] == [],
+                                "当前平台已有相应题或动态计划含非新增操作。")
+            entries.append({"candidate_key": candidate["key"],
+                            "source_instance_id": candidate.get("source_instance_id"),
+                            "source_key": native_plan.source_key(job["book_id"], candidate),
+                            "content_hash": candidate_hash(candidate),
+                            "operation": "INSERT_NEW_NATIVE_QUESTION",
+                            "baseline_new_order": plan["new_order"],
+                            "baseline_plan_hash": plan["hash"]})
+        report = {"schema": "CustomerWholebookReadOnlyExecutionPlan/v1",
+                  "book_id": job["book_id"], "job_id": identity, "job_head": head,
+                  "directory_path": copy.deepcopy(scope["directory_path"]),
+                  "directory_id": scope["directory_id"],
+                  "native_question_count": native_count,
+                  "native_snapshot_hash": digest(current),
+                  "captured_at": utcnow(), "entries": entries,
+                  "platform_capture": "COMPLETE_NATIVE_GET_WITH_OFFICIAL_SOURCE_IMAGES",
+                  "platform_actions": [], "platform_write_authorized": False}
+        ref = store.put(report)
+    return {"status": "READ_ONLY_PLAN", "report_ref": ref,
+            "report": report, "writes": 0}
+
+
+def _require_live_gate(store, identity, job, head, scope, selected):
+    """Validate the reviewable inventory artifact, then fail closed on grant.
+
+    An immutable local report proves what this application captured but is not
+    a trusted record of the user's approval in this conversation.  There is no
+    such issuer or verifier wired to this product yet.
+    """
+    ref = scope.get("readonly_plan_ref")
+    native_plan.require(type(ref) is str and re.fullmatch(r"[0-9a-f]{64}", ref),
+                        "真实写入缺少当前平台只读执行计划引用。")
+    report = store.get(ref)
+    expected = [{"candidate_key": candidate["key"],
+                 "source_instance_id": candidate.get("source_instance_id"),
+                 "source_key": native_plan.source_key(job["book_id"], candidate),
+                 "content_hash": candidate_hash(candidate),
+                 "operation": "INSERT_NEW_NATIVE_QUESTION"}
+                for candidate in selected]
+    native_plan.require(report.get("schema") == "CustomerWholebookReadOnlyExecutionPlan/v1" and
+                        report.get("book_id") == job["book_id"] and
+                        report.get("job_id") == identity and report.get("job_head") == head and
+                        report.get("directory_path") == scope["directory_path"] and
+                        report.get("directory_id") == scope["directory_id"] and
+                        report.get("native_question_count") == scope["expected_initial_native_count"] and
+                        type(report.get("native_snapshot_hash")) is str and
+                        re.fullmatch(r"[0-9a-f]{64}", report["native_snapshot_hash"]) and
+                        report.get("platform_capture") == "COMPLETE_NATIVE_GET_WITH_OFFICIAL_SOURCE_IMAGES" and
+                        report.get("platform_actions") == [] and
+                        type(report.get("entries")) is list and len(report["entries"]) == len(expected) and
+                        all(type(entry) is dict and
+                            all(entry.get(name) == value for name, value in bound.items()) and
+                            type(entry.get("baseline_plan_hash")) is str and
+                            re.fullmatch(r"[0-9a-f]{64}", entry["baseline_plan_hash"]) and
+                            type(entry.get("baseline_new_order")) is int and
+                            entry["baseline_new_order"] > 0
+                            for entry, bound in zip(report["entries"], expected)),
+                        "只读执行计划与当前任务、目录或精确题目范围不一致。")
+    raise Hold("真实新增题写入尚未开放：用户须在本会话批准这份精确计划，并由可信授权通道绑定唯一执行会话。")
+
+
+def run(store, identity, settings, scope, *, dry_run=True,
+        approved_question_ids=(), executor_session_id=None):
+    """Preview locally by default; live fails closed pending a trusted grant.
+
+    ``approved_question_ids`` are candidate keys, never printed numbers or
+    native order. Supplying them and setting scope booleans cannot grant a new
+    platform write.
+    """
+    job, head = store.job(identity)
     selected = _scope_selection(store, job, scope)
     keys = [candidate["key"] for candidate in selected]
     if dry_run:
@@ -176,6 +266,9 @@ def run(store, identity, settings, scope, *, dry_run=True,
                 "directory_path": scope["directory_path"], "directory_id": scope["directory_id"],
                 "question_ids": keys, "content_hashes": [candidate_hash(q) for q in selected],
                 "writes": 0}
+    # A caller-supplied checkbox, key list, or scope boolean is not authority.
+    # This gate fails closed until the exact report receives a trusted grant.
+    _require_live_gate(store, identity, job, head, scope, selected)
     native_plan.require(type(executor_session_id) is str and
                         re.fullmatch(r"[A-Za-z0-9][A-Za-z0-9_.:-]{7,127}", executor_session_id) and
                         executor_session_id == scope.get("executor_session_id") and
