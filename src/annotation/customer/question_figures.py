@@ -7,6 +7,7 @@ from pathlib import Path
 import re
 
 from .graphic_options import contains, overlaps, pixel_box
+from .caption_navigation import navigation_hints
 from .store import Hold, digest
 
 BLOCKER = 'REFERENCED_FIGURE_REGIONS_REQUIRE_REVIEW'
@@ -85,6 +86,9 @@ def _captioned_source_hints(questions, plan, evidence):
 
 def annotate(questions, plan, evidence):
     _captioned_source_hints(questions, plan, evidence)
+    by_source = {question['source_instance_id']: question for question in questions}
+    for hint in navigation_hints(questions, plan, evidence):
+        by_source[hint['question_item_id']].setdefault('captioned_figure_hints', []).append(hint)
     rows = plan.get('question_figure_bindings', [])
     if not rows: return
     reviews = plan.get('question_figure_scope_reviews', [])

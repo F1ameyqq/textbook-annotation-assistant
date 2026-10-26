@@ -69,6 +69,7 @@ def read_source(path, selected=None, *, graphic_review=None, graphic_review_sha2
                                                byte_hash(Path(__file__).with_name('answer_geometry.py').read_bytes()),
                                                byte_hash(Path(__file__).with_name('reading_contexts.py').read_bytes()),
                                                byte_hash(Path(__file__).with_name('question_figures.py').read_bytes()),
+                                               byte_hash(Path(__file__).with_name('caption_navigation.py').read_bytes()),
                                                byte_hash(Path(__file__).with_name('answer_source_candidates.py').read_bytes()),
                                                *figure_hint_hashes]),
                     'windows': windows, 'items': items, 'path': paths.get(scope['id'], [scope['label']]),
