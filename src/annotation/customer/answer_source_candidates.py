@@ -159,13 +159,20 @@ def _isolated_short_answers(questions, plan, by_number):
         for part in item.get("fragments", []):
             for row in part.get("row_indices", []):
                 owners.setdefault((part["page"], row), set()).add(item["item_id"])
+    pairing_owners = {}
+    for pairing in plan.get("pairing_status", []):
+        if pairing.get("answer_item_id"):
+            pairing_owners.setdefault(pairing["answer_item_id"], set()).add(pairing["question_item_id"])
     for pairing in plan.get("pairing_status", []):
         if (pairing.get("status") != "CUSTOMER_REVIEW" or
                 pairing.get("reason") != "ANSWER_MARKER_REQUIRES_REVIEW"):
             continue
         question = by_question.get(pairing.get("question_item_id"))
         item = items.get(pairing.get("answer_item_id"))
-        if (not question or not item or item["label"] != question["printed_number"] or
+        if (not question or not item or item["kind"] != "QUESTION" or
+                question.get("source_item_kind") != "QUESTION" or
+                item["label"] != question["printed_number"] or
+                pairing_owners.get(item["item_id"]) != {question["source_instance_id"]} or
                 len(item.get("fragments", [])) != 1 or
                 any(s["candidate_id"] == item["item_id"]
                     for s in question["answer_source_candidates"])):
@@ -187,7 +194,7 @@ def _isolated_short_answers(questions, plan, by_number):
         if part.get("text_spans") != [{"row_index": rows[0], "start": 0, "end": len(raw_text)}]:
             continue
         match = re.fullmatch(r"\s*" + re.escape(item["label"]) +
-                             r"\s*[.．、]\s*([\u4e00-\u9fff]{1,2})\s*", raw_text)
+                             r"\s*[.．、]\s*([\u4e00-\u9fff]{1,2}|[0-9]{1,2})\s*", raw_text)
         if not match:
             continue
         original = plan.get("source_images", {}).get(str(part["page"]))
@@ -222,6 +229,32 @@ def _isolated_short_answers(questions, plan, by_number):
                 (ink_box[2] - ink_box[0]) >= (x1 - x0) * .4 and
                 (ink_box[3] - ink_box[1]) >= (y1 - y0) * .35):
             continue
+        numeric_gap = None
+        if match.group(1).isascii():
+            # A collapsed OCR token such as "12.26" is also a decimal at the
+            # text level. Require a measured space after the printed marker,
+            # with each digit occupying a separate vertical ink run.
+            columns = np.any(gray[y0:y1, x0:x1] < 200, axis=0)
+            starts = np.flatnonzero(columns & ~np.r_[False, columns[:-1]])
+            ends = np.flatnonzero(columns & ~np.r_[columns[1:], False]) + 1
+            runs = [[x0 + int(a), x0 + int(b)] for a, b in zip(starts, ends)]
+            marker_end = len(item["label"]) + 1
+            if len(runs) != marker_end + len(match.group(1)):
+                continue
+            prior_gaps = [runs[i + 1][0] - runs[i][1]
+                          for i in range(marker_end - 1)]
+            value_gaps = [runs[i + 1][0] - runs[i][1]
+                          for i in range(marker_end, len(runs) - 1)]
+            marker_gap = runs[marker_end][0] - runs[marker_end - 1][1]
+            if (not prior_gaps or marker_gap < 5 or
+                    marker_gap < 2 * max(prior_gaps) or
+                    any(gap > 3 for gap in value_gaps) or
+                    any(end - start < 2 for start, end in runs)):
+                continue
+            numeric_gap = {"runs": runs, "marker_to_value_blank_columns": marker_gap,
+                           "within_marker_blank_columns": prior_gaps,
+                           "between_value_digits_blank_columns": value_gaps,
+                           "ink_threshold": 200}
         if any(line is not parent and isinstance(line.get("bbox"), list) and
                len(line["bbox"]) == 4 and
                max(box[0], line["bbox"][0]) < min(box[2], line["bbox"][2]) and
@@ -244,6 +277,7 @@ def _isolated_short_answers(questions, plan, by_number):
                       "measured_ink_bbox": ink_box, "ink_threshold": 160,
                       "pixel_padding": [2, 1, 2, 1], "unique_answer_row": True,
                       "nonoverlap_with_other_ocr_lines": True,
+                      "numeric_marker_gap": numeric_gap,
                       "pairing_status": pairing["status"], "pairing_reason": pairing["reason"]},
             "source_record": {"answer_item_id": item["item_id"],
                               "parent_line_id": parent["line_id"], "fragment": copy.deepcopy(part)},
