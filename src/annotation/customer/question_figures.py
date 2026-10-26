@@ -3,19 +3,83 @@ from __future__ import annotations
 
 import copy
 import json
+from pathlib import Path
 import re
 
 from .graphic_options import contains, overlaps, pixel_box
 from .store import Hold, digest
 
 BLOCKER = 'REFERENCED_FIGURE_REGIONS_REQUIRE_REVIEW'
+CAPTION_HINT_SCOPE = 'dir-1792063578574-2a6vq8zom'
 
 
 def need(value, detail):
     if not value: raise Hold('题干图来源绑定不一致：' + detail)
 
 
+def _captioned_source_hints(questions, plan, evidence):
+    """Expose exact-caption original-pixel hints without approving a figure.
+
+    This retained small visual review is a navigation aid for the ordinary
+    customer crop editor. It never adds a candidate frame or clears an issue.
+    The customer must redraw/check the full figure in the source image.
+    """
+    if plan['scope_id'] != CAPTION_HINT_SCOPE:
+        return
+    document = json.loads(Path(__file__).with_name('first_lesson_figure_hints.json').read_text(encoding='utf-8'))
+    need(document.get('schema') == 'CaptionedFigureHints/v1' and
+         document.get('book_id') == evidence['book_id'] and
+         document.get('scope_id') == plan['scope_id'] and
+         document.get('status') == 'SOURCE_GEOMETRY_PROPOSALS_REQUIRE_CUSTOMER_CONFIRMATION',
+         '图注提议版本或书籍课时')
+    pages = {p['asset_id']: p for p in evidence['payload']['pages']}
+    questions_by_source = {q['source_instance_id']: q for q in questions}
+    need(len(questions_by_source) == len(questions), '图注提议题目实例重复')
+    validated = []
+    for record in document['records']:
+        q = questions_by_source.get(record['question_item_id'])
+        aid = plan['page_assets'].get(str(record['viewer_page']))
+        page = pages.get(aid)
+        need(q is not None and page is not None and page['page_role'] == 'question', '图注提议题目或原页')
+        source = page['source']
+        size = [source['width'], source['height']]
+        need(record['source_sha256'] == source['sha256'] and
+             record['source_dimensions'] == size and
+             record['source_checked'] is False and record['content_approved'] is False,
+             '图注提议原图身份或审校状态')
+        box = pixel_box(record['bbox'], size)
+        need(box == record['bbox'], '图注提议不是原图整数像素框')
+        captions = [line for line in page['ocr_lines']
+                    if line.get('source_row_index') == record['caption_row_index']]
+        need(len(captions) == 1 and captions[0]['text'] == record['caption_text'] and
+             contains(box, captions[0]['bbox']), '图注提议没有绑定原图 OCR 图注')
+        numbered = re.fullmatch(r'第\s*([1-9]\d?)\s*题图', record['caption_text'])
+        if numbered:
+            need(q['source_item_kind'] == 'QUESTION' and q['printed_number'] == numbered[1] and
+                 sum(other['source_item_kind'] == 'QUESTION' and other['printed_number'] == numbered[1]
+                     for other in questions) == 1, '编号图注未唯一指向本题')
+        else:
+            need(record['caption_text'] == '变式题图' and q['source_item_kind'] == 'VARIANT' and
+                 sum(other['source_item_kind'] == 'VARIANT' for other in questions) == 1,
+                 '变式图注未唯一指向本题')
+        for other in questions:
+            anchor = next((line for line in page['ocr_lines'] if line['line_id'] == other.get('anchor_ref')), None)
+            need(anchor is None or not overlaps(box, anchor['bbox']), '图注提议包含题目题号')
+        validated.append({**copy.deepcopy(record), 'asset_id': aid,
+                          'caption_line_id': captions[0]['line_id'],
+                          'review_kind': 'CAPTION_LINKED_ORIGINAL_PIXEL_HINT',
+                          'review_sha256': digest(document)})
+    need(len({(r['question_item_id'], r['caption_line_id']) for r in validated}) == len(validated),
+         '图注提议身份重复')
+    need(not any(a['asset_id'] == b['asset_id'] and overlaps(a['bbox'], b['bbox'])
+                 for i, a in enumerate(validated) for b in validated[i+1:]),
+         '图注提议图框相交')
+    for region in validated:
+        questions_by_source[region['question_item_id']].setdefault('captioned_figure_hints', []).append(region)
+
+
 def annotate(questions, plan, evidence):
+    _captioned_source_hints(questions, plan, evidence)
     rows = plan.get('question_figure_bindings', [])
     if not rows: return
     reviews = plan.get('question_figure_scope_reviews', [])
@@ -102,6 +166,8 @@ def attach(candidates, graph):
     questions = {q['question_id']: q for q in graph['payload']['questions']}
     for candidate in candidates:
         q = questions[candidate['question_id']]
+        if q.get('captioned_figure_hints'):
+            candidate['captioned_figure_hints'] = copy.deepcopy(q['captioned_figure_hints'])
         regions = copy.deepcopy(q.get('referenced_figure_bindings', []))
         if regions:
             candidate['referenced_figure_bindings'] = regions
@@ -164,6 +230,17 @@ def proposals(candidate):
         result.append({**copy.deepcopy(region),'zone':'question','question_key':candidate['key'],
             'replace_region_id':'source-'+str(index),'status':'PROPOSED_UNREVIEWED','content_status':'NEEDS_REVIEW',
             'confidence':'REVIEW_REQUIRED','can_confirm_extent_without_adjustment':True,'content_inference':'NONE'})
+    for hint in candidate.get('captioned_figure_hints', []):
+        if any(f.get('content_type') == 'image' and f['asset_id'] == hint['asset_id']
+               and overlaps(f['bbox'], hint['bbox']) for f in candidate['frames']):
+            continue
+        result.append({**copy.deepcopy(hint), 'proposal_id': 'caption-' + digest([candidate['key'], hint])[:24],
+            'question_key': candidate['key'], 'zone': 'question',
+            'status': 'PROPOSED_UNREVIEWED', 'content_status': 'NEEDS_REVIEW',
+            'confidence': 'LOW', 'can_confirm_extent_without_adjustment': False,
+            'suggested_action': 'VIEW_AND_ADJUST',
+            'issues': ['CAPTIONED_PIXEL_SCOPE_REQUIRES_CUSTOMER_REVIEW'],
+            'content_inference': 'NONE', 'approved': False})
     return result
 
 

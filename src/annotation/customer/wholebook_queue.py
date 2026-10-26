@@ -52,7 +52,7 @@ def _row(job, candidate):
             "source_binding_missing": missing}
 
 
-def first_batch(store, result, limit=50):
+def first_batch(store, result, limit=50, *, exclude_source_ids=()):
     """Return the first *prepared source instances* in directory/source order.
 
     The preparation result fixes scope order. Inside each job, the source plan
@@ -62,6 +62,10 @@ def first_batch(store, result, limit=50):
     """
     if type(limit) is not int or limit < 1:
         raise Hold("首批题数必须为正整数。")
+    if (not isinstance(exclude_source_ids, (tuple, list, set, frozenset)) or
+            any(type(identity) is not str or not identity for identity in exclude_source_ids)):
+        raise Hold("历史排除清单必须包含精确来源题身份。")
+    excluded = set(exclude_source_ids)
     if result.get("schema") != "CustomerWholebookPreparation/v1":
         raise Hold("缺少全书准备结果。")
     rows, identities = [], set()
@@ -83,6 +87,8 @@ def first_batch(store, result, limit=50):
             if not source_id or source_id in identities:
                 raise Hold("全书队列题源身份缺失或重复。")
             identities.add(source_id)
+            if source_id in excluded:
+                continue
             rows.append(_row(job, candidate))
             if len(rows) == limit:
                 return rows

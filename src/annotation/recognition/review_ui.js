@@ -492,6 +492,7 @@
       card.style.flexBasis = "100%";
       card.append(node("p", "source-proof-note", candidate.source_binding_status === "ORIGINAL_PAGE_BOUND"
         ? "原图与范围已绑定；答案内容仍待审校。" : "原图绑定未完成，暂只能查看来源记录。"));
+      if (candidate.binding_note) card.append(node("p", "source-proof-note", candidate.binding_note));
       card.append(node("p", "mono muted", "来源 ID：" + candidate.candidate_id));
       if (candidate.text) card.append(node("pre", "", "原始观察：" + candidate.text));
       if (candidate.suggested_answer_text) card.append(node("pre", "", "候选答案：" + candidate.suggested_answer_text));
@@ -505,6 +506,7 @@
           source_record:candidate.source_record}, null, 2)));
       card.append(details);
       if (candidate.source_binding_status === "ORIGINAL_PAGE_BOUND" &&
+          candidate.direct_binding_allowed === true &&
           !answer.text?.trim() && !candidate.selected) {
         const inputLabel = node("label", "field", "核对原图后填写本题答案");
         const answerInput = node("textarea"); answerInput.rows = 2;

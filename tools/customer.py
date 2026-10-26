@@ -720,9 +720,15 @@ def start_offline_bundle(*, self_test=False):
               'platform_actions': result['platform_actions']}
     _offline_portal(store, result, root, bundle, report, self_test=self_test)
     if self_test:
+        if (report['failed_scopes'] or
+                (bundle.get('scope_count') is not None and report['prepared_scopes'] != bundle['scope_count']) or
+                (bundle.get('candidate_count') is not None and report['candidates'] != bundle['candidate_count'])):
+            report['status'] = 'FAIL_INCOMPLETE_SOURCE_PREPARATION'
         report['wall_seconds'] = time.perf_counter() - started
         (workspace / 'startup-result.json').write_bytes(encoded(report))
         print(json.dumps(report, ensure_ascii=True), flush=True)
+        if report['status'] != 'PASS':
+            raise RuntimeError('全书来源准备未达到包内课时与候选数量，请查看失败课时。')
     return 0
 
 

@@ -18,6 +18,7 @@ TABLES = (
 INDEPENDENT_PIXEL_SOURCES = {
     "independent_roi_answer_sources", "numeric_boundary_answer_candidates",
     "visual_answer_sources", "missing_short_answer_candidates",
+    "resolved_answer_character_geometry",
 }
 
 
@@ -53,6 +54,161 @@ def _suggestion(record, table, printed_number):
     label = str(record.get("label") or printed_number)
     match = re.match(r"^\s*" + re.escape(label) + r"\s*[.．、]\s*(.*)$", value, re.S)
     return match.group(1).strip() if match else ""
+
+
+def _geometry_answers(questions, plan, evidence, by_number):
+    """Expose only independently checked character groups already in the source.
+
+    These groups can occupy one piece of a shared OCR row, but each has its own
+    observed character boxes and blank gutters. A raw text span alone does not
+    qualify. This path never changes the graph's selected answer or a frame.
+    """
+    by_question = {q["source_instance_id"]: q for q in questions}
+    items = {item["item_id"]: item for item in plan["items"] if item["role"] == "answer"}
+    spans = {span["item_id"]: span for span in evidence["payload"].get("character_geometry_spans", [])}
+    for pairing in plan.get("pairing_status", []):
+        if pairing.get("status") != "CUSTOMER_REVIEW":
+            continue
+        question = by_question.get(pairing.get("question_item_id"))
+        item = items.get(pairing.get("answer_item_id"))
+        span = spans.get(pairing.get("answer_item_id"))
+        if not question or not item or not span or len(item.get("fragments", [])) != 1:
+            continue
+        part = item["fragments"][0]
+        page = by_number.get(part.get("page"))
+        if not page or page["page_role"] != "answer" or page["asset_id"] != span.get("asset_id"):
+            continue
+        source = page["source"]
+        rows = part.get("row_indices", [])
+        text_spans = part.get("text_spans", [])
+        if (len(rows) != 1 or len(text_spans) != 1 or
+                text_spans[0] != {"row_index": rows[0], "start": span.get("char_span", [None, None])[0],
+                                  "end": span.get("char_span", [None, None])[1]} or
+                part.get("geometry_group_id") != span.get("group_id") or
+                part.get("geometry_observation_id") != span.get("observation_id") or
+                part.get("bbox") != span.get("bbox") or
+                part.get("observation_text") != span.get("text") or
+                part.get("original_row_text") != span.get("original_row_text") or
+                span.get("row") != rows[0] or span.get("source_sha256") != source.get("sha256") or
+                not isinstance(span.get("char_boxes"), list) or not span["char_boxes"] or
+                len(span["char_boxes"]) != len(span.get("text", ""))):
+            continue
+        parent = next((line for line in page["ocr_lines"]
+                       if line.get("source_row_index") == rows[0]), None)
+        detail = next((line for line in page.get("answer_detail_lines", [])
+                       if line.get("line_id") == span.get("line_id")), None)
+        proof = span.get("proof", {})
+        if (not parent or parent.get("text") != span["original_row_text"] or
+                not detail or detail.get("geometry_verified") is not True or
+                detail.get("bbox") != span["bbox"] or detail.get("text") != span["text"] or
+                detail.get("parent_line_id") != parent.get("line_id") or
+                (proof.get("left_gap") or {}).get("passed") is not True or
+                (proof.get("right_gap") or {}).get("passed") is not True):
+            continue
+        box = span["bbox"]
+        if (not isinstance(box, (tuple, list)) or len(box) != 4 or
+                not all(type(value) in (int, float) and math.isfinite(value) for value in box) or
+                not 0 <= box[0] < box[2] <= source["width"] or
+                not 0 <= box[1] < box[3] <= source["height"]):
+            continue
+        # Another independently observed answer must never share these pixels.
+        if any(other is not span and other.get("asset_id") == page["asset_id"] and
+               isinstance(other.get("bbox"), list) and len(other["bbox"]) == 4 and
+               max(box[0], other["bbox"][0]) < min(box[2], other["bbox"][2]) and
+               max(box[1], other["bbox"][1]) < min(box[3], other["bbox"][3])
+               for other in spans.values()):
+            continue
+        match = re.fullmatch(r"\s*" + re.escape(str(item["label"])) + r"\s*[.．、]\s*(.+?)\s*", span["text"], re.S)
+        if not match or item["label"] != question["printed_number"]:
+            continue
+        question["answer_source_candidates"].append({
+            "candidate_id": item["item_id"], "question_item_id": question["source_instance_id"],
+            "source_kind": "resolved_answer_character_geometry", "page": part["page"],
+            "asset_id": page["asset_id"], "source_sha256": source["sha256"],
+            "bbox": [math.floor(box[0]), math.floor(box[1]), math.ceil(box[2]), math.ceil(box[3])],
+            "text": span["text"], "suggested_answer_text": match.group(1).strip(),
+            "source_binding_status": "ORIGINAL_PAGE_BOUND", "direct_binding_allowed": True,
+            "binding_note": "独立字符像素框及左右空白间隔已核对；答案内容仍须人工逐字检查",
+            "original_ocr_row_index": rows[0], "observation_id": span["observation_id"],
+            "requires_review": True, "selected": False, "content_approved": False,
+            "proof": copy.deepcopy(proof),
+            "source_record": {"answer_item_id": item["item_id"], "geometry_group_id": span["group_id"],
+                              "parent_line_id": span["parent_line_id"],
+                              "char_span": copy.deepcopy(span["char_span"]),
+                              "original_row_text": span["original_row_text"]},
+        })
+
+
+def _shared_answer_previews(questions, plan, by_number):
+    """Keep existing paired OCR spans visible when their pixels are shared.
+
+    The raw row may contain several answers or a long worked solution. Its
+    bbox is a reading aid only, never a direct answer frame.
+    """
+    by_question = {q["source_instance_id"]: q for q in questions}
+    items = {item["item_id"]: item for item in plan["items"] if item["role"] == "answer"}
+    for pairing in plan.get("pairing_status", []):
+        if pairing.get("status") != "CUSTOMER_REVIEW":
+            continue
+        question = by_question.get(pairing.get("question_item_id"))
+        item = items.get(pairing.get("answer_item_id"))
+        if not question or not item or any(
+                source["candidate_id"] == item["item_id"]
+                for source in question["answer_source_candidates"]):
+            continue
+        for index, part in enumerate(item.get("fragments", [])):
+            page = by_number.get(part.get("page"))
+            if not page or page["page_role"] != "answer":
+                continue
+            source = page["source"]
+            box = part.get("bbox")
+            if (not isinstance(box, (list, tuple)) or len(box) != 4 or
+                    not all(type(v) in (int, float) and math.isfinite(v) for v in box) or
+                    not 0 <= box[0] < box[2] <= source["width"] or
+                    not 0 <= box[1] < box[3] <= source["height"]):
+                continue
+            lines = {line.get("source_row_index"): line for line in page["ocr_lines"]}
+            snippets = []
+            valid = True
+            for row in part.get("row_indices", []):
+                line = lines.get(row)
+                if line is None:
+                    valid = False
+                    break
+                ranges = [(span["start"], span["end"])
+                          for span in part.get("text_spans", []) if span.get("row_index") == row]
+                if not ranges:
+                    ranges = [(0, len(line["text"]))]
+                for start, end in ranges:
+                    if (type(start) is not int or type(end) is not int or
+                            not 0 <= start < end <= len(line["text"])):
+                        valid = False
+                        break
+                    snippets.append(line["text"][start:end])
+                if not valid:
+                    break
+            if not valid or not snippets:
+                continue
+            question["answer_source_candidates"].append({
+                "candidate_id": item["item_id"] + "/read-only/" + str(index),
+                "question_item_id": question["source_instance_id"],
+                "source_kind": "resolved_answer_item_shared_ocr",
+                "page": part["page"], "asset_id": page["asset_id"],
+                "source_sha256": source["sha256"],
+                "bbox": [math.floor(box[0]), math.floor(box[1]),
+                         math.ceil(box[2]), math.ceil(box[3])],
+                "text": "\n".join(snippets), "suggested_answer_text": "",
+                "source_binding_status": "ORIGINAL_PAGE_BOUND",
+                "direct_binding_allowed": False,
+                "binding_note": "共享识别行或长解答仅供对照原图，需精确画框后配答",
+                "original_ocr_row_index": (part["row_indices"][0]
+                                            if len(part.get("row_indices", [])) == 1 else None),
+                "observation_id": part.get("geometry_observation_id"),
+                "requires_review": True, "selected": False, "content_approved": False,
+                "proof": {"source_item_id": item["item_id"], "fragment_index": index,
+                          "pairing_status": pairing["status"], "pairing_reason": pairing.get("reason")},
+                "source_record": copy.deepcopy(part),
+            })
 
 
 def attach(questions, plan, evidence):
@@ -137,6 +293,8 @@ def attach(questions, plan, evidence):
                 "source_record": record,
             }
             question["answer_source_candidates"].append(preview)
+    _geometry_answers(questions, plan, evidence, by_number)
+    _shared_answer_previews(questions, plan, by_number)
     for question in questions:
         question["answer_source_candidates"].sort(
             key=lambda p: (p["page"] or 0, p["bbox"][1] if p["bbox"] else 0,
