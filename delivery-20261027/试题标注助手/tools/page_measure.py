@@ -130,9 +130,23 @@ def build_questions(panels, rows_by_panel, atoms, img_h: int) -> tuple[list[dict
                 return i
         return None
 
-    # 行 → 该行的 OCR 文本（用于章节关键词判断）
-    def row_text(rows, y) -> str:
-        hs = [a["text"] for a in atoms if abs(a["y1"] - y) < 16]
+    # 行 → 该行的 OCR 文本（用于章节关键词判断）。
+    # 折衷过两次才定：±16px 会吸到邻行徽标（p34 Q5 被误杀）；
+    # 用整行区间（y1..y2）会吸到同一块里的「知识点3」（p34 Q6 被误杀）。
+    # 正解：只看**与锚点同一行**的 atom（y1 落在 [y1-6, y1+26]）。
+    def line_text(y, x1=None, x2=None) -> str:
+        hs = [a["text"] for a in atoms
+              if -6 <= a["y1"] - y <= 26
+              and (x1 is None or (x1 - 5 <= a["x1"] <= x2 + 5))]
+        return " ".join(hs)
+
+    # 行区间内所有 atom 文本（仅用于剪掉尾部徽标行，范围要宽）
+    def row_text(rows, y, y2=None) -> str:
+        if y2 is None:
+            hs = [a["text"] for a in atoms if abs(a["y1"] - y) < 16]
+        else:
+            hs = [a["text"] for a in atoms
+                  if not (a["y2"] < y - 2 or a["y1"] > y2 + 2)]
         return " ".join(hs)
 
     for pi, (px1, px2) in enumerate(panels):
@@ -152,7 +166,7 @@ def build_questions(panels, rows_by_panel, atoms, img_h: int) -> tuple[list[dict
                 debug.append({"panel": pi, "num": int(m.group(1)), "y": a["y1"],
                               "status": "rejected: no row nearby", "text": a["text"][:24]})
                 continue
-            txt = row_text(rows, nearest["y1"])
+            txt = line_text(nearest["y1"], px1, px2)
             if any(k in txt for k in SECTION_KW):
                 debug.append({"panel": pi, "num": int(m.group(1)), "y": a["y1"],
                               "status": "rejected: section keyword", "text": a["text"][:24]})
@@ -161,7 +175,7 @@ def build_questions(panels, rows_by_panel, atoms, img_h: int) -> tuple[list[dict
             anchors.setdefault(num, {"num": num, "row": nearest, "source": "ocr"})
         # 2) 齐栏行候选（补漏用）
         flush = [r for r in rows if r["left"] - px1 <= 8]
-        flush = [r for r in flush if not any(k in row_text(rows, r["y1"]) for k in SECTION_KW)]
+        flush = [r for r in flush if not any(k in line_text(r["y1"], px1, px2) for k in SECTION_KW)]
         # 3) 补号：先补已有锚点之间的空号，再补首个锚点之前的号
         anchors_sorted = sorted(anchors.values(), key=lambda x: x["row"]["y1"])
         existing_nums = [a["num"] for a in anchors_sorted]
@@ -210,7 +224,7 @@ def build_questions(panels, rows_by_panel, atoms, img_h: int) -> tuple[list[dict
             limit = (nxt["row"]["y1"] - 1) if nxt else H - 1
             inside = [r for r in rows if y1 <= r["y1"] < max(y1 + 1, limit)]
             # 去掉尾部徽标行
-            while inside and any(k in row_text(rows, inside[-1]["y1"]) for k in SECTION_KW):
+            while inside and any(k in row_text(rows, inside[-1]["y1"], inside[-1]["y2"]) for k in SECTION_KW):
                 inside.pop()
             y2 = (inside[-1]["y2"] + 4) if inside else a["row"]["y2"] + 4
             y2 = min(y2, limit)
@@ -277,3 +291,26 @@ def main() -> int:
 
 if __name__ == "__main__":
     sys.exit(main())
+
+
+# ---------------------------------------------------------------- 选项框（W）
+OPT_RE = re.compile(r"^\s*([A-D])\s*[.．、]\s*")
+
+
+def options_in_block(atoms: list[dict], bbox, pad: int = 3) -> list[dict]:
+    """从 OCR atom 里挑出落在题块内、且以 A./B./C./D. 开头的 atom，作为选项框候选。"""
+    x1, y1, x2, y2 = bbox
+    out = []
+    for a in atoms:
+        m = OPT_RE.match(a["text"])
+        if not m:
+            continue
+        ax1, ay1, ax2, ay2 = a["x1"], a["y1"], a["x2"], a["y2"]
+        if not (x1 - 4 <= ax1 <= x2 and y1 - 6 <= ay1 <= y2):
+            continue
+        out.append({"label": m.group(1),
+                    "bbox": [max(x1, ax1 - pad), max(y1, ay1 - pad),
+                             min(x2, ax2 + pad), min(y2, ay2 + pad)],
+                    "text": a["text"][:24]})
+    out.sort(key=lambda o: (o["bbox"][1], o["bbox"][0]))
+    return out
