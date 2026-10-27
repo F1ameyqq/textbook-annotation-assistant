@@ -56,6 +56,8 @@ def main() -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("--expect", type=int, required=True)
     ap.add_argument("--dry", action="store_true", help="只识别核对，不提交")
+    ap.add_argument("--allow-update", action="store_true",
+                    help="允许更新已有题（inserted=false），用于补框场景")
     args = ap.parse_args()
     stamp = datetime.now().strftime("%H%M%S")
 
@@ -141,10 +143,16 @@ def main() -> int:
         print("[响应]", json.dumps({k: d.get(k) for k in
                                    ("inserted", "question_order", "success", "append_at_global_end")},
                                   ensure_ascii=False))
-        if d.get("inserted") is not True or str(d.get("question_order")) != str(args.expect):
-            print("[闸门 b] ❌ inserted/order 不符 —— 立刻停下核查，不要继续录下一题")
+        if d.get("inserted") is not True and not args.allow_update:
+            print("[闸门 b] ❌ inserted 不为 true —— 立刻停下核查，不要继续录下一题")
             return 6
-        print("[闸门 b] ✅ inserted=true 且 order 符合预期")
+        if d.get("inserted") is False and args.allow_update:
+            print("[闸门 b] ✅ 更新已有题（inserted=false，补框场景符合预期）")
+        elif str(d.get("question_order")) != str(args.expect):
+            print("[闸门 b] ❌ order 不符")
+            return 6
+        else:
+            print("[闸门 b] ✅ inserted=true 且 order 符合预期")
 
         # ---- 服务端回读 ----
         rb = lv.page.evaluate("""async (order) => {
