@@ -15,6 +15,7 @@ from __future__ import annotations
 import json
 import subprocess
 import sys
+import urllib.error
 import urllib.request
 from pathlib import Path
 
@@ -53,8 +54,23 @@ def download(page: int, book: str | None = None) -> Path:
     n = page - 1
     url = f"{OSS}/{book}/{book}_page_{n}.jpg"
     req = urllib.request.Request(url, headers={"User-Agent": "annotation-helper/1.0"})
-    with urllib.request.urlopen(req, timeout=90) as r, open(out, "wb") as f:
-        f.write(r.read())
+    try:
+        with urllib.request.urlopen(req, timeout=90) as r, open(out, "wb") as f:
+            f.write(r.read())
+    except urllib.error.HTTPError as e:
+        body = ""
+        try:
+            body = e.read().decode("utf-8", "replace")[:200]
+        except Exception:
+            pass
+        if e.code == 403 and "UserDisable" in body:
+            raise SystemExit(
+                "\n[图床不可用] 平台图床返回 403 UserDisable —— 通常是平台方停用了 OSS 账号。\n"
+                "  这不是本工具的配置问题，请联系平台方恢复图床，或改用浏览器截图取图。\n"
+                f"  下载地址：{url}\n")
+        if e.code == 404:
+            raise SystemExit(f"\n[页码不存在] {url} 返回 404，请确认平台页码是否正确。\n")
+        raise SystemExit(f"\n[下载失败] HTTP {e.code}：{url}\n{body}\n")
     return out
 
 
