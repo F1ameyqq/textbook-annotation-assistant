@@ -84,17 +84,66 @@ def run_measure(spec_path: Path, out_path: Path) -> str:
     return (r.stdout or "") + (r.stderr or "")
 
 
-def base_spec(img: Path) -> dict:
-    """生成只含栏窗口的骨架 spec（栏窗口按图片宽度自动估）。"""
+def detect_cols(img: Path, thresh: int = 170):
+    """
+    按墨迹投影自动找双栏窗口（不要用页宽比例猜——实测会切掉行尾括号、把栏间竖线算进右栏）。
+
+    做法：整页列投影 → 找贯穿高度的空白带 → 取中间最宽的那条当栏缝 →
+    L = [左墨迹起点, 缝左], R = [缝右, 右墨迹终点]。
+    找不到缝（单栏页）时退回整幅宽度。
+    """
     im = read_img(img)
     h, w = im.shape[:2]
+    gray = cv2.cvtColor(im, cv2.COLOR_BGR2GRAY)
+    ink = (gray < thresh).sum(axis=0)
+    blank = ink <= 2                              # 该列几乎无墨（绝对阈值；2% 会把右栏首字误判为空白）
+    runs, start = [], None
+    for x, b in enumerate(blank):
+        if b and start is None:
+            start = x
+        elif not b and start is not None:
+            runs.append((start, x)); start = None
+    if start is not None:
+        runs.append((start, w))
+    # 只考虑页面中部（10%~90%）的空白带，取最宽
+    mid = [(a, b) for a, b in runs if a > w * 0.10 and b < w * 0.90]
+    mid.sort(key=lambda r: r[1] - r[0], reverse=True)
+    if not mid or (mid[0][1] - mid[0][0]) < 6:
+        # 单栏
+        cols = {"L": [int(w * 0.04), int(w * 0.96)], "R": [int(w * 0.04), int(w * 0.96)]}
+        return cols, False
+    inked = [x for x in range(w) if ink[x] > 0]
+    left_edge = max(0, inked[0] - 4)
+    right_edge = min(w, inked[-1] + 4)
+
+    # 优先找「竖向分隔线」：贯穿式高墨列（实测 617-629 那条线，墨值 100-180）。
+    # 之前按空白带切会把线右侧的首字归到左栏，或把线算进右栏。
+    dividers = [x for x in range(int(w * 0.30), int(w * 0.70)) if ink[x] > h * 0.35]
+    if dividers:
+        cut = (dividers[0] + dividers[-1]) // 2
+        cols = {"L": [left_edge, cut - 1], "R": [cut + 1, right_edge]}
+        return cols, True
+
+    g0, g1 = mid[0]
+    cols = {"L": [left_edge, g0 - 3], "R": [g1 + 3, right_edge]}
+    return cols, True
+
+
+def base_spec(img: Path) -> dict:
+    """生成骨架 spec：栏窗口自动检测 + 更宽松的墨迹阈值（保分数细线）。"""
+    im = read_img(img)
+    h, w = im.shape[:2]
+    cols, two_col = detect_cols(img)
     return {
         "src": str(img),
         "kind": "q",
         "canvas": [w, h],
-        "cols": {"L": [int(w * 0.06), int(w * 0.48)], "R": [int(w * 0.49), int(w * 0.94)]},
+        "cols": cols,
         "y": [0, h],
+        "th": 170,        # 实测 200 会切掉分数上横线；170 能保住
+        "min_ink": 5,     # 20 会把细带当噪声
         "items": [],
+        "_two_col": two_col,
     }
 
 
