@@ -1,0 +1,159 @@
+{
+  "schema": "b-complex-batch-staging-evaluation/0.1",
+  "date": "2026-10-19",
+  "timezone": "Asia/Shanghai",
+  "b_baseline": "5970f15a9921af424d55b662eefed4b28aa01c52",
+  "a_reference": "e37606d74d7e538052c563d02df11c6c961b742f",
+  "result": "B_STAGING_AND_FOCUSED_REGRESSION_COMPLETE_A_EXTENSION_PENDING",
+  "decision": "HOLD",
+  "staging": {
+    "answer_evidence_only": 3,
+    "batch_file_sha256": "8495d66042fedb75bfa3f0bf2ead20e1b0495d2c32a06354b639feccdd892bcc",
+    "business_acceptance": false,
+    "cases": 4,
+    "code_sha256": "612d1279ec0d99de8cacbcd04ac2350de42cd353cb596d2e28f0cbfc3a557dc5",
+    "new_ocr_calls": 0,
+    "new_simulation_dispatches": 0,
+    "platform_calls": 0,
+    "question_answer_candidates": 1,
+    "rejection_checks": [
+      {
+        "case": "same-number-cross-scope-answer",
+        "code": "CROSS_SCOPE_OR_CASE_IDENTITY",
+        "layer": "B_FIXED_BATCH_STAGING_ONLY",
+        "rejected": true
+      },
+      {
+        "case": "invented-q9-question-relation",
+        "code": "FABRICATED_QUESTION_OR_RELATION",
+        "layer": "B_FIXED_BATCH_STAGING_ONLY",
+        "rejected": true
+      },
+      {
+        "case": "resource-viewer-173-alias",
+        "code": "ASSET_ALIAS_OR_IDENTITY_CHANGED",
+        "layer": "B_FIXED_BATCH_STAGING_ONLY",
+        "rejected": true
+      },
+      {
+        "case": "q1-approval-reused-on-q16",
+        "code": "CASE_APPROVAL_ESCALATION",
+        "layer": "B_FIXED_BATCH_STAGING_ONLY",
+        "rejected": true
+      },
+      {
+        "case": "missing-q9-continuation-region",
+        "code": "FROZEN_SNAPSHOT_CHANGED",
+        "layer": "B_FIXED_BATCH_STAGING_ONLY",
+        "rejected": true
+      },
+      {
+        "case": "missing-q16-formula-run",
+        "code": "FROZEN_SNAPSHOT_CHANGED",
+        "layer": "B_FIXED_BATCH_STAGING_ONLY",
+        "rejected": true
+      }
+    ],
+    "result": "READY_FOR_A_EXTENSION_REVIEW_HOLD",
+    "source_graph_ref": {
+      "artifact_id": "content-graph-e1619a4590746fade081d981",
+      "content_hash": "a1d41a28251ba20231228795463908ee2d5c32aadef309a8a89ba300098cf792",
+      "revision": 2
+    },
+    "source_package_sha256": "8c812330b93cc60b920f6ccd1cd7784f0afe8d293336166a586e1aeaab8231ad"
+  },
+  "regression": {
+    "schema": "b-complex-batch-focused-regression/0.1",
+    "patterns": [
+      "test_b_offline.py",
+      "test_b_continuation_application_audit.py",
+      "test_content_geometry_revision.py",
+      "test_b_math_layout.py"
+    ],
+    "tests_run": 51,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0,
+    "successful": true,
+    "duration_seconds": 31.266,
+    "network_connections_blocked_in_runner": true,
+    "scope": "Existing selected modules only, not full suite or business/content acceptance",
+    "details": []
+  },
+  "a07_fixed_approval_transfer_test": {
+    "a_commit": "e37606d74d7e538052c563d02df11c6c961b742f",
+    "result": "EXPECTED_FIXED_Q1_APPROVAL_TRANSFER_REJECTED",
+    "layer": "AUTHORIZATION",
+    "code": "INPUT_BINDING",
+    "reason": "valid input envelope has changed; this approval cannot transfer",
+    "scenario": "Current G0.8 source package substituted while original Q1 candidate/approval/history/policy remain unchanged",
+    "meaning": "Fixed A07 cannot authorize this batch. Does not prove a generic batch consumer already exists.",
+    "new_plans": 0,
+    "new_targets": 0,
+    "new_dispatches": 0,
+    "platform_calls": 0
+  },
+  "deepseek": {
+    "authorized_cny_cap": 10,
+    "requested_tasks": 2,
+    "max_output_tokens_each": 2048,
+    "retries": 0,
+    "tools_disabled": true,
+    "price_source": "https://api-docs.deepseek.com/zh-cn/quick_start/pricing/",
+    "results": [
+      {
+        "task": "interface-review",
+        "exit_code": 1,
+        "duration_seconds": 5.31,
+        "prompt_bytes": 1707,
+        "output_file": "interface-review.stdout.txt"
+      },
+      {
+        "task": "regression-review",
+        "exit_code": 1,
+        "duration_seconds": 5.3,
+        "prompt_bytes": 1737,
+        "output_file": "regression-review.stdout.txt"
+      }
+    ],
+    "desktop_saved_provider": "deepseek-account",
+    "headless_provider": "deepseek-official",
+    "result": "BLOCKED_MISSING_CREDENTIAL_BEFORE_MODEL_DISPATCH",
+    "model_requests_dispatched": 0,
+    "model_outputs": 0,
+    "estimated_model_cost_cny": 0,
+    "account_statement_checked": false,
+    "preserved_authentication_configuration": true,
+    "reason": "No DEEPSEEK_API_KEY is configured for headless official route. Existing desktop account login was not repurposed as an API key."
+  },
+  "evidence_package": {
+    "path": "handoffs/b/46007447/B-46007447-Q4-Q9-Q16-next-batch-HOLD-2026-10-19.zip",
+    "sha256": "b646fad9008e03e79a3dddfb4ead912d7ceadefbcee331c2e2af2415abf6f673",
+    "manifest_sha256": "d9d2c8a460a57677cb2f204806df8cb32881039a7f69df7fff74258cfe5bf7b1",
+    "members_excluding_manifest": 23
+  },
+  "fresh_unpack_replay": {
+    "all_members_byte_identical": true,
+    "files": 10,
+    "exit_code": 0,
+    "code_sha256": "612d1279ec0d99de8cacbcd04ac2350de42cd353cb596d2e28f0cbfc3a557dc5",
+    "batch_file_sha256": "8495d66042fedb75bfa3f0bf2ead20e1b0495d2c32a06354b639feccdd892bcc"
+  },
+  "pre_release_history": {
+    "initial_package_sha256": "c96f06141f5bcbf149fe99840e8ef88193e9267a25b2f76addebc806214e6709",
+    "reason": "Self-review made the Q16 mutation explicitly remove a LaTeX run rather than the unspecified last run. Corrected six staging rejections and final packaged replay pass; selected case bytes unchanged.",
+    "retained_in_local_history": true
+  },
+  "limits": {
+    "a_batch_positive_simulation_complete": false,
+    "human_content_acceptance": false,
+    "chapter_acceptance": false,
+    "original_b_artifact_mutations": 0,
+    "new_ocr_calls": 0,
+    "new_simulation_dispatches": 0,
+    "website_calls": 0,
+    "website_writes": 0,
+    "prebox": "PAUSED_UNCHANGED",
+    "deepseek_model_outputs": 0
+  }
+}

@@ -1,0 +1,1101 @@
+{
+  "date": "2026-10-17",
+  "timezone": "Asia/Shanghai",
+  "baseline_commit": "6aa4ba89b720b3c7fcf1887015eb85b07446d601",
+  "long_term_goal": "docs/b-long-term-goal.md",
+  "goal_state": "ACTIVE",
+  "completion_claim": false,
+  "milestone": "L1 formula observations and L2 single-stage offline batch recovery; L5 reproducibility",
+  "tests_passed": 435,
+  "previous_tests": 301,
+  "new_tests": 134,
+  "new_test_groups": {
+    "test_b_batch.py": 21,
+    "test_b_batch_quality.py": 24,
+    "test_b_batch_cli.py": 16,
+    "test_b_formula.py": 11,
+    "test_b_formula_independent.py": 16,
+    "test_b_formula_quality.py": 28,
+    "test_b_formula_cli.py": 18
+  },
+  "test_command": "python -m unittest discover -s tests -q",
+  "formula_summary": {
+    "schema_version": "b-formula-cli-summary-trial/0.1",
+    "replay_mode": "CACHED_REPLAY",
+    "execution_kind": "CPU_RAPID_LATEX_OCR",
+    "integrity_accepted": true,
+    "verification_scope": "FORMULA_SOURCE_AND_CANDIDATE_INTEGRITY_ONLY",
+    "decision": "HOLD",
+    "transcription_verified": false,
+    "business_acceptance": false,
+    "graph_modified": false,
+    "entire_answer_reconstructed": false,
+    "paid_model_calls": 0,
+    "website_requests": 0,
+    "platform_actions": [],
+    "recognition_failures": 0,
+    "unit_count": 11,
+    "variant_count": 22,
+    "parsed_candidate_count": 20,
+    "unparsed_variant_count": 2,
+    "disagreement_unit_count": 8,
+    "artifacts": {
+      "math-layout.json": {
+        "artifact_id": "math-layout-9ee52128e1c47b3e55cd4025",
+        "revision": 1,
+        "content_hash": "37cd452675b6a66be12d5e2ae9b91f40c9da71bc733c889a9bdde739ceb9ea10"
+      },
+      "formula-observations.json": {
+        "artifact_id": "formula-observations-b9d5771e7fe1d39af46a0ede",
+        "revision": 1,
+        "content_hash": "d10056685c41d12647021e2531b9411916044f090c41d2ecc6d3a27c8cbf7ba9"
+      },
+      "formula-candidates.json": {
+        "artifact_id": "formula-candidates-599d496ad175ffa71b5a653a",
+        "revision": 1,
+        "content_hash": "31c28e89fd73793bab05e16b03b0a92c3a33f18d72b42e5f6787fb735d1d2328"
+      },
+      "formula-check.json": {
+        "artifact_id": "formula-check-b2841c4df52db7ebda560593",
+        "revision": 1,
+        "content_hash": "837300eddf17c9227bd7c6322fb2617811680df35fb7c15d63f9e5db4b7185aa"
+      }
+    },
+    "exit_code": 0
+  },
+  "actual_formula_collection": {
+    "mode": "CPU_RAPID_LATEX_OCR",
+    "backend": "rapid-latex-ocr",
+    "version": "0.0.9",
+    "units": 11,
+    "variants_per_unit": 2,
+    "inference_calls": 22,
+    "execution_failures": 0,
+    "sum_variant_wall_seconds": 17.19223180008703,
+    "wall_seconds_scope": "sum of 22 recorded engine-call wall intervals, excluding installation/model loading and the collector setup",
+    "source_layout_ref": {
+      "artifact_id": "math-layout-9ee52128e1c47b3e55cd4025",
+      "revision": 1,
+      "content_hash": "37cd452675b6a66be12d5e2ae9b91f40c9da71bc733c889a9bdde739ceb9ea10"
+    },
+    "producer_receipt": {
+      "module": "annotation.recognition.formula_backend",
+      "version": "0.1.0",
+      "code_sha256": "97376e4d2bab0286da4c4c67e624aa0308b54b570c0bf15cb528c902d491563f",
+      "configuration": {
+        "padding_pixels": 2,
+        "variants": [
+          {
+            "variant_id": "scale3",
+            "scale": 3,
+            "contrast": 1.0
+          },
+          {
+            "variant_id": "scale4-contrast15",
+            "scale": 4,
+            "contrast": 1.5
+          }
+        ],
+        "resize": "PIL_LANCZOS",
+        "color": "RGB",
+        "seed": 0,
+        "maximum_decode_tokens": 128,
+        "temperature": 1e-05
+      },
+      "configuration_sha256": "947852f1928715b6b1e543672d5bd9998e9266c154253e49de68b973b3418276",
+      "execution_kind": "CPU_RAPID_LATEX_OCR",
+      "backend": "rapid-latex-ocr",
+      "backend_version": "0.0.9",
+      "providers": [
+        [
+          "CPUExecutionProvider"
+        ],
+        [
+          "CPUExecutionProvider"
+        ],
+        [
+          "CPUExecutionProvider"
+        ]
+      ],
+      "dependencies": {
+        "rapid-latex-ocr": "0.0.9",
+        "onnxruntime": "1.31.0",
+        "numpy": "1.26.4",
+        "Pillow": "12.3.0",
+        "tokenizers": "0.23.3",
+        "opencv-python": "4.11.0.86",
+        "PyYAML": "6.0.3",
+        "chardet": "7.6.0"
+      },
+      "model_files": [
+        {
+          "name": "image_resizer.onnx",
+          "bytes": 38967751,
+          "sha256": "e0b075c39700f64d50400f39c8fc186bbb3b5d84d31864008313f376603aca9d"
+        },
+        {
+          "name": "encoder.onnx",
+          "bytes": 89008136,
+          "sha256": "01bf5dc25539ca0cd5b1bd29296ea495977a6ba5f629dc4178277809d26e5e7d"
+        },
+        {
+          "name": "decoder.onnx",
+          "bytes": 50952726,
+          "sha256": "bd695497bf1b22279b7626f5916c79226e1e244c84355f8da7edfd2d921d0072"
+        },
+        {
+          "name": "tokenizer.json",
+          "bytes": 24174,
+          "sha256": "1dc27b18d6a518d0d5ff3f4bb7bd98521fe80ad39e5b2a246d4109f1bb9d5019"
+        }
+      ],
+      "backend_code": {
+        "main.py": "da598ea2b697acfdf48a32e40fe30164a47cc9247b1f7dab1389995775b9be4b",
+        "models.py": "b85addc53ac0ee21a2301fc944e3243b72eed7abfaab930b691e681ca3bc99ed",
+        "utils.py": "943e4801660b85154c577988a2948f3d54ac3449124a6c79afaa6aecf8ec0556",
+        "utils_load.py": "befcfccf8bd0fcb0cad30e244bda6f17c1fec5c8e3d04a74d3012b67bca75862"
+      },
+      "backend_configuration_sha256": "4d85c7bf8ab5740f5fb031474997bc61ed3dbd143593a599d118a22cc9a2d57b",
+      "decode_tokens_capped": 128
+    },
+    "expected_mathematical_text_consumed": false,
+    "selected_candidate_count": 0,
+    "old_ocr_or_graph_replaced": false,
+    "transcription_verified": false,
+    "business_acceptance": false,
+    "observation_fixture": "tests/fixtures/book46007447/formula-observations.json",
+    "layout_fixture": "tests/fixtures/book46007447/formula-layout.json",
+    "observation_fixture_sha256": "99a52b4bc8507446bfbeb7bd18f8689d28759ff0fdcce20c820bcc750d50729d",
+    "layout_fixture_sha256": "bfe48a0b9076f4a5450b969fa66127558fda0e4c67b3c7f5b2162addae77b357",
+    "caveat": "20 supported syntax projections, 2 unsupported raw variants, 8 disagreement/unsupported units; these are syntax/integrity counts, not recognition accuracy."
+  },
+  "development_source_observations": {
+    "kind": "MODEL_VISUAL_UNVERIFIED_DEVELOPMENT_REFERENCE",
+    "business_gold": false,
+    "held_out_evaluation": false,
+    "used_by_collector_or_candidate_builder_or_checker": false,
+    "final_fraction": {
+      "observed_scale3_raw": "\\textstyle{\\frac{a^{2}+1}{2}}",
+      "observed_scale4_raw": "\\scriptstyle{\\frac{\\pi+1}{2}}",
+      "note": "One variant now contains the previously missing a-squared; the other hallucinates pi. Both remain unselected and unverified."
+    },
+    "remaining_failure_examples": [
+      "The third and fifth fraction numerators contain a fourth-power glyph in source pixels but dedicated outputs still misread it. Full source crops were inspected; no clipping repair was applied.",
+      "The second unit agrees on a^t and the ninth agrees on a-1; agreement alone does not prove a correct transcription.",
+      "The fourth fraction and other units also disagree. No assembled whole-answer proof or general superiority over ordinary OCR is claimed."
+    ]
+  },
+  "source_verification": {
+    "schema_version": "b-source-trial/0.1",
+    "artifact_id": "usense-46007447-observed-20261016",
+    "manifest_content_hash": "b82d5e4ba04abaf4c8759cd112695ebb15c30d7b901e0c8a049ddc54d490e9da",
+    "declared_asset_count": 5,
+    "assets": [
+      {
+        "asset_id": "viewer-10",
+        "path": "assets/46007447_viewer_10.jpg",
+        "sha256": "eb7cc17e6b58a55a005ce1cdef5bd5058ad258c3dd44dc891b3d830ed3db3626",
+        "width": 1217,
+        "height": 1691,
+        "reading_order": 0,
+        "external_refs": {
+          "viewer_page": 10,
+          "resource_index": 9,
+          "source_filename": "46007447_page_9.jpg"
+        },
+        "reference_quality": "UNVERIFIED_HISTORY"
+      },
+      {
+        "asset_id": "viewer-11",
+        "path": "assets/46007447_viewer_11.jpg",
+        "sha256": "7c433368bbe7ccea76c1c2b8a53559a87a9e2b99e23d692ba9ca005e16f507a3",
+        "width": 1222,
+        "height": 1692,
+        "reading_order": 1,
+        "external_refs": {
+          "viewer_page": 11,
+          "resource_index": 10,
+          "source_filename": "46007447_page_10.jpg"
+        },
+        "reference_quality": "UNVERIFIED_HISTORY"
+      },
+      {
+        "asset_id": "viewer-12",
+        "path": "assets/46007447_viewer_12.jpg",
+        "sha256": "774c8a29bbdcaa35fcb88479129d2b523ec077edfa4e0ac3db6f11e9bcae9b87",
+        "width": 1220,
+        "height": 1692,
+        "reading_order": 2,
+        "external_refs": {
+          "viewer_page": 12,
+          "resource_index": 11,
+          "source_filename": "46007447_page_11.jpg"
+        },
+        "reference_quality": "UNVERIFIED_HISTORY"
+      },
+      {
+        "asset_id": "viewer-14",
+        "path": "assets/46007447_viewer_14.jpg",
+        "sha256": "4186d57ffad14f576fe7c967c96697d25c83ffe3512217c79b8371134181c1d9",
+        "width": 1218,
+        "height": 1694,
+        "reading_order": 3,
+        "external_refs": {
+          "viewer_page": 14,
+          "resource_index": 13,
+          "source_filename": "46007447_page_13.jpg"
+        },
+        "reference_quality": "UNVERIFIED_HISTORY"
+      },
+      {
+        "asset_id": "viewer-173",
+        "path": "assets/46007447_viewer_173.jpg",
+        "sha256": "a231f0247cd0444cc34ed699c4cca99245d2ac6cfda5ef10a38ca3f8164510be",
+        "width": 1148,
+        "height": 1621,
+        "reading_order": 4,
+        "external_refs": {
+          "viewer_page": 173,
+          "resource_index": 172,
+          "source_filename": "46007447_page_172.jpg"
+        },
+        "reference_quality": "UNVERIFIED_HISTORY"
+      }
+    ],
+    "all_declared_bytes_and_dimensions_valid": true,
+    "q16_crop_pixel_equal_to_original_jpg_region": true,
+    "q16_crop_sha256": "20383bf4366301dd74ef76bb979685f64e41eba941df1c1fbe8b6c63fb6f2c9c",
+    "q16_source_sha256": "a231f0247cd0444cc34ed699c4cca99245d2ac6cfda5ef10a38ca3f8164510be",
+    "original_images_unchanged": true,
+    "whole_book_source_available": false,
+    "note": "Only the existing five observed pages are exercised by this batch; metadata-reported 214 pages is not a validated full-book inventory. Historical external_refs remain UNVERIFIED_HISTORY."
+  },
+  "real_five_page_batch": {
+    "schema_version": "b-batch-cli-real-replay/0.1",
+    "baseline": "6aa4ba8",
+    "mode": "BASELINE_GEOMETRY",
+    "producer_code_sha256": "1241142989260a01a910d0ae5b1d5d532a349a6edf802a603744e9af01d3dff3",
+    "source_ref": {
+      "artifact_id": "usense-46007447-observed-20261016",
+      "content_hash": "b82d5e4ba04abaf4c8759cd112695ebb15c30d7b901e0c8a049ddc54d490e9da"
+    },
+    "records": [
+      {
+        "step": "max2",
+        "arguments": [
+          "--max-items",
+          "2"
+        ],
+        "cli_result": {
+          "schema_version": "b-batch-cli-result-trial/0.1",
+          "batch_state": "PARTIAL",
+          "recognition_mode": "GEOMETRIC",
+          "execution_kind": "BASELINE_GEOMETRY",
+          "decision": "HOLD",
+          "integrity_accepted": true,
+          "business_acceptance": false,
+          "transcription_verified": false,
+          "audit_performed": true,
+          "report_ref": {
+            "artifact_id": "batch-report-e17c75ada1d42bb8e9f20534",
+            "revision": 1,
+            "content_hash": "40d30e355be6bbebc0a4cc6a01ad6346bb97c87ca50b857b3ee7aaf8f7f23137"
+          },
+          "check": {
+            "path": "checks/batch-run-0fe81113d80944ac80a130bc4d410546.json",
+            "sha256": "38b35ab713279cb77939a268213eba074bcc2d9ab1778155a91cc095a5b7656b",
+            "artifact_ref": {
+              "artifact_id": "batch-check-e459376c3cf1958d81aa6359",
+              "revision": 1,
+              "content_hash": "143b8681e37e6ae459442ec912c8340ee5c1b2b6833af1fcc0bceb1649787d6e"
+            }
+          },
+          "counts": {
+            "declared": 5,
+            "done": 2,
+            "pending": 3,
+            "failed": 0,
+            "invalidated": 0,
+            "cache_hits": 0
+          },
+          "batch_complete": false,
+          "issues": [],
+          "exit_code": 0
+        }
+      },
+      {
+        "step": "resume",
+        "arguments": [],
+        "cli_result": {
+          "schema_version": "b-batch-cli-result-trial/0.1",
+          "batch_state": "READY",
+          "recognition_mode": "GEOMETRIC",
+          "execution_kind": "BASELINE_GEOMETRY",
+          "decision": "HOLD",
+          "integrity_accepted": true,
+          "business_acceptance": false,
+          "transcription_verified": false,
+          "audit_performed": true,
+          "report_ref": {
+            "artifact_id": "batch-report-825c1c2ae370fdccdbbc1902",
+            "revision": 1,
+            "content_hash": "5c6a0144d4002877e61ace6a8e5c3ca6af97445a71f13090b86842d1a12f0dac"
+          },
+          "check": {
+            "path": "checks/batch-run-a9e7cba489fc446c83528ab6faa343da.json",
+            "sha256": "29ce9594a3bb689ff609fecd9f9d95759266e72488c796504968af08aa3dbe7c",
+            "artifact_ref": {
+              "artifact_id": "batch-check-564f6f6e6c9d0b668fe1aef7",
+              "revision": 1,
+              "content_hash": "4ba2d13ccf0d931cfaf2ad60b794c71e84fa385cd2f590c7c3f9e99f1ba46d04"
+            }
+          },
+          "counts": {
+            "declared": 5,
+            "done": 5,
+            "pending": 0,
+            "failed": 0,
+            "invalidated": 0,
+            "cache_hits": 2
+          },
+          "batch_complete": true,
+          "issues": [],
+          "exit_code": 0
+        }
+      },
+      {
+        "step": "repeat-cache",
+        "arguments": [],
+        "cli_result": {
+          "schema_version": "b-batch-cli-result-trial/0.1",
+          "batch_state": "READY",
+          "recognition_mode": "GEOMETRIC",
+          "execution_kind": "BASELINE_GEOMETRY",
+          "decision": "HOLD",
+          "integrity_accepted": true,
+          "business_acceptance": false,
+          "transcription_verified": false,
+          "audit_performed": true,
+          "report_ref": {
+            "artifact_id": "batch-report-27cb7777d4c642cd32a7bed2",
+            "revision": 1,
+            "content_hash": "c7ea30049c91f85020e7333e9c465c83ba2450db5f94f161a8819e98bad797fb"
+          },
+          "check": {
+            "path": "checks/batch-run-9a897012c98c4257ae0b2e52f907a63d.json",
+            "sha256": "67abe06c687021647a7074fe298a4f70806b24c6950fb5524548ff4aca1e3f81",
+            "artifact_ref": {
+              "artifact_id": "batch-check-93866d94a8e4884aef2cabf6",
+              "revision": 1,
+              "content_hash": "46be34a4105a5fcc98b9ea3debc0e1df39c08cd6b50b1f084337a9ef4c3d2e6c"
+            }
+          },
+          "counts": {
+            "declared": 5,
+            "done": 5,
+            "pending": 0,
+            "failed": 0,
+            "invalidated": 0,
+            "cache_hits": 5
+          },
+          "batch_complete": true,
+          "issues": [],
+          "exit_code": 0
+        }
+      }
+    ],
+    "real_ocr_invoked": false,
+    "original_source_unchanged": true,
+    "decision": "HOLD",
+    "business_acceptance": false,
+    "platform_actions": []
+  },
+  "real_five_page_batch_controlled_faults": {
+    "schema_version": "b-batch-cli-real-replay/0.1",
+    "baseline": "6aa4ba8",
+    "mode": "BASELINE_GEOMETRY",
+    "producer_code_sha256": "1241142989260a01a910d0ae5b1d5d532a349a6edf802a603744e9af01d3dff3",
+    "source_manifest": {
+      "schema_version": "b-source-trial/0.1",
+      "artifact_id": "usense-46007447-observed-20261016",
+      "book_id": "46007447",
+      "scope_id": "existing-annotations-five-observed-pages",
+      "assets": [
+        {
+          "asset_id": "viewer-10",
+          "path": "assets/46007447_viewer_10.jpg",
+          "sha256": "eb7cc17e6b58a55a005ce1cdef5bd5058ad258c3dd44dc891b3d830ed3db3626",
+          "width": 1217,
+          "height": 1691,
+          "reading_order": 0,
+          "external_refs": {
+            "viewer_page": 10,
+            "resource_index": 9,
+            "source_filename": "46007447_page_9.jpg"
+          },
+          "reference_quality": "UNVERIFIED_HISTORY"
+        },
+        {
+          "asset_id": "viewer-11",
+          "path": "assets/46007447_viewer_11.jpg",
+          "sha256": "7c433368bbe7ccea76c1c2b8a53559a87a9e2b99e23d692ba9ca005e16f507a3",
+          "width": 1222,
+          "height": 1692,
+          "reading_order": 1,
+          "external_refs": {
+            "viewer_page": 11,
+            "resource_index": 10,
+            "source_filename": "46007447_page_10.jpg"
+          },
+          "reference_quality": "UNVERIFIED_HISTORY"
+        },
+        {
+          "asset_id": "viewer-12",
+          "path": "assets/46007447_viewer_12.jpg",
+          "sha256": "774c8a29bbdcaa35fcb88479129d2b523ec077edfa4e0ac3db6f11e9bcae9b87",
+          "width": 1220,
+          "height": 1692,
+          "reading_order": 2,
+          "external_refs": {
+            "viewer_page": 12,
+            "resource_index": 11,
+            "source_filename": "46007447_page_11.jpg"
+          },
+          "reference_quality": "UNVERIFIED_HISTORY"
+        },
+        {
+          "asset_id": "viewer-14",
+          "path": "assets/46007447_viewer_14.jpg",
+          "sha256": "4186d57ffad14f576fe7c967c96697d25c83ffe3512217c79b8371134181c1d9",
+          "width": 1218,
+          "height": 1694,
+          "reading_order": 3,
+          "external_refs": {
+            "viewer_page": 14,
+            "resource_index": 13,
+            "source_filename": "46007447_page_13.jpg"
+          },
+          "reference_quality": "UNVERIFIED_HISTORY"
+        },
+        {
+          "asset_id": "viewer-173",
+          "path": "assets/46007447_viewer_173.jpg",
+          "sha256": "a231f0247cd0444cc34ed699c4cca99245d2ac6cfda5ef10a38ca3f8164510be",
+          "width": 1148,
+          "height": 1621,
+          "reading_order": 4,
+          "external_refs": {
+            "viewer_page": 173,
+            "resource_index": 172,
+            "source_filename": "46007447_page_172.jpg"
+          },
+          "reference_quality": "UNVERIFIED_HISTORY"
+        }
+      ],
+      "scope_note": "5 observed source pages only; metadata reports 214 pages. The public SourceBundle contract is not frozen."
+    },
+    "changed_source_manifest": {
+      "schema_version": "b-source-trial/0.1",
+      "artifact_id": "usense-46007447-observed-20261016",
+      "book_id": "46007447",
+      "scope_id": "existing-annotations-five-observed-pages",
+      "assets": [
+        {
+          "asset_id": "viewer-10",
+          "path": "assets/46007447_viewer_10.jpg",
+          "sha256": "eb7cc17e6b58a55a005ce1cdef5bd5058ad258c3dd44dc891b3d830ed3db3626",
+          "width": 1217,
+          "height": 1691,
+          "reading_order": 0,
+          "external_refs": {
+            "viewer_page": 10,
+            "resource_index": 9,
+            "source_filename": "46007447_page_9.jpg"
+          },
+          "reference_quality": "UNVERIFIED_HISTORY"
+        },
+        {
+          "asset_id": "viewer-11",
+          "path": "assets/46007447_viewer_11.jpg",
+          "sha256": "7c433368bbe7ccea76c1c2b8a53559a87a9e2b99e23d692ba9ca005e16f507a3",
+          "width": 1222,
+          "height": 1692,
+          "reading_order": 1,
+          "external_refs": {
+            "viewer_page": 11,
+            "resource_index": 10,
+            "source_filename": "46007447_page_10.jpg",
+            "local_descriptor_version_probe": "controlled-version2-no-pixel-change"
+          },
+          "reference_quality": "UNVERIFIED_HISTORY"
+        },
+        {
+          "asset_id": "viewer-12",
+          "path": "assets/46007447_viewer_12.jpg",
+          "sha256": "774c8a29bbdcaa35fcb88479129d2b523ec077edfa4e0ac3db6f11e9bcae9b87",
+          "width": 1220,
+          "height": 1692,
+          "reading_order": 2,
+          "external_refs": {
+            "viewer_page": 12,
+            "resource_index": 11,
+            "source_filename": "46007447_page_11.jpg"
+          },
+          "reference_quality": "UNVERIFIED_HISTORY"
+        },
+        {
+          "asset_id": "viewer-14",
+          "path": "assets/46007447_viewer_14.jpg",
+          "sha256": "4186d57ffad14f576fe7c967c96697d25c83ffe3512217c79b8371134181c1d9",
+          "width": 1218,
+          "height": 1694,
+          "reading_order": 3,
+          "external_refs": {
+            "viewer_page": 14,
+            "resource_index": 13,
+            "source_filename": "46007447_page_13.jpg"
+          },
+          "reference_quality": "UNVERIFIED_HISTORY"
+        },
+        {
+          "asset_id": "viewer-173",
+          "path": "assets/46007447_viewer_173.jpg",
+          "sha256": "a231f0247cd0444cc34ed699c4cca99245d2ac6cfda5ef10a38ca3f8164510be",
+          "width": 1148,
+          "height": 1621,
+          "reading_order": 4,
+          "external_refs": {
+            "viewer_page": 173,
+            "resource_index": 172,
+            "source_filename": "46007447_page_172.jpg"
+          },
+          "reference_quality": "UNVERIFIED_HISTORY"
+        }
+      ],
+      "scope_note": "5 observed source pages only; metadata reports 214 pages. The public SourceBundle contract is not frozen."
+    },
+    "manifest_mutation": "Only viewer-11 external_refs.local_descriptor_version_probe changed in temporary copied source; no original pixels changed.",
+    "original_images_unchanged": true,
+    "original_image_sha256": {
+      "viewer-10": "eb7cc17e6b58a55a005ce1cdef5bd5058ad258c3dd44dc891b3d830ed3db3626",
+      "viewer-11": "7c433368bbe7ccea76c1c2b8a53559a87a9e2b99e23d692ba9ca005e16f507a3",
+      "viewer-12": "774c8a29bbdcaa35fcb88479129d2b523ec077edfa4e0ac3db6f11e9bcae9b87",
+      "viewer-14": "4186d57ffad14f576fe7c967c96697d25c83ffe3512217c79b8371134181c1d9",
+      "viewer-173": "a231f0247cd0444cc34ed699c4cca99245d2ac6cfda5ef10a38ca3f8164510be"
+    },
+    "derived_cache_corruption_intentional": true,
+    "invalidation_count_cumulative": "One descriptor version invalidation plus one damaged cache invalidation=2 for viewer-11.",
+    "records": [
+      {
+        "step": "copied-original-five-assets",
+        "cli_result": {
+          "schema_version": "b-batch-cli-result-trial/0.1",
+          "batch_state": "READY",
+          "recognition_mode": "GEOMETRIC",
+          "execution_kind": "BASELINE_GEOMETRY",
+          "decision": "HOLD",
+          "integrity_accepted": true,
+          "business_acceptance": false,
+          "transcription_verified": false,
+          "audit_performed": true,
+          "report_ref": {
+            "artifact_id": "batch-report-108c3feb0fb483d6e05c2b90",
+            "revision": 1,
+            "content_hash": "a8c93a6e417d2f5aeeb5c8c817c2ff3de79add27132ba39f208963bee6fa51b4"
+          },
+          "check": {
+            "path": "checks/batch-run-1330421f4a4845bd848bb7679f4c9a5b.json",
+            "sha256": "2c0b71c956db563b354d6693920df92b5a37ab5a6c7b400fdfcf86a17a64fab5",
+            "artifact_ref": {
+              "artifact_id": "batch-check-453549fe71b2d5c8f7dfebb4",
+              "revision": 1,
+              "content_hash": "6ec445773cf16854bb894c27b5e6d927b0c900791b3c9df0dffd819da47c40e4"
+            }
+          },
+          "counts": {
+            "declared": 5,
+            "done": 5,
+            "pending": 0,
+            "failed": 0,
+            "invalidated": 0,
+            "cache_hits": 0
+          },
+          "batch_complete": true,
+          "issues": [],
+          "exit_code": 0
+        }
+      },
+      {
+        "step": "one-asset-descriptor-version-change",
+        "cli_result": {
+          "schema_version": "b-batch-cli-result-trial/0.1",
+          "batch_state": "READY",
+          "recognition_mode": "GEOMETRIC",
+          "execution_kind": "BASELINE_GEOMETRY",
+          "decision": "HOLD",
+          "integrity_accepted": true,
+          "business_acceptance": false,
+          "transcription_verified": false,
+          "audit_performed": true,
+          "report_ref": {
+            "artifact_id": "batch-report-61fa374991c934bbf1c5ad67",
+            "revision": 1,
+            "content_hash": "6b555dbf8adca4d4ca3b4fc72b61ec57d76df1cd4cc267e58ab60cdf4e247601"
+          },
+          "check": {
+            "path": "checks/batch-run-714d6c45e4054c28b0b5e6f04f59b38d.json",
+            "sha256": "c22cad463cbead75157c881f455be36fc8d8b04002ab1af41d35553b5f4b6e31",
+            "artifact_ref": {
+              "artifact_id": "batch-check-ae947e9f709f42c6e4f3f4d1",
+              "revision": 1,
+              "content_hash": "d54330d5f27e0f403a4691bde1e2e9c5346062b6c879e7ab5097ce7fa83c7e08"
+            }
+          },
+          "counts": {
+            "declared": 5,
+            "done": 5,
+            "pending": 0,
+            "failed": 0,
+            "invalidated": 1,
+            "cache_hits": 4
+          },
+          "batch_complete": true,
+          "issues": [],
+          "exit_code": 0
+        }
+      },
+      {
+        "step": "independent-audit-rejects-controlled-cache-corruption",
+        "damaged_artifact": {
+          "artifact_ref": {
+            "artifact_id": "batch-item-6080ab15a59156df4dcb278f",
+            "content_hash": "6080ab15a59156df4dcb278f9db41a3f280e13535e3dd9990654bae189346f57",
+            "revision": 1
+          },
+          "path": "objects/31fca36792c78e2d9c0c373368be951c02206905ce1f069390806c751e07ad55.json",
+          "sha256": "31fca36792c78e2d9c0c373368be951c02206905ce1f069390806c751e07ad55"
+        },
+        "check": {
+          "path": "checks/controlled-cache-corruption-check.json",
+          "sha256": "6f7ba81425b46264bdbab44ae90b6b525cf4b3a3c0ef39ae1a9de8240573a975",
+          "artifact_ref": {
+            "artifact_id": "batch-check-52b8f3499127e5bfc42c30ef",
+            "revision": 1,
+            "content_hash": "f6589c58ab8d3d6e5a8abbabc265e31f3ec4730cf975cf467c9f5d6ae1dba740"
+          }
+        },
+        "accepted": false,
+        "issues": [
+          "BATCH_ITEM_ARTIFACT_INVALID",
+          "BATCH_FALSE_COMPLETENESS",
+          "BATCH_JOB_STATUS_MISMATCH",
+          "BATCH_PREMATURE_BUNDLE"
+        ]
+      },
+      {
+        "step": "same-version-recovers-one-corrupt-cache-entry",
+        "cli_result": {
+          "schema_version": "b-batch-cli-result-trial/0.1",
+          "batch_state": "READY",
+          "recognition_mode": "GEOMETRIC",
+          "execution_kind": "BASELINE_GEOMETRY",
+          "decision": "HOLD",
+          "integrity_accepted": true,
+          "business_acceptance": false,
+          "transcription_verified": false,
+          "audit_performed": true,
+          "report_ref": {
+            "artifact_id": "batch-report-c908376b37c7177908cd0b89",
+            "revision": 1,
+            "content_hash": "9011a0287ac9180d7a1eef6d4457fb709bcf094a84465d2174f7d541a4339b3c"
+          },
+          "check": {
+            "path": "checks/batch-run-aa48275199734b5087c376ea10d0830f.json",
+            "sha256": "209326db38d590e76f8768a8dda38aef60131778f5115d03b73ed1c1ee99c388",
+            "artifact_ref": {
+              "artifact_id": "batch-check-a696abc2e2b59b7bfb7aa37c",
+              "revision": 1,
+              "content_hash": "9d1e87592cf8e41c4112b245dc9d33be4ec4e982d2c92e359a756f8dbb22b04a"
+            }
+          },
+          "counts": {
+            "declared": 5,
+            "done": 5,
+            "pending": 0,
+            "failed": 0,
+            "invalidated": 2,
+            "cache_hits": 4
+          },
+          "batch_complete": true,
+          "issues": [],
+          "exit_code": 0
+        }
+      },
+      {
+        "step": "repeat-after-recovery",
+        "cli_result": {
+          "schema_version": "b-batch-cli-result-trial/0.1",
+          "batch_state": "READY",
+          "recognition_mode": "GEOMETRIC",
+          "execution_kind": "BASELINE_GEOMETRY",
+          "decision": "HOLD",
+          "integrity_accepted": true,
+          "business_acceptance": false,
+          "transcription_verified": false,
+          "audit_performed": true,
+          "report_ref": {
+            "artifact_id": "batch-report-efb490db3bbe4d650e60543f",
+            "revision": 1,
+            "content_hash": "79781279c91efc03a496bc7a49d8948a7a1f4c9803911ffe40443706b71d0c70"
+          },
+          "check": {
+            "path": "checks/batch-run-aa2a8dbe3af54aa38554cc3bcd610157.json",
+            "sha256": "1c2fad900a0fe685ea9983f2babbc1d80b6703a767c2b15f3f2312603e92a76f",
+            "artifact_ref": {
+              "artifact_id": "batch-check-5daedcdfae40ceef7c0fdb1b",
+              "revision": 1,
+              "content_hash": "8de5636eb7b31fbab7280d5337968f874a7a7eaf20b75a5466cfcdd1a63f0759"
+            }
+          },
+          "counts": {
+            "declared": 5,
+            "done": 5,
+            "pending": 0,
+            "failed": 0,
+            "invalidated": 2,
+            "cache_hits": 5
+          },
+          "batch_complete": true,
+          "issues": [],
+          "exit_code": 0
+        }
+      }
+    ],
+    "real_ocr_invoked": false,
+    "decision": "HOLD",
+    "business_acceptance": false,
+    "platform_actions": []
+  },
+  "batch_scope": {
+    "recognition_mode": "GEOMETRIC",
+    "new_ocr_calls": 0,
+    "declared_assets": 5,
+    "actual_process_kills_in_regressions": [
+      "worker interrupted by os._exit",
+      "immutable object published before SQL success commit"
+    ],
+    "process_kill_test_inputs": "explicit synthetic fixtures; five-page real-source CLI trials cover partial resume, version invalidation and controlled cache corruption",
+    "cache_invalidation_count_is": "cumulative event count, not current number of redone pages",
+    "stages_with_durable_resume": [
+      "single-asset baseline recognition"
+    ],
+    "not_yet_connected": [
+      "formula collection",
+      "multi-page assembly/pairing",
+      "content quality and coverage dependencies"
+    ],
+    "a_platform_runtime_changed": false,
+    "business_acceptance": false
+  },
+  "runtime_reproducibility": {
+    "profile": "fresh isolated optional formula environment, Windows x64 / Python3.11",
+    "requirements": "requirements-formula-cpu.txt",
+    "requirements_sha256": "b68959b158fed3130efef4b506c0a6de8612cd09877e8ee8f369f4b32defd1d9",
+    "model_lock": "evaluation/formula-cpu-runtime-lock.json",
+    "model_lock_sha256": "f93c9e63b01d635cf9e92a7295f906af74bf1dedeab8edb07a4632655e4aaf42",
+    "pip_check": "No broken requirements found.",
+    "model_weights_committed": false,
+    "upstream_model_digests_published": false,
+    "closed_cached_formula_replay": "frozen layout + raw observations + source cutout; independent source/layout audit is repeated without rebuilding upstream identity",
+    "cached_replay_runtime_profiles": [
+      {
+        "numpy": "2.3.5",
+        "opencv-python": "4.13.0.92",
+        "Pillow": "12.2.0"
+      },
+      {
+        "numpy": "1.26.4",
+        "opencv-python": "4.11.0.86",
+        "Pillow": "12.3.0"
+      }
+    ],
+    "cached_replay_model_imports_and_socket_connections_forbidden": true,
+    "full_suite_in_both_runtime_profiles": false
+  },
+  "git_export_verification": {
+    "code_snapshot_tree": "cb38834b4c3e9b0c398853c39700aba10853c1b7",
+    "tests": "\n----------------------------------------------------------------------\nRan 435 tests in 56.729s\n\nOK",
+    "formula_summary": {
+      "schema_version": "b-formula-cli-summary-trial/0.1",
+      "replay_mode": "CACHED_REPLAY",
+      "execution_kind": "CPU_RAPID_LATEX_OCR",
+      "integrity_accepted": true,
+      "verification_scope": "FORMULA_SOURCE_AND_CANDIDATE_INTEGRITY_ONLY",
+      "decision": "HOLD",
+      "transcription_verified": false,
+      "business_acceptance": false,
+      "graph_modified": false,
+      "entire_answer_reconstructed": false,
+      "paid_model_calls": 0,
+      "website_requests": 0,
+      "platform_actions": [],
+      "recognition_failures": 0,
+      "unit_count": 11,
+      "variant_count": 22,
+      "parsed_candidate_count": 20,
+      "unparsed_variant_count": 2,
+      "disagreement_unit_count": 8,
+      "artifacts": {
+        "math-layout.json": {
+          "artifact_id": "math-layout-9ee52128e1c47b3e55cd4025",
+          "revision": 1,
+          "content_hash": "37cd452675b6a66be12d5e2ae9b91f40c9da71bc733c889a9bdde739ceb9ea10"
+        },
+        "formula-observations.json": {
+          "artifact_id": "formula-observations-b9d5771e7fe1d39af46a0ede",
+          "revision": 1,
+          "content_hash": "d10056685c41d12647021e2531b9411916044f090c41d2ecc6d3a27c8cbf7ba9"
+        },
+        "formula-candidates.json": {
+          "artifact_id": "formula-candidates-599d496ad175ffa71b5a653a",
+          "revision": 1,
+          "content_hash": "31c28e89fd73793bab05e16b03b0a92c3a33f18d72b42e5f6787fb735d1d2328"
+        },
+        "formula-check.json": {
+          "artifact_id": "formula-check-b2841c4df52db7ebda560593",
+          "revision": 1,
+          "content_hash": "837300eddf17c9227bd7c6322fb2617811680df35fb7c15d63f9e5db4b7185aa"
+        }
+      },
+      "exit_code": 0
+    },
+    "isolated_formula_summary": {
+      "schema_version": "b-formula-cli-summary-trial/0.1",
+      "replay_mode": "CACHED_REPLAY",
+      "execution_kind": "CPU_RAPID_LATEX_OCR",
+      "integrity_accepted": true,
+      "verification_scope": "FORMULA_SOURCE_AND_CANDIDATE_INTEGRITY_ONLY",
+      "decision": "HOLD",
+      "transcription_verified": false,
+      "business_acceptance": false,
+      "graph_modified": false,
+      "entire_answer_reconstructed": false,
+      "paid_model_calls": 0,
+      "website_requests": 0,
+      "platform_actions": [],
+      "recognition_failures": 0,
+      "unit_count": 11,
+      "variant_count": 22,
+      "parsed_candidate_count": 20,
+      "unparsed_variant_count": 2,
+      "disagreement_unit_count": 8,
+      "artifacts": {
+        "math-layout.json": {
+          "artifact_id": "math-layout-9ee52128e1c47b3e55cd4025",
+          "revision": 1,
+          "content_hash": "37cd452675b6a66be12d5e2ae9b91f40c9da71bc733c889a9bdde739ceb9ea10"
+        },
+        "formula-observations.json": {
+          "artifact_id": "formula-observations-b9d5771e7fe1d39af46a0ede",
+          "revision": 1,
+          "content_hash": "d10056685c41d12647021e2531b9411916044f090c41d2ecc6d3a27c8cbf7ba9"
+        },
+        "formula-candidates.json": {
+          "artifact_id": "formula-candidates-599d496ad175ffa71b5a653a",
+          "revision": 1,
+          "content_hash": "31c28e89fd73793bab05e16b03b0a92c3a33f18d72b42e5f6787fb735d1d2328"
+        },
+        "formula-check.json": {
+          "artifact_id": "formula-check-b2841c4df52db7ebda560593",
+          "revision": 1,
+          "content_hash": "837300eddf17c9227bd7c6322fb2617811680df35fb7c15d63f9e5db4b7185aa"
+        }
+      },
+      "exit_code": 0
+    },
+    "payload_hash_matches": {
+      "math-layout.json": {
+        "local": true,
+        "isolated": true
+      },
+      "formula-observations.json": {
+        "local": true,
+        "isolated": true
+      },
+      "formula-candidates.json": {
+        "local": true,
+        "isolated": true
+      },
+      "formula-check.json": {
+        "local": true,
+        "isolated": true
+      }
+    },
+    "synthetic_input_batch_replay": [
+      {
+        "step": "max1",
+        "result": {
+          "schema_version": "b-batch-cli-result-trial/0.1",
+          "batch_state": "PARTIAL",
+          "recognition_mode": "GEOMETRIC",
+          "execution_kind": "BASELINE_GEOMETRY",
+          "decision": "HOLD",
+          "integrity_accepted": true,
+          "business_acceptance": false,
+          "transcription_verified": false,
+          "audit_performed": true,
+          "report_ref": {
+            "artifact_id": "batch-report-56bd065beb6a1ec26ef239b4",
+            "revision": 1,
+            "content_hash": "31c5e4c9a3d25a4df5c3de112c61c99763ba50ffb079e657065c88f403d84fb0"
+          },
+          "check": {
+            "path": "checks/batch-run-87e00b342c694f26a3ed9ab2686b9be2.json",
+            "sha256": "99a00586b9a79bd9ac253919dac2b0b1736365384d9e7682bcf45625e3622525",
+            "artifact_ref": {
+              "artifact_id": "batch-check-a3679f5eac5e95ea3cd8d138",
+              "revision": 1,
+              "content_hash": "656e673f329ad965300bfb251cba2fc4ec3bb9546a744bab479eb99858667d47"
+            }
+          },
+          "counts": {
+            "declared": 3,
+            "done": 1,
+            "pending": 2,
+            "failed": 0,
+            "invalidated": 0,
+            "cache_hits": 0
+          },
+          "batch_complete": false,
+          "issues": [],
+          "exit_code": 0
+        }
+      },
+      {
+        "step": "resume",
+        "result": {
+          "schema_version": "b-batch-cli-result-trial/0.1",
+          "batch_state": "READY",
+          "recognition_mode": "GEOMETRIC",
+          "execution_kind": "BASELINE_GEOMETRY",
+          "decision": "HOLD",
+          "integrity_accepted": true,
+          "business_acceptance": false,
+          "transcription_verified": false,
+          "audit_performed": true,
+          "report_ref": {
+            "artifact_id": "batch-report-b311bab90c8b1b28a855ce1c",
+            "revision": 1,
+            "content_hash": "047b150da89dd03c6d333d81141979387b604b8c4e5c21f75b7ff547bff009f2"
+          },
+          "check": {
+            "path": "checks/batch-run-98020783dedf44cf8ec48b9b1d436614.json",
+            "sha256": "5701079c4c363a189c1eefd06c93088eca331c0a765daee7e55ef5e0748eefb1",
+            "artifact_ref": {
+              "artifact_id": "batch-check-8dcee97d989f68d9de04c711",
+              "revision": 1,
+              "content_hash": "dcdf1190fe1650ef8829625d38197087b1e3b4320decbe0f5327d14789c16e62"
+            }
+          },
+          "counts": {
+            "declared": 3,
+            "done": 3,
+            "pending": 0,
+            "failed": 0,
+            "invalidated": 0,
+            "cache_hits": 1
+          },
+          "batch_complete": true,
+          "issues": [],
+          "exit_code": 0
+        }
+      },
+      {
+        "step": "repeat",
+        "result": {
+          "schema_version": "b-batch-cli-result-trial/0.1",
+          "batch_state": "READY",
+          "recognition_mode": "GEOMETRIC",
+          "execution_kind": "BASELINE_GEOMETRY",
+          "decision": "HOLD",
+          "integrity_accepted": true,
+          "business_acceptance": false,
+          "transcription_verified": false,
+          "audit_performed": true,
+          "report_ref": {
+            "artifact_id": "batch-report-038dfda0f84a88879da20276",
+            "revision": 1,
+            "content_hash": "783975deed83e0ce1627b877499594c1349894885425bce66b6bd5ae64da5c65"
+          },
+          "check": {
+            "path": "checks/batch-run-55dfbdf5b5b8497f96ac94e04842885f.json",
+            "sha256": "011fa715ad4066be7225340ff25273254fcbe110ba430ba6297ea8825096e684",
+            "artifact_ref": {
+              "artifact_id": "batch-check-fc8415167c4de808e1a0ed61",
+              "revision": 1,
+              "content_hash": "d4116a80edef3a0cdbf1d38d1f437663a333582e7c0e6306987a1ce357a1d227"
+            }
+          },
+          "counts": {
+            "declared": 3,
+            "done": 3,
+            "pending": 0,
+            "failed": 0,
+            "invalidated": 0,
+            "cache_hits": 3
+          },
+          "batch_complete": true,
+          "issues": [],
+          "exit_code": 0
+        }
+      }
+    ],
+    "runtime_note": "separate staged Git archive; full suite in base runtime; actual frozen formula input replay in base and isolated formula runtimes with model imports/network forbidden; no actual model reruns; batch CLI uses real geometry on three labelled synthetic images",
+    "full_suite_in_both_runtimes": false,
+    "whole_book_or_business_acceptance": false
+  },
+  "post_export_changes_scope": {
+    "executable_source_tests_fixtures_and_requirements_unchanged": true,
+    "paths": [
+      "docs/b-formula-batch-46007447.md",
+      "docs/status/b.md",
+      "evaluation/book-46007447-formula-batch.json"
+    ],
+    "purpose": "add final observed test counts, distinguish recorded per-call timing, and save these evaluation receipts"
+  },
+  "implementation_text_sha256": {
+    "src/annotation/recognition/batch.py": "1241142989260a01a910d0ae5b1d5d532a349a6edf802a603744e9af01d3dff3",
+    "src/annotation/recognition/batch_quality.py": "4e5ce948bb457f4105f6bd11624815f103f7d5cf3eddd47f275d541458f3ec18",
+    "src/annotation/recognition/formula_backend.py": "97376e4d2bab0286da4c4c67e624aa0308b54b570c0bf15cb528c902d491563f",
+    "src/annotation/recognition/formula_candidates.py": "821988840f97bc0de5c24dc5a4dad5e9230bc53d225efbefe3394d33083048be",
+    "src/annotation/recognition/formula_quality.py": "978ec5816b23ef8e3fd37b75c76a7ad12eb07848b29ddc66611e10c9518fdf86",
+    "src/annotation/recognition/formula_syntax.py": "0e174cd4cbbbecf79c3f899368d960716811a0daaf8b708e38bbdc8247704694",
+    "tools/run_batch_b.py": "1309d16d47e0aa6e4db44ca85b80f0f3e7a5fce19096c8090580b28734deb8dd",
+    "tools/replay_formula_b.py": "eb9abd56c64883a50217fdee93c13f1071a99540f31f93bd269a62648db63305",
+    "tests/test_b_batch.py": "89de166bd5e7950354406aaaa9a19eea86e7996f3a43de7d70b85a60c19bf701",
+    "tests/test_b_batch_quality.py": "44a5368766b631cc58556b14edf135efd721c64f298d1cc709b90d31a130f6e4",
+    "tests/test_b_batch_cli.py": "85e3c9e130e45ebbbcca1a80b53aa57e3a0d77689122cd6b03f01e940b1611a0",
+    "tests/test_b_formula.py": "2f5037eb03cb2e27d96cb9af537b5d81d1a737877c3308a131494ad09b94a8c1",
+    "tests/test_b_formula_independent.py": "dd4f840b3be6ee2c900655b61cb65b3b9a7d2ffbe5cde2dae7f910a44a29cc6e",
+    "tests/test_b_formula_quality.py": "48e453935d7902a4c90d7c2b2cd7fa53e4bfcb52c0bc4596c275af484e6ddb01",
+    "tests/test_b_formula_cli.py": "84a2ad726d78c4fe62181832644c94b565ff9e94103e92a67d4da979a928df88"
+  },
+  "next_work": [
+    "Improve fourth powers and cross-backend conflicts with source evidence; reconstruct full linear formulas/proofs and other complex content without rewriting unknowns.",
+    "Extend durable stage dependencies to offline assembly, pairing and quality/coverage, including selective invalidation and restart evidence.",
+    "Acquire and audit full-book source/page inventory, directory identities and corresponding question pages for the 19 source-local unresolved rows.",
+    "Freeze independently verified development/held-out samples and measure content, pairing, coverage and false release errors.",
+    "Migrate to executable shared types and a fixed A consumer; A records receiving-side validation and subsequent authorized platform readback."
+  ],
+  "receiving_side_validation": "PENDING_A",
+  "current_increment_usage": {
+    "new_local_dedicated_formula_cpu_calls": 22,
+    "new_ordinary_ocr_calls": 0,
+    "cached_replay_model_calls": 0,
+    "annotation_platform_requests": 0,
+    "platform_actions": 0,
+    "source_document_uploads": 0,
+    "paid_model_requests": 0,
+    "public_dependency_model_downloads": "optional runtime packages plus four fixed public release files; successful model chunks reused after failed downloads"
+  }
+}

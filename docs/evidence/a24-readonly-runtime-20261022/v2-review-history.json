@@ -1,0 +1,79 @@
+{
+  "schema": "A24ReadonlyTrialIndependentReview/v1",
+  "date": "2026-10-22",
+  "verdict": {
+    "historical_offline_roundtrip": "PASS",
+    "identity_and_write_boundary": "PASS",
+    "current_body_closure": "HOLD_NOT_OBTAINED",
+    "platform_write": "NOT_RUN",
+    "operational_release": "CONDITIONAL_PRECHECK_ATOMICITY_FIX_RECOMMENDED"
+  },
+  "baseline": {
+    "path": "C:\\Users\\LIHAOYANG\\Documents\\Codex\\2026-10-16\\ni\\work\\a24-takeover-20261022\\source-historical-preservation-reviewed-20261022",
+    "rg_files_observed": 522
+  },
+  "patch": {
+    "path": "C:\\Users\\LIHAOYANG\\Documents\\Codex\\2026-10-17\\chapter1-content-sol56\\outputs\\a24-readonly-trial-20261022\\a24-readonly-trial-frozen-v2.patch",
+    "bytes": 19157,
+    "sha256": "3fb2cbcfbed76a4f4c7b29eb0761d37a2ff8a9a7de6c00fce1ee5113454d654b",
+    "apply_check": "PASS",
+    "apply": "PASS",
+    "core_autocrlf": false
+  },
+  "applied_files": {
+    "src/annotation/runtime/live_pilot/readonly_trial.py": "1ead1518959897529eb0ae6ea2a8c0f946158c6d299875d35204024117908fa4",
+    "tests/a24_readonly_trial/test_readonly_trial.py": "ea3a84ad8978d6e048cde0a2277cf010b8cd1705de6d53900191a3d1e9b8a727"
+  },
+  "tests": {
+    "readonly_trial": {"passed": 5, "failed": 0, "skipped": 0},
+    "historical_preservation": {"passed": 7, "failed": 0, "skipped": 0},
+    "real_19_record_regression_enabled": true
+  },
+  "real_run": {
+    "source_sha256": "02a8aaae2bc907649a03f3676806a02da103e0b487fb43f7e187b29a67fc7a8c",
+    "source_bytes": 11625,
+    "record_count": 19,
+    "source_type": "HISTORICAL_EXPORT",
+    "canonical_question_id": null,
+    "write_allowed": false,
+    "readback": "PASS_EXACT_LOCAL_READBACK",
+    "outputs": {
+      "private/records.full.jsonl": "02a8aaae2bc907649a03f3676806a02da103e0b487fb43f7e187b29a67fc7a8c",
+      "private/records.adapted.json": "50107c9153df3ae77e75bef10aef4478dd44c5381bf161099843afe0bd547576",
+      "public-summary.json": "de13b0ef2cbcbc1aad71b8ba702bf915a5eb3ed85e41eb962152ca788fb9b4d5",
+      "readback-receipt.json": "52ac92a936c669fb4fdf8e48b16965030cc5c2c28af7d539c0bdee77bcbabe38"
+    }
+  },
+  "precheck": {
+    "evidence_type": "CURRENT_DOM",
+    "error_count": 9,
+    "underlying_field_state": "UNOBSERVED",
+    "canonical_question_id": null,
+    "write_allowed": false
+  },
+  "negative_probes": {
+    "wrong_source_sha": "HISTORICAL_SOURCE_BYTES",
+    "current_multiple_records": "CURRENT_RECORD_CARDINALITY",
+    "same_number_and_identity_injection": "PRESERVED_AS_DATA_NOT_PROMOTED",
+    "reordered_precheck": "PRECHECK_ERROR_LEDGER",
+    "tampered_full": "DETECTED",
+    "tampered_adapted": "DETECTED",
+    "tampered_public_summary": "DETECTED"
+  },
+  "finding": {
+    "severity": "P2_OPERATIONAL",
+    "code": "PRECHECK_VALIDATED_AFTER_PRIVATE_OUTPUT_WRITE",
+    "observed_partial_files": [
+      "private/records.full.jsonl",
+      "private/records.adapted.json"
+    ],
+    "minimal_fix": "Validate precheck before _prepare_output_dir and add a no-partial-output regression test."
+  },
+  "evidence": {
+    "report_sha256": "fe6a6dc5dfdbd9d6f8d247200dfa41f6520f0b42e2e1358480aa22034ef47850",
+    "independent_readback_sha256": "d9b79bbd840e052c5cbea6556740a2361501468f8b6401a2087a995379e8a7c6",
+    "negative_probes_sha256": "e65fbbe5859563e00055f13a4049206a02602b6e094ceaac34820772aa16aa89",
+    "independent_checker_sha256": "52396f78981699fb897dc25d00a53d492c135e8d271c96b913f2dfd1b6ee2bf0",
+    "negative_probe_script_sha256": "0fd137b361eb8333f38833d4a734ca6e5ac59198c1dccab831b8254c4bb88aab"
+  }
+}

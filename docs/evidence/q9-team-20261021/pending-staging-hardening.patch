@@ -1,0 +1,90 @@
+diff --git a/tools/prepare_complex_batch_b.py b/tools/prepare_complex_batch_b.py
+index 5ceef07..10e9a01 100644
+--- a/tools/prepare_complex_batch_b.py
++++ b/tools/prepare_complex_batch_b.py
+@@ -21,6 +21,18 @@ ASSETS = {
+     'resource-173': 'base/source/adjacent/46007447_resource_173.jpg',
+ }
+ 
++Q9_RENDER_PLAN = [
++    ('text', 'viewer-173', None),
++    ('image', 'viewer-173', '3'),
++    ('image', 'viewer-173', '4'),
++    *[('text', 'resource-173', None) for _ in range(9)],
++    ('image', 'resource-173', '5'),
++    ('image', 'resource-173', '6'),
++    ('image', 'resource-173', '7'),
++]
++Q9_RESOURCE_LINES = [f'resource-173/ocr/{i}' for i in range(25)]
++Q9_TEXT_MARKERS = ('AB=20cm', '最短路程是20cm', '图5', '图6', '图7', '表面', '最短路程是25cm')
++
+ def sha(raw):
+     return hashlib.sha256(raw).hexdigest()
+ 
+@@ -31,6 +43,22 @@ def need(ok, code):
+     if not ok:
+         raise ValueError(code)
+ 
++def validate_q9_answer(answer):
++    render = answer.get('render_regions', [])
++    plan = [(r.get('content_type'), r.get('asset_id'), r.get('figure_number')) for r in render]
++    need(plan == Q9_RENDER_PLAN, 'Q9_EXACT_RENDER_PLAN')
++    continuations = answer.get('continuations', [])
++    need(len(continuations) == 1, 'Q9_CONTINUATION_CARDINALITY')
++    continuation = continuations[0]
++    need(continuation.get('kind') == 'CROSS_PAGE'
++         and continuation.get('from_asset_id') == 'viewer-173'
++         and continuation.get('to_asset_id') == 'resource-173'
++         and continuation.get('source_tail_line_id') == 'viewer-173/ocr/156'
++         and continuation.get('target_line_ids') == Q9_RESOURCE_LINES,
++         'Q9_CONTINUATION_BINDING')
++    need(all(marker in answer.get('text', '') for marker in Q9_TEXT_MARKERS),
++         'Q9_TEXT_CONTINUATION')
++
+ def ref(value):
+     return {k: value[k] for k in ('artifact_id', 'revision', 'content_hash')}
+ 
+@@ -87,9 +115,7 @@ def build(members):
+         if formulas is not None:
+             need(actual_formulas == formulas, 'FORMULA_SLOT_COVERAGE')
+         if key == 'q9-reflection-continuation':
+-            need(sum(r['content_type'] == 'image' for r in answer['render_regions']) == 5, 'FIGURE_COVERAGE')
+-            order = list(dict.fromkeys(r['asset_id'] for r in answer['render_regions']))
+-            need(order == ['viewer-173', 'resource-173'], 'CROSS_PAGE_READING_ORDER')
++            validate_q9_answer(answer)
+         if key == 'q16-unit2-formulas':
+             need('60 61' in answer['text'] and '60，61' not in answer['text'], 'UNSUPPORTED_PUNCTUATION')
+         case = {'case_id': key, 'book_id': graph['book_id'], 'question_id': question_id,
+@@ -128,6 +154,8 @@ def validate_batch(batch, original):
+              and got['section_path'] == expected['section_path'], 'CROSS_SCOPE_OR_CASE_IDENTITY')
+         need(got['question_id'] == expected['question_id'], 'FABRICATED_QUESTION_OR_RELATION')
+         need(got['decision'] == 'HOLD' and not got['joint_accepted'] and not got['platform_eligible'], 'CASE_APPROVAL_ESCALATION')
++        if got['case_id'] == 'q9-reflection-continuation':
++            validate_q9_answer(got['answer_snapshot'])
+         need(got['answer_snapshot'] == expected['answer_snapshot']
+              and got['question_snapshot'] == expected['question_snapshot'], 'FROZEN_SNAPSHOT_CHANGED')
+ 
+@@ -141,8 +169,21 @@ def rejection_checks(batch):
+     mutations.append(('resource-viewer-173-alias', bad, 'ASSET_ALIAS_OR_IDENTITY_CHANGED'))
+     bad = copy.deepcopy(batch); bad['cases'][3]['joint_accepted'] = True
+     mutations.append(('q1-approval-reused-on-q16', bad, 'CASE_APPROVAL_ESCALATION'))
+-    bad = copy.deepcopy(batch); bad['cases'][2]['answer_snapshot']['render_regions'].pop()
+-    mutations.append(('missing-q9-continuation-region', bad, 'FROZEN_SNAPSHOT_CHANGED'))
++    bad = copy.deepcopy(batch)
++    q9 = bad['cases'][2]['answer_snapshot']
++    q9['render_regions'] = [r for r in q9['render_regions'] if r.get('figure_number') != '5']
++    mutations.append(('missing-q9-figure-5', bad, 'Q9_EXACT_RENDER_PLAN'))
++    bad = copy.deepcopy(batch)
++    q9 = bad['cases'][2]['answer_snapshot']
++    first_resource = next(i for i, r in enumerate(q9['render_regions']) if r['asset_id'] == 'resource-173')
++    q9['render_regions'].insert(0, q9['render_regions'].pop(first_resource))
++    mutations.append(('swapped-q9-page-order', bad, 'Q9_EXACT_RENDER_PLAN'))
++    bad = copy.deepcopy(batch)
++    q9 = bad['cases'][2]['answer_snapshot']
++    q9['text'] = q9['text'].rsplit('\n', 1)[0]
++    mutations.append(('truncated-q9-final-25cm-line', bad, 'Q9_TEXT_CONTINUATION'))
++    bad = copy.deepcopy(batch); bad['cases'][2]['question_id'] = 'q-7d1579fe39d5acc3319646ca'
++    mutations.append(('spliced-other-printed-q9', bad, 'FABRICATED_QUESTION_OR_RELATION'))
+     bad = copy.deepcopy(batch)
+     formula_runs = bad['cases'][3]['answer_snapshot']['content_fragments'][0]['runs']
+     formula_runs.pop(next(i for i, run in enumerate(formula_runs) if run['format'] == 'latex'))

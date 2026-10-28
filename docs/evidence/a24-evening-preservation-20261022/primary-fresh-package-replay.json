@@ -1,0 +1,50 @@
+{
+  "result": "PASS_FRESH_DIRECTORY_REPLAY_EXISTING_DEPENDENCIES",
+  "package_sha256": "c579bd37221f636270070ddb54bd5c876dd3c57febc4d75522724f55d94acceb",
+  "manifest_members_verified": 79,
+  "requires_original_machine_paths_for_execution": false,
+  "requires_git": false,
+  "preservation_outputs_byte_identical": [
+    "private/archived-target.full.json",
+    "private/archived-target.preservation.json",
+    "private/historical-records.full.jsonl",
+    "public-summary.json",
+    "readback-receipt.json"
+  ],
+  "q1_frame_and_binding_values_identical": true,
+  "all_simulated_output_bytes_identical_claimed": false,
+  "calls": [
+    {
+      "arguments": [
+        "tools/run_current_q1_sixframe.py",
+        "--current-q1",
+        "inputs/current-q1-v3.jsonl",
+        "--output",
+        "runs/q1-new"
+      ],
+      "exit_code": 0
+    },
+    {
+      "arguments": [
+        "tools/verify_current_q1_sixframe.py",
+        "runs/q1-new"
+      ],
+      "exit_code": 0
+    },
+    {
+      "arguments": [
+        "tools/run_a24_archived_preservation.py",
+        "--state",
+        "inputs/archived-current-state.json",
+        "--historical",
+        "inputs/historical-19.jsonl",
+        "--current-dom",
+        "inputs/current-q1-tree-dom-attrs.json",
+        "--out",
+        "runs/preservation-new"
+      ],
+      "exit_code": 0
+    }
+  ],
+  "platform_use_allowed": false
+}

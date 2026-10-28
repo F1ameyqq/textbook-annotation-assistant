@@ -1,0 +1,163 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>页面预框工作台</title>
+  <link rel="stylesheet" href="ui.css">
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">
+      <span class="brand-mark" aria-hidden="true">框</span>
+      <div>
+        <h1>页面预框工作台</h1>
+        <p>只保存草稿框，不代表人工核准</p>
+      </div>
+    </div>
+    <div class="state-summary" aria-live="polite">
+      <span class="hold-pill">HOLD</span>
+      <span id="workspaceLabel">正在读取工作区…</span>
+      <span id="revisionLabel">修订 —</span>
+    </div>
+    <div class="top-actions">
+      <button id="reopenButton" type="button" class="secondary">重开已保存版本</button>
+      <button id="saveButton" type="button" class="primary">保存草稿</button>
+    </div>
+  </header>
+
+  <div id="notice" class="notice" role="status" aria-live="polite" hidden></div>
+
+  <section class="actionbar" aria-label="导入和导出">
+    <label class="file-action primary-file" for="imageFileInput">导入页面图片</label>
+    <input id="imageFileInput" type="file" accept="image/*" multiple>
+    <span id="imageFileHint" class="file-hint">可一次选择多张图片</span>
+
+    <button id="exportButton" type="button">下载 JSON</button>
+    <label class="file-action" for="jsonFileInput">重新导入 JSON</label>
+    <input id="jsonFileInput" type="file" accept="application/json,.json">
+    <span class="draft-warning">导入即生成几何候选，可能合框或漏框，须人工调整。仅在本机处理。</span>
+  </section>
+
+  <main class="workspace">
+    <aside class="pages-panel" aria-labelledby="pagesHeading">
+      <div class="panel-heading">
+        <h2 id="pagesHeading">页面</h2>
+        <span id="pageCount" class="count-chip">0</span>
+      </div>
+      <div id="pageList" class="page-list"></div>
+      <p class="panel-help">切换页面不会丢失本地草稿。刷新或关闭前会提醒保存。</p>
+    </aside>
+
+    <section class="canvas-panel" aria-labelledby="canvasHeading">
+      <div class="canvas-toolbar">
+        <div>
+          <p class="eyebrow">当前页面</p>
+          <h2 id="canvasHeading">尚未导入页面</h2>
+        </div>
+        <div class="tool-group" role="group" aria-label="框选工具">
+          <button id="selectToolButton" type="button" class="tool active" aria-pressed="true">选择 / 移动</button>
+          <button id="drawToolButton" type="button" class="tool" aria-pressed="false">新建框</button>
+          <button id="undoButton" type="button" disabled>撤销</button>
+          <button id="deleteButton" type="button" class="danger" disabled>删除框</button>
+          <label>缩放<select id="zoomInput" aria-label="画布缩放"><option value="0.5">50%</option><option value="1">100%</option><option value="2">200%</option><option value="fit">适应宽度</option></select></label>
+          <button id="fitButton" type="button">适应宽度</button>
+        </div>
+      </div>
+
+      <div id="canvasEmpty" class="empty-state">
+        <strong>先导入页面图片</strong>
+        <span>导入后可在原图上拖画、移动和缩放草稿框。</span>
+      </div>
+
+      <div id="stageShell" class="stage-shell" hidden>
+        <svg id="stage" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="页面原图与草稿框" tabindex="0">
+          <image id="pageImage" x="0" y="0" preserveAspectRatio="none"></image>
+          <g id="boxLayer"></g>
+          <g id="selectionLayer"></g>
+          <rect id="drawPreview" class="draw-preview" hidden></rect>
+        </svg>
+      </div>
+
+      <div class="canvas-foot">
+        <span id="coordinateReadout">原图坐标：—</span>
+        <span id="selectionCount">已选 0 个框</span>
+        <span>最小框尺寸 2 × 2 px</span>
+      </div>
+    </section>
+
+    <aside class="details-panel" aria-label="框详情和历史">
+      <section class="box-section" aria-labelledby="boxHeading">
+        <div class="panel-heading">
+          <h2 id="boxHeading">框列表</h2>
+          <span id="boxCount" class="count-chip">0</span>
+        </div>
+        <div id="boxList" class="box-list"></div>
+      </section>
+
+      <section id="inspector" class="inspector" aria-labelledby="inspectorHeading" hidden>
+        <div class="panel-heading">
+          <h2 id="inspectorHeading">选中框</h2>
+          <span class="draft-badge">DRAFT</span>
+        </div>
+        <p id="boxIdLabel" class="box-id"></p>
+        <label>
+          类型
+          <select id="kindInput">
+            <option value="candidate">候选区域</option>
+            <option value="question">题目</option>
+            <option value="stem">题干</option>
+            <option value="option">选项</option>
+            <option value="answer">答案</option>
+            <option value="explanation">解析</option>
+            <option value="figure">图形</option>
+            <option value="table">表格</option>
+            <option value="ignore">忽略</option>
+          </select>
+        </label>
+        <div class="coordinate-grid">
+          <label>x0<input id="x0Input" type="number" step="0.1"></label>
+          <label>y0<input id="y0Input" type="number" step="0.1"></label>
+          <label>x1<input id="x1Input" type="number" step="0.1"></label>
+          <label>y1<input id="y1Input" type="number" step="0.1"></label>
+        </div>
+        <button id="applyCoordinatesButton" type="button">应用坐标</button>
+        <dl class="box-meta">
+          <div><dt>来源</dt><dd id="originLabel">—</dd></div>
+          <div><dt>状态</dt><dd>DRAFT</dd></div>
+        </dl>
+        <p class="panel-help">拖动框体可移动；拖动四角或右下角可缩放。任何编辑都会将来源改为 MANUAL。</p>
+      </section>
+
+      <section class="history-section" aria-labelledby="historyHeading">
+        <div class="panel-heading">
+          <h2 id="historyHeading">保存历史</h2>
+          <button id="refreshHistoryButton" type="button" class="quiet">刷新</button>
+        </div>
+        <div id="historyList" class="history-list"></div>
+      </section>
+    </aside>
+  </main>
+
+  <template id="pageItemTemplate">
+    <button type="button" class="page-item">
+      <span class="page-name"></span>
+      <span class="page-meta"></span>
+    </button>
+  </template>
+
+  <template id="boxItemTemplate">
+    <button type="button" class="box-item">
+      <span class="box-swatch" aria-hidden="true"></span>
+      <span class="box-list-copy">
+        <strong class="box-kind"></strong>
+        <small class="box-coordinates"></small>
+      </span>
+      <span class="box-origin"></span>
+    </button>
+  </template>
+
+  <script src="geometry.js" defer></script>
+  <script src="ui.js" defer></script>
+</body>
+</html>

@@ -1,0 +1,3 @@
+# A30 friend takeover snapshot
+
+Fixed Union20 product; 11/16 accepted, Q12 sent once but readback incomplete, Q13-16 not sent at this checkpoint. Do not resend Q12, accepted11 or previous9. This branch is a code snapshot, NOT a grant to run concurrently. Main coordinator was not paused by this side conversation. Obtain exclusive ownership and reconcile latest state before ANY platform run. Use the separately supplied private handoff ZIP and HANDOFF.md; Git alone omits the original ledger, evidence and 11 book-cache leaves. No passwords, cookies or browser profile are supplied. Old one-shot runs remain spent. 1800-a remains PAUSED. Cross-machine runtime/profile/path deployment is required.

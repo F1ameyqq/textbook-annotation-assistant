@@ -1,0 +1,77 @@
+{
+  "schema": "A24PreservationBypassAudit/v1",
+  "date": "2026-10-22",
+  "decision": "HOLD_PROFILE_BINDING_GAPS_REPRODUCED",
+  "scope": "offline focused synthetic audit only",
+  "source": {
+    "tree": "work/a24-offline-replay-v2-final-independent-20261022/effective-tree",
+    "wire_sha256": "e89057ecdcdcb4878c22138b6de99a47dcd621bb2ce52c938d6fcc83f1a88d08",
+    "quality_sha256": "6b5b9362bfab4879f8b2b676028848b3f7009fb3cf825ea7ba9dccc722d6ace6",
+    "usense_sha256": "6e5c6ae1fa08588ee675193a3054588c1b537083098ab169b4646cc1ddc3e277",
+    "owner_sha256": "dc5113d1984c58d63ea3a26b95d45664aed60a0915a31b9f4afab592169e1318"
+  },
+  "current_unbound_entry": {
+    "fail_closed": true,
+    "condition": "schema_profile is None or body_admission is CURRENT_SCHEMA_UNBOUND",
+    "write_allowed": false,
+    "successors": "NOT_RUN",
+    "adapter_reached": false
+  },
+  "reproduced_findings": [
+    {
+      "id": "EMPTY_DENOMINATOR_ACCEPTED",
+      "severity": "BLOCKER_FOR_PROFILE_BINDING",
+      "observed": "global_order accepted complete=true with zero questions, zero frames and empty question_content, returning 0",
+      "impact": "An incomplete adapter can represent an existing book as an empty complete catalog unless a separately bound authoritative catalog is required."
+    },
+    {
+      "id": "NONSTRING_IDS_AND_SELF_FILLED_BODY_ACCEPTED",
+      "severity": "BLOCKER_FOR_PROFILE_BINDING",
+      "observed": "decode_complete_export accepted platform_question_id=null, rect_ids=[null], parts=[null], empty question_info and all five zones null when self-consistent metadata was supplied",
+      "impact": "Structural self-consistency can substitute for valid old identity and body evidence."
+    },
+    {
+      "id": "UNPROJECTED_FRAME_EXTRA_CHANGE_ACCEPTED",
+      "severity": "BLOCKER_FOR_OLD_FRAME_PRESERVATION",
+      "observed": "A raw frame business_extra change from A to B was discarded by projection; projected frames were equal and check_preservation passed",
+      "impact": "Unknown or omitted frame fields are not included in the before/after preservation denominator."
+    },
+    {
+      "id": "MANY_TO_ONE_ID_ALIAS_ACCEPTED",
+      "severity": "BLOCKER_FOR_IDENTITY_PROJECTION",
+      "observed": "lookup mapped Q-RAW-A and Q-RAW-B to q-old; the raw identity changed while check_preservation passed",
+      "impact": "Identity projection is not required to be direct or injective."
+    }
+  ],
+  "passing_controls": [
+    {"id": "DUPLICATE_FRAME_ID_REJECTED", "code": "TARGET_IDENTITY_DUPLICATE"},
+    {"id": "MISSING_FIFTH_ZONE_REJECTED", "code": "EXPORT_QUESTION_COVERAGE"},
+    {"id": "NATURAL_RAW_EXTRA_DELTA_REJECTED", "code": "OLD_QUESTION_CONTENT_CHANGED"}
+  ],
+  "harness": {
+    "path": "C:/Users/LIHAOYANG/Documents/Codex/2026-10-17/chapter1-quality-sol56/tools/a24_preservation_bypass_audit.py",
+    "sha256": "e4a05d202df3f188c9b8d602172e258258a74d4f4787718674c3449e495f9a80",
+    "exit_code": 0,
+    "reproduced_findings": 4,
+    "passing_controls": 3
+  },
+  "artifacts": {
+    "report": {
+      "path": "C:/Users/LIHAOYANG/Documents/Codex/2026-10-17/chapter1-quality-sol56/outputs/a24-preservation-bypass-audit-report-20261022.md",
+      "sha256": "7c8b92eca6d65005799525434026ca71a717ffd84a52f2f68d6f401f1569e98f"
+    },
+    "harness": {
+      "path": "C:/Users/LIHAOYANG/Documents/Codex/2026-10-17/chapter1-quality-sol56/tools/a24_preservation_bypass_audit.py",
+      "sha256": "e4a05d202df3f188c9b8d602172e258258a74d4f4787718674c3449e495f9a80"
+    }
+  },
+  "minimum_delta_recommendation": [
+    "Require every old platform_question_id, platform_frame_id and rect_id to be a non-empty trimmed string; apply the same rule in snapshot and export decoders.",
+    "Forbid literal and many-to-one lookup rules for identity outputs, or retain and compare a trusted raw identity alongside any canonical identity.",
+    "Attach a trusted full raw-record digest to every projected question, frame and directory record and require it in preservation comparisons; do not rely only on selected fields.",
+    "Bind complete-export state_version and natural-export qualification state_binding to the current snapshot catalog/version instead of checking only truthiness.",
+    "Require an independently observed authoritative catalog membership/count binding before accepting an empty or reduced old-question denominator; do not hardcode historical 22/68 counts.",
+    "Keep CURRENT_SCHEMA_UNBOUND and HOLD until real responses establish the actual field paths and binding values; do not invent platform fields."
+  ],
+  "network_browser_api_live_authority_model_calls": 0
+}

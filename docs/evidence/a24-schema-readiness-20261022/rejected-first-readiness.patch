@@ -1,0 +1,492 @@
+diff --git a/src/annotation/delivery/live_pilot/wire.py b/src/annotation/delivery/live_pilot/wire.py
+index ae6290d..cd1be94 100644
+--- a/src/annotation/delivery/live_pilot/wire.py
++++ b/src/annotation/delivery/live_pilot/wire.py
+@@ -34,6 +34,40 @@ ROW_FIELDS = {"rect_id", "type", "belong_to_level", "order_in_level",
+               "is_pre_annotation", "pre_annotations_id"}
+ SNAPSHOT_FIELDS = ("book_id", "platform_version", "view", "directory_details",
+                    "source_bindings", "submission_status", "complete", "read_status")
++IDENTITY_OUTPUT_FIELDS = {"platform_question_id", "platform_frame_id", "directory_id", "rect_id"}
++IDENTITY_CONTAINER_FIELDS = {"view", "target", "questions", "frames", "directory_details", "directories"}
++
++
++def canonical_id(value):
++    return isinstance(value, str) and bool(value) and value.strip() == value
++
++
++def direct_from(rule):
++    return (isinstance(rule, dict) and set(rule) == {"from"} and
++            isinstance(rule["from"], dict) and set(rule["from"]) == {"response", "path"})
++
++
++def validate_identity_projection(rule, identity_container=False):
++    """Identity leaves/containers must remain direct; unrelated lookups stay legal."""
++    require(isinstance(rule, dict) and len(rule) == 1, "SNAPSHOT_PROJECTION_RULE")
++    kind, spec = next(iter(rule.items()))
++    if identity_container and kind == "from":
++        require(direct_from(rule), "IDENTITY_FROM_RESPONSE_REQUIRED")
++        return True
++    if identity_container:
++        require(kind in ("object", "array"), "IDENTITY_FROM_RESPONSE_REQUIRED")
++    if kind == "object":
++        require(isinstance(spec, dict), "SNAPSHOT_PROJECTION_RULE")
++        for key, child in spec.items():
++            if key in IDENTITY_OUTPUT_FIELDS:
++                require(direct_from(child), "IDENTITY_FROM_RESPONSE_REQUIRED")
++            validate_identity_projection(child, key in IDENTITY_CONTAINER_FIELDS)
++    elif kind == "array":
++        require(isinstance(spec, dict) and "item" in spec, "SNAPSHOT_PROJECTION_RULE")
++        if identity_container:
++            require("source" in spec and direct_from(spec["source"]), "IDENTITY_FROM_RESPONSE_REQUIRED")
++        validate_identity_projection(spec["item"], identity_container)
++    return True
+ 
+ 
+ def public_read_manifest(reads):
+@@ -196,6 +230,13 @@ def validate_profile(admission, request, asset_root):
+                     len({r["name"] for r in spec["requests"]}) == len(spec["requests"]) and
+                     set(spec["projection"]) == set(SNAPSHOT_FIELDS) and
+                     "literal" not in spec["projection"]["complete"], "EXACT_READ_MANIFEST_REQUIRED")
++            book_rule = spec["projection"]["book_id"]
++            request_names = {r["name"] for r in spec["requests"]}
++            require(isinstance(book_rule, dict) and set(book_rule) == {"from"} and
++                    isinstance(book_rule["from"], dict) and set(book_rule["from"]) == {"response", "path"} and
++                    book_rule["from"]["response"] in request_names and
++                    isinstance(book_rule["from"]["path"], list), "BOOK_IDENTITY_FROM_RESPONSE_REQUIRED")
++            validate_identity_projection({"object": spec["projection"]})
+             for r in spec["requests"]:
+                 require(set(r) == {"name", "path", "params", "count"} and r["count"] == 1, "EXACT_READ_MANIFEST_REQUIRED")
+                 safe_get(r["path"], r["params"])
+@@ -306,7 +347,9 @@ def decode_complete_export(text, codec, inventory):
+             "AUTHORITATIVE_EXPORT_COMPLETENESS_REQUIRED")
+     m = {k: field(metadata[0], path) for k, path in codec["metadata_fields"].items()}
+     ids = [q["platform_question_id"] for q in inventory]
+-    require(str(m["book_id"]) == BOOK and m["complete"] is True and isinstance(m["question_ids"], list) and
++    require(ids and all(canonical_id(v) for v in ids) and
++            str(m["book_id"]) == BOOK and m["complete"] is True and isinstance(m["question_ids"], list) and
++            all(canonical_id(v) for v in m["question_ids"]) and
+             len(ids) == len(set(ids)) == len(m["question_ids"]) and set(m["question_ids"]) == set(ids) and
+             m["zones"] == list(ZONES) and m["state_version"], "EXPORT_COVERAGE_UNPROVEN")
+     require(set(codec["question_fields"]) == {"platform_question_id", "question_type", "parts", "wire_zones",
+@@ -315,11 +358,12 @@ def decode_complete_export(text, codec, inventory):
+     for row in rows:
+         value = {k: copy.deepcopy(field(row, path)) for k, path in codec["question_fields"].items()}
+         pid = value.pop("platform_question_id")
+-        require(pid in ids and pid not in contents and value["question_type"] and
+-                isinstance(value["parts"], list) and value["parts"] and
++        require(canonical_id(pid) and pid in ids and pid not in contents and value["question_type"] and
++                isinstance(value["parts"], list) and value["parts"] and all(isinstance(v, dict) for v in value["parts"]) and
+                 isinstance(value["wire_zones"], dict) and set(value["wire_zones"]) == set(ZONES) and
+                 all(v is None or isinstance(v, str) for v in value["wire_zones"].values()) and
+                 isinstance(value["question_info"], dict) and isinstance(value["rect_ids"], list) and
++                all(canonical_id(v) for v in value["rect_ids"]) and
+                 len(value["rect_ids"]) == len(set(value["rect_ids"])), "EXPORT_QUESTION_COVERAGE")
+         # Preserve every observed business field, including unrecognized additions.
+         contents[pid] = dict(value, status="AVAILABLE", raw_record=copy.deepcopy(row))
+@@ -345,7 +389,8 @@ def decode_natural_export(text, codec, inventory):
+     require(isinstance(text, str) and text.strip() and not text.lstrip().startswith("<"), "EXPORT_NOT_JSONL")
+     records = [json.loads(line, object_pairs_hook=unique_object) for line in text.splitlines() if line.strip()]
+     ids = [v["platform_question_id"] for v in inventory]
+-    require(len(ids) == len(set(ids)) and len(records) == len(ids) and
++    require(ids and all(canonical_id(v) for v in ids) and
++            len(ids) == len(set(ids)) and len(records) == len(ids) and
+             set(codec["question_fields"]) == {"platform_question_id", "question_type", "parts", "wire_zones", "question_info", "rect_ids"},
+             "EXPORT_QUESTION_COVERAGE")
+     contents = {}
+@@ -353,10 +398,12 @@ def decode_natural_export(text, codec, inventory):
+         require(isinstance(record, dict), "EXPORT_NOT_JSONL")
+         value = {k: copy.deepcopy(field(record, path)) for k, path in codec["question_fields"].items()}
+         pid = value.pop("platform_question_id")
+-        require(pid in ids and pid not in contents and value["question_type"] and isinstance(value["parts"], list) and
+-                value["parts"] and set(value["wire_zones"]) == set(ZONES) and
++        require(canonical_id(pid) and pid in ids and pid not in contents and value["question_type"] and isinstance(value["parts"], list) and
++                value["parts"] and all(isinstance(v, dict) for v in value["parts"]) and
++                set(value["wire_zones"]) == set(ZONES) and
+                 all(v is None or isinstance(v, str) for v in value["wire_zones"].values()) and
+                 isinstance(value["question_info"], dict) and isinstance(value["rect_ids"], list) and
++                all(canonical_id(v) for v in value["rect_ids"]) and
+                 len(value["rect_ids"]) == len(set(value["rect_ids"])), "EXPORT_QUESTION_COVERAGE")
+         contents[pid] = dict(value, status="AVAILABLE", raw_record_hash=digest(record))
+     require(set(contents) == set(ids), "OLD_CONTENT_INCOMPLETE")
+diff --git a/src/annotation/quality/live_pilot.py b/src/annotation/quality/live_pilot.py
+index 03027a5..b9c8109 100644
+--- a/src/annotation/quality/live_pilot.py
++++ b/src/annotation/quality/live_pilot.py
+@@ -212,14 +212,29 @@ def global_order(observation):
+             "FULL_TARGET_REQUIRED")
+     target = observation["view"]["target"]
+     questions = target["questions"]
++    frames = target["frames"]
++    require(questions and frames and observation["view"]["question_content"], "EMPTY_TARGET_DENOMINATOR")
++    require(all(isinstance(q.get("platform_question_id"), str) and q["platform_question_id"] and
++                q["platform_question_id"].strip() == q["platform_question_id"] for q in questions) and
++            all(isinstance(f.get("platform_frame_id"), str) and f["platform_frame_id"] and
++                f["platform_frame_id"].strip() == f["platform_frame_id"] and
++                isinstance(f.get("platform_question_id"), str) and f["platform_question_id"] and
++                f["platform_question_id"].strip() == f["platform_question_id"] for f in frames),
++            "TARGET_IDENTITY_INVALID")
+     orders = [q["platform_order"] for q in questions]
+     require(all(type(n) is int and n > 0 for n in orders) and len(set(orders)) == len(orders), "GLOBAL_ORDER_AMBIGUOUS")
+     for key, records in (("platform_question_id", questions), ("platform_frame_id", target["frames"])):
+         require(len({r[key] for r in records}) == len(records), "TARGET_IDENTITY_DUPLICATE")
+     require(all(f["platform_question_id"] in {q["platform_question_id"] for q in questions}
+                 for f in target["frames"]), "FRAME_QUESTION_IDENTITY")
++    require({f["platform_question_id"] for f in frames} == {q["platform_question_id"] for q in questions},
++            "FRAME_QUESTION_DENOMINATOR")
+     require(set(target["directories"]) == {d["directory_id"] for d in observation["directory_details"]} and
+             len(target["directories"]) == len(observation["directory_details"]), "DIRECTORY_INCOMPLETE")
++    require(target["directories"] and all(isinstance(v, str) and v and v.strip() == v
++            for v in target["directories"]) and all(isinstance(d.get("directory_id"), str) and
++            d["directory_id"] and d["directory_id"].strip() == d["directory_id"]
++            for d in observation["directory_details"]), "TARGET_IDENTITY_INVALID")
+     require(set(observation["view"]["question_content"]) == {q["platform_question_id"] for q in questions},
+             "OLD_CONTENT_INCOMPLETE")
+     require(all(c.get("status") == "AVAILABLE" and c.get("question_type") and c.get("parts")
+diff --git a/src/annotation/runtime/live_pilot/schema_capture.py b/src/annotation/runtime/live_pilot/schema_capture.py
+new file mode 100644
+index 0000000..e1a5f06
+--- /dev/null
++++ b/src/annotation/runtime/live_pilot/schema_capture.py
+@@ -0,0 +1,105 @@
++"""Fail-closed reader for the four unqualified current-schema captures.
++
++This module verifies bytes and provenance boundaries only. It deliberately does
++not infer field paths, build a wire profile, create proofs, or authorize writes.
++"""
++from dataclasses import dataclass
++import hashlib
++from pathlib import Path
++
++from annotation.quality.live_pilot import require
++from annotation.runtime.storage.common import digest
++
++
++CAPTURES = (
++    ("book", "/qieti/api/claim_book/books", (), "book-snapshot.bin"),
++    ("directory", "/qieti/api/annotate_ocr/directory/get", ("file_id",), "directory-snapshot.bin"),
++    ("frames", "/qieti/api/annotate_pic/get_manual_annotations_unified/46007447", (), "frames-snapshot.bin"),
++    ("export", "/qieti/api/annotate_ocr/export-paper-questions/46007447", (), "export-snapshot.bin"),
++)
++REPRESENTATION = "UTF8_REENCODED_RESPONSE_TEXT"
++REPARSE_POINT = 0x400
++
++
++def _sha(raw):
++    return hashlib.sha256(raw).hexdigest()
++
++
++def _regular_non_reparse(path):
++    require(path.is_file() and not path.is_symlink(), "CURRENT_SCHEMA_CAPTURE_PATH")
++    info = path.lstat()
++    require(not (getattr(info, "st_file_attributes", 0) & REPARSE_POINT), "CURRENT_SCHEMA_CAPTURE_PATH")
++
++
++@dataclass(frozen=True)
++class CurrentSchemaCapture:
++    root: Path
++    manifest: tuple
++    texts: tuple
++
++    def text(self, slot):
++        matches = [text for name, text in self.texts if name == slot]
++        require(len(matches) == 1, "CURRENT_SCHEMA_CAPTURE_SLOT")
++        return matches[0]
++
++    def public_summary(self):
++        return {
++            "schema": "A24CurrentSchemaCaptureSet/v1",
++            "status": "CAPTURE_BYTES_VERIFIED_SCHEMA_UNBOUND",
++            "write_allowed": False,
++            "successors": "NOT_RUN",
++            "members": [dict(item) for item in self.manifest],
++            "capture_set_sha256": digest(list(self.manifest)),
++            "schema_profile": None,
++            "qualification": "NOT_RUN",
++        }
++
++
++def load_current_schema_capture(result, output_root):
++    """Load exactly four private snapshots without promoting their schema."""
++    require(isinstance(result, dict) and set(result) ==
++            {"status", "write_allowed", "successors", "reads"} and
++            result["status"] == "CURRENT_SCHEMA_UNBOUND" and
++            result["write_allowed"] is False and result["successors"] == "NOT_RUN" and
++            isinstance(result["reads"], list) and len(result["reads"]) == len(CAPTURES),
++            "CURRENT_SCHEMA_CAPTURE_RESULT")
++    root = Path(output_root).resolve()
++    private = root / "private"
++    require(root.is_dir() and private.is_dir() and not root.is_symlink() and not private.is_symlink(),
++            "CURRENT_SCHEMA_CAPTURE_PATH")
++    for path in (root, private):
++        require(not (getattr(path.lstat(), "st_file_attributes", 0) & REPARSE_POINT),
++                "CURRENT_SCHEMA_CAPTURE_PATH")
++
++    manifest, texts = [], []
++    for read, (slot, route, query_keys, filename) in zip(result["reads"], CAPTURES):
++        expected_fields = {"slot", "path_template", "query_keys", "http_status", "bytes", "sha256",
++                           "capture_representation", "controlled_raw_ref"}
++        require(isinstance(read, dict) and set(read) == expected_fields and
++                read["slot"] == slot and read["path_template"] == route and
++                read["query_keys"] == list(query_keys) and read["http_status"] == 200 and
++                type(read["bytes"]) is int and read["bytes"] > 0 and
++                read["capture_representation"] == REPRESENTATION,
++                "CURRENT_SCHEMA_CAPTURE_RESULT")
++        reference = read["controlled_raw_ref"]
++        require(isinstance(reference, dict) and set(reference) ==
++                {"path", "sha256", "bytes", "capture_representation"} and
++                reference["sha256"] == read["sha256"] and reference["bytes"] == read["bytes"] and
++                reference["capture_representation"] == REPRESENTATION,
++                "CURRENT_SCHEMA_CAPTURE_REF")
++        expected = (private / filename).resolve()
++        actual = Path(reference["path"]).resolve()
++        require(actual == expected and private in actual.parents, "CURRENT_SCHEMA_CAPTURE_PATH")
++        _regular_non_reparse(actual)
++        raw = actual.read_bytes()
++        require(len(raw) == read["bytes"] and _sha(raw) == read["sha256"],
++                "CURRENT_SCHEMA_CAPTURE_BYTES")
++        try:
++            text = raw.decode("utf-8", errors="strict")
++        except UnicodeDecodeError as exc:
++            require(False, "CURRENT_SCHEMA_CAPTURE_ENCODING", str(type(exc).__name__))
++        manifest.append({"slot": slot, "path_template": route, "query_keys": list(query_keys),
++                         "bytes": len(raw), "sha256": _sha(raw),
++                         "capture_representation": REPRESENTATION})
++        texts.append((slot, text))
++    return CurrentSchemaCapture(root, tuple(manifest), tuple(texts))
+diff --git a/tests/a24_schema_readiness/test_schema_readiness.py b/tests/a24_schema_readiness/test_schema_readiness.py
+new file mode 100644
+index 0000000..eda6af6
+--- /dev/null
++++ b/tests/a24_schema_readiness/test_schema_readiness.py
+@@ -0,0 +1,230 @@
++"""Focused offline checks for capture consumption and book identity provenance."""
++import copy
++import hashlib
++import json
++from pathlib import Path
++import sys
++import tempfile
++import unittest
++
++ROOT = Path(__file__).resolve().parents[2]
++sys.path.insert(0, str(ROOT / "tests/a24_first_save_wire_r1"))
++
++from fixture import FakeIO, bind_profile, fixture
++from annotation.delivery.live_pilot import wire
++from annotation.delivery.live_pilot.usense import UsenseTransport
++from annotation.quality.live_pilot import PilotError, check_input, global_order
++from annotation.runtime.live_pilot.schema_capture import CAPTURES, REPRESENTATION, load_current_schema_capture
++
++
++class CaptureReadinessTests(unittest.TestCase):
++    def setUp(self):
++        self.temp = tempfile.TemporaryDirectory(prefix="a24-schema-readiness-")
++        self.addCleanup(self.temp.cleanup)
++        self.root = Path(self.temp.name)
++
++    def capture(self):
++        output = self.root / "owned-output"
++        private = output / "private"
++        private.mkdir(parents=True)
++        reads = []
++        for slot, route, query_keys, filename in CAPTURES:
++            raw = (slot + "-正文").encode("utf-8")
++            path = private / filename
++            path.write_bytes(raw)
++            reference = {"path": str(path), "sha256": hashlib.sha256(raw).hexdigest(), "bytes": len(raw),
++                         "capture_representation": REPRESENTATION}
++            reads.append({"slot": slot, "path_template": route, "query_keys": list(query_keys),
++                          "http_status": 200, "bytes": len(raw), "sha256": reference["sha256"],
++                          "capture_representation": REPRESENTATION, "controlled_raw_ref": reference})
++        result = {"status": "CURRENT_SCHEMA_UNBOUND", "write_allowed": False,
++                  "successors": "NOT_RUN", "reads": reads}
++        return output, result
++
++    def test_exact_four_capture_set_loads_but_remains_unqualified_and_nonwritable(self):
++        output, result = self.capture()
++        capture = load_current_schema_capture(result, output)
++        self.assertEqual(capture.text("book"), "book-正文")
++        self.assertEqual([item["slot"] for item in capture.manifest], [v[0] for v in CAPTURES])
++        summary = capture.public_summary()
++        self.assertEqual(summary["status"], "CAPTURE_BYTES_VERIFIED_SCHEMA_UNBOUND")
++        self.assertIs(summary["write_allowed"], False)
++        self.assertIsNone(summary["schema_profile"])
++        self.assertEqual(summary["qualification"], "NOT_RUN")
++        self.assertNotIn(str(output), str(summary))
++        self.assertNotIn("正文", str(summary))
++
++    def test_missing_book_member_rejects(self):
++        output, result = self.capture()
++        result["reads"] = result["reads"][1:]
++        with self.assertRaises(PilotError) as caught:
++            load_current_schema_capture(result, output)
++        self.assertEqual(caught.exception.code, "CURRENT_SCHEMA_CAPTURE_RESULT")
++
++    def test_reference_outside_owned_private_root_rejects(self):
++        output, result = self.capture()
++        outside = self.root / "outside.bin"
++        outside.write_bytes((output / "private/book-snapshot.bin").read_bytes())
++        result["reads"][0]["controlled_raw_ref"]["path"] = str(outside)
++        with self.assertRaises(PilotError) as caught:
++            load_current_schema_capture(result, output)
++        self.assertEqual(caught.exception.code, "CURRENT_SCHEMA_CAPTURE_PATH")
++
++    def test_tampered_body_rejects_digest(self):
++        output, result = self.capture()
++        (output / "private/frames-snapshot.bin").write_bytes(b"tampered")
++        with self.assertRaises(PilotError) as caught:
++            load_current_schema_capture(result, output)
++        self.assertEqual(caught.exception.code, "CURRENT_SCHEMA_CAPTURE_BYTES")
++
++    def profile_case(self, literal_book):
++        case = self.root / ("literal" if literal_book else "direct")
++        case.mkdir()
++        request, initial, fact, profile = fixture(case)
++        reads = {}
++        for phase in profile["reads"]:
++            projection = {name: {"from": {"response": "snapshot", "path": ["snapshot", name]}}
++                          for name in wire.SNAPSHOT_FIELDS}
++            if literal_book:
++                projection["book_id"] = {"literal": "46007447"}
++            reads[phase] = {"requests": [
++                {"name": "book", "path": "/qieti/api/synthetic/book", "params": {}, "count": 1},
++                {"name": "snapshot", "path": "/qieti/api/synthetic/complete-snapshot",
++                 "params": {"file_id": "46007447"}, "count": 1}], "projection": projection}
++        profile["reads"] = reads
++        bind_profile(request, profile, case)
++        transport = UsenseTransport(FakeIO(initial, fact))
++        return request, case, transport
++
++    def test_literal_book_identity_profile_rejects_before_any_read(self):
++        request, case, transport = self.profile_case(True)
++        with self.assertRaises(PilotError) as caught:
++            check_input(request, case, offline=True, wire=transport)
++        self.assertEqual(caught.exception.code, "BOOK_IDENTITY_FROM_RESPONSE_REQUIRED")
++        self.assertEqual(transport._session.calls, [])
++
++    def test_direct_response_book_identity_profile_can_bind_without_reading(self):
++        request, case, transport = self.profile_case(False)
++        admission = check_input(request, case, offline=True, wire=transport)
++        self.assertEqual(admission.wire.profile["reads"]["baseline"]["projection"]["book_id"],
++                         {"from": {"response": "snapshot", "path": ["snapshot", "book_id"]}})
++        self.assertEqual(transport._session.calls, [])
++
++    def observation(self):
++        return {"book_id": "46007447", "platform_version": "observed", "complete": True,
++                "read_status": "OK", "submission_status": "NOT_SUBMITTED", "source_bindings": {},
++                "directory_details": [{"directory_id": "leaf", "parent_id": None}],
++                "view": {"target": {"directories": ["leaf"],
++                    "questions": [{"platform_question_id": "q-old", "platform_order": 1,
++                                   "directory_id": "leaf"}],
++                    "frames": [{"platform_frame_id": "r-old", "platform_question_id": "q-old"}]},
++                    "internal_bindings": {}, "frame_projections": {"r-old": {}},
++                    "question_content": {"q-old": {"status": "AVAILABLE", "question_type": "ordinary_choice",
++                        "parts": [{}], "wire_zones": {zone: None for zone in wire.ZONES},
++                        "question_info": {}, "rect_ids": ["r-old"]}}}}
++
++    def test_empty_and_per_question_frame_denominators_reject(self):
++        empty = self.observation()
++        empty["view"]["target"].update(questions=[], frames=[])
++        empty["view"]["question_content"] = {}
++        with self.assertRaises(PilotError) as caught:
++            global_order(empty)
++        self.assertEqual(caught.exception.code, "EMPTY_TARGET_DENOMINATOR")
++
++        missing = self.observation()
++        missing["view"]["target"]["questions"].append(
++            {"platform_question_id": "q-without-frame", "platform_order": 2, "directory_id": "leaf"})
++        missing["view"]["question_content"]["q-without-frame"] = copy.deepcopy(
++            missing["view"]["question_content"]["q-old"])
++        with self.assertRaises(PilotError) as caught:
++            global_order(missing)
++        self.assertEqual(caught.exception.code, "FRAME_QUESTION_DENOMINATOR")
++
++    def test_noncanonical_snapshot_question_and_frame_ids_reject(self):
++        for field, value in (("platform_question_id", None), ("platform_question_id", " q-old"),
++                             ("platform_frame_id", ""), ("platform_frame_id", "r-old ")):
++            with self.subTest(field=field, value=value):
++                observed = self.observation()
++                target = observed["view"]["target"]
++                record = target["questions"][0] if field == "platform_question_id" else target["frames"][0]
++                record[field] = value
++                with self.assertRaises(PilotError) as caught:
++                    global_order(observed)
++                self.assertEqual(caught.exception.code, "TARGET_IDENTITY_INVALID")
++
++    def complete_codec(self):
++        return {"schema": "A24CompleteExportCodec/v1", "kind_path": ["kind"],
++                "metadata_value": "metadata", "question_value": "question",
++                "metadata_fields": {key: [key] for key in
++                    ("book_id", "complete", "question_ids", "zones", "state_version")},
++                "question_fields": {key: [key] for key in
++                    ("platform_question_id", "question_type", "parts", "wire_zones", "question_info", "rect_ids")}}
++
++    def export_text(self, qid="q-old", parts=None, rect_ids=None):
++        metadata = {"kind": "metadata", "book_id": "46007447", "complete": True,
++                    "question_ids": [qid], "zones": list(wire.ZONES), "state_version": "observed"}
++        row = {"kind": "question", "platform_question_id": qid, "question_type": "ordinary_choice",
++               "parts": [{}] if parts is None else parts, "wire_zones": {zone: None for zone in wire.ZONES},
++               "question_info": {}, "rect_ids": ["r-old"] if rect_ids is None else rect_ids}
++        return "\n".join(json.dumps(value, separators=(",", ":")) for value in (metadata, row))
++
++    def test_export_invalid_question_rect_ids_and_null_parts_reject(self):
++        cases = ((None, [{}], ["r-old"]), (" q-old", [{}], ["r-old"]),
++                 ("q-old", [None], ["r-old"]), ("q-old", [{}], [None]),
++                 ("q-old", [{}], [" r-old"]), ("q-old", [{}], ["r-old", "r-old"]))
++        for qid, parts, rect_ids in cases:
++            with self.subTest(qid=qid, parts=parts, rect_ids=rect_ids):
++                with self.assertRaises(PilotError) as caught:
++                    wire.decode_complete_export(self.export_text(qid, parts, rect_ids), self.complete_codec(),
++                                                [{"platform_question_id": qid}])
++                self.assertEqual(caught.exception.code, "EXPORT_COVERAGE_UNPROVEN" if qid is None or
++                                 isinstance(qid, str) and qid != qid.strip() else "EXPORT_QUESTION_COVERAGE")
++
++    def test_valid_complete_export_still_decodes(self):
++        contents, proof = wire.decode_complete_export(
++            self.export_text(), self.complete_codec(), [{"platform_question_id": "q-old"}])
++        self.assertEqual(set(contents), {"q-old"})
++        self.assertEqual(contents["q-old"]["rect_ids"], ["r-old"])
++        self.assertIs(proof["complete"], True)
++
++    def test_natural_export_applies_same_identity_and_parts_rules(self):
++        codec = {"schema": "A24NaturalExportCodec/v1",
++                 "question_fields": self.complete_codec()["question_fields"],
++                 "qualification": {"schema": "A24FullBodyRouteQualification/v1", "status": "VERIFIED",
++                    "route": wire.EXPORT, "book_id": "46007447", "authoritative_catalog_complete": True,
++                    "all_business_fields_covered": True, "zones": list(wire.ZONES),
++                    "state_binding": "synthetic-bound", "evidence_refs": ["synthetic"]}}
++        row = json.loads(self.export_text("q-old", [None], [None]).splitlines()[1])
++        with self.assertRaises(PilotError) as caught:
++            wire.decode_natural_export(json.dumps(row), codec, [{"platform_question_id": "q-old"}])
++        self.assertEqual(caught.exception.code, "EXPORT_QUESTION_COVERAGE")
++
++    def test_identity_lookup_rejects_but_nonidentity_lookup_remains_legal(self):
++        lookup = {"lookup": {"key": {"from": {"response": "$", "path": ["raw"]}},
++                             "table": {"A": "canonical"}}}
++        with self.assertRaises(PilotError) as caught:
++            wire.validate_identity_projection({"object": {"platform_question_id": lookup}})
++        self.assertEqual(caught.exception.code, "IDENTITY_FROM_RESPONSE_REQUIRED")
++        self.assertTrue(wire.validate_identity_projection({"object": {"question_type": lookup}}))
++
++    def test_identity_container_literal_and_array_item_lookup_reject(self):
++        with self.assertRaises(PilotError) as caught:
++            wire.validate_identity_projection({"object": {"view": {"literal": {
++                "target": {"questions": [{"platform_question_id": "made-up"}]}}}}})
++        self.assertEqual(caught.exception.code, "IDENTITY_FROM_RESPONSE_REQUIRED")
++
++        directories = {"array": {
++            "source": {"from": {"response": "snapshot", "path": ["directories"]}},
++            "item": {"lookup": {"key": {"from": {"response": "$", "path": []}},
++                                "table": {"raw": "canonical"}}}}}
++        with self.assertRaises(PilotError) as caught:
++            wire.validate_identity_projection({"object": {"directories": directories}})
++        self.assertEqual(caught.exception.code, "IDENTITY_FROM_RESPONSE_REQUIRED")
++
++    def test_identity_container_direct_copy_remains_legal(self):
++        direct = {"from": {"response": "snapshot", "path": ["view"]}}
++        self.assertTrue(wire.validate_identity_projection({"object": {"view": direct}}))
++
++
++if __name__ == "__main__":
++    unittest.main()
+

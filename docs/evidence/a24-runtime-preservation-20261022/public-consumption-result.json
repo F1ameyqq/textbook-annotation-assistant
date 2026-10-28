@@ -1,0 +1,106 @@
+{
+  "schema": "A24RuntimePreservationPublicConsumptionIndependent/v1",
+  "status": "PASS_PUBLIC_PACKAGE_CONSUMPTION_BOUNDED",
+  "package": {
+    "path": "handoffs/b/a24/a24-runtime-preservation-v3-20261022.zip",
+    "bytes": 506731,
+    "sha256": "2f97801dc13bc040b1eefb97b02932c2c7cbfee887297eedf579cd6998c52638",
+    "runtime_json_sha256": "e28545d2bbd23129b00773f8ba5099fe651d6f14d7769b03c0911676c84edfd3",
+    "members": 128,
+    "source_members": 115,
+    "test_and_fixture_members": 12,
+    "manifest_declared_payload_members": 127,
+    "manifest_hashes_verified": 127,
+    "hash_mismatches": 0,
+    "missing_members": 0,
+    "extra_members": 0,
+    "unsafe_paths": 0,
+    "duplicate_paths": 0,
+    "symlinks": 0
+  },
+  "command": "python tools/replay_a24_runtime_preservation.py --out <new independent directory>",
+  "command_exit_code": 0,
+  "receipt": {
+    "path": "replay/replay-receipt.json",
+    "sha256": "f7bdf5ba908eb4449a0cde12fb201ff1533e2c457e86937c6030d2fed3e2f1e8",
+    "result": "PASS_SYNTHETIC_RUNTIME_REGRESSIONS"
+  },
+  "suites": [
+    {
+      "path": "tests/a24_runtime_raw_preservation",
+      "expected": 13,
+      "observed": 13,
+      "exit_code": 0,
+      "qualified": true
+    },
+    {
+      "path": "tests/a24_schema_readiness",
+      "expected": 14,
+      "observed": 14,
+      "exit_code": 0,
+      "qualified": true
+    },
+    {
+      "path": "tests/a24_archived_target_preservation",
+      "expected": 8,
+      "observed": 8,
+      "exit_code": 0,
+      "qualified": true
+    },
+    {
+      "path": "tests/a24_readonly_trial",
+      "expected": 6,
+      "observed": 6,
+      "exit_code": 0,
+      "qualified": true
+    },
+    {
+      "path": "tests/independent_runtime_preservation",
+      "expected": 15,
+      "observed": 15,
+      "exit_code": 0,
+      "qualified": true
+    }
+  ],
+  "totals": {
+    "expected": 56,
+    "observed": 56,
+    "passed": 56,
+    "failed": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "content_audit": {
+    "persisted_login_state_paths": 0,
+    "forbidden_private_asset_extensions": 0,
+    "private_business_originals_present": false,
+    "browser_profile_present": false,
+    "cookie_store_present": false,
+    "real_credentials_present": false,
+    "synthetic_white_pgm": {
+      "dimensions": "100x100",
+      "pixels": 10000,
+      "unique_pixel_values": [
+        255
+      ],
+      "sha256": "9d720399fc5c9ea7770cbbf89eefdd97b33c8f935c2d6cda55f77172a9264c11"
+    },
+    "source_and_test_literals_note": "login and credential field names occur in source; only explicit SENTINEL values occur in tests"
+  },
+  "evidence_mode": "SYNTHETIC",
+  "platform_calls": 0,
+  "model_calls": 0,
+  "real_platform_format_qualified": false,
+  "platform_use_allowed": false,
+  "complete_export_metadata_limit_retained": true,
+  "actual_save": "NOT_RUN",
+  "actual_refresh": "NOT_RUN",
+  "actual_independent_reopen": "NOT_RUN",
+  "shared_repository_modified": false,
+  "shared_repository_committed": false,
+  "shared_repository_pushed": false,
+  "publication": {
+    "mode": "SANITIZED_COMMAND_PATHS_ONLY",
+    "original_report_sha256": "fc8cc145ac34fbb76d4ff0b00a2b41a90da509d920c7cd64aaf64fd4b2c40772"
+  }
+}

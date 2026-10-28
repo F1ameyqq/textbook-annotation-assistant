@@ -1,0 +1,104 @@
+{
+  "date": "2026-10-22",
+  "baseline_commit": "1cd363a050bfd14cfe9b7af8d3d97d9aaeb952ec",
+  "team_patch_applied": true,
+  "applied_patch_sha256": "a8959756df9f7c76354632b6dc8ef86cf9dd0a71d88e532d3af34d3b06f57e38",
+  "new_unit_tests": 6,
+  "embedded_rejections": [
+    {
+      "case": "same-number-cross-scope-answer",
+      "code": "CROSS_SCOPE_OR_CASE_IDENTITY",
+      "layer": "B_FIXED_BATCH_STAGING_ONLY",
+      "rejected": true
+    },
+    {
+      "case": "invented-q9-question-relation",
+      "code": "FABRICATED_QUESTION_OR_RELATION",
+      "layer": "B_FIXED_BATCH_STAGING_ONLY",
+      "rejected": true
+    },
+    {
+      "case": "resource-viewer-173-alias",
+      "code": "ASSET_ALIAS_OR_IDENTITY_CHANGED",
+      "layer": "B_FIXED_BATCH_STAGING_ONLY",
+      "rejected": true
+    },
+    {
+      "case": "q1-approval-reused-on-q16",
+      "code": "CASE_APPROVAL_ESCALATION",
+      "layer": "B_FIXED_BATCH_STAGING_ONLY",
+      "rejected": true
+    },
+    {
+      "case": "missing-q9-figure-5",
+      "code": "Q9_EXACT_RENDER_PLAN",
+      "layer": "B_FIXED_BATCH_STAGING_ONLY",
+      "rejected": true
+    },
+    {
+      "case": "swapped-q9-page-order",
+      "code": "Q9_EXACT_RENDER_PLAN",
+      "layer": "B_FIXED_BATCH_STAGING_ONLY",
+      "rejected": true
+    },
+    {
+      "case": "truncated-q9-final-25cm-line",
+      "code": "Q9_TEXT_CONTINUATION",
+      "layer": "B_FIXED_BATCH_STAGING_ONLY",
+      "rejected": true
+    },
+    {
+      "case": "spliced-other-printed-q9",
+      "code": "FABRICATED_QUESTION_OR_RELATION",
+      "layer": "B_FIXED_BATCH_STAGING_ONLY",
+      "rejected": true
+    },
+    {
+      "case": "missing-q16-formula-run",
+      "code": "FROZEN_SNAPSHOT_CHANGED",
+      "layer": "B_FIXED_BATCH_STAGING_ONLY",
+      "rejected": true
+    }
+  ],
+  "fixed_source_package_sha256": "8c812330b93cc60b920f6ccd1cd7784f0afe8d293336166a586e1aeaab8231ad",
+  "batch_file_sha256": "8495d66042fedb75bfa3f0bf2ead20e1b0495d2c32a06354b639feccdd892bcc",
+  "implementation_sha256": "96a09098aa1583526ed5e548812a7426586c9dedba4f1132b0a71706ad217622",
+  "prior_fixed_output_members_byte_unchanged": [
+    "batch.json",
+    "assets/resource-173.jpg",
+    "assets/viewer-10.jpg",
+    "assets/viewer-173.jpg",
+    "cases/q16-unit2-formulas.json",
+    "cases/q4-first-lesson.json",
+    "cases/q4-topic-fraction.json",
+    "cases/q9-reflection-continuation.json"
+  ],
+  "old_package_not_modified": true,
+  "question_id": null,
+  "q9_decision": "ANSWER_EVIDENCE_ONLY_HOLD",
+  "independent_human_acceptance": false,
+  "new_ocr_calls": 0,
+  "paid_api_calls": 0,
+  "site_writes": 0,
+  "targeted_regressions": {
+    "new_staging_tests": 6,
+    "existing_independent_continuation_audit_tests": 12,
+    "total_passed_in_existing_b_python": 18,
+    "full_repository_suite_run": false,
+    "command": "python -X utf8 -m unittest tests.test_complex_batch_staging tests.test_b_continuation_application_audit -v"
+  },
+  "runtime_attempts": [
+    {
+      "runtime": "bundled Python 3.12.14",
+      "new_staging_tests_passed": 6,
+      "expanded_audit_import": "BLOCKED_MODULE_NOT_FOUND_CV2",
+      "expanded_tests_executed": 0
+    },
+    {
+      "runtime": "existing B Python 3.11.8 with OpenCV",
+      "targeted_tests_passed": 18,
+      "installed_or_downloaded_dependencies": false
+    }
+  ],
+  "behavior_scope": "Fixed historical Q9 staging semantics only; no new source identities, public contract or platform approval."
+}
