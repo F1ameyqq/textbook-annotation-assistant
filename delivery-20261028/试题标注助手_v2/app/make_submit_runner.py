@@ -43,6 +43,14 @@ def main() -> int:
         if a in ("--from", "--to") and i + 1 < len(argv):
             opts[a[2:]] = int(argv[i + 1])
 
+    # ego 的 cmd 包装按 ANSI 写文件，非 ASCII 路径会让它找不到 _run.mjs（实测）
+    bad = [part for part in str(ROOT).split("\\") if any(ord(ch) > 127 for ch in part)]
+    if bad and not "--dry" in argv:
+        print(f"[中止] 安装路径含非 ASCII 字符：{bad}")
+        print("       ego 的启动包装不支持中文路径，请把整个文件夹移到 C:/anno-helper 这类纯英文路径后重试。")
+        print("       （DRY RUN 不受影响，可以照常跑）")
+        return 4
+
     data = json.loads(coord.read_text(encoding="utf-8"))
     if isinstance(data, dict):
         print(f"页面：{coord.name}  题数 {len(data.get('items', []))}  "

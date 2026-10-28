@@ -11,7 +11,7 @@ if not exist "%~dp0app\config.json" (
   exit /b 1
 )
 set /p BOOK=书号（直接回车用配置文件里的）:
-if not "%BOOK%"=="" powershell -NoProfile -Command "$p='%~dp0app\config.json'; $j=Get-Content $p -Raw -Encoding UTF8 | ConvertFrom-Json; $j.platform.fileId='%BOOK%'; $j | ConvertTo-Json -Depth 5 | Set-Content $p -Encoding UTF8"
+if not "%BOOK%"=="" powershell -NoProfile -Command "$p='%~dp0app\config.json'; $j=Get-Content $p -Raw -Encoding UTF8 | ConvertFrom-Json; $j.platform.fileId='%BOOK%'; $j | ConvertTo-Json -Depth 5 | ForEach-Object { [IO.File]::WriteAllText($p, $_, (New-Object Text.UTF8Encoding($false))) }"
 set /p QP=题目页码（回车=34）:
 if "%QP%"=="" set QP=34
 set /p AP=答案页码（回车=175）:

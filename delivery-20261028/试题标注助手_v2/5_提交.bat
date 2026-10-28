@@ -1,48 +1,71 @@
 @echo off
-title 试题标注助手 - 5 提交
+title 试题标注助手 v2 - 5 Submit
 cd /d "%~dp0"
 echo ============================================================
-echo    第 5 步：提交（默认只演练，不写库）
+echo    Step 5: submit (ego drives the real web page)
 echo ============================================================
 echo.
-echo 输入页面文件（pages 下的 json，不含路径），例如 p35
-set /p PAGE=页面:
+set /p PAGE=Page json name (no .json, e.g. p35):
 if not exist "%~dp0pages\%PAGE%.json" (
-  echo [错误] 找不到 pages\%PAGE%.json
+  echo ERROR: pages\%PAGE%.json not found
   pause
   exit /b 1
 )
 echo.
-echo   1 = DRY RUN 演练（推荐）
-echo   2 = 真提交（不可逆）
-set /p MODE=选择（回车=1）:
+echo   1 = DRY RUN  (structure check only, no ego needed)
+echo   2 = REAL SUBMIT (needs ego + login, irreversible)
+set /p MODE=Choose 1 or 2 [default 1]:
 if "%MODE%"=="" set MODE=1
 
-set PYTHONIOENCODING=gbk
 set "PY="
 if exist "%~dp0便携PY\python.exe" set "PY=%~dp0便携PY\python.exe"
 if not defined PY where python >nul 2>nul && set "PY=python"
 if not defined PY (
-  echo [错误] 没有 Python
+  echo ERROR: no Python
   pause
   exit /b 1
 )
+set PYTHONIOENCODING=gbk
 
-if "%MODE%"=="2" (
-  echo.
-  echo 警告：即将真实写入平台
-  set /p OK=输入 YES 确认:
-  if /i not "%OK%"=="YES" (
-    echo 已取消
-    pause
-    exit /b 1
-  )
-  "%PY%" "%~dp0app\make_submit_runner.py" "pages\%PAGE%.json" --commit
-) else (
-  "%PY%" "%~dp0app\make_submit_runner.py" "pages\%PAGE%.json" --dry
-)
+if "%MODE%"=="2" goto REAL
+goto DRY
+
+:DRY
+"%PY%" "%~dp0app\make_submit_runner.py" "pages\%PAGE%.json" --dry
 echo.
+echo running dry check with local node ...
+set "NODE="
+if exist "%~dp0便携NODE\node.exe" set "NODE=%~dp0便携NODE\node.exe"
+if not defined NODE where node >nul 2>nul && set "NODE=node"
+if not defined NODE (
+  echo ERROR: dry run needs Node.js
+  pause
+  exit /b 1
+)
+chcp 65001 >nul
+pushd "%~dp0app"
+"%NODE%" _submit_run.mjs
+popd
+chcp 936 >nul
+goto END
+
+:REAL
+echo.
+echo WARNING: this will WRITE to the platform and create a new question.
+set /p OK=Type YES to continue:
+if /i not "%OK%"=="YES" (
+  echo cancelled
+  pause
+  exit /b 1
+)
+"%PY%" "%~dp0app\make_submit_runner.py" "pages\%PAGE%.json" --commit
+echo.
+echo submitting via ego (do not touch the browser) ...
 powershell -NoProfile -ExecutionPolicy Bypass -File "%~dp0app\run_ego.ps1" -Js "%~dp0app\_submit_run.mjs" -Out "%TEMP%\submit.txt" -TimeoutSec 1800
 echo.
-echo 结果在 %TEMP%\submit.txt
+echo result: %TEMP%\submit.txt
+type "%TEMP%\submit.txt"
+
+:END
+echo.
 pause
