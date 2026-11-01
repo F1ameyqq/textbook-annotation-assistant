@@ -1,0 +1,1026 @@
+--- a/src/annotation/delivery/live_pilot/usense.py
++++ b/src/annotation/delivery/live_pilot/usense.py
+@@ -644,6 +644,7 @@
+         self.readonly = readonly
+         self.profile = None
+         self._used, self._request_ids, self._observations = set(), set(), {}
++        self._raw_reads = {}
+         self._ledger, self._sequence = [], 0
+         self._plan = self._payload = self._receipt = self._armed = None
+         self._predecessor = None
+@@ -687,7 +688,7 @@
+         # Historical approval is validated at its original time, never renewed.
+         return datetime.fromisoformat(request["approval"]["starts_at"].replace("Z", "+00:00"))
+ 
+-    def _read(self, path, params, phase, slot, *, json_body=True):
++    def _read(self, path, params, phase, slot, *, json_body=True, preserve_business=False):
+         self._bound()
+         window = self._session.binding if self.readonly and isinstance(self._session, CurrentPageIO) else self._request["approval"]
+         wire.require_window(window)
+@@ -702,6 +703,18 @@
+                 response["request_id"] not in self._request_ids, "RESPONSE_SESSION_OR_REPLAY")
+         self._request_ids.add(response["request_id"])
+         self._sequence += 1
++        raw_body = response.get("body")
++        require(isinstance(raw_body, str), "WIRE_RESPONSE_BODY_UNAVAILABLE")
++        if preserve_business:
++            require(phase in {"baseline", "prewrite", "get", "refresh", "reopen", "reconcile"},
++                    "RAW_BUSINESS_READ_PHASE")
++            self._raw_reads[(phase, slot)] = {
++                "body": raw_body,
++                "body_sha256": hashlib.sha256(raw_body.encode("utf-8")).hexdigest(),
++                "representation": "UTF8_REENCODED_RESPONSE_TEXT",
++                "json_body": json_body,
++                "parsed": copy.deepcopy(body),
++            }
+         query_provenance = (self._session.query_provenance(path, params) if hasattr(self._session, "query_provenance") else
+                             {"query_keys": sorted(params), "query_hash": digest(params)})
+         self._ledger.append({"sequence": self._sequence, "phase": phase, "slot": slot,
+@@ -732,16 +745,28 @@
+             require(refreshed == {"refreshed": True, "session_id": self.session_id}, "REFRESH_UNPROVEN")
+         start = len(self._ledger)
+         spec = self.profile["reads"][phase]
++        traces = []
++        direct_view = False
+         if "requests" in spec:
+-            responses = {r["name"]: self._read(r["path"], r["params"], phase, r["name"]) for r in spec["requests"]}
+-            result = {k: wire.project(rule, responses) for k, rule in spec["projection"].items()}
++            responses = {r["name"]: self._read(r["path"], r["params"], phase, r["name"],
++                                               preserve_business=True) for r in spec["requests"]}
++            result = {k: wire.project(rule, responses, collector=traces, path=(k,))
++                      for k, rule in spec["projection"].items()}
++            direct_view = wire.direct_from(spec["projection"]["view"])
++            covered = wire.projection_response_paths(spec["projection"], set(responses))
++            residuals = {name: wire.response_residual(responses[name], paths)
++                         for name, paths in covered.items()}
+         else:
+-            body = self._read(spec["path"], spec["params"], phase, "snapshot")
++            body = self._read(spec["path"], spec["params"], phase, "snapshot", preserve_business=True)
+             result = {k: copy.deepcopy(wire.field(body, path)) for k, path in spec["response_fields"].items()}
++            direct_view = True  # response_fields copies the complete declared view subtree.
++            residuals = {"snapshot": wire.response_residual(
++                body, list(spec["response_fields"].values()))}
+         require(result["platform_version"] == self.profile["platform_version"], "CAPABILITY_VERSION")
+         if "export" in spec:
+             export = spec["export"]
+-            text = self._read(export["path"], export["params"], phase, "export", json_body=False)
++            text = self._read(export["path"], export["params"], phase, "export",
++                              json_body=False, preserve_business=True)
+             content, coverage = wire.decode_complete_export(text, export["codec"], result["view"]["target"]["questions"])
+             # The snapshot must separately prove authoritative complete inventory.
+             require(result["complete"] is True, "FULL_TARGET_REQUIRED")
+@@ -753,6 +778,16 @@
+             result["export_coverage"] = coverage
+         if phase not in ("baseline", "prewrite") and self._receipt is not None:
+             result["wire_readback"] = self._read_aggregate_new(result, phase) if self.profile.get("aggregate_readback") else self._read_new(phase)
++        result["raw_business_responses"] = {
++            slot: copy.deepcopy(value) for (record_phase, slot), value in self._raw_reads.items()
++            if record_phase == phase
++        }
++        result["raw_business_residuals"] = {
++            "schema": "A24RawBusinessResponseResiduals/v1",
++            "slots": residuals,
++        }
++        result["raw_business_projection"] = wire.build_business_preservation(
++            result, traces, direct_view=direct_view)
+         source = digest({"session": self.session_id, "ledger": self._ledger[start:]})
+         result.update(origin="A24_WIRE_READ", evidence_mode=self.profile["mode"], phase=phase,
+                       source_ref=source, read_sequence=self._sequence, session_id=self.session_id,
+@@ -779,18 +814,20 @@
+         receipt, codec = self._receipt, self.profile["readback"]
+         order = receipt["question_order"]
+         suffix = "/" + wire.BOOK + "/" + str(order)
+-        raw = self._read(wire.FRAMES + suffix, {}, phase, "frames")
++        raw = self._read(wire.FRAMES + suffix, {}, phase, "frames", preserve_business=True)
+         records = wire.field(raw, codec["frames_path"])
+         require(isinstance(records, list), "READBACK_FRAME_CODEC")
+         rows = [{k: wire.field(row, path) for k, path in codec["frame_fields"].items()} for row in records]
+-        info = wire.field(self._read(wire.INFO + suffix, {}, phase, "info"), codec["info_path"])
++        info = wire.field(self._read(wire.INFO + suffix, {}, phase, "info", preserve_business=True),
++                          codec["info_path"])
+         if "info_fields" in codec:
+             require(set(codec["info_fields"]) == {"tishi", "tilei", "tihao"}, "QUESTION_INFO_CODEC")
+             info = {key: wire.field(info, path) for key, path in codec["info_fields"].items()}
+         content = []
+         for submission in self._payload["ocr_submissions"]:
+             zone = submission["zone"]
+-            raw = self._read(wire.CONTENT, {"file_id": wire.BOOK, "question_order": order, "zone": zone}, phase, zone)
++            raw = self._read(wire.CONTENT, {"file_id": wire.BOOK, "question_order": order, "zone": zone},
++                             phase, zone, preserve_business=True)
+             require(wire.field(raw, codec["content_success_path"]) is True, "CONTENT_UNAVAILABLE")
+             text = wire.field(raw, codec["content_text_path"])
+             require(isinstance(text, str), "CONTENT_UNAVAILABLE")
+@@ -819,7 +856,8 @@
+             bodies.append({"zone": zone, "ocr_result": actual_text, "rect_ids": actual_ids, "question_order": None})
+         info = content.get("question_info")
+         if p["mode"] == "ALL_ZONES_INFO_GET":
+-            info = wire.field(self._read(wire.INFO+"/"+wire.BOOK+"/"+str(receipt["question_order"]), {}, phase, "info"),
++            info = wire.field(self._read(wire.INFO+"/"+wire.BOOK+"/"+str(receipt["question_order"]), {}, phase,
++                                         "info", preserve_business=True),
+                               self.profile["readback"]["info_path"])
+         return {"rows": rows, "question_info": info, "body_submissions": bodies,
+                 "association": "AUTHORITATIVE_FRESH_AGGREGATE_RECT_ZONE_MEMBERSHIP", "receipt_hash": digest(receipt)}
+--- a/src/annotation/delivery/live_pilot/wire.py
++++ b/src/annotation/delivery/live_pilot/wire.py
+@@ -103,7 +103,20 @@
+     return value
+ 
+ 
+-def project(rule, responses, current=None):
++def json_same(left, right):
++    """JSON equality that preserves number types and object key order."""
++    if type(left) is not type(right):
++        return False
++    if isinstance(left, dict):
++        return (list(left) == list(right) and
++                all(json_same(left[key], right[key]) for key in left))
++    if isinstance(left, list):
++        return (len(left) == len(right) and
++                all(json_same(a, b) for a, b in zip(left, right)))
++    return left == right
++
++
++def project(rule, responses, current=None, collector=None, path=()):
+     """Small declarative JSON adapter; no Python/JS evaluation or guessed fields.
+ 
+     Paths, literal source metadata and lookup tables are part of the approved
+@@ -114,16 +127,21 @@
+     if kind == "from":
+         require(set(spec) == {"response", "path"} and (spec["response"] == "$" or spec["response"] in responses),
+                 "SNAPSHOT_PROJECTION_SOURCE")
+-        return copy.deepcopy(field(current if spec["response"] == "$" else responses[spec["response"]], spec["path"]))
++        value = copy.deepcopy(field(current if spec["response"] == "$" else responses[spec["response"]], spec["path"]))
++        if collector is not None and isinstance(value, (dict, list)):
++            collector.append({"trace_type": "direct", "projection_path": list(path),
++                              "raw_value": copy.deepcopy(value)})
++        return value
+     if kind == "object":
+         require(isinstance(spec, dict), "SNAPSHOT_PROJECTION_RULE")
+-        return {key: project(value, responses, current) for key, value in spec.items()}
++        return {key: project(value, responses, current, collector, path + (key,))
++                for key, value in spec.items()}
+     if kind == "literal":
+         return copy.deepcopy(spec)
+     if kind == "array":
+         require(set(spec).issubset({"source", "item", "children_path", "where"}) and
+                 {"source", "item"}.issubset(spec), "SNAPSHOT_PROJECTION_RULE")
+-        records = project(spec["source"], responses, current)
++        records = project(spec["source"], responses, current, None, path + ("$source",))
+         require(isinstance(records, list), "SNAPSHOT_PROJECTION_RECORDS")
+         flat = []
+         def visit(values):
+@@ -137,19 +155,109 @@
+         if "where" in spec:
+             require(set(spec["where"]) == {"path", "equals"}, "SNAPSHOT_PROJECTION_RULE")
+             flat = [item for item in flat if field(item, spec["where"]["path"]) == spec["where"]["equals"]]
+-        return [project(spec["item"], responses, item) for item in flat]
++        projected = []
++        for item in flat:
++            value = project(spec["item"], responses, item, collector, path + ("*",))
++            projected.append(value)
++            if collector is not None:
++                collector.append({"trace_type": "array_item", "projection_path": list(path),
++                                  "children_path": copy.deepcopy(spec.get("children_path")),
++                                  "projected": copy.deepcopy(value), "raw_record": copy.deepcopy(item),
++                                  "raw_record_json": json.dumps(item, ensure_ascii=False,
++                                      separators=(",", ":"), allow_nan=False)})
++        return projected
+     if kind == "lookup":
+         require(set(spec) == {"key", "table"}, "SNAPSHOT_PROJECTION_RULE")
+-        key = str(project(spec["key"], responses, current))
++        key = str(project(spec["key"], responses, current, collector, path + ("$lookup",)))
+         require(key in spec["table"], "SNAPSHOT_LOOKUP_UNKNOWN")
+         return copy.deepcopy(spec["table"][key])
+     if kind == "csv_bbox":
+-        raw = project(spec, responses, current)
++        raw = project(spec, responses, current, collector, path + ("$bbox",))
+         require(isinstance(raw, str) and len(raw.split(",")) == 4, "WIRE_BBOX")
+         values = [float(v) for v in raw.split(",")]
+         digest(values)  # Reject NaN/Infinity via canonical serialization.
+         return values
+     require(False, "SNAPSHOT_PROJECTION_RULE")
++
++
++def response_residual(value, declared_paths):
++    """Typed wrapper tree with declared response_fields values replaced by masks."""
++    require(isinstance(declared_paths, list) and declared_paths, "RAW_RESPONSE_RESIDUAL_UNBOUND")
++    paths = []
++    for path in declared_paths:
++        require(isinstance(path, list) and path and all(isinstance(key, str) for key in path),
++                "RAW_RESPONSE_RESIDUAL_UNBOUND")
++        paths.append(tuple(path))
++    require(len(paths) == len(set(paths)) and
++            not any(a != b and len(a) < len(b) and b[:len(a)] == a for a in paths for b in paths),
++            "RAW_RESPONSE_RESIDUAL_UNBOUND")
++    mask = object()
++    residual = copy.deepcopy(value)
++    for path in paths:
++        node = residual
++        for key in path[:-1]:
++            require(isinstance(node, dict) and key in node, "RAW_RESPONSE_RESIDUAL_UNBOUND")
++            node = node[key]
++        require(isinstance(node, dict) and path[-1] in node, "RAW_RESPONSE_RESIDUAL_UNBOUND")
++        node[path[-1]] = mask
++
++    def encode(node):
++        if node is mask:
++            return {"node_type": "DECLARED_SUBTREE_MASK"}
++        if isinstance(node, dict):
++            return {"node_type": "OBJECT", "entries": [
++                {"key": key, "value": encode(item)} for key, item in node.items()
++            ]}
++        if isinstance(node, list):
++            return {"node_type": "ARRAY", "items": [encode(item) for item in node]}
++        json_type = ("NULL" if node is None else "BOOLEAN" if type(node) is bool else
++                     "INTEGER" if type(node) is int else "NUMBER" if type(node) is float else
++                     "STRING" if isinstance(node, str) else None)
++        require(json_type is not None, "RAW_RESPONSE_RESIDUAL_UNBOUND")
++        return {"node_type": "JSON_SCALAR", "json_type": json_type, "value": node}
++    return encode(residual)
++
++
++def projection_response_paths(projection, response_names):
++    """Prove which external response subtrees are consumed by a projection."""
++    require(isinstance(projection, dict) and isinstance(response_names, set) and response_names,
++            "RAW_RESPONSE_RESIDUAL_UNBOUND")
++    covered = {name: [] for name in response_names}
++
++    def walk(rule):
++        require(isinstance(rule, dict) and len(rule) == 1, "RAW_RESPONSE_RESIDUAL_UNBOUND")
++        kind, spec = next(iter(rule.items()))
++        if kind == "from":
++            require(isinstance(spec, dict) and set(spec) == {"response", "path"},
++                    "RAW_RESPONSE_RESIDUAL_UNBOUND")
++            if spec["response"] != "$":
++                require(spec["response"] in covered, "RAW_RESPONSE_RESIDUAL_UNBOUND")
++                covered[spec["response"]].append(copy.deepcopy(spec["path"]))
++            return
++        if kind == "object":
++            require(isinstance(spec, dict), "RAW_RESPONSE_RESIDUAL_UNBOUND")
++            for child in spec.values():
++                walk(child)
++            return
++        if kind == "array":
++            require(isinstance(spec, dict) and "source" in spec and "item" in spec and
++                    "where" not in spec, "RAW_RESPONSE_RESIDUAL_UNBOUND")
++            walk(spec["source"])
++            walk(spec["item"])
++            return
++        if kind == "lookup":
++            require(isinstance(spec, dict) and "key" in spec, "RAW_RESPONSE_RESIDUAL_UNBOUND")
++            walk(spec["key"])
++            return
++        if kind == "csv_bbox":
++            walk(spec)
++            return
++        require(kind == "literal", "RAW_RESPONSE_RESIDUAL_UNBOUND")
++
++    for rule in projection.values():
++        walk(rule)
++    require(all(paths for paths in covered.values()), "RAW_RESPONSE_RESIDUAL_UNBOUND")
++    return covered
+ 
+ 
+ def read_evidence(bundle, identity, asset_root, mode):
+@@ -336,16 +444,16 @@
+             set(codec) == {"schema", "kind_path", "metadata_value", "question_value", "metadata_fields", "question_fields"},
+             "CURRENT_EXPORT_SCHEMA_REQUIRED")
+     require(isinstance(text, str) and text.strip() and not text.lstrip().startswith("<"), "EXPORT_NOT_JSONL")
+-    records = [json.loads(line, object_pairs_hook=unique_object,
+-                          parse_constant=lambda value: require(False, "NONFINITE_RESPONSE"))
+-               for line in text.splitlines() if line.strip()]
+-    require(records and all(isinstance(r, dict) for r in records), "EXPORT_NOT_JSONL")
+-    metadata = [r for r in records if field(r, codec["kind_path"]) == codec["metadata_value"]]
+-    rows = [r for r in records if field(r, codec["kind_path"]) == codec["question_value"]]
+-    require(len(metadata) == 1 and len(rows) + 1 == len(records), "AUTHORITATIVE_EXPORT_COMPLETENESS_REQUIRED")
++    parsed = [(line, json.loads(line, object_pairs_hook=unique_object,
++                                parse_constant=lambda value: require(False, "NONFINITE_RESPONSE")))
++              for line in text.splitlines() if line.strip()]
++    require(parsed and all(isinstance(r, dict) for _, r in parsed), "EXPORT_NOT_JSONL")
++    metadata = [(line, r) for line, r in parsed if field(r, codec["kind_path"]) == codec["metadata_value"]]
++    rows = [(line, r) for line, r in parsed if field(r, codec["kind_path"]) == codec["question_value"]]
++    require(len(metadata) == 1 and len(rows) + 1 == len(parsed), "AUTHORITATIVE_EXPORT_COMPLETENESS_REQUIRED")
+     require(set(codec["metadata_fields"]) == {"book_id", "complete", "question_ids", "zones", "state_version"},
+             "AUTHORITATIVE_EXPORT_COMPLETENESS_REQUIRED")
+-    m = {k: field(metadata[0], path) for k, path in codec["metadata_fields"].items()}
++    m = {k: field(metadata[0][1], path) for k, path in codec["metadata_fields"].items()}
+     ids = [q["platform_question_id"] for q in inventory]
+     require(ids and all(canonical_id(v) for v in ids) and
+             str(m["book_id"]) == BOOK and m["complete"] is True and isinstance(m["question_ids"], list) and
+@@ -355,7 +463,7 @@
+     require(set(codec["question_fields"]) == {"platform_question_id", "question_type", "parts", "wire_zones",
+                                               "question_info", "rect_ids"}, "CURRENT_EXPORT_SCHEMA_REQUIRED")
+     contents = {}
+-    for row in rows:
++    for raw_line, row in rows:
+         value = {k: copy.deepcopy(field(row, path)) for k, path in codec["question_fields"].items()}
+         pid = value.pop("platform_question_id")
+         require(canonical_id(pid) and pid in ids and pid not in contents and value["question_type"] and
+@@ -366,7 +474,8 @@
+                 all(canonical_id(v) for v in value["rect_ids"]) and
+                 len(value["rect_ids"]) == len(set(value["rect_ids"])), "EXPORT_QUESTION_COVERAGE")
+         # Preserve every observed business field, including unrecognized additions.
+-        contents[pid] = dict(value, status="AVAILABLE", raw_record=copy.deepcopy(row))
++        contents[pid] = dict(value, status="AVAILABLE", raw_record=copy.deepcopy(row),
++                             raw_record_json=raw_line)
+     require(set(contents) == set(ids), "OLD_CONTENT_INCOMPLETE")
+     return contents, {"membership_hash": digest(sorted(ids)), "state_version": m["state_version"],
+                       "zones": list(ZONES), "complete": True, "raw_export_sha256": hashlib.sha256(text.encode("utf-8")).hexdigest()}
+@@ -387,14 +496,15 @@
+             q.get("zones") == list(ZONES) and q.get("state_binding") and q.get("evidence_refs"),
+             "NATURAL_EXPORT_AUTHORITY_UNBOUND")
+     require(isinstance(text, str) and text.strip() and not text.lstrip().startswith("<"), "EXPORT_NOT_JSONL")
+-    records = [json.loads(line, object_pairs_hook=unique_object) for line in text.splitlines() if line.strip()]
++    records = [(line, json.loads(line, object_pairs_hook=unique_object))
++               for line in text.splitlines() if line.strip()]
+     ids = [v["platform_question_id"] for v in inventory]
+     require(ids and all(canonical_id(v) for v in ids) and
+             len(ids) == len(set(ids)) and len(records) == len(ids) and
+             set(codec["question_fields"]) == {"platform_question_id", "question_type", "parts", "wire_zones", "question_info", "rect_ids"},
+             "EXPORT_QUESTION_COVERAGE")
+     contents = {}
+-    for record in records:
++    for raw_line, record in records:
+         require(isinstance(record, dict), "EXPORT_NOT_JSONL")
+         value = {k: copy.deepcopy(field(record, path)) for k, path in codec["question_fields"].items()}
+         pid = value.pop("platform_question_id")
+@@ -405,7 +515,8 @@
+                 isinstance(value["question_info"], dict) and isinstance(value["rect_ids"], list) and
+                 all(canonical_id(v) for v in value["rect_ids"]) and
+                 len(value["rect_ids"]) == len(set(value["rect_ids"])), "EXPORT_QUESTION_COVERAGE")
+-        contents[pid] = dict(value, status="AVAILABLE", raw_record_hash=digest(record))
++        contents[pid] = dict(value, status="AVAILABLE", raw_record=copy.deepcopy(record),
++                             raw_record_json=raw_line, raw_record_hash=digest(record))
+     require(set(contents) == set(ids), "OLD_CONTENT_INCOMPLETE")
+     return contents, {"membership_hash": digest(sorted(ids)), "state_binding_hash": digest(q["state_binding"]),
+                       "complete": True, "zones": list(ZONES), "qualification_hash": digest(q),
+@@ -414,6 +525,97 @@
+ 
+ def sha_text(text):
+     return hashlib.sha256(text.encode("utf-8")).hexdigest()
++
++
++def build_business_preservation(observation, traces=(), *, direct_view=False):
++    """Identity-addressable copy of every projected old/new business object.
++
++    This sidecar is runtime evidence, not a public contract object.  It lets the
++    preservation gate compare unknown fields, JSON number types and key order
++    without changing the established normalized target schema.
++    """
++    view = observation["view"]
++    target = view["target"]
++    content = view["question_content"]
++    expected = {
++        "question": {item["platform_question_id"]: item for item in target["questions"]},
++        "frame": {item["platform_frame_id"]: item for item in target["frames"]},
++        "directory": {item["directory_id"]: item for item in observation["directory_details"]},
++        "content": content,
++    }
++    require(all(len(values) == len(set(values)) for values in expected.values()),
++            "RAW_ENTITY_IDENTITY_DUPLICATE")
++    candidates = {kind: {} for kind in expected}
++    for trace in traces:
++        if trace.get("trace_type") != "array_item" or not isinstance(trace.get("projected"), dict):
++            require(trace.get("trace_type") != "array_item", "RAW_ENTITY_PRESERVATION_UNBOUND")
++            continue
++        projected = trace["projected"]
++        if canonical_id(projected.get("platform_frame_id")):
++            kind, identity = "frame", projected["platform_frame_id"]
++        elif canonical_id(projected.get("platform_question_id")):
++            kind, identity = "question", projected["platform_question_id"]
++        elif canonical_id(projected.get("directory_id")):
++            kind, identity = "directory", projected["directory_id"]
++        else:
++            require(False, "RAW_ENTITY_PRESERVATION_UNBOUND")
++        require(identity in expected[kind], "RAW_ENTITY_PRESERVATION_UNBOUND")
++        require(trace.get("children_path") is None,
++                "RAW_ENTITY_RECURSIVE_CONTAINER_UNSUPPORTED", kind + ":" + identity)
++        require(identity not in candidates[kind], "RAW_ENTITY_IDENTITY_DUPLICATE")
++        candidates[kind][identity] = {
++            "kind": kind, "stable_id": identity,
++            "owner_platform_question_id": projected.get("platform_question_id"),
++            "projection_path": trace["projection_path"],
++            "raw_record": copy.deepcopy(trace["raw_record"]),
++            "raw_record_json": trace["raw_record_json"],
++            "source": "DECLARED_PROJECTION_RAW_ARRAY_ROW",
++        }
++    entities = []
++    for kind in ("directory", "question", "frame"):
++        for identity, normalized in expected[kind].items():
++            saved = candidates[kind].get(identity)
++            if saved is None:
++                require(direct_view, "RAW_ENTITY_PRESERVATION_UNBOUND", kind + ":" + identity)
++                saved = {
++                    "kind": kind, "stable_id": identity,
++                    "owner_platform_question_id": normalized.get("platform_question_id") if isinstance(normalized, dict) else None,
++                    "projection_path": ["view"], "raw_record": copy.deepcopy(normalized),
++                    "raw_record_json": json.dumps(normalized, ensure_ascii=False,
++                        separators=(",", ":"), allow_nan=False),
++                    "source": "DIRECT_RAW_VIEW_COPY",
++                }
++            entities.append(saved)
++    for identity, value in expected["content"].items():
++        if isinstance(value, dict) and "raw_record" in value and "raw_record_json" in value:
++            raw_record, raw_json, source = value["raw_record"], value["raw_record_json"], "EXPORT_RAW_RECORD"
++        else:
++            require(direct_view, "RAW_ENTITY_PRESERVATION_UNBOUND", "content:" + identity)
++            raw_record = value
++            raw_json = json.dumps(value, ensure_ascii=False, separators=(",", ":"), allow_nan=False)
++            source = "DIRECT_RAW_VIEW_COPY"
++        entities.append({"kind": "content", "stable_id": identity,
++                         "owner_platform_question_id": identity, "projection_path": ["view", "question_content"],
++                         "raw_record": copy.deepcopy(raw_record), "raw_record_json": raw_json, "source": source})
++    questions = []
++    for question in target["questions"]:
++        pid = question["platform_question_id"]
++        require(pid in content, "OLD_CONTENT_INCOMPLETE")
++        questions.append({
++            "platform_question_id": pid,
++            "question": copy.deepcopy(question),
++            "frames": [copy.deepcopy(frame) for frame in target["frames"]
++                       if frame["platform_question_id"] == pid],
++            "content": copy.deepcopy(content[pid]),
++        })
++    return {
++        "schema": "A24RuntimeBusinessPreservation/v1",
++        "directories": copy.deepcopy(target["directories"]),
++        "directory_details": copy.deepcopy(observation["directory_details"]),
++        "source_bindings": copy.deepcopy(observation["source_bindings"]),
++        "questions": questions,
++        "raw_entities": entities,
++    }
+ 
+ 
+ def bbox_csv(box):
+--- a/src/annotation/quality/live_pilot.py
++++ b/src/annotation/quality/live_pilot.py
+@@ -26,6 +26,19 @@
+ def require(condition, code, detail=""):
+     if not condition:
+         raise PilotError(code, detail)
++
++
++def json_same(left, right):
++    """Strict parsed-JSON equality: bool != int and object order is data."""
++    if type(left) is not type(right):
++        return False
++    if isinstance(left, dict):
++        return (list(left) == list(right) and
++                all(json_same(left[key], right[key]) for key in left))
++    if isinstance(left, list):
++        return (len(left) == len(right) and
++                all(json_same(a, b) for a, b in zip(left, right)))
++    return left == right
+ 
+ 
+ @dataclass(frozen=True)
+@@ -242,8 +255,12 @@
+ 
+ 
+ def state_facts(observation):
+-    return {key: observation[key] for key in ("book_id", "platform_version", "view", "directory_details",
+-                                             "source_bindings", "submission_status", "complete")}
++    keys = ["book_id", "platform_version", "view", "directory_details",
++            "source_bindings", "submission_status", "complete"]
++    keys.extend(key for key in ("raw_business_responses", "raw_business_residuals",
++                                "raw_business_projection")
++                if key in observation)
++    return {key: observation[key] for key in keys}
+ 
+ 
+ def check_target(admission, request, observation, *, expected=None):
+@@ -269,7 +286,7 @@
+             observation["read_sequence"] > 0 and observation.get("session_id"), "OBSERVATION_PROVENANCE")
+     require(observation["source_bindings"] == request["bindings"], "SOURCE_TARGET_BINDING")
+     if expected is not None:
+-        require(state_facts(expected) == state_facts(observation), "TARGET_CHANGED")
++        require(json_same(state_facts(expected), state_facts(observation)), "TARGET_CHANGED")
+     snapshot = resolve_artifact(admission.bundle, request["refs"]["snapshot"], "PlatformSnapshot")
+     caps = {c.name: c for c in snapshot.payload.capabilities}
+     for name in ("frame_readback", "content_readback", "same_session_handoff"):
+@@ -286,23 +303,69 @@
+ 
+ def check_preservation(before, after, pid=None):
+     global_order(after)
+-    require(before["book_id"] == after["book_id"] and before["platform_version"] == after["platform_version"] and
+-            before["directory_details"] == after["directory_details"] and
+-            before["source_bindings"] == after["source_bindings"], "OLD_DIRECTORY_OR_SOURCE_CHANGED")
++    require(json_same(before["book_id"], after["book_id"]) and
++            json_same(before["platform_version"], after["platform_version"]) and
++            json_same(before["directory_details"], after["directory_details"]) and
++            json_same(before["source_bindings"], after["source_bindings"]), "OLD_DIRECTORY_OR_SOURCE_CHANGED")
+     old, new = before["view"], after["view"]
+-    require(old["target"]["directories"] == new["target"]["directories"], "OLD_DIRECTORY_CHANGED")
++    observation_runtime = {"origin", "evidence_mode", "phase", "source_ref", "read_sequence", "session_id",
++                           "provenance", "wire_readback", "raw_business_responses", "raw_business_residuals",
++                           "raw_business_projection", "predecessor_session_id", "released_predecessor",
++                           "predecessor_release_hash", "export_coverage"}
++    observation_known = {"book_id", "platform_version", "view", "directory_details", "source_bindings",
++                         "submission_status", "complete", "read_status"} | observation_runtime
++    old_extra = {key: value for key, value in before.items() if key not in observation_known}
++    new_extra = {key: value for key, value in after.items() if key not in observation_known}
++    require(json_same(old_extra, new_extra), "OLD_OBSERVATION_EXTRA_CHANGED")
++    view_known = {"target", "internal_bindings", "frame_projections", "question_content", "wire_annotations"}
++    require(json_same({k: v for k, v in old.items() if k not in view_known},
++                      {k: v for k, v in new.items() if k not in view_known}), "OLD_VIEW_EXTRA_CHANGED")
++    target_known = {"directories", "questions", "frames"}
++    require(json_same({k: v for k, v in old["target"].items() if k not in target_known},
++                      {k: v for k, v in new["target"].items() if k not in target_known}),
++            "OLD_TARGET_EXTRA_CHANGED")
++    if "raw_business_residuals" in before:
++        require("raw_business_residuals" in after and
++                json_same(before["raw_business_residuals"], after["raw_business_residuals"]),
++                "OLD_RAW_RESPONSE_RESIDUAL_CHANGED")
++    require(json_same(old["target"]["directories"], new["target"]["directories"]), "OLD_DIRECTORY_CHANGED")
+     for field, key in (("questions", "platform_question_id"), ("frames", "platform_frame_id")):
+         index = {item[key]: item for item in new["target"][field]}
+-        require(all(index.get(item[key]) == item for item in old["target"][field]), "OLD_" + field.upper() + "_CHANGED")
++        require(all(json_same(index.get(item[key]), item) for item in old["target"][field]),
++                "OLD_" + field.upper() + "_CHANGED")
+         old_ids = {item[key] for item in old["target"][field]}
+         additions = [item for item in new["target"][field] if item[key] not in old_ids]
+         require(all(item["platform_question_id"] == pid for item in additions), "UNEXPECTED_ADDITION")
+     for field in ("internal_bindings", "frame_projections", "question_content"):
+-        require(all(new[field].get(k) == v for k, v in old[field].items()), "OLD_" + field.upper() + "_CHANGED")
++        require(all(json_same(new[field].get(k), v) for k, v in old[field].items()),
++                "OLD_" + field.upper() + "_CHANGED")
+     if "wire_annotations" in old:
+         require(isinstance(new.get("wire_annotations"), dict) and
+-                all(new["wire_annotations"].get(k) == v for k, v in old["wire_annotations"].items()) and
++                all(json_same(new["wire_annotations"].get(k), v) for k, v in old["wire_annotations"].items()) and
+                 set(new["wire_annotations"]) - set(old["wire_annotations"]) <= {pid}, "OLD_WIRE_ANNOTATIONS_CHANGED")
++    if "raw_business_projection" in before:
++        require("raw_business_projection" in after, "RAW_BUSINESS_PRESERVATION_MISSING")
++        old_raw, new_raw = before["raw_business_projection"], after["raw_business_projection"]
++        require(old_raw.get("schema") == new_raw.get("schema") == "A24RuntimeBusinessPreservation/v1" and
++                json_same(old_raw["directories"], new_raw["directories"]) and
++                json_same(old_raw["directory_details"], new_raw["directory_details"]) and
++                json_same(old_raw["source_bindings"], new_raw["source_bindings"]),
++                "OLD_RAW_BUSINESS_CHANGED")
++        old_entities = {(item["kind"], item["stable_id"]): item for item in old_raw.get("raw_entities", [])}
++        new_entities = {(item["kind"], item["stable_id"]): item for item in new_raw.get("raw_entities", [])}
++        require(len(old_entities) == len(old_raw.get("raw_entities", [])) and
++                len(new_entities) == len(new_raw.get("raw_entities", [])) and
++                all(json_same(new_entities.get(key), item) for key, item in old_entities.items()),
++                "OLD_RAW_ENTITY_CHANGED")
++        added_entities = [item for key, item in new_entities.items() if key not in old_entities]
++        require(all((item["kind"] in ("question", "content") and item["stable_id"] == pid) or
++                    (item["kind"] == "frame" and item.get("owner_platform_question_id") == pid)
++                    for item in added_entities), "UNEXPECTED_RAW_ENTITY_ADDITION")
++        new_by_id = {item["platform_question_id"]: item for item in new_raw["questions"]}
++        require(all(json_same(new_by_id.get(item["platform_question_id"]), item)
++                    for item in old_raw["questions"]), "OLD_RAW_BUSINESS_CHANGED")
++        added_raw = set(new_by_id) - {item["platform_question_id"] for item in old_raw["questions"]}
++        require(added_raw <= ({pid} if pid is not None else set()), "UNEXPECTED_RAW_BUSINESS_ADDITION")
+     added_questions = {q["platform_question_id"] for q in new["target"]["questions"]} - {
+         q["platform_question_id"] for q in old["target"]["questions"]}
+     added_frames = {f["platform_frame_id"] for f in new["target"]["frames"]} - {
+--- a/src/annotation/runtime/live_pilot/runner.py
++++ b/src/annotation/runtime/live_pilot/runner.py
+@@ -4,7 +4,7 @@
+ from annotation.delivery.live_pilot.plan import VERSION, create_live_plan, verify_plan
+ from annotation.delivery.live_pilot.usense import build_offline_command, parse_business_receipt, validate_offline_command
+ from annotation.quality.live_pilot import (PilotError, check_input, check_preservation, check_target,
+-    compare_saved, require, state_facts)
++    compare_saved, json_same, require, state_facts)
+ from annotation.runtime.storage.common import digest
+ 
+ 
+@@ -180,7 +180,7 @@
+         if not transport.offline:
+             from annotation.delivery.live_pilot.wire import verify_owner_release
+             verify_owner_release(release, asset_root)
+-        require(plan["input_hash"] == digest(request) and plan["baseline"] == baseline and
++        require(plan["input_hash"] == digest(request) and json_same(plan["baseline"], baseline) and
+                 author_observation["phase"] == "refresh" and author_observation["session_id"] == release["session_id"] and
+                 author_observation["evidence_mode"] == transport.profile["mode"] and
+                 release.get("last_observation_hash") == digest(author_observation) and
+@@ -246,7 +246,7 @@
+                 require(observed.get("origin") == "FAKE_BACKEND_READ" and observed.get("source_ref") !=
+                         baseline.get("source_ref") and observed["read_sequence"] > baseline["read_sequence"],
+                         "READBACK_NOT_INDEPENDENT")
+-            if state_facts(observed) == state_facts(baseline):
++            if json_same(state_facts(observed), state_facts(baseline)):
+                 result["effect_match"] = "ABSENT"
+             elif wire is None or receipt is not None:
+                 # Reconcile accepts a new readonly session but does not erase the prior UNKNOWN.
+--- /dev/null
++++ b/tests/a24_runtime_raw_preservation/test_runtime_raw_preservation.py
+@@ -0,0 +1,417 @@
++"""Focused regressions for lossless runtime old-business preservation."""
++import copy
++import json
++from pathlib import Path
++import sys
++import unittest
++
++from annotation.delivery.live_pilot import wire
++from annotation.delivery.live_pilot.usense import UsenseTransport
++from annotation.quality.live_pilot import PilotError, check_preservation, json_same, state_facts
++from annotation.runtime.storage.common import digest
++
++
++def observation(extra=None):
++    content = {
++        "status": "AVAILABLE",
++        "question_type": "ordinary_choice",
++        "parts": [{"text": "old"}],
++        "wire_zones": {zone: None for zone in wire.ZONES},
++        "question_info": {},
++        "rect_ids": ["r-old"],
++    }
++    if extra is not None:
++        content["opaque"] = copy.deepcopy(extra)
++    value = {
++        "book_id": "46007447",
++        "platform_version": "observed-v1",
++        "complete": True,
++        "read_status": "OK",
++        "submission_status": "NOT_SUBMITTED",
++        "source_bindings": {},
++        "directory_details": [{"directory_id": "leaf", "parent_id": None}],
++        "view": {
++            "target": {
++                "directories": ["leaf"],
++                "questions": [{"platform_question_id": "q-old", "platform_order": 1,
++                               "directory_id": "leaf"}],
++                "frames": [{"platform_frame_id": "r-old", "platform_question_id": "q-old"}],
++            },
++            "internal_bindings": {},
++            "frame_projections": {"r-old": {}},
++            "question_content": {"q-old": content},
++        },
++    }
++    value["raw_business_projection"] = wire.build_business_preservation(value, direct_view=True)
++    return value
++
++
++def content_record(pid, text):
++    raw = {
++        "platform_question_id": pid,
++        "question_type": "ordinary_choice",
++        "parts": [{"text": text}],
++        "wire_zones": {zone: None for zone in wire.ZONES},
++        "question_info": {},
++        "rect_ids": ["r-old"] if pid == "q-old" else ["r-new-" + str(i) for i in range(6)],
++    }
++    value = copy.deepcopy(raw)
++    value.update({"status": "AVAILABLE", "raw_record": copy.deepcopy(raw),
++                  "raw_record_json": json.dumps(raw, ensure_ascii=False, separators=(",", ":"))})
++    return value
++
++
++def projected_observation(*, old_extra, append=False):
++    """Build normalized state while retaining the original lossy-projection rows."""
++    value = observation()
++    value.pop("raw_business_projection")
++    question_rows = [{"qid": "q-old", "order": 1, "directory": "leaf",
++                      "unknown_extra": copy.deepcopy(old_extra)}]
++    frame_rows = [{"rid": "r-old", "owner": "q-old", "unknown_frame": {"zero": 0}}]
++    directory_rows = [{"did": "leaf", "parent": None, "unknown_directory": [1, None]}]
++    if append:
++        question_rows.append({"qid": "q-new", "order": 2, "directory": "leaf",
++                              "unknown_extra": {"new": True}})
++        frame_rows.extend({"rid": "r-new-" + str(i), "owner": "q-new",
++                           "unknown_frame": {"index": i}} for i in range(6))
++    traces = []
++    def array_rule(response, fields):
++        return {"array": {"source": {"from": {"response": response, "path": []}},
++                          "item": {"object": fields}}}
++    value["view"]["target"]["questions"] = wire.project(array_rule("questions", {
++        "platform_question_id": {"from": {"response": "$", "path": ["qid"]}},
++        "platform_order": {"from": {"response": "$", "path": ["order"]}},
++        "directory_id": {"from": {"response": "$", "path": ["directory"]}},
++    }), {"questions": question_rows}, collector=traces, path=("view", "target", "questions"))
++    value["view"]["target"]["frames"] = wire.project(array_rule("frames", {
++        "platform_frame_id": {"from": {"response": "$", "path": ["rid"]}},
++        "platform_question_id": {"from": {"response": "$", "path": ["owner"]}},
++    }), {"frames": frame_rows}, collector=traces, path=("view", "target", "frames"))
++    value["directory_details"] = wire.project(array_rule("directories", {
++        "directory_id": {"from": {"response": "$", "path": ["did"]}},
++        "parent_id": {"from": {"response": "$", "path": ["parent"]}},
++    }), {"directories": directory_rows}, collector=traces, path=("directory_details",))
++    value["view"]["question_content"] = {"q-old": content_record("q-old", "old")}
++    if append:
++        value["view"]["internal_bindings"]["local-new"] = "q-new"
++        value["view"]["question_content"]["q-new"] = content_record("q-new", "new")
++        for index in range(6):
++            value["view"]["frame_projections"]["r-new-" + str(index)] = {"index": index}
++    value["raw_business_projection"] = wire.build_business_preservation(
++        value, traces=traces, direct_view=False)
++    return value
++
++
++class FakeRawSession:
++    offline = True
++    evidence_mode = "SYNTHETIC"
++    actor = "author"
++    session_id = "raw-session"
++
++    def __init__(self, state, *, reorder_prewrite=True):
++        self.state = copy.deepcopy(state)
++        self.serial = 0
++        self.reorder_prewrite = reorder_prewrite
++
++    def request_once(self, method, path, *, params, payload, phase):
++        self.serial += 1
++        if phase == "upload":
++            body = {"credentials": {"accessid": "SENTINEL_ACCESS_ID",
++                                     "policy": "SENTINEL_POLICY",
++                                     "signature": "SENTINEL_SIGNATURE",
++                                     "securityToken": "SENTINEL_SECURITY_TOKEN"}}
++        else:
++            body = {"snapshot": copy.deepcopy(self.state),
++                    "unprojected_extra": {"first": 1, "second": 2}}
++        if phase == "prewrite" and self.reorder_prewrite:
++            body["unprojected_extra"] = {"second": 2, "first": 1}
++        return {
++            "http_status": 200,
++            "body": json.dumps(body, ensure_ascii=False, separators=(",", ":")),
++            "request_id": "raw-session:" + str(self.serial),
++            "session_id": self.session_id,
++            "fresh": True,
++            "cache": False,
++            "platform_version": "observed-v1",
++        }
++
++
++class RuntimeRawPreservationTests(unittest.TestCase):
++    def observe_pair(self, *, reorder_prewrite):
++        state = observation()
++        state.pop("raw_business_projection")
++        session = FakeRawSession(state, reorder_prewrite=reorder_prewrite)
++        transport = UsenseTransport(session)
++        spec = {"path": "/qieti/api/synthetic/complete-snapshot", "params": {}, "count": 1,
++                "response_fields": {key: ["snapshot", key] for key in wire.SNAPSHOT_FIELDS}}
++        profile = {"mode": "SYNTHETIC", "platform_version": "observed-v1",
++                   "reads": {"baseline": spec, "prewrite": copy.deepcopy(spec)}}
++        profile_hash = digest(profile)
++        transport.profile = profile
++        transport._profile_hash = profile_hash
++        transport._request = {"approval": {"wire_profile_hash": profile_hash,
++            "starts_at": "2026-01-01T00:00:00Z", "ends_at": "2099-01-01T00:00:00Z"}}
++        transport.session_id = session.session_id
++        baseline = transport.observe("baseline")
++        pid = "q-new"
++        session.state["view"]["target"]["questions"].append(
++            {"platform_question_id": pid, "platform_order": 2, "directory_id": "leaf"})
++        for index in range(6):
++            rid = "r-new-" + str(index)
++            session.state["view"]["target"]["frames"].append(
++                {"platform_frame_id": rid, "platform_question_id": pid})
++            session.state["view"]["frame_projections"][rid] = {"index": index}
++        session.state["view"]["internal_bindings"]["local-new"] = pid
++        session.state["view"]["question_content"][pid] = {
++            "status": "AVAILABLE", "question_type": "ordinary_choice",
++            "parts": [{"text": "new"}], "wire_zones": {zone: None for zone in wire.ZONES},
++            "question_info": {}, "rect_ids": ["r-new-" + str(i) for i in range(6)],
++        }
++        return baseline, transport.observe("prewrite"), pid
++
++    def test_old_json_type_and_key_order_changes_are_rejected(self):
++        cases = [
++            ({"value": 0}, {"value": False}),
++            ({"first": 1, "second": 2}, {"second": 2, "first": 1}),
++        ]
++        for before_extra, after_extra in cases:
++            with self.subTest(after=after_extra):
++                with self.assertRaises(PilotError) as caught:
++                    check_preservation(observation(before_extra), observation(after_extra))
++                self.assertIn(caught.exception.code,
++                              {"OLD_QUESTION_CONTENT_CHANGED", "OLD_RAW_BUSINESS_CHANGED"})
++
++    def test_legal_one_question_six_frame_append_still_passes(self):
++        before = observation({"nested": [0, None, ""]})
++        after = copy.deepcopy(before)
++        pid = "q-new"
++        after["view"]["target"]["questions"].append(
++            {"platform_question_id": pid, "platform_order": 2, "directory_id": "leaf"})
++        for index in range(6):
++            rid = "r-new-" + str(index)
++            after["view"]["target"]["frames"].append(
++                {"platform_frame_id": rid, "platform_question_id": pid})
++            after["view"]["frame_projections"][rid] = {"index": index}
++        after["view"]["internal_bindings"]["local-new"] = pid
++        after["view"]["question_content"][pid] = {
++            "status": "AVAILABLE", "question_type": "ordinary_choice",
++            "parts": [{"text": "new"}], "wire_zones": {zone: None for zone in wire.ZONES},
++            "question_info": {}, "rect_ids": ["r-new-" + str(i) for i in range(6)],
++        }
++        after["raw_business_projection"] = wire.build_business_preservation(after, direct_view=True)
++        check_preservation(before, after, pid)
++
++    def test_lossy_projection_legal_append_passes_but_old_raw_mutation_rejects(self):
++        before = projected_observation(old_extra={"first": 1, "second": 2})
++        legal_after = projected_observation(old_extra={"first": 1, "second": 2}, append=True)
++        check_preservation(before, legal_after, "q-new")
++
++        mutated_after = projected_observation(old_extra={"second": 2, "first": 1}, append=True)
++        with self.assertRaises(PilotError) as caught:
++            check_preservation(before, mutated_after, "q-new")
++        self.assertEqual(caught.exception.code, "OLD_RAW_ENTITY_CHANGED")
++
++    def test_lossy_projection_without_raw_entity_binding_is_rejected(self):
++        value = observation()
++        value.pop("raw_business_projection")
++        with self.assertRaises(PilotError) as caught:
++            wire.build_business_preservation(value, traces=(), direct_view=False)
++        self.assertEqual(caught.exception.code, "RAW_ENTITY_PRESERVATION_UNBOUND")
++
++    def test_recursive_raw_container_requires_a_declared_increment_model(self):
++        value = observation()
++        value.pop("raw_business_projection")
++        rows = [{"did": "leaf", "parent": None, "children": []}]
++        traces = []
++        rule = {"array": {
++            "source": {"from": {"response": "directories", "path": []}},
++            "children_path": ["children"],
++            "item": {"object": {
++                "directory_id": {"from": {"response": "$", "path": ["did"]}},
++                "parent_id": {"from": {"response": "$", "path": ["parent"]}},
++            }},
++        }}
++        value["directory_details"] = wire.project(
++            rule, {"directories": rows}, collector=traces, path=("directory_details",))
++        with self.assertRaises(PilotError) as caught:
++            wire.build_business_preservation(value, traces=traces, direct_view=False)
++        self.assertEqual(caught.exception.code, "RAW_ENTITY_RECURSIVE_CONTAINER_UNSUPPORTED")
++
++    def test_unknown_observation_view_and_target_fields_are_preserved(self):
++        for location, code in (("observation", "OLD_OBSERVATION_EXTRA_CHANGED"),
++                               ("view", "OLD_VIEW_EXTRA_CHANGED"),
++                               ("target", "OLD_TARGET_EXTRA_CHANGED")):
++            with self.subTest(location=location):
++                before = observation()
++                after = copy.deepcopy(before)
++                owner = after if location == "observation" else after["view"]
++                if location == "target":
++                    owner = after["view"]["target"]
++                owner["opaque_unknown"] = {"changed": True}
++                with self.assertRaises(PilotError) as caught:
++                    check_preservation(before, after)
++                self.assertEqual(caught.exception.code, code)
++
++    def test_runtime_sidecar_cannot_disappear(self):
++        before = observation({"kept": True})
++        after = copy.deepcopy(before)
++        del after["raw_business_projection"]
++        with self.assertRaises(PilotError) as caught:
++            check_preservation(before, after)
++        self.assertEqual(caught.exception.code, "RAW_BUSINESS_PRESERVATION_MISSING")
++
++    def test_natural_export_retains_full_raw_record_and_exact_key_order(self):
++        codec = {
++            "schema": "A24NaturalExportCodec/v1",
++            "question_fields": {key: [key] for key in
++                ("platform_question_id", "question_type", "parts", "wire_zones",
++                 "question_info", "rect_ids")},
++            "qualification": {
++                "schema": "A24FullBodyRouteQualification/v1", "status": "VERIFIED",
++                "route": wire.EXPORT, "book_id": "46007447",
++                "authoritative_catalog_complete": True,
++                "all_business_fields_covered": True, "zones": list(wire.ZONES),
++                "state_binding": "synthetic", "evidence_refs": ["synthetic"],
++            },
++        }
++        record = {
++            "platform_question_id": "q-old", "question_type": "ordinary_choice",
++            "parts": [{"text": "old"}], "wire_zones": {zone: None for zone in wire.ZONES},
++            "question_info": {}, "rect_ids": ["r-old"],
++            "unknown_extra": {"second": 2, "first": 1},
++        }
++        raw_line = json.dumps(record, ensure_ascii=False, separators=(",", ":"))
++        contents, _ = wire.decode_natural_export(
++            raw_line, codec, [{"platform_question_id": "q-old"}])
++        saved = contents["q-old"]
++        self.assertEqual(saved["raw_record_json"], raw_line)
++        self.assertEqual(list(saved["raw_record"]["unknown_extra"]), ["second", "first"])
++        self.assertTrue(json_same(saved["raw_record"], record))
++
++    def test_actual_observe_keeps_unprojected_response_and_prewrite_detects_it(self):
++        state = observation()
++        state.pop("raw_business_projection")
++        session = FakeRawSession(state)
++        transport = UsenseTransport(session)
++        spec = {"path": "/qieti/api/synthetic/complete-snapshot", "params": {}, "count": 1,
++                "response_fields": {key: ["snapshot", key] for key in wire.SNAPSHOT_FIELDS}}
++        profile = {"mode": "SYNTHETIC", "platform_version": "observed-v1",
++                   "reads": {"baseline": spec, "prewrite": copy.deepcopy(spec)}}
++        profile_hash = digest(profile)
++        transport.profile = profile
++        transport._profile_hash = profile_hash
++        transport._request = {"approval": {"wire_profile_hash": profile_hash,
++            "starts_at": "2026-01-01T00:00:00Z", "ends_at": "2099-01-01T00:00:00Z"}}
++        transport.session_id = session.session_id
++        baseline = transport.observe("baseline")
++        prewrite = transport.observe("prewrite")
++        self.assertIn("raw_business_responses", baseline)
++        self.assertIn("raw_business_projection", baseline)
++        self.assertEqual(baseline["raw_business_responses"]["snapshot"]["representation"],
++                         "UTF8_REENCODED_RESPONSE_TEXT")
++        self.assertNotEqual(
++            baseline["raw_business_responses"]["snapshot"]["body"],
++            prewrite["raw_business_responses"]["snapshot"]["body"],
++        )
++        self.assertFalse(json_same(state_facts(baseline), state_facts(prewrite)))
++
++    def test_actual_observe_residual_allows_append_but_rejects_wrapper_mutation(self):
++        before, legal_after, pid = self.observe_pair(reorder_prewrite=False)
++        check_preservation(before, legal_after, pid)
++        self.assertTrue(json_same(before["raw_business_residuals"],
++                                  legal_after["raw_business_residuals"]))
++        new_entities = legal_after["raw_business_projection"]["raw_entities"]
++        self.assertEqual(len([item for item in new_entities
++                              if item["kind"] == "frame" and
++                              item["owner_platform_question_id"] == pid]), 6)
++        self.assertEqual({item["kind"] for item in new_entities if item["stable_id"] == pid},
++                         {"question", "content"})
++        content = next(item for item in new_entities
++                       if item["kind"] == "content" and item["stable_id"] == pid)
++        self.assertEqual(set(content["raw_record"]["wire_zones"]), set(wire.ZONES))
++
++        before, mutated_after, pid = self.observe_pair(reorder_prewrite=True)
++        with self.assertRaises(PilotError) as caught:
++            check_preservation(before, mutated_after, pid)
++        self.assertEqual(caught.exception.code, "OLD_RAW_RESPONSE_RESIDUAL_CHANGED")
++
++    def test_typed_wrapper_mask_preserves_keys_order_types_and_unknown_structure(self):
++        declared = [["snapshot", "view"]]
++        baseline = {"snapshot": {"view": {"business": "changes legally"}},
++                    "opaque": {"first": 0, "second": [None, ""]}}
++        same_wrapper_new_business = copy.deepcopy(baseline)
++        same_wrapper_new_business["snapshot"]["view"] = {"new_question": True}
++        before = wire.response_residual(baseline, declared)
++        after = wire.response_residual(same_wrapper_new_business, declared)
++        self.assertTrue(json_same(before, after))
++        snapshot_entry = before["entries"][0]
++        self.assertEqual(snapshot_entry["key"], "snapshot")
++        self.assertEqual(snapshot_entry["value"]["entries"][0]["value"],
++                         {"node_type": "DECLARED_SUBTREE_MASK"})
++
++        variants = []
++        added = copy.deepcopy(baseline); added["new_unknown"] = 1; variants.append(added)
++        deleted = copy.deepcopy(baseline); del deleted["opaque"]["second"]; variants.append(deleted)
++        type_changed = copy.deepcopy(baseline); type_changed["opaque"]["first"] = False; variants.append(type_changed)
++        reordered = {"opaque": {"first": 0, "second": [None, ""]},
++                     "snapshot": copy.deepcopy(baseline["snapshot"])}; variants.append(reordered)
++        for variant in variants:
++            with self.subTest(variant=variant):
++                self.assertFalse(json_same(before, wire.response_residual(variant, declared)))
++
++    def test_multi_request_residual_without_coverage_binding_is_rejected(self):
++        state = observation()
++        state.pop("raw_business_projection")
++        session = FakeRawSession(state)
++        transport = UsenseTransport(session)
++        spec = {
++            "requests": [
++                {"name": "snapshot", "path": "/qieti/api/synthetic/complete-snapshot", "params": {}},
++                {"name": "unused", "path": "/qieti/api/synthetic/complete-snapshot", "params": {}},
++            ],
++            "projection": {key: {"from": {"response": "snapshot", "path": ["snapshot", key]}}
++                           for key in wire.SNAPSHOT_FIELDS},
++        }
++        profile = {"mode": "SYNTHETIC", "platform_version": "observed-v1",
++                   "reads": {"baseline": spec}}
++        profile_hash = digest(profile)
++        transport.profile = profile
++        transport._profile_hash = profile_hash
++        transport._request = {"approval": {"wire_profile_hash": profile_hash,
++            "starts_at": "2026-01-01T00:00:00Z", "ends_at": "2099-01-01T00:00:00Z"}}
++        transport.session_id = session.session_id
++        with self.assertRaises(PilotError) as caught:
++            transport.observe("baseline")
++        self.assertEqual(caught.exception.code, "RAW_RESPONSE_RESIDUAL_UNBOUND")
++        self.assertIn(("baseline", "snapshot"), transport._raw_reads)
++        self.assertIn(("baseline", "unused"), transport._raw_reads)
++
++    def test_signature_credentials_never_enter_business_raw_sidecar(self):
++        state = observation()
++        state.pop("raw_business_projection")
++        session = FakeRawSession(state)
++        transport = UsenseTransport(session)
++        spec = {"path": "/qieti/api/synthetic/complete-snapshot", "params": {}, "count": 1,
++                "response_fields": {key: ["snapshot", key] for key in wire.SNAPSHOT_FIELDS}}
++        profile = {"mode": "SYNTHETIC", "platform_version": "observed-v1",
++                   "reads": {"baseline": spec}}
++        profile_hash = digest(profile)
++        transport.profile = profile
++        transport._profile_hash = profile_hash
++        transport._request = {"approval": {"wire_profile_hash": profile_hash,
++            "starts_at": "2026-01-01T00:00:00Z", "ends_at": "2099-01-01T00:00:00Z"}}
++        transport.session_id = session.session_id
++        baseline = transport.observe("baseline")
++        transport._read(wire.SIGNATURE, {"file_id": wire.BOOK, "dir_type": "annotate_images"},
++                        "upload", "signature")
++        serialized_private = json.dumps(list(transport._raw_reads.values()), ensure_ascii=False)
++        serialized_result = json.dumps(baseline["raw_business_responses"], ensure_ascii=False)
++        self.assertNotIn(("upload", "signature"), transport._raw_reads)
++        for sentinel in ("SENTINEL_ACCESS_ID", "SENTINEL_POLICY", "SENTINEL_SIGNATURE",
++                         "SENTINEL_SECURITY_TOKEN"):
++            self.assertNotIn(sentinel, serialized_private)
++            self.assertNotIn(sentinel, serialized_result)
++
++
++if __name__ == "__main__":
++    unittest.main()

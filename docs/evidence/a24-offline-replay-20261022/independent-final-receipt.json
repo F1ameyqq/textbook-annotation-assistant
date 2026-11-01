@@ -1,0 +1,98 @@
+{
+  "schema": "A24OfflineReplayV2FinalIndependentReceipt/v1",
+  "date": "2026-10-22",
+  "decision": "PASS_OFFLINE_REPLAY_ONLY_LIVE_HOLD",
+  "archive": {
+    "path": "C:/Users/LIHAOYANG/Documents/Codex/2026-10-17/chapter1-content-sol56/outputs/a24-offline-replay-20261022-v2-final/a24-offline-replay-20261022-v2-final.zip",
+    "bytes": 2034326,
+    "sha256": "c4ad1b298dd34a8b0a5ec8706a3514fefe19d9a33582cd27fa826ef1a94ec89e",
+    "zip_members": 531,
+    "expanded_bytes": 9641605,
+    "crc_test": "PASS",
+    "root_manifest_sha256": "0770e2a17278a8f046e224d178113e0cbcebc08e206d5e56a2501c1833572d56",
+    "root_manifest_members_excluding_self": 530,
+    "effective_manifest_sha256": "c92e891b9644f1a24c6352a40ba4abc8691f76390ad892ad6b81209a84c50fe0"
+  },
+  "independent_safe_extraction": {
+    "tool": "tools/a24_safe_zip_extract.py",
+    "tool_sha256": "b51057c0c2ca7132a7e15832b31c65295228f0760ad24bbf727f5ec086ababeb",
+    "target": "C:/Users/LIHAOYANG/Documents/Codex/2026-10-17/chapter1-quality-sol56/work/a24-offline-replay-v2-final-independent-20261022/extracted-package",
+    "status": "PASS",
+    "guards": [
+      "absolute, drive, UNC, traversal, backslash and ADS path rejection",
+      "NFC and casefold collision rejection",
+      "Windows reserved name and trailing dot/space rejection",
+      "file/directory prefix collision rejection",
+      "encrypted, symlink and special member rejection",
+      "member/total size and compression ratio bounds",
+      "CRC and root-manifest byte binding"
+    ]
+  },
+  "package_verification": {
+    "runner_sha256": "aecad971743bd02d17e4b351aaecc9730b9a9f5204cc26662ac313f96b9eeabd",
+    "baseline_members": 522,
+    "overlay_members": 3,
+    "effective_members": 523,
+    "root_manifest_required_and_checked": true,
+    "status": "PASS"
+  },
+  "rebuild": {
+    "target": "C:/Users/LIHAOYANG/Documents/Codex/2026-10-17/chapter1-quality-sol56/work/a24-offline-replay-v2-final-independent-20261022/effective-tree",
+    "files": 523,
+    "status": "PASS",
+    "post_test_full_hash_verification": "PASS"
+  },
+  "synthetic_regression": {
+    "runtime": "C:/Users/LIHAOYANG/.cache/codex-runtimes/codex-primary-runtime/dependencies/python/python.exe",
+    "mode": "SYNTHETIC_MEMORY_POLICY_ONLY",
+    "suites": [
+      {"suite": "controlled_capture", "tests": 7, "failures": 0, "errors": 0, "passed": true},
+      {"suite": "minimum_gate", "tests": 10, "failures": 0, "errors": 0, "passed": true},
+      {"suite": "book_snapshot", "tests": 4, "failures": 0, "errors": 0, "passed": true}
+    ],
+    "tests": 21,
+    "expected_tests": 21,
+    "passed": true,
+    "duration_ms": 1797,
+    "pydantic_version": "2.14.1",
+    "pillow_version": "12.3.0",
+    "guard_scope": [
+      "asyncio MemoryPolicy",
+      "socket.create_connection",
+      "socket.socket.connect",
+      "subprocess.Popen",
+      "urllib.request.urlopen"
+    ],
+    "observed_guarded_entrypoint_calls": 0,
+    "raw_test_receipt": "outputs/a24-offline-replay-v2-final-raw-test-receipt-20261022.json",
+    "raw_test_receipt_sha256": "ee4a8555816b783316a14054c456bab72c4f95518e37e8a07fda83fb06efd724"
+  },
+  "negative_checks": {
+    "rebuild_existing_target": {
+      "expected_error": "FileExistsError: rebuild target already exists",
+      "exit_code": 1,
+      "rejected": true,
+      "tree_after_rejection": {"members": 523, "status": "PASS"}
+    },
+    "tampered_tree_matrix": "NOT_RUN_HERE_ASSIGNED_TO_PRIMARY_REVIEW"
+  },
+  "observed_write_scope": {
+    "extracted_package_files": 531,
+    "effective_tree_files": 523,
+    "test_report_files": 1,
+    "test_temp_files_after_completion": 0,
+    "shared_repository_writes": 0,
+    "browser_platform_live_model_calls": 0
+  },
+  "authority_boundary": {
+    "historical_authority_files": "BYTE_VERIFIED_ONLY",
+    "historical_authority_used_as_authorization": false,
+    "synthetic_test_authority": "TEMPORARY_FIXTURE_ONLY"
+  },
+  "limits": [
+    "The declared guards are finite entry-point guards, not a general OS or filesystem sandbox.",
+    "No current real book, directory, full-frame or natural-export response was available.",
+    "This receipt does not prove current platform schema, live preservation, write authorization, platform acceptance or human acceptance.",
+    "CURRENT_SCHEMA_UNBOUND, write_allowed=false, successors=NOT_RUN and HOLD remain in force."
+  ]
+}

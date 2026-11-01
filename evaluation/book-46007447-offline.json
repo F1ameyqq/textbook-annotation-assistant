@@ -1,0 +1,194 @@
+{
+  "date": "2026-10-16",
+  "timezone": "Asia/Shanghai",
+  "baseline_commit": "26ab3707710d23888d675c527c40fe8f052ee057",
+  "dataset": "46007447 five observed images, development corpus",
+  "source_descriptor": "tests/fixtures/book46007447/source-descriptor.json",
+  "reference_quality": "MODEL_VISUAL_DEVELOPMENT_REVIEW",
+  "held_out_accuracy": null,
+  "test_command": "python -m unittest discover -s tests -v",
+  "tests_passed": 29,
+  "replay_command": "python tools/replay_b.py --out data/runs/46007447-replay",
+  "full_command": "python tools/offline_b.py --source SOURCE/source.json --context tests/fixtures/book46007447/context.json --review tests/fixtures/book46007447/review.json --reference-export SOURCE/paper-questions-original.jsonl --out data/runs/46007447-offline",
+  "source_asset_count": 5,
+  "main_questions": 33,
+  "variant_questions": 1,
+  "ocr_lines": 424,
+  "detail_ocr_tokens": 82,
+  "detail_ocr_rows": 29,
+  "summary": {
+    "questions": 34,
+    "answers": 54,
+    "unique_candidate_links": 26,
+    "issues": 74
+  },
+  "decision": "HOLD",
+  "issue_counts": {
+    "FIGURE_OR_FORMULA_REVIEW": 25,
+    "ANSWER_TRANSCRIPTION_INCOMPLETE": 10,
+    "OCR_RECOGNITION_DISAGREEMENT": 2,
+    "FIGURE_EXTENT_UNVERIFIED": 11,
+    "SHARED_MATERIAL_STRUCTURE_REVIEW": 3,
+    "CROSS_COLUMN_CONTINUATION": 3,
+    "CHOICE_ANSWER_FORMAT": 1,
+    "ANSWER_MISSING_OR_AMBIGUOUS": 8,
+    "BUSINESS_REVIEW_REQUIRED": 1,
+    "AMBIGUOUS_ANSWER_ROW": 10
+  },
+  "page_coverage": [
+    {
+      "asset_id": "viewer-10",
+      "expected": [
+        "1",
+        "2",
+        "3",
+        "4",
+        "5",
+        "6",
+        "7",
+        "8",
+        "9"
+      ],
+      "actual": [
+        "1",
+        "2",
+        "3",
+        "4",
+        "5",
+        "6",
+        "7",
+        "8",
+        "9"
+      ],
+      "census_matches": true,
+      "reference_quality": "MODEL_VISUAL_DEVELOPMENT_REVIEW",
+      "business_acceptance": false
+    },
+    {
+      "asset_id": "viewer-11",
+      "expected": [
+        "10",
+        "11",
+        "12",
+        "13",
+        "14",
+        "15",
+        "16"
+      ],
+      "actual": [
+        "10",
+        "11",
+        "12",
+        "13",
+        "14",
+        "15",
+        "16"
+      ],
+      "census_matches": true,
+      "reference_quality": "MODEL_VISUAL_DEVELOPMENT_REVIEW",
+      "business_acceptance": false
+    },
+    {
+      "asset_id": "viewer-12",
+      "expected": [
+        "1",
+        "2",
+        "3",
+        "4",
+        "5",
+        "6",
+        "7"
+      ],
+      "actual": [
+        "1",
+        "2",
+        "3",
+        "4",
+        "5",
+        "6",
+        "7"
+      ],
+      "census_matches": true,
+      "reference_quality": "MODEL_VISUAL_DEVELOPMENT_REVIEW",
+      "business_acceptance": false
+    },
+    {
+      "asset_id": "viewer-14",
+      "expected": [
+        "1",
+        "2",
+        "3",
+        "4",
+        "5",
+        "6",
+        "7",
+        "8",
+        "9",
+        "10"
+      ],
+      "actual": [
+        "1",
+        "2",
+        "3",
+        "4",
+        "5",
+        "6",
+        "7",
+        "8",
+        "9",
+        "10"
+      ],
+      "census_matches": true,
+      "reference_quality": "MODEL_VISUAL_DEVELOPMENT_REVIEW",
+      "business_acceptance": false
+    }
+  ],
+  "unmatched_answer_candidates": 28,
+  "q4": {
+    "observed_ocr_answer": "13",
+    "source_bbox": [
+      308.667,
+      241.667,
+      340.0,
+      254.333
+    ],
+    "historical_export_answer": "1:3",
+    "expected_scalar": "13",
+    "bad_case_code": "ANSWER_SCALAR_FORMAT"
+  },
+  "implementation_sha256": {
+    "src\\annotation\\recognition\\offline.py": "04b4ee22863a4f74fa8f3331a044f84af60919b831d0f925beaed513c46705a0",
+    "src\\annotation\\recognition\\policy.py": "d1962ce169c0b105c9c9cc8c3a1bec5da3ea5f0807e47ebbe0864fc012c30f42",
+    "tools\\offline_b.py": "9a6f4cafadc0c473b01b5d22d5e4602c3aceb0719cdcbbb80744db404e2fa6b5"
+  },
+  "artifacts": {
+    "evidence": {
+      "artifact_id": "evidencebundletrial-0b4ccd9976860ee169a30990",
+      "revision": 1,
+      "content_hash": "23ae6b63e3b1d136e5b599d7c69d2a1dccb0b801e135b85f59446920cf364371",
+      "run_id": "b-run-86034a3740692885910e82d7"
+    },
+    "graph": {
+      "artifact_id": "questiongraphtrial-56d98358f8b96777fd9ede25",
+      "revision": 1,
+      "content_hash": "c72f973ee917732b750467ff49ed56d5b98cad0d52d9ec5b4b11182a5eb4b9d7",
+      "run_id": "b-run-86034a3740692885910e82d7"
+    },
+    "check": {
+      "artifact_id": "checkreporttrial-7894fdb4f6da506eb42812c1",
+      "revision": 1,
+      "content_hash": "34e75cf2a2e668987e7791bf489447ade135125ae51452c204c99f8859d70d50",
+      "run_id": "b-run-86034a3740692885910e82d7"
+    }
+  },
+  "limitations": [
+    "Not a frozen A contract or business acceptance.",
+    "Reviewed section windows are input, not automatic directory recognition.",
+    "Complex answers, figures, formula fidelity and cross-page tracking remain incomplete.",
+    "C/0 OCR disagreement is retained and blocked; candidate-link counts are not accuracy."
+  ],
+  "website_requests_this_run": 0,
+  "platform_actions": 0,
+  "paid_model_requests": 0,
+  "receiver_validation": "PENDING_A"
+}

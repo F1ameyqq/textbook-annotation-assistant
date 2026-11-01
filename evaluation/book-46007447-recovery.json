@@ -1,0 +1,340 @@
+{
+  "date": "2026-10-16",
+  "timezone": "Asia/Shanghai",
+  "baseline_commit": "db4cd8ebc91ecb5b685c523c329eb492ad3ad327",
+  "reference_quality": "MODEL_VISUAL_DEVELOPMENT_REVIEW",
+  "held_out_accuracy": null,
+  "business_acceptance": false,
+  "scope": "5 original assets for recovery; separate 6th-asset prefix extension for continuation, not whole book",
+  "schemas": {
+    "recovery": "b-recovery-trial/0.1",
+    "source_review": "b-source-review-trial/0.1",
+    "evidence": "b-evidence-trial/0.3",
+    "graph": "b-graph-trial/0.3",
+    "check": "b-check-trial/0.3"
+  },
+  "tests_passed": 130,
+  "previous_tests": 59,
+  "new_tests": 71,
+  "new_test_groups": {
+    "cpu_recovery": 21,
+    "continuation": 34,
+    "recovery_integration": 16
+  },
+  "test_command": "python -m unittest discover -s tests -v",
+  "replay_command": "python tools/replay_recovery_b.py --out data/runs/recovered",
+  "continuation_command": "python tools/verify_continuation_b.py --evidence data/runs/recovered/evidence.json --graph data/runs/recovered/question-graph.json --out data/runs/cross-page",
+  "original_assets_revalidated": 5,
+  "adjacent_original_and_crop_pixels_revalidated": true,
+  "cpu_recovery": {
+    "probes": 27,
+    "preprocess_passes": 54,
+    "raw_hypothesis_lines": 185,
+    "producer": {
+      "module": "annotation.recognition.recovery",
+      "version": "0.1.0",
+      "code_sha256": "6651e91fe39ce9b93b5227dbe6bdb06ccdae534a8a8632b28e251682f213bdea",
+      "engine": "rapidocr_onnxruntime",
+      "device": "CPU",
+      "dependencies": {
+        "rapidocr-onnxruntime": "1.4.4",
+        "onnxruntime": "1.25.1",
+        "numpy": "2.3.5",
+        "Pillow": "12.2.0",
+        "opencv-python": "4.13.0.92"
+      },
+      "dependency_sha256": "be48c09c51538058aff9e6b1064b51e2ef6761e0371e497ac49bd974e47359c0",
+      "model_files": [
+        {
+          "name": "models/ch_PP-OCRv4_det_infer.onnx",
+          "sha256": "d2a7720d45a54257208b1e13e36a8479894cb74155a5efe29462512d42f49da9"
+        },
+        {
+          "name": "models/ch_PP-OCRv4_rec_infer.onnx",
+          "sha256": "48fc40f24f6d2a207a2b1091d3437eb3cc3eb6b676dc3ef9c37384005483683b"
+        },
+        {
+          "name": "models/ch_ppocr_mobile_v2.0_cls_infer.onnx",
+          "sha256": "e47acedf663230f8863ff1ab0e64dd2d82b838fceb5957146dab185a89d6215c"
+        }
+      ],
+      "configuration_sha256": "a1a524abc78468bf6c685efb9d6c2e8663a748b17e5e6a3d688433a20688b7ca",
+      "selection_policy": "two-pass exact text agreement with scores>=.75; or primary worked-answer anchor agreement>=.8; never expected answer values"
+    },
+    "plans": 5,
+    "replacement_lines": 29,
+    "reviewed_selection_lines": 1,
+    "all_transcriptions_unverified": true
+  },
+  "original_38_dispositions": {
+    "new_ocr_recovery_candidates": 13,
+    "reviewed_non_content": 6,
+    "retained_unassigned_math": 19
+  },
+  "remaining_source_groups": [
+    {
+      "group_id": "topic1-examples",
+      "source_line_ids": [
+        "viewer-173/ocr/86",
+        "viewer-173/ocr/87"
+      ],
+      "section_path": [
+        "第一章 勾股定理",
+        "小专题1 方程思想",
+        "例题"
+      ],
+      "reference_type": "EXAMPLE_REFERENCE",
+      "source_sha256": "a231f0247cd0444cc34ed699c4cca99245d2ac6cfda5ef10a38ca3f8164510be",
+      "reason": "Examples1/2 have explicit labels but fraction/table OCR is unresolved. Keep namespace separate from training.",
+      "assignment_status": "UNASSIGNED",
+      "verification_status": "UNVERIFIED"
+    },
+    {
+      "group_id": "math-world",
+      "source_line_ids": [
+        "viewer-173/ocr/102",
+        "viewer-173/ocr/104",
+        "viewer-173/ocr/108",
+        "viewer-173/ocr/110",
+        "viewer-173/ocr/112"
+      ],
+      "section_path": [
+        "第一章 勾股定理",
+        "漫话勾股世界"
+      ],
+      "reference_type": "UNNUMBERED_WORKED_REFERENCE",
+      "source_sha256": "a231f0247cd0444cc34ed699c4cca99245d2ac6cfda5ef10a38ca3f8164510be",
+      "reason": "Unnumbered worked answer and diagram label b; do not invent question1.",
+      "assignment_status": "UNASSIGNED",
+      "verification_status": "UNVERIFIED"
+    },
+    {
+      "group_id": "topic2-example",
+      "source_line_ids": [
+        "viewer-173/ocr/111",
+        "viewer-173/ocr/113",
+        "viewer-173/ocr/114",
+        "viewer-173/ocr/115",
+        "viewer-173/ocr/116",
+        "viewer-173/ocr/117"
+      ],
+      "section_path": [
+        "第一章 勾股定理",
+        "小专题2 折叠问题",
+        "例题"
+      ],
+      "reference_type": "UNNUMBERED_EXAMPLE_REFERENCE",
+      "source_sha256": "a231f0247cd0444cc34ed699c4cca99245d2ac6cfda5ef10a38ca3f8164510be",
+      "reason": "Unnumbered example; 55/16 numerator and denominator are formula constituents, not primary markers.",
+      "assignment_status": "UNASSIGNED",
+      "verification_status": "UNVERIFIED"
+    },
+    {
+      "group_id": "topic2-training",
+      "source_line_ids": [
+        "viewer-173/ocr/119",
+        "viewer-173/ocr/120",
+        "viewer-173/ocr/121",
+        "viewer-173/ocr/122",
+        "viewer-173/ocr/123",
+        "viewer-173/ocr/125"
+      ],
+      "section_path": [
+        "第一章 勾股定理",
+        "小专题2 折叠问题",
+        "针对训练"
+      ],
+      "reference_type": "MIXED_TRAINING_REFERENCE",
+      "source_sha256": "a231f0247cd0444cc34ed699c4cca99245d2ac6cfda5ef10a38ca3f8164510be",
+      "reason": "Source reads 1.C 2.10/3 3.1 4.13/6 5.24; base OCR omitted denominator6 and recovery sees6, but unresolved mixed rows and 2D formula partition still prevent precise CPU fragment assignment.",
+      "assignment_status": "UNASSIGNED",
+      "verification_status": "UNVERIFIED"
+    }
+  ],
+  "decision": "HOLD",
+  "summary": {
+    "questions": 34,
+    "answers": 66,
+    "unique_candidate_links": 34,
+    "issues": 110,
+    "multiline_answers": 16,
+    "multi_fragment_answers": 21,
+    "bounded_answer_candidates": 62,
+    "answer_raw_lines": 175,
+    "unassigned_answer_lines": 19,
+    "explanation_candidates": 0,
+    "answer_fragment_count": 170,
+    "ocr_transcription_verified": false,
+    "triaged_original_unassigned_lines": 38,
+    "recovered_original_unassigned_lines": 13,
+    "reviewed_non_content_lines": 6,
+    "retained_math_source_lines": 19,
+    "recovery_replaced_raw_lines": 14,
+    "recovery_candidate_lines": 30,
+    "visual_formula_candidates": 5,
+    "formula_candidates_verified": false
+  },
+  "answer_coverage_counts": {
+    "EXCLUDED": 27,
+    "CONSUMED": 129,
+    "UNASSIGNED": 19
+  },
+  "answer_status_counts": {
+    "BOUNDED": 62,
+    "OPEN": 4
+  },
+  "issue_counts": {
+    "FIGURE_OR_FORMULA_REVIEW": 25,
+    "OCR_RECOGNITION_DISAGREEMENT": 8,
+    "FIGURE_EXTENT_UNVERIFIED": 11,
+    "SHARED_MATERIAL_STRUCTURE_REVIEW": 3,
+    "CROSS_COLUMN_CONTINUATION": 3,
+    "CHOICE_ANSWER_FORMAT": 2,
+    "ANSWER_OCR_DISAGREEMENT": 19,
+    "ANSWER_ASSEMBLY_UNRESOLVED": 4,
+    "ANSWER_UNASSIGNED_CONTENT": 19,
+    "ANSWER_SOURCE_OCR_GAP": 4,
+    "FORMULA_VISUAL_CANDIDATE_REQUIRES_REVIEW": 5,
+    "BUSINESS_REVIEW_REQUIRED": 1,
+    "ANSWER_SPATIAL_GAP_UNRESOLVED": 2,
+    "ANSWER_REFERENTIAL_CONTEXT_UNRESOLVED": 1,
+    "ANSWER_2D_READING_ORDER_UNRESOLVED": 1,
+    "AMBIGUOUS_EMBEDDED_ANSWER_MARKERS": 1,
+    "ANSWER_BOUNDARY_UNRESOLVED": 1
+  },
+  "continuation": {
+    "book_id": "46007447",
+    "source_assets": 6,
+    "new_ocr_lines": 27,
+    "prefix_lines": 25,
+    "status": "REJECTED",
+    "decision": "HOLD",
+    "accepted": false,
+    "issue_codes": [
+      "CONTINUATION_FIGURE_EXTENT_UNVERIFIED",
+      "CONTINUATION_PREFIX_INCOMPLETE"
+    ],
+    "original_source_validation": "ORIGINAL_BYTES_AND_CROP_PIXELS_RECHECKED",
+    "ocr_rerun": false,
+    "graph_merge_performed": false,
+    "platform_actions": 0,
+    "viewer_page_mapping": "UNKNOWN_FOR_RESOURCE_173"
+  },
+  "artifacts": {
+    "recovery": {
+      "artifact_id": "b-recovery-66eefe4c676734658c119304",
+      "revision": 1,
+      "content_hash": "770e32950052d0efa1444e471225ee4bc15d6d5161eec8e4b66757ef03a0d795"
+    },
+    "source_review": {
+      "artifact_id": "sourcerecoveryreviewtrial-8d9eee0ddfae2d0ec02e1068",
+      "revision": 1,
+      "content_hash": "b13fe1c9148043e320d8afb8e359c7ed1a326bcf4546acfd7bc9209b6208e5c3"
+    },
+    "evidence": {
+      "artifact_id": "evidencebundletrial-a35b5fcb9a09664babb693c0",
+      "revision": 1,
+      "content_hash": "fa68abeaec6aec0e1a4e6828b8f2b447e1c2f88459223c92d71a2feb0775b726"
+    },
+    "graph": {
+      "artifact_id": "questiongraphtrial-5e58bb105233475bd258f2bf",
+      "revision": 1,
+      "content_hash": "5ed814d257c3bb039f54c6f218dc0b69331604213cc888370613b27c8a2bf538"
+    },
+    "check": {
+      "artifact_id": "checkreporttrial-0460310706a517e51b442854",
+      "revision": 1,
+      "content_hash": "8d0a49ef34e9dbc60ebbf2a4fb9515039d1ffd4945c70c118496e39a993e58f1"
+    }
+  },
+  "implementation_sha256": {
+    "src/annotation/recognition/recovery.py": "6651e91fe39ce9b93b5227dbe6bdb06ccdae534a8a8632b28e251682f213bdea",
+    "src/annotation/recognition/recovery_apply.py": "3fbdd46012a3e3de824a55633460c09d7d41eb0d5d0dcbb5a8f3d8c2b4e58da4",
+    "src/annotation/recognition/recovery_quality.py": "ed9dc1fc4123b6a37e07f5df2faed1b53c162fb01ebbb13f667ec6016f459e23",
+    "src/annotation/recognition/continuation.py": "2e24bbaed6acfb5ea37ea2c56abdc79c0ecc7812508c170ecc2985fef42f7700",
+    "src/annotation/recognition/answer_assembly.py": "7ae13521a8d3cc5025e3de23707c70f89468089519c56ee29f82d5c6f6792051",
+    "src/annotation/recognition/answer_quality.py": "ae08342c54b4fe16c9c157da76ed92735147f4adfe32456131c338355258a210",
+    "src/annotation/recognition/offline.py": "99162b9fe7f672641cfbf2fdfc8a6a3d53fc98c347f1c2532652b548708787ca",
+    "tools/replay_recovery_b.py": "d50b7bbf15bfbf47e90fd4d9cbf87d158833d37ea774d3947d8b33472ae27fbc",
+    "tools/verify_continuation_b.py": "3a6794de9346f7a3596d1350067862c8348fce9334f8dd1cda8b73a0e03a3b9f"
+  },
+  "git_snapshot_verification": {
+    "code_snapshot_tree": "b1348e145cd9c70fa7e7b4e12866a78256d0cd66",
+    "tests": "----------------------------------------------------------------------\nRan 130 tests in 5.164s\n\nOK",
+    "recovery": {
+      "decision": "HOLD",
+      "questions": 34,
+      "answers": 66,
+      "unique_candidate_links": 34,
+      "issues": 110,
+      "multiline_answers": 16,
+      "multi_fragment_answers": 21,
+      "bounded_answer_candidates": 62,
+      "answer_raw_lines": 175,
+      "unassigned_answer_lines": 19,
+      "explanation_candidates": 0,
+      "answer_fragment_count": 170,
+      "ocr_transcription_verified": false,
+      "triaged_original_unassigned_lines": 38,
+      "recovered_original_unassigned_lines": 13,
+      "reviewed_non_content_lines": 6,
+      "retained_math_source_lines": 19,
+      "recovery_replaced_raw_lines": 14,
+      "recovery_candidate_lines": 30,
+      "visual_formula_candidates": 5,
+      "formula_candidates_verified": false
+    },
+    "continuation": {
+      "book_id": "46007447",
+      "source_assets": 6,
+      "new_ocr_lines": 27,
+      "prefix_lines": 25,
+      "status": "REJECTED",
+      "decision": "HOLD",
+      "accepted": false,
+      "issue_codes": [
+        "CONTINUATION_FIGURE_EXTENT_UNVERIFIED",
+        "CONTINUATION_PREFIX_INCOMPLETE"
+      ],
+      "original_source_validation": "NOT_RECHECKED_CACHED_CROP_REPLAY",
+      "ocr_rerun": false,
+      "graph_merge_performed": false,
+      "platform_actions": 0,
+      "viewer_page_mapping": "UNKNOWN_FOR_RESOURCE_173"
+    },
+    "legacy_replay": {
+      "decision": "HOLD",
+      "questions": 34,
+      "answers": 56,
+      "unique_candidate_links": 27,
+      "issues": 134,
+      "multiline_answers": 14,
+      "multi_fragment_answers": 19,
+      "bounded_answer_candidates": 52,
+      "answer_raw_lines": 159,
+      "unassigned_answer_lines": 38,
+      "explanation_candidates": 0,
+      "answer_fragment_count": 141,
+      "ocr_transcription_verified": false
+    },
+    "payload_matches": {
+      "evidence.json": true,
+      "question-graph.json": true,
+      "check-report.json": true
+    },
+    "environment": "same installed runtime, separate git archive path, no original image files or OCR engine used by replay"
+  },
+  "static_source_gets_this_increment": 1,
+  "platform_actions": 0,
+  "graph_merge_performed": false,
+  "paid_model_requests": 0,
+  "receiver_validation": "PENDING_A",
+  "semantic_notes": [
+    "38 triaged does not mean38 mathematically recovered.19 genuine math lines remain unassigned.",
+    "Unique scoped candidates are unverified links, not accuracy or business acceptance.",
+    "Five model visual formula candidates are not CPU OCR, human gold or applied corrections.",
+    "Recovered Q16 anchor is real but2D formula reading order remainsOPEN/completefalse.",
+    "Real continuation checked with all diagram labels and subsequent split title retained;REJECTED/HOLD;viewer mapping unknown.",
+    "Git snapshot replay uses same runtime in another path;no fresh environment or held-out evaluation claimed."
+  ]
+}

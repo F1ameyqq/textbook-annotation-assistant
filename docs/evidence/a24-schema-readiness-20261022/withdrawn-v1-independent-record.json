@@ -1,0 +1,128 @@
+{
+  "schema": "A24SchemaReadinessIndependentReview/v1",
+  "date": "2026-10-22",
+  "decision": "HOLD_PATCH_WITHDRAWN_PENDING_REVISION",
+  "focused_review_result_before_upstream_regression": "PASS_BOUNDED_FIX_HOLD_REMAINING_OPEN",
+  "withdrawal": {
+    "patch_sha256": "981c4569354cefff1f318a54768242a9be53fec7fb5078eb036106d2eeca914f",
+    "status": "WITHDRAWN_BY_PRIMARY_REVIEW",
+    "reason": "FRAME_QUESTION_DENOMINATOR introduced an unproven every-question-has-a-frame business assumption and caused existing wire_r1 regressions.",
+    "primary_observation": "new 14 + existing 7 + 10 + 4 passed, while wire_r1 20 produced 6 failures and 3 errors",
+    "integration_allowed": false,
+    "next_required_input": "revised patch with a new fixed hash"
+  },
+  "wire_r1_compatibility_baseline": {
+    "suite_tests": 20,
+    "baseline_v2_final": {"passed": 17, "failures": 0, "errors": 3},
+    "baseline_evidence": "primary work/a24-takeover-20261022/schema-readiness-main/baseline-r1-controls.json",
+    "known_baseline_errors": [
+      "legacy fixture missing WindowsBackend.bootstrap_steps",
+      "legacy reopen fixture triggers REOPEN_OUTER_CERTIFICATE_REQUIRED",
+      "required private request under D:/1800 is absent"
+    ],
+    "withdrawn_patch_observation": {"new_failures": 6, "errors": 3},
+    "revision_acceptance_boundary": "Restore zero new failures while allowing the same three evidenced baseline errors; do not claim 20/20 PASS.",
+    "legacy_fixture_or_private_input_repair_in_scope": false
+  },
+  "patch": {
+    "path": "C:/Users/LIHAOYANG/Documents/Codex/2026-10-17/chapter1-content-sol56/outputs/a24-schema-readiness-20261022/a24-schema-readiness.patch",
+    "bytes": 29277,
+    "sha256": "981c4569354cefff1f318a54768242a9be53fec7fb5078eb036106d2eeca914f",
+    "files_changed": 4,
+    "apply_check": "PASS"
+  },
+  "line_endings": {
+    "first_plain_git_apply": "EXIT_0_BUT_ALL_FOUR_PATCHED_FILES_CRLF",
+    "crlf_raw_sha256": {
+      "src/annotation/delivery/live_pilot/wire.py": "6034437bae3461641c3aec476443b67c43c31d5814cc8d205b9cd3dfe8e33d0f",
+      "src/annotation/quality/live_pilot.py": "15e3364863586b6efc555f9e9a7fc7db51884f6ea3ae1e44ffdd656e8e451174",
+      "src/annotation/runtime/live_pilot/schema_capture.py": "ed0f0d81d9c92882c5f9ef69fa2fc95dfcf6a39886bb36af439ae29e166466e5",
+      "tests/a24_schema_readiness/test_schema_readiness.py": "d9940c15f5d20b46b94b2898c1105def52d83693e8a2127c49adfa231d80a1a4"
+    },
+    "review_tree": "work/a24-schema-readiness-independent-20261022/source-lf",
+    "apply_command_boundary": "git -c core.autocrlf=false apply",
+    "reviewed_actual_files": "LF",
+    "lf_raw_sha256": {
+      "src/annotation/delivery/live_pilot/wire.py": "64885d7ac5d91d5351231a803ffeab4badb1b55528057a6abde1c03ac6131116",
+      "src/annotation/quality/live_pilot.py": "f12582cf87b9f7c365de640e33d0948b1a0a6ae0c2e3443d3843439548816a89",
+      "src/annotation/runtime/live_pilot/schema_capture.py": "a599b347c7737cb17d633b032dfe8a62403a56c91952f539ae7d5c082e96abe9",
+      "tests/a24_schema_readiness/test_schema_readiness.py": "941e3afb892a4cc9f256a2aed8bed1d994a8345249b13239beb7a750ad78510d"
+    },
+    "lf_hashes_match_author_record": true
+  },
+  "author_focused_tests": {
+    "tree": "work/a24-schema-readiness-independent-20261022/source-lf",
+    "tests": 14,
+    "failures": 0,
+    "errors": 0,
+    "seconds": 0.323,
+    "result": "PASS"
+  },
+  "independent_tests": {
+    "path": "C:/Users/LIHAOYANG/Documents/Codex/2026-10-17/chapter1-quality-sol56/tools/a24_schema_readiness_independent_tests.py",
+    "sha256": "477407d0fec75e73162b358f78512e01ca36c19140eac190b91178476254d67a",
+    "tests": 9,
+    "failures": 0,
+    "errors": 0,
+    "seconds": 0.731,
+    "result": "PASS"
+  },
+  "actual_entry_results": {
+    "validate_profile_calls_identity_projection_validator": true,
+    "view_literal_rejected": true,
+    "view_lookup_rejected": true,
+    "questions_container_literal_rejected": true,
+    "directories_array_item_lookup_rejected": true,
+    "legal_direct_identity_container_accepted": true,
+    "legal_nonidentity_lookup_accepted": true,
+    "transport_reads_during_binding": 0
+  },
+  "closed_findings": {
+    "empty_question_frame_or_content_denominator": "ZERO_DENOMINATOR_FIX_FOCUSED_PASS; PER_QUESTION_FRAME_EQUALITY_WITHDRAWN_AS_UNPROVEN",
+    "noncanonical_snapshot_question_frame_directory_identity": "CLOSED",
+    "complete_export_noncanonical_question_and_rect_identity": "CLOSED",
+    "natural_export_noncanonical_question_and_rect_identity": "CLOSED",
+    "known_identity_container_literal_or_lookup": "CLOSED_AT_VALIDATE_PROFILE_ENTRY",
+    "directories_array_item_alias": "CLOSED_AT_VALIDATE_PROFILE_ENTRY"
+  },
+  "new_open_findings": [
+    {
+      "id": "EMPTY_PART_OBJECT_ACCEPTED",
+      "severity": "OPEN_FOR_SCHEMA_QUALIFICATION",
+      "observed": "Both complete and natural codecs accept parts=[{}].",
+      "minimum_delta": "Require every part object to be non-empty, while leaving actual field names to real-schema evidence."
+    },
+    {
+      "id": "CAPTURE_ROOT_ALIAS_CHECK_DEPENDS_ON_CALLER",
+      "severity": "OPEN_BOUNDARY",
+      "observed": "schema_capture resolves output_root before checking is_symlink/reparse, so the helper alone does not inspect the supplied lexical root object.",
+      "minimum_delta": "Check the supplied lexical root/private path with lstat before resolve, or explicitly require and verify an upstream owner path-validation token."
+    }
+  ],
+  "remaining_open": [
+    "authoritative complete catalog membership beyond non-empty/per-question frame checks",
+    "full raw-record preservation for snapshot question/frame/directory extra fields",
+    "snapshot-to-export state_version/state_binding equality",
+    "hash-bound source_refs and evidence_refs",
+    "real current field paths and production adapter",
+    "six-phase reads, save receipt and post-save readback coverage",
+    "live, platform, human and official acceptance"
+  ],
+  "carry_forward_to_revision": [
+    "retain total-empty denominator rejection without assuming every question has a frame",
+    "retain canonical identity checks and actual validate_profile identity-container gates",
+    "retest focused author and independent entry checks on the new fixed hash",
+    "retest compatibility against existing wire_r1 before integration",
+    "compare revised wire_r1 against the 17 PASS, 0 FAIL, 3 known ERROR baseline rather than requiring or claiming 20 PASS",
+    "retain EMPTY_PART_OBJECT_ACCEPTED and CAPTURE_ROOT_ALIAS_CHECK_DEPENDS_ON_CALLER as open findings"
+  ],
+  "hold": {
+    "decision": "HOLD_REAL_SCHEMA_UNBOUND",
+    "write_allowed": false,
+    "successors": "NOT_RUN",
+    "schema_profile": null,
+    "qualification": "NOT_RUN"
+  },
+  "network_browser_api_live_authority_model_calls": 0,
+  "shared_repository_writes": 0
+}

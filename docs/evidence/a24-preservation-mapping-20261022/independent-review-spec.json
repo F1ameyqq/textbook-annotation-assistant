@@ -1,0 +1,77 @@
+{
+  "schema": "A24OriginalPreservationStableIdReviewSpec/v1",
+  "date": "2026-10-22",
+  "decision": "REVIEW_SPEC_READY_PATCH_PENDING",
+  "baseline": {
+    "user_declared_commit": "16b2c6b",
+    "commit_locally_verified": false,
+    "reason": "The supplied source-readiness-v2 directory is an extracted tree without .git; D:/1800 is not present in this environment.",
+    "tree": "C:/Users/LIHAOYANG/Documents/Codex/2026-10-16/ni/work/a24-takeover-20261022/source-readiness-v2",
+    "wire_sha256": "64885d7ac5d91d5351231a803ffeab4badb1b55528057a6abde1c03ac6131116",
+    "archive_checker": {
+      "exit_code": 1,
+      "result": "NOT_APPLICABLE_TO_EXTRACTED_TREE",
+      "cause": "No Git repository and no root manifest.json in the extracted tree."
+    },
+    "limited_schema_readiness_regression": {
+      "tests": 14,
+      "passed": 14,
+      "failed": 0,
+      "errors": 0,
+      "exit_code": 0
+    }
+  },
+  "historical_original": {
+    "path": "C:/Users/LIHAOYANG/Documents/Codex/2026-10-16/ni/work/a24-takeover-20261022/historical-download-export-20261022/46007447_paper_questions.jsonl",
+    "bytes": 11625,
+    "sha256": "02a8aaae2bc907649a03f3676806a02da103e0b487fb43f7e187b29a67fc7a8c",
+    "records": 19,
+    "current_denominator": "UNPROVEN",
+    "canonical_platform_question_ids": "ABSENT"
+  },
+  "minimum_lossless_preservation_acceptance": [
+    "Verify source byte length and SHA-256 before parsing.",
+    "Retain the exact original bytes or exact raw line bytes for all 19 records.",
+    "Retain record order, top-level field order, list order, exact strings, Unicode, whitespace, numeric types, empty strings, empty lists, nulls and missing-field distinctions.",
+    "Reject duplicate JSON keys before any last-wins object construction.",
+    "Retain every observed field including unknown future extra fields; a raw_record_hash without raw values is not lossless preservation.",
+    "Produce deterministic redacted error summaries with code, line and field identity but no business body excerpts.",
+    "Preservation success must not imply current completeness, platform identity, write eligibility or platform acceptance."
+  ],
+  "minimum_mapping_ledger_acceptance": [
+    "Every source record is referenced by source file SHA-256 plus raw line SHA-256 and source order.",
+    "Canonical platform identity is null or UNBOUND unless copied from an authoritative same-state server response with evidence reference and membership binding.",
+    "tixu, DOM data-key, rectIndex, line number, visible label, content digest and content equality are observations only and cannot populate canonical platform_question_id.",
+    "Ambiguous, duplicate or conflicting candidates are explicit AMBIGUOUS or REJECTED states, never first-match selection.",
+    "No 19-versus-22 arithmetic is used to infer a denominator or three missing records.",
+    "The ledger defaults to write_allowed=false and cannot generate authority, activation, signature, receipt or save permission."
+  ],
+  "required_negative_cases": [
+    {"id": "N01", "mutation": "Use tixu as platform_question_id", "expected": "REJECT_IDENTITY_PROMOTION"},
+    {"id": "N02", "mutation": "Use DOM data-key or rectIndex as canonical server ID", "expected": "REJECT_IDENTITY_PROMOTION"},
+    {"id": "N03", "mutation": "Use line number or record order as canonical identity", "expected": "REJECT_IDENTITY_PROMOTION"},
+    {"id": "N04", "mutation": "Use question text or content hash as canonical identity", "expected": "REJECT_IDENTITY_PROMOTION"},
+    {"id": "N05", "mutation": "Duplicate a JSON key in one source line", "expected": "REJECT_DUPLICATE_JSON_KEY_WITH_REDACTED_SUMMARY"},
+    {"id": "N06", "mutation": "Drop or rename an unknown extra field", "expected": "REJECT_LOSSY_PRESERVATION"},
+    {"id": "N07", "mutation": "Collapse missing, null, empty string and empty list", "expected": "REJECT_LOSSY_PRESERVATION"},
+    {"id": "N08", "mutation": "Normalize whitespace, Unicode, list order or record order", "expected": "REJECT_LOSSY_PRESERVATION"},
+    {"id": "N09", "mutation": "Map one source row to multiple authoritative IDs", "expected": "AMBIGUOUS_HOLD"},
+    {"id": "N10", "mutation": "Map multiple source rows to one authoritative ID", "expected": "DUPLICATE_ID_HOLD"},
+    {"id": "N11", "mutation": "Infer exactly three omissions from 19 historical records versus 22 visible labels", "expected": "REJECT_DENOMINATOR_INFERENCE"},
+    {"id": "N12", "mutation": "Set write_allowed true or emit authorization from preservation output", "expected": "REJECT_AUTHORITY_FABRICATION"},
+    {"id": "N13", "mutation": "Accept wrong source SHA-256 or byte length", "expected": "REJECT_SOURCE_BINDING"},
+    {"id": "N14", "mutation": "Silently keep the last value of a duplicate key", "expected": "REJECT_DUPLICATE_JSON_KEY_WITHOUT_BODY_LEAK"}
+  ],
+  "patch_review_required": {
+    "patch_received": false,
+    "own_copy_application": "NOT_RUN",
+    "original_all_field_string_order_empty_extra_checks": "NOT_RUN",
+    "negative_cases": "NOT_RUN",
+    "limited_related_regression": "NOT_RUN",
+    "default_write_gate_check": "NOT_RUN"
+  },
+  "write_allowed": false,
+  "authority_generated": false,
+  "shared_repository_writes": 0,
+  "browser_network_paid_model_calls": 0
+}

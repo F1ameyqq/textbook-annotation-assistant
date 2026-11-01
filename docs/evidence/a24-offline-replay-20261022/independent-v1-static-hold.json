@@ -1,0 +1,65 @@
+{
+  "schema": "A24OfflineReplayV1IndependentStaticHold/v1",
+  "date": "2026-10-22",
+  "decision": "HOLD_V1_REPLACED_BEFORE_EXECUTION",
+  "archive": {
+    "path": "C:/Users/LIHAOYANG/Documents/Codex/2026-10-17/chapter1-content-sol56/outputs/a24-offline-replay-20261022/a24-offline-replay-20261022.zip",
+    "bytes": 2034114,
+    "sha256": "21b4e9f22910469c0af9592de944a919e0c0ac8895bd7b2d8c8fbdf895bb8435",
+    "zip_members": 532,
+    "expanded_bytes": 9639706,
+    "compressed_member_bytes": 1878146,
+    "crc_test": "PASS",
+    "root_manifest_sha256": "324d8fd79a82fec325f96571daf8582db506c51b9eabc52ffdf2d97320bc638f",
+    "root_manifest_declared_members_excluding_self": 531,
+    "actual_members_excluding_root_manifest": 531
+  },
+  "execution": {
+    "extracted": false,
+    "rebuilt": false,
+    "tests_run": 0,
+    "browser_or_platform_requests": 0,
+    "reason": "Static blockers found and upstream requested a corrected v2 before execution."
+  },
+  "blockers": [
+    {
+      "id": "V1-WRONG-SUITE",
+      "severity": "BLOCKER",
+      "detail": "EXPECTED_SUITES selects tests/a24_bootstrap_exclusion/test_integration.py for the seven-test group; the required group is tests/a24_controlled_capture/test_integration.py."
+    },
+    {
+      "id": "V1-UNBOUND-TEST-TREE",
+      "severity": "BLOCKER",
+      "detail": "The test command does not call verify_package and does not verify --tree against effective-manifest.json, so a 21-test receipt can be produced from an unrelated or tampered tree."
+    },
+    {
+      "id": "V1-ROOT-MANIFEST-OPTIONAL",
+      "severity": "HIGH",
+      "detail": "verify_package checks root-manifest.json only when it exists; the handoff root membership contract is therefore optional to the bundled verifier."
+    },
+    {
+      "id": "V1-WINDOWS-PATH-GATE",
+      "severity": "HIGH",
+      "detail": "safe_relative uses PurePosixPath then Windows Path without rejecting backslashes, drive/UNC forms, ADS colons, reserved device names, trailing dots/spaces, Unicode/case-fold collisions, or prefix conflicts."
+    },
+    {
+      "id": "V1-IO-POLICY-INCOMPLETE",
+      "severity": "HIGH",
+      "detail": "MemoryPolicy blocks event-loop file descriptors and the runner patches selected socket/Popen/urlopen calls, but it does not confine filesystem reads/writes or cover every process/network entry point; historical authority files are present in baseline and are not denied by policy."
+    },
+    {
+      "id": "V1-FAILURE-EVIDENCE",
+      "severity": "MEDIUM",
+      "detail": "The receipt records only failure/error counts and discards test IDs and tracebacks, limiting independent diagnosis of a failed replay."
+    }
+  ],
+  "confirmed_non_blocking_facts": {
+    "baseline_members_in_zip": 522,
+    "overlay_members_in_zip": 3,
+    "effective_manifest_declares": 523,
+    "baseline_original_manifest_sha256": "a927a201988a277520275509791401e00cc45fdd9edcde140056bf85060633a9",
+    "overlay_hashes_match_previously_accepted_artifacts": true,
+    "documentation_retains_current_schema_unbound_and_hold": true
+  },
+  "carry_forward": "None. A changed v2 archive requires fresh byte identity, static review, extraction, reconstruction, tamper/overwrite negatives, and 21-test execution."
+}

@@ -1,0 +1,44 @@
+{
+  "schema_version": "b-q4-geometry-test-report/0.1",
+  "baseline_commit": "c3cc2df7a0be24c125c83681c0499c0d328d78f6",
+  "focused_tests": {
+    "command": "python -m unittest -v tests.test_content_geometry_revision tests.test_content_region_pipeline_cli.RegionPipelineTests tests.test_b_recovery_integration.RealRecoveryIntegration",
+    "tests": 24,
+    "failures": 0,
+    "errors": 0,
+    "passed": true
+  },
+  "pipeline": {
+    "cold": {
+      "check_file": "pipeline-cold-check.json",
+      "sha256": "089da75c2b5d671bc21c18a7eea135088cd9755b283f9bc76b88ae641d89f634",
+      "stages": 14,
+      "cache_hits": 0,
+      "accepted": true
+    },
+    "warm": {
+      "check_file": "pipeline-warm-check.json",
+      "sha256": "c91c85d61760962b16a6ecc1d402cf83ee38e225c0449ab2b40c0e37c555971e",
+      "stages": 14,
+      "cache_hits": 14,
+      "accepted": true
+    },
+    "decision": "HOLD",
+    "transcription_verified": false,
+    "business_acceptance": false
+  },
+  "independent_controls": {
+    "reopens_original_pixels": true,
+    "calls_producer_validator": false,
+    "rejects_missing_ocr_conflict": true,
+    "rejects_arbitrary_shift": true,
+    "rejects_nonzero_or_forged_pixel_receipt": true,
+    "rejects_wrong_original_bbox": true,
+    "rejects_duplicate_geometry_revision": true,
+    "rejects_empty_geometry_list": true,
+    "rejects_boolean_dark_count": true,
+    "rejects_float_threshold": true
+  },
+  "decision": "HOLD",
+  "complete": false
+}

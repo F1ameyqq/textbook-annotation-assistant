@@ -1,0 +1,11 @@
+# A30 Union19 最小 holder 修复独立审查
+
+结论：**ACCEPTED_OFFLINE_UNION19_HELD_HANDLE_METADATA_AND_BOUNDED_CLEANUP_DELTA_ONLY**。
+
+已私有复制并核对387个输入；固定manifest `5b6baf13556c7cce2def8e28a59fdf99644de9431b70a63261f3e7db96d648b1`，report `7966f8431afadf665c93a409d7a9d7d9590b3477b44577702e66c8f3d4791226`，holder `90babd87d0ec8e7bcda00f4ff0d2aa3f148ac26b84884735c4301c2a12a74e57`。相对已接受Union18，只有holder逻辑、run_usense_owned/delivery_display的holder哈希更新，加一个新合成测试文件；其余243个既有源文件完全一致。作者固定9项新合成检查PASS原日志/exit保留，本审查不重跑。
+
+接受有限行为：OpenProcess只将87记为明确skip，5及其他错误保持失败；取得句柄后先登记再取元信息；仅元信息error5且**同一持有句柄**已signaled，才保留元信息UNKNOWN继续；TIMEOUT/WAIT_FAILED/其他元信息错误不被当作退出。清理共用10秒期限，分别保存等待结果，GetExit/Close的Win32失败不会跳过后续持有句柄及外层句柄的关闭尝试。未降低errors/exit/handles/Job共同决定release的判据。该范围不构成所有既有holder路径或所有Windows行为的全面证明。
+
+独立新增3组纯合成路径均PASS：①元信息5且未退出，再叠加cleanup QueryJob6、首held GetExit87与Close6，原错误和4项错误完整保留，第二held及外层三句柄仍逐一关闭，release=false；②元信息5后同held已退出，后续全清理通过，creation/image仍null且原metadata_failure保留，release=true只在完整退出/关闭条件满足后成立；③WAIT_FAILED/TIMEOUT/OBJECT_0混合等待共用同一10秒预算，原失败不被覆盖。测试从冻结源AST加载类和函数定义，未执行WinDLL绑定；全部Win32 API、进程创建、继承句柄操作和时钟均为审查方内存替身，真实进程/浏览器/平台/模型调用0，旧用例重跑0。
+
+原actual02的exit126、PermissionError5具体stage/cause UNKNOWN、原outer release=false保持不变；补丁和合成检查不能解释或回填历史。Q12仍须在不同的新授权内只读对账，成功11题及old9不得重发；Q13–16、全16导出展示和最终包仍未完成，CUSTOMER_READY=false。本审查没有平台激活或客户交付结论。初次只读查看manifest时误用members字段的KeyError保留，随后按source_files/evidence真实结构接收，不涉及产品修改。

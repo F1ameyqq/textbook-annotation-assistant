@@ -1,0 +1,165 @@
+{
+  "schema": "A24HistoricalPreservationIndependentReview/v1",
+  "date": "2026-10-22",
+  "decision": "PASS_BOUNDED_HISTORICAL_PRESERVATION_WITH_MINIMAL_FIX_NATURAL_CODEC_OPEN",
+  "baseline": {
+    "user_declared_commit": "16b2c6b",
+    "commit_locally_verified": false,
+    "tree": "C:/Users/LIHAOYANG/Documents/Codex/2026-10-16/ni/work/a24-takeover-20261022/source-readiness-v2",
+    "tree_form": "EXTRACTED_NON_GIT_TREE",
+    "archive_checker_exit_code": 1,
+    "archive_checker_boundary": "No .git and no root manifest.json in the extracted tree; this is not a product failure.",
+    "wire_sha256_before_and_after": "64885d7ac5d91d5351231a803ffeab4badb1b55528057a6abde1c03ac6131116"
+  },
+  "content_candidate": {
+    "patch_path": "C:/Users/LIHAOYANG/Documents/Codex/2026-10-17/chapter1-content-sol56/outputs/a24-historical-preservation-20261022/a24-historical-preservation.patch",
+    "bytes": 15895,
+    "sha256": "d9ade078140df02a7da3473e3031cc7c801474b17dba5c0d1561cd04d1c73bdf",
+    "apply_check_exit_code": 0,
+    "apply_exit_code": 0,
+    "scope": {
+      "added_files": [
+        "src/annotation/runtime/live_pilot/historical_preservation.py",
+        "tests/a24_historical_preservation/test_historical_preservation.py"
+      ],
+      "modified_existing_files": [],
+      "natural_or_complete_codec_modified": false
+    },
+    "author_tests_before_independent_fix": {
+      "passed": 5,
+      "failed": 0,
+      "errors": 0,
+      "exit_code": 0
+    }
+  },
+  "historical_original": {
+    "path": "C:/Users/LIHAOYANG/Documents/Codex/2026-10-16/ni/work/a24-takeover-20261022/historical-download-export-20261022/46007447_paper_questions.jsonl",
+    "bytes": 11625,
+    "sha256": "02a8aaae2bc907649a03f3676806a02da103e0b487fb43f7e187b29a67fc7a8c",
+    "records": 19,
+    "byte_exact_roundtrip": true,
+    "all_parsed_records_match_independent_parse": true,
+    "field_order_preserved": true,
+    "record_order_preserved": true,
+    "strings_html_tex_option_order_empty_values_unknown_extra_preserved": true,
+    "numeric_scope": "The actual file contains integer tixu values 1 through 19 and otherwise strings/lists in the observed fields; generic JSON floats are rejected after the minimal fix."
+  },
+  "initial_independent_findings": [
+    {
+      "id": "F01",
+      "severity": "BOUNDED_FIX_REQUIRED",
+      "finding": "JSON decimal and exponent tokens were accepted through Python float parsing; a precise decimal could round and 1e309 could become infinity while raw bytes remained intact.",
+      "reproduced": true
+    },
+    {
+      "id": "F02",
+      "severity": "BOUNDED_FIX_REQUIRED",
+      "finding": "Frozen dataclasses retained a mutable record._value dict; direct mutation changed later full_records output while content_fingerprint stayed stale.",
+      "reproduced": true
+    }
+  ],
+  "independent_minimal_fix": {
+    "patch_path": "outputs/a24-historical-preservation-independent-minimal-fix-20261022.patch",
+    "bytes": 3601,
+    "sha256": "2c562a87d2f9a927aa577dd0354173df47abfe629a1859d090fb19126bafea15",
+    "apply_check_against_content_candidate_exit_code": 0,
+    "changes": [
+      "Reject every JSON float token with HISTORICAL_JSON_NUMBER rather than permitting lossy float parsing.",
+      "Remove the retained mutable _value dict and reparse every value from immutable preserved record_bytes.",
+      "Add two focused regression tests for numeric rejection and mutation resistance."
+    ],
+    "candidate_code_sha256": "636707c2fec0889627220657ef7099ea2a135ce8263165a2987e14e9d40ccf27",
+    "candidate_test_sha256": "295263cc873af9e247edf79d26c6793c5ffb621305631cf448d293228dbac380"
+  },
+  "combined_final_patch": {
+    "path": "C:/Users/LIHAOYANG/Documents/Codex/2026-10-17/chapter1-content-sol56/outputs/a24-historical-preservation-20261022/a24-historical-preservation-adopted-v2.patch",
+    "bytes": 16928,
+    "sha256": "524467067bc0f33d976e8dd1c41a46bc45809d0a863d3c65266f3cf6ac02d820",
+    "applies_directly_to_unchanged_source_readiness_v2": true,
+    "apply_check_exit_code": 0,
+    "apply_exit_code": 0,
+    "resulting_code_sha256": "636707c2fec0889627220657ef7099ea2a135ce8263165a2987e14e9d40ccf27",
+    "resulting_test_sha256": "295263cc873af9e247edf79d26c6793c5ffb621305631cf448d293228dbac380",
+    "adopted_variant": "REJECT_ALL_JSON_FLOAT_TOKENS_WITH_HISTORICAL_JSON_NUMBER",
+    "decimal_variant": "UNADOPTED_EXPERIMENT_NO_COMPATIBILITY_CLAIM"
+  },
+  "independent_combined_patch_mirror": {
+    "path": "outputs/a24-historical-preservation-combined-final-20261022.patch",
+    "bytes": 16928,
+    "sha256": "1d37397099edf16363772a54ae56d7a8431faf7081ec8c5669769545543d1312",
+    "formal_adopted_artifact": false,
+    "resulting_source_files_byte_identical_to_official_adopted_v2": true
+  },
+  "final_targeted_results": {
+    "candidate_tests": {"passed": 7, "failed": 0, "errors": 0, "exit_code": 0},
+    "independent_tests": {"passed": 6, "failed": 0, "errors": 0, "exit_code": 0},
+    "schema_readiness_regression": {"passed": 14, "failed": 0, "errors": 0, "exit_code": 0},
+    "total_passed": 27,
+    "independent_test_sha256": "84d4b035a95e39d20bc86e3a04e0c00d53ac6fca33aa02ab088cd71eb7ae8d72"
+  },
+  "public_artifacts": {
+    "preservation_manifest": {
+      "path": "C:/Users/LIHAOYANG/Documents/Codex/2026-10-17/chapter1-content-sol56/outputs/a24-historical-preservation-20261022/a24-historical-original-preservation-manifest-20261022.json",
+      "sha256": "47b4917e909abaa690d2cc7f80574369c905b6de001136f8e469edc131f22293",
+      "object_matches_independent_regeneration": true,
+      "record_count": 19,
+      "write_allowed": false,
+      "business_body_values_published": false
+    },
+    "identity_candidates": {
+      "path": "C:/Users/LIHAOYANG/Documents/Codex/2026-10-17/chapter1-content-sol56/outputs/a24-historical-preservation-20261022/a24-historical-identity-candidates-20261022.json",
+      "sha256": "1905f6367813ed714a18fc0a8bf0153b8f33a814c2a53fe1ae0608a2e3cc2276",
+      "object_matches_independent_regeneration": true,
+      "entries": 19,
+      "all_canonical_question_id_null": true,
+      "all_selected_candidate_null": true,
+      "status": "HOLD_CANONICAL_ID_UNBOUND",
+      "write_allowed": false
+    }
+  },
+  "identity_and_authority": {
+    "tixu_promoted_to_canonical": false,
+    "dom_data_key_promoted_to_canonical": false,
+    "line_number_promoted_to_canonical": false,
+    "content_fingerprint_promoted_to_canonical": false,
+    "ambiguous_many_to_many_auto_selected": false,
+    "historical_19_or_visible_22_used_as_denominator": false,
+    "authority_generated": false,
+    "write_allowed": false
+  },
+  "natural_codec_open_boundary": {
+    "historical_bypass_layer_repairs_natural_codec": false,
+    "duplicate_json_key_probe": "REJECTED_WITH_VALUEERROR",
+    "unknown_extra_input_accepted": true,
+    "unknown_extra_raw_value_retained": false,
+    "raw_record_hash_only": true,
+    "synthetic_qualified_identity_field_promotions_accepted": [
+      "tixu", "dom_data_key", "line_number", "content_hash"
+    ],
+    "conclusion": "Current natural codec full raw/extra preservation and authoritative identity provenance remain OPEN."
+  },
+  "project_layers": {
+    "engineering_simulation": "Bounded PASS after the minimal fix: 27 targeted tests pass; this proves only local preservation and denial behavior.",
+    "actual_data": "Historical 2026-10-16 19-record bytes are fixed and roundtrip; current fresh export, full denominator and canonical IDs remain unproved.",
+    "content_acceptance": "Prior explicit correction has limited recorded acceptance, but this review does not provide human final approval or prove five-zone completeness.",
+    "platform_save": "Save, refresh and independent reopen remain NOT_RUN; no platform receipt or acceptance exists."
+  },
+  "scope_result": {
+    "historical_sidecar_preservation_layer": "PASS_WITH_MINIMAL_FIX",
+    "current_natural_codec": "OPEN",
+    "current_complete_export_schema": "OPEN",
+    "current_platform_identity_and_denominator": "OPEN",
+    "platform_write_or_acceptance": "NOT_RUN"
+  },
+  "shared_tree_side_effects": {
+    "source_edits": 0,
+    "initial_review_generated_pyc": 20,
+    "initial_review_generated_cache_directories": 10,
+    "initial_review_cache_cleanup_complete": true,
+    "remaining_immediately_after_cleanup": 0,
+    "later_cache_files_observed": 13,
+    "later_cache_ownership": "UNKNOWN_NOT_REMOVED"
+  },
+  "commits": 0,
+  "browser_network_paid_model_calls": 0
+}

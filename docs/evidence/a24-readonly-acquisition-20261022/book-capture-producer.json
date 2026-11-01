@@ -1,0 +1,72 @@
+{
+  "schema": "A24BookSnapshotFixReceipt/v1",
+  "date": "2026-10-22",
+  "scope": "isolated_copy_only",
+  "source": {
+    "fixed_tree": "C:/Users/LIHAOYANG/Documents/Codex/2026-10-21/new-chat/work/a24-review/selected",
+    "fixed_owner_sha256": "fb5bcd815d075f425d97845da13b64c2e06f62ecb990f41924377dadea8aeaaf",
+    "isolated_tree": "C:/Users/LIHAOYANG/Documents/Codex/2026-10-17/chapter1-content-sol56/work/a24-book-snapshot-fix-20261022/a24-source",
+    "modified_owner_sha256": "dc5113d1984c58d63ea3a26b95d45664aed60a0915a31b9f4afab592169e1318",
+    "targeted_test_sha256": "26d2a4d98bf1ffefad1e920c91284e285734d68681e7642f1db3443ac770c3c8"
+  },
+  "behavior": {
+    "success_request_count": 4,
+    "methods": [
+      "GET",
+      "GET",
+      "GET",
+      "GET"
+    ],
+    "saved_slots": [
+      "book",
+      "directory",
+      "frames",
+      "export"
+    ],
+    "capture_representation": "UTF8_REENCODED_RESPONSE_TEXT",
+    "exclusive_create_mode": "xb",
+    "unknown_schema_write_allowed": false,
+    "successors": "NOT_RUN"
+  },
+  "targeted_regression": {
+    "runner": "C:/Users/LIHAOYANG/.cache/codex-runtimes/codex-primary-runtime/dependencies/python/python.exe -m unittest discover -s tests/a24_book_snapshot_fix -p test_book_snapshot.py -v",
+    "tests_run": 3,
+    "failures": 0,
+    "errors": 0,
+    "result": "PASS",
+    "assertions": [
+      "all four UTF-8 re-encoded response bodies are preserved and digest-checked",
+      "successful acquisition makes exactly four GET requests",
+      "an existing output is rejected without overwriting any snapshot",
+      "a first HTTP failure makes one request and creates no snapshot",
+      "the unbound result remains write_allowed=false and successors=NOT_RUN"
+    ]
+  },
+  "unchanged_boundaries": {
+    "new_gets": 0,
+    "auth_or_guard_changes": 0,
+    "write_qualification_changes": 0,
+    "website_writes": 0,
+    "shared_repo_changes": 0,
+    "fixed_source_changes": 0
+  },
+  "task2": {
+    "status": "WAITING_FOR_VERIFIABLE_REAL_INPUTS",
+    "source_workspace_checked": "C:/Users/LIHAOYANG/Documents/Codex/2026-10-17/chapter1-source-sol56",
+    "latest_source_receipt": "outputs/A24-current-platform-readonly-attempt-20261022.json",
+    "live_business_reads": {
+      "book": "NOT_RUN",
+      "directory": "NOT_RUN",
+      "fullframes": "NOT_RUN",
+      "natural_export": "NOT_RUN"
+    },
+    "manifest_status": "NO_SOURCE_INCREMENT",
+    "required_before_adapter_work": [
+      "current real book response body",
+      "current real directory response body",
+      "current real full frames response body",
+      "current real natural export response body",
+      "manifest binding each original file to byte length and SHA-256"
+    ]
+  }
+}

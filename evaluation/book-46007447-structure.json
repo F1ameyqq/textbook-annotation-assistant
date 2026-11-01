@@ -1,0 +1,185 @@
+{
+  "date": "2026-10-17",
+  "timezone": "Asia/Shanghai",
+  "baseline_commit": "70b5c2a3ecace3bc7e605fdb7ad2fa33f395d527",
+  "long_term_goal": "docs/b-long-term-goal.md",
+  "goal_state": "ACTIVE",
+  "milestone": "L1 partial progress",
+  "completion_claim": false,
+  "tests_passed": 193,
+  "previous_tests": 130,
+  "new_tests": 63,
+  "new_test_groups": {
+    "boundary": 16,
+    "image_regions": 18,
+    "math_layout": 14,
+    "structure_integration": 15
+  },
+  "test_command": "python -m unittest discover -s tests -v",
+  "replay_commands": [
+    "python tools/replay_math_b.py --out data/runs/math",
+    "python tools/replay_structure_b.py --out data/runs/structure"
+  ],
+  "decision": "HOLD",
+  "business_acceptance": false,
+  "reference_quality": "MODEL_VISUAL_DEVELOPMENT_REVIEW",
+  "math_layout": {
+    "artifact": {
+      "artifact_id": "math-layout-9ee52128e1c47b3e55cd4025",
+      "revision": 1,
+      "content_hash": "37cd452675b6a66be12d5e2ae9b91f40c9da71bc733c889a9bdde739ceb9ea10"
+    },
+    "check": {
+      "decision": "HOLD",
+      "geometry_and_token_coverage_valid": true,
+      "issues": [],
+      "input_tokens": 17,
+      "fraction_candidates": 11,
+      "transcription_verified": false
+    },
+    "source_crop_sha256": "20383bf4366301dd74ef76bb979685f64e41eba941df1c1fbe8b6c63fb6f2c9c",
+    "reading_rows": 3,
+    "role_counts": {
+      "FRACTION_NUMERATOR": 2,
+      "BODY": 5,
+      "FRACTION_DENOMINATOR": 9,
+      "AMBIGUOUS": 1
+    },
+    "missing_numerator_ocr": 9,
+    "missing_denominator_ocr": 2,
+    "formula_text_reconstructed": false,
+    "visual_formula_references_consumed": false
+  },
+  "continuation": {
+    "decision": "HOLD",
+    "source_assets": 6,
+    "continuation_prefix_lines": 25,
+    "image_regions": 5,
+    "image_region_check_accepted": true,
+    "image_semantics_verified": false,
+    "boundary_check_accepted": true,
+    "continuation_status": "VALIDATED_PROPOSAL",
+    "continuation_structurally_accepted": true,
+    "continuation_issue_codes": [],
+    "original_adjacent_validation": "ORIGINAL_BYTES_AND_CROP_PIXELS_RECHECKED",
+    "original_five_assets_revalidated": true,
+    "graph_merge_performed": false,
+    "platform_actions": 0,
+    "business_acceptance": false,
+    "ocr_rerun": false
+  },
+  "proposal_projection": {
+    "target_text_regions": 9,
+    "target_image_regions": 3,
+    "source_image_regions": 2,
+    "source_diagnostic_fragments_retained": 7,
+    "all_target_source_line_ids": 25,
+    "image_contained_ocr_refs": 23,
+    "next_title": "回顾与思考（一） 勾股定理",
+    "next_title_original_members": 2
+  },
+  "artifacts": {
+    "image-regions.json": {
+      "artifact_id": "imageregionstrial-00d6fc8f207ebc1703eca76c",
+      "revision": 1,
+      "content_hash": "12e22779007263a2b2b8ebbd60c34c3469b5ea7b4d9b8191c42426973b4fc23a"
+    },
+    "image-check.json": {
+      "artifact_id": "imageregionchecktrial-063843457c725af6d8a92b2d",
+      "revision": 1,
+      "content_hash": "a1663ee4f1c3decd85ed9048047bdbea9fe15d8ae044e034c335b34c6d74525f"
+    },
+    "boundary-candidate.json": {
+      "artifact_id": "boundarycandidatetrial-b1f232be40caefbe469cb507",
+      "revision": 1,
+      "content_hash": "88f56bbd58e277ed1a635fd6dabdb887d540dcd33395b708145d9b6172b3f6a7"
+    },
+    "boundary-check.json": {
+      "artifact_id": "boundarychecktrial-030a51be6ef598f59f5296f8",
+      "revision": 1,
+      "content_hash": "0e05fed15a08cda79f23869ae32bd07bde280a412845d8d1386207ce11855bb5"
+    },
+    "continuation-proof.json": {
+      "artifact_id": "continuationprooftrial-0f393b2144c9499b370c4abc",
+      "revision": 1,
+      "content_hash": "cde707df1ea4aa3f584eb6f572113b40933bb159e9027711fe65a2f5b745487e"
+    },
+    "continuation-check.json": {
+      "artifact_id": "continuationchecktrial-a64713c5c94b6031f06ea0b4",
+      "revision": 1,
+      "content_hash": "7df878b04d2e7375adf3bdfff80e07f2868cb03abe67c077b4e6377ab364b9cf"
+    }
+  },
+  "fixed_source_reviews": {
+    "image-region-review.json": {
+      "artifact_id": "imageregionreviewtrial-55356a9498fa4263455a99e2",
+      "revision": 1,
+      "content_hash": "e632ef03d52880a0d3e3a05d026ddfb5454134a04e74b63540eac67bec3fe6f7"
+    },
+    "boundary-review.json": {
+      "artifact_id": "46007447-resource173-split-heading-source-review-v1",
+      "revision": 1,
+      "content_hash": "d0bfe5592ef8166a55a80390a7a97aa244436f1a5bb24ac1169cba4cc3c859b0"
+    }
+  },
+  "implementation_sha256": {
+    "src/annotation/recognition/boundary.py": "d486334f2ff68eb506bb05275f2681a4ae72a7bba2a98f76c74f60f4102ade9c",
+    "src/annotation/recognition/image_regions.py": "dcf8d5d7af75b486591aa999701d330620879d2090c6876145434e13ea5a416c",
+    "src/annotation/recognition/math_layout.py": "11f8bbf4a7cadc45067f767f0f9eaab7e5c3b5e03f5a28b940251bebff0dc841",
+    "src/annotation/recognition/continuation.py": "6cfd9f4dd22924e6c6bce0cfb73d47ed910a67c70999ab5da07cfda8c859e126",
+    "tools/replay_structure_b.py": "156bbf9cc042ffc6b8d2e60e73f58dab083c50d2c706d34d757cfd142d7d074e",
+    "tools/replay_math_b.py": "1a52e8a5eafbe99b9ce1e934f5fa39e75a9f7ca1edbaef1540eb491257b28ca1"
+  },
+  "git_snapshot_verification": {
+    "code_snapshot_tree": "5395ed337ea703a85a004e2dd885e076f1173283",
+    "tests": "----------------------------------------------------------------------\nRan 193 tests in 11.234s\n\nOK",
+    "math": {
+      "decision": "HOLD",
+      "geometry_and_token_coverage_valid": true,
+      "fraction_candidates": 11,
+      "input_tokens": 17,
+      "transcription_verified": false
+    },
+    "structure": {
+      "decision": "HOLD",
+      "source_assets": 6,
+      "continuation_prefix_lines": 25,
+      "image_regions": 5,
+      "image_region_check_accepted": true,
+      "image_semantics_verified": false,
+      "boundary_check_accepted": true,
+      "continuation_status": "VALIDATED_PROPOSAL",
+      "continuation_structurally_accepted": true,
+      "continuation_issue_codes": [],
+      "original_adjacent_validation": "NOT_RECHECKED_CACHED_CROP_REPLAY",
+      "original_five_assets_revalidated": false,
+      "graph_merge_performed": false,
+      "platform_actions": 0,
+      "business_acceptance": false,
+      "ocr_rerun": false
+    },
+    "payload_hash_matches": {
+      "image-regions.json": true,
+      "image-check.json": true,
+      "boundary-candidate.json": true,
+      "boundary-check.json": true,
+      "math-layout.json": true
+    },
+    "continuation_semantic_plan_matches": true,
+    "comparison_note": "Per-run upstream graph/proof binding references differ; compared continuation payload with only verified_plan.input_refs omitted. These refs are still fully validated in each run.",
+    "environment": "same installed runtime, separate Git archive path; no full originals, OCR calls or network in replay"
+  },
+  "website_requests_this_increment": 0,
+  "new_ocr_calls": 0,
+  "platform_actions": 0,
+  "graph_merge_performed": false,
+  "paid_model_requests": 0,
+  "receiver_validation": "PENDING_A",
+  "held_out_accuracy": null,
+  "remaining_scope": [
+    "Version-bound local graph continuation consumer and independent reverse audit.",
+    "Missing formula characters and mathematical transcription; table/shared-material and other real difficult types.",
+    "19 math source identities and corresponding question pages; full-book source/directory/census and resumable batches.",
+    "Independent business held-out evaluation, executable public contracts, A/B integration and authorized platform readback."
+  ]
+}

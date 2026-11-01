@@ -1,0 +1,262 @@
+{
+  "date": "2026-10-17",
+  "timezone": "Asia/Shanghai",
+  "baseline_commit": "4378b2c1149d6e0d54d0c88bf1f6f91fbb3b5072",
+  "long_term_goal": "docs/b-long-term-goal.md",
+  "goal_state": "ACTIVE",
+  "milestone": "L1 partial progress: local continuation consumer, independent audit and strict rollback",
+  "completion_claim": false,
+  "tests_passed": 235,
+  "previous_tests": 193,
+  "new_tests": 42,
+  "new_test_groups": {
+    "apply_rollback": 14,
+    "independent_quality": 12,
+    "adversarial_application_audit": 12,
+    "cli": 4
+  },
+  "test_command": "python -m unittest discover -s tests -q",
+  "replay_commands": [
+    "python tools/replay_apply_b.py --out data/runs/applied",
+    "python tools/replay_apply_b.py --rollback-from data/runs/applied/question-graph.json --evidence data/runs/applied/evidence.json --receipt data/runs/applied/application-receipt.json --out data/runs/restored"
+  ],
+  "summary": {
+    "operation": "LOCAL_GRAPH_CONTINUATION",
+    "decision": "HOLD",
+    "schema": "b-graph-trial/0.4",
+    "independent_audit_accepted": true,
+    "source_trace_fragments": 33,
+    "render_regions": 15,
+    "structural_complete": true,
+    "transcription_verified": false,
+    "questions": 34,
+    "answers": 66,
+    "local_graph_applied": true,
+    "rollback_verified": true,
+    "business_acceptance": false,
+    "platform_actions": 0,
+    "website_requests": 0,
+    "ocr_rerun": false,
+    "original_validation": {
+      "decision": "HOLD",
+      "source_assets": 6,
+      "continuation_prefix_lines": 25,
+      "image_regions": 5,
+      "image_region_check_accepted": true,
+      "image_semantics_verified": false,
+      "boundary_check_accepted": true,
+      "continuation_status": "VALIDATED_PROPOSAL",
+      "continuation_structurally_accepted": true,
+      "continuation_issue_codes": [],
+      "original_adjacent_validation": "ORIGINAL_BYTES_AND_CROP_PIXELS_RECHECKED",
+      "original_five_assets_revalidated": true,
+      "graph_merge_performed": false,
+      "platform_actions": 0,
+      "business_acceptance": false,
+      "ocr_rerun": false
+    }
+  },
+  "independent_check": {
+    "accepted": true,
+    "decision": "HOLD",
+    "issues": [],
+    "summary": {
+      "source_fragments_preserved": 8,
+      "target_fragments": 25,
+      "fragments": 33,
+      "render_regions": 15,
+      "text_regions": 10,
+      "image_regions": 5,
+      "diagnostic_fragments": 23,
+      "unaffected_answers": 65
+    },
+    "verification_status": "UNVERIFIED",
+    "business_acceptance": false,
+    "platform_actions": []
+  },
+  "answer_source_ledger": {
+    "rows": 202,
+    "status_counts": {
+      "EXCLUDED": 29,
+      "CONSUMED": 154,
+      "UNASSIGNED": 19
+    }
+  },
+  "all_answer_fragments": 195,
+  "artifacts": {
+    "evidence.json": {
+      "artifact_id": "evidencebundletrial-a35b5fcb9a09664babb693c0",
+      "revision": 2,
+      "content_hash": "90916344df47c3dd0fb69e9f4785800a0d5be9a3f044833e00864dfcd5f73ed0"
+    },
+    "base-question-graph.json": {
+      "artifact_id": "questiongraphtrial-2219bb00bf41dd6e68502cb1",
+      "revision": 2,
+      "content_hash": "ffee0a775480e901ff637ba275219d40a1fca5994c4f5786e2ae90668ba37308"
+    },
+    "question-graph.json": {
+      "artifact_id": "questiongraphtrial-3e028de95a872bda731fad79",
+      "revision": 3,
+      "content_hash": "c4290624c8f999aef55f4e116c7afdb394e73267800f5c63af3d72b5d05bd63e"
+    },
+    "continuation-proof.json": {
+      "artifact_id": "continuationprooftrial-6e26b2c9aa7897a9075fea30",
+      "revision": 1,
+      "content_hash": "2302686aed5fd591c6f7a5cb93a0c01fb2cfe35694a9d9297147b36dc675031e"
+    },
+    "application-check.json": {
+      "artifact_id": "continuationapplicationchecktrial-d1565d32668a298bd6613f34",
+      "revision": 1,
+      "content_hash": "aa9c2e2869feba6fbd5950d2fc401bce846df994ef83dca74ada601b3b78c9a3"
+    },
+    "application-receipt.json": {
+      "artifact_id": "local-application-receipt-c479551e03bd9736991b8be3",
+      "revision": 1,
+      "content_hash": "c479551e03bd9736991b8be37ff88bda0eedb83dd4dbcd26bae6b096b8aad085"
+    }
+  },
+  "rollback_verification": {
+    "restored_equals_original": true,
+    "base_payload_hash": "ffee0a775480e901ff637ba275219d40a1fca5994c4f5786e2ae90668ba37308",
+    "restored_payload_hash": "ffee0a775480e901ff637ba275219d40a1fca5994c4f5786e2ae90668ba37308",
+    "restored_complete_object_digest": "af1c9dc9ff96c56c697364cfbe4a89d439370e324371050ae7fada9661bfcfd4",
+    "platform_actions": []
+  },
+  "rollback_contract": {
+    "external_saved_version_reference_required": true,
+    "current_evidence_revision_required": true,
+    "exact_own_base_object_restored": true,
+    "later_edits_including_rehashed_internal_guard_rejected": true,
+    "receipt_is_cryptographic_signature": false
+  },
+  "schema_migration": {
+    "graph": "b-graph-trial/0.4",
+    "base": "b-graph-trial/0.3",
+    "affected_answer_regions": "b-render-region-trial/0.1",
+    "unaffected_answer_objects_preserved": 65,
+    "consumer_must_check_per_answer_region_schema": true,
+    "public_contract_frozen": false,
+    "a_consumer_verified": false
+  },
+  "implementation_and_test_sha256": {
+    "src/annotation/recognition/continuation_apply.py": "71d99fb9c86c683f1cd64d9bc89c2e3000603622c355d51f833c60ffa0455ae0",
+    "src/annotation/recognition/continuation_quality.py": "61667352d03bbf85f45ab34ad3906fefcd0812daff2d8cdb5c49bebd2e202616",
+    "tools/replay_apply_b.py": "7bf9e95565515476e94de49c1e8f074d83f0174e8fac2bbb4d2abf7564e733af",
+    "tests/test_b_continuation_apply.py": "6c10d9a398c1ae993e20e493fb5128a0c385e4aa5d4e1f7a364d55aab1b43e20",
+    "tests/test_b_continuation_quality.py": "5a517575b79fede15adbe1941a993d0d63a6d3f7c047abd7e4749635fa2dab08",
+    "tests/test_b_continuation_application_audit.py": "5955bdee0eebe150a289aaa4ab9287235154d4b271490227ab5f3f2c56d390aa",
+    "tests/test_b_continuation_apply_cli.py": "dec27ea56b210a92d74382254e48fce67d9cbde3aa8adb7e0b991d001c6c6d6e"
+  },
+  "git_snapshot_verification": {
+    "code_snapshot_tree": "d7a22b78dd38c3cdf5bbb63538f2f40241729526",
+    "tests": "----------------------------------------------------------------------\nRan 235 tests in 31.845s\n\nOK",
+    "summary": {
+      "operation": "LOCAL_GRAPH_CONTINUATION",
+      "decision": "HOLD",
+      "schema": "b-graph-trial/0.4",
+      "independent_audit_accepted": true,
+      "source_trace_fragments": 33,
+      "render_regions": 15,
+      "structural_complete": true,
+      "transcription_verified": false,
+      "questions": 34,
+      "answers": 66,
+      "local_graph_applied": true,
+      "rollback_verified": true,
+      "business_acceptance": false,
+      "platform_actions": 0,
+      "website_requests": 0,
+      "ocr_rerun": false,
+      "original_validation": {
+        "decision": "HOLD",
+        "source_assets": 6,
+        "continuation_prefix_lines": 25,
+        "image_regions": 5,
+        "image_region_check_accepted": true,
+        "image_semantics_verified": false,
+        "boundary_check_accepted": true,
+        "continuation_status": "VALIDATED_PROPOSAL",
+        "continuation_structurally_accepted": true,
+        "continuation_issue_codes": [],
+        "original_adjacent_validation": "NOT_RECHECKED_CACHED_CROP_REPLAY",
+        "original_five_assets_revalidated": false,
+        "graph_merge_performed": false,
+        "platform_actions": 0,
+        "business_acceptance": false,
+        "ocr_rerun": false
+      }
+    },
+    "independent_check": {
+      "accepted": true,
+      "decision": "HOLD",
+      "issues": [],
+      "summary": {
+        "source_fragments_preserved": 8,
+        "target_fragments": 25,
+        "fragments": 33,
+        "render_regions": 15,
+        "text_regions": 10,
+        "image_regions": 5,
+        "diagnostic_fragments": 23,
+        "unaffected_answers": 65
+      },
+      "verification_status": "UNVERIFIED",
+      "business_acceptance": false,
+      "platform_actions": []
+    },
+    "rollback_equals_exact_own_base": true,
+    "semantic_comparisons": {
+      "source_fragments": true,
+      "render_regions": true,
+      "representation": true,
+      "text": true,
+      "source_line_ids": true,
+      "bbox": true,
+      "coverage": true,
+      "questions": true,
+      "unaffected_answers": true,
+      "matching": true,
+      "status": true,
+      "decision": true,
+      "business_acceptance": true,
+      "platform_actions": true
+    },
+    "comparison_note": "Fresh runs have different upstream identity/binding references. Compared real source fragments, parent-mapped ownership, typed text/image geometry/order/pixels, body, original source bbox, coverage, questions, other answers, matching and HOLD status. Binding/identity-only fields are omitted and fragment IDs mapped to parent line IDs; each run separately validates its own exact references and restores its exact own base.",
+    "environment": "same installed runtime in separate staged Git archive; no original full images or OCR/network required; CLI regression separately forbids socket connections and OCR imports",
+    "post_snapshot_changed_paths": [
+      "README.md",
+      "docs/b-long-term-goal.md",
+      "evaluation/book-46007447-local-application.json"
+    ],
+    "post_snapshot_executable_changes": false
+  },
+  "exploratory_math_probes": {
+    "record": "evaluation/book-46007447-math-role-probes.json",
+    "role_crops": 11,
+    "actual_cpu_passes": 22,
+    "two_pass_exact_agreement_groups": 9,
+    "disagreement_groups": 2,
+    "agreement_with_missing_exponent_observed": true,
+    "reference_quality": "MODEL_VISUAL_DEVELOPMENT_REVIEW",
+    "business_accepted": false,
+    "applied_to_graph_or_layout": false,
+    "released_recognition_backend": false
+  },
+  "website_requests_this_increment": 0,
+  "platform_actions": 0,
+  "paid_model_requests": 0,
+  "new_local_cpu_ocr_calls": 22,
+  "graph_replay_ocr_calls": 0,
+  "decision": "HOLD",
+  "transcription_verified": false,
+  "business_acceptance": false,
+  "receiver_validation": "PENDING_A",
+  "held_out_accuracy": null,
+  "remaining_scope": [
+    "Reusable source-bound missing-role math recognition with superscript completeness checks; independent fixed and real held-out regression.",
+    "19 remaining mathematical source identities and corresponding question pages; other true complex formula/table/shared-material/cross-page examples.",
+    "Full-book source mapping, directory and independent census; persistent resumable batches and incremental version invalidation.",
+    "Independent business held-out evaluation and approved automatic-pass criteria; executable public contracts, fixed A consumer and A/B integration.",
+    "Portable installation and model locks, measured runtime/cost, receiver validation and authorized platform readback."
+  ]
+}

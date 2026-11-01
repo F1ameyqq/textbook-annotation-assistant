@@ -1,0 +1,70 @@
+{
+  "schema": "A24V3PrecheckIndependentOracle/v1",
+  "date": "2026-10-22",
+  "source": {
+    "path": "C:/Users/LIHAOYANG/Documents/Codex/2026-10-17/chapter1-source-sol56/private/A24-current-platform-20261022/10-v3-current-selected-book-dom-snapshot.txt",
+    "bytes": 20487,
+    "sha256": "07d7defe1fb2ce093aaa1793a86a4f9b10f53f1d4fa8fcbb5e5a69351a52b315",
+    "representation": "DOM_SNAPSHOT_TEXT",
+    "sequence_time": "2026-10-22 15:14:05 +08:00",
+    "http_status": "UNKNOWN"
+  },
+  "public_summary": {
+    "path": "C:/Users/LIHAOYANG/Documents/Codex/2026-10-17/chapter1-source-sol56/outputs/A24-current-platform-observations-20261022-v3.json",
+    "bytes": 6010,
+    "sha256": "0ed4c4f2417d9057129e50dabb1fc295b0628c20c9f1fb02842a15c66b5d1390"
+  },
+  "expected_ordered_errors": [
+    {"sequence": 1, "importShitiID": "1", "field": "choice", "message": "tishi 为 xuanze/duoxuan 时 choice 必填"},
+    {"sequence": 2, "importShitiID": "2", "field": "choice", "message": "tishi 为 xuanze/duoxuan 时 choice 必填"},
+    {"sequence": 3, "importShitiID": "7", "field": "question", "message": "question 不能为空"},
+    {"sequence": 4, "importShitiID": "7", "field": "answer", "message": "answer 不能为空"},
+    {"sequence": 5, "importShitiID": "7", "field": "choice", "message": "tishi 为 xuanze/duoxuan 时 choice 必填"},
+    {"sequence": 6, "importShitiID": "19", "field": "question", "message": "question 不能为空"},
+    {"sequence": 7, "importShitiID": "19", "field": "answer", "message": "answer 不能为空"},
+    {"sequence": 8, "importShitiID": "22", "field": "question", "message": "question 不能为空"},
+    {"sequence": 9, "importShitiID": "22", "field": "answer", "message": "answer 不能为空"}
+  ],
+  "expected_aggregate": {
+    "error_count": 9,
+    "warning_count": 0,
+    "unique_importShitiID_values": ["1", "2", "7", "19", "22"],
+    "field_counts": {"choice": 3, "question": 3, "answer": 3},
+    "per_importShitiID_counts": {"1": 1, "2": 1, "7": 3, "19": 2, "22": 2}
+  },
+  "required_entry_boundary": {
+    "validation_class": "REQUIRED_OR_NONEMPTY_REPORTED",
+    "underlying_field_state": "UNOBSERVED",
+    "missing": null,
+    "null": null,
+    "empty": null,
+    "canonical_question_id": null,
+    "selected_identity": null,
+    "identity_status": "HOLD_LOCAL_CANDIDATE_ONLY"
+  },
+  "prohibited_inferences": [
+    "importShitiID is a canonical server question_id",
+    "importShitiID is a B-side question number",
+    "importShitiID 22 joins the visible DOM label 22",
+    "importShitiID joins historical tixu with the same digits",
+    "a visible frame proves exported body content",
+    "editor slot 23 zero counters prove an old record body is empty",
+    "nine visible validation errors establish the current question denominator",
+    "field names plus a source hash are enough to self-fill PASS"
+  ],
+  "minimum_negative_cases": [
+    {"id": "N01", "mutation": "Join current importShitiID to historical tixu", "expected": "REJECT_HISTORICAL_CURRENT_MIX"},
+    {"id": "N02", "mutation": "Join importShitiID 22 to visible label 22", "expected": "REJECT_SAME_NUMBER_JOIN"},
+    {"id": "N03", "mutation": "Collapse UNOBSERVED into missing, null or empty", "expected": "REJECT_STATE_INFERENCE"},
+    {"id": "N04", "mutation": "Change source SHA or byte length", "expected": "REJECT_SOURCE_BINDING"},
+    {"id": "N05", "mutation": "Change capture time or evidence type", "expected": "REJECT_VERSION_OR_EVIDENCE_MIX"},
+    {"id": "N06", "mutation": "Inject canonical_question_id or selected_identity", "expected": "REJECT_IDENTITY_PROMOTION"},
+    {"id": "N07", "mutation": "Reorder, remove or rewrite one of nine errors", "expected": "REJECT_LEDGER_MISMATCH"},
+    {"id": "N08", "mutation": "Treat visible frame as exported body", "expected": "REJECT_REPRESENTATION_MIX"},
+    {"id": "N09", "mutation": "Treat new slot 23 zero counters as old-body emptiness", "expected": "REJECT_RECORD_STATE_MIX"},
+    {"id": "N10", "mutation": "Populate fields without raw value evidence and mark PASS", "expected": "REJECT_SELF_CERTIFIED_PASS"}
+  ],
+  "write_allowed": false,
+  "current_content_closure": "NOT_ESTABLISHED",
+  "stable_identity": "UNBOUND"
+}

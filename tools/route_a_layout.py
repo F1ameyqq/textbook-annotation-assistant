@@ -1081,7 +1081,8 @@ def evaluate(cands: list[dict], anns: list[dict], pages: list[int],
 
 def unusable_report(anns: list[dict], img_wh: dict, offset: int = -1) -> dict:
     """
-    按 verify_report 的口径，标出坐标不可用的历史框（已套用 page_index → 页图 的映射）。
+    仅标出边界非法的历史框；局部占宽图一部分不是坐标失配证据。
+    本函数不验证跨书页映射，也不把边界合法解释为业务真值。
     """
     out = {"mapping_offset": offset, "pages": {}, "boxes": []}
     ann_pages = sorted({int(a["page_index"]) for a in anns})
@@ -1096,10 +1097,9 @@ def unusable_report(anns: list[dict], img_wh: dict, offset: int = -1) -> dict:
         max_x2 = max(a["bbox"][2] for a in sub)
         max_y2 = max(a["bbox"][3] for a in sub)
         span = max_x2 / float(w)
-        if max_x2 > w or max_y2 > h:
+        if any(not (0 <= a["bbox"][0] < a["bbox"][2] <= w
+                    and 0 <= a["bbox"][1] < a["bbox"][3] <= h) for a in sub):
             verdict = "OUT_OF_BOUNDS"
-        elif span < 0.5:
-            verdict = "SUSPECT_COORD_SPACE"
         else:
             verdict = "OK"
         out["pages"][str(ap)] = {"ann_page_index": ap, "image_index": ip,
@@ -1111,11 +1111,7 @@ def unusable_report(anns: list[dict], img_wh: dict, offset: int = -1) -> dict:
                 out["boxes"].append({
                     "rect_id": a["rect_id"], "ann_page_index": ap, "image_index": ip,
                     "type": a["type"], "reason": verdict,
-                    "note": ("x2=%.2f 超图宽 %d（超 %.2fpx）" % (max_x2, w, max_x2 - w)
-                             if verdict == "OUT_OF_BOUNDS"
-                             else "横向只用到图宽 %.1f%%：该页为多页拼合宽图，记录坐标空间"
-                                  "与这张图不是同一画布，未找到可离线复原的平移-缩放关系"
-                                  "（见 data/derived/verify_report.md §3.1）" % (100 * span)),
+                    "note": "该页含历史框边界非法，具体框须逐项复核；不推断缩放关系。",
                 })
     return out
 

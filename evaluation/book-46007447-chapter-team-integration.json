@@ -1,0 +1,156 @@
+{
+  "schema": "b-chapter-team-integration-evaluation/1",
+  "date": "2026-10-17",
+  "timezone": "Asia/Shanghai",
+  "integration_baseline": "0e5434f",
+  "team_initial_baseline": "c3cc2df7a0be24c125c83681c0499c0d328d78f6",
+  "decision": "HOLD",
+  "human_acceptance": false,
+  "a_acceptance": "PENDING_A",
+  "source_report_sha256": "962d14c8d728a8ab03241eab80c8750e88a7a39807b19e863f7d7ddef1784089",
+  "observed_printed_pages": [
+    2,
+    3,
+    4,
+    6,
+    25,
+    26
+  ],
+  "chapter_denominator": "UNKNOWN",
+  "unassigned_lines": 19,
+  "source_closure": [
+    {
+      "path": "tools/adapt_chapter_candidate_b.py",
+      "sha256": "9e44a2c02a92d0ba511d7654bafbabe1a1ddec893186f6a78b866df8739bb17e"
+    },
+    {
+      "path": "tools/check_chapter_delivery_b.py",
+      "sha256": "00336ff2530f798123d218a9313957cbaceaa32d14ca888dbe5213e9cec1c846"
+    },
+    {
+      "path": "tools/prepare_chapter_scope_b.py",
+      "sha256": "f97a65a03a033c4fe8b9a966339942769a687680a9c3c59bd3e459d912ecad45"
+    },
+    {
+      "path": "tests/test_adapt_chapter_candidate_b.py",
+      "sha256": "af710333e6f2ecc7c03c887d33a2325bfcaa465491c664ace929881e490d49d0"
+    },
+    {
+      "path": "tests/test_chapter_delivery_b.py",
+      "sha256": "9267e59cfd61d225724a70904030659caaaa47ddbc854eca489992ddddbc12d2"
+    },
+    {
+      "path": "tests/test_prepare_chapter_scope_b.py",
+      "sha256": "89ec8e94cca72a910a254c6fc474c25150e88fc7e883c0daae6ed791a6779c46"
+    }
+  ],
+  "focused_regression": {
+    "command": "python -X utf8 -m unittest tests.test_adapt_chapter_candidate_b tests.test_prepare_chapter_scope_b tests.test_chapter_delivery_b tests.test_source_coverage_report_b -v",
+    "tests": 34,
+    "exit_code": 0,
+    "independent_worktree_regressions": 11,
+    "independent_worktree_exit_code": 0,
+    "fixed_commit_recheck": "PENDING"
+  },
+  "historical_handoff_replay": {
+    "preparation": {
+      "code_sha": "14a2ad9c78b977b2c76da87810d84daa71752b57",
+      "zip_sha256": "66289f0db5c5b0999f9231e376e4886a189c64573d3b19523216d94ba46d2fec",
+      "verify_exit_code": 0,
+      "source_manifest_relocated_byte_identically_to": "package/source/source.json",
+      "replay_inputs": "package/supporting-fixtures packages plus inputs evidence/context/plan; input byte receipts recorded anew, not historical run replay identity"
+    },
+    "results": [
+      {
+        "label": "cold",
+        "seconds": 52.65599999995902,
+        "state": "READY",
+        "accepted": true,
+        "counts": {
+          "declared_stages": 14,
+          "done": 14,
+          "pending": 0,
+          "failed": 0,
+          "cache_hits": 0,
+          "invalidated": 0
+        },
+        "final_outputs": {
+          "evidence_ref": {
+            "artifact_id": "evidencebundletrial-1d0ce32cebd416397a54e642",
+            "revision": 2,
+            "content_hash": "a2566c553c83bc5c0b4701d3cdb367bdc4b349b788fd72f5527dc817b19bbdda"
+          },
+          "graph_ref": {
+            "artifact_id": "content-graph-290905ae84afe51289f7a338",
+            "revision": 2,
+            "content_hash": "3c90194e146cf93a32ac1c022a1b04d6bfce295762cc5ce7823bb74292b6d110"
+          },
+          "quality_ref": {
+            "artifact_id": "content-check-b3fbf1f56dabbe89ca48556b",
+            "revision": 1,
+            "content_hash": "403d4589e3de1ff7947e182bc6e811045dff39bcaa5820d75b02685aec55f7a4"
+          }
+        },
+        "matches_exported_final_outputs": true
+      },
+      {
+        "label": "warm",
+        "seconds": 38.71900000004098,
+        "state": "READY",
+        "accepted": true,
+        "counts": {
+          "declared_stages": 14,
+          "done": 14,
+          "pending": 0,
+          "failed": 0,
+          "cache_hits": 14,
+          "invalidated": 0
+        },
+        "final_outputs": {
+          "evidence_ref": {
+            "artifact_id": "evidencebundletrial-1d0ce32cebd416397a54e642",
+            "content_hash": "a2566c553c83bc5c0b4701d3cdb367bdc4b349b788fd72f5527dc817b19bbdda",
+            "revision": 2
+          },
+          "graph_ref": {
+            "artifact_id": "content-graph-290905ae84afe51289f7a338",
+            "revision": 2,
+            "content_hash": "3c90194e146cf93a32ac1c022a1b04d6bfce295762cc5ce7823bb74292b6d110"
+          },
+          "quality_ref": {
+            "artifact_id": "content-check-b3fbf1f56dabbe89ca48556b",
+            "revision": 1,
+            "content_hash": "403d4589e3de1ff7947e182bc6e811045dff39bcaa5820d75b02685aec55f7a4"
+          }
+        },
+        "matches_exported_final_outputs": true
+      }
+    ],
+    "execution_limits": "clean git archive source and empty run directory, same installed Python environment; models and socket connect prohibited; not an isolated dependency installation",
+    "initial_operator_failures": [
+      "ZIP was incorrectly passed as inline manifest: UTF8 decode rejected before run; fixed by prepare_inline_package_b",
+      "diagnostic read without UTF8 failed under Windows GBK; retried with explicit UTF8"
+    ],
+    "receipt_correction": "inline.package file SHA binds generated inline-package.json, which matches exactly; corrected package published separately by output owner",
+    "raw_receipt_sha256": {
+      "cold-report.json": "78b1894c09bc1b4125b91b9542346cadd63642524d1c4ff8ba6f2f87a6d0fa69",
+      "cold-audit.json": "da5ef06be9969497b01a0f07176c5d5a2fee5ee417876fdc190b0f965bcc1d73",
+      "warm-report.json": "6895b8ec7511ec8a1792cada75b16e7935acdbb3e1111e80fa0c97393cf5b013",
+      "warm-audit.json": "1e74d27b27d86ea18da9e31ab56bd37d9a34cf18571b58731c61e3fbebb50666",
+      "replay.py": "39e371b9dd71481dc4647c8ff7b21b7e2c8500c4ee9a21b9916774446db86a8e"
+    }
+  },
+  "previous_focused_regression": {
+    "command": "python -X utf8 -m unittest tests.test_adapt_chapter_candidate_b tests.test_prepare_chapter_scope_b tests.test_chapter_delivery_b tests.test_source_coverage_report_b -v",
+    "exit_code": 0,
+    "tests": 32,
+    "independent_recheck": "PENDING"
+  },
+  "second_source_attempt": {
+    "new_pages": 0,
+    "user_relogin_confirmed": true,
+    "url_and_title_readable": true,
+    "dom_screenshot_page_assets": "Debugger unattached",
+    "source_report_sha256": "9757058c126ac4fce7b3f5edf824d15c3acad0dc836b722ddb112871624fbe8b"
+  }
+}

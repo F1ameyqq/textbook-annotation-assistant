@@ -1,0 +1,363 @@
+{
+  "schema": "A24PreservationMappingIntegration/v1",
+  "date": "2026-10-22",
+  "timezone": "Asia/Shanghai",
+  "b_input_commit": "16b2c6bb7e0983d3a34385d8c6d5f267461b4ab0",
+  "fixed_a24_commit": "c5aefbc8e995c410b3babf74a251f05a7724a1c2",
+  "decision": "HISTORICAL_SIDECAR_PRESERVATION_PASS_CURRENT_ID_EXPORT_AND_LIVE_PRESERVATION_HOLD",
+  "scope": "Two new A24 files delivered as an additive patch, not a new standalone product or a current-schema codec repair",
+  "patch": {
+    "path": "handoffs/b/a24/a24-historical-preservation-adopted-v2-20261022.patch",
+    "bytes": 16928,
+    "sha256": "524467067bc0f33d976e8dd1c41a46bc45809d0a863d3c65266f3cf6ac02d820"
+  },
+  "applied_quality_combined_patch": {
+    "path": "C:\\Users\\LIHAOYANG\\Documents\\Codex\\2026-10-17\\chapter1-quality-sol56\\outputs\\a24-historical-preservation-combined-final-20261022.patch",
+    "sha256": "1d37397099edf16363772a54ae56d7a8431faf7081ec8c5669769545543d1312",
+    "apply_check_exit": 0,
+    "apply_exit": 0,
+    "final_code_same_as_published_patch": true
+  },
+  "variant": {
+    "baseline_files": 525,
+    "final_files": 527,
+    "all_baseline_files_unchanged": true,
+    "added_files": [
+      {
+        "path": "src/annotation/runtime/live_pilot/historical_preservation.py",
+        "bytes": 8823,
+        "sha256": "636707c2fec0889627220657ef7099ea2a135ce8263165a2987e14e9d40ccf27"
+      },
+      {
+        "path": "tests/a24_historical_preservation/test_historical_preservation.py",
+        "bytes": 7529,
+        "sha256": "295263cc873af9e247edf79d26c6793c5ffb621305631cf448d293228dbac380"
+      }
+    ]
+  },
+  "primary_actual_tests": [
+    {
+      "command": "python -m unittest discover -s tests/a24_historical_preservation -p test_historical_preservation.py -v",
+      "passed": 7,
+      "failures": 0,
+      "errors": 0,
+      "skips": 0,
+      "seconds": 0.105,
+      "exit": 0
+    },
+    {
+      "command": "python -m unittest discover -s tests/a24_schema_readiness -p test_schema_readiness.py -v",
+      "passed": 14,
+      "failures": 0,
+      "errors": 0,
+      "seconds": 0.755,
+      "exit": 0
+    },
+    {
+      "command": "C:\\Users\\LIHAOYANG\\Documents\\Codex\\2026-10-17\\chapter1-quality-sol56\\tools\\a24_historical_preservation_independent_tests.py -v",
+      "passed": 6,
+      "failures": 0,
+      "errors": 0,
+      "seconds": 0.075,
+      "exit": 0
+    }
+  ],
+  "primary_test_environment": {
+    "cwd": "C:\\Users\\LIHAOYANG\\Documents\\Codex\\2026-10-16\\ni\\work\\a24-takeover-20261022\\source-historical-preservation-reviewed-20261022",
+    "python": "C:/Users/LIHAOYANG/.cache/codex-runtimes/codex-primary-runtime/dependencies/python/python.exe",
+    "PYTHONPATH": "C:\\Users\\LIHAOYANG\\Documents\\Codex\\2026-10-16\\ni\\work\\a24-takeover-20261022\\source-historical-preservation-reviewed-20261022\\src",
+    "PYTHONDONTWRITEBYTECODE": "1",
+    "A24_HISTORICAL_EXPORT_PATH": "C:\\Users\\LIHAOYANG\\Documents\\Codex\\2026-10-16\\ni\\work\\a24-takeover-20261022\\historical-download-export-20261022\\46007447_paper_questions.jsonl"
+  },
+  "quality_actual_tests": {
+    "candidate": 7,
+    "independent": 6,
+    "schema_readiness": 14,
+    "total": 27,
+    "failures": 0,
+    "errors": 0,
+    "not_added_to_primary_total": true
+  },
+  "regression_boundary": "27 bounded primary checks and 27 separate quality checks. Previous full R1 3 existing errors unchanged; full R1 not rerun.",
+  "historical_source": {
+    "bytes": 11625,
+    "sha256": "02a8aaae2bc907649a03f3676806a02da103e0b487fb43f7e187b29a67fc7a8c",
+    "records": 19,
+    "byte_exact_roundtrip": true,
+    "canonical_identity_available": false
+  },
+  "mapping": {
+    "entries": 19,
+    "canonical_nonnull": 0,
+    "selected_nonnull": 0,
+    "actual_dom_joins": 0,
+    "row_numbers_and_content_fingerprints_are_not_canonical_ids": true
+  },
+  "numeric_policy": {
+    "json_integer": "PRESERVED",
+    "json_float_or_exponent": "REJECT_HISTORICAL_JSON_NUMBER",
+    "nan_or_infinity_token": "REJECT_HISTORICAL_JSON_NONFINITE",
+    "actual_19_record_source_contains_float": false
+  },
+  "initial_findings": {
+    "float_precision_or_overflow": "Reproduced, final rejects JSON floats; actual 19 records unaffected",
+    "mutable_parsed_dict": "Reproduced, final reparses immutable source record bytes"
+  },
+  "unadopted_decimal_variant": {
+    "patch_sha256": "0b1763048682b408767ca32c2449eff677d6edf16094102245cd741291c9cff0",
+    "probe_sha256": "6930fc0687da2825134e8fc162c843f74fa4d87b7b456f9000baa3436fbeec98",
+    "status": "RETAINED_NOT_ADOPTED_DO_NOT_STACK"
+  },
+  "current_source": {
+    "rendered_treeitems": 143,
+    "rendered_top_level_chapters": 8,
+    "visible_question_labels": 22,
+    "server_denominators": "UNPROVEN",
+    "stable_question_id_mapping": "NOT_ESTABLISHED",
+    "export_questions_ui_result": "PRECHECK_FAILED_9_ERRORS_0_WARNINGS",
+    "export_whole_book_json": "UNKNOWN",
+    "current_download_file_verified": false,
+    "http_statuses": "UNKNOWN",
+    "private_artifacts_verified": [
+      {
+        "path": "private/A24-current-platform-20261022/10-v3-current-selected-book-dom-snapshot.txt",
+        "bytes": 20487,
+        "sha256": "07d7defe1fb2ce093aaa1793a86a4f9b10f53f1d4fa8fcbb5e5a69351a52b315",
+        "collection_method": "DOM_SNAPSHOT_TEXT",
+        "sequence_time": "2026-10-22 15:14:05 +08:00",
+        "completeness": "CURRENTLY_RENDERED DOM ONLY; includes visible precheck dialog and full rendered directory tree; private because it contains an account display label"
+      },
+      {
+        "path": "private/A24-current-platform-20261022/11-v3-readonly-selection-attempt.json",
+        "bytes": 1085,
+        "sha256": "75f7fa01b2dc0db353c7062e11ba340d608a47705919d2158bd14889b6206beb",
+        "collection_method": "TOOL_ATTEMPT_RECEIPT",
+        "sequence_time": "2026-10-22 15:17:06 +08:00",
+        "completeness": "BOUNDED ATTEMPT LOG; no post-termination UI observation"
+      }
+    ],
+    "selection_tool_forced_termination": true,
+    "no_further_browser_actions": true
+  },
+  "export_precheck_issues": [
+    {
+      "importShitiID": "1",
+      "field": "choice",
+      "message": "tishi 为 xuanze/duoxuan 时 choice 必填"
+    },
+    {
+      "importShitiID": "2",
+      "field": "choice",
+      "message": "tishi 为 xuanze/duoxuan 时 choice 必填"
+    },
+    {
+      "importShitiID": "7",
+      "field": "question",
+      "message": "question 不能为空"
+    },
+    {
+      "importShitiID": "7",
+      "field": "answer",
+      "message": "answer 不能为空"
+    },
+    {
+      "importShitiID": "7",
+      "field": "choice",
+      "message": "tishi 为 xuanze/duoxuan 时 choice 必填"
+    },
+    {
+      "importShitiID": "19",
+      "field": "question",
+      "message": "question 不能为空"
+    },
+    {
+      "importShitiID": "19",
+      "field": "answer",
+      "message": "answer 不能为空"
+    },
+    {
+      "importShitiID": "22",
+      "field": "question",
+      "message": "question 不能为空"
+    },
+    {
+      "importShitiID": "22",
+      "field": "answer",
+      "message": "answer 不能为空"
+    }
+  ],
+  "codec": {
+    "historical_sidecar": "PASS_BOUNDED",
+    "natural_codec_full_raw_extra_values": "OPEN_UNCHANGED",
+    "canonical_identity_provenance": "OPEN",
+    "current_schema_profile": null,
+    "current_catalog_state_binding": "OPEN"
+  },
+  "website_edits_saves_submits_uploads": 0,
+  "paid_api_calls": 0,
+  "write_allowed": false,
+  "save_refresh_independent_reopen": "NOT_RUN",
+  "acceptance": {
+    "human_content": "NOT_NEWLY_PERFORMED",
+    "chapter": "NOT_COMPLETE",
+    "platform": "NOT_ACCEPTED"
+  },
+  "public_evidence": [
+    {
+      "path": "docs/evidence/a24-preservation-mapping-20261022/source-v3.json",
+      "source_sha256": "0ed4c4f2417d9057129e50dabb1fc295b0628c20c9f1fb02842a15c66b5d1390",
+      "published_sha256": "0ed4c4f2417d9057129e50dabb1fc295b0628c20c9f1fb02842a15c66b5d1390",
+      "bytes": 6010,
+      "transformation": "LABEL_REDACTION_AND_LF_EOF_NORMALIZATION"
+    },
+    {
+      "path": "docs/evidence/a24-preservation-mapping-20261022/source-v3.md",
+      "source_sha256": "b4e8962112c416d23671dd10c04759a3de4f30f4f957bde8d35c596e808b571d",
+      "published_sha256": "b4e8962112c416d23671dd10c04759a3de4f30f4f957bde8d35c596e808b571d",
+      "bytes": 3991,
+      "transformation": "LABEL_REDACTION_AND_LF_EOF_NORMALIZATION"
+    },
+    {
+      "path": "docs/evidence/a24-preservation-mapping-20261022/content-adopted-v2.md",
+      "source_sha256": "b7db99c5beaa35247026fa8f0fdc2fe16aaa74a6f4ad11632e8af40de1fdf677",
+      "published_sha256": "1610e3fd1e8408beb09054a7a5afd3b0b1cf22b7ab3e98f0e1bd176b9ce59fd3",
+      "bytes": 4831,
+      "transformation": "LABEL_REDACTION_AND_LF_EOF_NORMALIZATION"
+    },
+    {
+      "path": "docs/evidence/a24-preservation-mapping-20261022/content-adopted-v2.json",
+      "source_sha256": "e052e5ac9593f039e53e2a539b86823bee412441da95c23a43233a3312a07c8f",
+      "published_sha256": "9a00ae12c2128155977ba66a8a775ca8fd3f6bba1b67d5e5b95304fadcb25ed1",
+      "bytes": 3621,
+      "transformation": "LABEL_REDACTION_AND_LF_EOF_NORMALIZATION"
+    },
+    {
+      "path": "docs/evidence/a24-preservation-mapping-20261022/initial-v1-report.md",
+      "source_sha256": "36f0c09c4200bcd3416c84d90f10eee736c8336efc9ab0d829cc9bf29abaf8aa",
+      "published_sha256": "622c95fdbdf81984fb60b2eb08b14463b7799aa0d83796d209f891a0dfa9b385",
+      "bytes": 6277,
+      "transformation": "LABEL_REDACTION_AND_LF_EOF_NORMALIZATION"
+    },
+    {
+      "path": "docs/evidence/a24-preservation-mapping-20261022/initial-v1-record.json",
+      "source_sha256": "b2f02b4adaf8268cd0dd96d16260ab5890ef1a478c424366d83c7eb7bc0b76cd",
+      "published_sha256": "884d49a68dc6f50bf4b520d11d0dd0dd1d6ff5ef8fd9beb348f100dd55ce7e72",
+      "bytes": 4658,
+      "transformation": "LABEL_REDACTION_AND_LF_EOF_NORMALIZATION"
+    },
+    {
+      "path": "docs/evidence/a24-preservation-mapping-20261022/initial-v1.patch",
+      "source_sha256": "d9ade078140df02a7da3473e3031cc7c801474b17dba5c0d1561cd04d1c73bdf",
+      "published_sha256": "9eb880feae4b6b36de57272ee7802972648d8f060acebc8711f68efbbd81aef1",
+      "bytes": 15894,
+      "transformation": "LABEL_REDACTION_AND_LF_EOF_NORMALIZATION"
+    },
+    {
+      "path": "docs/evidence/a24-preservation-mapping-20261022/historical-original-manifest.json",
+      "source_sha256": "47b4917e909abaa690d2cc7f80574369c905b6de001136f8e469edc131f22293",
+      "published_sha256": "174ba39b61d254b70867abee8fdcc30181d11ff72b3138c9e556e1506af79c55",
+      "bytes": 20923,
+      "transformation": "LABEL_REDACTION_AND_LF_EOF_NORMALIZATION"
+    },
+    {
+      "path": "docs/evidence/a24-preservation-mapping-20261022/historical-identity-candidates.json",
+      "source_sha256": "1905f6367813ed714a18fc0a8bf0153b8f33a814c2a53fe1ae0608a2e3cc2276",
+      "published_sha256": "2351490d175ecac5d0ecff1027b1d1e0db41a555d4154252ba21c0057b46acd9",
+      "bytes": 12857,
+      "transformation": "LABEL_REDACTION_AND_LF_EOF_NORMALIZATION"
+    },
+    {
+      "path": "docs/evidence/a24-preservation-mapping-20261022/unadopted-decimal-experiment-probe.json",
+      "source_sha256": "6930fc0687da2825134e8fc162c843f74fa4d87b7b456f9000baa3436fbeec98",
+      "published_sha256": "7eaa12d0f145ae0f164b6ad76d62bfbef3dfe9a833bcd410759170bf17d3cfde",
+      "bytes": 1387,
+      "transformation": "LABEL_REDACTION_AND_LF_EOF_NORMALIZATION"
+    },
+    {
+      "path": "docs/evidence/a24-preservation-mapping-20261022/independent-review.md",
+      "source_sha256": "b73c03d0a0912524ebd11c69f82af94f0e02437949df6746502a1ec5f8a075e1",
+      "published_sha256": "b73c03d0a0912524ebd11c69f82af94f0e02437949df6746502a1ec5f8a075e1",
+      "bytes": 8361,
+      "transformation": "LABEL_REDACTION_AND_LF_EOF_NORMALIZATION"
+    },
+    {
+      "path": "docs/evidence/a24-preservation-mapping-20261022/independent-review.json",
+      "source_sha256": "0421dee172f6af7a93690b108ecfeb6fa344bf441d246c17da5bde84409188d8",
+      "published_sha256": "0421dee172f6af7a93690b108ecfeb6fa344bf441d246c17da5bde84409188d8",
+      "bytes": 8437,
+      "transformation": "LABEL_REDACTION_AND_LF_EOF_NORMALIZATION"
+    },
+    {
+      "path": "docs/evidence/a24-preservation-mapping-20261022/independent-minimal-fix.patch",
+      "source_sha256": "2c562a87d2f9a927aa577dd0354173df47abfe629a1859d090fb19126bafea15",
+      "published_sha256": "2c562a87d2f9a927aa577dd0354173df47abfe629a1859d090fb19126bafea15",
+      "bytes": 3601,
+      "transformation": "LABEL_REDACTION_AND_LF_EOF_NORMALIZATION"
+    },
+    {
+      "path": "docs/evidence/a24-preservation-mapping-20261022/independent-review-spec.md",
+      "source_sha256": "888858cce6646f27d871e5fa537f06f92ad5dbfa9e037d5a475d3432cf59bf8f",
+      "published_sha256": "888858cce6646f27d871e5fa537f06f92ad5dbfa9e037d5a475d3432cf59bf8f",
+      "bytes": 4462,
+      "transformation": "LABEL_REDACTION_AND_LF_EOF_NORMALIZATION"
+    },
+    {
+      "path": "docs/evidence/a24-preservation-mapping-20261022/independent-review-spec.json",
+      "source_sha256": "8e273816043e5cce82d6b29609f99d2423335fc86b39334947855ea5aca2e768",
+      "published_sha256": "8e273816043e5cce82d6b29609f99d2423335fc86b39334947855ea5aca2e768",
+      "bytes": 5242,
+      "transformation": "LABEL_REDACTION_AND_LF_EOF_NORMALIZATION"
+    },
+    {
+      "path": "docs/evidence/a24-preservation-mapping-20261022/independent-tests.py",
+      "source_sha256": "84d4b035a95e39d20bc86e3a04e0c00d53ac6fca33aa02ab088cd71eb7ae8d72",
+      "published_sha256": "84d4b035a95e39d20bc86e3a04e0c00d53ac6fca33aa02ab088cd71eb7ae8d72",
+      "bytes": 5389,
+      "transformation": "LABEL_REDACTION_AND_LF_EOF_NORMALIZATION"
+    },
+    {
+      "path": "docs/evidence/a24-preservation-mapping-20261022/independent-final-review.md",
+      "source_sha256": "b73c03d0a0912524ebd11c69f82af94f0e02437949df6746502a1ec5f8a075e1",
+      "published_sha256": "b73c03d0a0912524ebd11c69f82af94f0e02437949df6746502a1ec5f8a075e1",
+      "bytes": 8361,
+      "transformation": "LABEL_REDACTION_AND_LF_EOF_NORMALIZATION"
+    },
+    {
+      "path": "docs/evidence/a24-preservation-mapping-20261022/independent-final-review.json",
+      "source_sha256": "0421dee172f6af7a93690b108ecfeb6fa344bf441d246c17da5bde84409188d8",
+      "published_sha256": "0421dee172f6af7a93690b108ecfeb6fa344bf441d246c17da5bde84409188d8",
+      "bytes": 8437,
+      "transformation": "LABEL_REDACTION_AND_LF_EOF_NORMALIZATION"
+    },
+    {
+      "path": "docs/evidence/a24-preservation-mapping-20261022/independent-final-raw-tests.json",
+      "source_sha256": "27f72302047c9e66177bfbc2864d5c84d0b8b87fee2e7d161f5c64b179aaab71",
+      "published_sha256": "27f72302047c9e66177bfbc2864d5c84d0b8b87fee2e7d161f5c64b179aaab71",
+      "bytes": 4714,
+      "transformation": "LABEL_REDACTION_AND_LF_EOF_NORMALIZATION"
+    }
+  ],
+  "publication_integrity_check": {
+    "command": "python C:/Users/LIHAOYANG/Documents/Codex/2026-10-16/ni/work/a24-takeover-20261022/verify_preservation_publication.py",
+    "exit": 0,
+    "public_hashes": 19,
+    "private_v3_hashes": 2,
+    "patch_hash": true,
+    "historical_manifest_and_mapping_regenerated_equal": true
+  },
+  "publication_setup_error": {
+    "error": "FileNotFoundError",
+    "cause": "Publisher initially used runtime/live_pilot/wire.py instead of actual delivery/live_pilot/wire.py",
+    "corrected": true,
+    "product_or_test_assertions_changed": false
+  },
+  "team_round_finished": true,
+  "independent_review_history": "Earlier review captured before final combined-patch appendix preserved; final review and raw receipts appended separately, not overwritten.",
+  "publication_privacy_scan": {
+    "paths": 23,
+    "complete_private_string_values_min_chars": 20,
+    "matching_private_values": 0,
+    "credential_pattern_matches": 0,
+    "scope": "Bounded local publication scan, not a general secret guarantee"
+  }
+}

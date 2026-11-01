@@ -1,0 +1,639 @@
+diff --git a/src/annotation/runtime/live_pilot/archived_target_preservation.py b/src/annotation/runtime/live_pilot/archived_target_preservation.py
+new file mode 100644
+--- /dev/null
++++ b/src/annotation/runtime/live_pilot/archived_target_preservation.py
+@@ -0,0 +1,406 @@
++"""Lossless offline preservation for archived A24 target evidence.
++
++The archived current-state file is not fresh authority.  This module exports
++only its target subtree, never authentication/account material, and keeps the
++19-record historical export as a separate evidence set with no automatic join.
++"""
++import argparse
++import copy
++import hashlib
++import json
++from pathlib import Path
++
++from annotation.quality.live_pilot import require
++from annotation.runtime.live_pilot.historical_preservation import load_historical_original
++
++
++REPARSE_POINT = 0x400
++TARGET_FIELDS = {
++    "append_after_order", "book_id", "content_coverage", "directories",
++    "duplicate_raw_orders", "frame_count", "frame_envelope",
++    "frontend_derived_global_max", "global_max_observed", "inventory_coverage",
++    "orphan_frames", "q22_in_inventory", "q22_sample_or_navigation",
++    "question_count_observed", "question_count_reported", "questions",
++    "raw_directory_tree_is_full_response_body", "raw_directory_tree_projection",
++    "raw_order_or_derived_order_is_save_order", "raw_vs_frontend_order_disagreements",
++    "write_preservation_baseline",
++}
++QUESTION_FIELDS = {
++    "content", "directory_id", "frames", "frontend_derivation",
++    "frontend_derived_frame_candidates", "frontend_derived_global_order",
++    "frontend_derived_label", "id", "order", "raw_label", "raw_node_fields",
++    "raw_order_field_present", "raw_order_in_level", "raw_order_status",
++}
++DIRECTORY_FIELDS = {"id", "label", "parent", "raw_node_fields"}
++FRAME_FIELDS = {
++    "belong_to_level", "content_type", "directory_id", "file_id",
++    "image_order_in_annotation_zone", "image_path_sha256", "is_pre_annotation",
++    "order_in_level", "page_index", "parent_rect_id", "pre_annotations_id",
++    "rect_bbox", "rect_id", "type",
++}
++QUESTION_RAW_FIELDS = {"id", "isQuestion", "label", "order_in_level"}
++DIRECTORY_RAW_FIELDS = {"id", "label"}
++CONTENT_FIELDS = {"reason", "status", "text"}
++
++
++def _sha(raw):
++    return hashlib.sha256(raw).hexdigest()
++
++
++def _unique_object(pairs):
++    value = {}
++    for key, item in pairs:
++        require(key not in value, "ARCHIVED_JSON_DUPLICATE_KEY")
++        value[key] = item
++    return value
++
++
++def _load_json(raw, code):
++    try:
++        text = raw.decode("utf-8", errors="strict")
++        return json.loads(
++            text,
++            object_pairs_hook=_unique_object,
++            parse_constant=lambda token: require(False, code, token),
++        )
++    except (UnicodeDecodeError, json.JSONDecodeError) as exc:
++        require(False, code, type(exc).__name__)
++
++
++def _json_same(left, right):
++    """Compare parsed JSON without Python's bool/int coercion or key-order loss."""
++    if type(left) is not type(right):
++        return False
++    if isinstance(left, dict):
++        return (list(left) == list(right) and
++                all(_json_same(left[key], right[key]) for key in left))
++    if isinstance(left, list):
++        return (len(left) == len(right) and
++                all(_json_same(a, b) for a, b in zip(left, right)))
++    return left == right
++
++
++def _read_exact(path, expected_sha256, expected_bytes, code):
++    require(
++        isinstance(expected_sha256, str)
++        and len(expected_sha256) == 64
++        and set(expected_sha256) <= set("0123456789abcdef")
++        and type(expected_bytes) is int
++        and expected_bytes > 0,
++        code + "_REF",
++    )
++    candidate = Path(path)
++    require(
++        candidate.is_file()
++        and not candidate.is_symlink()
++        and not (getattr(candidate.lstat(), "st_file_attributes", 0) & REPARSE_POINT),
++        code + "_PATH",
++    )
++    raw = candidate.read_bytes()
++    require(len(raw) == expected_bytes and _sha(raw) == expected_sha256, code + "_BYTES")
++    return raw
++
++
++def _split_object(value, known_fields):
++    require(isinstance(value, dict), "ARCHIVED_OBJECT")
++    mapped = {key: copy.deepcopy(item) for key, item in value.items() if key in known_fields}
++    extra = {key: copy.deepcopy(item) for key, item in value.items() if key not in known_fields}
++    result = {
++        "original_field_order": list(value),
++        "mapped_fields": mapped,
++        "extra_fields": extra,
++    }
++    require(_json_same(_reconstruct(result), value), "ARCHIVED_TARGET_LOSS")
++    return result
++
++
++def _reconstruct(split):
++    require(
++        isinstance(split, dict)
++        and isinstance(split.get("original_field_order"), list)
++        and isinstance(split.get("mapped_fields"), dict)
++        and isinstance(split.get("extra_fields"), dict),
++        "ARCHIVED_PRESERVATION_SCHEMA",
++    )
++    mapped, extra = split["mapped_fields"], split["extra_fields"]
++    require(not (set(mapped) & set(extra)), "ARCHIVED_PRESERVATION_SCHEMA")
++    order = split["original_field_order"]
++    require(len(order) == len(set(order)) == len(mapped) + len(extra) and
++            set(order) == set(mapped) | set(extra),
++            "ARCHIVED_TARGET_LOSS")
++    return {
++        key: copy.deepcopy(mapped[key] if key in mapped else extra[key])
++        for key in order
++    }
++
++
++def build_preservation(target):
++    require(isinstance(target, dict), "ARCHIVED_TARGET_SCHEMA")
++    questions, directories = target.get("questions"), target.get("directories")
++    require(isinstance(questions, list) and isinstance(directories, list),
++            "ARCHIVED_TARGET_SCHEMA")
++    question_entries = []
++    for question in questions:
++        require(isinstance(question, dict), "ARCHIVED_QUESTION_SCHEMA")
++        frames = question.get("frames")
++        require(isinstance(frames, list), "ARCHIVED_FRAME_SCHEMA")
++        question_entries.append({
++            "object": _split_object(question, QUESTION_FIELDS),
++            "raw_node_fields": _split_object(
++                question.get("raw_node_fields", {}), QUESTION_RAW_FIELDS),
++            "content": _split_object(question.get("content", {}), CONTENT_FIELDS),
++            "frames": [_split_object(frame, FRAME_FIELDS) for frame in frames],
++        })
++    directory_entries = []
++    for directory in directories:
++        require(isinstance(directory, dict), "ARCHIVED_DIRECTORY_SCHEMA")
++        directory_entries.append({
++            "object": _split_object(directory, DIRECTORY_FIELDS),
++            "raw_node_fields": _split_object(
++                directory.get("raw_node_fields", {}), DIRECTORY_RAW_FIELDS),
++        })
++    preservation = {
++        "schema": "A24ArchivedTargetPreservation/v1",
++        "target": _split_object(target, TARGET_FIELDS),
++        "questions": question_entries,
++        "directories": directory_entries,
++    }
++    validate_preservation(target, preservation)
++    return preservation
++
++
++def validate_preservation(target, preservation):
++    require(isinstance(preservation, dict) and
++            preservation.get("schema") == "A24ArchivedTargetPreservation/v1",
++            "ARCHIVED_PRESERVATION_SCHEMA")
++    require(_json_same(_reconstruct(preservation["target"]), target),
++            "ARCHIVED_TARGET_LOSS")
++    questions, directories = target["questions"], target["directories"]
++    require(len(preservation["questions"]) == len(questions) and
++            len(preservation["directories"]) == len(directories),
++            "ARCHIVED_TARGET_LOSS")
++    for original, saved in zip(questions, preservation["questions"]):
++        require(_json_same(_reconstruct(saved["object"]), original) and
++                _json_same(_reconstruct(saved["raw_node_fields"]),
++                           original["raw_node_fields"]) and
++                _json_same(_reconstruct(saved["content"]), original["content"]) and
++                len(saved["frames"]) == len(original["frames"]),
++                "ARCHIVED_TARGET_LOSS")
++        for frame, frame_saved in zip(original["frames"], saved["frames"]):
++            require(_json_same(_reconstruct(frame_saved), frame),
++                    "ARCHIVED_TARGET_LOSS")
++    for original, saved in zip(directories, preservation["directories"]):
++        require(_json_same(_reconstruct(saved["object"]), original) and
++                _json_same(_reconstruct(saved["raw_node_fields"]),
++                           original["raw_node_fields"]),
++                "ARCHIVED_TARGET_LOSS")
++    return True
++
++
++def _extra_summary(preservation):
++    def names(split):
++        return set(split["extra_fields"])
++
++    result = {
++        "target": names(preservation["target"]),
++        "question": set(),
++        "question_raw_node": set(),
++        "content": set(),
++        "frame": set(),
++        "directory": set(),
++        "directory_raw_node": set(),
++    }
++    for item in preservation["questions"]:
++        result["question"].update(names(item["object"]))
++        result["question_raw_node"].update(names(item["raw_node_fields"]))
++        result["content"].update(names(item["content"]))
++        for frame in item["frames"]:
++            result["frame"].update(names(frame))
++    for item in preservation["directories"]:
++        result["directory"].update(names(item["object"]))
++        result["directory_raw_node"].update(names(item["raw_node_fields"]))
++    return {key: sorted(value) for key, value in result.items()}
++
++
++def _prepare_output(path):
++    output = Path(path)
++    if output.exists():
++        require(output.is_dir() and not output.is_symlink() and not any(output.iterdir()),
++                "ARCHIVED_OUTPUT_DIR")
++    else:
++        output.mkdir(parents=True)
++    private = output / "private"
++    private.mkdir()
++    return output, private
++
++
++def run(input_path, output_dir, expected_sha256, expected_bytes,
++        historical_path, historical_sha256, historical_bytes,
++        current_dom_path, current_dom_sha256, current_dom_bytes):
++    state_raw = _read_exact(
++        input_path, expected_sha256, expected_bytes, "ARCHIVED_CURRENT_STATE")
++    state = _load_json(state_raw, "ARCHIVED_CURRENT_STATE_JSON")
++    require(isinstance(state, dict) and isinstance(state.get("target"), dict),
++            "ARCHIVED_TARGET_SCHEMA")
++    # Authentication/account values are intentionally never selected or exported.
++    target = copy.deepcopy(state["target"])
++    preservation = build_preservation(target)
++
++    historical_raw = _read_exact(
++        historical_path, historical_sha256, historical_bytes, "HISTORICAL_EXPORT")
++    historical = load_historical_original(
++        historical_path, historical_sha256, historical_bytes)
++
++    dom_raw = _read_exact(current_dom_path, current_dom_sha256, current_dom_bytes,
++                          "CURRENT_DOM")
++    dom = _load_json(dom_raw, "CURRENT_DOM_JSON")
++    matches = dom.get("matches") if isinstance(dom, dict) else None
++    require(isinstance(matches, list) and len(matches) == 1 and
++            isinstance(matches[0], dict), "CURRENT_DOM_SCHEMA")
++    data_key = matches[0].get("dataKey")
++    require(isinstance(data_key, str) and data_key, "CURRENT_DOM_SCHEMA")
++    archived_ids = [item.get("id") for item in target["questions"]]
++    matched = [item for item in target["questions"] if item.get("id") == data_key]
++    candidate = {
++        "status": "CORROBORATED_DIRECTORY_NODE_ID_CANDIDATE" if len(matched) == 1
++                  else "HOLD_NO_UNIQUE_ARCHIVED_NODE_MATCH",
++        "current_dom_data_key": data_key,
++        "archived_match_count": len(matched),
++        "archived_question_id": data_key if len(matched) == 1 else None,
++        "canonical_question_id": None,
++        "write_allowed": False,
++        "same_number_join_used": False,
++    }
++
++    output, private = _prepare_output(output_dir)
++    target_raw = (json.dumps(target, ensure_ascii=False, indent=2, allow_nan=False) +
++                  "\n").encode("utf-8")
++    preservation_raw = (json.dumps(
++        preservation, ensure_ascii=False, indent=2, allow_nan=False) + "\n").encode("utf-8")
++    (private / "archived-target.full.json").write_bytes(target_raw)
++    (private / "archived-target.preservation.json").write_bytes(preservation_raw)
++    (private / "historical-records.full.jsonl").write_bytes(historical_raw)
++
++    frame_count = sum(len(item["frames"]) for item in target["questions"])
++    content_states = {}
++    for question in target["questions"]:
++        status = question.get("content", {}).get("status", "UNOBSERVED")
++        content_states[status] = content_states.get(status, 0) + 1
++    public = {
++        "schema": "A24ArchivedRealMaterialComparison/v1",
++        "status": "OFFLINE_ARCHIVED_TARGET_AND_HISTORICAL_EXPORT_PRESERVED",
++        "source_classification": {
++            "archived_current_state": "FIXED_PARSED_ARCHIVE_NOT_FRESH_HTTP",
++            "historical_export": "HISTORICAL_EXPORT_NOT_CURRENT_DENOMINATOR",
++            "current_dom": "CURRENT_VISIBLE_DOM_PARTIAL",
++        },
++        "source_refs": {
++            "archived_current_state": {"bytes": len(state_raw), "sha256": _sha(state_raw)},
++            "historical_export": {"bytes": len(historical_raw), "sha256": _sha(historical_raw)},
++            "current_dom": {"bytes": len(dom_raw), "sha256": _sha(dom_raw)},
++        },
++        "archived_target": {
++            "book_id": target.get("book_id"),
++            "directory_count_observed": len(target["directories"]),
++            "question_count_observed": len(target["questions"]),
++            "frame_count_observed": frame_count,
++            "content_states": content_states,
++            "inventory_coverage": target.get("inventory_coverage"),
++            "content_coverage": target.get("content_coverage"),
++            "raw_directory_tree_is_full_response_body": target.get(
++                "raw_directory_tree_is_full_response_body"),
++            "extra_field_names": _extra_summary(preservation),
++        },
++        "historical_export": {
++            "record_count_observed": len(historical.records),
++            "byte_exact_preserved": historical.reconstruct_bytes() == historical_raw,
++        },
++        "comparison_boundary": {
++            "same_collection_proven": False,
++            "automatic_record_join_performed": False,
++            "authoritative_old_question_denominator": None,
++            "full_old_body_coverage_proven": False,
++        },
++        "identity_candidate": candidate,
++        "credential_fields_exported": False,
++        "fresh_capture_proven": False,
++        "canonical_question_id": None,
++        "write_allowed": False,
++        "private_outputs": {
++            "archived-target.full.json": {"bytes": len(target_raw), "sha256": _sha(target_raw)},
++            "archived-target.preservation.json": {
++                "bytes": len(preservation_raw), "sha256": _sha(preservation_raw)},
++            "historical-records.full.jsonl": {
++                "bytes": len(historical_raw), "sha256": _sha(historical_raw)},
++        },
++    }
++    public_raw = (json.dumps(public, ensure_ascii=False, indent=2, allow_nan=False) +
++                  "\n").encode("utf-8")
++    (output / "public-summary.json").write_bytes(public_raw)
++
++    reread_target = _load_json((private / "archived-target.full.json").read_bytes(),
++                               "ARCHIVED_TARGET_READBACK")
++    reread_preservation = _load_json(
++        (private / "archived-target.preservation.json").read_bytes(),
++        "ARCHIVED_PRESERVATION_READBACK")
++    require(_json_same(reread_target, target) and
++            validate_preservation(reread_target, reread_preservation),
++            "ARCHIVED_TARGET_READBACK")
++    require((private / "historical-records.full.jsonl").read_bytes() == historical_raw,
++            "HISTORICAL_READBACK")
++    exported_text = target_raw.decode("utf-8") + preservation_raw.decode("utf-8") + public_raw.decode("utf-8")
++    require('"authentication"' not in exported_text and '"account_identity_fields_available"' not in exported_text,
++            "CREDENTIAL_FIELD_EXPORTED")
++    receipt = {
++        "schema": "A24ArchivedRealMaterialReadback/v1",
++        "result": "PASS_EXACT_OFFLINE_READBACK",
++        "archived_question_count": len(target["questions"]),
++        "archived_frame_count": frame_count,
++        "historical_record_count": len(historical.records),
++        "identity_candidate_status": candidate["status"],
++        "canonical_question_id": None,
++        "write_allowed": False,
++        "public_summary_sha256": _sha(public_raw),
++        "target_full_sha256": _sha(target_raw),
++        "target_preservation_sha256": _sha(preservation_raw),
++        "historical_full_sha256": _sha(historical_raw),
++    }
++    (output / "readback-receipt.json").write_text(
++        json.dumps(receipt, ensure_ascii=False, indent=2, allow_nan=False) + "\n",
++        encoding="utf-8", newline="\n")
++    return public, receipt
++
++
++def main(argv=None):
++    parser = argparse.ArgumentParser(description=__doc__)
++    parser.add_argument("--input", required=True)
++    parser.add_argument("--expected-sha256", required=True)
++    parser.add_argument("--expected-bytes", required=True, type=int)
++    parser.add_argument("--historical", required=True)
++    parser.add_argument("--historical-sha256", required=True)
++    parser.add_argument("--historical-bytes", required=True, type=int)
++    parser.add_argument("--current-dom", required=True)
++    parser.add_argument("--current-dom-sha256", required=True)
++    parser.add_argument("--current-dom-bytes", required=True, type=int)
++    parser.add_argument("--out", required=True)
++    args = parser.parse_args(argv)
++    public, receipt = run(
++        args.input, args.out, args.expected_sha256, args.expected_bytes,
++        args.historical, args.historical_sha256, args.historical_bytes,
++        args.current_dom, args.current_dom_sha256, args.current_dom_bytes)
++    print(json.dumps({
++        "status": public["status"],
++        "archived_questions": public["archived_target"]["question_count_observed"],
++        "archived_frames": public["archived_target"]["frame_count_observed"],
++        "historical_records": public["historical_export"]["record_count_observed"],
++        "identity_candidate": public["identity_candidate"]["status"],
++        "canonical_question_id": None,
++        "write_allowed": False,
++        "readback": receipt["result"],
++        "output": str(Path(args.out).resolve()),
++    }, ensure_ascii=False))
++    return 0
++
++
++if __name__ == "__main__":
++    raise SystemExit(main())
+diff --git a/tests/a24_archived_target_preservation/test_archived_target_preservation.py b/tests/a24_archived_target_preservation/test_archived_target_preservation.py
+new file mode 100644
+--- /dev/null
++++ b/tests/a24_archived_target_preservation/test_archived_target_preservation.py
+@@ -0,0 +1,223 @@
++import copy
++import hashlib
++import json
++from pathlib import Path
++import tempfile
++import unittest
++
++from annotation.quality.live_pilot import PilotError
++from annotation.runtime.live_pilot.archived_target_preservation import (
++    build_preservation,
++    run,
++    validate_preservation,
++)
++
++
++def sha(raw):
++    return hashlib.sha256(raw).hexdigest()
++
++
++class ArchivedTargetPreservationTests(unittest.TestCase):
++    def setUp(self):
++        self.temp = tempfile.TemporaryDirectory(prefix="a24-archived-target-")
++        self.root = Path(self.temp.name)
++
++    def tearDown(self):
++        self.temp.cleanup()
++
++    def fixtures(self, data_key="1792064001811"):
++        target = {
++            "book_id": "46007447",
++            "directories": [{
++                "id": "directory-1",
++                "label": "section",
++                "parent": None,
++                "raw_node_fields": {"id": "directory-1", "label": "section",
++                                    "directory_raw_extra": {"kept": True}},
++                "directory_extra": [None, ""],
++            }],
++            "questions": [{
++                "id": "1792064001811",
++                "directory_id": "directory-1",
++                "frames": [{
++                    "belong_to_level": 1,
++                    "content_type": "image",
++                    "directory_id": "directory-1",
++                    "file_id": "file-1",
++                    "image_order_in_annotation_zone": 0,
++                    "image_path_sha256": "a" * 64,
++                    "is_pre_annotation": False,
++                    "order_in_level": 1,
++                    "page_index": 0,
++                    "parent_rect_id": None,
++                    "pre_annotations_id": None,
++                    "rect_bbox": [1, 2, 3, 4],
++                    "rect_id": "rect-1",
++                    "type": "Q",
++                    "frame_extra": {"zero": 0},
++                }],
++                "frontend_derivation": None,
++                "frontend_derived_frame_candidates": [],
++                "frontend_derived_global_order": 1,
++                "frontend_derived_label": "1",
++                "order": 1,
++                "raw_label": "1",
++                "raw_node_fields": {"id": "1792064001811", "isQuestion": True,
++                                    "label": "1", "order_in_level": 1,
++                                    "question_raw_extra": False},
++                "raw_order_field_present": True,
++                "raw_order_in_level": 1,
++                "raw_order_status": "PRESENT",
++                "content": {"status": "UNKNOWN", "reason": "NOT_FETCHED", "text": None,
++                            "content_extra": "retain"},
++                "question_extra": {"nested": [0, None]},
++            }],
++            "inventory_coverage": "PARTIAL",
++            "content_coverage": "UNKNOWN",
++            "raw_directory_tree_is_full_response_body": False,
++            "target_extra": {"first": 1, "second": 2},
++        }
++        state = {
++            "authentication": {"token": "DO-NOT-EXPORT-SECRET"},
++            "account_identity_fields_available": ["username"],
++            "target": target,
++        }
++        historical_records = [
++            {"question": "old-1", "option": ["B", "A"], "answer": "A"},
++            {"question": "old-2", "option": [], "answer": "D"},
++        ]
++        historical_raw = b"\n".join(
++            json.dumps(item, ensure_ascii=False, separators=(",", ":")).encode("utf-8")
++            for item in historical_records
++        )
++        dom = {"matches": [{"dataKey": data_key, "label": "1"}]}
++        state_raw = (json.dumps(state, ensure_ascii=False) + "\n").encode("utf-8")
++        dom_raw = (json.dumps(dom, ensure_ascii=False) + "\n").encode("utf-8")
++        state_path = self.root / "current-state.json"
++        historical_path = self.root / "historical.jsonl"
++        dom_path = self.root / "current-dom.json"
++        state_path.write_bytes(state_raw)
++        historical_path.write_bytes(historical_raw)
++        dom_path.write_bytes(dom_raw)
++        return target, (state_path, state_raw), (historical_path, historical_raw), (dom_path, dom_raw)
++
++    def invoke(self, data_key="1792064001811", output_name="out"):
++        target, state, historical, dom = self.fixtures(data_key)
++        public, receipt = run(
++            state[0], self.root / output_name, sha(state[1]), len(state[1]),
++            historical[0], sha(historical[1]), len(historical[1]),
++            dom[0], sha(dom[1]), len(dom[1]),
++        )
++        return target, state, historical, dom, public, receipt
++
++    def test_unknown_fields_roundtrip_and_credentials_are_not_exported(self):
++        target, _, historical, _, public, receipt = self.invoke()
++        output = self.root / "out"
++        exported = (output / "private" / "archived-target.full.json").read_text("utf-8")
++        preservation = json.loads(
++            (output / "private" / "archived-target.preservation.json").read_text("utf-8"))
++        self.assertEqual(json.loads(exported), target)
++        self.assertTrue(validate_preservation(target, preservation))
++        self.assertNotIn("DO-NOT-EXPORT-SECRET", exported)
++        self.assertNotIn('"authentication"', exported)
++        self.assertEqual(
++            (output / "private" / "historical-records.full.jsonl").read_bytes(),
++            historical[1],
++        )
++        extras = public["archived_target"]["extra_field_names"]
++        self.assertEqual(extras["target"], ["target_extra"])
++        self.assertEqual(extras["question"], ["question_extra"])
++        self.assertEqual(extras["question_raw_node"], ["question_raw_extra"])
++        self.assertEqual(extras["content"], ["content_extra"])
++        self.assertEqual(extras["frame"], ["frame_extra"])
++        self.assertEqual(extras["directory"], ["directory_extra"])
++        self.assertEqual(extras["directory_raw_node"], ["directory_raw_extra"])
++        self.assertEqual(public["identity_candidate"]["archived_match_count"], 1)
++        self.assertIsNone(public["canonical_question_id"])
++        self.assertFalse(public["write_allowed"])
++        self.assertIsNone(public["comparison_boundary"]["authoritative_old_question_denominator"])
++        self.assertEqual(receipt["result"], "PASS_EXACT_OFFLINE_READBACK")
++
++    def test_deleting_nested_extra_from_projection_is_a_hard_failure(self):
++        target, *_ = self.fixtures()
++        for key in ("target_extra", "question_extra", "frame_extra"):
++            with self.subTest(key=key):
++                damaged = build_preservation(target)
++                if key == "target_extra":
++                    del damaged["target"]["extra_fields"][key]
++                elif key == "question_extra":
++                    del damaged["questions"][0]["object"]["extra_fields"][key]
++                else:
++                    del damaged["questions"][0]["frames"][0]["extra_fields"][key]
++                with self.assertRaises(PilotError) as caught:
++                    validate_preservation(target, damaged)
++                self.assertEqual(caught.exception.code, "ARCHIVED_TARGET_LOSS")
++
++    def test_nested_zero_to_false_is_not_equal(self):
++        target, *_ = self.fixtures()
++        damaged = build_preservation(target)
++        nested = damaged["questions"][0]["object"]["extra_fields"]["question_extra"]
++        self.assertEqual(nested["nested"][0], 0)
++        nested["nested"][0] = False
++        with self.assertRaises(PilotError) as caught:
++            validate_preservation(target, damaged)
++        self.assertEqual(caught.exception.code, "ARCHIVED_TARGET_LOSS")
++
++    def test_nested_object_key_order_swap_is_not_equal(self):
++        target, *_ = self.fixtures()
++        damaged = build_preservation(target)
++        damaged["target"]["extra_fields"]["target_extra"] = {
++            "second": 2,
++            "first": 1,
++        }
++        with self.assertRaises(PilotError) as caught:
++            validate_preservation(target, damaged)
++        self.assertEqual(caught.exception.code, "ARCHIVED_TARGET_LOSS")
++
++    def test_duplicate_original_field_order_rejects(self):
++        target, *_ = self.fixtures()
++        damaged = build_preservation(target)
++        damaged["target"]["original_field_order"].append("book_id")
++        with self.assertRaises(PilotError) as caught:
++            validate_preservation(target, damaged)
++        self.assertEqual(caught.exception.code, "ARCHIVED_TARGET_LOSS")
++
++    def test_printed_number_is_never_used_as_identity_join(self):
++        _, _, _, _, public, _ = self.invoke(data_key="1")
++        identity = public["identity_candidate"]
++        self.assertEqual(identity["status"], "HOLD_NO_UNIQUE_ARCHIVED_NODE_MATCH")
++        self.assertEqual(identity["archived_match_count"], 0)
++        self.assertIsNone(identity["archived_question_id"])
++        self.assertFalse(identity["same_number_join_used"])
++        self.assertIsNone(identity["canonical_question_id"])
++
++    def test_wrong_current_state_sha_fails_before_output_creation(self):
++        _, state, historical, dom = self.fixtures()
++        output = self.root / "must-not-exist"
++        with self.assertRaises(PilotError) as caught:
++            run(
++                state[0], output, "0" * 64, len(state[1]),
++                historical[0], sha(historical[1]), len(historical[1]),
++                dom[0], sha(dom[1]), len(dom[1]),
++            )
++        self.assertEqual(caught.exception.code, "ARCHIVED_CURRENT_STATE_BYTES")
++        self.assertFalse(output.exists())
++
++    def test_duplicate_key_rejects_before_output_creation(self):
++        _, _, historical, dom = self.fixtures()
++        raw = b'{"target":{},"target":{}}'
++        source = self.root / "duplicate.json"
++        source.write_bytes(raw)
++        output = self.root / "duplicate-out"
++        with self.assertRaises(PilotError) as caught:
++            run(
++                source, output, sha(raw), len(raw),
++                historical[0], sha(historical[1]), len(historical[1]),
++                dom[0], sha(dom[1]), len(dom[1]),
++            )
++        self.assertEqual(caught.exception.code, "ARCHIVED_JSON_DUPLICATE_KEY")
++        self.assertFalse(output.exists())
++
++
++if __name__ == "__main__":
++    unittest.main()

@@ -1,0 +1,25 @@
+diff --git a/src/annotation/runtime/live_pilot/owner.py b/src/annotation/runtime/live_pilot/owner.py
+--- a/src/annotation/runtime/live_pilot/owner.py
++++ b/src/annotation/runtime/live_pilot/owner.py
+@@ -442,13 +442,14 @@ async def acquire_current_schema(authority, page, context, guard, binding):
+         require(response["http_status"] == 200, "OWNER_FIRST_SAVE_BLOCKED")
+         raw = response["body"].encode("utf-8")
+         observation = {"slot": slot, "path_template": path, "query_keys": sorted(params),
+-                       "http_status": 200, "bytes": len(raw), "sha256": sha(raw)}
+-        if slot in ("directory", "frames", "export"):
+-            private = authority.output / "private" / (slot + "-snapshot.bin")
+-            private.parent.mkdir(parents=True, exist_ok=True)
+-            with private.open("xb") as handle:
+-                handle.write(raw)
+-            observation["controlled_raw_ref"] = {"path": str(private), "sha256": sha(raw), "bytes": len(raw)}
++                       "http_status": 200, "bytes": len(raw), "sha256": sha(raw),
++                       "capture_representation": "UTF8_REENCODED_RESPONSE_TEXT"}
++        private = authority.output / "private" / (slot + "-snapshot.bin")
++        private.parent.mkdir(parents=True, exist_ok=True)
++        with private.open("xb") as handle:
++            handle.write(raw)
++        observation["controlled_raw_ref"] = {"path": str(private), "sha256": sha(raw), "bytes": len(raw),
++                                              "capture_representation": "UTF8_REENCODED_RESPONSE_TEXT"}
+         # Unknown server fields remain private; no synthetic completeness row is added.
+         result["reads"].append(observation)
+     return result

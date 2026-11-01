@@ -1,0 +1,114 @@
+"""Verify a one-use, operator-signed grant for one whole-book insertion plan.
+
+The private key and issuer are deliberately outside the customer application.
+Only this pinned RSA-3072 public key ships with the Windows product.  A local
+checkbox, editable scope, or unsigned JSON cannot create a grant.
+"""
+from __future__ import annotations
+
+import base64
+from datetime import datetime, timedelta, timezone
+import hashlib
+import hmac
+import json
+import re
+from pathlib import Path
+
+from .store import Hold, digest
+
+
+# V10 delivery key. The private XML remains outside the repository and bundle.
+PUBLIC_MODULUS_B64 = (
+    "lnLfyOFJvoCEg3h01RRwgfrPqxGFNUuy8cC1/OVgP0rIXcYt1yXIQxrB/gkooM/"
+    "77NrrPqXv+abTWkQ6Cc+arZX4YpVg9v02Dogw8zYcd42oWtXUG8LbPxQ9DRDbMoFT2zHOWe+yx2hbttF9w4t9tVb3jwqsNcuHvMmRXEcPrg2yUmUGKX3s1xwNMIcOvrvO0EEqi/MTEMmaz7k4KtXP39Krz8mfK6nyA391/V2tGtTFo/AMa3tkk0e7MmsR4pTkZtpRsXnRcM2tKjBCumWRS+JHNDQoEQgJHxqU6C1oRFq0ogyFhZEzrSwt+l28jY0KT5YTyABvNWxr1BZeUgyt/6QekiqZlzBKz83iPQfYiCgP3A1eGEfp9ouBCqyxkwc1Oa6UNeS280FwJ1PvLNYL77/hfF8nEU6+MqcJnkhNWcFk0gqSYyLf9/4E4wEYr1/aCgg21urA+bLG+iOK5/fFsqCyR0qd1GFKICjrswLW4kY40Qx8xTm4nrb4LdL+x5J1"
+)
+PUBLIC_EXPONENT_B64 = "AQAB"
+_SHA256_DIGEST_INFO = bytes.fromhex("3031300d060960864801650304020105000420")
+_HEX64 = re.compile(r"[0-9a-f]{64}\Z")
+_SESSION = re.compile(r"[A-Za-z0-9][A-Za-z0-9_.:-]{7,127}\Z")
+_NONCE = re.compile(r"[0-9a-f]{32}\Z")
+
+
+def canonical_payload(payload):
+    return json.dumps(payload, ensure_ascii=False, sort_keys=True,
+                      separators=(",", ":"), allow_nan=False).encode("utf-8")
+
+
+def _verify_rsa_sha256(message, signature):
+    """Strict PKCS#1 v1.5 SHA-256 verification with a pinned public key.
+
+    RSA signing and key generation use Windows .NET, not this verifier.  The
+    encoded block is compared in full, including the DigestInfo and all FFs.
+    """
+    modulus = base64.b64decode(PUBLIC_MODULUS_B64, validate=True)
+    exponent = base64.b64decode(PUBLIC_EXPONENT_B64, validate=True)
+    n, e = int.from_bytes(modulus, "big"), int.from_bytes(exponent, "big")
+    size = len(modulus)
+    if size < 384 or e != 65537 or len(signature) != size:
+        return False
+    value = int.from_bytes(signature, "big")
+    if value <= 0 or value >= n:
+        return False
+    observed = pow(value, e, n).to_bytes(size, "big")
+    tail = _SHA256_DIGEST_INFO + hashlib.sha256(message).digest()
+    padding = size - len(tail) - 3
+    if padding < 8:
+        return False
+    expected = b"\x00\x01" + b"\xff" * padding + b"\x00" + tail
+    return hmac.compare_digest(observed, expected)
+
+
+def load_and_verify(grant_file, *, report_ref, report, job_id, job_head,
+                    executor_session_id, now=None):
+    """Check signed exact scope and short validity; never consume the nonce."""
+    path = Path(grant_file) if grant_file is not None else None
+    if path is None or not path.is_absolute() or not path.is_file():
+        raise Hold("缺少本会话操作员签发的精确范围授权文件。")
+    try:
+        raw = path.read_bytes()
+        if len(raw) > 16_384:
+            raise ValueError("oversize")
+        grant = json.loads(raw)
+        payload = grant["payload"]
+        signature = base64.b64decode(grant["signature_b64"], validate=True)
+    except (OSError, ValueError, TypeError, KeyError) as exc:
+        raise Hold("授权文件格式或签名无效。") from exc
+    if (type(grant) is not dict or set(grant) != {"schema", "payload", "signature_b64"} or
+            grant["schema"] != "CustomerWholebookOperatorGrant/v1" or
+            type(payload) is not dict or
+            set(payload) != {"schema", "plan_ref", "plan_hash", "book_id", "job_id",
+                             "job_head", "directory_id", "directory_path", "entries",
+                             "executor_session_id", "conversation_id", "approval_event_id",
+                             "nonce", "issued_at", "expires_at"} or
+            payload["schema"] != "CustomerWholebookOperatorGrantPayload/v1" or
+            type(payload["nonce"]) is not str or not _NONCE.fullmatch(payload["nonce"]) or
+            type(payload["executor_session_id"]) is not str or
+            not _SESSION.fullmatch(payload["executor_session_id"]) or
+            type(payload["conversation_id"]) is not str or not payload["conversation_id"] or
+            type(payload["approval_event_id"]) is not str or not payload["approval_event_id"] or
+            type(payload["plan_ref"]) is not str or not _HEX64.fullmatch(payload["plan_ref"]) or
+            type(payload["plan_hash"]) is not str or not _HEX64.fullmatch(payload["plan_hash"]) or
+            not _verify_rsa_sha256(canonical_payload(payload), signature)):
+        raise Hold("授权签名、会话或精确范围格式无效。")
+    expected_entries = [{name: entry[name] for name in
+                         ("candidate_key", "source_instance_id", "source_key", "content_hash")}
+                        for entry in report["entries"]]
+    if (payload["plan_ref"] != report_ref or payload["plan_hash"] != digest(report) or
+            payload["book_id"] != report["book_id"] or
+            payload["job_id"] != job_id or payload["job_head"] != job_head or
+            payload["directory_id"] != report["directory_id"] or
+            payload["directory_path"] != report["directory_path"] or
+            payload["entries"] != expected_entries or
+            payload["executor_session_id"] != executor_session_id):
+        raise Hold("授权与当前书籍、任务、执行会话或逐题计划不一致。")
+    try:
+        issued = datetime.fromisoformat(payload["issued_at"])
+        expires = datetime.fromisoformat(payload["expires_at"])
+    except (TypeError, ValueError) as exc:
+        raise Hold("授权有效期无效。") from exc
+    current = now or datetime.now(timezone.utc)
+    if (issued.tzinfo is None or expires.tzinfo is None or current.tzinfo is None or
+            expires - issued > timedelta(hours=1) or expires <= issued or
+            issued > current + timedelta(minutes=2) or current >= expires):
+        raise Hold("授权未生效或已过期；不能写入。")
+    return payload

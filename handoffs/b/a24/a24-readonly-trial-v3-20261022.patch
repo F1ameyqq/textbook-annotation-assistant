@@ -1,0 +1,444 @@
+diff --git a/src/annotation/runtime/live_pilot/readonly_trial.py b/src/annotation/runtime/live_pilot/readonly_trial.py
+new file mode 100644
+--- /dev/null
++++ b/src/annotation/runtime/live_pilot/readonly_trial.py
+@@ -0,0 +1,300 @@
++"""Bounded read-only A24 record adaptation and local readback.
++
++This module does not confer platform identity or write eligibility.  It reuses
++the byte-exact JSONL preservation layer and emits private full-value artifacts
++plus a value-free public receipt.
++"""
++import argparse
++import copy
++import hashlib
++import json
++from pathlib import Path
++
++from annotation.quality.live_pilot import require
++from annotation.runtime.live_pilot.historical_preservation import (
++    HistoricalArchive,
++    load_historical_original,
++)
++from annotation.runtime.storage.common import digest
++
++
++SOURCE_TYPES = {"HISTORICAL_EXPORT", "CURRENT_RAW_RECORD"}
++MAPPED_FIELDS = ("question", "option", "answer")
++EXPECTED_PRECHECK_ERRORS = (
++    ("1", "choice", "tishi 为 xuanze/duoxuan 时 choice 必填"),
++    ("2", "choice", "tishi 为 xuanze/duoxuan 时 choice 必填"),
++    ("7", "question", "question 不能为空"),
++    ("7", "answer", "answer 不能为空"),
++    ("7", "choice", "tishi 为 xuanze/duoxuan 时 choice 必填"),
++    ("19", "question", "question 不能为空"),
++    ("19", "answer", "answer 不能为空"),
++    ("22", "question", "question 不能为空"),
++    ("22", "answer", "answer 不能为空"),
++)
++
++
++def _sha(raw):
++    return hashlib.sha256(raw).hexdigest()
++
++
++def _json_type(value):
++    if value is None:
++        return "null"
++    if type(value) is bool:
++        return "boolean"
++    if type(value) is int:
++        return "integer"
++    if isinstance(value, str):
++        return "string"
++    if isinstance(value, list):
++        return "array"
++    if isinstance(value, dict):
++        return "object"
++    require(False, "READONLY_FIELD_TYPE", type(value).__name__)
++
++
++def _field_evidence(record, field_name):
++    if field_name not in record:
++        return {"state": "MISSING", "value_type": None, "value_sha256": None}
++    value = record[field_name]
++    value_type = _json_type(value)
++    if value is None:
++        state = "NULL"
++    elif ((isinstance(value, str) and value == "") or
++          (isinstance(value, (list, dict)) and len(value) == 0)):
++        state = "EMPTY"
++    else:
++        state = "PRESENT"
++    return {
++        "state": state,
++        "value_type": value_type,
++        "value_sha256": digest({"type": value_type, "value": value}),
++    }
++
++
++def _adapt_record(preserved, record, source_type):
++    mapped = {name: copy.deepcopy(record[name]) for name in MAPPED_FIELDS if name in record}
++    extra = {name: copy.deepcopy(value) for name, value in record.items()
++             if name not in MAPPED_FIELDS}
++    reconstructed = {}
++    for name in record:
++        reconstructed[name] = copy.deepcopy(mapped[name] if name in mapped else extra[name])
++    require(reconstructed == record, "READONLY_ADAPTER_ROUNDTRIP")
++    return {
++        "schema": "A24ReadonlyAdaptedRecord/v1",
++        "source_type": source_type,
++        "local_source_line": preserved.line_number,
++        "line_identity": preserved.line_identity,
++        "canonical_question_id": None,
++        "write_allowed": False,
++        "original_field_order": list(record),
++        "mapped_fields": mapped,
++        "extra_fields": extra,
++        "field_states": {name: _field_evidence(record, name)["state"]
++                         for name in MAPPED_FIELDS},
++    }
++
++
++def load_precheck_diagnosis(path, expected_sha256, expected_bytes):
++    """Load the frozen v3 visible-UI precheck without inferring field contents."""
++    raw = Path(path).read_bytes()
++    require(len(raw) == expected_bytes and _sha(raw) == expected_sha256,
++            "PRECHECK_SOURCE_BYTES")
++    try:
++        value = json.loads(raw.decode("utf-8"))
++    except (UnicodeDecodeError, json.JSONDecodeError) as exc:
++        require(False, "PRECHECK_SOURCE_JSON", type(exc).__name__)
++    require(isinstance(value, dict) and value.get("schema") ==
++            "A24CurrentPlatformObservations/v3", "PRECHECK_SOURCE_SCHEMA")
++    reconciliation = value.get("export_questions_reconciliation")
++    require(isinstance(reconciliation, dict), "PRECHECK_SOURCE_SCHEMA")
++    errors = reconciliation.get("errors")
++    observed = tuple((item.get("importShitiID"), item.get("field"), item.get("message"))
++                     for item in errors) if isinstance(errors, list) else ()
++    require(observed == EXPECTED_PRECHECK_ERRORS and
++            reconciliation.get("error_count") == 9 and
++            reconciliation.get("warning_count") == 0,
++            "PRECHECK_ERROR_LEDGER")
++    dom = next((item for item in value.get("artifacts", [])
++                if item.get("collection_method") == "DOM_SNAPSHOT_TEXT"), None)
++    require(isinstance(dom, dict) and isinstance(dom.get("sha256"), str) and
++            type(dom.get("bytes")) is int, "PRECHECK_DOM_REF")
++    return {
++        "schema": "A24CurrentPrecheckDiagnosis/v1",
++        "evidence_type": "CURRENT_DOM",
++        "source": {"sha256": expected_sha256, "bytes": expected_bytes},
++        "dom_source": {"sha256": dom["sha256"], "bytes": dom["bytes"],
++                       "representation": "DOM_SNAPSHOT_TEXT"},
++        "error_count": 9,
++        "warning_count": 0,
++        "errors": [{
++            "sequence": index,
++            "importShitiID": import_id,
++            "field": field,
++            "message": message,
++            "underlying_field_state": "UNOBSERVED",
++            "missing": None,
++            "null": None,
++            "empty": None,
++        } for index, (import_id, field, message) in enumerate(observed, 1)],
++        "identity_boundary": "importShitiID_IS_VISIBLE_VALUE_NOT_SERVER_QUESTION_ID",
++        "write_allowed": False,
++    }
++
++
++def _selected_records(archive, source_type, source_line):
++    require(isinstance(archive, HistoricalArchive), "READONLY_ARCHIVE")
++    if source_type == "CURRENT_RAW_RECORD":
++        require(len(archive.records) == 1 and source_line in (None, 1),
++                "CURRENT_RECORD_CARDINALITY")
++        return list(archive.records)
++    if source_line is None:
++        return list(archive.records)
++    require(type(source_line) is int and source_line > 0, "READONLY_SOURCE_LINE")
++    selected = [record for record in archive.records if record.line_number == source_line]
++    require(len(selected) == 1, "READONLY_SOURCE_LINE")
++    return selected
++
++
++def _prepare_output_dir(path):
++    output = Path(path)
++    if output.exists():
++        require(output.is_dir() and not output.is_symlink() and not any(output.iterdir()),
++                "READONLY_OUTPUT_DIR")
++    else:
++        output.mkdir(parents=True)
++    private = output / "private"
++    private.mkdir()
++    return output, private
++
++
++def run_readonly_trial(input_path, output_dir, expected_sha256, expected_bytes,
++                       source_type, source_line=None, precheck=None):
++    """Adapt records locally, emit artifacts, and immediately read them back."""
++    require(source_type in SOURCE_TYPES, "READONLY_SOURCE_TYPE")
++    archive = load_historical_original(input_path, expected_sha256, expected_bytes)
++    selected = _selected_records(archive, source_type, source_line)
++    diagnosis = None
++    if precheck is not None:
++        diagnosis = load_precheck_diagnosis(
++            precheck["path"], precheck["sha256"], precheck["bytes"])
++    output, private = _prepare_output_dir(output_dir)
++
++    raw_output = b"".join(record.raw_span for record in selected)
++    raw_path = private / "records.full.jsonl"
++    raw_path.write_bytes(raw_output)
++    adapted = [_adapt_record(record, record.value(), source_type) for record in selected]
++    adapted_raw = (json.dumps(adapted, ensure_ascii=False, indent=2) + "\n").encode("utf-8")
++    adapted_path = private / "records.adapted.json"
++    adapted_path.write_bytes(adapted_raw)
++
++    public = {
++        "schema": "A24ReadonlyTrial/v1",
++        "status": "READ_ONLY_LOCAL_ROUNDTRIP_COMPLETE_IDENTITY_UNBOUND",
++        "source_type": source_type,
++        "source_type_basis": "CALLER_DECLARED",
++        "fresh_capture_proven": False,
++        "http_status": "UNKNOWN",
++        "canonical_question_id": None,
++        "write_allowed": False,
++        "source": {"sha256": archive.source_sha256, "bytes": archive.source_bytes,
++                   "representation": "UTF8_JSONL"},
++        "selection": {"kind": "ALL_RECORDS" if source_line is None else "LOCAL_SOURCE_LINE",
++                      "local_source_line": source_line},
++        "record_count": len(selected),
++        "records": [{
++            "local_source_line": preserved.line_number,
++            "line_identity": preserved.line_identity,
++            "canonical_question_id": None,
++            "raw_byte_ref": preserved.byte_reference(archive.source_sha256),
++            "field_evidence": {name: _field_evidence(record, name)
++                               for name in MAPPED_FIELDS},
++            "field_names": list(record),
++        } for preserved, record in zip(selected, (item.value() for item in selected))],
++        "private_outputs": {
++            "records.full.jsonl": {"bytes": len(raw_output), "sha256": _sha(raw_output)},
++            "records.adapted.json": {"bytes": len(adapted_raw), "sha256": _sha(adapted_raw)},
++        },
++        "precheck_diagnosis": diagnosis,
++        "limits": [
++            "LOCAL_SOURCE_LINE_IS_NOT_QUESTION_ID",
++            "VALUE_HASH_IS_NOT_IDENTITY",
++            "NO_AUTOMATIC_JOIN_TO_DOM_OR_HISTORY_NUMBER",
++            "NO_PLATFORM_READ_OR_WRITE",
++        ],
++    }
++    public_raw = (json.dumps(public, ensure_ascii=False, indent=2) + "\n").encode("utf-8")
++    public_path = output / "public-summary.json"
++    public_path.write_bytes(public_raw)
++
++    # Independent file readback: hashes, exact selected bytes, adapted content,
++    # and the value-free public summary are all re-read from disk.
++    reread_raw = raw_path.read_bytes()
++    reread_adapted_raw = adapted_path.read_bytes()
++    reread_public_raw = public_path.read_bytes()
++    require(reread_raw == raw_output and _sha(reread_raw) ==
++            public["private_outputs"]["records.full.jsonl"]["sha256"],
++            "READBACK_RAW_MISMATCH")
++    require(_sha(reread_adapted_raw) ==
++            public["private_outputs"]["records.adapted.json"]["sha256"],
++            "READBACK_ADAPTED_MISMATCH")
++    require(json.loads(reread_adapted_raw.decode("utf-8")) == adapted,
++            "READBACK_ADAPTED_MISMATCH")
++    require(json.loads(reread_public_raw.decode("utf-8")) == public,
++            "READBACK_PUBLIC_MISMATCH")
++    receipt = {
++        "schema": "A24ReadonlyReadbackReceipt/v1",
++        "result": "PASS_EXACT_LOCAL_READBACK",
++        "source_type": source_type,
++        "record_count": len(selected),
++        "canonical_question_id": None,
++        "write_allowed": False,
++        "public_summary_sha256": _sha(reread_public_raw),
++        "private_full_sha256": _sha(reread_raw),
++        "private_adapted_sha256": _sha(reread_adapted_raw),
++    }
++    receipt_path = output / "readback-receipt.json"
++    receipt_path.write_text(json.dumps(receipt, ensure_ascii=False, indent=2) + "\n",
++                            encoding="utf-8", newline="\n")
++    return public, receipt
++
++
++def _parser():
++    parser = argparse.ArgumentParser(
++        description="A24 read-only JSONL adapter with exact local readback")
++    parser.add_argument("--input", required=True)
++    parser.add_argument("--out", required=True)
++    parser.add_argument("--source-type", required=True, choices=sorted(SOURCE_TYPES))
++    parser.add_argument("--expected-sha256", required=True)
++    parser.add_argument("--expected-bytes", required=True, type=int)
++    parser.add_argument("--line", type=int, default=None,
++                        help="local JSONL line only; never a question identity")
++    parser.add_argument("--precheck-observation")
++    parser.add_argument("--precheck-sha256")
++    parser.add_argument("--precheck-bytes", type=int)
++    return parser
++
++
++def main(argv=None):
++    args = _parser().parse_args(argv)
++    supplied = (args.precheck_observation, args.precheck_sha256, args.precheck_bytes)
++    require(all(item is None for item in supplied) or all(item is not None for item in supplied),
++            "PRECHECK_SOURCE_REF")
++    precheck = None if supplied[0] is None else {
++        "path": supplied[0], "sha256": supplied[1], "bytes": supplied[2]}
++    public, receipt = run_readonly_trial(
++        args.input, args.out, args.expected_sha256, args.expected_bytes,
++        args.source_type, args.line, precheck)
++    print(json.dumps({
++        "status": public["status"],
++        "source_type": public["source_type"],
++        "record_count": public["record_count"],
++        "write_allowed": False,
++        "readback": receipt["result"],
++        "output": str(Path(args.out).resolve()),
++    }, ensure_ascii=False))
++    return 0
++
++
++if __name__ == "__main__":
++    raise SystemExit(main())
+diff --git a/tests/a24_readonly_trial/test_readonly_trial.py b/tests/a24_readonly_trial/test_readonly_trial.py
+new file mode 100644
+--- /dev/null
++++ b/tests/a24_readonly_trial/test_readonly_trial.py
+@@ -0,0 +1,134 @@
++import hashlib
++import json
++from pathlib import Path
++import tempfile
++import unittest
++
++from annotation.quality.live_pilot import PilotError
++from annotation.runtime.live_pilot.readonly_trial import (
++    _field_evidence,
++    load_precheck_diagnosis,
++    run_readonly_trial,
++)
++
++
++def sha(raw):
++    return hashlib.sha256(raw).hexdigest()
++
++
++class ReadonlyTrialTests(unittest.TestCase):
++    def setUp(self):
++        self.temp = tempfile.TemporaryDirectory(prefix="a24-readonly-")
++        self.root = Path(self.temp.name)
++
++    def tearDown(self):
++        self.temp.cleanup()
++
++    def source(self, records):
++        raw = "\n".join(json.dumps(item, ensure_ascii=False, separators=(",", ":"))
++                        for item in records).encode("utf-8")
++        path = self.root / "source.jsonl"
++        path.write_bytes(raw)
++        return path, raw
++
++    def test_historical_adapter_preserves_mapped_values_extras_and_reads_back(self):
++        records = [
++            {"question": "Q1", "option": ["B", "A"], "answer": "A",
++             "extra": {"null": None, "empty": ""}},
++            {"question": " ", "option": [], "answer": False, "count": 0},
++        ]
++        path, raw = self.source(records)
++        public, receipt = run_readonly_trial(
++            path, self.root / "out", sha(raw), len(raw), "HISTORICAL_EXPORT")
++        self.assertEqual(public["record_count"], 2)
++        self.assertEqual(public["source_type"], "HISTORICAL_EXPORT")
++        self.assertEqual(public["source_type_basis"], "CALLER_DECLARED")
++        self.assertIs(public["canonical_question_id"], None)
++        self.assertIs(public["write_allowed"], False)
++        self.assertEqual(receipt["result"], "PASS_EXACT_LOCAL_READBACK")
++        self.assertEqual((self.root / "out/private/records.full.jsonl").read_bytes(), raw)
++        adapted = json.loads((self.root / "out/private/records.adapted.json").read_text("utf-8"))
++        self.assertEqual(adapted[0]["mapped_fields"], {
++            "question": "Q1", "option": ["B", "A"], "answer": "A"})
++        self.assertEqual(adapted[0]["extra_fields"], {"extra": {"null": None, "empty": ""}})
++        self.assertEqual(adapted[1]["field_states"], {
++            "question": "PRESENT", "option": "EMPTY", "answer": "PRESENT"})
++
++    def test_field_states_do_not_collapse_missing_null_empty_or_present(self):
++        record = {"null": None, "empty_s": "", "empty_a": [], "empty_o": {},
++                  "space": " ", "zero": 0, "false": False}
++        self.assertEqual(_field_evidence(record, "missing")["state"], "MISSING")
++        self.assertEqual(_field_evidence(record, "null")["state"], "NULL")
++        for name in ("empty_s", "empty_a", "empty_o"):
++            self.assertEqual(_field_evidence(record, name)["state"], "EMPTY")
++        for name in ("space", "zero", "false"):
++            self.assertEqual(_field_evidence(record, name)["state"], "PRESENT")
++
++    def test_current_mode_requires_exactly_one_record(self):
++        path, raw = self.source([{"question": "Q1"}, {"question": "Q2"}])
++        with self.assertRaises(PilotError) as caught:
++            run_readonly_trial(path, self.root / "out", sha(raw), len(raw),
++                               "CURRENT_RAW_RECORD")
++        self.assertEqual(caught.exception.code, "CURRENT_RECORD_CARDINALITY")
++
++    def test_invalid_precheck_rejects_before_output_creation(self):
++        path, raw = self.source([{"question": "Q1", "option": [], "answer": "A"}])
++        invalid = {"schema": "A24CurrentPlatformObservations/v3",
++                   "export_questions_reconciliation": {
++                       "error_count": 9, "warning_count": 0, "errors": []}}
++        precheck_raw = json.dumps(invalid).encode("utf-8")
++        precheck_path = self.root / "invalid-precheck.json"
++        precheck_path.write_bytes(precheck_raw)
++        out = self.root / "out"
++        with self.assertRaises(PilotError) as caught:
++            run_readonly_trial(path, out, sha(raw), len(raw), "HISTORICAL_EXPORT",
++                               precheck={"path": precheck_path,
++                                         "sha256": sha(precheck_raw),
++                                         "bytes": len(precheck_raw)})
++        self.assertEqual(caught.exception.code, "PRECHECK_ERROR_LEDGER")
++        self.assertFalse(out.exists())
++        self.assertEqual(path.read_bytes(), raw)
++
++    def test_local_line_selection_is_explicit_and_identity_remains_null(self):
++        path, raw = self.source([{"question": "Q1"}, {"question": "Q2"}])
++        public, _ = run_readonly_trial(
++            path, self.root / "out", sha(raw), len(raw), "HISTORICAL_EXPORT", 2)
++        self.assertEqual(public["selection"], {
++            "kind": "LOCAL_SOURCE_LINE", "local_source_line": 2})
++        self.assertIs(public["records"][0]["canonical_question_id"], None)
++        self.assertIn("NO_AUTOMATIC_JOIN_TO_DOM_OR_HISTORY_NUMBER", public["limits"])
++
++    def test_precheck_diagnosis_keeps_underlying_field_state_unobserved(self):
++        errors = [
++            {"importShitiID": qid, "field": field, "message": message}
++            for qid, field, message in (
++                ("1", "choice", "tishi 为 xuanze/duoxuan 时 choice 必填"),
++                ("2", "choice", "tishi 为 xuanze/duoxuan 时 choice 必填"),
++                ("7", "question", "question 不能为空"),
++                ("7", "answer", "answer 不能为空"),
++                ("7", "choice", "tishi 为 xuanze/duoxuan 时 choice 必填"),
++                ("19", "question", "question 不能为空"),
++                ("19", "answer", "answer 不能为空"),
++                ("22", "question", "question 不能为空"),
++                ("22", "answer", "answer 不能为空"),
++            )]
++        value = {
++            "schema": "A24CurrentPlatformObservations/v3",
++            "export_questions_reconciliation": {
++                "error_count": 9, "warning_count": 0, "errors": errors},
++            "artifacts": [{"collection_method": "DOM_SNAPSHOT_TEXT",
++                           "bytes": 20487, "sha256": "0" * 64}],
++        }
++        raw = json.dumps(value, ensure_ascii=False).encode("utf-8")
++        path = self.root / "v3.json"
++        path.write_bytes(raw)
++        diagnosis = load_precheck_diagnosis(path, sha(raw), len(raw))
++        self.assertEqual(diagnosis["error_count"], 9)
++        self.assertTrue(all(item["underlying_field_state"] == "UNOBSERVED" and
++                            item["missing"] is None and item["null"] is None and
++                            item["empty"] is None for item in diagnosis["errors"]))
++        self.assertIn("NOT_SERVER_QUESTION_ID", diagnosis["identity_boundary"])
++
++
++if __name__ == "__main__":
++    unittest.main()

@@ -1,0 +1,318 @@
+{
+  "schema": "a24-runtime-preservation-publication/3",
+  "date": "2026-10-22",
+  "B_input": "9d4c0fc78ca5176d30d2661283a60897748740e8",
+  "A24_source": "c5aefbc8e995c410b3babf74a251f05a7724a1c2",
+  "status": "PASS_OFFLINE_ENGINEERING_INCREMENT_BOUNDED",
+  "private_frozen_candidate_sha256": "3bfdced673694f848fece63383107fc615d4c5bfc7f870addff3996078928f67",
+  "runtime_package": {
+    "path": "handoffs/b/a24/a24-runtime-preservation-v3-20261022.zip",
+    "bytes": 506731,
+    "sha256": "2f97801dc13bc040b1eefb97b02932c2c7cbfee887297eedf579cd6998c52638",
+    "members_including_manifest": 128,
+    "source_files": 115,
+    "private_business_inputs": false
+  },
+  "source_changes": [
+    {
+      "path": "src/annotation/delivery/live_pilot/usense.py",
+      "status": "changed",
+      "sha256": "7fc37bc10a125644d93178d705ae1948918f74f56f40bc0b251899ccbc529f6f"
+    },
+    {
+      "path": "src/annotation/delivery/live_pilot/wire.py",
+      "status": "changed",
+      "sha256": "282749ab5111c7a69737070827e89fd74b8b6ff991a3956181e44a6693a9b95b"
+    },
+    {
+      "path": "src/annotation/quality/live_pilot.py",
+      "status": "changed",
+      "sha256": "435698ce3b7f04c199c325bc08245622f09d49981d2b2655307e8d0365943217"
+    },
+    {
+      "path": "src/annotation/runtime/live_pilot/runner.py",
+      "status": "changed",
+      "sha256": "103aff983ffa1c9f19a2c7227f6ff2e73835ffddaf6821a0ea482bf65feb50fe"
+    },
+    {
+      "path": "tests/a24_runtime_raw_preservation/test_runtime_raw_preservation.py",
+      "status": "added",
+      "sha256": "dc682f454bac777c69cf262852875ad7e6d302c75c0dd675ab444cb4fd788a1f"
+    }
+  ],
+  "public_replay": {
+    "command": "python tools/replay_a24_runtime_preservation.py --out <new directory>",
+    "result": "PASS_SYNTHETIC_RUNTIME_REGRESSIONS",
+    "suites": [
+      {
+        "path": "tests/a24_runtime_raw_preservation",
+        "tests": 13,
+        "exit_code": 0,
+        "qualified": true
+      },
+      {
+        "path": "tests/a24_schema_readiness",
+        "tests": 14,
+        "exit_code": 0,
+        "qualified": true
+      },
+      {
+        "path": "tests/a24_archived_target_preservation",
+        "tests": 8,
+        "exit_code": 0,
+        "qualified": true
+      },
+      {
+        "path": "tests/a24_readonly_trial",
+        "tests": 6,
+        "exit_code": 0,
+        "qualified": true
+      },
+      {
+        "path": "tests/independent_runtime_preservation",
+        "tests": 15,
+        "exit_code": 0,
+        "qualified": true
+      }
+    ],
+    "passed": 56,
+    "failed": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "main_source_tree_checks": [
+    {
+      "suite": "a24_runtime_raw_preservation",
+      "tests": 13,
+      "exit_code": 0,
+      "unresolved_cases": []
+    },
+    {
+      "suite": "a24_schema_readiness",
+      "tests": 14,
+      "exit_code": 0,
+      "unresolved_cases": []
+    },
+    {
+      "suite": "a24_archived_target_preservation",
+      "tests": 8,
+      "exit_code": 0,
+      "unresolved_cases": []
+    },
+    {
+      "suite": "a24_historical_preservation",
+      "tests": 7,
+      "exit_code": 0,
+      "unresolved_cases": []
+    },
+    {
+      "suite": "a24_readonly_trial",
+      "tests": 6,
+      "exit_code": 0,
+      "unresolved_cases": []
+    },
+    {
+      "suite": "a24_first_save_wire_r1",
+      "tests": 20,
+      "exit_code": 1,
+      "unresolved_cases": [
+        "test_concrete_windows_open_installs_new_guard_before_online_and_navigation (test_r1.OwnerTests.test_concrete_windows_open_installs_new_guard_before_online_and_navigation)",
+        "test_same_reviewer_fresh_readonly_owner_reopens_without_any_post (test_r1.OwnerTests.test_same_reviewer_fresh_readonly_owner_reopens_without_any_post)",
+        "test_fixed_accepted_model_refs_match_native_conversion_without_new_model_call (test_r1.Tests.test_fixed_accepted_model_refs_match_native_conversion_without_new_model_call)"
+      ]
+    }
+  ],
+  "canonical_temp_comparison": {
+    "change": "TMP and TEMP use a fully resolved owned workspace directory instead of inherited 8.3 temp alias; no source/test expectation changed",
+    "old_default_temp_failures_retained": true,
+    "no_source_or_test_expectation_change": true,
+    "results": [
+      {
+        "suite": "a24_controlled_capture",
+        "tests": 7,
+        "exit_code": 0,
+        "unresolved_cases": [],
+        "source": "baseline"
+      },
+      {
+        "suite": "a24_first_save_current_body",
+        "tests": 10,
+        "exit_code": 0,
+        "unresolved_cases": [],
+        "source": "baseline"
+      },
+      {
+        "suite": "a24_first_save_wire_r1",
+        "tests": 20,
+        "exit_code": 1,
+        "unresolved_cases": [
+          "test_concrete_windows_open_installs_new_guard_before_online_and_navigation (test_r1.OwnerTests.test_concrete_windows_open_installs_new_guard_before_online_and_navigation)",
+          "test_same_reviewer_fresh_readonly_owner_reopens_without_any_post (test_r1.OwnerTests.test_same_reviewer_fresh_readonly_owner_reopens_without_any_post)",
+          "test_fixed_accepted_model_refs_match_native_conversion_without_new_model_call (test_r1.Tests.test_fixed_accepted_model_refs_match_native_conversion_without_new_model_call)"
+        ],
+        "source": "baseline"
+      },
+      {
+        "suite": "a24_controlled_capture",
+        "tests": 7,
+        "exit_code": 0,
+        "unresolved_cases": [],
+        "source": "v3"
+      },
+      {
+        "suite": "a24_first_save_current_body",
+        "tests": 10,
+        "exit_code": 0,
+        "unresolved_cases": [],
+        "source": "v3"
+      },
+      {
+        "suite": "a24_first_save_wire_r1",
+        "tests": 20,
+        "exit_code": 1,
+        "unresolved_cases": [
+          "test_concrete_windows_open_installs_new_guard_before_online_and_navigation (test_r1.OwnerTests.test_concrete_windows_open_installs_new_guard_before_online_and_navigation)",
+          "test_same_reviewer_fresh_readonly_owner_reopens_without_any_post (test_r1.OwnerTests.test_same_reviewer_fresh_readonly_owner_reopens_without_any_post)",
+          "test_fixed_accepted_model_refs_match_native_conversion_without_new_model_call (test_r1.Tests.test_fixed_accepted_model_refs_match_native_conversion_without_new_model_call)"
+        ],
+        "source": "v3"
+      }
+    ]
+  },
+  "actual_archive_trial": {
+    "command": "python tools/run_a24_archived_preservation.py --state <fixed parsed archive> --historical <fixed 19 records> --current-dom <fixed Q1 DOM> --out <new directory>",
+    "exit_code": 0,
+    "archived_question_nodes": 22,
+    "archived_frames": 68,
+    "separate_historical_records": 19,
+    "canonical_question_id": null,
+    "current_complete_body_qualified": false,
+    "outputs": [
+      {
+        "path": "private/archived-target.full.json",
+        "bytes": 173098,
+        "sha256": "439248fb87ea25108b8ebbb48b049a517a553f25adf95eaf2e8da501ef9c377e",
+        "byte_equal_to_prior_archival_run": true
+      },
+      {
+        "path": "private/archived-target.preservation.json",
+        "bytes": 528586,
+        "sha256": "8f22262d781def38926bb23368727748e46b7e4673ce3a343e3551330a952c24",
+        "byte_equal_to_prior_archival_run": true
+      },
+      {
+        "path": "private/historical-records.full.jsonl",
+        "bytes": 11625,
+        "sha256": "02a8aaae2bc907649a03f3676806a02da103e0b487fb43f7e187b29a67fc7a8c",
+        "byte_equal_to_prior_archival_run": true
+      },
+      {
+        "path": "public-summary.json",
+        "bytes": 2550,
+        "sha256": "7b636d6411775a3e348da43bd06725df7b9d368d5fe19ffa1aba082934f7ae45",
+        "byte_equal_to_prior_archival_run": true
+      },
+      {
+        "path": "readback-receipt.json",
+        "bytes": 709,
+        "sha256": "b363bb4a8e377fc7dd97d2e419a7b67cdad34fadcf3103b071ceabbacbd89512",
+        "byte_equal_to_prior_archival_run": true
+      }
+    ]
+  },
+  "negative_probes": [
+    {
+      "name": "corrupt_package",
+      "error": "RUNTIME_REPLAY_PACKAGE_HASH",
+      "output_created": false,
+      "result": "PASS_EXPECTED_REJECTION"
+    },
+    {
+      "name": "existing_output",
+      "error": "RUNTIME_REPLAY_OUTPUT_EXISTS",
+      "receipt_unchanged": true,
+      "result": "PASS_EXPECTED_REJECTION"
+    }
+  ],
+  "known_limits": [
+    "A24CompleteExportCodec/v1 metadata residual not covered; not reachable under current OBSERVED natural-export-only authority",
+    "Recursive children_path and ambiguous/filtered/unbound response projections rejected",
+    "Current natural export qualification UNBOUND; current old bodies UNKNOWN; no authoritative insertion order",
+    "Q16 and three reading tasks exceed ordinary-choice-only live admission",
+    "Three existing R1 errors retained; no clean dependency installation established"
+  ],
+  "actual_save": "NOT_RUN",
+  "actual_refresh": "NOT_RUN",
+  "actual_independent_reopen": "NOT_RUN",
+  "website_modifications": 0,
+  "platform_calls": 0,
+  "model_calls": 0,
+  "paid_calls": 0,
+  "platform_use_allowed": false,
+  "independent_public_package_consumption": {
+    "status": "PASS_PUBLIC_PACKAGE_CONSUMPTION_BOUNDED",
+    "package_sha256": "2f97801dc13bc040b1eefb97b02932c2c7cbfee887297eedf579cd6998c52638",
+    "passed": 56,
+    "failed": 0,
+    "errors": 0,
+    "skipped": 0,
+    "member_hashes_verified": 127,
+    "raw_report_sha256": "fc8cc145ac34fbb76d4ff0b00a2b41a90da509d920c7cd64aaf64fd4b2c40772",
+    "public_report": "docs/evidence/a24-runtime-preservation-20261022/public-consumption-result.json"
+  },
+  "publication_files": [
+    {
+      "path": "tools/replay_a24_runtime_preservation.py",
+      "bytes": 4286,
+      "sha256": "53e7eaf28f8cdacc76fbda6e245555a51b1fb847a65a1d20fe0ed6c431ae0888"
+    },
+    {
+      "path": "tools/run_a24_archived_preservation.py",
+      "bytes": 3334,
+      "sha256": "2760bf1ac6d7f41508317da9687f9b61692c6c5453a4f80fabd1e02f83eefa4c"
+    },
+    {
+      "path": "handoffs/b/a24/a24-runtime-preservation-v3-20261022.patch",
+      "bytes": 59739,
+      "sha256": "24fbc26f9b5962e905f1ad57c700e6286cd289fbe64e27789223ee0675748686"
+    },
+    {
+      "path": "docs/evidence/a24-runtime-preservation-20261022/independent-report.md",
+      "bytes": 4675,
+      "sha256": "8f47f675f947201e54f9ac45dc0c5e3c99d62d6082c1c8818db8b3ed98d37028"
+    },
+    {
+      "path": "docs/evidence/a24-runtime-preservation-20261022/independent-result.json",
+      "bytes": 3793,
+      "sha256": "8003f2159395e8ddbc827d22f7288df71648de2c8b1f6b716b8c47e0cb5b911c"
+    },
+    {
+      "path": "docs/evidence/a24-runtime-preservation-20261022/native-format-gap-audit.json",
+      "bytes": 2877,
+      "sha256": "1a3aa9a9f4ed9a5cd7c64cb8a065f8fb534bf874d39bb934efd5f0cb88822771"
+    },
+    {
+      "path": "docs/evidence/a24-runtime-preservation-20261022/public-consumption-report.md",
+      "bytes": 3094,
+      "sha256": "65a52fc44c2d668ac95bacf454f9c95823094876f426b2e72c35f8f31f0e8a1f"
+    },
+    {
+      "path": "docs/evidence/a24-runtime-preservation-20261022/public-consumption-result.json",
+      "bytes": 3164,
+      "sha256": "9f7e8bfb062326b5dd2ebfda9dc960b0df4e151191790c02257d685efb573872"
+    },
+    {
+      "path": "docs/evidence/a24-runtime-preservation-20261022/test_complete_export_metadata_scope_boundary.py",
+      "bytes": 5269,
+      "sha256": "213ddf2a325c044ae6e43e983e1a39bfa2f7c0f717e69ec2fb90ba0ecd9a5a32"
+    },
+    {
+      "path": "docs/evidence/a24-runtime-preservation-20261022/v2-rejection.json",
+      "bytes": 1125,
+      "sha256": "c3176dd86d4a4d216dbf33020ff5df3a2c0893fccdb77573804f59518e428a24"
+    }
+  ],
+  "raw_main_log_sha256": "868286aa0c097faf3c07c9261fdbe47ee91b6f9408ce8ff97debcca4c4f8578e",
+  "canonical_temp_log_sha256": "a300584b98aebfe5bd2a53635013a76aaecd7fc361349310f4ec8ec438e6dccb",
+  "native_format_gap_audit": "docs/evidence/a24-runtime-preservation-20261022/native-format-gap-audit.json"
+}
